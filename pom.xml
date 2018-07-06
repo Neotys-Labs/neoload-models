@@ -48,6 +48,17 @@
 		</repository>
 	</distributionManagement-->
 
+	<distributionManagement>
+		<repository>
+			<id>neotys-releases</id>
+			<url>http://nexus.intranet.neotys.com/content/repositories/neotysrepo/</url>
+		</repository>
+		<snapshotRepository>
+			<id>neotys-snapshots</id>
+			<url>http://nexus.intranet.neotys.com/content/repositories/neotysrepo-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<properties>
 		<project.scm.id>git</project.scm.id>
 		<encoding>UTF-8</encoding>
