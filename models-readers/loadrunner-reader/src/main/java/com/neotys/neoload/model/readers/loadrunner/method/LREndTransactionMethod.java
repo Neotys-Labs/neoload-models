@@ -14,7 +14,7 @@ public class LREndTransactionMethod implements LoadRunnerMethod {
 	@Override
 	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		final int size = visitor.getCurrentContainers().size();
-		if (size == 0) {
+		if (size <= 1) {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot end non existing transaction.");
 			return null;
 		}

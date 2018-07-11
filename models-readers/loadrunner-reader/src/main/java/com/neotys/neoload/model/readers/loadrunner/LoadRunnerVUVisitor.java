@@ -68,7 +68,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		return currentContainers.get(0).build();
 	}
 
-	private static Element setUniqueNameInContainer(final Element element, final Container container) {
+	public static Element setUniqueNameInContainer(final Element element, final Container container) {
 		if (element == null)
 			return element;
 		int i = 0;

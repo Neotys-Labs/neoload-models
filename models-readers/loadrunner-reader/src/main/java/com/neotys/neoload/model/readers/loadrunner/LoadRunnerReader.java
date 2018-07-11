@@ -266,7 +266,16 @@ public class LoadRunnerReader extends Reader {
 			}
 		}
 		LoadRunnerVUVisitor visitor = new LoadRunnerVUVisitor(this, leftBrace, rightBrace, name);
-		return (Container) visitor.visit(tree);
+		Container container = (Container) visitor.visit(tree);
+		// end unended container
+		while(visitor.getCurrentContainers().size()>1){
+			container = visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1).build();
+			if(container != null){
+				container = (Container) LoadRunnerVUVisitor.setUniqueNameInContainer(container, visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).build());
+				visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).addChilds(container);
+			}
+		}
+		return container;
 
 	}
 

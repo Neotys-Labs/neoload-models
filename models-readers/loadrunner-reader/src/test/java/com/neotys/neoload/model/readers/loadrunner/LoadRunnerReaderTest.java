@@ -110,6 +110,25 @@ public class LoadRunnerReaderTest {
         assertThat(reader.currentProjectServers.size()).isEqualTo(1);
         reader.getOrAddServerIfNotExist(ImmutableServer.builder().host("myhost2").port("80").name("myhost").scheme("http").build());
         assertThat(reader.currentProjectServers.size()).isEqualTo(2);
-
+    }
+    
+    @Test
+    public void subTransactionsReaderTest() {
+    	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
+        try(InputStream targetStream = this.getClass().getResourceAsStream("ActionSubTransaction.c")) {
+            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer");
+            assertThat(container).isNotNull();
+            assertThat(container.getChilds().size()).isEqualTo(3);
+            assertThat(container.getChilds().get(0).getName()).isEqualTo("level#2a");
+            assertThat(container.getChilds().get(1).getName()).isEqualTo("page#2");
+            assertThat(container.getChilds().get(2).getName()).isEqualTo("level#2b");
+            assertThat(((Container)container.getChilds().get(0)).getChilds().size()).isEqualTo(1);
+            assertThat(((Container)container.getChilds().get(0)).getChilds().get(0).getName()).isEqualTo("page#1");
+            assertThat(((Container)container.getChilds().get(2)).getChilds().size()).isEqualTo(1);
+            assertThat(((Container)container.getChilds().get(2)).getChilds().get(0).getName()).isEqualTo("page#3");
+            
+        }catch(IOException e) {
+            fail("Error reading test stream", e);
+        }
     }
 }
