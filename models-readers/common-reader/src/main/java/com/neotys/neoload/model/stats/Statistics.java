@@ -10,9 +10,6 @@ import java.util.List;
 @Gson.TypeAdapters
 public interface Statistics {
 
-	@Gson.Named("converter-version")
-	String getConverterVersion();
-
 	@Gson.Named("project-type")
 	String getProjectType();
 

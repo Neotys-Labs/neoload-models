@@ -152,10 +152,9 @@ public class CmdEventListener implements EventListener {
 		//}
 	}
 
-	public void generateJsonReport(final ProjectType projectType, final String converterVersion, final String statusCode) {
+	public void generateJsonReport(final ProjectType projectType, final String statusCode) {
 		final ImmutableStatistics.Builder statisticsBuilder = ImmutableStatistics.builder()
 				.projectType(projectType.getName())
-				.converterVersion(converterVersion)
 				.scriptCount(totalScriptNumber)
 				.statusCode(statusCode)
 				.durationInMillis(totalDurationInMills)
