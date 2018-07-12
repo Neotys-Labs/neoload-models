@@ -1,27 +1,30 @@
 package com.neotys.neoload.model.listener;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.FileAppender;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.common.io.Files;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.neotys.neoload.model.stats.*;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.google.common.io.Files;
-
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.FileAppender;
-
 public class CmdEventListener implements EventListener {
-	
+
 	private static final Logger LIVE_OUT = LoggerFactory.getLogger("LIVE");
 	private static final Logger FUNCTIONAL_OUT = LoggerFactory.getLogger("FUNCTIONAL");
 	private static final String LINE = "Line ";
@@ -31,28 +34,28 @@ public class CmdEventListener implements EventListener {
 	private final String destFolder;
 	private final String nlProjectName;
 	private final Date startDate;
-	
+
 	private int totalScriptNumber;
 	private long totalDurationInMills;
 	private long currentScriptStartTime;
 	private final SupportLevelCounter actionsCounter = new SupportLevelCounter();
 	private final SupportLevelCounter functionsCounter = new SupportLevelCounter();
 	private final SupportLevelCounter parametersCounter = new SupportLevelCounter();
-	
+
 	private final Supplier<List<String>> logFiles = Suppliers.memoize(CmdEventListener::getLogFiles);
-	
-	public CmdEventListener(final String sourceFolder, final String destFolder, final String nlProjectName) {		
+
+	public CmdEventListener(final String sourceFolder, final String destFolder, final String nlProjectName) {
 		this.sourceFolder = sourceFolder;
 		this.destFolder = destFolder;
 		this.nlProjectName = nlProjectName;
 		this.startDate = new Date();
 	}
-		
+
 	@Override
 	public void readSupportedAction(final String actionName) {
 		actionsCounter.readSupported(actionName);
 	}
-	
+
 	@Override
 	public void readUnsupportedAction(final String actionName) {
 		actionsCounter.readUnsupported(actionName);
@@ -76,7 +79,7 @@ public class CmdEventListener implements EventListener {
 	}
 
 	@Override
-	public void startScript(final String scriptPath) {				
+	public void startScript(final String scriptPath) {
 		// Reset current script info
 		currentScriptStartTime = (new Date()).getTime();
 		functionsCounter.nextScript();
@@ -99,7 +102,7 @@ public class CmdEventListener implements EventListener {
 
 	@Override
 	public void readSupportedFunctionWithWarn(final String scriptName, final String functionName, final Integer lineNumber,
-			final String warning) {
+											  final String warning) {
 		functionsCounter.readSupportedWithWarn(functionName);
 		FUNCTIONAL_OUT.warn(LINE + lineNumber + ": function supported with warning: " + functionName + ". " + warning);
 	}
@@ -117,7 +120,7 @@ public class CmdEventListener implements EventListener {
 
 	@Override
 	public void readSupportedParameterWithWarn(final String scriptName, final String parameterType, final String parameterName,
-			final String warning) {
+											   final String warning) {
 		parametersCounter.readSupportedWithWarn(parameterType);
 		FUNCTIONAL_OUT.warn("Parameter supported with warning. Type: " + parameterType + ", name: " + parameterName + ". " + warning);
 	}
@@ -127,26 +130,58 @@ public class CmdEventListener implements EventListener {
 		parametersCounter.readUnsupported(parameterType);
 		FUNCTIONAL_OUT.warn("Parameter unsupported. Type: " + parameterType + ", name: " + parameterName + ". ");
 	}
-	
+
 	public void printSummary() {
 		final StringBuilder summaryBuilder = new StringBuilder();
 		summaryBuilder.append("\n***********\n* Summary *\n***********\n");
-		summaryBuilder.append("Start date: ").append(startDate).append("\n");		
+		summaryBuilder.append("Start date: ").append(startDate).append("\n");
 		summaryBuilder.append("Reading duration: ").append(totalDurationInMills).append(" ms\n");
 		summaryBuilder.append("Source folder: ").append(sourceFolder).append("\n");
 		summaryBuilder.append("Destination folder: ").append(destFolder).append("\n");
 		summaryBuilder.append("NeoLoad project: ").append(nlProjectName).append("\n");
 		summaryBuilder.append("Log files: ").append(StringUtils.join(logFiles.get(), ", ")).append("\n");
 		summaryBuilder.append("Total script number: ").append(totalScriptNumber).append("\n");
-		summaryBuilder.append("Coverage: ").append(functionsCounter.getTotalCoveragePercent()).append("\n");	
+		summaryBuilder.append("Coverage: ").append(functionsCounter.getTotalCoveragePercentAsString()).append("\n");
 		summaryBuilder.append("Total actions: \n").append(actionsCounter.getTotalSummary());
 		summaryBuilder.append("Total functions: \n").append(functionsCounter.getTotalSummary());
 		summaryBuilder.append("Total parameters: \n").append(parametersCounter.getTotalSummary());
 		final String summary = summaryBuilder.toString();
 		FUNCTIONAL_OUT.info(summary);
+		//if(((ch.qos.logback.classic.Logger)FUNCTIONAL_OUT).getAppender("Console out")==null) {
 		LIVE_OUT.info(summary);
+		//}
 	}
-		
+
+	public void generateJsonReport(final ProjectType projectType, final String converterVersion, final String statusCode) {
+		final ImmutableStatistics.Builder statisticsBuilder = ImmutableStatistics.builder()
+				.projectType(projectType.getName())
+				.converterVersion(converterVersion)
+				.scriptCount(totalScriptNumber)
+				.statusCode(statusCode)
+				.durationInMillis(totalDurationInMills)
+				.conversionRatePercent(functionsCounter.getTotalCoveragePercent())
+				.supportedFunctionsNoWarnCount(functionsCounter.getSupportedFunctionsNoWarnCount())
+				.supportedFunctionsWarnCount(functionsCounter.getSupportedFunctionsWarnCount())
+				.unsupportedFunctionsCount(functionsCounter.getUnsupportedFunctionsCount());
+
+		functionsCounter.getTotalOccurencePerName().entrySet().stream()
+				.map(e -> ImmutableFunctionStat.builder().name(e.getKey()).count(e.getValue()).build())
+				.forEach(statisticsBuilder::addUnsupportedFunctions);
+
+		final Statistics statistics = statisticsBuilder.build();
+		final Gson gson = new GsonBuilder()
+				.registerTypeAdapterFactory(new GsonAdaptersFunctionStat())
+				.registerTypeAdapterFactory(new GsonAdaptersStatistics())
+				.create();
+
+		final String reportFileName = destFolder + File.separator + "statistics.json";
+		try (final Writer writer = new FileWriter(reportFileName)) {
+			gson.toJson(statistics, writer);
+		} catch (final IOException e) {
+			LIVE_OUT.error("Error while generating JSON report.", e);
+		}
+	}
+
 	public void moveLogFilesToNLProject(final String nlProjectFolderPath){
 		final File nlProjectFolder = new File(nlProjectFolderPath);
 		if(!nlProjectFolder.isDirectory()){
@@ -155,7 +190,7 @@ public class CmdEventListener implements EventListener {
 		}
 		final File logsFolder = new File(nlProjectFolder, MIGRATION_LOG_FOLDER);
 		logsFolder.mkdir();
-		
+
 		for(final String logFile : logFiles.get()){
 			try {
 				final File from = new File( logFile);
@@ -164,9 +199,9 @@ public class CmdEventListener implements EventListener {
 			} catch (final IOException e) {
 				FUNCTIONAL_OUT.warn("Cannot copy file " + logFile + ". ", e);
 			}
-		}		
+		}
 	}
-	
+
 	private static final List<String> getLogFiles(){
 		final List<String> logFileLocations = new ArrayList<>();
 		final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();

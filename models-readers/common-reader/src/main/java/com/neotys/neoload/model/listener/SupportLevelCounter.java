@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.listener;
 
+import java.util.Map;
+
 public class SupportLevelCounter {
 
 	private final CurrentAndTotalCounter supported = new CurrentAndTotalCounter();
@@ -35,10 +37,30 @@ public class SupportLevelCounter {
 	public void readUnsupported(final String name) {
 		unsupported.increment(name);
 	}
-	
-	public String getTotalCoveragePercent(){
+
+	public int getTotalCoveragePercent(){
 		final int totalSupported = supported.getTotal() + supportedWithWarn.getTotal();
 		final int totalUnsupported = unsupported.getTotal();
-		return ((int)(((float)totalSupported / (totalSupported + totalUnsupported))*100)) + "%";
+		return (int)(((float)totalSupported / (totalSupported + totalUnsupported))*100);
+	}
+
+	public String getTotalCoveragePercentAsString(){
+		return getTotalCoveragePercent() + "%";
+	}
+
+	public int getSupportedFunctionsNoWarnCount(){
+		return supported.getTotal();
+	}
+
+	public int getSupportedFunctionsWarnCount(){
+		return supportedWithWarn.getTotal();
+	}
+
+	public int getUnsupportedFunctionsCount(){
+		return unsupported.getTotal();
+	}
+
+	public Map<String, Integer> getTotalOccurencePerName(){
+		return unsupported.getTotalOccurencePerName();
 	}
 }

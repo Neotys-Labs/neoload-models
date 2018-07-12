@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.Factory;
 import org.apache.commons.collections4.map.LazyMap;
@@ -17,7 +18,7 @@ public class CurrentAndTotalCounter {
 
 	private int current = 0;
 	private Map<String, MutableInt> totalOccurencePerName = LazyMap.lazyMap(new HashMap<String, MutableInt>(), (Factory<MutableInt>)MutableInt::new);
-	
+
 	public void nextScript() {
 		current = 0;
 	}
@@ -40,13 +41,22 @@ public class CurrentAndTotalCounter {
 	}
 
 	public String getListSummary() {
-		List<Map.Entry<String, MutableInt>> totalOccurencePerNameList = Lists.newArrayList(totalOccurencePerName.entrySet());
-		Comparator<Entry<String, MutableInt>> reverseOrder = (entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue());
-		Collections.sort(totalOccurencePerNameList, reverseOrder);
+		List<Entry<String, MutableInt>> totalOccurencePerNameList = sortOccurencePerName();
 		final StringBuilder summary = new StringBuilder();
 		for (final Entry<String, MutableInt> entry : totalOccurencePerNameList) {
 			summary.append("\t\t\t*").append(entry.getValue().intValue()).append(": ").append(entry.getKey()).append("\n");
 		}
 		return summary.toString();
+	}
+
+	private List<Entry<String, MutableInt>> sortOccurencePerName() {
+		List<Entry<String, MutableInt>> totalOccurencePerNameList = Lists.newArrayList(totalOccurencePerName.entrySet());
+		Comparator<Entry<String, MutableInt>> reverseOrder = (entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue());
+		Collections.sort(totalOccurencePerNameList, reverseOrder);
+		return totalOccurencePerNameList;
+	}
+
+	public Map<String, Integer> getTotalOccurencePerName() {
+		return sortOccurencePerName().stream().collect(Collectors.toMap(Entry::getKey,e -> e.getValue().getValue()));
 	}
 }
