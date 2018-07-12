@@ -37,7 +37,7 @@
 		<url>https://github.com/neotysbde/neoload-models/tree/master</url>
 	</scm>
 
-	<!--distributionManagement>
+	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -46,17 +46,6 @@
 			<id>ossrh</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
-	</distributionManagement-->
-
-	<distributionManagement>
-		<repository>
-			<id>neotys-releases</id>
-			<url>http://nexus.intranet.neotys.com/content/repositories/neotysrepo/</url>
-		</repository>
-		<snapshotRepository>
-			<id>neotys-snapshots</id>
-			<url>http://nexus.intranet.neotys.com/content/repositories/neotysrepo-snapshots/</url>
-		</snapshotRepository>
 	</distributionManagement>
 
 	<properties>
@@ -268,7 +257,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>1.5</version>
@@ -281,7 +270,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin-->
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
