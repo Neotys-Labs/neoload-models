@@ -1,22 +1,21 @@
 package com.neotys.neoload.model.readers.loadrunner;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.antlr.v4.runtime.Token;
 
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
 import com.neotys.neoload.model.parsers.CPP14Parser;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.ImmutableContainer;
 import com.neotys.neoload.model.repository.Validator;
 import com.neotys.neoload.model.repository.VariableExtractor;
-import org.antlr.v4.runtime.Token;
 
-import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
-import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
 
 public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 
@@ -52,14 +51,16 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		}
 		final MethodCall method = methodBuilder.build();
 		final LoadRunnerMethod lrMethod = LoadRunnerSupportedMethods.get(method.getName());
-		final Element elt;
+		Element elt;
 		if(lrMethod == null){
 			readUnsupportedFunction(method.getName(), ctx);
 			return null;
-		}		
-		elt = setUniqueNameInContainer(lrMethod.getElement(this, method, ctx),
-				currentContainers.get(currentContainers.size() - 1).build());
-		Optional.ofNullable(elt).ifPresent(element -> currentContainers.get(currentContainers.size() - 1).addChilds(element));
+		}	
+		elt = lrMethod.getElement(this, method, ctx);
+		if(elt != null){
+			elt = setUniqueNameInContainer(elt,	currentContainers.get(currentContainers.size() - 1).build());
+			currentContainers.get(currentContainers.size() - 1).addChilds(elt);
+		}
 		return elt;
 	}
 
@@ -68,7 +69,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		return currentContainers.get(0).build();
 	}
 
-	public static Element setUniqueNameInContainer(final Element element, final Container container) {
+	static Element setUniqueNameInContainer(final Element element, final Container container) {
 		if (element == null)
 			return element;
 		int i = 0;

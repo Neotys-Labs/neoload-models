@@ -17,6 +17,7 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 	private static final String PARAMETER_DOMAIN = "domain";
 	private static final String PARAMETER_EXPIRES = "expires";
 	private static final String PARAMETER_PATH = "path";
+	private static final String METHOD = "Method ";
 	
 	public WebAddCookieMethod() {
 		super();
@@ -26,12 +27,12 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		Preconditions.checkNotNull(method);
 		if(method.getParameters() == null || method.getParameters().size() < 2){
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Method " + method.getName() + " should have at least 2 parameters.");
+			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, METHOD + method.getName() + " should have at least 2 parameters.");
 			return null;
 		}
 		final String nameAndValue = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0));
 		if(Strings.isNullOrEmpty(nameAndValue) || !nameAndValue.contains(NAME_VALUE_COOKIE_SEPARATOR)){
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Method " + method.getName() + " should have the first parameter parameter with format 'name=VALUE'.");
+			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, METHOD + method.getName() + " should have the first parameter parameter with format 'name=VALUE'.");
 			return null;
 		}
 		final String[] nameAndValueArray = nameAndValue.split(NAME_VALUE_COOKIE_SEPARATOR);
@@ -42,7 +43,7 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 		if(domain.isPresent()){
 			builder.domain(domain.get());
 		} else {
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Method " + method.getName() + " should have a " + PARAMETER_DOMAIN + " attribute.");
+			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, METHOD + method.getName() + " should have a " + PARAMETER_DOMAIN + " attribute.");
 		}		
 		MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, PARAMETER_EXPIRES).ifPresent(builder::expires);
 		MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, PARAMETER_PATH).ifPresent(builder::path);
