@@ -173,7 +173,7 @@ public class CmdEventListener implements EventListener {
 				.registerTypeAdapterFactory(new GsonAdaptersStatistics())
 				.create();
 
-		final String reportFileName = destFolder + File.separator + "statistics.json";
+		final String reportFileName = destFolder + File.separator + nlProjectName + File.separator + "statistics.json";
 		try (final Writer writer = new FileWriter(reportFileName)) {
 			gson.toJson(statistics, writer);
 		} catch (final IOException e) {
