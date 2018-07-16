@@ -174,6 +174,7 @@ public class CmdEventListener implements EventListener {
 				.create();
 
 		final String reportFileName = destFolder + File.separator + nlProjectName + File.separator + "statistics.json";
+		new File(reportFileName).getParentFile().mkdirs();
 		try (final Writer writer = new FileWriter(reportFileName)) {
 			gson.toJson(statistics, writer);
 		} catch (final IOException e) {
