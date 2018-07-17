@@ -8,7 +8,7 @@ public class AddCookieWriter extends JavascriptWriter {
 	private static final String CONTENT_FIRST_PART = "// Add cookie to a HTTP server.\ncontext.currentVU.setCookieForServer(";
 
 	public AddCookieWriter(final AddCookie addCookie) {		
-				super(ImmutableJavascript.builder().name("setCookieForServer " + addCookie.getName()).content(buildJavascript(addCookie)).build());
+				super(ImmutableJavascript.builder().name(addCookie.getName()).content(buildJavascript(addCookie)).build());
 	}
 	
 	static String buildJavascript(final AddCookie addCookie){
@@ -21,7 +21,7 @@ public class AddCookieWriter extends JavascriptWriter {
 	
 	static String buildCookie(final AddCookie addCookie){
 		final StringBuilder content = new StringBuilder();
-		content.append(addCookie.getName()).append("=").append(addCookie.getValue());
+		content.append(addCookie.getCookieName()).append("=").append(addCookie.getCookieValue());
 		if(addCookie.getExpires().isPresent()){
 			content.append("; expires=").append(addCookie.getExpires().get());				
 		}

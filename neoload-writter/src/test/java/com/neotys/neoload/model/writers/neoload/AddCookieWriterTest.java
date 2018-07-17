@@ -18,7 +18,7 @@ public class AddCookieWriterTest {
 		Document doc = WrittingTestUtils.generateEmptyDocument();
 		Element root = WrittingTestUtils.generateTestRootElement(doc);
 
-		final AddCookie addCookie = ImmutableAddCookie.builder().name("cookieName").value("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").path("cookiePath").build();
+		final AddCookie addCookie = ImmutableAddCookie.builder().name("setCookieForServer cookieName").cookieName("cookieName").cookieValue("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").path("cookiePath").build();
 
 		AddCookieWriter.of(addCookie).writeXML(doc, root, "setCookieForServer cookieName", Files.createTempDir().getAbsolutePath());
 		String generatedResult = WrittingTestUtils.getXmlString(doc);
@@ -33,35 +33,35 @@ public class AddCookieWriterTest {
 		
 	@Test
 	public void testbuildCookieNameValueDomain() {
-		final AddCookie addCookie = ImmutableAddCookie.builder().name("cookieName").value("cookieValue").domain("cookieDomain").build();
+		final AddCookie addCookie = ImmutableAddCookie.builder().name("name").cookieName("cookieName").cookieValue("cookieValue").domain("cookieDomain").build();
 		final String expectedResult = "cookieName=cookieValue";
 		Assertions.assertThat(AddCookieWriter.buildCookie(addCookie)).isEqualTo(expectedResult);
 	}
 	
 	@Test
 	public void testbuildCookieNameValueDomainExpires() {
-		final AddCookie addCookie = ImmutableAddCookie.builder().name("cookieName").value("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").build();
+		final AddCookie addCookie = ImmutableAddCookie.builder().name("name").cookieName("cookieName").cookieValue("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").build();
 		final String expectedResult = "cookieName=cookieValue; expires=Thu, 2 Aug 2007 20:47:11 UTC";
 		Assertions.assertThat(AddCookieWriter.buildCookie(addCookie)).isEqualTo(expectedResult);
 	}
 	
 	@Test
 	public void testbuildCookieNameValueDomainPath() {
-		final AddCookie addCookie = ImmutableAddCookie.builder().name("cookieName").value("cookieValue").domain("cookieDomain").path("cookiePath").build();
+		final AddCookie addCookie = ImmutableAddCookie.builder().name("name").cookieName("cookieName").cookieValue("cookieValue").domain("cookieDomain").path("cookiePath").build();
 		final String expectedResult = "cookieName=cookieValue; path=cookiePath";
 		Assertions.assertThat(AddCookieWriter.buildCookie(addCookie)).isEqualTo(expectedResult);
 	}
 		
 	@Test
 	public void testbuildCookieNameValueDomainExpiresPath() {
-		final AddCookie addCookie = ImmutableAddCookie.builder().name("cookieName").value("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").path("cookiePath").build();
+		final AddCookie addCookie = ImmutableAddCookie.builder().name("name").cookieName("cookieName").cookieValue("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").path("cookiePath").build();
 		final String expectedResult = "cookieName=cookieValue; expires=Thu, 2 Aug 2007 20:47:11 UTC; path=cookiePath";
 		Assertions.assertThat(AddCookieWriter.buildCookie(addCookie)).isEqualTo(expectedResult);
 	}
 	
 	@Test
 	public void testbuildJavascript() {
-		final AddCookie addCookie = ImmutableAddCookie.builder().name("cookieName").value("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").path("cookiePath").build();
+		final AddCookie addCookie = ImmutableAddCookie.builder().name("name").cookieName("cookieName").cookieValue("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").path("cookiePath").build();
 		final String expectedResult = "// Add cookie to a HTTP server.\ncontext.currentVU.setCookieForServer(\"cookieDomain\",\"cookieName=cookieValue; expires=Thu, 2 Aug 2007 20:47:11 UTC; path=cookiePath\");";
 		Assertions.assertThat(AddCookieWriter.buildJavascript(addCookie)).isEqualTo(expectedResult);
 	}
