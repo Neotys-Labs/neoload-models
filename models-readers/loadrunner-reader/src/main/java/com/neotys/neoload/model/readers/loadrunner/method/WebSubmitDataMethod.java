@@ -15,10 +15,10 @@ public class WebSubmitDataMethod  implements LoadRunnerMethod {
 	@Override
 	public Element getElement(LoadRunnerVUVisitor visitor, MethodCall method, MethodcallContext ctx) {
 		visitor.readSupportedFunction(method.getName(), ctx);
-		final Element element = WebSubmitData.toElement(visitor.getReader(), visitor.getLeftBrace(),
-				visitor.getRightBrace(), method, visitor.getCurrentExtractors(), visitor.getCurrentValidators());
+		final Element element = WebSubmitData.toElement(visitor, method);
 		visitor.getCurrentExtractors().clear();
 		visitor.getCurrentValidators().clear();
+		visitor.getCurrentHeaders().clear();
 		return element;
 	}
 

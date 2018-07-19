@@ -19,16 +19,16 @@ public class WebSubmitData extends WebRequest {
 		return getUrlFromMethodParameters(leftBrace, rightBrace, method, "Action");
 	}
 	
-    public static Element toElement(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final MethodCall method, List<VariableExtractor> extractors, List<Validator>validators) {
+    public static Element toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 
-        pageBuilder.addChilds(buildPostRequest(reader, leftBrace, rightBrace, method, extractors, validators));
+        pageBuilder.addChilds(buildPostRequest(visitor, method));
         
-        MethodUtils.extractItemListAsStringList(leftBrace, rightBrace, method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString()).ifPresent(stringList ->
-        		getUrlList(stringList, getUrl(leftBrace, rightBrace, method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(reader, url))));
+        MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString()).ifPresent(stringList ->
+        		getUrlList(stringList, getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url))));
         
-        return pageBuilder.name(MethodUtils.normalizeString(leftBrace, rightBrace, method.getParameters().get(0)))
+        return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)
                 .build();
     }
@@ -38,19 +38,20 @@ public class WebSubmitData extends WebRequest {
      * @param method represent the LR "web_submit_data" function
      * @return the associate POST_REQUEST
      */
-    public static PostRequest buildPostRequest(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final MethodCall method, final List<VariableExtractor> extractors, final List<Validator>validators) {
-    	URL mainUrl = Preconditions.checkNotNull(getUrl(leftBrace, rightBrace, method));
+    public static PostRequest buildPostRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    	URL mainUrl = Preconditions.checkNotNull(getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method));
     	
     	ImmutablePostFormRequest.Builder requestBuilder = ImmutablePostFormRequest.builder()
                 .name(mainUrl.getPath())
                 .path(mainUrl.getPath())
-                .server(getServer(reader, mainUrl))
-                .httpMethod(getMethod(leftBrace, rightBrace, method));
+                .server(getServer(visitor.getReader(), mainUrl))
+                .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
-    	if (extractors != null && !extractors.isEmpty()) requestBuilder.addAllExtractors(extractors);
-    	if (validators != null && !validators.isEmpty()) requestBuilder.addAllValidators(validators);
+    	if (visitor.getCurrentExtractors() != null && !visitor.getCurrentExtractors().isEmpty()) requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
+    	if (visitor.getCurrentValidators() != null && !visitor.getCurrentValidators().isEmpty()) requestBuilder.addAllValidators(visitor.getCurrentValidators());
+    	if (visitor.getCurrentHeaders() != null && !visitor.getCurrentHeaders().isEmpty()) requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	
-    	MethodUtils.extractItemListAsStringList(leftBrace, rightBrace, method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
+    	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
 				.stream().forEach(requestBuilder::addPostParameters));
         
     	MethodUtils.queryToParameterList(mainUrl.getQuery()).forEach(requestBuilder::addParameters);

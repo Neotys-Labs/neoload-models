@@ -25,6 +25,7 @@ public class LoadRunnerSupportedMethods {
 		SUPPORTED_METHODS.put("web_cache_cleanup", new WebCacheCleanupMethod());
 		SUPPORTED_METHODS.put("web_cleanup_cookies", new WebCleanupCookiesMethod());
 		SUPPORTED_METHODS.put("web_add_cookie", new WebAddCookieMethod());
+		SUPPORTED_METHODS.put("web_add_header", new WebAddHeaderMethod());
 	}
 	
 	private LoadRunnerSupportedMethods() {

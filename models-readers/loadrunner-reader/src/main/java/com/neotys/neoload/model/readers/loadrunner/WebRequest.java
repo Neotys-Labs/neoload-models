@@ -7,11 +7,15 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.neotys.neoload.model.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.neotys.neoload.model.repository.GetRequest;
+import com.neotys.neoload.model.repository.ImmutableGetRequest;
+import com.neotys.neoload.model.repository.ImmutableServer;
+import com.neotys.neoload.model.repository.Request;
+import com.neotys.neoload.model.repository.Server;
 
 
 public abstract class WebRequest {
@@ -131,28 +135,24 @@ public abstract class WebRequest {
 		}
 		return Optional.empty();
 	}
-    
-	protected static GetRequest buildGetRequestFromURL(final LoadRunnerReader reader, final URL url) {
-		return buildGetRequestFromURL(reader, url, null, null);
-	}
-	
-	
+    	
     /**
      * Generate an immutable request from a given URL object
      * @param url
      * @return
      */
     @VisibleForTesting
-    protected static GetRequest buildGetRequestFromURL(final LoadRunnerReader reader, URL url, List<VariableExtractor> extractors, List<Validator>validators) {
+    protected static GetRequest buildGetRequestFromURL(final LoadRunnerVUVisitor visitor, final URL url) {
     	ImmutableGetRequest.Builder requestBuilder = ImmutableGetRequest.builder()
 				// Just create a unique name, no matter the request name, should just be unique under a page
                 .name(UUID.randomUUID().toString())
                 .path(url.getPath())
-                .server(getServer(reader, url))
+                .server(getServer(visitor.getReader(), url))
                 .httpMethod(Request.HttpMethod.GET);
 
-    	if (extractors != null && !extractors.isEmpty()) {requestBuilder.addAllExtractors(extractors);}
-    	if (validators != null && !validators.isEmpty()) {requestBuilder.addAllValidators(validators);}
+    	if (visitor.getCurrentExtractors() != null && !visitor.getCurrentExtractors().isEmpty()) {requestBuilder.addAllExtractors(visitor.getCurrentExtractors());}
+    	if (visitor.getCurrentValidators() != null && !visitor.getCurrentValidators().isEmpty()) {requestBuilder.addAllValidators(visitor.getCurrentValidators());}
+    	if (visitor.getCurrentHeaders() != null && !visitor.getCurrentHeaders().isEmpty()) {requestBuilder.addAllHeaders(visitor.getCurrentHeaders());}
     	
         MethodUtils.queryToParameterList(url.getQuery()).forEach(requestBuilder::addParameters);
         

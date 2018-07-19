@@ -12,6 +12,7 @@ import com.neotys.neoload.model.parsers.CPP14Parser;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
 import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.Header;
 import com.neotys.neoload.model.repository.ImmutableContainer;
 import com.neotys.neoload.model.repository.Validator;
 import com.neotys.neoload.model.repository.VariableExtractor;
@@ -23,6 +24,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	private final List<ImmutableContainer.Builder> currentContainers = new ArrayList<>();
 	private List<VariableExtractor> currentExtractors;
 	private List<Validator> currentValidators;
+	private List<Header> currentHeaders;
 	private final String leftBrace;
 	private final String rightBrace;
 	private final LoadRunnerReader reader;
@@ -34,6 +36,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		this.currentContainers.add(mainContainer);
 		this.currentExtractors = new ArrayList<>();
 		this.currentValidators = new ArrayList<>();
+		this.currentHeaders = new ArrayList<>();
 		this.leftBrace = leftBrace;
 		this.rightBrace = rightBrace;
 		this.reader = reader;
@@ -135,6 +138,10 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	
 	public List<Validator> getCurrentValidators() {
 		return currentValidators;
+	}
+	
+	public List<Header> getCurrentHeaders() {
+		return currentHeaders;
 	}
 	
 	public static final int getLineNumber(final CPP14Parser.MethodcallContext ctx) {

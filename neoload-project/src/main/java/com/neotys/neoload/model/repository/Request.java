@@ -25,4 +25,5 @@ public interface Request extends PageElement {
     List<Parameter> getParameters();
     List<VariableExtractor> getExtractors();
     List<Validator> getValidators();
+    List<Header> getHeaders();
 }

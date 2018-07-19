@@ -116,16 +116,18 @@ public class LoadRunnerReaderTest {
     public void subTransactionsReaderTest() {
     	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("ActionSubTransaction.c")) {
-            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer");
-            assertThat(container).isNotNull();
-            assertThat(container.getChilds().size()).isEqualTo(3);
-            assertThat(container.getChilds().get(0).getName()).isEqualTo("level#2a");
-            assertThat(container.getChilds().get(1).getName()).isEqualTo("page#2");
-            assertThat(container.getChilds().get(2).getName()).isEqualTo("level#2b");
-            assertThat(((Container)container.getChilds().get(0)).getChilds().size()).isEqualTo(1);
-            assertThat(((Container)container.getChilds().get(0)).getChilds().get(0).getName()).isEqualTo("page#1");
-            assertThat(((Container)container.getChilds().get(2)).getChilds().size()).isEqualTo(1);
-            assertThat(((Container)container.getChilds().get(2)).getChilds().get(0).getName()).isEqualTo("page#3");
+            final Container myContainer = reader.parseCppFile("{", "}", targetStream, "MyContainer");
+            assertThat(myContainer).isNotNull();
+            assertThat(myContainer.getChilds().size()).isEqualTo(1);
+            final Container level1 = (Container) myContainer.getChilds().get(0);            
+            assertThat(level1.getName()).isEqualTo("level#1");
+            assertThat(level1.getChilds().size()).isEqualTo(3);          
+            final Container level2 = (Container) level1.getChilds().get(0);
+            final Page page2 = (Page) level1.getChilds().get(1);
+            final Container level2b = (Container) level1.getChilds().get(2);
+            assertThat(level2.getName()).isEqualTo("level#2a");
+            assertThat(page2.getName()).isEqualTo("page#2");
+            assertThat(level2b.getName()).isEqualTo("level#2b");            
             
         }catch(IOException e) {
             fail("Error reading test stream", e);

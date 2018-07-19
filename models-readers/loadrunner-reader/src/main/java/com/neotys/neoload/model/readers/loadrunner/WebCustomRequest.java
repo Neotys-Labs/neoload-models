@@ -1,30 +1,32 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 
-import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.core.Element;
-import com.neotys.neoload.model.repository.*;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.core.Element;
+import com.neotys.neoload.model.repository.ImmutablePage;
+import com.neotys.neoload.model.repository.ImmutablePostBinaryRequest;
+import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
+import com.neotys.neoload.model.repository.PostRequest;
 
 public class WebCustomRequest extends WebRequest {
 	
 	public static final String LR_HEXA_STR_PATTERN = "\\x";
 	
-    public static Element toElement(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final MethodCall method, final List<VariableExtractor> extractors, final List<Validator>validators) {
+    public static Element toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 
-        pageBuilder.addChilds(buildPostRequest(reader, leftBrace, rightBrace, method, extractors, validators));
+        pageBuilder.addChilds(buildPostRequest(visitor, method));
         
-        MethodUtils.extractItemListAsStringList(leftBrace, rightBrace, method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
-				.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(leftBrace, rightBrace, method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(reader, url))));
+        MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
+				.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url))));
         
-        return pageBuilder.name(MethodUtils.normalizeString(leftBrace, rightBrace, method.getParameters().get(0)))
+        return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)
                 .build();
     }
@@ -34,19 +36,20 @@ public class WebCustomRequest extends WebRequest {
      * @param method represent the LR "web_custom_request" function
      * @return the corresponding request of the model
      */
-    public static PostRequest buildPostRequest(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final MethodCall method, final List<VariableExtractor> extractors, final List<Validator>validators) {
-    	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(leftBrace, rightBrace, method));
+    public static PostRequest buildPostRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
 		if (MethodUtils.getParameterWithName(method, "Body").isPresent()) {
 			return ImmutablePostTextRequest.builder()
 					.name(mainUrl.getPath())
 					.path(mainUrl.getPath())
-					.server(getServer(reader, mainUrl))
-					.httpMethod(getMethod(leftBrace, rightBrace, method))
-					.contentType(MethodUtils.getParameterValueWithName(leftBrace, rightBrace, method, "EncType"))
-					.data(MethodUtils.getParameterValueWithName(leftBrace, rightBrace, method, "Body").get())
-					.addAllExtractors(Optional.ofNullable(extractors).orElse(ImmutableList.of()))
-					.addAllValidators(Optional.ofNullable(validators).orElse(ImmutableList.of()))
+					.server(getServer(visitor.getReader(), mainUrl))
+					.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+					.contentType(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "EncType"))
+					.data(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "Body").get())
+					.addAllExtractors(Optional.ofNullable(visitor.getCurrentExtractors()).orElse(ImmutableList.of()))
+					.addAllValidators(Optional.ofNullable(visitor.getCurrentValidators()).orElse(ImmutableList.of()))
+					.addAllHeaders(Optional.ofNullable(visitor.getCurrentHeaders()).orElse(ImmutableList.of()))
 					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
 					.build();
 		}
@@ -54,12 +57,13 @@ public class WebCustomRequest extends WebRequest {
 			return ImmutablePostBinaryRequest.builder()
 					.name(mainUrl.getPath())
 					.path(mainUrl.getPath())
-					.server(getServer(reader, mainUrl))
-					.httpMethod(getMethod(leftBrace, rightBrace, method))
-					.contentType(MethodUtils.getParameterValueWithName(leftBrace, rightBrace, method, "EncType"))
-					.binaryData(extractBinaryBody(leftBrace, rightBrace, method))
-					.addAllExtractors(Optional.ofNullable(extractors).orElse(ImmutableList.of()))
-					.addAllValidators(Optional.ofNullable(validators).orElse(ImmutableList.of()))
+					.server(getServer(visitor.getReader(), mainUrl))
+					.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+					.contentType(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "EncType"))
+					.binaryData(extractBinaryBody(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+					.addAllExtractors(Optional.ofNullable(visitor.getCurrentExtractors()).orElse(ImmutableList.of()))
+					.addAllValidators(Optional.ofNullable(visitor.getCurrentValidators()).orElse(ImmutableList.of()))
+					.addAllHeaders(Optional.ofNullable(visitor.getCurrentHeaders()).orElse(ImmutableList.of()))
 					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
 					.build();
 		}

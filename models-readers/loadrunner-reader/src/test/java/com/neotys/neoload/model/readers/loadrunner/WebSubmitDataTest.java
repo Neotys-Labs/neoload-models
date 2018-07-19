@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.neotys.neoload.model.listener.TestEventListener;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.ImmutablePostFormRequest;
@@ -26,6 +26,9 @@ import com.neotys.neoload.model.repository.VariableExtractor;
 
 public class WebSubmitDataTest {
 	
+	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
+	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
+		
 	public static final MethodCall WEB_SUBMIT_DATA_TEST = ImmutableMethodCall.builder()
 			.name("\"test_web_submit_data\"")
 			.addParameters("\"test_web_submit_data\"")
@@ -110,8 +113,7 @@ public class WebSubmitDataTest {
 
 	@Test
 	public void toElementTest() {
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		ImmutablePage pageGenerated = (ImmutablePage) WebSubmitData.toElement(reader,"{", "}", WEB_SUBMIT_DATA_TEST, null, null);
+		final ImmutablePage pageGenerated = (ImmutablePage) WebSubmitData.toElement(LOAD_RUNNER_VISITOR, WEB_SUBMIT_DATA_TEST);
 
 		final Page expectedPage = ImmutablePage.builder()
 				.addChilds(ImmutablePostFormRequest.builder().from(REQUEST_TEST).name(pageGenerated.getChilds().get(0).getName()).build())
@@ -124,8 +126,7 @@ public class WebSubmitDataTest {
 
 	@Test
 	public void toElementTestWithEmptyExtractorsAndValidators() {
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		ImmutablePage pageGenerated = (ImmutablePage) WebSubmitData.toElement(reader,"{", "}", WEB_SUBMIT_DATA_TEST, ImmutableList.of(), ImmutableList.of());
+		final ImmutablePage pageGenerated = (ImmutablePage) WebSubmitData.toElement(LOAD_RUNNER_VISITOR, WEB_SUBMIT_DATA_TEST);
 
 		final Page expectedPage = ImmutablePage.builder()
 				.addChilds(ImmutablePostFormRequest.builder().from(REQUEST_TEST).name(pageGenerated.getChilds().get(0).getName()).build())
@@ -137,28 +138,31 @@ public class WebSubmitDataTest {
 	}
 
 	@Test
-	public void toElementTestWithExtractorsAndValidators() {
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		List<VariableExtractor> variableExtractors = ImmutableList.of(ImmutableVariableExtractor.builder()
+	public void toElementTestWithExtractorsAndValidators() {		
+		final List<VariableExtractor> variableExtractors = ImmutableList.of(ImmutableVariableExtractor.builder()
 				.name("myName")
 				.startExpression("")
 				.endExpression("")
 				.exitOnError(false)
 				.extractType(VariableExtractor.ExtractType.BODY)
 				.build());
-
-		List<Validator> validators = ImmutableList.of(ImmutableTextValidator.builder()
+		final List<Validator> validators = ImmutableList.of(ImmutableTextValidator.builder()
 				.name("myValidator")
 				.validationText("")
 				.haveToContains(true)
 				.build());
+		
+		LOAD_RUNNER_VISITOR.getCurrentExtractors().addAll(variableExtractors);
+		LOAD_RUNNER_VISITOR.getCurrentValidators().addAll(validators);
+		
+		ImmutablePage pageGenerated = (ImmutablePage) WebSubmitData.toElement(LOAD_RUNNER_VISITOR, WEB_SUBMIT_DATA_TEST);
 
-		ImmutablePage pageGenerated = (ImmutablePage) WebSubmitData.toElement(reader,"{", "}", WEB_SUBMIT_DATA_TEST, variableExtractors, validators);
-
-		Request requestGenerated = (Request) pageGenerated.getChilds().get(0);
+		final Request requestGenerated = (Request) pageGenerated.getChilds().get(0);
 		pageGenerated = pageGenerated.withChilds(ImmutableList.of(requestGenerated));
 
 		assertEquals(variableExtractors, ((Request) pageGenerated.getChilds().get(0)).getExtractors());
 		assertEquals(validators, ((Request) pageGenerated.getChilds().get(0)).getValidators());
+		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
+		LOAD_RUNNER_VISITOR.getCurrentValidators().clear();
 	}
 }

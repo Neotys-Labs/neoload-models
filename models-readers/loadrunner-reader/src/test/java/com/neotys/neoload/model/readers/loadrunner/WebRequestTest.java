@@ -22,6 +22,9 @@ import com.neotys.neoload.model.repository.Server;
 
 public class WebRequestTest {
 		
+	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
+	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
+		
 	public static final MethodCall WEB_URL_FULL_TEST = ImmutableMethodCall.builder()
 			.name("\"test_web_url\"")
 			.addParameters("\"URL=https://server.test.com/test/path?testArgNoValue&testArgWithValue=value\"")
@@ -89,9 +92,8 @@ public class WebRequestTest {
 	
 	@Test
 	public void buildRequestFromURLTest() throws MalformedURLException {
-		final URL urlTest = new URL("https://test_server.com:8080/request/path?param1=value1&param2&param3=value%203");
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "","");
-		final GetRequest generatedResult = WebRequest.buildGetRequestFromURL(reader,urlTest);
+		final URL urlTest = new URL("https://test_server.com:8080/request/path?param1=value1&param2&param3=value%203");		
+		final GetRequest generatedResult = WebRequest.buildGetRequestFromURL(LOAD_RUNNER_VISITOR, urlTest);
 
 		// no matter the request name, it is generated randomly
 		Request expectedRequestResult = ImmutableGetRequest.builder()

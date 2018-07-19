@@ -1,14 +1,11 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
 import java.net.URL;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.repository.ImmutablePage;
-import com.neotys.neoload.model.repository.Validator;
-import com.neotys.neoload.model.repository.VariableExtractor;
 
 
 public class WebUrl extends WebRequest {
@@ -16,17 +13,17 @@ public class WebUrl extends WebRequest {
 	
 
 	
-    public static Element toElement(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, MethodCall method, List<VariableExtractor> extractors, List<Validator>validators) {
+    public static Element toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
         
-        final URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(leftBrace, rightBrace, method));
-        pageBuilder.addChilds(buildGetRequestFromURL(reader, mainUrl, extractors, validators));
+        final URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
+        pageBuilder.addChilds(buildGetRequestFromURL(visitor, mainUrl));
 
-        MethodUtils.extractItemListAsStringList(leftBrace, rightBrace, method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString()).ifPresent(stringList ->
-                pageBuilder.addAllChilds(getUrlList(stringList, mainUrl).stream().map(url -> WebRequest.buildGetRequestFromURL(reader, url)).collect(Collectors.toList())));
+        MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString()).ifPresent(stringList ->
+                pageBuilder.addAllChilds(getUrlList(stringList, mainUrl).stream().map(url -> WebRequest.buildGetRequestFromURL(visitor, url)).collect(Collectors.toList())));
 
-        return pageBuilder.name(MethodUtils.normalizeString(leftBrace, rightBrace, method.getParameters().get(0)))
+        return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)
                 .build();
     }

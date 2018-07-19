@@ -18,6 +18,9 @@ import com.neotys.neoload.model.repository.Server;
 
 public class WebUrlTest {
 	
+	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
+	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
+		
 	public static final MethodCall WEB_URL_FULL_TEST = ImmutableMethodCall.builder()
 			.name("\"test_web_url\"")
 			.addParameters("\"test_web_url_full\"")
@@ -85,9 +88,8 @@ public class WebUrlTest {
 			.build();
 
 	@Test
-	public void toElementTest() {
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(reader,"{", "}", WEB_URL_VERY_SIMPLE_TEST, null, null);
+	public void toElementTest() {		
+		final ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(LOAD_RUNNER_VISITOR, WEB_URL_VERY_SIMPLE_TEST);
 
 		final GetRequest request = ImmutableGetRequest.builder()
 				.name(pageGenerated.getChilds().get(0).getName())
@@ -106,17 +108,16 @@ public class WebUrlTest {
 
 	@Test
 	public void toElementWithResourceTest() {
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(reader,"{", "}", WEB_URL_SIMPLE_TEST, null, null);
+		final ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(LOAD_RUNNER_VISITOR, WEB_URL_SIMPLE_TEST);
 
-		GetRequest resource = ImmutableGetRequest.builder()
+		final GetRequest resource = ImmutableGetRequest.builder()
 				.name(pageGenerated.getChilds().get(1).getName())
 				.path("")
 				.server(SERVER_TEST)
 				.httpMethod(HttpMethod.GET)
 				.build();
 
-		Page expectedPage = ImmutablePage.builder()
+		final Page expectedPage = ImmutablePage.builder()
 				.name("test_web_url_simple")
 				.thinkTime(0)
 				.addChilds(ImmutableGetRequest.builder().from(REQUEST_TEST).name(pageGenerated.getChilds().get(0).getName()).build(), resource)
@@ -127,8 +128,7 @@ public class WebUrlTest {
 
 	@Test
 	public void toElementWithRelativeResourceTest() {
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(reader,"{", "}", WEB_URL_FULL_TEST, null, null);
+		final ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(LOAD_RUNNER_VISITOR, WEB_URL_FULL_TEST);
 
 		// https://server.test.com/test/path?testArgNoValue&testArgWithValue=value"
 		ImmutableGetRequest mainRequest = ImmutableGetRequest.builder()
