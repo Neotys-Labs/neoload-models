@@ -19,16 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.neotys.neoload.model.ImmutableProject;
-import com.neotys.neoload.model.Project;
-import com.neotys.neoload.model.listener.EventListener;
-import com.neotys.neoload.model.parsers.CPP14Lexer;
-import com.neotys.neoload.model.parsers.CPP14Parser;
-import com.neotys.neoload.model.readers.Reader;
-import com.neotys.neoload.model.repository.Container;
-import com.neotys.neoload.model.repository.ImmutableContainer;
-import com.neotys.neoload.model.repository.ImmutableUserPath;
-import com.neotys.neoload.model.repository.Server;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -40,8 +30,18 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterables;
+import com.neotys.neoload.model.ImmutableProject;
+import com.neotys.neoload.model.Project;
+import com.neotys.neoload.model.listener.EventListener;
+import com.neotys.neoload.model.parsers.CPP14Lexer;
+import com.neotys.neoload.model.parsers.CPP14Parser;
+import com.neotys.neoload.model.readers.Reader;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ParameterFileReader;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ProjectFileReader;
+import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.ImmutableUserPath;
+import com.neotys.neoload.model.repository.Server;
 
 public class LoadRunnerReader extends Reader {
 
@@ -270,10 +270,9 @@ public class LoadRunnerReader extends Reader {
 		// end unended container
 		while(visitor.getCurrentContainers().size()>1){
 			container = visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1).build();
-			if(container != null){
-				container = (Container) LoadRunnerVUVisitor.setUniqueNameInContainer(container, visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).build());
-				visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).addChilds(container);
-			}
+			final Container parent = visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).build();
+			container = (Container) LoadRunnerVUVisitor.setUniqueNameInContainer(container, parent);
+			container = visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).addChilds(container).build();			
 		}
 		return container;
 
