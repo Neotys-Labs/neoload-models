@@ -25,6 +25,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	private List<VariableExtractor> currentExtractors;
 	private List<Validator> currentValidators;
 	private List<Header> currentHeaders;
+	private List<Header> globalHeaders;
 	private final String leftBrace;
 	private final String rightBrace;
 	private final LoadRunnerReader reader;
@@ -37,6 +38,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		this.currentExtractors = new ArrayList<>();
 		this.currentValidators = new ArrayList<>();
 		this.currentHeaders = new ArrayList<>();
+		this.globalHeaders = new ArrayList<>();
 		this.leftBrace = leftBrace;
 		this.rightBrace = rightBrace;
 		this.reader = reader;
@@ -142,6 +144,10 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	
 	public List<Header> getCurrentHeaders() {
 		return currentHeaders;
+	}
+	
+	public List<Header> getGlobalHeaders() {
+		return globalHeaders;
 	}
 	
 	public static final int getLineNumber(final CPP14Parser.MethodcallContext ctx) {

@@ -1,12 +1,10 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
 import java.net.URL;
-import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutablePostBinaryRequest;
@@ -40,32 +38,36 @@ public class WebCustomRequest extends WebRequest {
     	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
 		if (MethodUtils.getParameterWithName(method, "Body").isPresent()) {
-			return ImmutablePostTextRequest.builder()
+			final ImmutablePostTextRequest.Builder builder = ImmutablePostTextRequest.builder()
 					.name(mainUrl.getPath())
 					.path(mainUrl.getPath())
 					.server(getServer(visitor.getReader(), mainUrl))
 					.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
 					.contentType(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "EncType"))
 					.data(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "Body").get())
-					.addAllExtractors(Optional.ofNullable(visitor.getCurrentExtractors()).orElse(ImmutableList.of()))
-					.addAllValidators(Optional.ofNullable(visitor.getCurrentValidators()).orElse(ImmutableList.of()))
-					.addAllHeaders(Optional.ofNullable(visitor.getCurrentHeaders()).orElse(ImmutableList.of()))
-					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
-					.build();
+					.addAllExtractors(visitor.getCurrentExtractors())
+					.addAllValidators(visitor.getCurrentValidators())
+					.addAllHeaders(visitor.getCurrentHeaders())
+					.addAllHeaders(visitor.getGlobalHeaders())
+					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()));
+			visitor.getCurrentHeaders().clear();
+			return builder.build();
 		}
 		if(MethodUtils.getParameterWithName(method, "BodyBinary").isPresent()) {
-			return ImmutablePostBinaryRequest.builder()
+				final ImmutablePostBinaryRequest.Builder builder = ImmutablePostBinaryRequest.builder()
 					.name(mainUrl.getPath())
 					.path(mainUrl.getPath())
 					.server(getServer(visitor.getReader(), mainUrl))
 					.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
 					.contentType(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "EncType"))
 					.binaryData(extractBinaryBody(visitor.getLeftBrace(), visitor.getRightBrace(), method))
-					.addAllExtractors(Optional.ofNullable(visitor.getCurrentExtractors()).orElse(ImmutableList.of()))
-					.addAllValidators(Optional.ofNullable(visitor.getCurrentValidators()).orElse(ImmutableList.of()))
-					.addAllHeaders(Optional.ofNullable(visitor.getCurrentHeaders()).orElse(ImmutableList.of()))
-					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
-					.build();
+					.addAllExtractors(visitor.getCurrentExtractors())
+					.addAllValidators(visitor.getCurrentValidators())
+					.addAllHeaders(visitor.getCurrentHeaders())
+					.addAllHeaders(visitor.getGlobalHeaders())
+					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()));
+				visitor.getCurrentHeaders().clear();
+				return builder.build();
 		}
 
     	logger.warn("There is not any body parameter for the following LR function : " + method.getName());

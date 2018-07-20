@@ -47,9 +47,11 @@ public class WebSubmitData extends WebRequest {
                 .server(getServer(visitor.getReader(), mainUrl))
                 .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
-    	if (visitor.getCurrentExtractors() != null && !visitor.getCurrentExtractors().isEmpty()) requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
-    	if (visitor.getCurrentValidators() != null && !visitor.getCurrentValidators().isEmpty()) requestBuilder.addAllValidators(visitor.getCurrentValidators());
-    	if (visitor.getCurrentHeaders() != null && !visitor.getCurrentHeaders().isEmpty()) requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
+    	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
+    	requestBuilder.addAllValidators(visitor.getCurrentValidators());
+    	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
+    	visitor.getCurrentHeaders().clear();
+    	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
     	
     	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
 				.stream().forEach(requestBuilder::addPostParameters));

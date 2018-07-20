@@ -13,9 +13,7 @@ import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.ImmutableAddCookie;
 import com.neotys.neoload.model.repository.ImmutableAddCookie.Builder;
 public class WebAddCookieMethod implements LoadRunnerMethod {
-			
-	private static final String METHOD = "Method ";
-	
+		
 	public WebAddCookieMethod() {
 		super();
 	}

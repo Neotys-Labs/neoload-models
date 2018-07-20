@@ -35,6 +35,7 @@ public class RequestWriter extends ElementWriter {
 		theRequest.getExtractors().forEach(extractElem -> ExtractorWriter.of(extractElem).writeXML(document, xmlRequest));
 		writeValidationSection(theRequest, document, xmlRequest);
 		writeParameters(theRequest, document, xmlRequest);
+		theRequest.getHeaders().forEach(header -> HeaderWriter.writeXML(document, xmlRequest, header));
 
 		currentElement.appendChild(xmlRequest);
 	}

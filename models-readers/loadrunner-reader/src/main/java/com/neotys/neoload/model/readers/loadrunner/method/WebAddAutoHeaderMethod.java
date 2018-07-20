@@ -9,9 +9,9 @@ import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.Header;
 import com.neotys.neoload.model.repository.ImmutableHeader;
 
-public class WebAddHeaderMethod implements LoadRunnerMethod {
-	
-	public WebAddHeaderMethod() {
+public class WebAddAutoHeaderMethod implements LoadRunnerMethod {
+		
+	public WebAddAutoHeaderMethod() {
 		super();
 	}
 
@@ -26,7 +26,7 @@ public class WebAddHeaderMethod implements LoadRunnerMethod {
 		final String headerName = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0));
 		final String headerValue = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(1));
 		final Header header = ImmutableHeader.builder().headerName(headerName).headerValue(headerValue).build();
-		visitor.getCurrentHeaders().add(header);
+		visitor.getGlobalHeaders().add(header);
 		visitor.readSupportedFunction(method.getName(), ctx);		
 		return null;
 	}	
