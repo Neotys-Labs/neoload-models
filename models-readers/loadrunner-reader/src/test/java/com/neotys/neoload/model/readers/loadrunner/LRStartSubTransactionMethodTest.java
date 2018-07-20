@@ -1,4 +1,4 @@
-package com.neotys.neoload.model.readers.loadrunner.method;
+package com.neotys.neoload.model.readers.loadrunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
