@@ -61,24 +61,6 @@ public class LoadRunnerReaderTest {
     }
 
     @Test
-    public void transactionsReaderTest() {
-    	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-        try(InputStream targetStream = this.getClass().getResourceAsStream("ActionTransaction.c")) {
-            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer");
-            assertThat(container).isNotNull();
-            assertThat(container.getChilds().size()).isEqualTo(2);
-            assertThat(container.getChilds().get(0).getName()).isEqualTo("level#1");
-            assertThat(container.getChilds().get(1).getName()).isEqualTo("page#3");
-            assertThat(((Container)container.getChilds().get(0)).getChilds().size()).isEqualTo(2);
-            assertThat(((Container)container.getChilds().get(0)).getChilds().get(0).getName()).isEqualTo("level#2");
-            assertThat(((Container)container.getChilds().get(0)).getChilds().get(1).getName()).isEqualTo("page#2");
-            assertThat(((Container)((Container)container.getChilds().get(0)).getChilds().get(0)).getChilds().get(0).getName()).isEqualTo("page#1");
-        }catch(IOException e) {
-            fail("Error reading test stream", e);
-        }
-    }
-
-    @Test
     public void readTest() throws IOException {
         File myTempDir = Files.createTempDir();
         FileUtils.copyInputStreamToFile(LoadRunnerReaderTest.class.getResourceAsStream("sample/vuser_init.c"), new File(myTempDir.getPath(),"vuser_init.c"));
@@ -111,26 +93,5 @@ public class LoadRunnerReaderTest {
         reader.getOrAddServerIfNotExist(ImmutableServer.builder().host("myhost2").port("80").name("myhost").scheme("http").build());
         assertThat(reader.currentProjectServers.size()).isEqualTo(2);
     }
-    
-    @Test
-    public void subTransactionsReaderTest() {
-    	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-        try(InputStream targetStream = this.getClass().getResourceAsStream("ActionSubTransaction.c")) {
-            final Container myContainer = reader.parseCppFile("{", "}", targetStream, "MyContainer");
-            assertThat(myContainer).isNotNull();
-            assertThat(myContainer.getChilds().size()).isEqualTo(1);
-            final Container level1 = (Container) myContainer.getChilds().get(0);            
-            assertThat(level1.getName()).isEqualTo("level#1");
-            assertThat(level1.getChilds().size()).isEqualTo(3);          
-            final Container level2 = (Container) level1.getChilds().get(0);
-            final Page page2 = (Page) level1.getChilds().get(1);
-            final Container level2b = (Container) level1.getChilds().get(2);
-            assertThat(level2.getName()).isEqualTo("level#2a");
-            assertThat(page2.getName()).isEqualTo("page#2");
-            assertThat(level2b.getName()).isEqualTo("level#2b");            
-            
-        }catch(IOException e) {
-            fail("Error reading test stream", e);
-        }
-    }
+   
 }

@@ -252,7 +252,7 @@ public class LoadRunnerReader extends Reader {
 	}
 
 	@VisibleForTesting
-	protected Container parseCppFile(final String leftBrace, final String rightBrace, final InputStream stream,
+	public Container parseCppFile(final String leftBrace, final String rightBrace, final InputStream stream,
 			final String name) throws IOException {
 
 		CPP14Lexer lexer = new CPP14Lexer(loadAndCorrectGrammarFromLR(stream));
