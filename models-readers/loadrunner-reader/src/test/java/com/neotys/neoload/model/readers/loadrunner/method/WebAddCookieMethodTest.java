@@ -14,7 +14,7 @@ import com.neotys.neoload.model.readers.loadrunner.method.WebAddCookieMethod;
 import com.neotys.neoload.model.repository.AddCookie;
 import com.neotys.neoload.model.repository.ImmutableAddCookie;
 
-public class WebAddCookieTest {
+public class WebAddCookieMethodTest {
 	
 	public static final MethodCall WEB_ADD_COOKIE_TEST = ImmutableMethodCall.builder()
 			.name("\"web_add_cookie\"")
