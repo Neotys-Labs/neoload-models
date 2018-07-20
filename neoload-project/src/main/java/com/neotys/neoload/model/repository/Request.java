@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Request extends PageElement {
 
@@ -26,4 +27,5 @@ public interface Request extends PageElement {
     List<VariableExtractor> getExtractors();
     List<Validator> getValidators();
     List<Header> getHeaders();
+    Optional<String> getContentType();
 }

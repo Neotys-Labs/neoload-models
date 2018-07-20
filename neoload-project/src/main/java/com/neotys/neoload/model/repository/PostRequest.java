@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.repository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface PostRequest extends Request {
-	Optional<String> getContentType();
+	List<Parameter> getPostParameters();
 }
