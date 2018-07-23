@@ -28,9 +28,9 @@ public class RequestWriter extends ElementWriter {
 		super.writeXML(document, xmlRequest, parentPath, outputFolder);
 
 		xmlRequest.setAttribute(XML_ATTR_METHOD, theRequest.getHttpMethod().toString());
-		xmlRequest.setAttribute(XML_ATTR_SERV_UID, theRequest.getServer().getName());
+		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));		
 		xmlRequest.setAttribute(XML_ATTR_ACTION_TYPE, DEFAULT_ACTION_TYPE);
-		xmlRequest.setAttribute(XML_ATTR_PATH, theRequest.getPath());
+		theRequest.getPath().ifPresent(path -> xmlRequest.setAttribute(XML_ATTR_PATH, path));
 		
 		theRequest.getExtractors().forEach(extractElem -> ExtractorWriter.of(extractElem).writeXML(document, xmlRequest));
 		writeValidationSection(theRequest, document, xmlRequest);

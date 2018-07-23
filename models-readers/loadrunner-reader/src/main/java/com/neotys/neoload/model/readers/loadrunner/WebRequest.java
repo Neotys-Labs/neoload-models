@@ -142,21 +142,24 @@ public abstract class WebRequest {
      * @return
      */
     @VisibleForTesting
-    protected static GetRequest buildGetRequestFromURL(final LoadRunnerVUVisitor visitor, final URL url) {
+    protected static GetRequest buildGetRequest(final LoadRunnerVUVisitor visitor, final Optional<URL> url) {
     	ImmutableGetRequest.Builder requestBuilder = ImmutableGetRequest.builder()
 				// Just create a unique name, no matter the request name, should just be unique under a page
-                .name(UUID.randomUUID().toString())
-                .path(url.getPath())
-                .server(getServer(visitor.getReader(), url))
+                .name(UUID.randomUUID().toString())               
                 .httpMethod(Request.HttpMethod.GET);
+    	
+    	if(url.isPresent()){
+    		requestBuilder.path(url.get().getPath()).server(getServer(visitor.getReader(), url.get()));
+    	}
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
-    	
-        MethodUtils.queryToParameterList(url.getQuery()).forEach(requestBuilder::addParameters);
+    	if(url.isPresent()){
+    		MethodUtils.queryToParameterList(url.get().getQuery()).forEach(requestBuilder::addParameters);
+    	}
         
         return requestBuilder.build();
     }

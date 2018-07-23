@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.util.Optional;
 import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.repository.*;
@@ -26,7 +27,7 @@ public class WebSubmitData extends WebRequest {
         pageBuilder.addChilds(buildPostRequest(visitor, method));
         
         MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString()).ifPresent(stringList ->
-        		getUrlList(stringList, getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url))));
+        		getUrlList(stringList, getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequest(visitor, Optional.of(url)))));
         
         return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)

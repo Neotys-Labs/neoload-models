@@ -4,6 +4,7 @@ import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Optional;
 import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.repository.ImmutablePage;
@@ -22,7 +23,7 @@ public class WebCustomRequest extends WebRequest {
         pageBuilder.addChilds(buildPostRequest(visitor, method));
         
         MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
-				.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url))));
+				.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequest(visitor, Optional.of(url)))));
         
         return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)

@@ -20,8 +20,8 @@ public interface Request extends PageElement {
      * The request full path containing the URL parameters.
      * @return
      */
-    String getPath();
-    Server getServer();
+    Optional<String> getPath();
+    Optional<Server> getServer();
     HttpMethod getHttpMethod();
     List<Parameter> getParameters();
     List<VariableExtractor> getExtractors();
