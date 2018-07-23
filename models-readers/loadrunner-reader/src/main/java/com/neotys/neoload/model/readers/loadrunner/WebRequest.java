@@ -11,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.neotys.neoload.model.repository.GetRequest;
+import com.neotys.neoload.model.repository.GetFollowLinkRequest;
+import com.neotys.neoload.model.repository.GetPlainRequest;
+import com.neotys.neoload.model.repository.ImmutableGetFollowLinkRequest;
 import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
 import com.neotys.neoload.model.repository.ImmutableServer;
 import com.neotys.neoload.model.repository.Request;
@@ -142,24 +144,42 @@ public abstract class WebRequest {
      * @return
      */
     @VisibleForTesting
-    protected static GetRequest buildGetRequest(final LoadRunnerVUVisitor visitor, final Optional<URL> url) {
+    protected static GetPlainRequest buildGetRequestFromURL(final LoadRunnerVUVisitor visitor, final URL url) {
     	ImmutableGetPlainRequest.Builder requestBuilder = ImmutableGetPlainRequest.builder()
 				// Just create a unique name, no matter the request name, should just be unique under a page
-                .name(UUID.randomUUID().toString())               
-                .httpMethod(Request.HttpMethod.GET);
-    	
-    	if(url.isPresent()){
-    		requestBuilder.path(url.get().getPath()).server(getServer(visitor.getReader(), url.get()));
-    	}
+                .name(UUID.randomUUID().toString())     
+                .path(url.getPath())
+                .server(getServer(visitor.getReader(), url))
+                .httpMethod(Request.HttpMethod.GET);   	
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
-    	if(url.isPresent()){
-    		MethodUtils.queryToParameterList(url.get().getQuery()).forEach(requestBuilder::addParameters);
-    	}
+    	
+    	MethodUtils.queryToParameterList(url.getQuery()).forEach(requestBuilder::addParameters);    	
+        
+        return requestBuilder.build();
+    }
+    
+    /**
+     * Generate an immutable request of type Follow link
+     * @param url
+     * @return
+     */
+    @VisibleForTesting
+    protected static GetFollowLinkRequest buildGetFollowLinkRequest(final LoadRunnerVUVisitor visitor, final String textFollowLink) {
+    	ImmutableGetFollowLinkRequest.Builder requestBuilder = ImmutableGetFollowLinkRequest.builder()
+				// Just create a unique name, no matter the request name, should just be unique under a page
+                .name(UUID.randomUUID().toString())               
+                .httpMethod(Request.HttpMethod.GET);   	
+
+    	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
+    	requestBuilder.addAllValidators(visitor.getCurrentValidators());
+    	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
+    	visitor.getCurrentHeaders().clear();
+    	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());    	    	
         
         return requestBuilder.build();
     }
