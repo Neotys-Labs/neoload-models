@@ -40,7 +40,7 @@ public class RequestWriterTest {
     			+ "uid=\"032e11f533cd97719d4e1a09b88dc201a1fa2a5f01da9b38631bcbaecf5b0bc4\"/>"
     			+ "</test-root>";
     	
-    	(new GetRequestWriter(WrittingTestUtils.REQUEST_TEST)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
+    	(new GetPlainRequestWriter(WrittingTestUtils.REQUEST_TEST)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);

@@ -8,7 +8,7 @@ import com.neotys.neoload.model.listener.TestEventListener;
 import org.junit.Test;
 
 import com.neotys.neoload.model.repository.GetRequest;
-import com.neotys.neoload.model.repository.ImmutableGetRequest;
+import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.ImmutableServer;
@@ -74,7 +74,7 @@ public class WebUrlTest {
             .scheme("https")
             .build();
 	
-	public static final GetRequest REQUEST_TEST = ImmutableGetRequest.builder()
+	public static final GetRequest REQUEST_TEST = ImmutableGetPlainRequest.builder()
             .name("/")
             .path("/")
             .server(SERVER_TEST)
@@ -91,7 +91,7 @@ public class WebUrlTest {
 	public void toElementTest() {		
 		final ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(LOAD_RUNNER_VISITOR, WEB_URL_VERY_SIMPLE_TEST);
 
-		final GetRequest request = ImmutableGetRequest.builder()
+		final GetRequest request = ImmutableGetPlainRequest.builder()
 				.name(pageGenerated.getChilds().get(0).getName())
 				.path("/")
 				.server(SERVER_TEST)
@@ -110,7 +110,7 @@ public class WebUrlTest {
 	public void toElementWithResourceTest() {
 		final ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(LOAD_RUNNER_VISITOR, WEB_URL_SIMPLE_TEST);
 
-		final GetRequest resource = ImmutableGetRequest.builder()
+		final GetRequest resource = ImmutableGetPlainRequest.builder()
 				.name(pageGenerated.getChilds().get(1).getName())
 				.path("")
 				.server(SERVER_TEST)
@@ -120,7 +120,7 @@ public class WebUrlTest {
 		final Page expectedPage = ImmutablePage.builder()
 				.name("test_web_url_simple")
 				.thinkTime(0)
-				.addChilds(ImmutableGetRequest.builder().from(REQUEST_TEST).name(pageGenerated.getChilds().get(0).getName()).build(), resource)
+				.addChilds(ImmutableGetPlainRequest.builder().from(REQUEST_TEST).name(pageGenerated.getChilds().get(0).getName()).build(), resource)
 				.build();
 
 		assertEquals(expectedPage, pageGenerated);
@@ -131,7 +131,7 @@ public class WebUrlTest {
 		final ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(LOAD_RUNNER_VISITOR, WEB_URL_FULL_TEST);
 
 		// https://server.test.com/test/path?testArgNoValue&testArgWithValue=value"
-		ImmutableGetRequest mainRequest = ImmutableGetRequest.builder()
+		ImmutableGetPlainRequest mainRequest = ImmutableGetPlainRequest.builder()
 				.httpMethod(HttpMethod.GET)
 				.name(pageGenerated.getChilds().get(0).getName())
 				.path("/test/path")
@@ -139,7 +139,7 @@ public class WebUrlTest {
 				.addParameters(ImmutableParameter.builder().name("testArgNoValue").value(Optional.empty()).build(), ImmutableParameter.builder().name("testArgWithValue").value("value").build())
 				.build();
 
-		ImmutableGetRequest resource = ImmutableGetRequest.builder()
+		ImmutableGetPlainRequest resource = ImmutableGetPlainRequest.builder()
 				.path("/path/resource/1")
 				.httpMethod(HttpMethod.GET)
 				.server(SERVER_TEST)
@@ -147,7 +147,7 @@ public class WebUrlTest {
 				.addParameters(ImmutableParameter.builder().name("ArgWithValue2").value("value 2").build())
 				.build();
 
-		ImmutableGetRequest resource2 = ImmutableGetRequest.builder()
+		ImmutableGetPlainRequest resource2 = ImmutableGetPlainRequest.builder()
 				.path("/resource_path_2")
 				.httpMethod(HttpMethod.GET)
 				.server(ImmutableServer.builder().name("external.server.test.com").host("external.server.test.com").scheme("https").port("443").build())

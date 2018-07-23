@@ -27,7 +27,7 @@ public class WrittingTestUtils {
             .scheme("http")
             .build();
 	
-	public static final GetRequest REQUEST_TEST = ImmutableGetRequest.builder()
+	public static final ImmutableGetPlainRequest REQUEST_TEST = ImmutableGetPlainRequest.builder()
             .name("request_test")
             .path("/test_path")
             .server(SERVER_TEST)
@@ -44,7 +44,7 @@ public class WrittingTestUtils {
 			.value("post_param Value")
 			.build(); 
 	
-	public static final GetRequest REQUEST_TEST2 = ImmutableGetRequest.builder()
+	public static final GetRequest REQUEST_TEST2 = ImmutableGetPlainRequest.builder()
             .name("request_test")
             .path("/test_path")
             .server(SERVER_TEST)

@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.neotys.neoload.model.listener.TestEventListener;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.repository.GetRequest;
-import com.neotys.neoload.model.repository.ImmutableGetRequest;
+import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.ImmutableServer;
 import com.neotys.neoload.model.repository.Request;
@@ -97,7 +97,7 @@ public class WebRequestTest {
 		final GetRequest generatedResult = WebRequest.buildGetRequest(LOAD_RUNNER_VISITOR, Optional.of(urlTest));
 
 		// no matter the request name, it is generated randomly
-		Request expectedRequestResult = ImmutableGetRequest.builder()
+		Request expectedRequestResult = ImmutableGetPlainRequest.builder()
 				.server(SERVER_TEST)
 				.path("/request/path")
 				.name(generatedResult.getName())

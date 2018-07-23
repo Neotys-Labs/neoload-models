@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.neotys.neoload.model.repository.GetRequest;
-import com.neotys.neoload.model.repository.ImmutableGetRequest;
+import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
 import com.neotys.neoload.model.repository.ImmutableServer;
 import com.neotys.neoload.model.repository.Request;
 import com.neotys.neoload.model.repository.Server;
@@ -143,7 +143,7 @@ public abstract class WebRequest {
      */
     @VisibleForTesting
     protected static GetRequest buildGetRequest(final LoadRunnerVUVisitor visitor, final Optional<URL> url) {
-    	ImmutableGetRequest.Builder requestBuilder = ImmutableGetRequest.builder()
+    	ImmutableGetPlainRequest.Builder requestBuilder = ImmutableGetPlainRequest.builder()
 				// Just create a unique name, no matter the request name, should just be unique under a page
                 .name(UUID.randomUUID().toString())               
                 .httpMethod(Request.HttpMethod.GET);
