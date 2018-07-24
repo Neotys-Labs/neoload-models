@@ -8,4 +8,8 @@ public class GetPlainRequestWriter extends RequestWriter {
 		super(request);
 	}
 
+	@Override
+	protected int getActionType() {
+		return 1;
+	}
 }

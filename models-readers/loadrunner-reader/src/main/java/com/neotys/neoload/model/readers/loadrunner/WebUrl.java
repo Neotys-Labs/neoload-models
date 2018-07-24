@@ -4,8 +4,8 @@ import java.net.URL;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Preconditions;
-import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.repository.ImmutablePage;
+import com.neotys.neoload.model.repository.Page;
 
 
 public class WebUrl extends WebRequest {
@@ -13,7 +13,7 @@ public class WebUrl extends WebRequest {
 	
 
 	
-    public static Element toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    public static Page toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
         
@@ -22,7 +22,7 @@ public class WebUrl extends WebRequest {
 
         MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString()).ifPresent(stringList ->
                 pageBuilder.addAllChilds(getUrlList(stringList, mainUrl).stream().map(url -> WebRequest.buildGetRequestFromURL(visitor, url)).collect(Collectors.toList())));
-
+               
         return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)
                 .build();

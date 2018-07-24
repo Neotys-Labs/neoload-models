@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.loadrunner;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.Token;
@@ -14,6 +15,9 @@ import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMet
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.Header;
 import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.Page;
+import com.neotys.neoload.model.repository.PageElement;
+import com.neotys.neoload.model.repository.Request;
 import com.neotys.neoload.model.repository.Validator;
 import com.neotys.neoload.model.repository.VariableExtractor;
 
@@ -30,6 +34,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	private final String rightBrace;
 	private final LoadRunnerReader reader;
 	private final EventListener eventListener;
+	private Optional<Request> currentRequest;
 
 	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final String containerName) {
 		this.mainContainer = ImmutableContainer.builder().name(containerName);
@@ -176,5 +181,20 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	
 	private String getCurrentScriptName(){
 		return reader.getCurrentScriptName();
+	}
+	
+	public Optional<Request> getCurrentRequest() {
+		return currentRequest;
+	}
+	
+	public void setCurrentRequestFromPage(final Page currentPage) {
+		if(!currentPage.getChilds().isEmpty()){
+			for(final PageElement pageElement : currentPage.getChilds()){
+				if(pageElement instanceof Request){
+					this.currentRequest = Optional.of((Request)pageElement);
+					return;
+				}
+			}			 			
+		}
 	}
 }

@@ -44,7 +44,7 @@ public class WrittingTestUtils {
 			.value("post_param Value")
 			.build(); 
 	
-	public static final GetRequest REQUEST_TEST2 = ImmutableGetPlainRequest.builder()
+	public static final GetPlainRequest REQUEST_TEST2 = ImmutableGetPlainRequest.builder()
             .name("request_test")
             .path("/test_path")
             .server(SERVER_TEST)

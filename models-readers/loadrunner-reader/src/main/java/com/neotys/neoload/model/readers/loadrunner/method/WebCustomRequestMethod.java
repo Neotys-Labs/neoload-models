@@ -5,6 +5,7 @@ import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.WebCustomRequest;
+import com.neotys.neoload.model.repository.Page;
 
 public class WebCustomRequestMethod  implements LoadRunnerMethod {
 	
@@ -15,11 +16,12 @@ public class WebCustomRequestMethod  implements LoadRunnerMethod {
 	@Override
 	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		visitor.readSupportedFunction(method.getName(), ctx);
-		final Element element = WebCustomRequest.toElement(visitor, method);
+		final Page page = WebCustomRequest.toElement(visitor, method);
 		visitor.getCurrentExtractors().clear();
 		visitor.getCurrentValidators().clear();
 		visitor.getCurrentHeaders().clear();
-		return element;
+		visitor.setCurrentRequestFromPage(page);
+		return page;
 	}
 
 }

@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.ImmutablePostFormRequest;
+import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.Parameter;
 import com.neotys.neoload.model.repository.PostRequest;
 import com.neotys.neoload.model.repository.Request;
@@ -24,7 +24,7 @@ public class WebSubmitData extends WebRequest {
 		return getUrlFromMethodParameters(leftBrace, rightBrace, method, "Action");
 	}
 	
-    public static Element toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    public static Page toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 

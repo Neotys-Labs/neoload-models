@@ -5,6 +5,7 @@ import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.WebUrl;
+import com.neotys.neoload.model.repository.Page;
 
 public class WebUrlMethod implements LoadRunnerMethod {
 
@@ -15,10 +16,11 @@ public class WebUrlMethod implements LoadRunnerMethod {
 	@Override
 	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		visitor.readSupportedFunction(method.getName(), ctx);
-		final Element element = WebUrl.toElement(visitor, method);
+		final Page page = WebUrl.toElement(visitor, method);
 		visitor.getCurrentExtractors().clear();
 		visitor.getCurrentValidators().clear();
 		visitor.getCurrentHeaders().clear();
-		return element;
+		visitor.setCurrentRequestFromPage(page);
+		return page;
 	}
 }

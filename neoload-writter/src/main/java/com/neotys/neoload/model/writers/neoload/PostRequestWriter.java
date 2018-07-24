@@ -21,4 +21,9 @@ public class PostRequestWriter extends RequestWriter {
 	public void writeParameters(final Request request, final Document document, Element xmlRequest) {
 		request.getParameters().forEach(paramElem -> ParameterWriter.of(paramElem).writeXML(document, xmlRequest, Optional.of(XML_URL_PARAMETER_TAG_NAME)));
 	}
+	
+	@Override
+	protected int getActionType() {
+		return 1;
+	}
 }

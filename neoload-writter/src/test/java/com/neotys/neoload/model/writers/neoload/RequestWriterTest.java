@@ -1,13 +1,14 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.google.common.io.Files;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import com.google.common.io.Files;
 
 public class RequestWriterTest {
 	
@@ -23,7 +24,7 @@ public class RequestWriterTest {
     			+ "<parameter name=\"param_name\" value=\"param_value\"/>"
     			+ "</http-action></test-root>";
     	
-    	(new RequestWriter(WrittingTestUtils.REQUEST_TEST2)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
+    	(new GetPlainRequestWriter(WrittingTestUtils.REQUEST_TEST2)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);

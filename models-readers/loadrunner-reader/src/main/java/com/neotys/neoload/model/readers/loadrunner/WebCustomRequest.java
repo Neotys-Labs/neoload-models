@@ -5,17 +5,17 @@ import java.net.URL;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Preconditions;
-import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutablePostBinaryRequest;
 import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
+import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.PostRequest;
 
 public class WebCustomRequest extends WebRequest {
 	
 	public static final String LR_HEXA_STR_PATTERN = "\\x";
 	
-    public static Element toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    public static Page toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 

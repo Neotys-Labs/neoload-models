@@ -169,10 +169,11 @@ public abstract class WebRequest {
      * @return
      */
     @VisibleForTesting
-    protected static GetFollowLinkRequest buildGetFollowLinkRequest(final LoadRunnerVUVisitor visitor, final String textFollowLink) {
+    protected static GetFollowLinkRequest buildGetFollowLinkRequest(final LoadRunnerVUVisitor visitor, final String name, final String textFollowLink) {
     	ImmutableGetFollowLinkRequest.Builder requestBuilder = ImmutableGetFollowLinkRequest.builder()
-				// Just create a unique name, no matter the request name, should just be unique under a page
-                .name(UUID.randomUUID().toString())               
+				.name(name)      
+				.path(name)
+                .text(textFollowLink)
                 .httpMethod(Request.HttpMethod.GET);   	
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
@@ -180,7 +181,7 @@ public abstract class WebRequest {
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());    	    	
-        
+    	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
         return requestBuilder.build();
     }
 }
