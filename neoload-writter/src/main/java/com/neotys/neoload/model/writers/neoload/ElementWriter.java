@@ -1,11 +1,9 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.google.common.hash.Hashing;
-import com.neotys.neoload.model.core.Element;
-
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.w3c.dom.Document;
 
-import java.nio.charset.StandardCharsets;
+import com.neotys.neoload.model.core.Element;
 
 public class ElementWriter {
 
@@ -36,7 +34,7 @@ public class ElementWriter {
     */
     protected void writeXML(final Document document, final org.w3c.dom.Element currentElement, final String parentPath, final String outputFolder) {
         currentElement.setAttribute(XML_NAME_ATTR, element.getName());
-        currentElement.setAttribute(XML_UID_TAG, Hashing.sha256().hashString(parentPath+"/"+element.getName(), StandardCharsets.UTF_8).toString());
+        currentElement.setAttribute(XML_UID_TAG, WriterUtils.getElementUid(new ImmutablePair<>(parentPath, element)));
         writeDescription(document, currentElement);
     }
 
