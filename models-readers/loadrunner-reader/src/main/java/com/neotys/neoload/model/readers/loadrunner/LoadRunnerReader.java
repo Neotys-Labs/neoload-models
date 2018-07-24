@@ -71,6 +71,10 @@ public class LoadRunnerReader extends Reader {
 		this.projectName = projectName;
 	}
 
+	public Path getProjectFolder() {
+		return Paths.get(getSourceFolder(), projectName);
+	}
+
 	/**
 	 * Create an HashMap with keys as the NeoLoad destination folder of the Future NeoLoad Project.
 	 * The set returned by each key is a list of the file to copy into the folder reference by the key

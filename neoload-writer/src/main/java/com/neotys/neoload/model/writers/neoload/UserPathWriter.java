@@ -13,7 +13,7 @@ public class UserPathWriter extends ElementWriter{
     public static final String XML_USERPATH_NAME_ATTR = "uid";
 
     private UserPath userPath;
-    
+
     public UserPathWriter(UserPath userPath) {
         super(userPath);
         this.userPath = userPath;

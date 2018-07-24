@@ -9,6 +9,7 @@ import com.neotys.neoload.model.repository.ImmutableUserPath;
 
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT, property="type")
 @JsonSubTypes({
@@ -21,4 +22,8 @@ public interface Element {
     String getName();
     Optional<String> getDescription();
     Element withName(String of);
+
+    default Stream<Element> flattened() {
+        return Stream.of(this);
+    }
 }

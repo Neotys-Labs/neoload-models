@@ -100,7 +100,7 @@ public class ProjectFileReader extends IniFileReader{
 		return actions;
 	}
 	
-	public static final boolean isUSRFile(final File file){
+	public static boolean isUSRFile(final File file){
 		return file.getName().endsWith(ProjectFileReader.FILE_EXT);
 	}
 	

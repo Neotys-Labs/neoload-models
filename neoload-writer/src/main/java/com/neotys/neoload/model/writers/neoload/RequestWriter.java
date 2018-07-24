@@ -1,13 +1,26 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import com.neotys.neoload.model.repository.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.neotys.neoload.model.repository.Request;
-
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.Properties;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_REQUESTS_FOLDER;
+import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_RESPONSE_FOLDER;
 
 public abstract class RequestWriter extends ElementWriter {
+
+	private static Logger LOG = LoggerFactory.getLogger(RequestWriter.class);
+
 	public static final String XML_TAG_NAME = "http-action";
 	public static final String XML_ATTR_METHOD = "method";
 	public static final String XML_ATTR_ACTION_TYPE = "actionType";
@@ -27,7 +40,13 @@ public abstract class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_HTML_TYPE = "htmlType";
 	public static final String XML_ATTR_EXTRACTORPATH = "extractorPath";
 	public static final String XML_ATTR_CONF_FORM_EXTRACTOR_PARAMETERS = "confFormExtractorParameters";
-	
+
+	private static final String XML_TAG_RECORDED_REQUEST = "requestContentFileDescription";
+	private static final String XML_TAG_RECORDED_RESPONSE = "responsePageFileDescription";
+	private static final String XML_TAG_REQUEST_HEADER = "header";
+	private static final String XML_TAG_RESPONSE_HEADERS = "responseHeaders";
+
+
 	public RequestWriter(Request request) {
 		super(request);
 	}
@@ -38,12 +57,13 @@ public abstract class RequestWriter extends ElementWriter {
 		final Request theRequest = (Request) this.element;
 		super.writeXML(document, xmlRequest, outputFolder);
 		fillXML(document, xmlRequest, theRequest);
+		writeRecordedFiles(theRequest, document, xmlRequest);
 		currentElement.appendChild(xmlRequest);
 	}
 
 	protected void fillXML(final Document document, final Element xmlRequest, final Request theRequest) {
 		xmlRequest.setAttribute(XML_ATTR_METHOD, theRequest.getHttpMethod().toString());
-		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));		
+		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));
 		xmlRequest.setAttribute(XML_ATTR_ACTION_TYPE, String.valueOf(getActionType()));
 		theRequest.getPath().ifPresent(path -> xmlRequest.setAttribute(XML_ATTR_PATH, path));
 		theRequest.getExtractors().forEach(extractElem -> ExtractorWriter.of(extractElem).writeXML(document, xmlRequest));
@@ -54,17 +74,83 @@ public abstract class RequestWriter extends ElementWriter {
 
 	protected abstract int getActionType();
 
+    private void writeValidationSection(final Request request, final Document document, Element xmlRequest) {
+		if (request.getValidators().isEmpty())
+			return;
+
+		Element xmlAssertBloc = document.createElement(XML_ATTR_ASSERT_BLOC);
+		request.getValidators().forEach(validElem -> ValidatorWriter.getWriterFor(validElem).writeXML(document, xmlAssertBloc));
+
+		xmlRequest.appendChild(xmlAssertBloc);
+	}
+
 	public void writeParameters(final Request request, final Document document, Element xmlRequest) {
 		request.getParameters().forEach(paramElem -> ParameterWriter.of(paramElem).writeXML(document, xmlRequest, Optional.empty()));
 	}
-	
-	public void writeValidationSection(final Request request, final Document document, Element xmlRequest) {
-		if (request.getValidators().isEmpty())
-			return;
-		
-		Element xmlAssertBloc = document.createElement(XML_ATTR_ASSERT_BLOC);
-		request.getValidators().forEach(validElem -> ValidatorWriter.getWriterFor(validElem).writeXML(document, xmlAssertBloc));
-		
-		xmlRequest.appendChild(xmlAssertBloc);
+
+    private void writeRecordedFiles(Request request, Document document, Element xmlRequest) {
+        request.getRecordedFiles().ifPresent(recordedFiles -> {
+            //Request header
+            if (!isNullOrEmpty(recordedFiles.recordedRequestHeaderFile())) {
+				writeRecordedRequestHeaders(recordedFiles.recordedRequestHeaderFile(), document, xmlRequest);
+            }
+
+            //Request body
+            if (!isNullOrEmpty(recordedFiles.recordedRequestBodyFile())) {
+				final Element element = document.createElement(XML_TAG_RECORDED_REQUEST);
+				final Path recordedRequestBodyPath = Paths.get(recordedFiles.recordedRequestBodyFile());
+				final String fileName = "req_" + recordedRequestBodyPath.getFileName().toString();
+				element.setTextContent(RECORDED_REQUESTS_FOLDER + "/" + fileName);
+				xmlRequest.appendChild(element);
+
+				//FIXME Copy files "lrProjectFolder/data/t22_RequestHeader.htm" and "lrProjectFolder/data/t22_RequestBody.htm"
+				//to "nlProjectFolder/recorded-responses/t22.htm"
+            }
+
+            //Response header
+            if (!isNullOrEmpty(recordedFiles.recordedResponseHeaderFile())) {
+				writeRecordedResponseHeaders(recordedFiles.recordedResponseHeaderFile(), document, xmlRequest);
+            }
+
+            //Response body
+            if (!isNullOrEmpty(recordedFiles.recordedResponseBodyFile())) {
+				final Element element = document.createElement(XML_TAG_RECORDED_RESPONSE);
+				final Path recordedResponseBodyPath = Paths.get(recordedFiles.recordedResponseBodyFile());
+				final String fileName = "res_" + recordedResponseBodyPath.getFileName().toString();
+				element.setTextContent(RECORDED_RESPONSE_FOLDER + "/" + fileName);
+				xmlRequest.appendChild(element);
+
+				//FIXME Copy file "lrProjectFolder/data/t22.htm"
+				//to "nlProjectFolder/recorded-responses/t22.htm"
+            }
+        });
+    }
+
+	private void writeRecordedResponseHeaders(String recordedResponseHeaderFile, Document document, Element xmlRequest) {
+		try {
+			final String responseHeaders = new String(Files.readAllBytes(Paths.get(recordedResponseHeaderFile)), "UTF-8");
+			final Element element = document.createElement(XML_TAG_RESPONSE_HEADERS);
+			element.setTextContent(responseHeaders);
+			xmlRequest.appendChild(element);
+		} catch (IOException e) {
+			LOG.error("Can not write recorded response headers", e);
+		}
+	}
+
+	private void writeRecordedRequestHeaders(String recordedRequestHeaderFile, Document document, Element xmlRequest) {
+		try {
+			final Properties properties = new Properties();
+			properties.load(Files.newInputStream(Paths.get(recordedRequestHeaderFile)));
+			properties.forEach((key, value) -> {
+				if (key instanceof String && value instanceof String) {
+					final Element element = document.createElement(XML_TAG_REQUEST_HEADER);
+					element.setAttribute("name", (String) key);
+					element.setAttribute("value", (String) value);
+					xmlRequest.appendChild(element);
+				}
+			});
+		} catch (IOException e) {
+			LOG.error("Can not write recorded request headers", e);
+		}
 	}
 }

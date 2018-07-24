@@ -1,28 +1,24 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.neotys.neoload.model.repository.GetFollowLinkRequest;
-import com.neotys.neoload.model.repository.GetPlainRequest;
-import com.neotys.neoload.model.repository.ImmutableGetFollowLinkRequest;
-import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
-import com.neotys.neoload.model.repository.ImmutableParameter;
-import com.neotys.neoload.model.repository.ImmutablePostFormRequest;
-import com.neotys.neoload.model.repository.ImmutablePostSubmitFormRequest;
-import com.neotys.neoload.model.repository.Parameter;
-import com.neotys.neoload.model.repository.PostRequest;
-import com.neotys.neoload.model.repository.PostSubmitFormRequest;
-import com.neotys.neoload.model.repository.Request;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.getParameterValueWithName;
+import static java.nio.file.Files.newInputStream;
 
 
 public abstract class WebRequest {
@@ -57,7 +53,7 @@ public abstract class WebRequest {
 	 */
 	protected static Request.HttpMethod getMethod(final String leftBrace, final String rightBrace, MethodCall method) {
 		try {
-			return Request.HttpMethod.valueOf(MethodUtils.getParameterValueWithName(leftBrace, rightBrace, method, "Method").orElse(DEFAULT_HTTP_METHOD.toString()));
+			return Request.HttpMethod.valueOf(getParameterValueWithName(leftBrace, rightBrace, method, "Method").orElse(DEFAULT_HTTP_METHOD.toString()));
 		}catch(IllegalArgumentException e) {
 			return DEFAULT_HTTP_METHOD;
 		}
@@ -134,14 +130,14 @@ public abstract class WebRequest {
      * @return
      */
     @VisibleForTesting
-    protected static GetPlainRequest buildGetRequestFromURL(final LoadRunnerVUVisitor visitor, final URL url) {
+    protected static GetPlainRequest buildGetRequestFromURL(final LoadRunnerVUVisitor visitor, final URL url, Optional<RecordedFiles> recordedFiles) {
     	ImmutableGetPlainRequest.Builder requestBuilder = ImmutableGetPlainRequest.builder()
 				// Just create a unique name, no matter the request name, should just be unique under a page
-                .name(UUID.randomUUID().toString())     
+                .name(UUID.randomUUID().toString())
                 .path(url.getPath())
                 .server(visitor.getReader().getServer(url))
-                .httpMethod(Request.HttpMethod.GET);   	
-
+                .httpMethod(Request.HttpMethod.GET)
+				.recordedFiles(recordedFiles);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
@@ -154,13 +150,13 @@ public abstract class WebRequest {
     }
     
     /**
-     * 
+     *
      * @param method represent the LR "web_submit_data" function
      * @return the associate POST_REQUEST
      */
     public static PostRequest buildPostFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
     	URL mainUrl = Preconditions.checkNotNull(getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method));
-    	
+
     	ImmutablePostFormRequest.Builder requestBuilder = ImmutablePostFormRequest.builder()
                 .name(mainUrl.getPath())
                 .path(mainUrl.getPath())
@@ -172,18 +168,19 @@ public abstract class WebRequest {
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
-    	
+
     	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
 				.stream().forEach(requestBuilder::addPostParameters));
-        
+
     	MethodUtils.queryToParameterList(mainUrl.getQuery()).forEach(requestBuilder::addParameters);
-        
+
         return requestBuilder.build();
-    }  
-    
+    }
+
     /**
      * Generate an immutable request of type Follow link
-     * @param url
+     * @param visitor
+     * @param textFollowLink
      * @return
      */
     @VisibleForTesting
@@ -203,7 +200,7 @@ public abstract class WebRequest {
     	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));
         return requestBuilder.build();
     }
-    
+
     /**
      * Generate an immutable request of type Submit form
      * @param url
@@ -212,26 +209,64 @@ public abstract class WebRequest {
     @VisibleForTesting
     protected static PostSubmitFormRequest buildPostSubmitFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name) {
     	ImmutablePostSubmitFormRequest.Builder requestBuilder = ImmutablePostSubmitFormRequest.builder()
-				.name(name)      
+				.name(name)
 				.path(name)
-                .httpMethod(Request.HttpMethod.POST);   	
+                .httpMethod(Request.HttpMethod.POST);
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
-    	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());    	    	
+    	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
     	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
     	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));
     	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
 				.stream().forEach(requestBuilder::addPostParameters));
         return requestBuilder.build();
     }
-    
+
+	protected static Optional<RecordedFiles> getRecordedFilesFromSnapshotFile(String leftBrace, String rightBrace, MethodCall method, final Path projectFolder) {
+		final String snapshotFileName = getParameterValueWithName(leftBrace, rightBrace, method, "Snapshot").orElse("");
+		if (isNullOrEmpty(snapshotFileName)) {
+			return Optional.empty();
+		}
+
+		try {
+			Properties properties = new Properties();
+			final Path projectDataPath = projectFolder.resolve("data");
+			properties.load(newInputStream(projectDataPath.resolve(snapshotFileName)));
+
+			final String requestHeaderFile = getRecordedFileName(properties, "RequestHeaderFile", projectDataPath);
+			final String requestBodyFile = getRecordedFileName(properties, "RequestBodyFile", projectDataPath);
+			final String responseHeaderFile = getRecordedFileName(properties,"ResponseHeaderFile", projectDataPath);
+			//FIXME multi files
+			final String responseBodyFile = getRecordedFileName(properties,"FileName1", projectDataPath);
+
+			return Optional.of(ImmutableRecordedFiles.builder()
+					.recordedRequestHeaderFile(requestHeaderFile)
+					.recordedRequestBodyFile(requestBodyFile)
+					.recordedResponseHeaderFile(responseHeaderFile)
+					.recordedResponseBodyFile(responseBodyFile)
+					.build());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return Optional.empty();
+	}
+
+	private static String getRecordedFileName(final Properties properties, final String key, Path projectDataPath) {
+		final String propertyValue = properties.getProperty(key, "");
+		if (isNullOrEmpty(propertyValue) || propertyValue.equals("NONE")) {
+			return "";
+		}
+		return projectDataPath.resolve(propertyValue).toString();
+	}
+
     protected static URL getUrl(final String leftBrace, final String rightBrace, MethodCall method) {
 		return getUrlFromMethodParameters(leftBrace, rightBrace, method, "Action");
 	}
-    
+
     /**
    	 * generate parameters from the "ITEM_DATA" of a "web_submit_data"
    	 * @param extractPart the extract containing only the "ITEM_DATA" of the "web_submit_data"

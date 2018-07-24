@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.writers.neoload;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -10,12 +11,13 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -31,6 +33,8 @@ import javax.xml.transform.stream.StreamResult;
 import com.neotys.neoload.model.ImmutableProject;
 import com.neotys.neoload.model.Project;
 import com.neotys.neoload.model.repository.ImmutableFileVariable;
+import com.neotys.neoload.model.repository.RecordedFiles;
+import com.neotys.neoload.model.repository.Request;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.FileUtils;
@@ -41,9 +45,13 @@ import org.w3c.dom.Document;
 import com.neotys.neoload.model.repository.FileVariable;
 import com.neotys.neoload.model.repository.Variable;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 public class NeoLoadWriter {
 
-	static Logger logger = LoggerFactory.getLogger(NeoLoadWriter.class);
+	private static Logger logger = LoggerFactory.getLogger(NeoLoadWriter.class);
 	
 	private static final String PROJECT_VERSION = "6.4";
 	private static final String PRODUCT_VERSION = "6.6.0";
@@ -62,16 +70,15 @@ public class NeoLoadWriter {
 
 	private Project project;
 	private final String nlProjectFolder;
-	Map<String, List<File>> fileToCopy;
+	private Map<String, List<File>> fileToCopy;
+
+	public static String RECORDED_REQUESTS_FOLDER = "recorded-requests";
+	public static String RECORDED_RESPONSE_FOLDER = "recorded-responses";
 
 	public NeoLoadWriter(final Project project, final String nlProjectFolder, final Map<String, List<File>> map) {
 		this.project = project;
 		this.nlProjectFolder = nlProjectFolder;
 		this.fileToCopy = map;
-	}
-
-	public String getOutputFolder() {
-		return nlProjectFolder;
 	}
 
 	public void write() {
@@ -100,6 +107,8 @@ public class NeoLoadWriter {
 		//copy the file needed to NeoLoad Directory
 		copyDataFilesToDestFolder(nlProjectFolder);
 		changeBaseNameForCopiedVariables();
+
+		copyFilesToRecordedFolders(project);
 
 		// write the repository
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -148,7 +157,6 @@ public class NeoLoadWriter {
 
 	/**
 	 * Copy parameters data files from LR project to NL project
-	 * @param initFolderFullPath
 	 * @param destFolderFullPath
 	 */
 	private void copyDataFilesToDestFolder(String destFolderFullPath) {
@@ -173,7 +181,94 @@ public class NeoLoadWriter {
 		});
 	}
 
-	public void createConfigZip() throws IOException {
+	private void copyFilesToRecordedFolders(final Project project) {
+		createRecordedFoldersIfNeeded();
+
+		final Set<Request> allRequests = getAllRequests(project);
+		allRequests.forEach(request -> {
+			request.getRecordedFiles().ifPresent(recordedFiles -> {
+				final String recordedRequestHeaderFile = recordedFiles.recordedRequestHeaderFile();
+				final String recordedRequestBodyFile = recordedFiles.recordedRequestBodyFile();
+
+				copyRequestContentFile(recordedRequestHeaderFile, recordedRequestBodyFile);
+				copyResponseContentFile(recordedFiles);
+			});
+		});
+	}
+
+	private void createRecordedFoldersIfNeeded() {
+		try {
+			final Path recordedRequestsFolderPath = Paths.get(nlProjectFolder, RECORDED_REQUESTS_FOLDER);
+			if (!recordedRequestsFolderPath.toFile().exists()) {
+				Files.createDirectory(recordedRequestsFolderPath);
+			}
+
+			final Path recordedResponsesFolderPath = Paths.get(nlProjectFolder, RECORDED_RESPONSE_FOLDER);
+			if (!recordedResponsesFolderPath.toFile().exists()) {
+				Files.createDirectory(recordedResponsesFolderPath);
+			}
+		} catch (IOException e) {
+			logger.error("Problem while creating recorded requests and responses folders", e);
+		}
+	}
+
+	private Set<Request> getAllRequests(Project project) {
+
+		final Set<Request> elements = newHashSet();
+		project.getUserPaths().forEach(userPath -> {
+			//FIXME It misses some Requests
+			final Set<Request> collect = userPath.getActionsContainer().flattened()
+					.filter(element -> element instanceof Request)
+					.map(element -> (Request) element)
+					.collect(Collectors.toSet());
+			elements.addAll(collect);
+		});
+		return elements;
+	}
+
+	private void copyRequestContentFile(String recordedRequestHeaderFile, String recordedRequestBodyFile) {
+		//Copy files "lrProjectFolder/data/t22_RequestHeader.htm"
+		// and "lrProjectFolder/data/t22_RequestBody.htm"
+		//to "nlProjectFolder/recorded-requests/t22_requestHeader.htm"
+		if (!isNullOrEmpty(recordedRequestHeaderFile)
+				&& !isNullOrEmpty(recordedRequestBodyFile)) {
+			final Path recordedRequestHeaderPathFromLRProject = Paths.get(recordedRequestHeaderFile);
+			final Path recordedRequestBodyPathFromLRProject = Paths.get(recordedRequestBodyFile);
+			try {
+				Path recordedRequestBodyPathToNLProject = Paths.get(nlProjectFolder, RECORDED_REQUESTS_FOLDER,
+						"req_" + recordedRequestBodyPathFromLRProject.getFileName().toString());
+				Files.createFile(recordedRequestBodyPathToNLProject);
+
+				FileOutputStream fileOutputStream = new FileOutputStream(recordedRequestBodyPathToNLProject.toFile(), true);
+				fileOutputStream.write(Files.readAllBytes(recordedRequestHeaderPathFromLRProject));
+				fileOutputStream.write(Files.readAllBytes(recordedRequestBodyPathFromLRProject));
+
+				fileOutputStream.flush();
+				fileOutputStream.close();
+			} catch (IOException e) {
+				logger.error("Error while copying the recorded request header, body to NeoLoad project folder", e);
+			}
+		}
+	}
+
+	private void copyResponseContentFile(RecordedFiles recordedFiles) {
+		//Copy file "lrProjectFolder/data/t22.htm"
+		//to "nlProjectFolder/recorded-responses/t22.htm"
+
+		final String recordedResponseBodyFile = recordedFiles.recordedResponseBodyFile();
+		if (!isNullOrEmpty(recordedResponseBodyFile)) {
+			Path recordedResponseBodyPathFromLRProject = Paths.get(recordedResponseBodyFile);
+			Path recordedResponseBodyPathToNLProject = Paths.get(nlProjectFolder, RECORDED_RESPONSE_FOLDER,
+					"res_" + recordedResponseBodyPathFromLRProject.getFileName().toString());
+			try {
+				Files.copy(recordedResponseBodyPathFromLRProject, recordedResponseBodyPathToNLProject, REPLACE_EXISTING);
+			} catch (IOException e) {
+				logger.error("Error while copying the recorded response body to NeoLoad project folder", e);
+			}
+		}
+	}
+
+	private void createConfigZip() throws IOException {
 		Map<String, String> env = new HashMap<>();
 		env.put("create", "true");
 
@@ -186,7 +281,7 @@ public class NeoLoadWriter {
 				Path filePathInZipfile = zipfs.getPath("/" + configFile.fileName);
 				// copy a file into the zip file
 				try {
-					Files.copy(filePath, filePathInZipfile, StandardCopyOption.REPLACE_EXISTING);
+					Files.copy(filePath, filePathInZipfile, REPLACE_EXISTING);
 				} catch (IOException e) {
 					logger.error("Error writing file in config.zip file", e);
 				}
@@ -205,7 +300,7 @@ public class NeoLoadWriter {
 		});
 	}
 
-	public void writeNLP(String name) throws IOException {
+	private void writeNLP(String name) throws IOException {
 		File nlp = new File(nlProjectFolder, name + ".nlp");
 		if (!nlp.exists() && !nlp.createNewFile()) {
 			logger.error("Error, cannot create the NLP file");

@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
 import java.net.URL;
+import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -22,7 +23,7 @@ public class WebCustomRequest extends WebRequest {
         pageBuilder.addChilds(buildPostRequest(visitor, method));
         
         MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
-				.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url))));
+				.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, Optional.empty()))));
         
         return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)
@@ -49,7 +50,8 @@ public class WebCustomRequest extends WebRequest {
 					.addAllValidators(visitor.getCurrentValidators())
 					.addAllHeaders(visitor.getCurrentHeaders())
 					.addAllHeaders(visitor.getGlobalHeaders())
-					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()));
+					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
+                    .recordedFiles(getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getProjectFolder()));
 			visitor.getCurrentHeaders().clear();
 			return builder.build();
 		}

@@ -13,4 +13,7 @@ public abstract class Reader {
 
 	public abstract Project read();
 
+	protected String getSourceFolder() {
+		return folder;
+	}
 }

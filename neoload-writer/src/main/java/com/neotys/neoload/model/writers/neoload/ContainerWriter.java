@@ -10,7 +10,7 @@ import com.neotys.neoload.model.repository.Container;
 public class ContainerWriter extends ElementWriter {
 
 	private final Optional<String> tagName;
-	
+
     public static final String XML_ELEMENT_NUMBER = "element-number";
     public static final String XML_EXECUTION_TYPE = "execution-type";
     public static final String XML_WEIGHTS_ENABLED = "weightsEnabled";
