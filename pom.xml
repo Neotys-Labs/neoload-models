@@ -63,6 +63,8 @@
 		<antlr.version>4.7</antlr.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.classic.version>1.2.3</logback.classic.version>
+                <gpg.executable>/usr/bin/gpg</gpg.executable>
+		<gpg.passphrase>${env.PGP_PASSPHRASE}</gpg.passphrase>
 	</properties>
 
 	<dependencyManagement>
@@ -268,6 +270,12 @@
 						<goals>
 							<goal>sign</goal>
 						</goals>
+						<configuration>
+							<gpgArguments>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
