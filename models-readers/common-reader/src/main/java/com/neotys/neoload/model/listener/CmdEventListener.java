@@ -133,15 +133,16 @@ public class CmdEventListener implements EventListener {
 
 	public void printSummary() {
 		final StringBuilder summaryBuilder = new StringBuilder();
-		summaryBuilder.append("\n***********\n* Summary *\n***********\n");
-		summaryBuilder.append("Start date: ").append(startDate).append("\n");
-		summaryBuilder.append("Reading duration: ").append(totalDurationInMills).append(" ms\n");
-		summaryBuilder.append("Source folder: ").append(sourceFolder).append("\n");
-		summaryBuilder.append("Destination folder: ").append(destFolder).append("\n");
-		summaryBuilder.append("NeoLoad project: ").append(nlProjectName).append("\n");
-		summaryBuilder.append("Log files: ").append(StringUtils.join(logFiles.get(), ", ")).append("\n");
-		summaryBuilder.append("Total script number: ").append(totalScriptNumber).append("\n");
-		summaryBuilder.append("Coverage: ").append(functionsCounter.getTotalCoveragePercentAsString()).append("\n");
+		summaryBuilder.append(System.lineSeparator()).append("***********").append(System.lineSeparator())
+				.append("* Summary *").append(System.lineSeparator()).append("***********").append(System.lineSeparator());
+		summaryBuilder.append("Start date: ").append(startDate).append(System.lineSeparator());
+		summaryBuilder.append("Reading duration: ").append(totalDurationInMills).append(" ms").append(System.lineSeparator());
+		summaryBuilder.append("Source folder: ").append(sourceFolder).append(System.lineSeparator());
+		summaryBuilder.append("Destination folder: ").append(destFolder).append(System.lineSeparator());
+		summaryBuilder.append("NeoLoad project: ").append(nlProjectName).append(System.lineSeparator());
+		summaryBuilder.append("Log files: ").append(StringUtils.join(logFiles.get(), ", ")).append(System.lineSeparator());
+		summaryBuilder.append("Total script number: ").append(totalScriptNumber).append(System.lineSeparator());
+		summaryBuilder.append("Coverage: ").append(functionsCounter.getTotalCoveragePercentAsString()).append(System.lineSeparator());
 		summaryBuilder.append("Total actions: \n").append(actionsCounter.getTotalSummary());
 		summaryBuilder.append("Total functions: \n").append(functionsCounter.getTotalSummary());
 		summaryBuilder.append("Total parameters: \n").append(parametersCounter.getTotalSummary());
