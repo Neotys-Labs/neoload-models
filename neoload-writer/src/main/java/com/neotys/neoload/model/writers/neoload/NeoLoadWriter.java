@@ -1,24 +1,14 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.neotys.neoload.model.ImmutableProject;
+import com.neotys.neoload.model.Project;
+import com.neotys.neoload.model.repository.*;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,24 +19,15 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import com.neotys.neoload.model.ImmutableProject;
-import com.neotys.neoload.model.Project;
-import com.neotys.neoload.model.repository.ImmutableFileVariable;
-import com.neotys.neoload.model.repository.RecordedFiles;
-import com.neotys.neoload.model.repository.Request;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-
-import com.neotys.neoload.model.repository.FileVariable;
-import com.neotys.neoload.model.repository.Variable;
+import java.io.*;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.collect.Sets.newHashSet;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class NeoLoadWriter {
@@ -142,7 +123,7 @@ public class NeoLoadWriter {
 			return;
 		}
 		fileToCopy.get("variables").forEach(var -> fileLst.add(var.getAbsolutePath()));
-		tmpProject.getVariables().stream().forEach(var -> {
+		tmpProject.getVariables().forEach(var -> {
 			if (var instanceof FileVariable && ((FileVariable) var).getFileName().isPresent()
 					&& fileLst.contains(((FileVariable) var).getFileName().get())) {
 				ImmutableFileVariable fileVar = (ImmutableFileVariable) var;
@@ -212,18 +193,12 @@ public class NeoLoadWriter {
 		}
 	}
 
-	private Set<Request> getAllRequests(Project project) {
-
-		final Set<Request> elements = newHashSet();
-		project.getUserPaths().forEach(userPath -> {
-			//FIXME It misses some Requests
-			final Set<Request> collect = userPath.getActionsContainer().flattened()
-					.filter(element -> element instanceof Request)
-					.map(element -> (Request) element)
-					.collect(Collectors.toSet());
-			elements.addAll(collect);
-		});
-		return elements;
+	private Set<Request> getAllRequests(final Project project) {
+		return project.getUserPaths().stream()
+				.flatMap(UserPath::flattened)
+				.filter(element -> element instanceof Request)
+				.map(element -> (Request) element)
+				.collect(Collectors.toSet());
 	}
 
 	private void copyRequestContentFile(String recordedRequestHeaderFile, String recordedRequestBodyFile) {

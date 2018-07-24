@@ -1,35 +1,5 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterables;
 import com.neotys.neoload.model.ImmutableProject;
@@ -40,11 +10,26 @@ import com.neotys.neoload.model.parsers.CPP14Parser;
 import com.neotys.neoload.model.readers.Reader;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ParameterFileReader;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ProjectFileReader;
-import com.neotys.neoload.model.repository.Container;
-import com.neotys.neoload.model.repository.ImmutableContainer;
-import com.neotys.neoload.model.repository.ImmutableServer;
-import com.neotys.neoload.model.repository.ImmutableUserPath;
-import com.neotys.neoload.model.repository.Server;
+import com.neotys.neoload.model.repository.*;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class LoadRunnerReader extends Reader {
 
@@ -69,10 +54,6 @@ public class LoadRunnerReader extends Reader {
 		super(folder);
 		this.eventListener = eventListener;
 		this.projectName = projectName;
-	}
-
-	public Path getProjectFolder() {
-		return Paths.get(getSourceFolder(), projectName);
 	}
 
 	/**
@@ -313,22 +294,26 @@ public class LoadRunnerReader extends Reader {
 	public String getCurrentScriptName() {
 		return currentScriptName;
 	}
-	
+
+	public Path getProjectFolder() {
+		return Paths.get(folder);
+	}
+
 	/**
      * Build or get the server from the list of server already build from the passed url
      * @param url extracting the server from this url
      * @return the corresponding server
-	 * @throws MalformedURLException 
-     */    
+	 * @throws MalformedURLException
+     */
     public Server getServer(final String url) throws MalformedURLException {
         return getServer(new URL(url));
     }
-	
+
 	 /**
      * Build or get the server from the list of server already build from the passed url
      * @param url extracting the server from this url
      * @return the corresponding server
-     */    
+     */
     public Server getServer(final URL url) {
         return getOrAddServerIfNotExist(ImmutableServer.builder()
                 .name(MethodUtils.normalizeName(url.getHost()))
