@@ -133,7 +133,7 @@ public abstract class RequestWriter extends ElementWriter {
 
 	private void writeRecordedResponseHeaders(final String recordedResponseHeaderFile, final Document document, final Element xmlRequest) {
 		try {
-			final String responseHeaders = new String(Files.readAllBytes(Paths.get(recordedResponseHeaderFile)), "UTF-8");
+			final String responseHeaders = new String(Files.readAllBytes(Paths.get(recordedResponseHeaderFile)), "UTF-8").replaceAll("\r\n", "\n");
 			writeRecordedStatusCode(xmlRequest, responseHeaders);
 			final Element element = document.createElement(XML_TAG_RESPONSE_HEADERS);
 			element.setTextContent(responseHeaders);
