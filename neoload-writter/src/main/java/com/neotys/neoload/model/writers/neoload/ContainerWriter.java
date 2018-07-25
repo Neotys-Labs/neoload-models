@@ -1,10 +1,11 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.neotys.neoload.model.repository.Container;
+import java.util.Optional;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.Optional;
+import com.neotys.neoload.model.repository.Container;
 
 public class ContainerWriter extends ElementWriter {
 
@@ -37,9 +38,9 @@ public class ContainerWriter extends ElementWriter {
 	}
 
 	@Override
-	public void writeXML(final Document document, final Element currentElement, final String parentPath, final String outputFolder) {
+	public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
 		Element xmlContainerElement = document.createElement(tagName.orElse("basic-logical-action-container"));
-		super.writeXML(document, xmlContainerElement, parentPath, outputFolder);
+		super.writeXML(document, xmlContainerElement, outputFolder);
 		currentElement.appendChild(xmlContainerElement);
 		Container theContainer = ((Container) this.element);
 
@@ -48,8 +49,8 @@ public class ContainerWriter extends ElementWriter {
 		xmlContainerElement.setAttribute(XML_WEIGHTS_ENABLED, DEFAULT_WEIGHTS_ENABLED);
 
 		theContainer.getChilds().forEach(elt -> {
-			WriterUtils.generateEmbeddedAction(document, xmlContainerElement, elt, parentPath+"/"+theContainer.getName(), Optional.of(WriterUtils.WEIGHTED_ACTION_XML_TAG_NAME), true);
-			WriterUtils.getWriterFor(elt).writeXML(document, document.getDocumentElement(), parentPath+"/"+theContainer.getName(), outputFolder);
+			WriterUtils.generateEmbeddedAction(document, xmlContainerElement, elt, Optional.of(WriterUtils.WEIGHTED_ACTION_XML_TAG_NAME), true);
+			WriterUtils.getWriterFor(elt).writeXML(document, document.getDocumentElement(), outputFolder);
 		});
 
 	}

@@ -15,15 +15,15 @@ public class PageWriter extends ElementWriter {
     }
     
     @Override
-    public void writeXML(final Document document, final Element currentElement, final String parentPath, final String outputFolder) {
+    public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
         Element xmlPage = document.createElement(XML_TAG_NAME);
-        super.writeXML(document, xmlPage,parentPath, outputFolder);
+        super.writeXML(document, xmlPage, outputFolder);
         Page thePage = (Page) this.element;
         xmlPage.setAttribute(XML_THINK_TIME, Integer.toString(thePage.getThinkTime()));
         currentElement.appendChild(xmlPage);
         thePage.getChilds().forEach(pageElem -> {
-        	WriterUtils.generateEmbeddedAction(document, xmlPage, pageElem, parentPath+"/"+thePage.getName());
-        	WriterUtils.getWriterFor(pageElem).writeXML(document, currentElement, parentPath+"/"+thePage.getName(), outputFolder);
+        	WriterUtils.generateEmbeddedAction(document, xmlPage, pageElem);
+        	WriterUtils.getWriterFor(pageElem).writeXML(document, currentElement, outputFolder);
         });
     }
 }

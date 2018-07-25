@@ -20,15 +20,15 @@ public abstract class RequestWriter extends ElementWriter {
 	}
 
 	@Override
-	public void writeXML(final Document document, final Element currentElement, final String parentPath, final String outputFolder) {
+	public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
 		final Element xmlRequest = document.createElement(XML_TAG_NAME);
 		final Request theRequest = (Request) this.element;
-		super.writeXML(document, xmlRequest, parentPath, outputFolder);
-		fillXML(document, xmlRequest, parentPath, theRequest);
+		super.writeXML(document, xmlRequest, outputFolder);
+		fillXML(document, xmlRequest, theRequest);
 		currentElement.appendChild(xmlRequest);
 	}
 
-	protected void fillXML(final Document document, final Element xmlRequest, final String parentPath, final Request theRequest) {
+	protected void fillXML(final Document document, final Element xmlRequest, final Request theRequest) {
 		xmlRequest.setAttribute(XML_ATTR_METHOD, theRequest.getHttpMethod().toString());
 		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));		
 		xmlRequest.setAttribute(XML_ATTR_ACTION_TYPE, String.valueOf(getActionType()));

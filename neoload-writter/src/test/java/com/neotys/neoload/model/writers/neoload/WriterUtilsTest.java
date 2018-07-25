@@ -32,7 +32,7 @@ public class WriterUtilsTest {
                 .name("TEST")
                 .thinkTime(0)
                 .build();
-    	WriterUtils.generateEmbeddedAction(doc, root, page, "PagePath", Optional.of("action-test"));
+    	WriterUtils.generateEmbeddedAction(doc, root, page, Optional.of("action-test"));
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><test-root><action-test>" + WriterUtils.getElementUid(page)+ "</action-test></test-root>";
     	final String generatedResult = WrittingTestUtils.getXmlString(doc);
     	assertEquals(expectedResult, generatedResult);

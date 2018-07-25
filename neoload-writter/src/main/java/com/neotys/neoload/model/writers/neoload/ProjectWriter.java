@@ -22,7 +22,7 @@ public class ProjectWriter {
     public void writeXML(final Document document, final String outputFolder) {
         final Element repositoryElement = document.createElement(XML_TAG_NAME);
         document.appendChild(repositoryElement);
-        project.getUserPaths().forEach(userPath -> UserPathWriter.of(userPath).writeXML(document, repositoryElement, userPath.getName(), outputFolder));
+        project.getUserPaths().forEach(userPath -> UserPathWriter.of(userPath).writeXML(document, repositoryElement, outputFolder));
         project.getServers().forEach(serv -> ServerWriter.of(serv).writeXML(document, repositoryElement));
         project.getVariables().forEach(var -> WriterUtils.getWriterFor(var).writeXML(document, repositoryElement, outputFolder));
     }

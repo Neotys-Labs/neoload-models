@@ -24,7 +24,7 @@ public class PageWriterTest {
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
     			+ "</test-root>";
     	
-    	(new PageWriter(WrittingTestUtils.PAGE_TEST)).writeXML(doc, root, "pageNameParent", Files.createTempDir().getAbsolutePath());
+    	(new PageWriter(WrittingTestUtils.PAGE_TEST)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
     	Assertions.assertThat(generatedResult).isEqualTo(expectedResult);

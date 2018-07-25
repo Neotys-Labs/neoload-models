@@ -13,14 +13,14 @@ public class DelayWriter extends ElementWriter {
         super(delay);
     }
 
-    public static DelayWriter of(Delay delay) {
+    public static DelayWriter of(final Delay delay) {
         return new DelayWriter(delay);
     }
 
     @Override
-    public void writeXML(Document document, Element currentElement, String parentPath, final String outputFolder) {
+    public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
         Element xmlDelay = document.createElement(XML_TAG_NAME);
-        super.writeXML(document, xmlDelay, parentPath, outputFolder);
+        super.writeXML(document, xmlDelay, outputFolder);
         xmlDelay.setAttribute(XML_DURATION_ATT, ((Delay)element).getDelay());
         currentElement.appendChild(xmlDelay);
     }

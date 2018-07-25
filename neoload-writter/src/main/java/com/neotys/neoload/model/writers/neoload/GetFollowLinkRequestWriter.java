@@ -22,8 +22,8 @@ public class GetFollowLinkRequestWriter extends RequestWriter {
 	}	
 	
 	@Override
-	protected void fillXML(final Document document, final Element xmlRequest, final String parentPath, final Request theRequest) {
-		super.fillXML(document, xmlRequest, parentPath, theRequest);
+	protected void fillXML(final Document document, final Element xmlRequest, final Request theRequest) {
+		super.fillXML(document, xmlRequest, theRequest);
 		final GetFollowLinkRequest getFollowLinkRequest = (GetFollowLinkRequest)theRequest;
 		xmlRequest.setAttribute(XML_ATTR_LINKEXTRACTORTYPE, ACTION_LINKEXTRACTOR_TYPE_MATCHCONTENT);
 		RecordHtmlInfosWriter.writeXML(document, xmlRequest, getFollowLinkRequest);		

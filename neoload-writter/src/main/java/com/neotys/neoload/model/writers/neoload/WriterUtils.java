@@ -65,18 +65,17 @@ public class WriterUtils {
         return null;
     }
 
-    public static void generateEmbeddedAction(final Document document, final org.w3c.dom.Element parentXmlElement,
-    		Element modelElem, String parentPath){
-    	generateEmbeddedAction(document, parentXmlElement, modelElem, parentPath, Optional.empty());
+    public static void generateEmbeddedAction(final Document document, final org.w3c.dom.Element parentXmlElement, final Element modelElem){
+    	generateEmbeddedAction(document, parentXmlElement, modelElem, Optional.empty());
     }
     
     public static void generateEmbeddedAction(final Document document, final org.w3c.dom.Element parentXmlElement,
-    		Element modelElem, String parentPath, Optional<String> embeddedActionName){
-    	generateEmbeddedAction(document, parentXmlElement, modelElem, parentPath, embeddedActionName, false);
+    		final Element modelElem, final Optional<String> embeddedActionName){
+    	generateEmbeddedAction(document, parentXmlElement, modelElem, embeddedActionName, false);
     }
     
     public static void generateEmbeddedAction(final Document document, final org.w3c.dom.Element parentXmlElement,
-    		Element modelElem, String parentPath, Optional<String> embeddedActionName, boolean uidAsAttributes){
+    		final Element modelElem, final Optional<String> embeddedActionName, final boolean uidAsAttributes){
         final String uid = WriterUtils.getElementUid(modelElem);
     	final org.w3c.dom.Element newElem = document.createElement(embeddedActionName.orElse(EMBEDDED_ACTION_XML_TAG_NAME));
     	if (uidAsAttributes) {

@@ -21,7 +21,7 @@ public class DelayWriterTest {
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><delay-action duration=\"1000\" name=\"myDelay\" uid=\"" + WriterUtils.getElementUid(delay)+ "\"><description/></delay-action>"
     			+ "</test-root>";	
-    	DelayWriter.of(delay).writeXML(doc, root, "delay", Files.createTempDir().getAbsolutePath());
+    	DelayWriter.of(delay).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	final String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
 

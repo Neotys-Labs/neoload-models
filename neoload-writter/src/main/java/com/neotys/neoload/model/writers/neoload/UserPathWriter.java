@@ -24,19 +24,19 @@ public class UserPathWriter extends ElementWriter{
     }
 
     @Override
-    public void writeXML(final Document document, final Element repositoryElement, String parentPath, final String outputFolder) {
+    public void writeXML(final Document document, final Element repositoryElement, final String outputFolder) {
         Element element = document.createElement(XML_TAG_NAME);
         element.setAttribute(XML_USERPATH_NAME_ATTR, this.userPath.getName());
         super.writeDescription(document, element);
         repositoryElement.appendChild(element);
         // write init-container
-        ContainerWriter.of(this.userPath.getInitContainer(), XML_TAG_INIT).writeXML(document, element, parentPath, outputFolder);
+        ContainerWriter.of(this.userPath.getInitContainer(), XML_TAG_INIT).writeXML(document, element, outputFolder);
 
         // write actions-container
-        ContainerWriter.of(this.userPath.getActionsContainer(), XML_TAG_ACTIONS).writeXML(document, element, parentPath, outputFolder);
+        ContainerWriter.of(this.userPath.getActionsContainer(), XML_TAG_ACTIONS).writeXML(document, element, outputFolder);
 
         // write end-container
-        ContainerWriter.of(this.userPath.getEndContainer(), XML_TAG_END).writeXML(document, element, parentPath, outputFolder);
+        ContainerWriter.of(this.userPath.getEndContainer(), XML_TAG_END).writeXML(document, element, outputFolder);
     }
     
 }

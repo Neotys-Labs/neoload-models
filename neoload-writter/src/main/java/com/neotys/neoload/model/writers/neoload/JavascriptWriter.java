@@ -26,9 +26,9 @@ public class JavascriptWriter extends ElementWriter {
 	}
 
 	@Override
-	public void writeXML(final Document document, final Element currentElement, final String parentPath, final String outputFolder) {
+	public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
 		final Element xmlJS = document.createElement(XML_TAG_NAME);
-		super.writeXML(document, xmlJS, parentPath, outputFolder);
+		super.writeXML(document, xmlJS, outputFolder);
 		final String uid = xmlJS.getAttribute(XML_UID_TAG);
 		writeJavascriptFile(new File(outputFolder), uid);
 		xmlJS.setAttribute(XML_ATTRIBUTE_FILENAME, "scripts/jsAction_" + uid + ".js");

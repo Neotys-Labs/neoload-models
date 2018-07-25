@@ -24,7 +24,7 @@ public class RequestWriterTest {
     			+ "<parameter name=\"param_name\" value=\"param_value\"/>"
     			+ "</http-action></test-root>";
     	
-    	(new GetPlainRequestWriter(WrittingTestUtils.REQUEST_TEST2)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
+    	(new GetPlainRequestWriter(WrittingTestUtils.REQUEST_TEST2)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
@@ -41,7 +41,7 @@ public class RequestWriterTest {
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
     			+ "</test-root>";
     	
-    	(new GetPlainRequestWriter(WrittingTestUtils.REQUEST_TEST)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
+    	(new GetPlainRequestWriter(WrittingTestUtils.REQUEST_TEST)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
@@ -60,7 +60,7 @@ public class RequestWriterTest {
     			+ "<parameter name=\"post param_name\" value=\"post_param Value\"/>"
     			+ "</http-action></test-root>";
     	
-    	(new PostFormRequestWriter(WrittingTestUtils.REQUEST_TEST3)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
+    	(new PostFormRequestWriter(WrittingTestUtils.REQUEST_TEST3)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
@@ -80,7 +80,7 @@ public class RequestWriterTest {
     			+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
     			+ "</http-action></test-root>";
     	
-    	(new PostTextRequestWriter(WrittingTestUtils.REQUEST_TEST4)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
+    	(new PostTextRequestWriter(WrittingTestUtils.REQUEST_TEST4)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
     	Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
@@ -100,7 +100,7 @@ public class RequestWriterTest {
     			+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
     			+ "</http-action></test-root>";
     	
-    	(new PostBinaryRequestWriter(WrittingTestUtils.REQUEST_TEST5)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
+    	(new PostBinaryRequestWriter(WrittingTestUtils.REQUEST_TEST5)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);

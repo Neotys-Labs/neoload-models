@@ -28,10 +28,9 @@ public class ElementWriter {
     * 
     * @param document
     * @param currentElement
-    * @param parentPath
     * @param outputFolder NeoLoad output folder may be use for further computation in overriding classes.
     */
-    protected void writeXML(final Document document, final org.w3c.dom.Element currentElement, final String parentPath, final String outputFolder) {
+    protected void writeXML(final Document document, final org.w3c.dom.Element currentElement, final String outputFolder) {
         currentElement.setAttribute(XML_NAME_ATTR, element.getName());
         currentElement.setAttribute(XML_UID_TAG, WriterUtils.getElementUid(element));
         writeDescription(document, currentElement);

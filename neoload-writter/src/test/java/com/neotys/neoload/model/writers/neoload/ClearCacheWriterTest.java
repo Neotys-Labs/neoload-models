@@ -20,7 +20,7 @@ public class ClearCacheWriterTest {
     	
     	final ClearCache clearCache = ImmutableClearCache.builder().name("web_cache_cleanup").build();
     			
-    	ClearCacheWriter.of(clearCache).writeXML(doc, root, "web_cache_cleanup", Files.createTempDir().getAbsolutePath());
+    	ClearCacheWriter.of(clearCache).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	final String generatedResult = WrittingTestUtils.getXmlString(doc);
     	final String timestamp = generatedResult.substring(generatedResult.indexOf("ts=") + 4, generatedResult.indexOf("ts=") + 17);
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"

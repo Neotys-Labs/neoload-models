@@ -20,7 +20,7 @@ public class AddCookieWriterTest {
 
 		final AddCookie addCookie = ImmutableAddCookie.builder().name("setCookieForServer cookieName").cookieName("cookieName").cookieValue("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").path("cookiePath").build();
 
-		AddCookieWriter.of(addCookie).writeXML(doc, root, "setCookieForServer cookieName", Files.createTempDir().getAbsolutePath());
+		AddCookieWriter.of(addCookie).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
 		String generatedResult = WrittingTestUtils.getXmlString(doc);
 		final String timestamp = generatedResult.substring(generatedResult.indexOf("ts=") + 4, generatedResult.indexOf("ts=") + 17);
 		final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"

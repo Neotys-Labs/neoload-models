@@ -28,7 +28,7 @@ public class ContainerWriterTest {
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
     			+ "</test-root>";
 
-    	ContainerWriter.of(WrittingTestUtils.CONTAINER_TEST).writeXML(doc, root, "ContainerPath", Files.createTempDir().getAbsolutePath());
+    	ContainerWriter.of(WrittingTestUtils.CONTAINER_TEST).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
 
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
