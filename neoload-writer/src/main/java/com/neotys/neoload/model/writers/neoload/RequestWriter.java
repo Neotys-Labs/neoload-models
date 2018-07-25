@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_REQUESTS_FOLDER;
@@ -28,6 +30,7 @@ public abstract class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_EXTRACTOR_SERVER_UID = "extractorServerUid";
 	public static final String XML_ATTR_PATH = "path";
 	public static final String XML_ATTR_ASSERT_BLOC = "assertions";
+	public static final String XML_ATTR_RECORDED_RESPONSE_CODE = "recordedResponseCode";
 	public static final String XML_ATTR_LINKEXTRACTORTYPE = "linkExtractorType";
 	public static final String ACTION_LINKEXTRACTOR_TYPE_MATCH_DEFINITION = "6";
 	public static final String ACTION_LINKEXTRACTOR_TYPE_MATCHCONTENT = "3";
@@ -46,6 +49,8 @@ public abstract class RequestWriter extends ElementWriter {
 	private static final String XML_TAG_REQUEST_HEADER = "header";
 	private static final String XML_TAG_RESPONSE_HEADERS = "responseHeaders";
 
+
+	private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("(\\d{3})");
 
 	public RequestWriter(Request request) {
 		super(request);
@@ -126,14 +131,23 @@ public abstract class RequestWriter extends ElementWriter {
         });
     }
 
-	private void writeRecordedResponseHeaders(String recordedResponseHeaderFile, Document document, Element xmlRequest) {
+	private void writeRecordedResponseHeaders(final String recordedResponseHeaderFile, final Document document, final Element xmlRequest) {
 		try {
 			final String responseHeaders = new String(Files.readAllBytes(Paths.get(recordedResponseHeaderFile)), "UTF-8");
+			writeRecordedStatusCode(xmlRequest, responseHeaders);
 			final Element element = document.createElement(XML_TAG_RESPONSE_HEADERS);
 			element.setTextContent(responseHeaders);
 			xmlRequest.appendChild(element);
 		} catch (IOException e) {
 			LOG.error("Can not write recorded response headers", e);
+		}
+	}
+
+	private void writeRecordedStatusCode(final Element xmlRequest, final String responseHeaders) {
+		final Matcher matcher = STATUS_CODE_PATTERN.matcher(responseHeaders);
+		if(matcher.find()){
+			final String statusCode = matcher.group(1);
+			xmlRequest.setAttribute(XML_ATTR_RECORDED_RESPONSE_CODE, statusCode);
 		}
 	}
 
