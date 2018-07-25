@@ -12,10 +12,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.io.Files.getFileExtension;
+import static com.google.common.io.Files.getNameWithoutExtension;
 import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_REQUESTS_FOLDER;
 import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_RESPONSE_FOLDER;
 
@@ -62,7 +65,7 @@ public abstract class RequestWriter extends ElementWriter {
 		final Request theRequest = (Request) this.element;
 		super.writeXML(document, xmlRequest, outputFolder);
 		fillXML(document, xmlRequest, theRequest);
-		writeRecordedFiles(theRequest, document, xmlRequest);
+		writeRecordedFiles(theRequest, document, xmlRequest, outputFolder);
 		currentElement.appendChild(xmlRequest);
 	}
 
@@ -93,7 +96,7 @@ public abstract class RequestWriter extends ElementWriter {
 		request.getParameters().forEach(paramElem -> ParameterWriter.of(paramElem).writeXML(document, xmlRequest, Optional.empty()));
 	}
 
-    private void writeRecordedFiles(Request request, Document document, Element xmlRequest) {
+    private void writeRecordedFiles(final Request request, final Document document, final Element xmlRequest, final String outputFolder) {
         request.getRecordedFiles().ifPresent(recordedFiles -> {
             //Request header
             if (!isNullOrEmpty(recordedFiles.recordedRequestHeaderFile())) {
@@ -103,13 +106,8 @@ public abstract class RequestWriter extends ElementWriter {
             //Request body
             if (!isNullOrEmpty(recordedFiles.recordedRequestBodyFile())) {
 				final Element element = document.createElement(XML_TAG_RECORDED_REQUEST);
-				final Path recordedRequestBodyPath = Paths.get(recordedFiles.recordedRequestBodyFile());
-				final String fileName = "req_" + recordedRequestBodyPath.getFileName().toString();
-				element.setTextContent(RECORDED_REQUESTS_FOLDER + "/" + fileName);
+				addResourceFileWithUuid(outputFolder, element, RECORDED_REQUESTS_FOLDER, "req_", recordedFiles.recordedRequestBodyFile());
 				xmlRequest.appendChild(element);
-
-				//FIXME Copy files "lrProjectFolder/data/t22_RequestHeader.htm" and "lrProjectFolder/data/t22_RequestBody.htm"
-				//to "nlProjectFolder/recorded-responses/t22.htm"
             }
 
             //Response header
@@ -120,16 +118,29 @@ public abstract class RequestWriter extends ElementWriter {
             //Response body
             if (!isNullOrEmpty(recordedFiles.recordedResponseBodyFile())) {
 				final Element element = document.createElement(XML_TAG_RECORDED_RESPONSE);
-				final Path recordedResponseBodyPath = Paths.get(recordedFiles.recordedResponseBodyFile());
-				final String fileName = "res_" + recordedResponseBodyPath.getFileName().toString();
-				element.setTextContent(RECORDED_RESPONSE_FOLDER + "/" + fileName);
+				addResourceFileWithUuid(outputFolder, element, RECORDED_RESPONSE_FOLDER, "res_", recordedFiles.recordedResponseBodyFile());
 				xmlRequest.appendChild(element);
-
-				//FIXME Copy file "lrProjectFolder/data/t22.htm"
-				//to "nlProjectFolder/recorded-responses/t22.htm"
             }
         });
     }
+
+	private void addResourceFileWithUuid(final String outputFolder, final Element element,
+										 final String resourceFolderName, final String baseName,
+										 final String resourcePathAsString) {
+		final Path resourcePathInSrcProject = Paths.get(resourcePathAsString);
+		final String srcFileName = resourcePathInSrcProject.getFileName().toString();
+		final String srcFileNameWithoutExt = getNameWithoutExtension(resourcePathInSrcProject.getFileName().toString());
+		String fileName = baseName + srcFileName;
+		final Path resourcePathInNlProject = Paths.get(outputFolder, resourceFolderName, fileName);
+		final String newName = baseName + srcFileNameWithoutExt + "_" + UUID.randomUUID() + "." + getFileExtension(fileName);
+		try {
+			Files.move(resourcePathInNlProject, resourcePathInNlProject.resolveSibling(newName));
+			fileName = newName;
+		} catch (final IOException e) {
+			LOG.error("Can rename resource " + fileName + " to " + newName, e);
+		}
+		element.setTextContent(resourceFolderName + "/" + fileName);
+	}
 
 	private void writeRecordedResponseHeaders(final String recordedResponseHeaderFile, final Document document, final Element xmlRequest) {
 		try {
@@ -156,6 +167,7 @@ public abstract class RequestWriter extends ElementWriter {
 			final Properties properties = new Properties();
 			properties.load(Files.newInputStream(Paths.get(recordedRequestHeaderFile)));
 			properties.forEach((key, value) -> {
+				// TODO ignore status line
 				if (key instanceof String && value instanceof String) {
 					final Element element = document.createElement(XML_TAG_REQUEST_HEADER);
 					element.setAttribute("name", (String) key);

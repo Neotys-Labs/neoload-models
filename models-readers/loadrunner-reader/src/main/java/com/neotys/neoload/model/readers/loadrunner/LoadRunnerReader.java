@@ -67,7 +67,7 @@ public class LoadRunnerReader extends Reader {
 		return returnedMap;
 	}
 
-	private final List<File> getProjectFolders() {
+	private List<File> getProjectFolders() {
 		final List<File> projectFolders = new ArrayList<>();
 		final File rootFolder = new File(folder);
 		if (!rootFolder.isDirectory()) {
@@ -78,7 +78,7 @@ public class LoadRunnerReader extends Reader {
 			projectFolders.add(rootFolder);
 		} else {
 			projectFolders.addAll(
-					Arrays.asList(rootFolder.listFiles()).stream().filter(ProjectFileReader::containsUSRFile).collect(Collectors.toList()));
+					Arrays.stream(rootFolder.listFiles()).filter(ProjectFileReader::containsUSRFile).collect(Collectors.toList()));
 		}
 		return projectFolders;
 	}

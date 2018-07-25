@@ -89,6 +89,7 @@ public class NeoLoadWriter {
 		copyDataFilesToDestFolder(nlProjectFolder);
 		changeBaseNameForCopiedVariables();
 
+		//files need to be copied to neoload project folder before XML writing!
 		copyFilesToRecordedFolders(project);
 
 		// write the repository
