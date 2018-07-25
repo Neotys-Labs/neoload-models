@@ -1,20 +1,17 @@
 package com.neotys.neoload.model.writers.neoload;
 
 import java.lang.reflect.Constructor;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
-import org.apache.commons.collections4.Transformer;
+import org.apache.commons.collections4.Factory;
 import org.apache.commons.collections4.map.LazyMap;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-import com.google.common.hash.Hashing;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.repository.Variable;
 
@@ -27,16 +24,16 @@ public class WriterUtils {
 	
     static Logger logger = LoggerFactory.getLogger(NeoLoadWriter.class);
     
-    private static Map<Pair<String,Element>, String> elementUids = LazyMap.lazyMap(new HashMap<Pair<String,Element>, String>(), new Transformer<Pair<String,Element>, String>(){
+    private static Map<Element, String> elementUids = LazyMap.lazyMap(new HashMap<Element, String>(), new Factory<String>(){
     	@Override
-    	public String transform(final Pair<String,Element> element) {
-    		return Hashing.sha256().hashString(element.getLeft()+"/"+element.getRight().getName(), StandardCharsets.UTF_8).toString();
+    	public String create() {
+    		return UUID.randomUUID().toString();     	
     	}
     });
     
     private WriterUtils() {}
     
-    public static String getElementUid(final Pair<String, Element> element) {
+    public static String getElementUid(final Element element) {
 		return elementUids.get(element);
 	}    
 
@@ -80,7 +77,7 @@ public class WriterUtils {
     
     public static void generateEmbeddedAction(final Document document, final org.w3c.dom.Element parentXmlElement,
     		Element modelElem, String parentPath, Optional<String> embeddedActionName, boolean uidAsAttributes){
-        final String uid = WriterUtils.getElementUid(new ImmutablePair<>(parentPath, modelElem));
+        final String uid = WriterUtils.getElementUid(modelElem);
     	final org.w3c.dom.Element newElem = document.createElement(embeddedActionName.orElse(EMBEDDED_ACTION_XML_TAG_NAME));
     	if (uidAsAttributes) {
     		newElem.setAttribute(XML_UID_NAME_ATTR, uid);

@@ -25,17 +25,16 @@ public class WriterUtilsTest {
     
     @Test
     public void generateEmbeddedActionTest() throws ParserConfigurationException, TransformerException {
-    	Document doc = WrittingTestUtils.generateEmptyDocument();
-    	Element root = WrittingTestUtils.generateTestRootElement(doc);
-    	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><test-root><action-test>11d41df2e5c0549a0080cc401905902ac8c6834879b56495f337d2b3079f6ce2</action-test></test-root>";
+    	final Document doc = WrittingTestUtils.generateEmptyDocument();
+    	final Element root = WrittingTestUtils.generateTestRootElement(doc);
     	
-    	Page page = ImmutablePage.builder()
+    	final Page page = ImmutablePage.builder()
                 .name("TEST")
                 .thinkTime(0)
                 .build();
     	WriterUtils.generateEmbeddedAction(doc, root, page, "PagePath", Optional.of("action-test"));
-    	
-    	String generatedResult = WrittingTestUtils.getXmlString(doc);
+    	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><test-root><action-test>" + WriterUtils.getElementUid(page)+ "</action-test></test-root>";
+    	final String generatedResult = WrittingTestUtils.getXmlString(doc);
     	assertEquals(expectedResult, generatedResult);
     }
 }

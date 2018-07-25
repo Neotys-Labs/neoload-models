@@ -15,8 +15,8 @@ public class ClearCacheWriterTest {
 	
 	@Test
     public void writeClearCacheXmlTest() throws ParserConfigurationException, TransformerException {
-    	Document doc = WrittingTestUtils.generateEmptyDocument();
-    	Element root = WrittingTestUtils.generateTestRootElement(doc);
+    	final Document doc = WrittingTestUtils.generateEmptyDocument();
+    	final Element root = WrittingTestUtils.generateTestRootElement(doc);
     	
     	final ClearCache clearCache = ImmutableClearCache.builder().name("web_cache_cleanup").build();
     			
@@ -24,10 +24,11 @@ public class ClearCacheWriterTest {
     	final String generatedResult = WrittingTestUtils.getXmlString(doc);
     	final String timestamp = generatedResult.substring(generatedResult.indexOf("ts=") + 4, generatedResult.indexOf("ts=") + 17);
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-    			+ "<test-root><js-action filename=\"scripts/jsAction_a19e40d7b1fff56a6612f73cb757319b53f65d05db79f2a72b98f60d6bf44b5d.js\" name=\"web_cache_cleanup\" ts=\"" + timestamp + "\" uid=\"a19e40d7b1fff56a6612f73cb757319b53f65d05db79f2a72b98f60d6bf44b5d\"/></test-root>";
+    			+ "<test-root><js-action filename=\"scripts/jsAction_" + WriterUtils.getElementUid(clearCache)+ ".js\" "
+    					+ "name=\"web_cache_cleanup\" ts=\"" + timestamp + "\" "
+    							+ "uid=\"" + WriterUtils.getElementUid(clearCache)+ "\"/></test-root>";
 
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
-
     }
 
 }

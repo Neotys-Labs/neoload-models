@@ -1,12 +1,8 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.hash.Hashing;
 import com.neotys.neoload.model.repository.GetFollowLinkRequest;
 import com.neotys.neoload.model.repository.Request;
 
@@ -33,7 +29,7 @@ public class GetFollowLinkRequestWriter extends RequestWriter {
 		RecordHtmlInfosWriter.writeXML(document, xmlRequest, getFollowLinkRequest);		
 		ExtractorHtmlInfosWriter.writeXML(document, xmlRequest, getFollowLinkRequest);
 		final Request referer = getFollowLinkRequest.getReferer();
-		xmlRequest.setAttribute(XML_ATTR_REFERER_UID, WriterUtils.getElementUid(new ImmutablePair<>(parentPath, referer)));
+		xmlRequest.setAttribute(XML_ATTR_REFERER_UID, WriterUtils.getElementUid(referer));
 		referer.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));	
 	}
 }

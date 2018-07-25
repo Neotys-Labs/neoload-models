@@ -20,7 +20,7 @@ public class RequestWriterTest {
     			+ "<test-root><http-action actionType=\"1\" "
     			+ "method=\"GET\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" "
-    			+ "uid=\"032e11f533cd97719d4e1a09b88dc201a1fa2a5f01da9b38631bcbaecf5b0bc4\">"
+    			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST2)+ "\">"
     			+ "<parameter name=\"param_name\" value=\"param_value\"/>"
     			+ "</http-action></test-root>";
     	
@@ -38,7 +38,7 @@ public class RequestWriterTest {
     			+ "<test-root><http-action actionType=\"1\" "
     			+ "method=\"GET\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" "
-    			+ "uid=\"032e11f533cd97719d4e1a09b88dc201a1fa2a5f01da9b38631bcbaecf5b0bc4\"/>"
+    			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
     			+ "</test-root>";
     	
     	(new GetPlainRequestWriter(WrittingTestUtils.REQUEST_TEST)).writeXML(doc, root, "PagePath", Files.createTempDir().getAbsolutePath());
@@ -55,7 +55,7 @@ public class RequestWriterTest {
     			+ "<test-root><http-action actionType=\"1\" "
     			+ "method=\"POST\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" "
-    			+ "uid=\"032e11f533cd97719d4e1a09b88dc201a1fa2a5f01da9b38631bcbaecf5b0bc4\">"
+    			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST3)+ "\">"
 				+ "<urlPostParameter name=\"param_name\" value=\"param_value\"/>"
     			+ "<parameter name=\"post param_name\" value=\"post_param Value\"/>"
     			+ "</http-action></test-root>";
@@ -74,7 +74,7 @@ public class RequestWriterTest {
     			+ "<test-root><http-action actionType=\"1\" "
     			+ "method=\"POST\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" "
-    			+ "uid=\"032e11f533cd97719d4e1a09b88dc201a1fa2a5f01da9b38631bcbaecf5b0bc4\">"
+    			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST4)+ "\">"
 				+ "<urlPostParameter name=\"param_name\" value=\"param_value\"/>"
 				+ "<textPostContent><![CDATA[texte a convertir en binaire]]></textPostContent>"
     			+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
@@ -95,7 +95,7 @@ public class RequestWriterTest {
     			+ "<test-root><http-action actionType=\"1\" "
     			+ "method=\"POST\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" "
-    			+ "uid=\"032e11f533cd97719d4e1a09b88dc201a1fa2a5f01da9b38631bcbaecf5b0bc4\">"
+    			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST5)+ "\">"
 				+ "<urlPostParameter name=\"param_name\" value=\"param_value\"/>"
     			+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
     			+ "</http-action></test-root>";

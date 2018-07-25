@@ -15,18 +15,18 @@ public class ClearCookiesWriterTest {
 
 	@Test
 	public void writeClearCookiesXmlTest() throws ParserConfigurationException, TransformerException {
-		Document doc = WrittingTestUtils.generateEmptyDocument();
-		Element root = WrittingTestUtils.generateTestRootElement(doc);
+		final Document doc = WrittingTestUtils.generateEmptyDocument();
+		final Element root = WrittingTestUtils.generateTestRootElement(doc);
 
 		final ClearCookies clearCookies = ImmutableClearCookies.builder().name("web_cleanup_cookies").build();
 
 		ClearCookiesWriter.of(clearCookies).writeXML(doc, root, "web_cleanup_cookies", Files.createTempDir().getAbsolutePath());
-		String generatedResult = WrittingTestUtils.getXmlString(doc);
+		final String generatedResult = WrittingTestUtils.getXmlString(doc);
 		final String timestamp = generatedResult.substring(generatedResult.indexOf("ts=") + 4, generatedResult.indexOf("ts=") + 17);
-		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><js-action filename=\"scripts/jsAction_d78b0b1faea953556ceba40841e8f3c456e6c14435a730d7f830f71b0ec1046a.js\" "
+		final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><js-action filename=\"scripts/jsAction_" + WriterUtils.getElementUid(clearCookies)+ ".js\" "
 				+ "name=\"web_cleanup_cookies\" ts=\"" + timestamp + "\" "
-				+ "uid=\"d78b0b1faea953556ceba40841e8f3c456e6c14435a730d7f830f71b0ec1046a\"/></test-root>";
+				+ "uid=\"" + WriterUtils.getElementUid(clearCookies)+ "\"/></test-root>";
 
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
 	}

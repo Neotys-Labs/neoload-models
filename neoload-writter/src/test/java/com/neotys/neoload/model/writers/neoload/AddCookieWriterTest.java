@@ -24,9 +24,9 @@ public class AddCookieWriterTest {
 		String generatedResult = WrittingTestUtils.getXmlString(doc);
 		final String timestamp = generatedResult.substring(generatedResult.indexOf("ts=") + 4, generatedResult.indexOf("ts=") + 17);
 		final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><js-action filename=\"scripts/jsAction_8683a380b497cad6ceaa8d0032953c4009beb719df7cff5b04672326641ef361.js\" "
+				+ "<test-root><js-action filename=\"scripts/jsAction_" + WriterUtils.getElementUid(addCookie)+ ".js\" "
 				+ "name=\"setCookieForServer cookieName\" ts=\"" + timestamp + "\" "
-				+ "uid=\"8683a380b497cad6ceaa8d0032953c4009beb719df7cff5b04672326641ef361\"/></test-root>";
+				+ "uid=\"" + WriterUtils.getElementUid(addCookie)+ "\"/></test-root>";
 
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
 	}
@@ -63,6 +63,6 @@ public class AddCookieWriterTest {
 	public void testbuildJavascript() {
 		final AddCookie addCookie = ImmutableAddCookie.builder().name("name").cookieName("cookieName").cookieValue("cookieValue").domain("cookieDomain").expires("Thu, 2 Aug 2007 20:47:11 UTC").path("cookiePath").build();
 		final String expectedResult = "// Add cookie to a HTTP server.\ncontext.currentVU.setCookieForServer(\"cookieDomain\",\"cookieName=cookieValue; expires=Thu, 2 Aug 2007 20:47:11 UTC; path=cookiePath\");";
-		Assertions.assertThat(AddCookieWriter.buildJavascript(addCookie)).isEqualTo(expectedResult);
+		Assertions.assertThat((new AddCookieWriter(addCookie)).getJavascriptContent()).isEqualTo(expectedResult);
 	}
 }

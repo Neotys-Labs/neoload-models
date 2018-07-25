@@ -21,7 +21,7 @@ public class JavascriptWriter extends ElementWriter {
 	private static final String XML_ATTRIBUTE_NAME = "name";
 	private static final String XML_ATTRIBUTE_TS = "ts";	
 
-	public JavascriptWriter(Javascript javascript) {
+	public JavascriptWriter(com.neotys.neoload.model.core.Element javascript) {
 		super(javascript);
 	}
 
@@ -56,12 +56,16 @@ public class JavascriptWriter extends ElementWriter {
 				LOGGER.error("An error occured while writing the Javascript file \"" + jsFile.getAbsolutePath() + ".");
 				return;				
 			}
-			final String strContent = ((Javascript) element).getContent();
+			final String strContent = getJavascriptContent();
 			final byte[] content = strContent == null ? new byte[0] : strContent.getBytes();
 			Files.write(content, jsFile);
 		} catch (IOException e) {
 			LOGGER.error("An error occured while writing the Javascript file \"" + jsFile.getAbsolutePath() + "\":\n" + e);
 			return;
 		}
+	}
+	
+	protected String getJavascriptContent(){
+		return ((Javascript) element).getContent();
 	}
 }
