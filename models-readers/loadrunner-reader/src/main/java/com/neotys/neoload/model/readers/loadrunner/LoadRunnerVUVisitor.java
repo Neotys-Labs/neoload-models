@@ -1,10 +1,4 @@
 package com.neotys.neoload.model.readers.loadrunner;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.antlr.v4.runtime.Token;
 
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.listener.EventListener;
@@ -12,14 +6,13 @@ import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
 import com.neotys.neoload.model.parsers.CPP14Parser;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
-import com.neotys.neoload.model.repository.Container;
-import com.neotys.neoload.model.repository.Header;
-import com.neotys.neoload.model.repository.ImmutableContainer;
-import com.neotys.neoload.model.repository.Page;
-import com.neotys.neoload.model.repository.PageElement;
-import com.neotys.neoload.model.repository.Request;
-import com.neotys.neoload.model.repository.Validator;
-import com.neotys.neoload.model.repository.VariableExtractor;
+import com.neotys.neoload.model.repository.*;
+import org.antlr.v4.runtime.Token;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
@@ -189,7 +182,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	
 	public void setCurrentRequestFromPage(final Page currentPage) {
 		if(!currentPage.getChilds().isEmpty()){
-			for(final PageElement pageElement : currentPage.getChilds()){
+			for(final Element pageElement : currentPage.getChilds()){
 				if(pageElement instanceof Request){
 					this.currentRequest = Optional.of((Request)pageElement);
 					return;
