@@ -11,12 +11,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.repository.GetFollowLinkRequest;
 import com.neotys.neoload.model.repository.GetPlainRequest;
 import com.neotys.neoload.model.repository.ImmutableGetFollowLinkRequest;
 import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
+import com.neotys.neoload.model.repository.ImmutableParameter;
+import com.neotys.neoload.model.repository.ImmutablePostFormRequest;
 import com.neotys.neoload.model.repository.ImmutablePostSubmitFormRequest;
 import com.neotys.neoload.model.repository.ImmutableServer;
+import com.neotys.neoload.model.repository.Parameter;
+import com.neotys.neoload.model.repository.PostRequest;
 import com.neotys.neoload.model.repository.PostSubmitFormRequest;
 import com.neotys.neoload.model.repository.Request;
 import com.neotys.neoload.model.repository.Server;
@@ -166,6 +171,34 @@ public abstract class WebRequest {
     }
     
     /**
+     * 
+     * @param method represent the LR "web_submit_data" function
+     * @return the associate POST_REQUEST
+     */
+    public static PostRequest buildPostFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    	URL mainUrl = Preconditions.checkNotNull(getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method));
+    	
+    	ImmutablePostFormRequest.Builder requestBuilder = ImmutablePostFormRequest.builder()
+                .name(mainUrl.getPath())
+                .path(mainUrl.getPath())
+                .server(getServer(visitor.getReader(), mainUrl))
+                .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method));
+
+    	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
+    	requestBuilder.addAllValidators(visitor.getCurrentValidators());
+    	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
+    	visitor.getCurrentHeaders().clear();
+    	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
+    	
+    	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
+				.stream().forEach(requestBuilder::addPostParameters));
+        
+    	MethodUtils.queryToParameterList(mainUrl.getQuery()).forEach(requestBuilder::addParameters);
+        
+        return requestBuilder.build();
+    }  
+    
+    /**
      * Generate an immutable request of type Follow link
      * @param url
      * @return
@@ -193,7 +226,7 @@ public abstract class WebRequest {
      * @return
      */
     @VisibleForTesting
-    protected static PostSubmitFormRequest buildPostSubmitFormRequest(final LoadRunnerVUVisitor visitor, final String name) {
+    protected static PostSubmitFormRequest buildPostSubmitFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name) {
     	ImmutablePostSubmitFormRequest.Builder requestBuilder = ImmutablePostSubmitFormRequest.builder()
 				.name(name)      
 				.path(name)
@@ -205,6 +238,28 @@ public abstract class WebRequest {
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());    	    	
     	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
+    	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
+				.stream().forEach(requestBuilder::addPostParameters));
         return requestBuilder.build();
     }
+    
+    protected static URL getUrl(final String leftBrace, final String rightBrace, MethodCall method) {
+		return getUrlFromMethodParameters(leftBrace, rightBrace, method, "Action");
+	}
+    
+    /**
+   	 * generate parameters from the "ITEM_DATA" of a "web_submit_data"
+   	 * @param extractPart the extract containing only the "ITEM_DATA" of the "web_submit_data"
+   	 * @return
+   	 */
+       @VisibleForTesting
+   	public static List<Parameter> buildPostParamsFromExtract(List<String> extractPart) {
+
+           List<Item> items = MethodUtils.parseItemList(extractPart);
+           return items.stream()
+                   .filter(item -> item.getAttribute("Name").isPresent())
+                   .<Parameter>map(item -> ImmutableParameter.builder().name(item.getAttribute("Name").get()).value(item.getAttribute("Value")).build())
+                   .collect(Collectors.toList());
+
+   	}
 }

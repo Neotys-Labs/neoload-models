@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 import com.neotys.neoload.model.repository.PostSubmitFormRequest;
 import com.neotys.neoload.model.repository.Request;
 
-public class PostSubmitFormRequestWriter extends RequestWriter {
+public class PostSubmitFormRequestWriter extends PostRequestWriter {
 	
 	public PostSubmitFormRequestWriter(final PostSubmitFormRequest request) {
 		super(request);
