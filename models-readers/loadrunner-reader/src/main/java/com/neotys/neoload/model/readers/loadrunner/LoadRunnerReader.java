@@ -296,7 +296,7 @@ public class LoadRunnerReader extends Reader {
 	}
 
 	public Path getCurrentScriptFolder() {
-		return currentScriptFolder.toPath();
+		return currentScriptFolder != null ? currentScriptFolder.toPath() : Paths.get(folder);
 	}
 
 	/**
