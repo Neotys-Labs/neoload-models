@@ -42,7 +42,7 @@ public class WebCustomRequest extends WebRequest {
     	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
 		if (MethodUtils.getParameterWithName(method, "Body").isPresent()) {
-			final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getProjectFolder());
+			final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
 
 			final ImmutablePostTextRequest.Builder builder = ImmutablePostTextRequest.builder()
 					.name(mainUrl.getPath())

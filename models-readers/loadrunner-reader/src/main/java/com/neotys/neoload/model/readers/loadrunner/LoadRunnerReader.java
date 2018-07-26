@@ -42,7 +42,7 @@ public class LoadRunnerReader extends Reader {
 
 	private final EventListener eventListener;
 	private final String projectName;
-	private String currentScriptName = null;
+	private File currentScriptFolder = null;
 
 	@VisibleForTesting
 	protected List<Server> currentProjectServers = new ArrayList<>();
@@ -109,8 +109,8 @@ public class LoadRunnerReader extends Reader {
 
 	private void readScript(final ImmutableProject.Builder projectBuilder, final File projectFolder) {
 		try {
-			currentScriptName = projectFolder.getName();
-			eventListener.startScript(currentScriptName);
+			currentScriptFolder = projectFolder;
+			eventListener.startScript(currentScriptFolder.getName());
 			final ProjectFileReader projectFileReader = new ProjectFileReader(this, eventListener, projectFolder);
 			final Map<String, String> actionsMap = projectFileReader.getActions();
 			if (actionsMap.isEmpty()) {
@@ -292,11 +292,11 @@ public class LoadRunnerReader extends Reader {
 	}
 
 	public String getCurrentScriptName() {
-		return currentScriptName;
+		return currentScriptFolder != null ? currentScriptFolder.getName() : null;
 	}
 
-	public Path getProjectFolder() {
-		return Paths.get(folder);
+	public Path getCurrentScriptFolder() {
+		return currentScriptFolder.toPath();
 	}
 
 	/**

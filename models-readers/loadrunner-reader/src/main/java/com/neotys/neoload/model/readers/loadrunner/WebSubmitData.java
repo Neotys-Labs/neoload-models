@@ -44,7 +44,7 @@ public class WebSubmitData extends WebRequest {
 				.path(mainUrl.getPath())
 				.server(getServer(visitor.getReader(), mainUrl))
 				.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
-				.recordedFiles(getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getProjectFolder()));
+				.recordedFiles(getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder()));
 
 		requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
 		requestBuilder.addAllValidators(visitor.getCurrentValidators());

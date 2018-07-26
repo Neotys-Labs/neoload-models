@@ -21,7 +21,7 @@ public class WebUrl extends WebRequest {
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
         
         final URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
-        final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getProjectFolder());
+        final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
         final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
         pageBuilder.addChilds(buildGetRequestFromURL(visitor, mainUrl, recordedFiles, recordedHeaders));
 
