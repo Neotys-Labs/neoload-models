@@ -13,6 +13,7 @@ public interface UserPath extends Element {
 	Container getActionsContainer();
 	Container getEndContainer();
 
+	@Override
 	default Stream<Element> flattened() {
 		return Stream.of(getInitContainer(), getActionsContainer(), getEndContainer()).flatMap(Container::flattened);
 	}

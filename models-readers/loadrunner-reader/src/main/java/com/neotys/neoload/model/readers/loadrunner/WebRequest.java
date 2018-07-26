@@ -256,7 +256,7 @@ public abstract class WebRequest {
 
 	private static String getRecordedFileName(final Properties properties, final String key, Path projectDataPath) {
 		final String propertyValue = properties.getProperty(key, "");
-		if (isNullOrEmpty(propertyValue) || propertyValue.equals("NONE")) {
+		if (isNullOrEmpty(propertyValue) || "NONE".equals(propertyValue)) {
 			return "";
 		}
 		return projectDataPath.resolve(propertyValue).toString();

@@ -37,6 +37,9 @@ public class NeoLoadWriter {
 	private static final String PROJECT_VERSION = "6.4";
 	private static final String PRODUCT_VERSION = "6.6.0";
 
+	public static final String RECORDED_REQUESTS_FOLDER = "recorded-requests";
+	public static final String RECORDED_RESPONSE_FOLDER = "recorded-responses";
+
 	public enum ConfigFiles {
 								REPOSITORY("repository.xml"),
 								SCENARIO("scenario.xml"),
@@ -52,9 +55,6 @@ public class NeoLoadWriter {
 	private Project project;
 	private final String nlProjectFolder;
 	private Map<String, List<File>> fileToCopy;
-
-	public static String RECORDED_REQUESTS_FOLDER = "recorded-requests";
-	public static String RECORDED_RESPONSE_FOLDER = "recorded-responses";
 
 	public NeoLoadWriter(final Project project, final String nlProjectFolder, final Map<String, List<File>> map) {
 		this.project = project;
@@ -214,12 +214,12 @@ public class NeoLoadWriter {
 						"req_" + recordedRequestBodyPathFromLRProject.getFileName().toString());
 				Files.createFile(recordedRequestBodyPathToNLProject);
 
-				final FileOutputStream fileOutputStream = new FileOutputStream(recordedRequestBodyPathToNLProject.toFile(), true);
-				fileOutputStream.write(Files.readAllBytes(recordedRequestHeaderPathFromLRProject));
-				fileOutputStream.write(Files.readAllBytes(recordedRequestBodyPathFromLRProject));
+				try (final FileOutputStream fileOutputStream = new FileOutputStream(recordedRequestBodyPathToNLProject.toFile(), true)) {
+					fileOutputStream.write(Files.readAllBytes(recordedRequestHeaderPathFromLRProject));
+					fileOutputStream.write(Files.readAllBytes(recordedRequestBodyPathFromLRProject));
 
-				fileOutputStream.flush();
-				fileOutputStream.close();
+					fileOutputStream.flush();
+				}
 			} catch (IOException e) {
 				logger.error("Error while copying the recorded request header, body to NeoLoad project folder", e);
 			}

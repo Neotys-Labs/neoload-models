@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +28,7 @@ import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_RE
 
 public abstract class RequestWriter extends ElementWriter {
 
-	private static Logger LOG = LoggerFactory.getLogger(RequestWriter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RequestWriter.class);
 
 	public static final String XML_TAG_NAME = "http-action";
 	public static final String XML_ATTR_METHOD = "method";
@@ -172,15 +173,17 @@ public abstract class RequestWriter extends ElementWriter {
 			final Properties properties = new Properties();
 			// we remove the status line from header file.
 			final String contentWithoutFirstLine = Files.lines(Paths.get(recordedRequestHeaderFile)).skip(1).collect(Collectors.joining(System.lineSeparator()));
-			properties.load(CharSource.wrap(contentWithoutFirstLine).openStream());
-			properties.forEach((key, value) -> {
-				if (key instanceof String && value instanceof String) {
-					final Element element = document.createElement(XML_TAG_REQUEST_HEADER);
-					element.setAttribute("name", (String) key);
-					element.setAttribute("value", (String) value);
-					xmlRequest.appendChild(element);
-				}
-			});
+			try(final Reader reader = CharSource.wrap(contentWithoutFirstLine).openStream()) {
+				properties.load(reader);
+				properties.forEach((key, value) -> {
+					if (key instanceof String && value instanceof String) {
+						final Element element = document.createElement(XML_TAG_REQUEST_HEADER);
+						element.setAttribute("name", (String) key);
+						element.setAttribute("value", (String) value);
+						xmlRequest.appendChild(element);
+					}
+				});
+			}
 		} catch (IOException e) {
 			LOG.error("Can not write recorded request headers", e);
 		}
