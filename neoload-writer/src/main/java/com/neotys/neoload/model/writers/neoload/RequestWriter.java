@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,6 +22,7 @@ import static com.google.common.io.Files.getFileExtension;
 import static com.google.common.io.Files.getNameWithoutExtension;
 import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_REQUESTS_FOLDER;
 import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_RESPONSE_FOLDER;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public abstract class RequestWriter extends ElementWriter {
 
@@ -50,7 +52,6 @@ public abstract class RequestWriter extends ElementWriter {
 	private static final String XML_TAG_RECORDED_REQUEST = "requestContentFileDescription";
 	private static final String XML_TAG_RECORDED_RESPONSE = "responsePageFileDescription";
 	private static final String XML_TAG_RESPONSE_HEADERS = "responseHeaders";
-
 
 	private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("(\\d{3})");
 
@@ -97,12 +98,14 @@ public abstract class RequestWriter extends ElementWriter {
 
 	private void writeRecordedFiles(final Request request, final Document document, final Element xmlRequest, final String outputFolder) {
 		//Request content
-		final String requestFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestBodyFile)
-				.orElse(request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile).orElse(null));
-		if (!isNullOrEmpty(requestFile)) {
+		final String requestBodyFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestBodyFile).orElse(null);
+		final String requestHeaderFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile).orElse(null);
+		if (!isNullOrEmpty(requestBodyFile) || !isNullOrEmpty(requestHeaderFile) ) {
 			final Element element = document.createElement(XML_TAG_RECORDED_REQUEST);
-			addResourceFileWithUuid(outputFolder, element, RECORDED_REQUESTS_FOLDER, "req_", requestFile);
-			xmlRequest.appendChild(element);
+			final boolean copied = copyRequestContent(outputFolder, element, requestHeaderFile, requestBodyFile);
+			if (copied) {
+				xmlRequest.appendChild(element);
+			}
 		}
 
 		//Response header
@@ -115,27 +118,59 @@ public abstract class RequestWriter extends ElementWriter {
 		final String responseBodyFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedResponseBodyFile).orElse(null);
 		if (!isNullOrEmpty(responseBodyFile)) {
 			final Element element = document.createElement(XML_TAG_RECORDED_RESPONSE);
-			addResourceFileWithUuid(outputFolder, element, RECORDED_RESPONSE_FOLDER, "res_", responseBodyFile);
-			xmlRequest.appendChild(element);
+			final boolean copied = copyResponseBody(outputFolder, element, responseBodyFile);
+			if (copied) {
+				xmlRequest.appendChild(element);
+			}
 		}
 	}
 
-	private void addResourceFileWithUuid(final String outputFolder, final Element element,
-										 final String resourceFolderName, final String baseName,
-										 final String resourcePathAsString) {
+	private boolean copyRequestContent(final String outputFolder, final Element element,
+									   final String requestHeaderFile, final String requestBodyFile) {
+		final boolean hasHeaders = !isNullOrEmpty(requestHeaderFile);
+		final boolean hasBody = !isNullOrEmpty(requestBodyFile);
+
+		final Path requestHeaderPathFromLRProject = hasHeaders ? Paths.get(requestHeaderFile) : null;
+		final Path requestBodyPathFromLRProject = hasBody ? Paths.get(requestBodyFile) : null;
+
+		final Path file = hasBody ? requestBodyPathFromLRProject : requestHeaderPathFromLRProject;
+		final String srcFileNameWithoutExt = getNameWithoutExtension(file.getFileName().toString());
+		final String newName = "req_" + srcFileNameWithoutExt + "_" + UUID.randomUUID() + "." + getFileExtension(file.getFileName().toString());
+		final Path filePathInNLProject = Paths.get(outputFolder, RECORDED_REQUESTS_FOLDER, newName);
+
+		try (final FileOutputStream fileOutputStream = new FileOutputStream(filePathInNLProject.toFile())) {
+			if (hasHeaders) {
+				fileOutputStream.write(Files.readAllBytes(requestHeaderPathFromLRProject));
+			}
+			if (hasBody) {
+				fileOutputStream.write(Files.readAllBytes(requestBodyPathFromLRProject));
+			}
+			fileOutputStream.flush();
+			element.setTextContent(RECORDED_REQUESTS_FOLDER + "/" + newName);
+			return true;
+		} catch (IOException e) {
+			LOG.error("Cannot copy resource " + file + " to " + filePathInNLProject, e);
+		}
+		return false;
+
+	}
+
+	private boolean copyResponseBody(final String outputFolder, final Element element,
+									 final String resourcePathAsString) {
 		final Path resourcePathInSrcProject = Paths.get(resourcePathAsString);
 		final String srcFileName = resourcePathInSrcProject.getFileName().toString();
 		final String srcFileNameWithoutExt = getNameWithoutExtension(resourcePathInSrcProject.getFileName().toString());
-		String fileName = baseName + srcFileName;
-		final Path resourcePathInNlProject = Paths.get(outputFolder, resourceFolderName, fileName);
-		final String newName = baseName + srcFileNameWithoutExt + "_" + UUID.randomUUID() + "." + getFileExtension(fileName);
+
+		final String newName = "res_" + srcFileNameWithoutExt + "_" + UUID.randomUUID() + "." + getFileExtension(srcFileName);
+		final Path resourcePathInNlProject = Paths.get(outputFolder, RECORDED_RESPONSE_FOLDER, newName);
 		try {
-			Files.move(resourcePathInNlProject, resourcePathInNlProject.resolveSibling(newName));
-			fileName = newName;
+			Files.copy(resourcePathInSrcProject, resourcePathInNlProject, REPLACE_EXISTING);
+			element.setTextContent(RECORDED_RESPONSE_FOLDER + "/" + newName);
+			return true;
 		} catch (final IOException e) {
-			LOG.error("Can rename resource " + fileName + " to " + newName, e);
+			LOG.error("Cannot copy resource " + resourcePathInSrcProject + " to " + resourcePathInNlProject, e);
+			return false;
 		}
-		element.setTextContent(resourceFolderName + "/" + fileName);
 	}
 
 	private void writeRecordedResponseHeaders(final String recordedResponseHeaderFile, final Document document, final Element xmlRequest) {
