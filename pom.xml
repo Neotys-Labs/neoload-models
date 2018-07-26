@@ -63,8 +63,10 @@
 		<antlr.version>4.7</antlr.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.classic.version>1.2.3</logback.classic.version>
-                <gpg.executable>/usr/bin/gpg</gpg.executable>
+		<gpg.executable>/usr/bin/gpg</gpg.executable>
 		<gpg.passphrase>${env.PGP_PASSPHRASE}</gpg.passphrase>
+		<jacoco.version>0.7.7.201606060606</jacoco.version>
+
 	</properties>
 
 	<dependencyManagement>
@@ -204,6 +206,12 @@
 				<artifactId>ini4j</artifactId>
 				<version>0.5.2</version>
 			</dependency>
+			<dependency>
+				<groupId>org.codehaus.sonar-plugins.java</groupId>
+				<artifactId>sonar-jacoco-listeners</artifactId>
+				<version>3.2</version>
+				<scope>test</scope>
+			</dependency>
 
 		</dependencies>
 
@@ -305,6 +313,27 @@
 						<version>1.13.1</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
