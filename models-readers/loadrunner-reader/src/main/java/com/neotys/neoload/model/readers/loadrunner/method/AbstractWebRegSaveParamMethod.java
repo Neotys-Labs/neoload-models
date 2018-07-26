@@ -32,6 +32,7 @@ public abstract class AbstractWebRegSaveParamMethod implements LoadRunnerMethod 
 	private static final String ATTRIBUTE_SAVELEN = "SaveLen";
 	private static final String ATTRIBUTE_SAVEOFFSET = "SaveOffset";
 	private static final String ATTRIBUTE_SEARCH = "Search";
+	private static final String ATTRIBUTE_SCOPE = "Scope";
 	private static final String ATTRIBUTE_DFES = "DFEs";
 	private static final String ATTRIBUTE_HEADERNAMES = "HeaderNames";
 	private static final String ATTRIBUTE_REQUESTURL = "RequestURL";
@@ -207,7 +208,7 @@ public abstract class AbstractWebRegSaveParamMethod implements LoadRunnerMethod 
 	private SearchAttribute handleSearch(final MethodCall method, final WarningCallbBack warningCallback, final String leftBrace,
 			final String rightBrace) {
 		final SearchAttribute searchAttribute = SearchAttribute.from(
-				MethodUtils.getParameterValueWithName(leftBrace, rightBrace, method, ATTRIBUTE_SEARCH).orElse(ATTRIBUTE_VALUE_ALL));
+				MethodUtils.getParameterValueWithName(leftBrace, rightBrace, method, ATTRIBUTE_SEARCH).orElse(MethodUtils.getParameterValueWithName(leftBrace, rightBrace, method, ATTRIBUTE_SCOPE).orElse(ATTRIBUTE_VALUE_ALL)));
 		if (searchAttribute == SearchAttribute.COOKIES) {
 			logWarn("The option \"Search=Cookies\" is not supported in NeoLoad. The extractor type has been set to \"Headers\".",
 					warningCallback);
