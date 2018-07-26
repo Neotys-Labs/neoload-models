@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.repository.RecordedFiles;
 import com.neotys.neoload.model.repository.Request;
 import org.slf4j.Logger;
@@ -129,6 +130,7 @@ public abstract class RequestWriter extends ElementWriter {
 									   final String requestHeaderFile, final String requestBodyFile) {
 		final boolean hasHeaders = !isNullOrEmpty(requestHeaderFile);
 		final boolean hasBody = !isNullOrEmpty(requestBodyFile);
+		Preconditions.checkState(hasHeaders || hasBody);
 
 		final Path requestHeaderPathFromLRProject = hasHeaders ? Paths.get(requestHeaderFile) : null;
 		final Path requestBodyPathFromLRProject = hasBody ? Paths.get(requestBodyFile) : null;
