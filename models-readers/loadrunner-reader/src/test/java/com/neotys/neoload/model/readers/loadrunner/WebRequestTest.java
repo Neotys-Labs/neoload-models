@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
@@ -87,7 +88,7 @@ public class WebRequestTest {
 	@Test
 	public void buildRequestFromURLTest() throws MalformedURLException {
 		final URL urlTest = new URL("https://test_server.com:8080/request/path?param1=value1&param2&param3=value%203");		
-		final GetRequest generatedResult = WebRequest.buildGetRequestFromURL(LOAD_RUNNER_VISITOR, urlTest, ImmutableRecordedFiles.builder().build());
+		final GetRequest generatedResult = WebRequest.buildGetRequestFromURL(LOAD_RUNNER_VISITOR, urlTest, Optional.empty());
 
 		// no matter the request name, it is generated randomly
 		Request expectedRequestResult = ImmutableGetPlainRequest.builder()

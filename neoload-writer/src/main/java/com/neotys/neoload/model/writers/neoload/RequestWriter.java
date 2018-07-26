@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.writers.neoload;
 
 import com.google.common.io.CharSource;
+import com.neotys.neoload.model.repository.RecordedFiles;
 import com.neotys.neoload.model.repository.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,13 +101,13 @@ public abstract class RequestWriter extends ElementWriter {
 
 	private void writeRecordedFiles(final Request request, final Document document, final Element xmlRequest, final String outputFolder) {
 		//Request header
-		final String requestHeaderFile = request.getRecordedFiles().recordedRequestHeaderFile().orElse(null);
+		final String requestHeaderFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile).orElse(null);
 		if (!isNullOrEmpty(requestHeaderFile)) {
 			writeRecordedRequestHeaders(requestHeaderFile, document, xmlRequest);
 		}
 
 		//Request body
-		final String requestBodyFile = request.getRecordedFiles().recordedRequestBodyFile().orElse(null);
+		final String requestBodyFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestBodyFile).orElse(null);
 		if (!isNullOrEmpty(requestBodyFile)) {
 			final Element element = document.createElement(XML_TAG_RECORDED_REQUEST);
 			addResourceFileWithUuid(outputFolder, element, RECORDED_REQUESTS_FOLDER, "req_", requestBodyFile);
@@ -114,13 +115,13 @@ public abstract class RequestWriter extends ElementWriter {
 		}
 
 		//Response header
-		final String responseHeaderFile = request.getRecordedFiles().recordedResponseHeaderFile().orElse(null);
+		final String responseHeaderFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedResponseHeaderFile).orElse(null);
 		if (!isNullOrEmpty(responseHeaderFile)) {
 			writeRecordedResponseHeaders(responseHeaderFile, document, xmlRequest);
 		}
 
 		//Response body
-		final String responseBodyFile = request.getRecordedFiles().recordedResponseBodyFile().orElse(null);
+		final String responseBodyFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedResponseBodyFile).orElse(null);
 		if (!isNullOrEmpty(responseBodyFile)) {
 			final Element element = document.createElement(XML_TAG_RECORDED_RESPONSE);
 			addResourceFileWithUuid(outputFolder, element, RECORDED_RESPONSE_FOLDER, "res_", responseBodyFile);

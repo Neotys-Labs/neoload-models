@@ -141,7 +141,6 @@ public class NeoLoadWriter {
 
 	/**
 	 * Copy parameters data files from LR project to NL project
-	 * @param destFolderFullPath
 	 */
 	private void copyDataFilesToDestFolder(String destFolderFullPath) {
 		if (fileToCopy == null)
@@ -170,8 +169,8 @@ public class NeoLoadWriter {
 
 		final Set<Request> allRequests = getAllRequests(project);
 		allRequests.forEach(request -> {
-				final String recordedRequestHeaderFile = request.getRecordedFiles().recordedRequestHeaderFile().orElse(null);
-				final String recordedRequestBodyFile = request.getRecordedFiles().recordedRequestBodyFile().orElse(null);
+				final String recordedRequestHeaderFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile).orElse(null);
+				final String recordedRequestBodyFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestBodyFile).orElse(null);
 
 				copyRequestContentFile(recordedRequestHeaderFile, recordedRequestBodyFile);
 				copyResponseContentFile(request.getRecordedFiles());
@@ -227,11 +226,11 @@ public class NeoLoadWriter {
 		}
 	}
 
-	private void copyResponseContentFile(RecordedFiles recordedFiles) {
+	private void copyResponseContentFile(final Optional<RecordedFiles> recordedFiles) {
 		//Copy file "lrProjectFolder/data/t22.htm"
 		//to "nlProjectFolder/recorded-responses/t22.htm"
 
-		final String recordedResponseBodyFile = recordedFiles.recordedResponseBodyFile().orElse(null);
+		final String recordedResponseBodyFile = recordedFiles.flatMap(RecordedFiles::recordedResponseBodyFile).orElse(null);
 		if (!isNullOrEmpty(recordedResponseBodyFile)) {
 			Path recordedResponseBodyPathFromLRProject = Paths.get(recordedResponseBodyFile);
 			Path recordedResponseBodyPathToNLProject = Paths.get(nlProjectFolder, RECORDED_RESPONSE_FOLDER,

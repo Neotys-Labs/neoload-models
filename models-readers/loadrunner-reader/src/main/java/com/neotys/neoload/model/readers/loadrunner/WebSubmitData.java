@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.repository.*;
 
 import java.net.URL;
+import java.util.Optional;
 
 public class WebSubmitData extends WebRequest {
 	
@@ -19,7 +20,7 @@ public class WebSubmitData extends WebRequest {
 		pageBuilder.addChilds(postRequest);
 
 		// we use the headers of the main request for the resources.
-		final RecordedFiles resourceRecordedFiles = ImmutableRecordedFiles.builder().recordedRequestHeaderFile(postRequest.getRecordedFiles().recordedRequestHeaderFile()).build();
+		final Optional<RecordedFiles> resourceRecordedFiles = postRequest.getRecordedFiles().map(recordedFiles -> ImmutableRecordedFiles.builder().recordedRequestHeaderFile(recordedFiles.recordedRequestHeaderFile()).build());
 
         MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
 				.ifPresent(stringList -> getUrlList(stringList, getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method))
