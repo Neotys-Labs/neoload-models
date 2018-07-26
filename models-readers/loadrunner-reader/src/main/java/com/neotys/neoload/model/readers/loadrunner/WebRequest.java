@@ -23,7 +23,7 @@ import static java.nio.file.Files.newInputStream;
 
 public abstract class WebRequest {
 
-    static Logger logger = LoggerFactory.getLogger(WebRequest.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(WebRequest.class);
     
     /**
      * item delimiter used in ITEMDATA and EXTRARES part for LR's functions
@@ -73,7 +73,7 @@ public abstract class WebRequest {
 			//the +1 is for the "=" that follows the url tag
 			return getUrlFromParameterString(leftBrace, rightBrace, urlString.substring(urlTag.length()+1));
         }catch (IllegalArgumentException e) {
-            logger.error("Cannot find URL in WebUrl Node:"+method.getName()  + "\nThe error is : " + e);
+            LOGGER.error("Cannot find URL in WebUrl Node:"+method.getName()  + "\nThe error is : " + e);
         }
         return null;
     }
@@ -85,7 +85,7 @@ public abstract class WebRequest {
 			urlStr = MethodUtils.normalizeString(leftBrace, rightBrace, urlParam);
 			return new URL(urlStr);
 		}catch(MalformedURLException e) {
-			logger.error("Invalid URL in LR project:" + urlStr + "\nThe error is : " + e);
+			LOGGER.error("Invalid URL in LR project:" + urlStr + "\nThe error is : " + e);
 			if(e.getMessage().startsWith("no protocol") && urlParam.startsWith(leftBrace)) {
 				// the protocol is in a variable like {BaseUrl}/index.html, try to do something
 				return getUrlFromParameterString(leftBrace, rightBrace, "http://" + urlParam);
@@ -117,21 +117,22 @@ public abstract class WebRequest {
 
 	private static Optional<URL> getURLFromItem(final URL context, final Item item,  final String urlTag) {
 		try {
-			return Optional.ofNullable(new URL(context, item.getAttribute(urlTag).get()));
+			return Optional.of(new URL(context, item.getAttribute(urlTag).get()));
 		} catch (MalformedURLException e) {
-			logger.warn("Invalid URL found in request, could be a variable in the host");
+			LOGGER.warn("Invalid URL found in request, could be a variable in the host");
 		}
 		return Optional.empty();
 	}
     	
     /**
      * Generate an immutable request from a given URL object
-     * @param url
-     * @return
      */
     @VisibleForTesting
-    protected static GetPlainRequest buildGetRequestFromURL(final LoadRunnerVUVisitor visitor, final URL url, final Optional<RecordedFiles> recordedFiles) {
-    	ImmutableGetPlainRequest.Builder requestBuilder = ImmutableGetPlainRequest.builder()
+    protected static GetPlainRequest buildGetRequestFromURL(final LoadRunnerVUVisitor visitor,
+															final URL url,
+															final Optional<RecordedFiles> recordedFiles,
+															final List<Header> recordedHeaders) {
+    	final ImmutableGetPlainRequest.Builder requestBuilder = ImmutableGetPlainRequest.builder()
 				// Just create a unique name, no matter the request name, should just be unique under a page
                 .name(UUID.randomUUID().toString())
                 .path(url.getPath())
@@ -140,6 +141,7 @@ public abstract class WebRequest {
 				.recordedFiles(recordedFiles);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
+		requestBuilder.addAllHeaders(recordedHeaders);
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
@@ -148,7 +150,7 @@ public abstract class WebRequest {
         
         return requestBuilder.build();
     }
-    
+
     /**
      *
      * @param method represent the LR "web_submit_data" function
@@ -179,9 +181,6 @@ public abstract class WebRequest {
 
     /**
      * Generate an immutable request of type Follow link
-     * @param visitor
-     * @param textFollowLink
-     * @return
      */
     @VisibleForTesting
     protected static GetFollowLinkRequest buildGetFollowLinkRequest(final LoadRunnerVUVisitor visitor, final String name, final String textFollowLink) {
@@ -236,10 +235,10 @@ public abstract class WebRequest {
 			final Path projectDataPath = projectFolder.resolve("data");
 			properties.load(newInputStream(projectDataPath.resolve(snapshotFileName)));
 
-			final String requestHeaderFile = getRecordedFileName(properties, "RequestHeaderFile", projectDataPath);
-			final String requestBodyFile = getRecordedFileName(properties, "RequestBodyFile", projectDataPath);
-			final String responseHeaderFile = getRecordedFileName(properties,"ResponseHeaderFile", projectDataPath);
-			final String responseBodyFile = getRecordedFileName(properties,"FileName1", projectDataPath);
+			final Optional<String> requestHeaderFile = getRecordedFileName(properties, "RequestHeaderFile", projectDataPath);
+			final Optional<String> requestBodyFile = getRecordedFileName(properties, "RequestBodyFile", projectDataPath);
+			final Optional<String> responseHeaderFile = getRecordedFileName(properties,"ResponseHeaderFile", projectDataPath);
+			final Optional<String> responseBodyFile = getRecordedFileName(properties,"FileName1", projectDataPath);
 
 			return Optional.of(ImmutableRecordedFiles.builder()
 					.recordedRequestHeaderFile(requestHeaderFile)
@@ -248,18 +247,38 @@ public abstract class WebRequest {
 					.recordedResponseBodyFile(responseBodyFile)
 					.build());
 		} catch (final IOException e) {
-			logger.warn("Cannot find recorded files: ", e);
+			LOGGER.warn("Cannot find recorded files: ", e);
 		}
 
 		return Optional.empty();
 	}
 
-	private static String getRecordedFileName(final Properties properties, final String key, Path projectDataPath) {
+	private static Optional<String> getRecordedFileName(final Properties properties, final String key, Path projectDataPath) {
 		final String propertyValue = properties.getProperty(key, "");
 		if (isNullOrEmpty(propertyValue) || "NONE".equals(propertyValue)) {
-			return "";
+			return Optional.empty();
 		}
-		return projectDataPath.resolve(propertyValue).toString();
+		return Optional.ofNullable(projectDataPath.resolve(propertyValue).toString());
+	}
+
+	static List<Header> getHeadersFromRecordedFile(final Optional<String> recordedRequestHeaderFile){
+    	if(!recordedRequestHeaderFile.isPresent()){
+    		return ImmutableList.of();
+		}
+		try (final Stream<String> linesStream = Files.lines(Paths.get(recordedRequestHeaderFile.get()))) {
+			final String contentWithoutFirstLine = linesStream.skip(1).collect(Collectors.joining(System.lineSeparator()));
+			try (final Reader reader = CharSource.wrap(contentWithoutFirstLine).openStream()) {
+				final Properties properties = new Properties();
+				properties.load(reader);
+				return properties.entrySet().stream()
+						.filter(entry -> entry.getKey() instanceof String && entry.getValue() instanceof String)
+						.map(entry -> ImmutableHeader.builder().headerName((String) entry.getKey()).headerValue((String) entry.getValue()).build())
+						.collect(Collectors.toList());
+			}
+		} catch (final IOException e) {
+			LOGGER.error("Can not read recorded request headers", e);
+		}
+		return ImmutableList.of();
 	}
 
     protected static URL getUrl(final String leftBrace, final String rightBrace, MethodCall method) {

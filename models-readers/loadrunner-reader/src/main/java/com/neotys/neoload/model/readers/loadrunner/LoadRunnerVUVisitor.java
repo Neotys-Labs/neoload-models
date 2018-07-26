@@ -148,7 +148,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		return globalHeaders;
 	}
 	
-	public static final int getLineNumber(final CPP14Parser.MethodcallContext ctx) {
+	public static int getLineNumber(final CPP14Parser.MethodcallContext ctx) {
 		final Token token = ctx.getStart();
 		if (token == null) {
 			return 0;

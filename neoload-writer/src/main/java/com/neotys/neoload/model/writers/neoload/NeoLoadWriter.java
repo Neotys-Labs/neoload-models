@@ -33,7 +33,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class NeoLoadWriter {
 
 	private static Logger logger = LoggerFactory.getLogger(NeoLoadWriter.class);
-	
+
 	private static final String PROJECT_VERSION = "6.4";
 	private static final String PRODUCT_VERSION = "6.6.0";
 
@@ -41,9 +41,9 @@ public class NeoLoadWriter {
 	public static final String RECORDED_RESPONSE_FOLDER = "recorded-responses";
 
 	public enum ConfigFiles {
-								REPOSITORY("repository.xml"),
-								SCENARIO("scenario.xml"),
-								SETTINGS("settings.xml");
+		REPOSITORY("repository.xml"),
+		SCENARIO("scenario.xml"),
+		SETTINGS("settings.xml");
 
 		private String fileName;
 
@@ -169,11 +169,11 @@ public class NeoLoadWriter {
 
 		final Set<Request> allRequests = getAllRequests(project);
 		allRequests.forEach(request -> {
-				final String recordedRequestHeaderFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile).orElse(null);
-				final String recordedRequestBodyFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestBodyFile).orElse(null);
+			final String recordedRequestHeaderFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile).orElse(null);
+			final String recordedRequestBodyFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestBodyFile).orElse(null);
 
-				copyRequestContentFile(recordedRequestHeaderFile, recordedRequestBodyFile);
-				copyResponseContentFile(request.getRecordedFiles());
+			copyRequestContentFile(recordedRequestHeaderFile, recordedRequestBodyFile);
+			copyResponseContentFile(request.getRecordedFiles());
 		});
 	}
 
@@ -201,25 +201,26 @@ public class NeoLoadWriter {
 				.collect(Collectors.toSet());
 	}
 
-	private void copyRequestContentFile(String recordedRequestHeaderFile, String recordedRequestBodyFile) {
+	private void copyRequestContentFile(final String recordedRequestHeaderFile, final String recordedRequestBodyFile) {
 		//Copy files "lrProjectFolder/data/t22_RequestHeader.htm"
 		// and "lrProjectFolder/data/t22_RequestBody.htm"
 		//to "nlProjectFolder/recorded-requests/t22_requestHeader.htm"
-		if (!isNullOrEmpty(recordedRequestHeaderFile)
-				&& !isNullOrEmpty(recordedRequestBodyFile)) {
-			final Path recordedRequestHeaderPathFromLRProject = Paths.get(recordedRequestHeaderFile);
-			final Path recordedRequestBodyPathFromLRProject = Paths.get(recordedRequestBodyFile);
-			try {
-				final Path recordedRequestBodyPathToNLProject = Paths.get(nlProjectFolder, RECORDED_REQUESTS_FOLDER,
-						"req_" + recordedRequestBodyPathFromLRProject.getFileName().toString());
-				Files.createFile(recordedRequestBodyPathToNLProject);
-
-				try (final FileOutputStream fileOutputStream = new FileOutputStream(recordedRequestBodyPathToNLProject.toFile(), true)) {
+		final boolean hasHeaders = !isNullOrEmpty(recordedRequestHeaderFile);
+		final boolean hasBody = !isNullOrEmpty(recordedRequestBodyFile);
+		if (hasHeaders || hasBody) {
+			final Path recordedRequestHeaderPathFromLRProject = hasHeaders ? Paths.get(recordedRequestHeaderFile) : null;
+			final Path recordedRequestBodyPathFromLRProject = hasBody ? Paths.get(recordedRequestBodyFile) : null;
+			final Path fileName = hasBody ? recordedRequestBodyPathFromLRProject : recordedRequestHeaderPathFromLRProject;
+			final Path filePathInNLProject = Paths.get(nlProjectFolder, RECORDED_REQUESTS_FOLDER,
+					"req_" + fileName.getFileName().toString());
+			try (final FileOutputStream fileOutputStream = new FileOutputStream(filePathInNLProject.toFile())) {
+				if (hasHeaders) {
 					fileOutputStream.write(Files.readAllBytes(recordedRequestHeaderPathFromLRProject));
-					fileOutputStream.write(Files.readAllBytes(recordedRequestBodyPathFromLRProject));
-
-					fileOutputStream.flush();
 				}
+				if (hasBody) {
+					fileOutputStream.write(Files.readAllBytes(recordedRequestBodyPathFromLRProject));
+				}
+				fileOutputStream.flush();
 			} catch (IOException e) {
 				logger.error("Error while copying the recorded request header, body to NeoLoad project folder", e);
 			}
@@ -304,7 +305,7 @@ public class NeoLoadWriter {
 			logger.error("Error while saving NLP file", e);
 		}
 	}
-	
+
 	public File getNlProjectFolder() {
 		return new File(nlProjectFolder);
 	}

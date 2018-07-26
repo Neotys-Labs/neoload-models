@@ -5,6 +5,7 @@ import com.neotys.neoload.model.repository.*;
 import org.apache.commons.lang.StringUtils;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 
 public class WebCustomRequest extends WebRequest {
@@ -19,11 +20,12 @@ public class WebCustomRequest extends WebRequest {
 		if(postRequest != null) {
 			pageBuilder.addChilds(postRequest);
 
-			// we use the headers of the main request for the resources.
-			final Optional<RecordedFiles> resourceRecordedFiles = postRequest.getRecordedFiles().map(recordedFiles -> ImmutableRecordedFiles.builder().recordedRequestHeaderFile(recordedFiles.recordedRequestHeaderFile()).build());
+			// we use the request headers of the main request for the resources.
+			final List<Header> recordedHeaders = getHeadersFromRecordedFile(postRequest.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile));
 
 			MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
-					.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method)).forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, resourceRecordedFiles))));
+					.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+							.forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, Optional.empty(), recordedHeaders))));
 		}
         
         return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
@@ -40,6 +42,8 @@ public class WebCustomRequest extends WebRequest {
     	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
 		if (MethodUtils.getParameterWithName(method, "Body").isPresent()) {
+			final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getProjectFolder());
+
 			final ImmutablePostTextRequest.Builder builder = ImmutablePostTextRequest.builder()
 					.name(mainUrl.getPath())
 					.path(mainUrl.getPath())
@@ -52,7 +56,7 @@ public class WebCustomRequest extends WebRequest {
 					.addAllHeaders(visitor.getCurrentHeaders())
 					.addAllHeaders(visitor.getGlobalHeaders())
 					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
-                    .recordedFiles(getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getProjectFolder()));
+                    .recordedFiles(recordedFilesFromSnapshotFile);
 			visitor.getCurrentHeaders().clear();
 			return builder.build();
 		}
@@ -73,7 +77,7 @@ public class WebCustomRequest extends WebRequest {
 				return builder.build();
 		}
 
-    	logger.warn("There is not any body parameter for the following LR function : " + method.getName());
+    	LOGGER.warn("There is not any body parameter for the following LR function : " + method.getName());
 		return null;
     }
     

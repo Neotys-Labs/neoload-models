@@ -1,6 +1,5 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.google.common.io.CharSource;
 import com.neotys.neoload.model.repository.RecordedFiles;
 import com.neotys.neoload.model.repository.Request;
 import org.slf4j.Logger;
@@ -9,17 +8,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.Files.getFileExtension;
@@ -102,17 +97,12 @@ public abstract class RequestWriter extends ElementWriter {
 	}
 
 	private void writeRecordedFiles(final Request request, final Document document, final Element xmlRequest, final String outputFolder) {
-		//Request header
-		final String requestHeaderFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile).orElse(null);
-		if (!isNullOrEmpty(requestHeaderFile)) {
-			writeRecordedRequestHeaders(requestHeaderFile, document, xmlRequest);
-		}
-
-		//Request body
-		final String requestBodyFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestBodyFile).orElse(null);
-		if (!isNullOrEmpty(requestBodyFile)) {
+		//Request content
+		final String requestFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestBodyFile)
+				.orElse(request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile).orElse(null));
+		if (!isNullOrEmpty(requestFile)) {
 			final Element element = document.createElement(XML_TAG_RECORDED_REQUEST);
-			addResourceFileWithUuid(outputFolder, element, RECORDED_REQUESTS_FOLDER, "req_", requestBodyFile);
+			addResourceFileWithUuid(outputFolder, element, RECORDED_REQUESTS_FOLDER, "req_", requestFile);
 			xmlRequest.appendChild(element);
 		}
 
@@ -169,30 +159,4 @@ public abstract class RequestWriter extends ElementWriter {
 		}
 	}
 
-	private void writeRecordedRequestHeaders(final String recordedRequestHeaderFile, final Document document, final Element xmlRequest) {
-		try {
-			final Properties properties = new Properties();
-			// we remove the status line from header file.
-			final String contentWithoutFirstLine = getContentWithoutFirstLine(recordedRequestHeaderFile);
-			try (final Reader reader = CharSource.wrap(contentWithoutFirstLine).openStream()) {
-				properties.load(reader);
-				properties.forEach((key, value) -> {
-					if (key instanceof String && value instanceof String) {
-						final Element element = document.createElement(XML_TAG_REQUEST_HEADER);
-						element.setAttribute("name", (String) key);
-						element.setAttribute("value", (String) value);
-						xmlRequest.appendChild(element);
-					}
-				});
-			}
-		} catch (IOException e) {
-			LOG.error("Can not write recorded request headers", e);
-		}
-	}
-
-	private String getContentWithoutFirstLine(final String recordedRequestHeaderFile) throws IOException {
-		try (final Stream<String> linesStream = Files.lines(Paths.get(recordedRequestHeaderFile))) {
-			return linesStream.skip(1).collect(Collectors.joining(System.lineSeparator()));
-		}
-	}
 }
