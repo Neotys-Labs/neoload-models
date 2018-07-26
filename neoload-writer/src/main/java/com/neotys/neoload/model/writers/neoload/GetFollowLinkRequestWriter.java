@@ -22,6 +22,7 @@ public class GetFollowLinkRequestWriter extends RequestWriter {
 		super.fillXML(document, xmlRequest, theRequest);
 		final GetFollowLinkRequest getFollowLinkRequest = (GetFollowLinkRequest)theRequest;
 		xmlRequest.setAttribute(XML_ATTR_LINKEXTRACTORTYPE, ACTION_LINKEXTRACTOR_TYPE_MATCHCONTENT);
+		xmlRequest.setAttribute(XML_ATTR_EXTRACTORPATH, theRequest.getName());		
 		final Element recordHtmlInfos = document.createElement(XML_TAG_RECORD_HTML_INFOS);
 		recordHtmlInfos.setAttribute(XML_ATTR_EXTRACTOR_CONTENT, getFollowLinkRequest.getText());
 		recordHtmlInfos.setAttribute(XML_ATTR_EXTRACTOR_OCCURENCE, "1");

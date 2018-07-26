@@ -3,6 +3,7 @@ package com.neotys.neoload.model.writers.neoload;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.neotys.neoload.model.repository.Parameter;
 import com.neotys.neoload.model.repository.PostSubmitFormRequest;
 import com.neotys.neoload.model.repository.Request;
 
@@ -22,6 +23,8 @@ public class PostSubmitFormRequestWriter extends PostRequestWriter {
 		super.fillXML(document, xmlRequest, theRequest);
 		final PostSubmitFormRequest postSubmitFormRequest = (PostSubmitFormRequest)theRequest;
 		xmlRequest.setAttribute(XML_ATTR_LINKEXTRACTORTYPE, ACTION_LINKEXTRACTOR_TYPE_MATCH_DEFINITION);
+		xmlRequest.setAttribute(XML_ATTR_EXTRACTORPATH, theRequest.getName());
+		xmlRequest.setAttribute(XML_ATTR_CONF_FORM_EXTRACTOR_PARAMETERS, buildConfFormExtractorParameters(postSubmitFormRequest));		
 		final Element recordHtmlInfos = document.createElement(XML_TAG_RECORD_HTML_INFOS);
 		recordHtmlInfos.setAttribute(XML_ATTR_EXTRACTOR_REGEXP, "false");
 		recordHtmlInfos.setAttribute(XML_ATTR_EXTRACTOR_OCCURENCE, "1");
@@ -35,5 +38,16 @@ public class PostSubmitFormRequestWriter extends PostRequestWriter {
 		final Request referer = postSubmitFormRequest.getReferer();
 		xmlRequest.setAttribute(XML_ATTR_REFERER_UID, WriterUtils.getElementUid(referer));
 		referer.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));	
+	}
+
+	private static String buildConfFormExtractorParameters(final PostSubmitFormRequest postSubmitFormRequest) {		
+		if(postSubmitFormRequest.getPostParameters().isEmpty()){
+			return "";
+		}
+		final StringBuilder content = new StringBuilder();
+		for(final Parameter parameter : postSubmitFormRequest.getPostParameters()){
+			content.append(parameter.getName()).append(",");
+		}
+		return content.deleteCharAt(content.length()-1).toString();
 	}
 }

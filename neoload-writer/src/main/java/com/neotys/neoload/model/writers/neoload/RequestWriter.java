@@ -24,6 +24,8 @@ public abstract class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_EXTRACTOR_OCCURENCE = "extractorOccurence";
 	public static final String XML_ATTR_EXTRACTOR_CONTENT = "extractorContent";
 	public static final String XML_ATTR_HTML_TYPE = "htmlType";
+	public static final String XML_ATTR_EXTRACTORPATH = "extractorPath";
+	public static final String XML_ATTR_CONF_FORM_EXTRACTOR_PARAMETERS = "confFormExtractorParameters";
 	
 	public RequestWriter(Request request) {
 		super(request);
