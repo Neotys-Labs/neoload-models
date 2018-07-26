@@ -35,6 +35,7 @@ public class GetFollowLinkRequestWriter extends RequestWriter {
 		xmlRequest.appendChild(extractorHtmlInfos);
 		final Request referer = getFollowLinkRequest.getReferer();
 		xmlRequest.setAttribute(XML_ATTR_REFERER_UID, WriterUtils.getElementUid(referer));
-		referer.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));	
+		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));
+		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_EXTRACTOR_SERVER_UID, server.getName()));	
 	}
 }

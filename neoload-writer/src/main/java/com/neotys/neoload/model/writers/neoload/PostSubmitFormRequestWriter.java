@@ -37,7 +37,8 @@ public class PostSubmitFormRequestWriter extends PostRequestWriter {
 		xmlRequest.appendChild(extractorHtmlInfos);
 		final Request referer = postSubmitFormRequest.getReferer();
 		xmlRequest.setAttribute(XML_ATTR_REFERER_UID, WriterUtils.getElementUid(referer));
-		referer.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));	
+		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));
+		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_EXTRACTOR_SERVER_UID, server.getName()));	
 	}
 
 	private static String buildConfFormExtractorParameters(final PostSubmitFormRequest postSubmitFormRequest) {		

@@ -12,6 +12,7 @@ public abstract class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_METHOD = "method";
 	public static final String XML_ATTR_ACTION_TYPE = "actionType";
 	public static final String XML_ATTR_SERV_UID = "serverUid";
+	public static final String XML_ATTR_EXTRACTOR_SERVER_UID = "extractorServerUid";
 	public static final String XML_ATTR_PATH = "path";
 	public static final String XML_ATTR_ASSERT_BLOC = "assertions";
 	public static final String XML_ATTR_LINKEXTRACTORTYPE = "linkExtractorType";

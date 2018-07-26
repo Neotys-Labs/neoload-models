@@ -19,12 +19,10 @@ import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.ImmutablePostFormRequest;
 import com.neotys.neoload.model.repository.ImmutablePostSubmitFormRequest;
-import com.neotys.neoload.model.repository.ImmutableServer;
 import com.neotys.neoload.model.repository.Parameter;
 import com.neotys.neoload.model.repository.PostRequest;
 import com.neotys.neoload.model.repository.PostSubmitFormRequest;
 import com.neotys.neoload.model.repository.Request;
-import com.neotys.neoload.model.repository.Server;
 
 
 public abstract class WebRequest {
@@ -202,6 +200,7 @@ public abstract class WebRequest {
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());    	    	
     	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
+    	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));
         return requestBuilder.build();
     }
     
@@ -223,6 +222,7 @@ public abstract class WebRequest {
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());    	    	
     	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
+    	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));
     	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
 				.stream().forEach(requestBuilder::addPostParameters));
         return requestBuilder.build();
