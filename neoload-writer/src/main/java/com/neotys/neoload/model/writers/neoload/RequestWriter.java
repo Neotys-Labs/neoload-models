@@ -49,7 +49,6 @@ public abstract class RequestWriter extends ElementWriter {
 
 	private static final String XML_TAG_RECORDED_REQUEST = "requestContentFileDescription";
 	private static final String XML_TAG_RECORDED_RESPONSE = "responsePageFileDescription";
-	private static final String XML_TAG_REQUEST_HEADER = "header";
 	private static final String XML_TAG_RESPONSE_HEADERS = "responseHeaders";
 
 
