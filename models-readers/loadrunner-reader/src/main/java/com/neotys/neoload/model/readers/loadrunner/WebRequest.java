@@ -99,21 +99,6 @@ public abstract class WebRequest {
 		}
 		return null;
 	}
-
-    /**
-     * Build or get the server from the list of server already build from the passed url
-     * @param url extracting the server from this url
-     * @return the corresponding server
-     */
-    @VisibleForTesting
-    protected static Server getServer(final LoadRunnerReader reader, URL url) {
-        return reader.getOrAddServerIfNotExist(ImmutableServer.builder()
-                .name(MethodUtils.normalizeName(url.getHost()))
-                .host(url.getHost())
-                .port(String.valueOf(url.getPort()!=-1 ? url.getPort() : url.getDefaultPort()))
-                .scheme(url.getProtocol())
-                .build());
-    }
     
     /**
 	 * generate URLs from extrares extract of a "web_url" or "web_submit_data"
@@ -156,7 +141,7 @@ public abstract class WebRequest {
 				// Just create a unique name, no matter the request name, should just be unique under a page
                 .name(UUID.randomUUID().toString())     
                 .path(url.getPath())
-                .server(getServer(visitor.getReader(), url))
+                .server(visitor.getReader().getServer(url))
                 .httpMethod(Request.HttpMethod.GET);   	
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
@@ -181,7 +166,7 @@ public abstract class WebRequest {
     	ImmutablePostFormRequest.Builder requestBuilder = ImmutablePostFormRequest.builder()
                 .name(mainUrl.getPath())
                 .path(mainUrl.getPath())
-                .server(getServer(visitor.getReader(), mainUrl))
+                .server(visitor.getReader().getServer(mainUrl))
                 .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());

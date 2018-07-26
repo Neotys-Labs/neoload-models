@@ -13,7 +13,7 @@ public class AddCookieWriter extends JavascriptWriter {
 	@Override
 	protected String getJavascriptContent() {
 		final StringBuilder content = new StringBuilder(CONTENT_FIRST_PART);
-		content.append("\"").append(((AddCookie)element).getDomain()).append("\"");
+		content.append("\"").append(((AddCookie)element).getServer().getName()).append("\"");
 		content.append(",\"").append(buildCookie(((AddCookie)element))).append("\"");
 		content.append(");");
 		return content.toString();

@@ -171,11 +171,11 @@ public class WebRequestTest {
 
 	@Test
     public void getServerTest() throws MalformedURLException {
-		URL urlTest = new URL("https://test_server.com:8080/request/path");
-		URL urlTest2 = new URL("https://test_server.com:80/request/path");
+		final URL urlTest = new URL("https://test_server.com:8080/request/path");
+		final URL urlTest2 = new URL("https://test_server.com:80/request/path");
 		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "","");
-		Server serverGenerated1 = WebRequest.getServer(reader, urlTest);
-		Server serverGenerated2 = WebRequest.getServer(reader, urlTest2);
+		final Server serverGenerated1 = reader.getServer(urlTest);
+		final Server serverGenerated2 = reader.getServer(urlTest2);
 		
 		assertEquals(SERVER_TEST, serverGenerated1);
 		assertEquals(SERVER_TEST2, serverGenerated2);

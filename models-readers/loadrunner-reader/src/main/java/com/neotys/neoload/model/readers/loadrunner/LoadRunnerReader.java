@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +42,7 @@ import com.neotys.neoload.model.readers.loadrunner.filereader.ParameterFileReade
 import com.neotys.neoload.model.readers.loadrunner.filereader.ProjectFileReader;
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.ImmutableServer;
 import com.neotys.neoload.model.repository.ImmutableUserPath;
 import com.neotys.neoload.model.repository.Server;
 
@@ -306,4 +309,28 @@ public class LoadRunnerReader extends Reader {
 	public String getCurrentScriptName() {
 		return currentScriptName;
 	}
+	
+	/**
+     * Build or get the server from the list of server already build from the passed url
+     * @param url extracting the server from this url
+     * @return the corresponding server
+	 * @throws MalformedURLException 
+     */    
+    public Server getServer(final String url) throws MalformedURLException {
+        return getServer(new URL(url));
+    }
+	
+	 /**
+     * Build or get the server from the list of server already build from the passed url
+     * @param url extracting the server from this url
+     * @return the corresponding server
+     */    
+    public Server getServer(final URL url) {
+        return getOrAddServerIfNotExist(ImmutableServer.builder()
+                .name(MethodUtils.normalizeName(url.getHost()))
+                .host(url.getHost())
+                .port(String.valueOf(url.getPort()!=-1 ? url.getPort() : url.getDefaultPort()))
+                .scheme(url.getProtocol())
+                .build());
+    }
 }

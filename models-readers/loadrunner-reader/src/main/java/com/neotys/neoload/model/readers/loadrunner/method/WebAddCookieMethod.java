@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
 import java.net.HttpCookie;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -53,12 +55,20 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 		final Builder builder = ImmutableAddCookie.builder()
 				.name(name)
 				.cookieName(cookieName)
-				.cookieValue(cookieValue)
-				.domain(cookieDomain);	
-		final String path = httpCookie.getPath();	
-		if(!Strings.isNullOrEmpty(path)){
-			builder.domain(path);
-		}		
+				.cookieValue(cookieValue);
+		URL url;
+		try{
+			url = new URL(cookieDomain);
+		} catch(final MalformedURLException e1){
+			try{
+				url = new URL("http://" + cookieDomain);
+			} catch(final MalformedURLException e2){
+				url = null;
+			}			
+		}
+		if(url != null){
+			builder.server(visitor.getReader().getServer(url));
+		}
 		final long maxAge = httpCookie.getMaxAge();
 		if(maxAge != -1L){
 			builder.expires(Long.toString(maxAge));

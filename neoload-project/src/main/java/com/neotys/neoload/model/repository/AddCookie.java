@@ -11,7 +11,7 @@ import com.neotys.neoload.model.core.Element;
 public interface AddCookie extends Element {
 	String getCookieName();
 	String getCookieValue();
-	String getDomain();
+	Server getServer();
 	Optional<String> getExpires();
 	Optional<String> getPath();
 }
