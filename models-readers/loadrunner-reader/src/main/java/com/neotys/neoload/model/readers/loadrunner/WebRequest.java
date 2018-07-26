@@ -130,7 +130,7 @@ public abstract class WebRequest {
      * @return
      */
     @VisibleForTesting
-    protected static GetPlainRequest buildGetRequestFromURL(final LoadRunnerVUVisitor visitor, final URL url, Optional<RecordedFiles> recordedFiles) {
+    protected static GetPlainRequest buildGetRequestFromURL(final LoadRunnerVUVisitor visitor, final URL url, final RecordedFiles recordedFiles) {
     	ImmutableGetPlainRequest.Builder requestBuilder = ImmutableGetPlainRequest.builder()
 				// Just create a unique name, no matter the request name, should just be unique under a page
                 .name(UUID.randomUUID().toString())
@@ -225,10 +225,10 @@ public abstract class WebRequest {
         return requestBuilder.build();
     }
 
-	protected static Optional<RecordedFiles> getRecordedFilesFromSnapshotFile(String leftBrace, String rightBrace, MethodCall method, final Path projectFolder) {
+	protected static RecordedFiles getRecordedFilesFromSnapshotFile(String leftBrace, String rightBrace, MethodCall method, final Path projectFolder) {
 		final String snapshotFileName = getParameterValueWithName(leftBrace, rightBrace, method, "Snapshot").orElse("");
 		if (isNullOrEmpty(snapshotFileName)) {
-			return Optional.empty();
+			return ImmutableRecordedFiles.builder().build();
 		}
 
 		try {
@@ -239,20 +239,19 @@ public abstract class WebRequest {
 			final String requestHeaderFile = getRecordedFileName(properties, "RequestHeaderFile", projectDataPath);
 			final String requestBodyFile = getRecordedFileName(properties, "RequestBodyFile", projectDataPath);
 			final String responseHeaderFile = getRecordedFileName(properties,"ResponseHeaderFile", projectDataPath);
-			//FIXME multi files
 			final String responseBodyFile = getRecordedFileName(properties,"FileName1", projectDataPath);
 
-			return Optional.of(ImmutableRecordedFiles.builder()
+			return ImmutableRecordedFiles.builder()
 					.recordedRequestHeaderFile(requestHeaderFile)
 					.recordedRequestBodyFile(requestBodyFile)
 					.recordedResponseHeaderFile(responseHeaderFile)
 					.recordedResponseBodyFile(responseBodyFile)
-					.build());
-		} catch (IOException e) {
-			e.printStackTrace();
+					.build();
+		} catch (final IOException e) {
+			logger.warn("Cannot find recorded files: ", e);
 		}
 
-		return Optional.empty();
+		return ImmutableRecordedFiles.builder().build();
 	}
 
 	private static String getRecordedFileName(final Properties properties, final String key, Path projectDataPath) {

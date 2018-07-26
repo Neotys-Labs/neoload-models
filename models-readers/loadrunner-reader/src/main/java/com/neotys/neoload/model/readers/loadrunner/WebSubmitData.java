@@ -1,11 +1,9 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
 import com.google.common.base.Preconditions;
-import com.neotys.neoload.model.repository.ImmutablePage;
-import com.neotys.neoload.model.repository.Page;
-import com.neotys.neoload.model.repository.Request;
+import com.neotys.neoload.model.repository.*;
 
-import java.util.Optional;
+import java.net.URL;
 
 public class WebSubmitData extends WebRequest {
 	
@@ -17,15 +15,47 @@ public class WebSubmitData extends WebRequest {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 
-        pageBuilder.addChilds(buildPostFormRequest(visitor, method));
-        
+		final PostRequest postRequest = buildPostFormRequest(visitor, method);
+		pageBuilder.addChilds(postRequest);
+
+		// we use the headers of the main request for the resources.
+		final RecordedFiles resourceRecordedFiles = ImmutableRecordedFiles.builder().recordedRequestHeaderFile(postRequest.getRecordedFiles().recordedRequestHeaderFile()).build();
+
         MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
 				.ifPresent(stringList -> getUrlList(stringList, getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method))
-						.forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, Optional.empty()))));
+						.forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, resourceRecordedFiles))));
         
         return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)
                 .build();
     }
 
+	/**
+	 *
+	 * @param method represent the LR "web_submit_data" function
+	 * @return the associate POST_REQUEST
+	 */
+	public static PostRequest buildPostRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+		URL mainUrl = Preconditions.checkNotNull(getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method));
+
+		ImmutablePostFormRequest.Builder requestBuilder = ImmutablePostFormRequest.builder()
+				.name(mainUrl.getPath())
+				.path(mainUrl.getPath())
+				.server(getServer(visitor.getReader(), mainUrl))
+				.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+				.recordedFiles(getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getProjectFolder()));
+
+		requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
+		requestBuilder.addAllValidators(visitor.getCurrentValidators());
+		requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
+		visitor.getCurrentHeaders().clear();
+		requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
+
+		MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString())
+				.ifPresent(stringList -> buildPostParamsFromExtract(stringList).forEach(requestBuilder::addPostParameters));
+
+		MethodUtils.queryToParameterList(mainUrl.getQuery()).forEach(requestBuilder::addParameters);
+
+		return requestBuilder.build();
+	}
 }

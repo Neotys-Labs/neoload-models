@@ -1,16 +1,10 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import java.net.URL;
-import java.util.Optional;
-
+import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.repository.*;
 import org.apache.commons.lang.StringUtils;
 
-import com.google.common.base.Preconditions;
-import com.neotys.neoload.model.repository.ImmutablePage;
-import com.neotys.neoload.model.repository.ImmutablePostBinaryRequest;
-import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
-import com.neotys.neoload.model.repository.Page;
-import com.neotys.neoload.model.repository.PostRequest;
+import java.net.URL;
 
 public class WebCustomRequest extends WebRequest {
 	
@@ -20,10 +14,16 @@ public class WebCustomRequest extends WebRequest {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 
-        pageBuilder.addChilds(buildPostRequest(visitor, method));
-        
-        MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
-				.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method)).stream().forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, Optional.empty()))));
+		final PostRequest postRequest = buildPostRequest(visitor, method);
+		if(postRequest != null) {
+			pageBuilder.addChilds(postRequest);
+
+			// we use the headers of the main request for the resources.
+			final RecordedFiles resourceRecordedFiles = ImmutableRecordedFiles.builder().recordedRequestHeaderFile(postRequest.getRecordedFiles().recordedRequestHeaderFile()).build();
+
+			MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
+					.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method)).forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, resourceRecordedFiles))));
+		}
         
         return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)

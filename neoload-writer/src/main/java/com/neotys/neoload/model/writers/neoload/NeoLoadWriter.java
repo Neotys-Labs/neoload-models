@@ -170,13 +170,11 @@ public class NeoLoadWriter {
 
 		final Set<Request> allRequests = getAllRequests(project);
 		allRequests.forEach(request -> {
-			request.getRecordedFiles().ifPresent(recordedFiles -> {
-				final String recordedRequestHeaderFile = recordedFiles.recordedRequestHeaderFile();
-				final String recordedRequestBodyFile = recordedFiles.recordedRequestBodyFile();
+				final String recordedRequestHeaderFile = request.getRecordedFiles().recordedRequestHeaderFile().orElse(null);
+				final String recordedRequestBodyFile = request.getRecordedFiles().recordedRequestBodyFile().orElse(null);
 
 				copyRequestContentFile(recordedRequestHeaderFile, recordedRequestBodyFile);
-				copyResponseContentFile(recordedFiles);
-			});
+				copyResponseContentFile(request.getRecordedFiles());
 		});
 	}
 
@@ -213,11 +211,11 @@ public class NeoLoadWriter {
 			final Path recordedRequestHeaderPathFromLRProject = Paths.get(recordedRequestHeaderFile);
 			final Path recordedRequestBodyPathFromLRProject = Paths.get(recordedRequestBodyFile);
 			try {
-				Path recordedRequestBodyPathToNLProject = Paths.get(nlProjectFolder, RECORDED_REQUESTS_FOLDER,
+				final Path recordedRequestBodyPathToNLProject = Paths.get(nlProjectFolder, RECORDED_REQUESTS_FOLDER,
 						"req_" + recordedRequestBodyPathFromLRProject.getFileName().toString());
 				Files.createFile(recordedRequestBodyPathToNLProject);
 
-				FileOutputStream fileOutputStream = new FileOutputStream(recordedRequestBodyPathToNLProject.toFile(), true);
+				final FileOutputStream fileOutputStream = new FileOutputStream(recordedRequestBodyPathToNLProject.toFile(), true);
 				fileOutputStream.write(Files.readAllBytes(recordedRequestHeaderPathFromLRProject));
 				fileOutputStream.write(Files.readAllBytes(recordedRequestBodyPathFromLRProject));
 
@@ -233,7 +231,7 @@ public class NeoLoadWriter {
 		//Copy file "lrProjectFolder/data/t22.htm"
 		//to "nlProjectFolder/recorded-responses/t22.htm"
 
-		final String recordedResponseBodyFile = recordedFiles.recordedResponseBodyFile();
+		final String recordedResponseBodyFile = recordedFiles.recordedResponseBodyFile().orElse(null);
 		if (!isNullOrEmpty(recordedResponseBodyFile)) {
 			Path recordedResponseBodyPathFromLRProject = Paths.get(recordedResponseBodyFile);
 			Path recordedResponseBodyPathToNLProject = Paths.get(nlProjectFolder, RECORDED_RESPONSE_FOLDER,

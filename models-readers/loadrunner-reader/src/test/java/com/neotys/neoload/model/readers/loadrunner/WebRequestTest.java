@@ -1,25 +1,18 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import static org.junit.Assert.assertEquals;
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.listener.TestEventListener;
+import com.neotys.neoload.model.repository.*;
+import com.neotys.neoload.model.repository.Request.HttpMethod;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.repository.GetRequest;
-import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
-import com.neotys.neoload.model.repository.ImmutableParameter;
-import com.neotys.neoload.model.repository.ImmutableServer;
-import com.neotys.neoload.model.repository.Request;
-import com.neotys.neoload.model.repository.Request.HttpMethod;
-import com.neotys.neoload.model.repository.Server;
+import static org.junit.Assert.assertEquals;
 
 public class WebRequestTest {
 		
@@ -94,7 +87,7 @@ public class WebRequestTest {
 	@Test
 	public void buildRequestFromURLTest() throws MalformedURLException {
 		final URL urlTest = new URL("https://test_server.com:8080/request/path?param1=value1&param2&param3=value%203");		
-		final GetRequest generatedResult = WebRequest.buildGetRequestFromURL(LOAD_RUNNER_VISITOR, urlTest, Optional.empty());
+		final GetRequest generatedResult = WebRequest.buildGetRequestFromURL(LOAD_RUNNER_VISITOR, urlTest, ImmutableRecordedFiles.builder().build());
 
 		// no matter the request name, it is generated randomly
 		Request expectedRequestResult = ImmutableGetPlainRequest.builder()

@@ -28,5 +28,5 @@ public interface Request extends PageElement {
     List<Validator> getValidators();
     List<Header> getHeaders();
     Optional<String> getContentType();
-    Optional<RecordedFiles> getRecordedFiles();
+    RecordedFiles getRecordedFiles();
 }

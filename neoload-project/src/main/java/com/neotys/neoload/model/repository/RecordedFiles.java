@@ -2,13 +2,15 @@ package com.neotys.neoload.model.repository;
 
 import org.immutables.value.Value;
 
+import java.util.Optional;
+
 @Value.Immutable
 public interface RecordedFiles {
-    String recordedRequestHeaderFile();
+    Optional<String> recordedRequestHeaderFile();
 
-    String recordedRequestBodyFile();
+    Optional<String> recordedRequestBodyFile();
 
-    String recordedResponseHeaderFile();
+    Optional<String> recordedResponseHeaderFile();
 
-    String recordedResponseBodyFile();
+    Optional<String> recordedResponseBodyFile();
 }

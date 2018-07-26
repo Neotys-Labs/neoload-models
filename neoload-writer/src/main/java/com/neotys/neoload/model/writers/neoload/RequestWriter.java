@@ -98,33 +98,35 @@ public abstract class RequestWriter extends ElementWriter {
 		request.getParameters().forEach(paramElem -> ParameterWriter.of(paramElem).writeXML(document, xmlRequest, Optional.empty()));
 	}
 
-    private void writeRecordedFiles(final Request request, final Document document, final Element xmlRequest, final String outputFolder) {
-        request.getRecordedFiles().ifPresent(recordedFiles -> {
-            //Request header
-            if (!isNullOrEmpty(recordedFiles.recordedRequestHeaderFile())) {
-				writeRecordedRequestHeaders(recordedFiles.recordedRequestHeaderFile(), document, xmlRequest);
-            }
+	private void writeRecordedFiles(final Request request, final Document document, final Element xmlRequest, final String outputFolder) {
+		//Request header
+		final String requestHeaderFile = request.getRecordedFiles().recordedRequestHeaderFile().orElse(null);
+		if (!isNullOrEmpty(requestHeaderFile)) {
+			writeRecordedRequestHeaders(requestHeaderFile, document, xmlRequest);
+		}
 
-            //Request body
-            if (!isNullOrEmpty(recordedFiles.recordedRequestBodyFile())) {
-				final Element element = document.createElement(XML_TAG_RECORDED_REQUEST);
-				addResourceFileWithUuid(outputFolder, element, RECORDED_REQUESTS_FOLDER, "req_", recordedFiles.recordedRequestBodyFile());
-				xmlRequest.appendChild(element);
-            }
+		//Request body
+		final String requestBodyFile = request.getRecordedFiles().recordedRequestBodyFile().orElse(null);
+		if (!isNullOrEmpty(requestBodyFile)) {
+			final Element element = document.createElement(XML_TAG_RECORDED_REQUEST);
+			addResourceFileWithUuid(outputFolder, element, RECORDED_REQUESTS_FOLDER, "req_", requestBodyFile);
+			xmlRequest.appendChild(element);
+		}
 
-            //Response header
-            if (!isNullOrEmpty(recordedFiles.recordedResponseHeaderFile())) {
-				writeRecordedResponseHeaders(recordedFiles.recordedResponseHeaderFile(), document, xmlRequest);
-            }
+		//Response header
+		final String responseHeaderFile = request.getRecordedFiles().recordedResponseHeaderFile().orElse(null);
+		if (!isNullOrEmpty(responseHeaderFile)) {
+			writeRecordedResponseHeaders(responseHeaderFile, document, xmlRequest);
+		}
 
-            //Response body
-            if (!isNullOrEmpty(recordedFiles.recordedResponseBodyFile())) {
-				final Element element = document.createElement(XML_TAG_RECORDED_RESPONSE);
-				addResourceFileWithUuid(outputFolder, element, RECORDED_RESPONSE_FOLDER, "res_", recordedFiles.recordedResponseBodyFile());
-				xmlRequest.appendChild(element);
-            }
-        });
-    }
+		//Response body
+		final String responseBodyFile = request.getRecordedFiles().recordedResponseBodyFile().orElse(null);
+		if (!isNullOrEmpty(responseBodyFile)) {
+			final Element element = document.createElement(XML_TAG_RECORDED_RESPONSE);
+			addResourceFileWithUuid(outputFolder, element, RECORDED_RESPONSE_FOLDER, "res_", responseBodyFile);
+			xmlRequest.appendChild(element);
+		}
+	}
 
 	private void addResourceFileWithUuid(final String outputFolder, final Element element,
 										 final String resourceFolderName, final String baseName,
