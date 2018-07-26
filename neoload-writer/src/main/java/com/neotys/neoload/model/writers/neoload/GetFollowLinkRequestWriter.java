@@ -9,7 +9,7 @@ import com.neotys.neoload.model.repository.Request;
 public class GetFollowLinkRequestWriter extends RequestWriter {
 
 	private static final String XML_ATTR_LINKEXTRACTORTYPE = "linkExtractorType";
-	private final static String ACTION_LINKEXTRACTOR_TYPE_MATCHCONTENT = "3";
+	private static final String ACTION_LINKEXTRACTOR_TYPE_MATCHCONTENT = "3";
 	private static final String XML_ATTR_REFERER_UID = "refererUid";
 		
 	public GetFollowLinkRequestWriter(final GetFollowLinkRequest request) {
