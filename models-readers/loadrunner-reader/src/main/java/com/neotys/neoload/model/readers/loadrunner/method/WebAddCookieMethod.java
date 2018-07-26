@@ -3,6 +3,9 @@ package com.neotys.neoload.model.readers.loadrunner.method;
 import java.net.HttpCookie;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.core.Element;
@@ -14,6 +17,8 @@ import com.neotys.neoload.model.repository.ImmutableAddCookie;
 import com.neotys.neoload.model.repository.ImmutableAddCookie.Builder;
 public class WebAddCookieMethod implements LoadRunnerMethod {
 		
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebAddCookieMethod.class);
+	
 	public WebAddCookieMethod() {
 		super();
 	}
@@ -21,7 +26,7 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 	@Override
 	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		Preconditions.checkNotNull(method);
-		if(method.getParameters() == null || method.getParameters().size() < 1){
+		if(method.getParameters() == null || method.getParameters().isEmpty()){
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, METHOD + method.getName() + " should have at least 1 parameter.");
 			return null;
 		}
@@ -30,11 +35,13 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 		try{
 			httpCookies = HttpCookie.parse(cookie);
 		} catch (final Exception exception){
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot parse cookie (" + cookie + "): " + exception.getMessage());
+			final String warnMessage = "Cannot parse cookie (" + cookie + "): " + exception.getMessage();
+			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, warnMessage);
+			LOGGER.warn(warnMessage, exception);
 			return null;
 		}
 		if(httpCookies == null || httpCookies.size() != 1){
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot parse cookie (" + cookie + ").");
+			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot parse cookie (" + cookie + ").");			
 			return null;
 		}	
 		visitor.readSupportedFunction(method.getName(), ctx);

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.commons.collections4.Factory;
 import org.apache.commons.collections4.map.LazyMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +23,7 @@ public class WriterUtils {
 	
     static Logger logger = LoggerFactory.getLogger(NeoLoadWriter.class);
     
-    private static Map<Element, String> elementUids = LazyMap.lazyMap(new HashMap<Element, String>(), new Factory<String>(){
-    	@Override
-    	public String create() {
-    		return UUID.randomUUID().toString();     	
-    	}
-    });
+    private static Map<Element, String> elementUids = LazyMap.lazyMap(new HashMap<Element, String>(), a -> UUID.randomUUID().toString());
     
     private WriterUtils() {}
     

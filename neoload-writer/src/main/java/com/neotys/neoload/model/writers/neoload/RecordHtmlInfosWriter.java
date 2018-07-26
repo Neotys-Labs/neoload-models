@@ -12,6 +12,8 @@ public class RecordHtmlInfosWriter {
 	public static final String XML_ATTR_EXTRACTOR_OCCURENCE = "extractorOccurence";
 	public static final String XML_ATTR_HTML_TYPE = "htmlType";
 
+	private RecordHtmlInfosWriter() {}
+	
 	public static void writeXML(final Document document, final Element parentElement, final GetFollowLinkRequest getFollowLinkRequest) {
 		final Element element = document.createElement(XML_TAG_NAME);
 		element.setAttribute(XML_ATTR_EXTRACTOR_CONTENT, getFollowLinkRequest.getText());
