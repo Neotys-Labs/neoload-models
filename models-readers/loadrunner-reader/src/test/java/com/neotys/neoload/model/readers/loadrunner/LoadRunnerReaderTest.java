@@ -23,7 +23,8 @@ public class LoadRunnerReaderTest {
 	
     @Test
     public void methodReaderTest() {
-    	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
+        final String folder = new File(this.getClass().getResource("Action.c").getFile()).getParent();
+        final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("Action.c")) {
             Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer");
             assertThat(container).isNotNull();
@@ -41,7 +42,8 @@ public class LoadRunnerReaderTest {
 
     @Test
     public void methodReaderTestFullRequest() {
-    	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
+        final String folder = new File(this.getClass().getResource("ActionRequest.c").getFile()).getParent();
+    	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("ActionRequest.c")) {
             Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer");
             assertThat(container).isNotNull();

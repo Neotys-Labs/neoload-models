@@ -26,7 +26,6 @@ public class WebRequestTest {
 			.addParameters("\"Resource=0\"")
 			.addParameters("\"RecContentType=text/xml\"")
 			.addParameters("\"Referer=\"")
-			.addParameters("\"Snapshot=t7.inf\"")
 			.addParameters("\"Mode=HTML\"")
 			.addParameters("EXTRARES")
 			.addParameters("\"URL=https://server.test.com/path/resource/1?ArgWithValue2=value%202\"")

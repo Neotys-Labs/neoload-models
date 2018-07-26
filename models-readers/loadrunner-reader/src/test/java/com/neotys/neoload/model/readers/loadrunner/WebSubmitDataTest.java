@@ -36,7 +36,6 @@ public class WebSubmitDataTest {
 			.addParameters("\"Method=POST\"")
 			.addParameters("\"RecContentType=application/json\"")
 			.addParameters("\"Referer=referer_test\"")
-			.addParameters("\"Snapshot=tX.inf\"")
 			.addParameters("\"Mode=HTML\"")
 			.addParameters("ITEMDATA")
 			.addParameters("\"Name=param1\"")

@@ -28,7 +28,6 @@ public class WebUrlTest {
 			.addParameters("\"Resource=0\"")
 			.addParameters("\"RecContentType=text/xml\"")
 			.addParameters("\"Referer=\"")
-			.addParameters("\"Snapshot=t7.inf\"")
 			.addParameters("\"Mode=HTML\"")
 			.addParameters("EXTRARES")
 			.addParameters("\"URL=/path/resource/1?ArgWithValue2=value%202\"")
@@ -47,7 +46,6 @@ public class WebUrlTest {
 			.addParameters("\"Resource=0\"")
 			.addParameters("\"RecContentType=text/xml\"")
 			.addParameters("\"Referer=\"")
-			.addParameters("\"Snapshot=t7.inf\"")
 			.addParameters("\"Mode=HTML\"")
 			.addParameters("EXTRARES")
 			.addParameters("\"URL=https://server.test.com\"")
@@ -62,7 +60,6 @@ public class WebUrlTest {
 			.addParameters("\"Resource=0\"")
 			.addParameters("\"RecContentType=text/xml\"")
 			.addParameters("\"Referer=\"")
-			.addParameters("\"Snapshot=t7.inf\"")
 			.addParameters("\"Mode=HTML\"")
 			.addParameters("LAST")
 			.build();

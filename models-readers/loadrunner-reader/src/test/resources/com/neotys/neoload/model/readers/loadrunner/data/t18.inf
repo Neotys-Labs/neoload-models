@@ -1,0 +1,10 @@
+[t18]
+FileName1=t18.html
+URL1=http://sampledemo.neotys.com/json/cluster?s=1498867200&e=1501545599&z=3
+Total=1
+RequestHeaderFile=t18_RequestHeader.txt
+RequestBodyFile=t18_RequestBody.txt
+ResponseHeaderFile=t18_ResponseHeader.txt
+ContentType=application/json
+[AdditionalInfo]
+IsIgnorable=1

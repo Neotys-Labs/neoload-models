@@ -6,7 +6,6 @@ vuser_init()
         "EncType=multipart/form-data",
         "RecContentType=text/html",
         "Referer=http://sampledemo.neotys.com/reports/submit",
-        "Snapshot=t22.inf",
         "Mode=HTML",
         ITEMDATA,
         "Name=login", "Value={login}", ENDITEM,
