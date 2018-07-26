@@ -19,6 +19,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.Files.getFileExtension;
@@ -172,8 +173,8 @@ public abstract class RequestWriter extends ElementWriter {
 		try {
 			final Properties properties = new Properties();
 			// we remove the status line from header file.
-			final String contentWithoutFirstLine = Files.lines(Paths.get(recordedRequestHeaderFile)).skip(1).collect(Collectors.joining(System.lineSeparator()));
-			try(final Reader reader = CharSource.wrap(contentWithoutFirstLine).openStream()) {
+			final String contentWithoutFirstLine = getContentWithoutFirstLine(recordedRequestHeaderFile);
+			try (final Reader reader = CharSource.wrap(contentWithoutFirstLine).openStream()) {
 				properties.load(reader);
 				properties.forEach((key, value) -> {
 					if (key instanceof String && value instanceof String) {
@@ -186,6 +187,12 @@ public abstract class RequestWriter extends ElementWriter {
 			}
 		} catch (IOException e) {
 			LOG.error("Can not write recorded request headers", e);
+		}
+	}
+
+	private String getContentWithoutFirstLine(final String recordedRequestHeaderFile) throws IOException {
+		try (final Stream<String> linesStream = Files.lines(Paths.get(recordedRequestHeaderFile))) {
+			return linesStream.skip(1).collect(Collectors.joining(System.lineSeparator()));
 		}
 	}
 }
