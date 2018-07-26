@@ -15,7 +15,9 @@ import com.neotys.neoload.model.repository.GetFollowLinkRequest;
 import com.neotys.neoload.model.repository.GetPlainRequest;
 import com.neotys.neoload.model.repository.ImmutableGetFollowLinkRequest;
 import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
+import com.neotys.neoload.model.repository.ImmutablePostSubmitFormRequest;
 import com.neotys.neoload.model.repository.ImmutableServer;
+import com.neotys.neoload.model.repository.PostSubmitFormRequest;
 import com.neotys.neoload.model.repository.Request;
 import com.neotys.neoload.model.repository.Server;
 
@@ -175,6 +177,27 @@ public abstract class WebRequest {
 				.path(name)
                 .text(textFollowLink)
                 .httpMethod(Request.HttpMethod.GET);   	
+
+    	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
+    	requestBuilder.addAllValidators(visitor.getCurrentValidators());
+    	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
+    	visitor.getCurrentHeaders().clear();
+    	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());    	    	
+    	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
+        return requestBuilder.build();
+    }
+    
+    /**
+     * Generate an immutable request of type Submit form
+     * @param url
+     * @return
+     */
+    @VisibleForTesting
+    protected static PostSubmitFormRequest buildPostSubmitFormRequest(final LoadRunnerVUVisitor visitor, final String name) {
+    	ImmutablePostSubmitFormRequest.Builder requestBuilder = ImmutablePostSubmitFormRequest.builder()
+				.name(name)      
+				.path(name)
+                .httpMethod(Request.HttpMethod.POST);   	
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());

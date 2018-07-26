@@ -14,7 +14,17 @@ public abstract class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_SERV_UID = "serverUid";
 	public static final String XML_ATTR_PATH = "path";
 	public static final String XML_ATTR_ASSERT_BLOC = "assertions";
-
+	public static final String XML_ATTR_LINKEXTRACTORTYPE = "linkExtractorType";
+	public static final String ACTION_LINKEXTRACTOR_TYPE_MATCH_DEFINITION = "6";
+	public static final String ACTION_LINKEXTRACTOR_TYPE_MATCHCONTENT = "3";
+	public static final String XML_ATTR_REFERER_UID = "refererUid";
+	public static final String XML_TAG_RECORD_HTML_INFOS = "record-html-infos";
+	public static final String XML_TAG_EXTRACTOR_HTML_INFOS = "extractor-html-infos";
+	public static final String XML_ATTR_EXTRACTOR_REGEXP = "extractorRegExp";
+	public static final String XML_ATTR_EXTRACTOR_OCCURENCE = "extractorOccurence";
+	public static final String XML_ATTR_EXTRACTOR_CONTENT = "extractorContent";
+	public static final String XML_ATTR_HTML_TYPE = "htmlType";
+	
 	public RequestWriter(Request request) {
 		super(request);
 	}

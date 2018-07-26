@@ -12,6 +12,7 @@ public class LoadRunnerSupportedMethods {
 		SUPPORTED_METHODS.put("web_submit_data", new WebSubmitDataMethod());
 		SUPPORTED_METHODS.put("web_custom_request", new WebCustomRequestMethod());
 		SUPPORTED_METHODS.put("web_link", new WebLinkMethod());
+		SUPPORTED_METHODS.put("web_submit_form", new WebSubmitFormMethod());
 		
 		SUPPORTED_METHODS.put("web_reg_save_param", new WebRegSaveParamMethod());
 		SUPPORTED_METHODS.put("web_reg_save_param_ex", new WebRegSaveParamExMethod());
