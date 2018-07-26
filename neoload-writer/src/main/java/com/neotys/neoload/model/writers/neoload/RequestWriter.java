@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import com.google.common.io.CharSource;
 import com.neotys.neoload.model.repository.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.Files.getFileExtension;
@@ -162,12 +164,13 @@ public abstract class RequestWriter extends ElementWriter {
 		}
 	}
 
-	private void writeRecordedRequestHeaders(String recordedRequestHeaderFile, Document document, Element xmlRequest) {
+	private void writeRecordedRequestHeaders(final String recordedRequestHeaderFile, final Document document, final Element xmlRequest) {
 		try {
 			final Properties properties = new Properties();
-			properties.load(Files.newInputStream(Paths.get(recordedRequestHeaderFile)));
+			// we remove the status line from header file.
+			final String contentWithoutFirstLine = Files.lines(Paths.get(recordedRequestHeaderFile)).skip(1).collect(Collectors.joining(System.lineSeparator()));
+			properties.load(CharSource.wrap(contentWithoutFirstLine).openStream());
 			properties.forEach((key, value) -> {
-				// TODO ignore status line
 				if (key instanceof String && value instanceof String) {
 					final Element element = document.createElement(XML_TAG_REQUEST_HEADER);
 					element.setAttribute("name", (String) key);
