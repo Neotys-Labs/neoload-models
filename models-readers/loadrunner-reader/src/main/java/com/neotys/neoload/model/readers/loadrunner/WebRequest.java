@@ -2,19 +2,25 @@ package com.neotys.neoload.model.readers.loadrunner;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.common.io.CharSource;
 import com.neotys.neoload.model.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.getParameterValueWithName;
@@ -63,7 +69,6 @@ public abstract class WebRequest {
 	 * Find the url in the LR function and parse it to an URL Object
 	 * @param method represent the LR function
 	 * @param urlTag tag used to find the correct keywords in the function (also used for parsing)
-	 * @return
 	 */
     @VisibleForTesting
     protected static URL getUrlFromMethodParameters(final String leftBrace, final String rightBrace, MethodCall method, String urlTag) {
@@ -97,7 +102,6 @@ public abstract class WebRequest {
     /**
 	 * generate URLs from extrares extract of a "web_url" or "web_submit_data"
 	 * @param extraresPart the extract that contains an "EXTRARES" section
-	 * @return
 	 */
     @VisibleForTesting
 	protected static List<URL> getUrlList(final List<String> extraresPart, final URL context) {
@@ -163,7 +167,8 @@ public abstract class WebRequest {
                 .name(mainUrl.getPath())
                 .path(mainUrl.getPath())
                 .server(visitor.getReader().getServer(mainUrl))
-                .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method));
+                .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+				.recordedFiles(getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder()));
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
@@ -171,8 +176,8 @@ public abstract class WebRequest {
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
 
-    	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
-				.stream().forEach(requestBuilder::addPostParameters));
+    	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString())
+				.ifPresent(stringList -> buildPostParamsFromExtract(stringList).forEach(requestBuilder::addPostParameters));
 
     	MethodUtils.queryToParameterList(mainUrl.getQuery()).forEach(requestBuilder::addParameters);
 
@@ -202,15 +207,14 @@ public abstract class WebRequest {
 
     /**
      * Generate an immutable request of type Submit form
-     * @param url
-     * @return
      */
     @VisibleForTesting
     protected static PostSubmitFormRequest buildPostSubmitFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name) {
     	ImmutablePostSubmitFormRequest.Builder requestBuilder = ImmutablePostSubmitFormRequest.builder()
 				.name(name)
 				.path(name)
-                .httpMethod(Request.HttpMethod.POST);
+                .httpMethod(Request.HttpMethod.POST)
+				.recordedFiles(getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder()));
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
@@ -219,8 +223,8 @@ public abstract class WebRequest {
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
     	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
     	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));
-    	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString()).ifPresent(stringList -> buildPostParamsFromExtract(stringList)
-				.stream().forEach(requestBuilder::addPostParameters));
+    	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString())
+				.ifPresent(stringList -> buildPostParamsFromExtract(stringList).forEach(requestBuilder::addPostParameters));
         return requestBuilder.build();
     }
 
@@ -288,7 +292,6 @@ public abstract class WebRequest {
     /**
    	 * generate parameters from the "ITEM_DATA" of a "web_submit_data"
    	 * @param extractPart the extract containing only the "ITEM_DATA" of the "web_submit_data"
-   	 * @return
    	 */
        @VisibleForTesting
    	public static List<Parameter> buildPostParamsFromExtract(List<String> extractPart) {

@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 public class WebUrl extends WebRequest {
 	private WebUrl() {}
 	
-
-	
     public static Page toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
