@@ -2,6 +2,7 @@ package com.neotys.neoload.model.readers.loadrunner;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharSource;
 import com.neotys.neoload.model.repository.*;
@@ -232,7 +233,8 @@ public abstract class WebRequest {
     	requestBuilder.addAllHeaders(recordedHeaders);
 
     	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
-    	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));
+    	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));    	
+    	requestBuilder.path(buildExtractorPath(snapshotProperties));   	
         return requestBuilder.build();
     }
 
@@ -260,12 +262,30 @@ public abstract class WebRequest {
 		requestBuilder.addAllHeaders(recordedHeaders);
 
     	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
-    	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));
-
+    	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));    	
+    	requestBuilder.path(buildExtractorPath(snapshotProperties));   	
+    	
     	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString())
 				.ifPresent(stringList -> buildPostParamsFromExtract(stringList).forEach(requestBuilder::addPostParameters));
         return requestBuilder.build();
     }
+
+	private static Optional<String> buildExtractorPath(final Optional<Properties> snapshotProperties) {
+		if(!snapshotProperties.isPresent()){
+			return Optional.empty();
+		}		
+		return extractPathFromUrl(snapshotProperties.get().getProperty("URL1", ""));		
+	}
+	
+	private static Optional<String> extractPathFromUrl(final String url){
+		if(!Strings.isNullOrEmpty(url)){
+			try {
+				return Optional.of((new URL(url)).getPath());								
+			} catch (MalformedURLException e) {					
+			}
+		}	
+		return Optional.empty();
+	}
 
 	protected static Optional<RecordedFiles> getRecordedFilesFromSnapshotProperties(final LoadRunnerVUVisitor visitor, final MethodCall method, final Optional<Properties> snapshotProperties) {
 		if(!snapshotProperties.isPresent()){
