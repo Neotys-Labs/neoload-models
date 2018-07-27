@@ -1,15 +1,6 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
-import java.net.HttpCookie;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
@@ -17,6 +8,13 @@ import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.ImmutableAddCookie;
 import com.neotys.neoload.model.repository.ImmutableAddCookie.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.HttpCookie;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 public class WebAddCookieMethod implements LoadRunnerMethod {
 		
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebAddCookieMethod.class);

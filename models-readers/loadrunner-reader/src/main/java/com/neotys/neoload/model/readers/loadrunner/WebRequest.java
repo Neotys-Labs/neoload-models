@@ -143,8 +143,10 @@ public abstract class WebRequest {
                 .server(visitor.getReader().getServer(url))
                 .httpMethod(Request.HttpMethod.GET)
 				.recordedFiles(recordedFiles);
+
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
+
 		requestBuilder.addAllHeaders(recordedHeaders);
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
@@ -161,20 +163,25 @@ public abstract class WebRequest {
      * @return the associate POST_REQUEST
      */
     public static PostRequest buildPostFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
-    	URL mainUrl = Preconditions.checkNotNull(getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method));
+    	final URL mainUrl = Preconditions.checkNotNull(getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
-    	ImmutablePostFormRequest.Builder requestBuilder = ImmutablePostFormRequest.builder()
+		final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFilesFromSnapshotFile.flatMap(RecordedFiles::recordedRequestHeaderFile));
+
+		final ImmutablePostFormRequest.Builder requestBuilder = ImmutablePostFormRequest.builder()
                 .name(mainUrl.getPath())
                 .path(mainUrl.getPath())
                 .server(visitor.getReader().getServer(mainUrl))
                 .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
-				.recordedFiles(getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder()));
+				.recordedFiles(recordedFilesFromSnapshotFile);
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
+
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
+    	requestBuilder.addAllHeaders(recordedHeaders);
 
     	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString())
 				.ifPresent(stringList -> buildPostParamsFromExtract(stringList).forEach(requestBuilder::addPostParameters));
@@ -188,18 +195,25 @@ public abstract class WebRequest {
      * Generate an immutable request of type Follow link
      */
     @VisibleForTesting
-    protected static GetFollowLinkRequest buildGetFollowLinkRequest(final LoadRunnerVUVisitor visitor, final String name, final String textFollowLink) {
-    	ImmutableGetFollowLinkRequest.Builder requestBuilder = ImmutableGetFollowLinkRequest.builder()
+    protected static GetFollowLinkRequest buildGetFollowLinkRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name, final String textFollowLink) {
+		final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFilesFromSnapshotFile.flatMap(RecordedFiles::recordedRequestHeaderFile));
+
+		final ImmutableGetFollowLinkRequest.Builder requestBuilder = ImmutableGetFollowLinkRequest.builder()
 				.name(name)      
 				.path(name)
                 .text(textFollowLink)
-                .httpMethod(Request.HttpMethod.GET);   	
+                .httpMethod(Request.HttpMethod.GET)
+				.recordedFiles(recordedFilesFromSnapshotFile);
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
+
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
-    	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());    	    	
+    	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
+    	requestBuilder.addAllHeaders(recordedHeaders);
+
     	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
     	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));
         return requestBuilder.build();
@@ -210,7 +224,10 @@ public abstract class WebRequest {
      */
     @VisibleForTesting
     protected static PostSubmitFormRequest buildPostSubmitFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name) {
-    	ImmutablePostSubmitFormRequest.Builder requestBuilder = ImmutablePostSubmitFormRequest.builder()
+		final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFilesFromSnapshotFile.flatMap(RecordedFiles::recordedRequestHeaderFile));
+
+		final ImmutablePostSubmitFormRequest.Builder requestBuilder = ImmutablePostSubmitFormRequest.builder()
 				.name(name)
 				.path(name)
                 .httpMethod(Request.HttpMethod.POST)
@@ -218,11 +235,15 @@ public abstract class WebRequest {
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
+
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
+		requestBuilder.addAllHeaders(recordedHeaders);
+
     	visitor.getCurrentRequest().ifPresent(requestBuilder::referer);
     	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));
+
     	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString())
 				.ifPresent(stringList -> buildPostParamsFromExtract(stringList).forEach(requestBuilder::addPostParameters));
         return requestBuilder.build();

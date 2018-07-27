@@ -25,7 +25,7 @@ public class WebLink extends WebRequest {
         }
         visitor.readSupportedFunction(method.getName(), ctx);        
         final String name = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0));
-        pageBuilder.addChilds(buildGetFollowLinkRequest(visitor, name, text.get()));
+        pageBuilder.addChilds(buildGetFollowLinkRequest(visitor, method, name, text.get()));
         return pageBuilder.name(name).thinkTime(0).build();
     }
     

@@ -41,9 +41,10 @@ public class WebCustomRequest extends WebRequest {
     public static PostRequest buildPostRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
     	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
-		if (MethodUtils.getParameterWithName(method, "Body").isPresent()) {
-			final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
+		final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFilesFromSnapshotFile.flatMap(RecordedFiles::recordedRequestHeaderFile));
 
+		if (MethodUtils.getParameterWithName(method, "Body").isPresent()) {
 			final ImmutablePostTextRequest.Builder builder = ImmutablePostTextRequest.builder()
 					.name(mainUrl.getPath())
 					.path(mainUrl.getPath())
@@ -55,6 +56,7 @@ public class WebCustomRequest extends WebRequest {
 					.addAllValidators(visitor.getCurrentValidators())
 					.addAllHeaders(visitor.getCurrentHeaders())
 					.addAllHeaders(visitor.getGlobalHeaders())
+					.addAllHeaders(recordedHeaders)
 					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
                     .recordedFiles(recordedFilesFromSnapshotFile);
 			visitor.getCurrentHeaders().clear();
@@ -72,7 +74,9 @@ public class WebCustomRequest extends WebRequest {
 					.addAllValidators(visitor.getCurrentValidators())
 					.addAllHeaders(visitor.getCurrentHeaders())
 					.addAllHeaders(visitor.getGlobalHeaders())
-					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()));
+					.addAllHeaders(recordedHeaders)
+					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
+					.recordedFiles(recordedFilesFromSnapshotFile);
 				visitor.getCurrentHeaders().clear();
 				return builder.build();
 		}
