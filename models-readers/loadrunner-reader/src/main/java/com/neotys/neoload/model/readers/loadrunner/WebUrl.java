@@ -9,6 +9,7 @@ import com.neotys.neoload.model.repository.RecordedFiles;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class WebUrl extends WebRequest {
@@ -19,7 +20,8 @@ public class WebUrl extends WebRequest {
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
         
         final URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
-        final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
+        final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
         final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
         pageBuilder.addChilds(buildGetRequestFromURL(visitor, mainUrl, recordedFiles, recordedHeaders));
 

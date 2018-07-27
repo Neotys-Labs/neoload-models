@@ -165,15 +165,16 @@ public abstract class WebRequest {
     public static PostRequest buildPostFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
     	final URL mainUrl = Preconditions.checkNotNull(getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
-		final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
-		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFilesFromSnapshotFile.flatMap(RecordedFiles::recordedRequestHeaderFile));
+    	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
 
 		final ImmutablePostFormRequest.Builder requestBuilder = ImmutablePostFormRequest.builder()
                 .name(mainUrl.getPath())
                 .path(mainUrl.getPath())
                 .server(visitor.getReader().getServer(mainUrl))
                 .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
-				.recordedFiles(recordedFilesFromSnapshotFile);
+				.recordedFiles(recordedFiles);
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
@@ -191,20 +192,36 @@ public abstract class WebRequest {
         return requestBuilder.build();
     }
 
-    /**
+    protected static Optional<Properties> getSnapshotProperties(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    	final String snapshotFileName = getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "Snapshot").orElse("");
+		if (isNullOrEmpty(snapshotFileName)) {
+			return Optional.empty();
+		}
+		try{
+			final Properties properties = new Properties();
+			properties.load(newInputStream(visitor.getReader().getCurrentScriptDataFolder().resolve(snapshotFileName)));
+			return Optional.of(properties);			
+		} catch (final IOException e) {
+			LOGGER.warn("Cannot find snapshot properties files: ", e);
+		}
+		return Optional.empty();
+	}
+
+	/**
      * Generate an immutable request of type Follow link
      */
     @VisibleForTesting
     protected static GetFollowLinkRequest buildGetFollowLinkRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name, final String textFollowLink) {
-		final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
-		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFilesFromSnapshotFile.flatMap(RecordedFiles::recordedRequestHeaderFile));
+    	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
 
 		final ImmutableGetFollowLinkRequest.Builder requestBuilder = ImmutableGetFollowLinkRequest.builder()
 				.name(name)      
 				.path(name)
                 .text(textFollowLink)
                 .httpMethod(Request.HttpMethod.GET)
-				.recordedFiles(recordedFilesFromSnapshotFile);
+				.recordedFiles(recordedFiles);
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
@@ -224,14 +241,15 @@ public abstract class WebRequest {
      */
     @VisibleForTesting
     protected static PostSubmitFormRequest buildPostSubmitFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name) {
-		final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
-		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFilesFromSnapshotFile.flatMap(RecordedFiles::recordedRequestHeaderFile));
+    	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
 
 		final ImmutablePostSubmitFormRequest.Builder requestBuilder = ImmutablePostSubmitFormRequest.builder()
 				.name(name)
 				.path(name)
                 .httpMethod(Request.HttpMethod.POST)
-				.recordedFiles(getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder()));
+				.recordedFiles(recordedFiles);
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
@@ -249,33 +267,22 @@ public abstract class WebRequest {
         return requestBuilder.build();
     }
 
-	protected static Optional<RecordedFiles> getRecordedFilesFromSnapshotFile(String leftBrace, String rightBrace, MethodCall method, final Path projectFolder) {
-		final String snapshotFileName = getParameterValueWithName(leftBrace, rightBrace, method, "Snapshot").orElse("");
-		if (isNullOrEmpty(snapshotFileName)) {
+	protected static Optional<RecordedFiles> getRecordedFilesFromSnapshotProperties(final LoadRunnerVUVisitor visitor, final MethodCall method, final Optional<Properties> snapshotProperties) {
+		if(!snapshotProperties.isPresent()){
 			return Optional.empty();
 		}
+		final Path projectDataPath = visitor.getReader().getCurrentScriptDataFolder();
+		final Optional<String> requestHeaderFile = getRecordedFileName(snapshotProperties.get(), "RequestHeaderFile", projectDataPath);
+		final Optional<String> requestBodyFile = getRecordedFileName(snapshotProperties.get(), "RequestBodyFile", projectDataPath);
+		final Optional<String> responseHeaderFile = getRecordedFileName(snapshotProperties.get(),"ResponseHeaderFile", projectDataPath);
+		final Optional<String> responseBodyFile = getRecordedFileName(snapshotProperties.get(),"FileName1", projectDataPath);
 
-		try {
-			Properties properties = new Properties();
-			final Path projectDataPath = projectFolder.resolve("data");
-			properties.load(newInputStream(projectDataPath.resolve(snapshotFileName)));
-
-			final Optional<String> requestHeaderFile = getRecordedFileName(properties, "RequestHeaderFile", projectDataPath);
-			final Optional<String> requestBodyFile = getRecordedFileName(properties, "RequestBodyFile", projectDataPath);
-			final Optional<String> responseHeaderFile = getRecordedFileName(properties,"ResponseHeaderFile", projectDataPath);
-			final Optional<String> responseBodyFile = getRecordedFileName(properties,"FileName1", projectDataPath);
-
-			return Optional.of(ImmutableRecordedFiles.builder()
-					.recordedRequestHeaderFile(requestHeaderFile)
-					.recordedRequestBodyFile(requestBodyFile)
-					.recordedResponseHeaderFile(responseHeaderFile)
-					.recordedResponseBodyFile(responseBodyFile)
-					.build());
-		} catch (final IOException e) {
-			LOGGER.warn("Cannot find recorded files: ", e);
-		}
-
-		return Optional.empty();
+		return Optional.of(ImmutableRecordedFiles.builder()
+				.recordedRequestHeaderFile(requestHeaderFile)
+				.recordedRequestBodyFile(requestBodyFile)
+				.recordedResponseHeaderFile(responseHeaderFile)
+				.recordedResponseBodyFile(responseBodyFile)
+				.build());		
 	}
 
 	private static Optional<String> getRecordedFileName(final Properties properties, final String key, Path projectDataPath) {

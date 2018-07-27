@@ -1,12 +1,20 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import com.google.common.base.Preconditions;
-import com.neotys.neoload.model.repository.*;
-import org.apache.commons.lang.StringUtils;
-
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.repository.Header;
+import com.neotys.neoload.model.repository.ImmutablePage;
+import com.neotys.neoload.model.repository.ImmutablePostBinaryRequest;
+import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
+import com.neotys.neoload.model.repository.Page;
+import com.neotys.neoload.model.repository.PostRequest;
+import com.neotys.neoload.model.repository.RecordedFiles;
 
 public class WebCustomRequest extends WebRequest {
 	
@@ -41,8 +49,9 @@ public class WebCustomRequest extends WebRequest {
     public static PostRequest buildPostRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
     	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
-		final Optional<RecordedFiles> recordedFilesFromSnapshotFile = getRecordedFilesFromSnapshotFile(visitor.getLeftBrace(), visitor.getRightBrace(), method, visitor.getReader().getCurrentScriptFolder());
-		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFilesFromSnapshotFile.flatMap(RecordedFiles::recordedRequestHeaderFile));
+    	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
 
 		if (MethodUtils.getParameterWithName(method, "Body").isPresent()) {
 			final ImmutablePostTextRequest.Builder builder = ImmutablePostTextRequest.builder()
@@ -58,7 +67,7 @@ public class WebCustomRequest extends WebRequest {
 					.addAllHeaders(visitor.getGlobalHeaders())
 					.addAllHeaders(recordedHeaders)
 					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
-                    .recordedFiles(recordedFilesFromSnapshotFile);
+                    .recordedFiles(recordedFiles);
 			visitor.getCurrentHeaders().clear();
 			return builder.build();
 		}
@@ -76,7 +85,7 @@ public class WebCustomRequest extends WebRequest {
 					.addAllHeaders(visitor.getGlobalHeaders())
 					.addAllHeaders(recordedHeaders)
 					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
-					.recordedFiles(recordedFilesFromSnapshotFile);
+					.recordedFiles(recordedFiles);
 				visitor.getCurrentHeaders().clear();
 				return builder.build();
 		}

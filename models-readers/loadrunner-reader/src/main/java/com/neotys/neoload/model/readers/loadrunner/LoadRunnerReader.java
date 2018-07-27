@@ -298,6 +298,10 @@ public class LoadRunnerReader extends Reader {
 	public Path getCurrentScriptFolder() {
 		return currentScriptFolder != null ? currentScriptFolder.toPath() : Paths.get(folder);
 	}
+	
+	public Path getCurrentScriptDataFolder() {
+		return getCurrentScriptFolder().resolve("data");
+	}
 
 	/**
      * Build or get the server from the list of server already build from the passed url
