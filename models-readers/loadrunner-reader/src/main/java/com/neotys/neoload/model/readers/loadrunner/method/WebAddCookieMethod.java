@@ -49,7 +49,7 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 		final String cookieName = httpCookie.getName();
 		final String cookieValue = httpCookie.getValue();
 		final String cookieDomain = httpCookie.getDomain();
-		final String name = "Set cookie " + cookieName + " for server " + cookieDomain;
+		final String name = "Set cookie " + cookieName + " for hostname " + cookieDomain;
 		final Builder builder = ImmutableAddCookie.builder()
 				.name(name)
 				.cookieName(cookieName)
