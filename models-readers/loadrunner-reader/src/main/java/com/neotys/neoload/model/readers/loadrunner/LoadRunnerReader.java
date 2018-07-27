@@ -45,7 +45,7 @@ public class LoadRunnerReader extends Reader {
 	private File currentScriptFolder = null;
 
 	@VisibleForTesting
-	protected List<Server> currentProjectServers = new ArrayList<>();
+	protected Map<String, Server> currentProjectServers = new HashMap<>();
 	private Map<String, Integer> nameIndexes = new HashMap<>();
 
 	private List<File> dataFilesToCopy = new ArrayList<>();
@@ -100,7 +100,7 @@ public class LoadRunnerReader extends Reader {
 			for (final File projectFolder : projectFolders) {
 				readScript(projectBuilder, projectFolder);
 			}
-			projectBuilder.servers(currentProjectServers);
+			projectBuilder.servers(currentProjectServers.values());
 			return projectBuilder.build();
 		} finally {
 			eventListener.endReadingScripts();
@@ -217,26 +217,33 @@ public class LoadRunnerReader extends Reader {
 	 * @param newServer to test
 	 * @return the unique server to use
 	 */
-	public Server getOrAddServerIfNotExist(Server newServer) {
-		Server foundServer = null;
-		Iterator<Server> it = currentProjectServers.iterator();
-		while (it.hasNext()) {
-			Server serv = it.next();
-			// equals without UUID
-			if (serv.getHost().equals(newServer.getHost())
-					&& serv.getPort().equals(newServer.getPort())
-					&& serv.getScheme().equals(newServer.getScheme())
-					&& serv.getName().equals(newServer.getName())) {
-				foundServer = serv;
-				break;
+	public Server getOrAddServerIfNotExist(final String name, final String host, final String port, final Optional<String> scheme) {
+		// Search if exact same server exists
+		for(final Server server : currentProjectServers.values()){
+			if (server.getHost().equals(host)
+					&& server.getPort().equals(port)
+					&& server.getScheme().equals(scheme)
+					&& server.getName().equals(name)) {
+				return server;
 			}
-		}
-		if (foundServer != null) {
-			return foundServer;
-		}
-		currentProjectServers.add(newServer);
+		}				
+		final Server server = ImmutableServer.builder()
+			.name(currentProjectServers.get(name) == null ? name : findUniqueName(name, currentProjectServers.keySet()))
+			.host(host)
+			.port(port)
+			.scheme(scheme)
+			.build();
+		currentProjectServers.put(server.getName(), server);
+		return server;		
+	}
 
-		return newServer;
+	private static String findUniqueName(final String name, final Set<String> keySet) {
+		int i = 0;
+		String uniqueName = name;
+		while(keySet.contains(uniqueName)){
+			uniqueName = name + "_" + (++i);
+		}
+		return uniqueName;
 	}
 
 	@VisibleForTesting
@@ -319,11 +326,11 @@ public class LoadRunnerReader extends Reader {
      * @return the corresponding server
      */
     public Server getServer(final URL url) {
-        return getOrAddServerIfNotExist(ImmutableServer.builder()
-                .name(MethodUtils.normalizeName(url.getHost()))
-                .host(url.getHost())
-                .port(String.valueOf(url.getPort()!=-1 ? url.getPort() : url.getDefaultPort()))
-                .scheme(url.getProtocol())
-                .build());
+        return getOrAddServerIfNotExist(
+        		MethodUtils.normalizeName(url.getHost()), 
+        		url.getHost(), 
+        		String.valueOf(url.getPort()!=-1 ? url.getPort() : url.getDefaultPort()), 
+        		Optional.of(url.getProtocol())
+        	);        
     }
 }

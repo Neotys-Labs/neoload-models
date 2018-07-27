@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.fail;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 import com.neotys.neoload.model.listener.TestEventListener;
 import org.apache.commons.io.FileUtils;
@@ -86,14 +87,17 @@ public class LoadRunnerReaderTest {
     @Test
     public void getOrAddServerTest() {
         final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "",  "");
-        Server server = reader.getOrAddServerIfNotExist(ImmutableServer.builder().host("myhost").port("80").name("myhost").scheme("http").build());
+        assertThat(reader.currentProjectServers.size()).isEqualTo(0);
+        assertThat(reader.getOrAddServerIfNotExist("myhost","myhost", "80",Optional.of("http")).getName()).isEqualTo("myhost");
         assertThat(reader.currentProjectServers.size()).isEqualTo(1);
-        reader.getOrAddServerIfNotExist(server);
-        assertThat(reader.currentProjectServers.size()).isEqualTo(1);
-        reader.getOrAddServerIfNotExist(ImmutableServer.builder().host("myhost").port("80").name("myhost").scheme("http").build());
-        assertThat(reader.currentProjectServers.size()).isEqualTo(1);
-        reader.getOrAddServerIfNotExist(ImmutableServer.builder().host("myhost2").port("80").name("myhost").scheme("http").build());
+        assertThat(reader.getOrAddServerIfNotExist("myhost","myhost", "80",Optional.of("http")).getName()).isEqualTo("myhost");
+        assertThat(reader.currentProjectServers.size()).isEqualTo(1);        
+        assertThat(reader.getOrAddServerIfNotExist("myhost2","myhost2", "80",Optional.of("http")).getName()).isEqualTo("myhost2");
         assertThat(reader.currentProjectServers.size()).isEqualTo(2);
+        assertThat(reader.getOrAddServerIfNotExist("myhost2","myhost", "8080",Optional.of("http")).getName()).isEqualTo("myhost2_1");
+        assertThat(reader.currentProjectServers.size()).isEqualTo(3);
+        assertThat(reader.getOrAddServerIfNotExist("myhost2","myhost", "80",Optional.of("https")).getName()).isEqualTo("myhost2_2");
+        assertThat(reader.currentProjectServers.size()).isEqualTo(4);
     }
    
 }

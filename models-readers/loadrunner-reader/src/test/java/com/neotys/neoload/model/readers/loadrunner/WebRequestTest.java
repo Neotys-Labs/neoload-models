@@ -78,7 +78,7 @@ public class WebRequestTest {
             .build();
 
 	public static final Server SERVER_TEST2 = ImmutableServer.builder()
-            .name("test_server.com")
+            .name("test_server.com_1")
             .host("test_server.com")
             .port("80")
             .scheme("https")
