@@ -20,7 +20,7 @@ public class ContainerWriterTest {
 				+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.CONTAINER_TEST)+ "\" weightsEnabled=\"false\">"
     			+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.PAGE_TEST)+ "\"/>"
     			+ "</basic-logical-action-container>"
-    			+ "<http-page name=\"page_name\" thinkTime=\"0\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.PAGE_TEST)+ "\">"
+    			+ "<http-page executeResourcesDynamically=\"false\" name=\"page_name\" thinkTime=\"0\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.PAGE_TEST)+ "\">"
     			+ "<embedded-action>" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "</embedded-action></http-page>"
     			+ "<http-action actionType=\"1\" "
     			+ "method=\"GET\" name=\"request_test\" "

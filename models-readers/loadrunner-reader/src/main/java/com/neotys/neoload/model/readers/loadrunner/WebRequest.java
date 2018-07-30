@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.getParameterValueWithName;
+import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.ITEM_BOUNDARY.ITEMDATA;
 import static java.nio.file.Files.newInputStream;
 
 
@@ -185,7 +186,7 @@ public abstract class WebRequest {
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
     	requestBuilder.addAllHeaders(recordedHeaders);
 
-    	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString())
+    	MethodUtils.extractItemListAsStringList(visitor, method.getParameters(), ITEMDATA, Optional.empty())
 				.ifPresent(stringList -> buildPostParamsFromExtract(stringList).forEach(requestBuilder::addPostParameters));
 
     	MethodUtils.queryToParameterList(mainUrl.getQuery()).forEach(requestBuilder::addParameters);
@@ -265,7 +266,7 @@ public abstract class WebRequest {
     	visitor.getCurrentRequest().ifPresent(cr -> requestBuilder.server(cr.getServer()));    	
     	requestBuilder.path(buildExtractorPath(snapshotProperties));   	
     	
-    	MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.ITEMDATA.toString())
+    	MethodUtils.extractItemListAsStringList(visitor, method.getParameters(), ITEMDATA, Optional.empty())
 				.ifPresent(stringList -> buildPostParamsFromExtract(stringList).forEach(requestBuilder::addPostParameters));
         return requestBuilder.build();
     }
@@ -341,7 +342,7 @@ public abstract class WebRequest {
    	 * generate parameters from the "ITEM_DATA" of a "web_submit_data"
    	 * @param extractPart the extract containing only the "ITEM_DATA" of the "web_submit_data"
    	 */
-       @VisibleForTesting
+    @VisibleForTesting
    	public static List<Parameter> buildPostParamsFromExtract(List<String> extractPart) {
 
            List<Item> items = MethodUtils.parseItemList(extractPart);

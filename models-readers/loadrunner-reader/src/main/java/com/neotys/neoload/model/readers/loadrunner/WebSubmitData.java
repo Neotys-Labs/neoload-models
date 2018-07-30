@@ -5,7 +5,7 @@ import com.neotys.neoload.model.repository.*;
 
 import java.util.List;
 import java.util.Optional;
-
+import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.ITEM_BOUNDARY.EXTRARES;
 public class WebSubmitData extends WebRequest {
 	
 	private WebSubmitData() {}
@@ -20,7 +20,7 @@ public class WebSubmitData extends WebRequest {
 		// we use the request headers of the main request for the resources.
 		final List<Header> recordedHeaders = getHeadersFromRecordedFile(postRequest.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile));
 
-        MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
+        MethodUtils.extractItemListAsStringList(visitor,method.getParameters(), EXTRARES, Optional.of(pageBuilder))
 				.ifPresent(stringList -> getUrlList(stringList, getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method))
 						.forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, Optional.empty(), recordedHeaders))));
         

@@ -82,6 +82,7 @@ public class WebUrlTest {
 			.addChilds(REQUEST_TEST)
 			.thinkTime(0)
 			.name("test_web_url_very_simple")
+			.isDynamic(true)
 			.build();
 
 	@Test
@@ -98,6 +99,7 @@ public class WebUrlTest {
 				.addChilds(request)
 				.thinkTime(0)
 				.name("test_web_url_very_simple")
+				.isDynamic(true)
 				.build();
 
 		assertEquals(expectedPage, pageGenerated);
@@ -118,6 +120,7 @@ public class WebUrlTest {
 				.name("test_web_url_simple")
 				.thinkTime(0)
 				.addChilds(ImmutableGetPlainRequest.builder().from(REQUEST_TEST).name(pageGenerated.getChilds().get(0).getName()).build(), resource)
+				.isDynamic(false)
 				.build();
 
 		assertEquals(expectedPage, pageGenerated);
@@ -155,6 +158,7 @@ public class WebUrlTest {
 				.addChilds(mainRequest, resource, resource2)
 				.thinkTime(0)
 				.name("test_web_url_full")
+				.isDynamic(false)
 				.build();
 
 		assertEquals(expectedPage, pageGenerated);

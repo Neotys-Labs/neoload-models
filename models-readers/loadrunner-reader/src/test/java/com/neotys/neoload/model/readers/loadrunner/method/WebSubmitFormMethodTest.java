@@ -116,6 +116,7 @@ public class WebSubmitFormMethodTest {
 				.addChilds(expectedRequest3)
 				.thinkTime(0)
 				.name("doit.jsp")
+				.isDynamic(true)
 				.build();
 
 		assertEquals(expectedPage, actualWebSubmitForm);

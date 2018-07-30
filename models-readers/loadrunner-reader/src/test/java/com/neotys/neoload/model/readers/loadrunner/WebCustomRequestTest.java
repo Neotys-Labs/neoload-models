@@ -92,6 +92,7 @@ public class WebCustomRequestTest {
 			.addChilds(REQUEST_TEST)
 			.thinkTime(0)
 			.name("test_web_custom_data")
+			.isDynamic(true)
 			.build();
 	
 	/*@Test

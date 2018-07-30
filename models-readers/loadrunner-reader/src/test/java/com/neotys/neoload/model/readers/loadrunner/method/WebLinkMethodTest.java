@@ -70,6 +70,7 @@ public class WebLinkMethodTest {
 				.addChilds(expectedRequest1)
 				.thinkTime(0)
 				.name("loadtest")
+				.isDynamic(true)
 				.build();
 
 		assertEquals(expectedPage1, actualWebUrl);
@@ -85,6 +86,7 @@ public class WebLinkMethodTest {
 				.addChilds(expectedRequest2)
 				.thinkTime(0)
 				.name("Form")
+				.isDynamic(true)
 				.build();
 		
 		assertEquals(expectedPage2, actualWebLink);

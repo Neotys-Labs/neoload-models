@@ -19,6 +19,7 @@ public class WriterUtilsTest {
         Page page = ImmutablePage.builder()
                 .name("TEST")
                 .thinkTime(0)
+                .isDynamic(false)
                 .build();
         assertThat(WriterUtils.getWriterFor(page).getClass().getSimpleName()).isEqualTo("PageWriter");
     }
@@ -31,6 +32,7 @@ public class WriterUtilsTest {
     	final Page page = ImmutablePage.builder()
                 .name("TEST")
                 .thinkTime(0)
+                .isDynamic(false)
                 .build();
     	WriterUtils.generateEmbeddedAction(doc, root, page, Optional.of("action-test"));
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><test-root><action-test>" + WriterUtils.getElementUid(page)+ "</action-test></test-root>";

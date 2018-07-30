@@ -16,7 +16,7 @@ public class PageWriterTest {
     	Document doc = WrittingTestUtils.generateEmptyDocument();
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-    			+ "<test-root><http-page name=\"page_name\" thinkTime=\"0\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.PAGE_TEST)+ "\">"
+    			+ "<test-root><http-page executeResourcesDynamically=\"false\" name=\"page_name\" thinkTime=\"0\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.PAGE_TEST)+ "\">"
     			+ "<embedded-action>" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "</embedded-action></http-page>"
     			+ "<http-action actionType=\"1\" "
     			+ "method=\"GET\" name=\"request_test\" "

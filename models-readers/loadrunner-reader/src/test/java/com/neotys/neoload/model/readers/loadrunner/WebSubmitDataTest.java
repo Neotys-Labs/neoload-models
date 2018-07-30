@@ -91,11 +91,12 @@ public class WebSubmitDataTest {
 			.addChilds(REQUEST_TEST)
 			.thinkTime(0)
 			.name("test_web_submit_data")
+			.isDynamic(true)
 			.build();
 	
 	@Test
 	public void buildPostParamsFromExtractTest() {
-		List<Parameter> expectedResult = new ArrayList<>();
+		final List<Parameter> expectedResult = new ArrayList<>();
 		expectedResult.add(PARAM_TEST_1);
 		expectedResult.add(PARAM_TEST_2);
 		List<String> input = new ArrayList<>();
@@ -105,7 +106,7 @@ public class WebSubmitDataTest {
 		input.add("Name=param 2");
 		input.add("Value=Value 2");
 		input.add("ENDITEM");
-		List<Parameter> generatedResult = WebSubmitData.buildPostParamsFromExtract(input);
+		final List<Parameter> generatedResult = WebRequest.buildPostParamsFromExtract(input);
 		
 		assertEquals(expectedResult, generatedResult);
 	}
@@ -118,6 +119,7 @@ public class WebSubmitDataTest {
 				.addChilds(ImmutablePostFormRequest.builder().from(REQUEST_TEST).name(pageGenerated.getChilds().get(0).getName()).build())
 				.thinkTime(0)
 				.name("test_web_submit_data")
+				.isDynamic(true)
 				.build();
 		
 		assertEquals(expectedPage, pageGenerated);
@@ -131,6 +133,7 @@ public class WebSubmitDataTest {
 				.addChilds(ImmutablePostFormRequest.builder().from(REQUEST_TEST).name(pageGenerated.getChilds().get(0).getName()).build())
 				.thinkTime(0)
 				.name("test_web_submit_data")
+				.isDynamic(true)
 				.build();
 
 		assertEquals(expectedPage, pageGenerated);

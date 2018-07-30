@@ -85,6 +85,7 @@ public class WrittingTestUtils {
 			.addChilds(WrittingTestUtils.REQUEST_TEST)
 			.thinkTime(0)
 			.name("page_name")
+			.isDynamic(false)
 			.build();
 	
 	public static final Server SERVER_JACK9090_TEST = ImmutableServer.builder()
@@ -105,6 +106,7 @@ public class WrittingTestUtils {
 			.addChilds(GET_REQUEST_TEST)
 			.thinkTime(0)
 			.name("PAGE_GET_REQUEST_TEST")
+			.isDynamic(false)
 			.build();
 	
 	public static final GetFollowLinkRequest GET_FOLLOW_LINK_REQUEST_TEST = ImmutableGetFollowLinkRequest.builder()
@@ -119,6 +121,7 @@ public class WrittingTestUtils {
 			.addChilds(GET_FOLLOW_LINK_REQUEST_TEST)
 			.thinkTime(0)
 			.name("Form")
+			.isDynamic(false)
 			.build();
 	
 	public static final PostSubmitFormRequest POST_SUBMIT_FORM_REQUEST_TEST = ImmutablePostSubmitFormRequest.builder()
@@ -137,6 +140,7 @@ public class WrittingTestUtils {
 			.addChilds(POST_SUBMIT_FORM_REQUEST_TEST)
 			.thinkTime(0)
 			.name("PAGE_GET_SUBMIT_FORM_REQUEST_TEST")
+			.isDynamic(false)
 			.build();
 	
 	public static final Container CONTAINER_TEST = ImmutableContainer.builder()

@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.Parameter;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -81,12 +82,15 @@ public class MethodUtils {
 	 * @param parameters the parameters to extract the items from.
 	 * @return a List of elements between the typeListName and the end boundary
 	 */
-	protected static Optional<List<String>> extractItemListAsStringList(final String leftBrace, final String rightBrace, List<String> parameters, final String typeListName) {
-
-		if(!parameters.contains(typeListName)) return Optional.empty();
+	protected static Optional<List<String>> extractItemListAsStringList(final LoadRunnerVUVisitor visitor, List<String> parameters, final ITEM_BOUNDARY typeListName, final Optional<ImmutablePage.Builder> pageBuilder) {
+		final boolean containsTypeListName = parameters.contains(typeListName.toString());
+		pageBuilder.map(p -> p.isDynamic(!containsTypeListName));
+		if(!containsTypeListName) {			
+			return Optional.empty();
+		}		
 		// split the list to get only the part after the "typeListName"
-		List<String> result = parameters.subList(parameters.indexOf(typeListName)+1, parameters.size())
-				.stream().map(param -> MethodUtils.normalizeString(leftBrace, rightBrace, param)).collect(Collectors.toList());
+		final List<String> result = parameters.subList(parameters.indexOf(typeListName.toString())+1, parameters.size())
+				.stream().map(param -> MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), param)).collect(Collectors.toList());
 		// compute last index (end boundaries can be EXTRARES, ITEMDATA, LAST)
 		final MutableInt boundaryIndex = new MutableInt(result.size());
 		ImmutableList.copyOf(ITEM_BOUNDARY.values()).forEach(itemBoundary -> boundaryIndex.setValue(result.indexOf(itemBoundary.toString())>=0 ? Math.min(boundaryIndex.intValue(), result.indexOf(itemBoundary.toString())) : boundaryIndex));

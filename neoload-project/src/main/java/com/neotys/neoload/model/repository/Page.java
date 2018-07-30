@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 public interface Page extends PageElement {
     List<Element> getChilds();
     int getThinkTime();
+    boolean isDynamic();
 
     @Override
     default Stream<Element> flattened() {

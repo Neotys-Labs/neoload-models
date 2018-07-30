@@ -10,12 +10,16 @@ import static org.junit.Assert.assertEquals;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.Parameter;
-
+import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.ITEM_BOUNDARY.EXTRARES;
 
 public class MethodUtilsTest {
 
+	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
+	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
+	
     @Test
     public void getMethodParameterTest() {
         ImmutableMethodCall method = ImmutableMethodCall.builder()
@@ -147,7 +151,7 @@ public class MethodUtilsTest {
 		output.add("Referer=https://www.server-test.fr/");
 		output.add("ENDITEM");
 		
-		Optional<List<String>> generatedResult = MethodUtils.extractItemListAsStringList("{", "}", input, MethodUtils.ITEM_BOUNDARY.EXTRARES.toString());
+		Optional<List<String>> generatedResult = MethodUtils.extractItemListAsStringList(LOAD_RUNNER_VISITOR, input, EXTRARES, Optional.empty());
 		
 		Optional<List<String>> expectedResult = Optional.of(output);
 		
@@ -174,7 +178,7 @@ public class MethodUtilsTest {
 				"ENDITEM"
 
 		);
-		assertThat(MethodUtils.extractItemListAsStringList("{", "}", input, MethodUtils.ITEM_BOUNDARY.EXTRARES.toString()).get()).isEqualTo(result);
+		assertThat(MethodUtils.extractItemListAsStringList(LOAD_RUNNER_VISITOR, input, EXTRARES, Optional.empty()).get()).isEqualTo(result);
 	}
 
 	@Test
@@ -195,7 +199,7 @@ public class MethodUtilsTest {
 				"ENDITEM"
 
 		);
-		assertThat(MethodUtils.extractItemListAsStringList("{", "}", input, MethodUtils.ITEM_BOUNDARY.EXTRARES.toString()).get()).isEqualTo(result);
+		assertThat(MethodUtils.extractItemListAsStringList(LOAD_RUNNER_VISITOR, input, EXTRARES, Optional.empty()).get()).isEqualTo(result);
 	}
 
 	@Test
@@ -209,14 +213,14 @@ public class MethodUtilsTest {
 
 		);
 
-		assertThat(MethodUtils.extractItemListAsStringList("{", "}", input, MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())).isEqualTo(Optional.empty());
+		assertThat(MethodUtils.extractItemListAsStringList(LOAD_RUNNER_VISITOR, input, EXTRARES, Optional.empty())).isEqualTo(Optional.empty());
 	}
 
     @Test
     public void extractExtraresAsStringListOnlyBoundary() {
         List<String> input = ImmutableList.of("LAST");
 
-        assertThat(MethodUtils.extractItemListAsStringList("{", "}", input, MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())).isEqualTo(Optional.empty());
+        assertThat(MethodUtils.extractItemListAsStringList(LOAD_RUNNER_VISITOR, input, EXTRARES, Optional.empty())).isEqualTo(Optional.empty());
     }
 
 	@Test

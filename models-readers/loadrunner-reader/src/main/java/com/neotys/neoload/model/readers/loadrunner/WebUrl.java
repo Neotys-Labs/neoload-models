@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
-
+import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.ITEM_BOUNDARY.EXTRARES;
 public class WebUrl extends WebRequest {
 	private WebUrl() {}
 	
@@ -25,9 +25,9 @@ public class WebUrl extends WebRequest {
         final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
         pageBuilder.addChilds(buildGetRequestFromURL(visitor, mainUrl, recordedFiles, recordedHeaders));
 
-        MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString()).ifPresent(stringList ->
+        MethodUtils.extractItemListAsStringList(visitor, method.getParameters(), EXTRARES, Optional.of(pageBuilder)).ifPresent(stringList ->
                 pageBuilder.addAllChilds(getUrlList(stringList, mainUrl).stream().map(url -> WebRequest.buildGetRequestFromURL(visitor, url, Optional.empty(), recordedHeaders)).collect(Collectors.toList())));
-
+        
         return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
                 .thinkTime(0)
                 .build();

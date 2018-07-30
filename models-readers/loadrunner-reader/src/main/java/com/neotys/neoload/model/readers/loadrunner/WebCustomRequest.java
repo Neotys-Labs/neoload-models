@@ -15,7 +15,7 @@ import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
 import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.PostRequest;
 import com.neotys.neoload.model.repository.RecordedFiles;
-
+import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.ITEM_BOUNDARY.EXTRARES;
 public class WebCustomRequest extends WebRequest {
 	
 	public static final String LR_HEXA_STR_PATTERN = "\\x";
@@ -31,7 +31,7 @@ public class WebCustomRequest extends WebRequest {
 			// we use the request headers of the main request for the resources.
 			final List<Header> recordedHeaders = getHeadersFromRecordedFile(postRequest.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile));
 
-			MethodUtils.extractItemListAsStringList(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters(), MethodUtils.ITEM_BOUNDARY.EXTRARES.toString())
+			MethodUtils.extractItemListAsStringList(visitor, method.getParameters(), EXTRARES, Optional.of(pageBuilder))
 					.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method))
 							.forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, Optional.empty(), recordedHeaders))));
 		}
