@@ -27,7 +27,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	private final String rightBrace;
 	private final LoadRunnerReader reader;
 	private final EventListener eventListener;
-	private Optional<Request> currentRequest;
+	private Optional<Request> currentRequest = Optional.empty();
 
 	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final String containerName) {
 		this.mainContainer = ImmutableContainer.builder().name(containerName);

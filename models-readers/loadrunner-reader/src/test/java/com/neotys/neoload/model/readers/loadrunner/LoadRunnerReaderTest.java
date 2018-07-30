@@ -8,17 +8,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
-import com.neotys.neoload.model.listener.TestEventListener;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import com.google.common.io.Files;
+import com.neotys.neoload.model.Project;
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.Delay;
-import com.neotys.neoload.model.repository.ImmutableServer;
 import com.neotys.neoload.model.repository.Page;
-import com.neotys.neoload.model.Project;
-import com.neotys.neoload.model.repository.Server;
 
 public class LoadRunnerReaderTest {
 	
