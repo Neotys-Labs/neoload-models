@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NeoLoadWritterTest {
 
     @Test
-    public void writeProjectTest() {
+    public void writeProjectTestZip() {
 
         ImmutableProject project = ImmutableProject.builder()
                 .name("Test project")
@@ -26,8 +26,25 @@ public class NeoLoadWritterTest {
         File tmpDir = Files.createTempDir();
         final String nlProjectFolder = tmpDir.getPath() + File.separator + project.getName();
         NeoLoadWriter writer = new NeoLoadWriter(project, nlProjectFolder, null);
-        writer.write();
+        writer.write(true);
         assertThat(new File(tmpDir, "Test project" + File.separator + "config.zip")).exists();
+        assertThat(new File(tmpDir, "Test project" + File.separator + "config.zip")).isFile();
+        assertThat(new File(tmpDir, "Test project" + File.separator + "Test project.nlp")).exists();
+    }
+    
+    @Test
+    public void writeProjectTestFolder() {
+
+        ImmutableProject project = ImmutableProject.builder()
+                .name("Test project")
+                .addUserPaths(getUserPath("MyPath"))
+                .build();
+        File tmpDir = Files.createTempDir();
+        final String nlProjectFolder = tmpDir.getPath() + File.separator + project.getName();
+        NeoLoadWriter writer = new NeoLoadWriter(project, nlProjectFolder, null);
+        writer.write(false);
+        assertThat(new File(tmpDir, "Test project" + File.separator + "config")).exists();
+        assertThat(new File(tmpDir, "Test project" + File.separator + "config")).isDirectory();
         assertThat(new File(tmpDir, "Test project" + File.separator + "Test project.nlp")).exists();
     }
 
@@ -96,7 +113,7 @@ public class NeoLoadWritterTest {
                 .build();
     	final String nlProjectFolder = tmpDirDest.getPath() + File.separator + project.getName();
         NeoLoadWriter writer = new NeoLoadWriter(project, nlProjectFolder, fileMap);
-        writer.write();
+        writer.write(true);
         assertThat(new File(tmpDirDest.getAbsolutePath() + File.separator + "Test project" + File.separator + "variables" ,"file1")).exists();
         assertThat(new File(tmpDirDest.getAbsolutePath() + File.separator + "Test project" + File.separator + "variables" ,"file2")).exists();
     }

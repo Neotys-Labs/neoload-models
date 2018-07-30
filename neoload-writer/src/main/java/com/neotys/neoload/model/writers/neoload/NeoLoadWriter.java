@@ -39,6 +39,9 @@ public class NeoLoadWriter {
 	private static final String PROJECT_VERSION = "6.4";
 	private static final String PRODUCT_VERSION = "6.6.0";
 
+	private static final String CONFIG_ZIP = "config.zip";
+	private static final String CONFIG_FOLDER = "config";
+	
 	public static final String RECORDED_REQUESTS_FOLDER = "recorded-requests";
 	public static final String RECORDED_RESPONSE_FOLDER = "recorded-responses";
 
@@ -64,7 +67,7 @@ public class NeoLoadWriter {
 		this.fileToCopy = map;
 	}
 
-	public void write() {
+	public void write(final boolean zipConfig) {
 		try {
 			final File f = new File(nlProjectFolder);
 			if (!f.exists()) {
@@ -74,8 +77,8 @@ public class NeoLoadWriter {
 				logger.error("The destination is not a directory, migration aborted.");
 				return;
 			}
-			writeXML();
-			writeNLP(project.getName());
+			writeXML(zipConfig);
+			writeNLP(project.getName(), zipConfig);
 			logger.info("Project saved.");
 
 		} catch (ParserConfigurationException | TransformerException | IOException e) {
@@ -83,7 +86,7 @@ public class NeoLoadWriter {
 		}
 	}
 
-	private void writeXML() throws ParserConfigurationException, TransformerException, IOException {
+	private void writeXML(final boolean zipConfig) throws ParserConfigurationException, TransformerException, IOException {
 
 		StreamResult result = new StreamResult(new File(nlProjectFolder, ConfigFiles.REPOSITORY.fileName));
 
@@ -115,7 +118,7 @@ public class NeoLoadWriter {
 				new File(nlProjectFolder, "scenario.xml"));
 		FileUtils.copyInputStreamToFile(NeoLoadWriter.class.getResourceAsStream(ConfigFiles.SETTINGS.fileName),
 				new File(nlProjectFolder, "settings.xml"));
-		createConfigZip();
+		createConfig(zipConfig);
 		deleteConfigFiles();
 	}
 
@@ -181,22 +184,41 @@ public class NeoLoadWriter {
 		}
 	}
 
-	private void createConfigZip() throws IOException {
-		Map<String, String> env = new HashMap<>();
-		env.put("create", "true");
-
-		Path zipfile = Paths.get(nlProjectFolder, "config.zip");
-		URI uri = URI.create("jar:" + zipfile.toUri());
-
-		try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
+	private void createConfig(final boolean zipConfig) throws IOException {
+		if(zipConfig){
+			Map<String, String> env = new HashMap<>();
+			env.put("create", "true");
+	
+			Path zipfile = Paths.get(nlProjectFolder, CONFIG_ZIP);
+			URI uri = URI.create("jar:" + zipfile.toUri());
+	
+			try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
+				Stream.of(ConfigFiles.values()).forEach(configFile -> {
+					Path filePath = Paths.get(nlProjectFolder, configFile.fileName);
+					Path filePathInZipfile = zipfs.getPath("/" + configFile.fileName);
+					// copy file into the zip file
+					try {
+						Files.copy(filePath, filePathInZipfile, REPLACE_EXISTING);
+					} catch (IOException e) {
+						logger.error("Error writing file in " + CONFIG_ZIP + " file", e);
+					}
+				});
+			}
+		} else {
+			final Path confFolder = Paths.get(nlProjectFolder + File.separator + CONFIG_FOLDER);
+			try {
+				Files.createDirectories(confFolder);
+			} catch (IOException e) {
+				logger.error("Error creating folder " + CONFIG_FOLDER, e);
+			}
 			Stream.of(ConfigFiles.values()).forEach(configFile -> {
 				Path filePath = Paths.get(nlProjectFolder, configFile.fileName);
-				Path filePathInZipfile = zipfs.getPath("/" + configFile.fileName);
-				// copy a file into the zip file
+				Path filePathInConfFolder = Paths.get(nlProjectFolder + File.separator + CONFIG_FOLDER, configFile.fileName);
+				// copy a file into the config folder
 				try {
-					Files.copy(filePath, filePathInZipfile, REPLACE_EXISTING);
+					Files.copy(filePath, filePathInConfFolder, REPLACE_EXISTING);
 				} catch (IOException e) {
-					logger.error("Error writing file in config.zip file", e);
+					logger.error("Error copying file to " + CONFIG_FOLDER + " folder", e);
 				}
 			});
 		}
@@ -213,7 +235,7 @@ public class NeoLoadWriter {
 		});
 	}
 
-	private void writeNLP(String name) throws IOException {
+	private void writeNLP(final String name, final boolean zipConfig) throws IOException {
 		File nlp = new File(nlProjectFolder, name + ".nlp");
 		if (!nlp.exists() && !nlp.createNewFile()) {
 			logger.error("Error, cannot create the NLP file");
@@ -231,8 +253,8 @@ public class NeoLoadWriter {
 		nlpProperties.addProperty("product.version", PRODUCT_VERSION);
 		nlpProperties.addProperty("product.original.version", PRODUCT_VERSION);
 		nlpProperties.addProperty("project.id", UUID.randomUUID().toString());
-		nlpProperties.addProperty("project.config.path", "config.zip");
-		nlpProperties.addProperty("project.config.storage", "ZIP");
+		nlpProperties.addProperty("project.config.path", zipConfig ? CONFIG_ZIP : CONFIG_FOLDER);
+		nlpProperties.addProperty("project.config.storage", zipConfig ? "ZIP" : "FOLDER");
 		nlpProperties.addProperty("team.server.enabled", "false");
 
 		try (final Writer out = new FileWriter(nlp)) {
