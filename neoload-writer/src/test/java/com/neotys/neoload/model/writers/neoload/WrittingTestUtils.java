@@ -87,6 +87,58 @@ public class WrittingTestUtils {
 			.name("page_name")
 			.build();
 	
+	public static final Server SERVER_JACK9090_TEST = ImmutableServer.builder()
+            .name("jack")
+            .host("jack")
+            .port("9090")
+            .scheme("http")
+            .build();
+	
+	public static final GetPlainRequest GET_REQUEST_TEST = ImmutableGetPlainRequest.builder()
+			.name("GET_REQUEST_TEST")
+			.path("/loadtest/")
+			.server(SERVER_JACK9090_TEST)
+			.httpMethod(HttpMethod.GET)
+			.build();
+	
+	public static final Page PAGE_GET_REQUEST_TEST = ImmutablePage.builder()
+			.addChilds(GET_REQUEST_TEST)
+			.thinkTime(0)
+			.name("PAGE_GET_REQUEST_TEST")
+			.build();
+	
+	public static final GetFollowLinkRequest GET_FOLLOW_LINK_REQUEST_TEST = ImmutableGetFollowLinkRequest.builder()
+			.name("GET_FOLLOW_LINK_REQUEST_TEST")				
+			.server(SERVER_JACK9090_TEST)
+			.text("Form")
+			.referer(GET_REQUEST_TEST)
+			.httpMethod(HttpMethod.GET)
+			.build();
+	
+	public static final Page PAGE_GET_FOLLOW_LINK_REQUEST_TEST = ImmutablePage.builder()
+			.addChilds(GET_FOLLOW_LINK_REQUEST_TEST)
+			.thinkTime(0)
+			.name("Form")
+			.build();
+	
+	public static final PostSubmitFormRequest POST_SUBMIT_FORM_REQUEST_TEST = ImmutablePostSubmitFormRequest.builder()
+			.name("POST_SUBMIT_FORM_REQUEST_TEST")
+			.server(SERVER_JACK9090_TEST)
+			.httpMethod(HttpMethod.POST)
+			.referer(GET_FOLLOW_LINK_REQUEST_TEST)
+			.addPostParameters(ImmutableParameter.builder().name("firstname").value("a").build())
+			.addPostParameters(ImmutableParameter.builder().name("lastname").value("b").build())
+			.addPostParameters(ImmutableParameter.builder().name("email").value("c@d.fr").build())
+			.addPostParameters(ImmutableParameter.builder().name("address").value("e").build())
+			.addPostParameters(ImmutableParameter.builder().name("sex").value("Male").build())
+			.build();
+	
+	public static final Page PAGE_GET_SUBMIT_FORM_REQUEST_TEST = ImmutablePage.builder()
+			.addChilds(POST_SUBMIT_FORM_REQUEST_TEST)
+			.thinkTime(0)
+			.name("PAGE_GET_SUBMIT_FORM_REQUEST_TEST")
+			.build();
+	
 	public static final Container CONTAINER_TEST = ImmutableContainer.builder()
 			.addChilds(PAGE_TEST)
 			.name("Container_name")

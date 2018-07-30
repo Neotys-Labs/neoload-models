@@ -85,8 +85,7 @@ public class RequestWriterTest {
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
     	Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
     }
-	
-	
+		
 	@Test
     public void writePostRequestBinaryDataTest() throws ParserConfigurationException, TransformerException {
     	Document doc = WrittingTestUtils.generateEmptyDocument();
@@ -106,4 +105,62 @@ public class RequestWriterTest {
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
     }
 
+	@Test
+    public void writeGetRequestTest() throws ParserConfigurationException, TransformerException {
+    	final Document doc = WrittingTestUtils.generateEmptyDocument();
+    	final Element root = WrittingTestUtils.generateTestRootElement(doc);
+    	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+    			+ "<test-root><http-action actionType=\"1\" method=\"GET\" "
+    			+ "name=\"GET_REQUEST_TEST\" path=\"/loadtest/\" "
+    			+ "serverUid=\"jack\" uid=\"" 
+    			+ WriterUtils.getElementUid(WrittingTestUtils.GET_REQUEST_TEST)+ "\"/></test-root>";
+    	
+    	(new GetPlainRequestWriter(WrittingTestUtils.GET_REQUEST_TEST)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+    	
+    	String generatedResult = WrittingTestUtils.getXmlString(doc);
+		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
+    }
+	
+	@Test
+    public void writeGetFollowLinkRequestTest() throws ParserConfigurationException, TransformerException {
+    	final Document doc = WrittingTestUtils.generateEmptyDocument();
+    	final Element root = WrittingTestUtils.generateTestRootElement(doc);
+    	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+    			+ "<test-root><http-action actionType=\"3\" extractorPath=\"GET_FOLLOW_LINK_REQUEST_TEST\" "
+    			+ "extractorServerUid=\"jack\" linkExtractorType=\"3\" method=\"GET\" name=\"GET_FOLLOW_LINK_REQUEST_TEST\" "
+    			+ "refererUid=\"" 
+    			+ WriterUtils.getElementUid(WrittingTestUtils.GET_REQUEST_TEST)+ "\" serverUid=\"jack\" "
+    			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.GET_FOLLOW_LINK_REQUEST_TEST)+ "\">"
+    			+ "<record-html-infos extractorContent=\"Form\" extractorOccurence=\"1\" htmlType=\"1\"/>"
+    			+ "<extractor-html-infos extractorContent=\"Form\" extractorOccurence=\"1\" htmlType=\"1\"/>"
+    			+ "</http-action></test-root>";
+    	
+    	(new GetFollowLinkRequestWriter(WrittingTestUtils.GET_FOLLOW_LINK_REQUEST_TEST)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+    	
+    	String generatedResult = WrittingTestUtils.getXmlString(doc);
+		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
+    }
+	
+	@Test
+    public void writePostSubmitFormRequestTest() throws ParserConfigurationException, TransformerException {
+    	final Document doc = WrittingTestUtils.generateEmptyDocument();
+    	final Element root = WrittingTestUtils.generateTestRootElement(doc);
+    	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+    			+ "<test-root><http-action actionType=\"4\" "
+    			+ "confFormExtractorParameters=\"firstname,lastname,email,address,sex\" "
+    			+ "extractorPath=\"POST_SUBMIT_FORM_REQUEST_TEST\" extractorServerUid=\"jack\" "
+    			+ "linkExtractorType=\"6\" method=\"POST\" name=\"POST_SUBMIT_FORM_REQUEST_TEST\" "
+    			+ "refererUid=\"" + WriterUtils.getElementUid(WrittingTestUtils.GET_FOLLOW_LINK_REQUEST_TEST)+ "\" "
+    			+ "serverUid=\"jack\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.POST_SUBMIT_FORM_REQUEST_TEST)+ "\"><parameter name=\"firstname\" "
+    			+ "value=\"a\"/><parameter name=\"lastname\" value=\"b\"/><parameter name=\"email\" "
+    			+ "value=\"c@d.fr\"/><parameter name=\"address\" value=\"e\"/><parameter name=\"sex\" "
+    			+ "value=\"Male\"/><record-html-infos extractorOccurence=\"1\" extractorRegExp=\"false\" "
+    			+ "htmlType=\"2\"/><extractor-html-infos extractorOccurence=\"1\" extractorRegExp=\"false\" "
+    			+ "htmlType=\"2\"/></http-action></test-root>";
+    	
+    	(new PostSubmitFormRequestWriter(WrittingTestUtils.POST_SUBMIT_FORM_REQUEST_TEST)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+    	
+    	String generatedResult = WrittingTestUtils.getXmlString(doc);
+		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
+    }
 }

@@ -1,12 +1,11 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.google.common.base.Preconditions;
-import com.neotys.neoload.model.repository.RecordedFiles;
-import com.neotys.neoload.model.repository.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.io.Files.getFileExtension;
+import static com.google.common.io.Files.getNameWithoutExtension;
+import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_REQUESTS_FOLDER;
+import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_RESPONSE_FOLDER;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,12 +17,14 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.io.Files.getFileExtension;
-import static com.google.common.io.Files.getNameWithoutExtension;
-import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_REQUESTS_FOLDER;
-import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_RESPONSE_FOLDER;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.repository.RecordedFiles;
+import com.neotys.neoload.model.repository.Request;
 
 public abstract class RequestWriter extends ElementWriter {
 
@@ -83,7 +84,7 @@ public abstract class RequestWriter extends ElementWriter {
 
 	protected abstract int getActionType();
 
-    private void writeValidationSection(final Request request, final Document document, Element xmlRequest) {
+    private static void writeValidationSection(final Request request, final Document document, Element xmlRequest) {
 		if (request.getValidators().isEmpty())
 			return;
 
@@ -97,7 +98,7 @@ public abstract class RequestWriter extends ElementWriter {
 		request.getParameters().forEach(paramElem -> ParameterWriter.of(paramElem).writeXML(document, xmlRequest, Optional.empty()));
 	}
 
-	private void writeRecordedFiles(final Request request, final Document document, final Element xmlRequest, final String outputFolder) {
+	private static void writeRecordedFiles(final Request request, final Document document, final Element xmlRequest, final String outputFolder) {
 		//Request content
 		final String requestBodyFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestBodyFile).orElse(null);
 		final String requestHeaderFile = request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile).orElse(null);
@@ -126,7 +127,7 @@ public abstract class RequestWriter extends ElementWriter {
 		}
 	}
 
-	private boolean copyRequestContent(final String outputFolder, final Element element,
+	private static boolean copyRequestContent(final String outputFolder, final Element element,
 									   final String requestHeaderFile, final String requestBodyFile) {
 		final boolean hasHeaders = !isNullOrEmpty(requestHeaderFile);
 		final boolean hasBody = !isNullOrEmpty(requestBodyFile);
@@ -136,6 +137,9 @@ public abstract class RequestWriter extends ElementWriter {
 		final Path requestBodyPathFromLRProject = hasBody ? Paths.get(requestBodyFile) : null;
 
 		final Path file = hasBody ? requestBodyPathFromLRProject : requestHeaderPathFromLRProject;
+		if(file == null){
+			return false;
+		}
 		final String srcFileNameWithoutExt = getNameWithoutExtension(file.getFileName().toString());
 		final String newName = "req_" + srcFileNameWithoutExt + "_" + UUID.randomUUID() + "." + getFileExtension(file.getFileName().toString());
 		final Path filePathInNLProject = Paths.get(outputFolder, RECORDED_REQUESTS_FOLDER, newName);
@@ -157,7 +161,7 @@ public abstract class RequestWriter extends ElementWriter {
 
 	}
 
-	private boolean copyResponseBody(final String outputFolder, final Element element,
+	private static boolean copyResponseBody(final String outputFolder, final Element element,
 									 final String resourcePathAsString) {
 		final Path resourcePathInSrcProject = Paths.get(resourcePathAsString);
 		final String srcFileName = resourcePathInSrcProject.getFileName().toString();
@@ -175,7 +179,7 @@ public abstract class RequestWriter extends ElementWriter {
 		}
 	}
 
-	private void writeRecordedResponseHeaders(final String recordedResponseHeaderFile, final Document document, final Element xmlRequest) {
+	private static void writeRecordedResponseHeaders(final String recordedResponseHeaderFile, final Document document, final Element xmlRequest) {
 		try {
 			final String responseHeaders = new String(Files.readAllBytes(Paths.get(recordedResponseHeaderFile)), "UTF-8").replaceAll("\r\n", "\n");
 			writeRecordedStatusCode(xmlRequest, responseHeaders);
@@ -187,7 +191,7 @@ public abstract class RequestWriter extends ElementWriter {
 		}
 	}
 
-	private void writeRecordedStatusCode(final Element xmlRequest, final String responseHeaders) {
+	private static void writeRecordedStatusCode(final Element xmlRequest, final String responseHeaders) {
 		final Matcher matcher = STATUS_CODE_PATTERN.matcher(responseHeaders);
 		if(matcher.find()){
 			final String statusCode = matcher.group(1);
