@@ -8,6 +8,8 @@ import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.ImmutableAddCookie;
 import com.neotys.neoload.model.repository.ImmutableAddCookie.Builder;
+import com.neotys.neoload.model.repository.Server;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,11 +51,7 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 		final String cookieName = httpCookie.getName();
 		final String cookieValue = httpCookie.getValue();
 		final String cookieDomain = httpCookie.getDomain();
-		final String name = "Set cookie " + cookieName + " for hostname " + cookieDomain;
-		final Builder builder = ImmutableAddCookie.builder()
-				.name(name)
-				.cookieName(cookieName)
-				.cookieValue(cookieValue);
+		final Builder builder = ImmutableAddCookie.builder();
 		URL url;
 		try{
 			url = new URL(cookieDomain);
@@ -64,9 +62,17 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 				url = null;
 			}			
 		}
-		if(url != null){
-			builder.server(visitor.getReader().getServer(url));
+		if(url == null){
+			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot parse URL (" + cookieDomain + ").");			
+			return null;
 		}
+		final Server server = visitor.getReader().getServer(url);		
+				
+		builder.name("Set cookie " + cookieName + " for server " + server.getName())
+				.cookieName(cookieName)
+				.cookieValue(cookieValue)
+				.server(server);
+		
 		final long maxAge = httpCookie.getMaxAge();
 		if(maxAge != -1L){
 			builder.expires(Long.toString(maxAge));

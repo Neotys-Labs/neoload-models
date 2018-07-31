@@ -40,7 +40,7 @@ public class WebAddCookieMethodTest {
 		final AddCookie actualAddCookie = (AddCookie) (new WebAddCookieMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_ADD_COOKIE_TEST, METHOD_CALL_CONTEXT);
 
 		final AddCookie expectedAddCookie = ImmutableAddCookie.builder()
-				.name("Set cookie NID for hostname host_test.com")
+				.name("Set cookie NID for server host_test.com")
 				.cookieName("NID")
 				.cookieValue("131=IGM2b3TaZ32Y6AhTUp7xG3hvGMXb35mBjohIErmdaQWVV-zd203Khdap56-0p30lyMlDq5AYP1WlxdPQfEmNckJMzl525vPuUQi1bY5e7phDCFx6SbiTH4RxN6V-IbpH0xLE3d5P1Ro")
 				.server(SERVER_TEST)
