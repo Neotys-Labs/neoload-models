@@ -1,19 +1,5 @@
 package com.neotys.neoload.model.listener;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.FileAppender;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.google.common.io.Files;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.neotys.neoload.model.stats.*;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,13 +9,32 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.neotys.neoload.model.stats.GsonAdaptersFunctionStat;
+import com.neotys.neoload.model.stats.GsonAdaptersStatistics;
+import com.neotys.neoload.model.stats.ImmutableFunctionStat;
+import com.neotys.neoload.model.stats.ImmutableStatistics;
+import com.neotys.neoload.model.stats.ProjectType;
+import com.neotys.neoload.model.stats.Statistics;
+
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.FileAppender;
+
 public class CmdEventListener implements EventListener {
 
 	private static final Logger LIVE_OUT = LoggerFactory.getLogger("LIVE");
 	private static final Logger FUNCTIONAL_OUT = LoggerFactory.getLogger("FUNCTIONAL");
 	private static final String LINE = "Line ";
-	private static final String MIGRATION_LOG_FOLDER = "migration_logs";
-
+	
 	private final String sourceFolder;
 	private final String destFolder;
 	private final String nlProjectName;
@@ -180,26 +185,6 @@ public class CmdEventListener implements EventListener {
 			gson.toJson(statistics, writer);
 		} catch (final IOException e) {
 			LIVE_OUT.error("Error while generating JSON report.", e);
-		}
-	}
-
-	public void moveLogFilesToNLProject(final String nlProjectFolderPath){
-		final File nlProjectFolder = new File(nlProjectFolderPath);
-		if(!nlProjectFolder.isDirectory()){
-			FUNCTIONAL_OUT.warn("Cannot copy migration log files because " + nlProjectFolderPath + " is not a directory.");
-			return;
-		}
-		final File logsFolder = new File(nlProjectFolder, MIGRATION_LOG_FOLDER);
-		logsFolder.mkdir();
-
-		for(final String logFile : logFiles.get()){
-			try {
-				final File from = new File( logFile);
-				Files.copy(from, new File(logsFolder, logFile));
-				from.deleteOnExit();
-			} catch (final IOException e) {
-				FUNCTIONAL_OUT.warn("Cannot copy file " + logFile + ". ", e);
-			}
 		}
 	}
 
