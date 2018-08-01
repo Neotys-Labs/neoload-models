@@ -181,7 +181,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	}
 	
 	public void setCurrentRequestFromPage(final Page currentPage) {
-		if(!currentPage.getChilds().isEmpty()){
+		if(currentPage!=null && !currentPage.getChilds().isEmpty()){
 			for(final Element pageElement : currentPage.getChilds()){
 				if(pageElement instanceof Request){
 					this.currentRequest = Optional.of((Request)pageElement);

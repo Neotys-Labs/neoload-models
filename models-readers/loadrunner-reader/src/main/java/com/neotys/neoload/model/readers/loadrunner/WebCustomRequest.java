@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.repository.Header;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutablePostBinaryRequest;
@@ -20,25 +21,29 @@ public class WebCustomRequest extends WebRequest {
 	
 	public static final String LR_HEXA_STR_PATTERN = "\\x";
 	
-    public static Page toElement(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    public static Page toElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
+    	
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 
 		final PostRequest postRequest = buildPostRequest(visitor, method);
-		if(postRequest != null) {
-			pageBuilder.addChilds(postRequest);
+		if(postRequest == null) {
+			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "There is not any body parameter for the following LR function");			
+			return null;
+		} 
+		visitor.readSupportedFunction(method.getName(), ctx);
+		pageBuilder.addChilds(postRequest);
 
-			// we use the request headers of the main request for the resources.
-			final List<Header> recordedHeaders = getHeadersFromRecordedFile(postRequest.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile));
+		// we use the request headers of the main request for the resources.
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(postRequest.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile));
 
-			MethodUtils.extractItemListAsStringList(visitor, method.getParameters(), EXTRARES, Optional.of(pageBuilder))
-					.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method))
-							.forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, Optional.empty(), recordedHeaders))));
-		}
-        
-        return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
-                .thinkTime(0)
-                .build();
+		MethodUtils.extractItemListAsStringList(visitor, method.getParameters(), EXTRARES, Optional.of(pageBuilder))
+				.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+						.forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, Optional.empty(), recordedHeaders))));
+		
+		return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
+                .thinkTime(0)               
+                .build();		
     }
     
     /**
@@ -88,9 +93,7 @@ public class WebCustomRequest extends WebRequest {
 					.recordedFiles(recordedFiles);
 				visitor.getCurrentHeaders().clear();
 				return builder.build();
-		}
-
-    	LOGGER.warn("There is not any body parameter for the following LR function : " + method.getName());
+		}   	
 		return null;
     }
     

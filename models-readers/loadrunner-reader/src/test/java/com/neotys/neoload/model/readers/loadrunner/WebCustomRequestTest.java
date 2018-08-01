@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.listener.TestEventListener;
+import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
@@ -24,7 +25,8 @@ public class WebCustomRequestTest {
 	
 	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
 	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
-		
+	private static final MethodcallContext METHOD_CALL_CONTEXT = new MethodcallContext(null, 0);
+	
 	public static final MethodCall WEB_CUSTOM_DATA_TEST = ImmutableMethodCall.builder()
 			.name("\"test_web_custom_data\"")
 			.addParameters("\"test_web_custom_data\"")
@@ -114,13 +116,13 @@ public class WebCustomRequestTest {
 
 	@Test
 	public void binaryDataTest() {
-		final ImmutablePage pageGenerated = (ImmutablePage) WebCustomRequest.toElement(LOAD_RUNNER_VISITOR, WEB_CUSTOM_DATA_TEST);
+		final ImmutablePage pageGenerated = (ImmutablePage) WebCustomRequest.toElement(LOAD_RUNNER_VISITOR, WEB_CUSTOM_DATA_TEST, METHOD_CALL_CONTEXT);
 		assertEquals("dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==", Base64.getEncoder().encodeToString(((PostBinaryRequest)pageGenerated.getChilds().get(0)).getBinaryData()));
 	}
 	
 	@Test
 	public void toElementTest() {		
-		ImmutablePage pageGenerated = (ImmutablePage) WebCustomRequest.toElement(LOAD_RUNNER_VISITOR, WEB_CUSTOM_DATA_TEST2);
+		ImmutablePage pageGenerated = (ImmutablePage) WebCustomRequest.toElement(LOAD_RUNNER_VISITOR, WEB_CUSTOM_DATA_TEST2, METHOD_CALL_CONTEXT);
 
 		final Request requestGenerated = (Request) pageGenerated.getChilds().get(0);
 		pageGenerated = pageGenerated.withChilds(ImmutableList.of(requestGenerated));

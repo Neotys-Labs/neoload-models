@@ -14,9 +14,8 @@ public class WebCustomRequestMethod  implements LoadRunnerMethod {
 	}
 
 	@Override
-	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
-		visitor.readSupportedFunction(method.getName(), ctx);
-		final Page page = WebCustomRequest.toElement(visitor, method);
+	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {		
+		final Page page = WebCustomRequest.toElement(visitor, method, ctx);
 		visitor.getCurrentExtractors().clear();
 		visitor.getCurrentValidators().clear();
 		visitor.getCurrentHeaders().clear();
