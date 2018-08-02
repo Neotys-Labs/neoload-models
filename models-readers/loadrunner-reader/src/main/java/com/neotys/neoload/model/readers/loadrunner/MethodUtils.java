@@ -11,9 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.neotys.neoload.model.repository.ImmutablePage;
-import com.neotys.neoload.model.repository.ImmutableParameter;
-import com.neotys.neoload.model.repository.Parameter;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
 import org.slf4j.Logger;
@@ -22,6 +19,10 @@ import org.slf4j.LoggerFactory;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.repository.ImmutablePage;
+import com.neotys.neoload.model.repository.ImmutableParameter;
+import com.neotys.neoload.model.repository.ImmutableParameter.Builder;
+import com.neotys.neoload.model.repository.Parameter;
 
 public class MethodUtils {
 
@@ -164,16 +165,22 @@ public class MethodUtils {
 			logger.warn("Request Parameters are not encode in UTF-8 : " + e);
 		}
 		for (String param : query.split("&")) {
-			final String[] pair = param.split("=");
-			if (pair.length > 1) {
-				result.add(ImmutableParameter.builder().name(pair[0]).value(pair[1]).build());
+			final Builder parameterBuilder = ImmutableParameter.builder();
+			if(param.contains("=")){
+				final String[] pair = param.split("=");
+				if (pair.length > 1) {
+					parameterBuilder.name(pair[0]).value(pair[1]);
+				} else {
+					parameterBuilder.name(pair[0]).value("");
+				}
 			} else {
-				result.add(ImmutableParameter.builder().name(pair[0]).build());
+				parameterBuilder.name(param);
 			}
+			result.add(parameterBuilder.build());
 		}
 		return result;
 	}
-
+	
 	protected static List<Item> parseItemList(final List<String> attributes) {
 		final List<Item> items = new ArrayList<>();
 		final Item item = new Item();

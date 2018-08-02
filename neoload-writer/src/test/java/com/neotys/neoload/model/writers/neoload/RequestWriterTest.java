@@ -22,7 +22,7 @@ public class RequestWriterTest {
     			+ "method=\"GET\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST2)+ "\">"
-    			+ "<parameter name=\"param_name\" value=\"param_value\"/>"
+    			+ "<parameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
     			+ "</http-action></test-root>";
     	
     	(new GetPlainRequestWriter(WrittingTestUtils.REQUEST_TEST2)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
@@ -57,8 +57,8 @@ public class RequestWriterTest {
     			+ "method=\"POST\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST3)+ "\">"
-				+ "<urlPostParameter name=\"param_name\" value=\"param_value\"/>"
-    			+ "<parameter name=\"post param_name\" value=\"post_param Value\"/>"
+				+ "<urlPostParameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
+    			+ "<parameter name=\"post param_name\" separator=\"=\" value=\"post_param Value\"/>"
     			+ "</http-action></test-root>";
     	
     	(new PostFormRequestWriter(WrittingTestUtils.REQUEST_TEST3)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
@@ -76,7 +76,7 @@ public class RequestWriterTest {
     			+ "method=\"POST\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST4)+ "\">"
-				+ "<urlPostParameter name=\"param_name\" value=\"param_value\"/>"
+				+ "<urlPostParameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
 				+ "<textPostContent><![CDATA[texte a convertir en binaire]]></textPostContent>"
     			+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
     			+ "</http-action></test-root>";
@@ -96,7 +96,7 @@ public class RequestWriterTest {
     			+ "method=\"POST\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST5)+ "\">"
-				+ "<urlPostParameter name=\"param_name\" value=\"param_value\"/>"
+				+ "<urlPostParameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
     			+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
     			+ "</http-action></test-root>";
     	
@@ -153,9 +153,9 @@ public class RequestWriterTest {
     			+ "linkExtractorType=\"6\" method=\"POST\" name=\"POST_SUBMIT_FORM_REQUEST_TEST\" "
     			+ "refererUid=\"" + WriterUtils.getElementUid(WrittingTestUtils.GET_FOLLOW_LINK_REQUEST_TEST)+ "\" "
     			+ "serverUid=\"jack\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.POST_SUBMIT_FORM_REQUEST_TEST)+ "\"><parameter name=\"firstname\" "
-    			+ "value=\"a\"/><parameter name=\"lastname\" value=\"b\"/><parameter name=\"email\" "
-    			+ "value=\"c@d.fr\"/><parameter name=\"address\" value=\"e\"/><parameter name=\"sex\" "
-    			+ "value=\"Male\"/><record-html-infos extractorOccurence=\"1\" extractorRegExp=\"false\" "
+    			+ "separator=\"=\" value=\"a\"/><parameter name=\"lastname\" separator=\"=\" value=\"b\"/><parameter name=\"email\" "
+    			+ "separator=\"=\" value=\"c@d.fr\"/><parameter name=\"address\" separator=\"=\" value=\"e\"/><parameter name=\"sex\" "
+    			+ "separator=\"=\" value=\"Male\"/><record-html-infos extractorOccurence=\"1\" extractorRegExp=\"false\" "
     			+ "htmlType=\"2\"/><extractor-html-infos extractorOccurence=\"1\" extractorRegExp=\"false\" "
     			+ "htmlType=\"2\"/></http-action></test-root>";
     	

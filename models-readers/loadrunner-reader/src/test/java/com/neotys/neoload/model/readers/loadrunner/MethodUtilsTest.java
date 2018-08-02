@@ -124,6 +124,22 @@ public class MethodUtilsTest {
     	assertEquals(MethodUtils.queryToParameterList(query), expectedList);
     }
     
+    @Test
+    public void queryToParameterListTestWithEmptyValue() {
+    	String query = "key1=";
+    	List<Parameter> expectedList = new ArrayList<>();
+    	expectedList.add(ImmutableParameter.builder().name("key1").value("").build());    	
+    	assertEquals(MethodUtils.queryToParameterList(query), expectedList);
+    }
+    
+    @Test
+    public void queryToParameterListTestWithNoValue() {
+    	String query = "key1";
+    	List<Parameter> expectedList = new ArrayList<>();
+    	expectedList.add(ImmutableParameter.builder().name("key1").build());    	
+    	assertEquals(MethodUtils.queryToParameterList(query), expectedList);
+    }
+    
 	@Test
 	public void extractExtraresAsStringListWithLastBoundary() {
 		List<String> input = new ArrayList<>();

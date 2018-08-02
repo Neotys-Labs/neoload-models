@@ -7,8 +7,9 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface Parameter {
 	String getName();
-	//If there is not a value, that means that parameter has not a value
-	//Overwise, that means there is a value (an "=" is present in the URL),
-	//if this value is void getValue return a empty "string" 
+	
+	// If value has empty optional, it means the parameter has no value ("parameterName"), 
+	// If value is present with empty string, it means value is empty string ("parameterName=")
 	Optional<String> getValue();
+	
 }

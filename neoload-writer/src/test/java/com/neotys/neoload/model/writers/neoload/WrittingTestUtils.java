@@ -39,6 +39,15 @@ public class WrittingTestUtils {
 			.value("param_value")
 			.build();
 	
+	public static final Parameter PARAMETER_TEST_EMPTY_VALUE = ImmutableParameter.builder()
+			.name("param_name")
+			.value("")
+			.build();
+	
+	public static final Parameter PARAMETER_TEST_NO_VALUE = ImmutableParameter.builder()
+			.name("param_name")
+			.build();
+	
 	public static final Parameter POST_PARAMETER_TEST = ImmutableParameter.builder()
 			.name("post param_name")
 			.value("post_param Value")
