@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.writers.neoload;
 
 import com.neotys.neoload.model.repository.PostBinaryRequest;
-import com.neotys.neoload.model.repository.PostRequest;
 import com.neotys.neoload.model.repository.Request;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -12,7 +11,7 @@ import java.util.Base64;
 public class PostBinaryRequestWriter extends PostRequestWriter {
 	public static final String XML_BINARY_DATA_TAG_NAME = "binaryPostContentBase64";
 
-	public PostBinaryRequestWriter(PostRequest request) {
+	public PostBinaryRequestWriter(PostBinaryRequest request) {
 		super(request);
 	}
 	

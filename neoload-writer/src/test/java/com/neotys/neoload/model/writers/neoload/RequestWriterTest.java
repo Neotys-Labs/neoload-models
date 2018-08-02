@@ -3,6 +3,7 @@ package com.neotys.neoload.model.writers.neoload;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import com.neotys.neoload.model.repository.PostBinaryRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -99,7 +100,7 @@ public class RequestWriterTest {
     			+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
     			+ "</http-action></test-root>";
     	
-    	(new PostBinaryRequestWriter(WrittingTestUtils.REQUEST_TEST5)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+    	(new PostBinaryRequestWriter((PostBinaryRequest) WrittingTestUtils.REQUEST_TEST5)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
