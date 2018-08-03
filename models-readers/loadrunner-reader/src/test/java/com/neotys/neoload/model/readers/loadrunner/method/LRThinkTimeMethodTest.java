@@ -15,9 +15,14 @@ import com.neotys.neoload.model.repository.ImmutableDelay;
 
 public class LRThinkTimeMethodTest {
 	
-	public static final MethodCall LR_THINK_TIME = ImmutableMethodCall.builder()
+	public static final MethodCall LR_THINK_TIME_1 = ImmutableMethodCall.builder()
 			.name("\"lr_think_time\"")
 			.addParameters("10")
+			.build();
+	
+	public static final MethodCall LR_THINK_TIME_2 = ImmutableMethodCall.builder()
+			.name("\"lr_think_time\"")
+			.addParameters("10.00")
 			.build();
 
 	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
@@ -27,13 +32,18 @@ public class LRThinkTimeMethodTest {
 	@Test
 	public void testGetElement() {		
 		
-		final Delay actualDelay = (Delay) (new LRThinkTimeMethod()).getElement(LOAD_RUNNER_VISITOR, LR_THINK_TIME, METHOD_CALL_CONTEXT);
-
-		final Delay expectedDelay = ImmutableDelay.builder()
+		Delay actualDelay = (Delay) (new LRThinkTimeMethod()).getElement(LOAD_RUNNER_VISITOR, LR_THINK_TIME_1, METHOD_CALL_CONTEXT);
+		Delay expectedDelay = ImmutableDelay.builder()
 				.name("delay")
 				.delay("10000")
-				.build();	
-
+				.build();
+		assertEquals(expectedDelay, actualDelay);
+		
+		actualDelay = (Delay) (new LRThinkTimeMethod()).getElement(LOAD_RUNNER_VISITOR, LR_THINK_TIME_2, METHOD_CALL_CONTEXT);
+		expectedDelay = ImmutableDelay.builder()
+				.name("delay")
+				.delay("10000")
+				.build();
 		assertEquals(expectedDelay, actualDelay);
 	}
 

@@ -22,7 +22,7 @@ public class LRThinkTimeMethod  implements LoadRunnerMethod {
 
 		String delayInMs = method.getParameters().get(0);
 		try {
-			delayInMs = String.valueOf(Integer.parseInt(method.getParameters().get(0)) * 1000);
+			delayInMs = String.valueOf(Math.round(Double.parseDouble(method.getParameters().get(0)) * 1000));			
 			visitor.readSupportedFunction(method.getName(), ctx);
 		} catch (final NumberFormatException nfe) {
 			final String warning = "A think time cannot be converted in milli seconds";
