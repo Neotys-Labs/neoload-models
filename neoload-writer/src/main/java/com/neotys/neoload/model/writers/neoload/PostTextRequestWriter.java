@@ -11,6 +11,8 @@ import com.neotys.neoload.model.repository.Request;
 
 public class PostTextRequestWriter extends PostRequestWriter {
 
+	public static final int TEXT_CONTENT = 4;
+	
 	public PostTextRequestWriter(PostTextRequest request) {
 		super(request);
 	}
@@ -29,5 +31,10 @@ public class PostTextRequestWriter extends PostRequestWriter {
 		CDATASection xmlDataBinary = document.createCDATASection(Base64.getEncoder().encodeToString(data.getBytes()));
 		xmlDataBinaryNode.appendChild(xmlDataBinary);
 		xmlRequest.appendChild(xmlDataBinaryNode);
+	}
+	
+	@Override
+	protected int getPostType() {
+		return TEXT_CONTENT;
 	}
 }

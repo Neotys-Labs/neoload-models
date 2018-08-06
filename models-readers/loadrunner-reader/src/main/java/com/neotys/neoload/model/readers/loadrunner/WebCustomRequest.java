@@ -26,7 +26,7 @@ public class WebCustomRequest extends WebRequest {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 
-		final PostRequest postRequest = buildPostRequest(visitor, method);
+		final PostRequest postRequest = buildRequest(visitor, method);
 		if(postRequest == null) {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "There is not any body parameter for the following LR function");			
 			return null;
@@ -51,7 +51,7 @@ public class WebCustomRequest extends WebRequest {
      * @param method represent the LR "web_custom_request" function
      * @return the corresponding request of the model
      */
-    public static PostRequest buildPostRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    public static PostRequest buildRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
     	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
     	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 

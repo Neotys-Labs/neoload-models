@@ -10,7 +10,8 @@ import java.util.Base64;
 
 public class PostBinaryRequestWriter extends PostRequestWriter {
 	public static final String XML_BINARY_DATA_TAG_NAME = "binaryPostContentBase64";
-
+	public static final int RAW_CONTENT = 2;
+	
 	public PostBinaryRequestWriter(PostBinaryRequest request) {
 		super(request);
 	}
@@ -22,7 +23,10 @@ public class PostBinaryRequestWriter extends PostRequestWriter {
 		CDATASection xmlData = document.createCDATASection(Base64.getEncoder().encodeToString(((PostBinaryRequest)request).getBinaryData()));
 		xmlDataNode.appendChild(xmlData);
 		xmlRequest.appendChild(xmlDataNode);
-
-
+	}
+	
+	@Override
+	protected int getPostType() {
+		return RAW_CONTENT;
 	}
 }

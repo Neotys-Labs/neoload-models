@@ -4,11 +4,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.neotys.neoload.model.repository.Parameter;
+import com.neotys.neoload.model.repository.PostFormRequest;
 import com.neotys.neoload.model.repository.PostSubmitFormRequest;
 import com.neotys.neoload.model.repository.Request;
 
 public class PostSubmitFormRequestWriter extends PostRequestWriter {
 	
+	public static final int FORM_CONTENT = 1;
+		
 	public PostSubmitFormRequestWriter(final PostSubmitFormRequest request) {
 		super(request);
 	}
@@ -50,5 +53,10 @@ public class PostSubmitFormRequestWriter extends PostRequestWriter {
 			content.append(parameter.getName()).append(",");
 		}
 		return content.deleteCharAt(content.length()-1).toString();
+	}
+	
+	@Override
+	protected int getPostType() {
+		return FORM_CONTENT;
 	}
 }

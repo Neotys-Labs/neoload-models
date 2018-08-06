@@ -50,7 +50,7 @@ public abstract class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_HTML_TYPE = "htmlType";
 	public static final String XML_ATTR_EXTRACTORPATH = "extractorPath";
 	public static final String XML_ATTR_CONF_FORM_EXTRACTOR_PARAMETERS = "confFormExtractorParameters";
-
+	
 	private static final String XML_TAG_RECORDED_REQUEST = "requestContentFileDescription";
 	private static final String XML_TAG_RECORDED_RESPONSE = "responsePageFileDescription";
 	private static final String XML_TAG_RESPONSE_HEADERS = "responseHeaders";
