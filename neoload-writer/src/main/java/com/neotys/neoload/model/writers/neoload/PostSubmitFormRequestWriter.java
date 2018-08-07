@@ -4,7 +4,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.neotys.neoload.model.repository.Parameter;
-import com.neotys.neoload.model.repository.PostFormRequest;
 import com.neotys.neoload.model.repository.PostSubmitFormRequest;
 import com.neotys.neoload.model.repository.Request;
 

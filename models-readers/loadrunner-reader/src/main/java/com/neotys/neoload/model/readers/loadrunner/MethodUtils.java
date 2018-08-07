@@ -85,7 +85,7 @@ public class MethodUtils {
 	 */
 	protected static Optional<List<String>> extractItemListAsStringList(final LoadRunnerVUVisitor visitor, List<String> parameters, final ITEM_BOUNDARY typeListName, final Optional<ImmutablePage.Builder> pageBuilder) {
 		final boolean containsTypeListName = parameters.contains(typeListName.toString());
-		pageBuilder.map(p -> p.isDynamic(!containsTypeListName));
+		pageBuilder.ifPresent(p -> p.isDynamic(!containsTypeListName));
 		if(!containsTypeListName) {			
 			return Optional.empty();
 		}		

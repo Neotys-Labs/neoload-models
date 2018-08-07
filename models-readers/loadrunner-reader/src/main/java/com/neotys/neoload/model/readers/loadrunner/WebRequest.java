@@ -168,7 +168,7 @@ public abstract class WebRequest {
     	final URL mainUrl = Preconditions.checkNotNull(getUrl(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
     	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
-    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, snapshotProperties);
 		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
 
 		final ImmutablePostFormRequest.Builder requestBuilder = ImmutablePostFormRequest.builder()
@@ -177,7 +177,7 @@ public abstract class WebRequest {
                 .server(visitor.getReader().getServer(mainUrl))
                 .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
 				.recordedFiles(recordedFiles);
-		getContentType(snapshotProperties).map(requestBuilder::contentType);
+		getContentType(snapshotProperties).ifPresent(requestBuilder::contentType);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
 
@@ -215,7 +215,7 @@ public abstract class WebRequest {
     @VisibleForTesting
     protected static GetFollowLinkRequest buildGetFollowLinkRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name, final String textFollowLink) {
 		final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
-    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, snapshotProperties);
 		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
 		
 		final ImmutableGetFollowLinkRequest.Builder requestBuilder = ImmutableGetFollowLinkRequest.builder()
@@ -225,7 +225,7 @@ public abstract class WebRequest {
                 .httpMethod(Request.HttpMethod.GET)
 				.recordedFiles(recordedFiles);
 
-		getContentType(snapshotProperties).map(requestBuilder::contentType);
+		getContentType(snapshotProperties).ifPresent(requestBuilder::contentType);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
 
@@ -246,7 +246,7 @@ public abstract class WebRequest {
     @VisibleForTesting
     protected static PostSubmitFormRequest buildPostSubmitFormRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name) {
     	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
-    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, snapshotProperties);
 		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
 
 		final ImmutablePostSubmitFormRequest.Builder requestBuilder = ImmutablePostSubmitFormRequest.builder()
@@ -254,7 +254,7 @@ public abstract class WebRequest {
 				.path(name)
                 .httpMethod(Request.HttpMethod.POST)
 				.recordedFiles(recordedFiles);
-		getContentType(snapshotProperties).map(requestBuilder::contentType);
+		getContentType(snapshotProperties).ifPresent(requestBuilder::contentType);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
 
@@ -283,13 +283,14 @@ public abstract class WebRequest {
 		if(!Strings.isNullOrEmpty(url)){
 			try {
 				return Optional.of((new URL(url)).getPath());								
-			} catch (MalformedURLException e) {					
+			} catch (MalformedURLException e) {
+				LOGGER.error("Cannot extract path from URL :"+url  + "\nThe error is : " + e);
 			}
 		}	
 		return Optional.empty();
 	}
 
-	protected static Optional<RecordedFiles> getRecordedFilesFromSnapshotProperties(final LoadRunnerVUVisitor visitor, final MethodCall method, final Optional<Properties> snapshotProperties) {
+	protected static Optional<RecordedFiles> getRecordedFilesFromSnapshotProperties(final LoadRunnerVUVisitor visitor, final Optional<Properties> snapshotProperties) {
 		if(!snapshotProperties.isPresent()){
 			return Optional.empty();
 		}
