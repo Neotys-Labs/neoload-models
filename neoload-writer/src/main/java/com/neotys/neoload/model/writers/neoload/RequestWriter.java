@@ -50,7 +50,8 @@ public abstract class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_HTML_TYPE = "htmlType";
 	public static final String XML_ATTR_EXTRACTORPATH = "extractorPath";
 	public static final String XML_ATTR_CONF_FORM_EXTRACTOR_PARAMETERS = "confFormExtractorParameters";
-	
+	public static final String XML_ATTR_CONTENT_TYPE = "contentType";
+		
 	private static final String XML_TAG_RECORDED_REQUEST = "requestContentFileDescription";
 	private static final String XML_TAG_RECORDED_RESPONSE = "responsePageFileDescription";
 	private static final String XML_TAG_RESPONSE_HEADERS = "responseHeaders";
@@ -73,6 +74,7 @@ public abstract class RequestWriter extends ElementWriter {
 
 	protected void fillXML(final Document document, final Element xmlRequest, final Request theRequest) {
 		xmlRequest.setAttribute(XML_ATTR_METHOD, theRequest.getHttpMethod().toString());
+		theRequest.getContentType().ifPresent(c -> xmlRequest.setAttribute(XML_ATTR_CONTENT_TYPE, c));
 		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server.getName()));
 		xmlRequest.setAttribute(XML_ATTR_ACTION_TYPE, String.valueOf(getActionType()));
 		theRequest.getPath().ifPresent(path -> xmlRequest.setAttribute(XML_ATTR_PATH, path));

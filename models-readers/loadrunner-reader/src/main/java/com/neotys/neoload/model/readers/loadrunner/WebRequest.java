@@ -177,7 +177,7 @@ public abstract class WebRequest {
                 .server(visitor.getReader().getServer(mainUrl))
                 .httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
 				.recordedFiles(recordedFiles);
-
+		getContentType(snapshotProperties).map(requestBuilder::contentType);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
 
@@ -214,10 +214,10 @@ public abstract class WebRequest {
      */
     @VisibleForTesting
     protected static GetFollowLinkRequest buildGetFollowLinkRequest(final LoadRunnerVUVisitor visitor, final MethodCall method, final String name, final String textFollowLink) {
-    	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
+		final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
     	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
 		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
-
+		
 		final ImmutableGetFollowLinkRequest.Builder requestBuilder = ImmutableGetFollowLinkRequest.builder()
 				.name(name)      
 				.path(name)
@@ -225,6 +225,7 @@ public abstract class WebRequest {
                 .httpMethod(Request.HttpMethod.GET)
 				.recordedFiles(recordedFiles);
 
+		getContentType(snapshotProperties).map(requestBuilder::contentType);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
 
@@ -239,7 +240,7 @@ public abstract class WebRequest {
         return requestBuilder.build();
     }
 
-    /**
+	/**
      * Generate an immutable request of type Submit form
      */
     @VisibleForTesting
@@ -253,7 +254,7 @@ public abstract class WebRequest {
 				.path(name)
                 .httpMethod(Request.HttpMethod.POST)
 				.recordedFiles(recordedFiles);
-
+		getContentType(snapshotProperties).map(requestBuilder::contentType);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
 
@@ -350,6 +351,16 @@ public abstract class WebRequest {
                    .filter(item -> item.getAttribute("Name").isPresent())
                    .<Parameter>map(item -> ImmutableParameter.builder().name(item.getAttribute("Name").get()).value(item.getAttribute("Value")).build())
                    .collect(Collectors.toList());
-
    	}
+    
+    private static Optional<String> getContentType(final Optional<Properties> snapshotProperties) {
+		if(!snapshotProperties.isPresent()){
+			return Optional.empty();
+		}
+		final Object property = snapshotProperties.get().get("ContentType");
+		if(property == null){
+			return Optional.empty();
+		}
+		return Optional.of(property.toString());
+	}
 }
