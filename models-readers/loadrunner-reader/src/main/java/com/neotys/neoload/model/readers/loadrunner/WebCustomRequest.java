@@ -55,7 +55,7 @@ public class WebCustomRequest extends WebRequest {
     	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
     	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
-    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, snapshotProperties);
 		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
 
 		if (MethodUtils.getParameterWithName(method, "Body").isPresent()) {

@@ -21,7 +21,7 @@ public class WebUrl extends WebRequest {
         
         final URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
         final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
-    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, method, snapshotProperties);
+    	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, snapshotProperties);
         final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
         pageBuilder.addChilds(buildGetRequestFromURL(visitor, mainUrl, recordedFiles, recordedHeaders));
 
