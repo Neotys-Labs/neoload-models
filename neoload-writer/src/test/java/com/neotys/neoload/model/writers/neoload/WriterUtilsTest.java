@@ -22,7 +22,7 @@ public class WriterUtilsTest {
                 .thinkTime(0)
                 .isDynamic(false)
                 .build();
-        assertThat(WriterUtils.getWriterFor(page, ElementWriter.class).getClass().getSimpleName()).isEqualTo("PageWriter");
+        assertThat(WriterUtils.<ElementWriter>getWriterFor(page).getClass().getSimpleName()).isEqualTo("PageWriter");
     }
 
 
@@ -39,7 +39,7 @@ public class WriterUtilsTest {
                 .scope(Variable.VariableScope.LOCAL)
                 .numOfFirstRowData(0)
                 .build();
-        assertThat(WriterUtils.getWriterFor(var, VariableWriter.class).getClass().getSimpleName()).isEqualTo("FileVariableWriter");
+        assertThat(WriterUtils.<VariableWriter>getWriterFor(var).getClass().getSimpleName()).isEqualTo("FileVariableWriter");
     }
     
     @Test

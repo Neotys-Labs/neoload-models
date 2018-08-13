@@ -6,8 +6,8 @@ import org.w3c.dom.Element;
 
 public abstract class DurationPolicyWriter {
 
-    public final static String XML_TAG_NAME = "duration-policy-entry";
-    public final static String XML_PARAM_TYPE = "type";
+    public static final String XML_TAG_NAME = "duration-policy-entry";
+    public static final String XML_PARAM_TYPE = "type";
 
     protected final DurationPolicy durationPolicy;
 

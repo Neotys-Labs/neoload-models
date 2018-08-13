@@ -6,9 +6,9 @@ import org.w3c.dom.Element;
 
 public class ConstantLoadPolicyWriter extends LoadPolicyWriter {
 
-    public final static String XML_TAG_NAME = "constant-volume-policy";
-    public final static String XML_USERNUMBER_ATTR = "userNumber";
-    public final static String XML_ITERATION_ATTR = "iterationNumber";
+    public static final String XML_TAG_NAME = "constant-volume-policy";
+    public static final String XML_USERNUMBER_ATTR = "userNumber";
+    public static final String XML_ITERATION_ATTR = "iterationNumber";
 
     public ConstantLoadPolicyWriter(ConstantLoadPolicy constantLoadPolicy) { super(constantLoadPolicy); }
 

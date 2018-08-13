@@ -6,14 +6,14 @@ import org.w3c.dom.Element;
 
 public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
 
-    public final static String XML_TAG_NAME = "peaks-volume-policy";
-    public final static String XML_MINLOAD_ATTR = "defaultUserNumber";
-    public final static String XML_MINDURATION_ATTR = "defaultDelay";
-    public final static String XML_MINTYPE_ATTR = "defaultDelayType";
-    public final static String XML_MAXLOAD_ATTR = "peakUserNumber";
-    public final static String XML_MAXDURATION_ATTR = "peakDelay";
-    public final static String XML_MAXTYPE_ATTR = "peakDelayType";
-    public final static String XML_STARTPOLICY_ATTR = "startPoint";
+    public static final String XML_TAG_NAME = "peaks-volume-policy";
+    public static final String XML_MINLOAD_ATTR = "defaultUserNumber";
+    public static final String XML_MINDURATION_ATTR = "defaultDelay";
+    public static final String XML_MINTYPE_ATTR = "defaultDelayType";
+    public static final String XML_MAXLOAD_ATTR = "peakUserNumber";
+    public static final String XML_MAXDURATION_ATTR = "peakDelay";
+    public static final String XML_MAXTYPE_ATTR = "peakDelayType";
+    public static final String XML_STARTPOLICY_ATTR = "startPoint";
 
     public PeaksLoadPolicyWriter(PeaksLoadPolicy peaksLoadPolicy) { super(peaksLoadPolicy); }
 

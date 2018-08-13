@@ -14,11 +14,11 @@ public abstract class PostRequestWriter extends RequestWriter {
 	public static final String XML_STRING_DATA_TAG_NAME = "textPostContent";
 	public static final String XML_ATTR_POST_TYPE = "postType";
 
-    public final static int FORM_CONTENT = 1;
-    public final static int RAW_CONTENT = 2;
-    public final static int PART_CONTENT = 3;
-    public final static int TEXT_CONTENT = 4;
-    public final static int MIME_CONTENT = 5;
+    public static final int FORM_CONTENT = 1;
+    public static final int RAW_CONTENT = 2;
+    public static final int PART_CONTENT = 3;
+    public static final int TEXT_CONTENT = 4;
+    public static final int MIME_CONTENT = 5;
 
 	public PostRequestWriter(PostRequest request) {
 		super(request);

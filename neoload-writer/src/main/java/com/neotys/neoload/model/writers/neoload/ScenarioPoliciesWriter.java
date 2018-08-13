@@ -25,8 +25,8 @@ public class ScenarioPoliciesWriter {
         Element xmlPopulationPolicy = document.createElement(XML_TAG_NAME);
         xmlPopulationPolicy.setAttribute(XML_NAME_ATTR, this.populationName);
 
-        WriterUtils.getWriterFor(scenarioPolicies.getDurationPolicy(), DurationPolicyWriter.class).writeXML(document, xmlPopulationPolicy);
-        WriterUtils.getWriterFor(scenarioPolicies.getLoadPolicy(), LoadPolicyWriter.class).writeXML(document, xmlPopulationPolicy);
+        WriterUtils.<DurationPolicyWriter>getWriterFor(scenarioPolicies.getDurationPolicy()).writeXML(document, xmlPopulationPolicy);
+        WriterUtils.<LoadPolicyWriter>getWriterFor(scenarioPolicies.getLoadPolicy()).writeXML(document, xmlPopulationPolicy);
 
 
         currentElement.appendChild(xmlPopulationPolicy);

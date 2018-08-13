@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 
 public abstract class LoadPolicyWriter {
 
-    public final static String XML_TAG_NAME = "volume-policy-entry";
+    public static final String XML_TAG_NAME = "volume-policy-entry";
 
     protected final LoadPolicy loadPolicy;
 

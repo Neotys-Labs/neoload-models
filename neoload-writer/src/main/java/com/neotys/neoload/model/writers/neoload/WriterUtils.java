@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import com.neotys.neoload.model.core.Element;
-import com.neotys.neoload.model.repository.Variable;
 
 public class WriterUtils {
 	
@@ -31,7 +30,7 @@ public class WriterUtils {
 		return elementUids.get(element);
 	}
 
-    public static  <T> T getWriterFor(Object object, Class<T> type) {
+    public static  <T> T getWriterFor(Object object) {
         String elementClassName = object.getClass().getSimpleName();
         if(elementClassName.startsWith(IMMUTABLE)) elementClassName = elementClassName.substring(IMMUTABLE.length());
         Class writerClass;

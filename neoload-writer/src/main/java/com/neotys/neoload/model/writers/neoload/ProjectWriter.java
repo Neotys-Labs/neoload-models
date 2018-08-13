@@ -25,7 +25,7 @@ public class ProjectWriter {
         repositoryDocument.appendChild(repositoryElement);
         project.getUserPaths().forEach(userPath -> UserPathWriter.of(userPath).writeXML(repositoryDocument, repositoryElement, userPath.getName()));
         project.getServers().forEach(serv -> ServerWriter.of(serv).writeXML(repositoryDocument, repositoryElement));
-        project.getVariables().forEach(var -> WriterUtils.getWriterFor(var, VariableWriter.class).writeXML(repositoryDocument, repositoryElement, outputFolder));
+        project.getVariables().forEach(var -> WriterUtils.<VariableWriter>getWriterFor(var).writeXML(repositoryDocument, repositoryElement, outputFolder));
         project.getPopulations().forEach(pop -> PopulationWriter.of(pop).writeXML(repositoryDocument, repositoryElement));
 
         final Element scenariosElement = scenarioDocument.createElement(XML_SCENARIOS_TAG_NAME);

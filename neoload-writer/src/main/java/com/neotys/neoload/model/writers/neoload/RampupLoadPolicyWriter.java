@@ -6,13 +6,13 @@ import org.w3c.dom.Element;
 
 public class RampupLoadPolicyWriter extends LoadPolicyWriter {
 
-    public final static String XML_TAG_NAME = "rampup-volume-policy";
-    public final static String XML_INITIALUSERNUMBER_ATTR = "initialUserNumber";
-    public final static String XML_USERINCREMENT_ATTR = "userIncrement";
-    public final static String XML_MAXUSERNUMBER_ATTR = "maxUserNumber";
-    public final static String XML_ITERATION_ATTR = "iterationNumber";
-    public final static String XML_DELAYINCREMENT_ATTR = "delayIncrement";
-    public final static String XML_DELAYTYPEINCREMENT_ATTR = "delayTypeIncrement";
+    public static final String XML_TAG_NAME = "rampup-volume-policy";
+    public static final String XML_INITIALUSERNUMBER_ATTR = "initialUserNumber";
+    public static final String XML_USERINCREMENT_ATTR = "userIncrement";
+    public static final String XML_MAXUSERNUMBER_ATTR = "maxUserNumber";
+    public static final String XML_ITERATION_ATTR = "iterationNumber";
+    public static final String XML_DELAYINCREMENT_ATTR = "delayIncrement";
+    public static final String XML_DELAYTYPEINCREMENT_ATTR = "delayTypeIncrement";
 
     public RampupLoadPolicyWriter(RampupLoadPolicy rampupLoadPolicy) { super(rampupLoadPolicy); }
 

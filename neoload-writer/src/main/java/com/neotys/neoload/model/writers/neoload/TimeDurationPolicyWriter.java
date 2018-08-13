@@ -6,8 +6,8 @@ import org.w3c.dom.Element;
 
 public class TimeDurationPolicyWriter extends DurationPolicyWriter {
 
-    public final static String XML_PARAM_TIME = "time";
-    public final static String XML_PARAM_TIME_UNIT = "timeUnit";
+    public static final String XML_PARAM_TIME = "time";
+    public static final String XML_PARAM_TIME_UNIT = "timeUnit";
 
     public TimeDurationPolicyWriter(TimeDurationPolicy durationPolicy) {
         super(durationPolicy);

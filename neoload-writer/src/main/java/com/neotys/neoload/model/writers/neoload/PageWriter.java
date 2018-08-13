@@ -25,7 +25,7 @@ public class PageWriter extends ElementWriter {
         currentElement.appendChild(xmlPage);
         thePage.getChilds().forEach(pageElem -> {
         	WriterUtils.generateEmbeddedAction(document, xmlPage, pageElem);
-        	WriterUtils.getWriterFor(pageElem, ElementWriter.class).writeXML(document, currentElement, outputFolder);
+        	WriterUtils.<ElementWriter>getWriterFor(pageElem).writeXML(document, currentElement, outputFolder);
         });
     }
 }
