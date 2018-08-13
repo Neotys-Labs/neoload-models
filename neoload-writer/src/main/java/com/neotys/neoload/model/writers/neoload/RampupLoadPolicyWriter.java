@@ -34,7 +34,7 @@ public class RampupLoadPolicyWriter extends LoadPolicyWriter {
             // type is iteration
             xmlElement.setAttribute(XML_DELAYTYPEINCREMENT_ATTR, "0");
         });
-        rampupLoadPolicy.getMaximumVirtualUsers().ifPresent(maxVU -> xmlElement.setAttribute(XML_MAXUSERNUMBER_ATTR, String.valueOf(maxVU)));
+        rampupLoadPolicy.getMaximumLoad().ifPresent(maxVU -> xmlElement.setAttribute(XML_MAXUSERNUMBER_ATTR, String.valueOf(maxVU)));
         rampupLoadPolicy.getIterationNumber().ifPresent(iterationNumber -> xmlElement.setAttribute(XML_ITERATION_ATTR, String.valueOf(iterationNumber)));
         volumePolicyElement.appendChild(xmlElement);
     }
