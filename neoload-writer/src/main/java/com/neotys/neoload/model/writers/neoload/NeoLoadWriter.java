@@ -88,20 +88,25 @@ public class NeoLoadWriter {
 
 	private void writeXML(final boolean zipConfig) throws ParserConfigurationException, TransformerException, IOException {
 
-		StreamResult result = new StreamResult(new File(nlProjectFolder, ConfigFiles.REPOSITORY.fileName));
+		StreamResult repositoryStream = new StreamResult(new File(nlProjectFolder, ConfigFiles.REPOSITORY.fileName));
+		StreamResult scenarioStream = new StreamResult(new File(nlProjectFolder, ConfigFiles.SCENARIO.fileName));
+
 
 		//copy the file needed to NeoLoad Directory
 		copyDataFilesToDestFolder(nlProjectFolder);
 		changeBaseNameForCopiedVariables();
-
 		createRecordedFoldersIfNeeded();
 
 		// write the repository
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		DocumentBuilderFactory repositoryDocFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder repositoryDocBuilder = repositoryDocFactory.newDocumentBuilder();
+		Document repositoryDoc = repositoryDocBuilder.newDocument();
 
-		Document doc = docBuilder.newDocument();
-		ProjectWriter.of(project).writeXML(doc, nlProjectFolder);
+		DocumentBuilderFactory scenarioDocFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder scenarioDocBuilder = scenarioDocFactory.newDocumentBuilder();
+		Document scenarioDoc = scenarioDocBuilder.newDocument();
+
+		ProjectWriter.of(project).writeXML(repositoryDoc, scenarioDoc, nlProjectFolder);
 
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -109,13 +114,14 @@ public class NeoLoadWriter {
 		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 		transformer.setOutputProperty(OutputKeys.VERSION, "1.1");
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		DOMSource source = new DOMSource(doc);
 
-		transformer.transform(source, result);
+		DOMSource repositorySource = new DOMSource(repositoryDoc);
+		transformer.transform(repositorySource, repositoryStream);
 
-		// extract scenario / settings
-		FileUtils.copyInputStreamToFile(NeoLoadWriter.class.getResourceAsStream(ConfigFiles.SCENARIO.fileName),
-				new File(nlProjectFolder, "scenario.xml"));
+		DOMSource scenarioSource = new DOMSource(scenarioDoc);
+		transformer.transform(scenarioSource, scenarioStream);
+
+		// extract settings
 		FileUtils.copyInputStreamToFile(NeoLoadWriter.class.getResourceAsStream(ConfigFiles.SETTINGS.fileName),
 				new File(nlProjectFolder, "settings.xml"));
 		createConfig(zipConfig);

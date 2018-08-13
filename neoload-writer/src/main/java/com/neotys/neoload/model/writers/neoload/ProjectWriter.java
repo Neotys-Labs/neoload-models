@@ -7,7 +7,8 @@ import org.w3c.dom.Element;
 
 public class ProjectWriter {
 
-    public static final String XML_TAG_NAME = "repository";
+    public static final String XML_REPOSITORY_TAG_NAME = "repository";
+    public static final String XML_SCENARIOS_TAG_NAME = "scenarios";
     
     private final Project project;
 
@@ -19,11 +20,17 @@ public class ProjectWriter {
         return new ProjectWriter(project);
     }
 
-    public void writeXML(final Document document, final String outputFolder) {
-        final Element repositoryElement = document.createElement(XML_TAG_NAME);
-        document.appendChild(repositoryElement);
-        project.getUserPaths().forEach(userPath -> UserPathWriter.of(userPath).writeXML(document, repositoryElement, outputFolder));
-        project.getServers().forEach(serv -> ServerWriter.of(serv).writeXML(document, repositoryElement));
-        project.getVariables().forEach(var -> WriterUtils.getWriterFor(var).writeXML(document, repositoryElement, outputFolder));
+    public void writeXML(final Document repositoryDocument, final Document scenarioDocument, final String outputFolder) {
+        final Element repositoryElement = repositoryDocument.createElement(XML_REPOSITORY_TAG_NAME);
+        repositoryDocument.appendChild(repositoryElement);
+        project.getUserPaths().forEach(userPath -> UserPathWriter.of(userPath).writeXML(repositoryDocument, repositoryElement, userPath.getName()));
+        project.getServers().forEach(serv -> ServerWriter.of(serv).writeXML(repositoryDocument, repositoryElement));
+        project.getVariables().forEach(var -> WriterUtils.getWriterFor(var, VariableWriter.class).writeXML(repositoryDocument, repositoryElement, outputFolder));
+        project.getPopulations().forEach(pop -> PopulationWriter.of(pop).writeXML(repositoryDocument, repositoryElement));
+
+        final Element scenariosElement = scenarioDocument.createElement(XML_SCENARIOS_TAG_NAME);
+        scenarioDocument.appendChild(scenariosElement);
+        project.getScenarios().forEach(scenario -> ScenarioWriter.of(scenario).writeXML(scenarioDocument, scenariosElement));
+
     }
 }

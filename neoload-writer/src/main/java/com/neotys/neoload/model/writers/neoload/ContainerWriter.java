@@ -50,7 +50,7 @@ public class ContainerWriter extends ElementWriter {
 
 		theContainer.getChilds().forEach(elt -> {
 			WriterUtils.generateEmbeddedAction(document, xmlContainerElement, elt, Optional.of(WriterUtils.WEIGHTED_ACTION_XML_TAG_NAME), true);
-			WriterUtils.getWriterFor(elt).writeXML(document, document.getDocumentElement(), outputFolder);
+			WriterUtils.getWriterFor(elt, ElementWriter.class).writeXML(document, document.getDocumentElement(), outputFolder);
 		});
 
 	}

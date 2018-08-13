@@ -29,32 +29,18 @@ public class WriterUtils {
     
     public static String getElementUid(final Element element) {
 		return elementUids.get(element);
-	}    
+	}
 
-    public static ElementWriter getWriterFor(Element element) {
-        String elementClassName = element.getClass().getSimpleName();
+    public static  <T> T getWriterFor(Object object, Class<T> type) {
+        String elementClassName = object.getClass().getSimpleName();
         if(elementClassName.startsWith(IMMUTABLE)) elementClassName = elementClassName.substring(IMMUTABLE.length());
         Class writerClass;
         try {
             writerClass = Class.forName("com.neotys.neoload.model.writers.neoload."+elementClassName+"Writer");
-            Constructor<?> constructor = writerClass.getConstructor(Class.forName("com.neotys.neoload.model.repository." + elementClassName));
-            return (ElementWriter)constructor.newInstance(element);
+            Constructor<?> constructor = writerClass.getConstructor(Class.forName(object.getClass().getPackage().getName() + "." + elementClassName));
+            return (T)constructor.newInstance(object);
         } catch (Exception e) {
-            logger.error("Cannot instanciate Element writer:" + elementClassName + "/" + element.getName(),e);
-        }
-        return null;
-    }
-
-    public static VariableWriter getWriterFor(Variable variable) {
-        String variableClassName = variable.getClass().getSimpleName();
-        if(variableClassName.startsWith(IMMUTABLE)) variableClassName = variableClassName.substring(IMMUTABLE.length());
-        Class writerClass;
-        try {
-            writerClass = Class.forName("com.neotys.neoload.model.writers.neoload."+variableClassName+"Writer");
-            Constructor<?> constructor = writerClass.getConstructor(Class.forName("com.neotys.neoload.model.repository." + variableClassName));
-            return (VariableWriter) constructor.newInstance(variable);
-        } catch (Exception e) {
-            logger.error("Cannot instanciate Variable writer:" + variableClassName + "/" + variable.getName(),e);
+            logger.error("Cannot instanciate Element writer:" + elementClassName,e);
         }
         return null;
     }
