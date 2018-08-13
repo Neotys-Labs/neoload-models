@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,6 +138,15 @@ public class CmdEventListener implements EventListener {
 	}
 
 	public void printSummary() {
+		final String summary = newSummary();
+		FUNCTIONAL_OUT.info(summary);
+		//if(((ch.qos.logback.classic.Logger)FUNCTIONAL_OUT).getAppender("Console out")==null) {
+		LIVE_OUT.info(summary);
+		//}
+	}
+
+	@VisibleForTesting
+	String newSummary() {
 		final StringBuilder summaryBuilder = new StringBuilder();
 		summaryBuilder.append(System.lineSeparator()).append("***********").append(System.lineSeparator())
 				.append("* Summary *").append(System.lineSeparator()).append("***********").append(System.lineSeparator());
@@ -151,11 +161,7 @@ public class CmdEventListener implements EventListener {
 		summaryBuilder.append("Total actions: \n").append(actionsCounter.getTotalSummary());
 		summaryBuilder.append("Total functions: \n").append(functionsCounter.getTotalSummary());
 		summaryBuilder.append("Total parameters: \n").append(parametersCounter.getTotalSummary());
-		final String summary = summaryBuilder.toString();
-		FUNCTIONAL_OUT.info(summary);
-		//if(((ch.qos.logback.classic.Logger)FUNCTIONAL_OUT).getAppender("Console out")==null) {
-		LIVE_OUT.info(summary);
-		//}
+		return summaryBuilder.toString();
 	}
 
 	public void generateJsonReport(final ProjectType projectType, final String statusCode) {
@@ -188,7 +194,7 @@ public class CmdEventListener implements EventListener {
 		}
 	}
 
-	private static final List<String> getLogFiles(){
+	private static List<String> getLogFiles(){
 		final List<String> logFileLocations = new ArrayList<>();
 		final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 		for (ch.qos.logback.classic.Logger logger : context.getLoggerList()) {
