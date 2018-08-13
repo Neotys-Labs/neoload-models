@@ -117,10 +117,10 @@ public class WrittingTestUtils {
 			.server(SERVER_JACK9090_TEST)
 			.httpMethod(HttpMethod.GET)
 			.recordedFiles(ImmutableRecordedFiles.builder()
-					.recordedRequestBodyFile(WrittingTestUtils.class.getResource("requestBody.txt").getFile().substring(1))
-					.recordedRequestHeaderFile(WrittingTestUtils.class.getResource("requestHeader.txt").getFile().substring(1))
-					.recordedResponseBodyFile(WrittingTestUtils.class.getResource("responseBody.html").getFile().substring(1))
-					.recordedResponseHeaderFile(WrittingTestUtils.class.getResource("responseHeader.txt").getFile().substring(1))
+					.recordedRequestBodyFile(WrittingTestUtils.class.getResource("requestBody.txt").getFile())
+					.recordedRequestHeaderFile(WrittingTestUtils.class.getResource("requestHeader.txt").getFile())
+					.recordedResponseBodyFile(WrittingTestUtils.class.getResource("responseBody.html").getFile())
+					.recordedResponseHeaderFile(WrittingTestUtils.class.getResource("responseHeader.txt").getFile())
 					.build())
 			.build();
 	
