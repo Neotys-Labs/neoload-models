@@ -110,6 +110,19 @@ public class WrittingTestUtils {
 			.server(SERVER_JACK9090_TEST)
 			.httpMethod(HttpMethod.GET)
 			.build();
+
+	public static final GetPlainRequest GET_REQUEST_WITH_RECORDED_FILES = ImmutableGetPlainRequest.builder()
+			.name("GET_REQUEST_TEST")
+			.path("/loadtest/")
+			.server(SERVER_JACK9090_TEST)
+			.httpMethod(HttpMethod.GET)
+			.recordedFiles(ImmutableRecordedFiles.builder()
+					.recordedRequestBodyFile(WrittingTestUtils.class.getResource("requestBody.txt").getFile().substring(1))
+					.recordedRequestHeaderFile(WrittingTestUtils.class.getResource("requestHeader.txt").getFile().substring(1))
+					.recordedResponseBodyFile(WrittingTestUtils.class.getResource("responseBody.html").getFile().substring(1))
+					.recordedResponseHeaderFile(WrittingTestUtils.class.getResource("responseHeader.txt").getFile().substring(1))
+					.build())
+			.build();
 	
 	public static final Page PAGE_GET_REQUEST_TEST = ImmutablePage.builder()
 			.addChilds(GET_REQUEST_TEST)

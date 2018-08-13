@@ -1,15 +1,21 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
+import com.google.common.io.Files;
 import com.neotys.neoload.model.repository.PostBinaryRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.io.Files;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_REQUESTS_FOLDER;
+import static com.neotys.neoload.model.writers.neoload.NeoLoadWriter.RECORDED_RESPONSE_FOLDER;
+import static java.nio.file.Files.createDirectory;
 
 public class RequestWriterTest {
 	
@@ -164,4 +170,36 @@ public class RequestWriterTest {
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
     }
+
+	@Test
+	public void writeRequestWithRecordedFiles() throws ParserConfigurationException, TransformerException, IOException {
+
+		final String outputFolder = Files.createTempDir().getAbsolutePath();
+		final Path recordedRequestsFolderPath = Paths.get(outputFolder, RECORDED_REQUESTS_FOLDER);
+		if (!recordedRequestsFolderPath.toFile().exists()) {
+			createDirectory(recordedRequestsFolderPath);
+		}
+
+		final Path recordedResponsesFolderPath = Paths.get(outputFolder, RECORDED_RESPONSE_FOLDER);
+		if (!recordedResponsesFolderPath.toFile().exists()) {
+			createDirectory(recordedResponsesFolderPath);
+		}
+
+		final Document doc = WrittingTestUtils.generateEmptyDocument();
+		final Element root = WrittingTestUtils.generateTestRootElement(doc);
+
+		(new GetPlainRequestWriter(WrittingTestUtils.GET_REQUEST_WITH_RECORDED_FILES)).writeXML(doc, root, outputFolder);
+
+		String generatedResult = WrittingTestUtils.getXmlString(doc);
+		Assertions.assertThat(generatedResult)
+				.contains("<requestContentFileDescription>recorded-requests/req_requestBody")
+				.contains("<responseHeaders>HTTP/1.1 200 OK" + System.lineSeparator() +
+						"Date: Thu, 11 Feb 2015 13:23:40 GMT" + System.lineSeparator() +
+						"X-AspNet-Version: 2.0.50727" + System.lineSeparator() +
+						"Cache-Control: private, max-age=0" + System.lineSeparator() +
+						"Content-Type: application/json; charset=utf-8" + System.lineSeparator() +
+						"Content-Length: 150" + System.lineSeparator() + System.lineSeparator() +
+						"</responseHeaders>")
+				.contains("<responsePageFileDescription>recorded-responses/res_responseBody_");
+	}
 }
