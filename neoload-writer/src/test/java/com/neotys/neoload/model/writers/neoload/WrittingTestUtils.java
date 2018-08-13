@@ -13,7 +13,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.File;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,19 +113,27 @@ public class WrittingTestUtils {
 			.httpMethod(HttpMethod.GET)
 			.build();
 
-	public static final GetPlainRequest GET_REQUEST_WITH_RECORDED_FILES = ImmutableGetPlainRequest.builder()
-			.name("GET_REQUEST_TEST")
-			.path("/loadtest/")
-			.server(SERVER_JACK9090_TEST)
-			.httpMethod(HttpMethod.GET)
-			.recordedFiles(ImmutableRecordedFiles.builder()
-					.recordedRequestBodyFile(WrittingTestUtils.class.getResource("requestBody.txt").getFile())
-					.recordedRequestHeaderFile(WrittingTestUtils.class.getResource("requestHeader.txt").getFile())
-					.recordedResponseBodyFile(WrittingTestUtils.class.getResource("responseBody.html").getFile())
-					.recordedResponseHeaderFile(WrittingTestUtils.class.getResource("responseHeader.txt").getFile())
-					.build())
-			.build();
-	
+	public static final GetPlainRequest GET_REQUEST_WITH_RECORDED_FILES;
+
+	static {
+		final ImmutableGetPlainRequest.Builder builder = ImmutableGetPlainRequest.builder().name("GET_REQUEST_TEST")
+				.path("/loadtest/")
+				.server(SERVER_JACK9090_TEST)
+				.httpMethod(HttpMethod.GET);
+		try {
+			builder.recordedFiles(ImmutableRecordedFiles.builder()
+					.recordedRequestBodyFile(new File(WrittingTestUtils.class.getResource("requestBody.txt").toURI()).getAbsolutePath())
+					.recordedRequestHeaderFile(new File(WrittingTestUtils.class.getResource("requestHeader.txt").toURI()).getAbsolutePath())
+					.recordedResponseBodyFile(new File(WrittingTestUtils.class.getResource("responseBody.html").toURI()).getAbsolutePath())
+					.recordedResponseHeaderFile(new File(WrittingTestUtils.class.getResource("responseHeader.txt").toURI()).getAbsolutePath())
+					.build());
+
+		} catch (final URISyntaxException e) {
+			e.printStackTrace();
+		}
+		GET_REQUEST_WITH_RECORDED_FILES = builder.build();
+	}
+
 	public static final Page PAGE_GET_REQUEST_TEST = ImmutablePage.builder()
 			.addChilds(GET_REQUEST_TEST)
 			.thinkTime(0)
