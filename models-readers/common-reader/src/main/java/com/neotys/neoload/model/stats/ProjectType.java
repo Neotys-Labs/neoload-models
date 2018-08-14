@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.stats;
 
 public enum ProjectType {
-	LOAD_RUNNER("Load Runner");
+	LOAD_RUNNER("LoadRunner");
 
 	private final String name;
 
