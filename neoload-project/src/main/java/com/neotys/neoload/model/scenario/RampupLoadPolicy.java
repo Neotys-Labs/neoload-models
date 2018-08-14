@@ -11,5 +11,5 @@ public interface RampupLoadPolicy extends LoadPolicy {
     int getIncrementLoad();
     Optional<Integer> getIncrementTime();
     Optional<Integer> getIncrementIteration();
-    Optional<Integer> getMaximumVirtualUsers();
+    Optional<Integer> getMaximumLoad();
 }

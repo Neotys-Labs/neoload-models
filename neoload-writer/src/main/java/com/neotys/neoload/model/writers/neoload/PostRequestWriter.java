@@ -9,12 +9,17 @@ import com.neotys.neoload.model.repository.PostRequest;
 import com.neotys.neoload.model.repository.Request;
 
 public abstract class PostRequestWriter extends RequestWriter {
-	
 	public static final String XML_URL_PARAMETER_TAG_NAME = "urlPostParameter";
 	public static final String XML_BINARY_DATA_TAG_NAME = "binaryPostContentBase64";
 	public static final String XML_STRING_DATA_TAG_NAME = "textPostContent";
 	public static final String XML_ATTR_POST_TYPE = "postType";
-	
+
+    public static final int FORM_CONTENT = 1;
+    public static final int RAW_CONTENT = 2;
+    public static final int PART_CONTENT = 3;
+    public static final int TEXT_CONTENT = 4;
+    public static final int MIME_CONTENT = 5;
+
 	public PostRequestWriter(PostRequest request) {
 		super(request);
 	}
@@ -30,7 +35,7 @@ public abstract class PostRequestWriter extends RequestWriter {
 		super.fillXML(document, xmlRequest, theRequest);
 		xmlRequest.setAttribute(XML_ATTR_POST_TYPE, String.valueOf(getPostType()));
 	}
-	
+
 	protected abstract int getPostType();
 
 	@Override

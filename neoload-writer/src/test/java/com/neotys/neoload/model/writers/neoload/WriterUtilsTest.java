@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.repository.*;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -21,7 +22,24 @@ public class WriterUtilsTest {
                 .thinkTime(0)
                 .isDynamic(false)
                 .build();
-        assertThat(WriterUtils.getWriterFor(page).getClass().getSimpleName()).isEqualTo("PageWriter");
+        assertThat(WriterUtils.<ElementWriter>getWriterFor(page).getClass().getSimpleName()).isEqualTo("PageWriter");
+    }
+
+
+    @Test
+    public void getWriterForVariableTest() {
+        FileVariable var = ImmutableFileVariable.builder()
+                .name("TEST")
+                .fileName("myfile")
+                .policy(Variable.VariablePolicy.EACH_USE)
+                .order(Variable.VariableOrder.SEQUENTIAL)
+                .firstLineIsColumnName(false)
+                .columnsNames(ImmutableList.of("col1"))
+                .columnsDelimiter(",")
+                .scope(Variable.VariableScope.LOCAL)
+                .numOfFirstRowData(0)
+                .build();
+        assertThat(WriterUtils.<VariableWriter>getWriterFor(var).getClass().getSimpleName()).isEqualTo("FileVariableWriter");
     }
     
     @Test
