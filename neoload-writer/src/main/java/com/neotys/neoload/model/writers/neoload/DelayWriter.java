@@ -8,7 +8,8 @@ public class DelayWriter extends ElementWriter {
 
     public static final String XML_TAG_NAME = "delay-action";
     public static final String XML_DURATION_ATT = "duration";
-    
+    public static final String XML_ISTHINKTIME_ATT = "isThinkTime";
+        
     public DelayWriter(Delay delay) {
         super(delay);
     }
@@ -22,6 +23,7 @@ public class DelayWriter extends ElementWriter {
         Element xmlDelay = document.createElement(XML_TAG_NAME);
         super.writeXML(document, xmlDelay, outputFolder);
         xmlDelay.setAttribute(XML_DURATION_ATT, ((Delay)element).getDelay());
+        xmlDelay.setAttribute(XML_ISTHINKTIME_ATT, String.valueOf(((Delay)element).isThinkTime()));
         currentElement.appendChild(xmlDelay);
     }
 }

@@ -28,7 +28,7 @@ public class LRThinkTimeMethod  implements LoadRunnerMethod {
 			final String warning = "A think time cannot be converted in milli seconds";
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, warning);
 		}
-		return ImmutableDelay.builder().name("delay").delay(delayInMs).build();
+		return ImmutableDelay.builder().name("delay").delay(delayInMs).isThinkTime(true).build();
 	}
 
 }

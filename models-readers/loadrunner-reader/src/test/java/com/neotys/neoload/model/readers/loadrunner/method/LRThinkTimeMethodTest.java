@@ -36,6 +36,7 @@ public class LRThinkTimeMethodTest {
 		Delay expectedDelay = ImmutableDelay.builder()
 				.name("delay")
 				.delay("10000")
+				.isThinkTime(true)
 				.build();
 		assertEquals(expectedDelay, actualDelay);
 		
@@ -43,6 +44,7 @@ public class LRThinkTimeMethodTest {
 		expectedDelay = ImmutableDelay.builder()
 				.name("delay")
 				.delay("10000")
+				.isThinkTime(true)
 				.build();
 		assertEquals(expectedDelay, actualDelay);
 	}

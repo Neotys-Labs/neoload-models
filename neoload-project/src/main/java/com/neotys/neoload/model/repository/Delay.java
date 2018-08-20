@@ -8,4 +8,5 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableDelay.class)
 public interface Delay extends Element {
     String getDelay();
+    boolean isThinkTime();
 }
