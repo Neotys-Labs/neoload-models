@@ -20,6 +20,7 @@ import com.neotys.neoload.model.repository.Header;
 import com.neotys.neoload.model.repository.ImmutableContainer;
 import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.Request;
+import com.neotys.neoload.model.repository.ReturnTypeElement;
 import com.neotys.neoload.model.repository.Validator;
 import com.neotys.neoload.model.repository.VariableExtractor;
 
@@ -143,12 +144,12 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 				return ImmutableList.of();
 			}	
 			Element elt = lrMethod.getElement(LoadRunnerVUVisitor.this, method, ctx);
-			if(elt == null){
+			if(!(elt instanceof ReturnTypeElement)){
 				return ImmutableList.of();
 			}
-			elt = setUniqueNameInContainer(elt,	currentContainers.get(currentContainers.size() - 1).build());
-			currentContainers.get(currentContainers.size() - 1).addChilds(elt);
-			return ImmutableList.of("${" + elt.getName() + "}");						
+			final ReturnTypeElement returnTypeElement = (ReturnTypeElement)setUniqueNameInContainer(elt, currentContainers.get(currentContainers.size() - 1).build());
+			currentContainers.get(currentContainers.size() - 1).addChilds(returnTypeElement);
+			return ImmutableList.of("${" + returnTypeElement.getVariableName() + "}");						
 		}		
 	}
 		
