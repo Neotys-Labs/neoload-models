@@ -34,6 +34,7 @@ public class LoadRunnerSupportedMethods {
 		SUPPORTED_METHODS.put("web_add_auto_header", new WebAddAutoHeaderMethod());
 		
 		SUPPORTED_METHODS.put("lr_eval_string", new LREvalStringMethod());
+		SUPPORTED_METHODS.put("lr_save_string", new LRSaveStringMethod());
 	}
 	
 	private LoadRunnerSupportedMethods() {
