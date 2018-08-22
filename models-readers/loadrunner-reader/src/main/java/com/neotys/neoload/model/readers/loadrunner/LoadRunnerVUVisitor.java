@@ -1,19 +1,27 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import com.neotys.neoload.model.core.Element;
-import com.neotys.neoload.model.listener.EventListener;
-import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
-import com.neotys.neoload.model.parsers.CPP14Parser;
-import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
-import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
-import com.neotys.neoload.model.repository.*;
-import org.antlr.v4.runtime.Token;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.antlr.v4.runtime.Token;
+
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.core.Element;
+import com.neotys.neoload.model.listener.EventListener;
+import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
+import com.neotys.neoload.model.parsers.CPP14Parser;
+import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
+import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.Header;
+import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.Page;
+import com.neotys.neoload.model.repository.Request;
+import com.neotys.neoload.model.repository.Validator;
+import com.neotys.neoload.model.repository.VariableExtractor;
 
 public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 
@@ -87,7 +95,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		return container.getChilds().stream().filter(element1 -> element1.getName().equals(element.getName())).count() == 0;
 	}
 
-	private static class ParametersVisitor extends CPP14BaseVisitor<List<String>> {
+	private class ParametersVisitor extends CPP14BaseVisitor<List<String>> {
 
 		@Override
 		public List<String> visitExpressionlist(CPP14Parser.ExpressionlistContext ctx) {
@@ -96,7 +104,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		}
 	}
 
-	private static class InitializeListVisitor extends CPP14BaseVisitor<List<String>> {
+	private class InitializeListVisitor extends CPP14BaseVisitor<List<String>> {
 
 		private static final String PARAMETER_SEPARATOR = ",";
 
@@ -118,6 +126,30 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 				return params.stream();
 			}).collect(Collectors.toList());
 		}
+		
+		@Override
+		public List<String> visitMethodcall(MethodcallContext ctx) {
+			final String methodName = ctx.Identifier().getText();
+			final ImmutableMethodCall.Builder methodBuilder = ImmutableMethodCall.builder().name(methodName);
+			final ParametersVisitor paramsVisitor = new ParametersVisitor();
+			if (ctx.expressionlist() != null) {
+				List<String> params = ctx.expressionlist().accept(paramsVisitor);
+				methodBuilder.addAllParameters(params);
+			}
+			final MethodCall method = methodBuilder.build();
+			final LoadRunnerMethod lrMethod = LoadRunnerSupportedMethods.get(method.getName());
+			if(lrMethod == null){
+				readUnsupportedFunction(method.getName(), ctx);
+				return ImmutableList.of();
+			}	
+			Element elt = lrMethod.getElement(LoadRunnerVUVisitor.this, method, ctx);
+			if(elt == null){
+				return ImmutableList.of();
+			}
+			elt = setUniqueNameInContainer(elt,	currentContainers.get(currentContainers.size() - 1).build());
+			currentContainers.get(currentContainers.size() - 1).addChilds(elt);
+			return ImmutableList.of("${" + elt.getName() + "}");						
+		}		
 	}
 		
 	public LoadRunnerReader getReader() {
