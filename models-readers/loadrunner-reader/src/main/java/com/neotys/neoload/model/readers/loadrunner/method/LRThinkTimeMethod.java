@@ -15,11 +15,10 @@ public class LRThinkTimeMethod  implements LoadRunnerMethod {
 
 	@Override
 	public Element getElement(LoadRunnerVUVisitor visitor, MethodCall method, MethodcallContext ctx) {
-		Preconditions.checkNotNull(method);
-		Preconditions.checkNotNull(method.getParameters(), "A lr_think_time must have a parameter");
-		Preconditions.checkArgument(!method.getParameters().isEmpty(),
-				"A lr_think_time must have a parameter value");
-
+		Preconditions.checkNotNull(method);		
+		Preconditions.checkNotNull(method.getParameters(), method.getName() + " method must have a parameter");
+		Preconditions.checkArgument(!method.getParameters().isEmpty(), method.getName() + " method must have a parameter");		
+		
 		String delayInMs = method.getParameters().get(0);
 		try {
 			delayInMs = String.valueOf(Math.round(Double.parseDouble(method.getParameters().get(0)) * 1000));			
