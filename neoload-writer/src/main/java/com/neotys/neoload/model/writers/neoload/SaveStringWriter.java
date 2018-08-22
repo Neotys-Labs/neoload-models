@@ -14,9 +14,20 @@ public class SaveStringWriter extends JavascriptWriter {
 	protected String getJavascriptContent() {
 		final StringBuilder content = new StringBuilder(CONTENT_FIRST_PART);
 		content.append(((SaveString)element).getVariableName());
-		content.append("\", \"");
-		content.append(((SaveString)element).getVariableValue());
-		content.append("\");");				
+		content.append("\", ");
+		final String variableValue = ((SaveString)element).getVariableValue();
+		if(variableValue.startsWith("${") && variableValue.endsWith("}")){
+			// NL Variable
+			content.append("context.variableManager.getValue(\"");
+			content.append(variableValue.substring(2, variableValue.length()-1));
+			content.append("\")");
+		} else {
+			// Plain text
+			content.append("\"");
+			content.append(variableValue);
+			content.append("\"");
+		}		
+		content.append(");");				
 		return content.toString();
 	}
 	public static SaveStringWriter of(final SaveString saveString) {
