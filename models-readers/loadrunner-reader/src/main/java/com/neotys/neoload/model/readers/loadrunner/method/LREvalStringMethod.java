@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -18,6 +17,8 @@ import com.neotys.neoload.model.repository.ImmutableVariableName;
 import com.neotys.neoload.model.repository.VariableName;
 
 public class LREvalStringMethod implements LoadRunnerMethod {
+	
+	private static int counter = 1;
 
 	public LREvalStringMethod() {
 		super();
@@ -33,8 +34,8 @@ public class LREvalStringMethod implements LoadRunnerMethod {
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);		
 		final List<Either<String, VariableName>> content = parseContent(method.getParameters().get(0), visitor.getLeftBrace(), visitor.getRightBrace());		
-		final String variableName = method.getName() + "_" + UUID.randomUUID().toString();
-		return ImmutableEvalString.builder().name(method.getName()).variableName(variableName).content(content).build();
+		final String variableName = method.getName() + "_" + counter++;
+		return ImmutableEvalString.builder().name(variableName).variableName(variableName).content(content).build();
 	}
 
 	private static List<Either<String, VariableName>> parseContent(String content, final String leftBrace, final String rightBrace) {
@@ -44,7 +45,13 @@ public class LREvalStringMethod implements LoadRunnerMethod {
 		}
 		if(content.startsWith("\"") && content.endsWith("\"")){
 			content = content.substring(1, content.length()-1);
-		}		 
+		}	
+		if(content.startsWith("${") && content.endsWith("}")){
+			// NL Variable
+			content = content.substring(2, content.length()-1);
+			result.add(Either.right(ImmutableVariableName.builder().name(content).build()));
+			return result;
+		}	
 		final String regExp = "(?=(?!^)\\" + leftBrace + ")|(?<=\\" + leftBrace + ")|(?=(?!^)\\" + rightBrace + ")|(?<=\\" + rightBrace + ")";
 		final Iterator<String> it = Arrays.asList(content.split(regExp)).iterator();
 		boolean isVariable = false;
