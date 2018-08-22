@@ -32,6 +32,8 @@ public class LoadRunnerSupportedMethods {
 		SUPPORTED_METHODS.put("web_add_cookie", new WebAddCookieMethod());
 		SUPPORTED_METHODS.put("web_add_header", new WebAddHeaderMethod());
 		SUPPORTED_METHODS.put("web_add_auto_header", new WebAddAutoHeaderMethod());
+		
+		SUPPORTED_METHODS.put("lr_eval_string", new LREvalStringMethod());
 	}
 	
 	private LoadRunnerSupportedMethods() {
