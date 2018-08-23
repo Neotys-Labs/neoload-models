@@ -19,14 +19,8 @@ public class LRThinkTimeMethod  implements LoadRunnerMethod {
 		Preconditions.checkNotNull(method.getParameters(), method.getName() + " method must have a parameter");
 		Preconditions.checkArgument(!method.getParameters().isEmpty(), method.getName() + " method must have a parameter");		
 		
-		String delayInMs = method.getParameters().get(0);
-		try {
-			delayInMs = String.valueOf(Math.round(Double.parseDouble(method.getParameters().get(0)) * 1000));			
-			visitor.readSupportedFunction(method.getName(), ctx);
-		} catch (final NumberFormatException nfe) {
-			final String warning = "A think time cannot be converted in milli seconds";
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, warning);
-		}
+		String delayInMs = method.getParameters().get(0) + "000";
+		visitor.readSupportedFunction(method.getName(), ctx);		
 		return ImmutableDelay.builder().name("delay").delay(delayInMs).isThinkTime(true).build();
 	}
 
