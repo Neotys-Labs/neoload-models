@@ -29,6 +29,7 @@ public class LRSaveStringMethod implements LoadRunnerMethod {
 		if(variableName.startsWith("\"") && variableName.endsWith("\"")){
 			variableName = variableName.substring(1, variableName.length()-1);
 		}	
-		return ImmutableSaveString.builder().name(method.getName() + " " + variableName).variableName(variableName).variableValue(variableValue).build();
+		final String name = "save_string " + variableName;
+		return ImmutableSaveString.builder().name(name).variableName(variableName).variableValue(variableValue).build();
 	}
 }

@@ -34,7 +34,7 @@ public class LREvalStringMethod implements LoadRunnerMethod {
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);		
 		final List<Either<String, VariableName>> content = parseContent(method.getParameters().get(0), visitor.getLeftBrace(), visitor.getRightBrace());		
-		final String variableName = method.getName() + "_" + counter++;
+		final String variableName = "eval_string_" + counter++;
 		return ImmutableEvalString.builder().name(variableName).variableName(variableName).content(content).build();
 	}
 
