@@ -4,15 +4,13 @@ import com.neotys.neoload.model.repository.SaveString;
 
 public class SaveStringWriter extends JavascriptWriter {
 
-	private static final String CONTENT_FIRST_PART = "// int lr_save_string( const char *param_value, const char *param_name);\ncontext.variableManager.setValue(\"";
-
 	public SaveStringWriter(final SaveString saveString) {		
 		super(saveString);
 	}
 	
 	@Override
 	protected String getJavascriptContent() {
-		final StringBuilder content = new StringBuilder(CONTENT_FIRST_PART);
+		final StringBuilder content = new StringBuilder("context.variableManager.setValue(\"");
 		content.append(((SaveString)element).getVariableName());
 		content.append("\", ");
 		final String variableValue = ((SaveString)element).getVariableValue();

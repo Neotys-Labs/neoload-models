@@ -6,15 +6,13 @@ import com.neotys.neoload.model.repository.EvalString;
 
 public class EvalStringWriter extends JavascriptWriter {
 
-	private static final String CONTENT_FIRST_PART = "// char *lr_eval_string( char *instring  );\ncontext.variableManager.setValue(\"";
-
 	public EvalStringWriter(final EvalString evalString) {		
 		super(evalString);
 	}
 	
 	@Override
 	protected String getJavascriptContent() {
-		final StringBuilder content = new StringBuilder(CONTENT_FIRST_PART);
+		final StringBuilder content = new StringBuilder("context.variableManager.setValue(\"");
 		content.append(((EvalString)element).getVariableName());
 		content.append("\", ");
 		if(((EvalString)element).getContent().isEmpty()){
