@@ -1,5 +1,9 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -23,21 +27,24 @@ public class AddCookieWriterTest {
             .build();
 	
 	@Test
-	public void writeAddCookieXmlTest() throws ParserConfigurationException, TransformerException {
-		Document doc = WrittingTestUtils.generateEmptyDocument();
-		Element root = WrittingTestUtils.generateTestRootElement(doc);
+	public void writeAddCookieXmlTest() throws ParserConfigurationException, TransformerException, IOException {
+		final Document doc = WrittingTestUtils.generateEmptyDocument();
+		final Element root = WrittingTestUtils.generateTestRootElement(doc);
 
 		final AddCookie addCookie = ImmutableAddCookie.builder().name("setCookieForServer cookieName").cookieName("cookieName").cookieValue("cookieValue").server(SERVER_TEST).expires("Thu, 2 Aug 2007 20:47:11 UTC").path("cookiePath").build();
-
-		AddCookieWriter.of(addCookie).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
-		String generatedResult = WrittingTestUtils.getXmlString(doc);
-		final String timestamp = generatedResult.substring(generatedResult.indexOf("ts=") + 4, generatedResult.indexOf("ts=") + 17);
-		final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><js-action filename=\"scripts/jsAction_" + WriterUtils.getElementUid(addCookie)+ ".js\" "
+		final String outputfolder = Files.createTempDir().getAbsolutePath();
+		AddCookieWriter.of(addCookie).writeXML(doc, root, outputfolder);
+		final String generatedResultXML = WrittingTestUtils.getXmlString(doc);
+		final String timestamp = generatedResultXML.substring(generatedResultXML.indexOf("ts=") + 4, generatedResultXML.indexOf("ts=") + 17);
+		final String jsFile = "scripts/jsAction_" + WriterUtils.getElementUid(addCookie) + ".js";
+		final String expectedResultXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><js-action filename=\"" + jsFile + "\" "
 				+ "name=\"setCookieForServer cookieName\" ts=\"" + timestamp + "\" "
 				+ "uid=\"" + WriterUtils.getElementUid(addCookie)+ "\"/></test-root>";
-
-		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
+		final String expectedResultJS = "// Add cookie to a HTTP server.\ncontext.currentVU.setCookieForServer(\"server_test\",\"cookieName=cookieValue; expires=Thu, 2 Aug 2007 20:47:11 UTC; path=cookiePath\");";
+		final String generatedJS = Files.asCharSource(new File(outputfolder + File.separator + jsFile), Charset.defaultCharset()).read();		
+		Assertions.assertThat(generatedResultXML).isEqualTo(expectedResultXML);
+		Assertions.assertThat(generatedJS).isEqualTo(expectedResultJS);
 	}
 		
 	@Test
