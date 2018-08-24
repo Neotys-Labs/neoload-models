@@ -28,7 +28,9 @@ public class LRThinkTimeMethod  implements LoadRunnerMethod {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, warning);
 			delayInMs = delayInMs + "000";
 		}
-		return ImmutableDelay.builder().name("delay").delay(delayInMs).isThinkTime(true).build();
+		final Element delay = ImmutableDelay.builder().name("delay").delay(delayInMs).isThinkTime(true).build();
+		visitor.addInCurrentContainer(delay);
+		return delay;
 	}
 
 }

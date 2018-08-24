@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.Token;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
+import com.neotys.neoload.model.function.Function;
 import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
 import com.neotys.neoload.model.parsers.CPP14Parser;
@@ -20,7 +21,6 @@ import com.neotys.neoload.model.repository.Header;
 import com.neotys.neoload.model.repository.ImmutableContainer;
 import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.Request;
-import com.neotys.neoload.model.repository.ReturnTypeElement;
 import com.neotys.neoload.model.repository.Validator;
 import com.neotys.neoload.model.repository.VariableExtractor;
 
@@ -63,22 +63,21 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		}
 		final MethodCall method = methodBuilder.build();
 		final LoadRunnerMethod lrMethod = LoadRunnerSupportedMethods.get(method.getName());
-		Element elt;
 		if(lrMethod == null){
 			readUnsupportedFunction(method.getName(), ctx);
 			return null;
 		}	
-		elt = lrMethod.getElement(this, method, ctx);
-		if(elt != null){
-			elt = setUniqueNameInContainer(elt,	currentContainers.get(currentContainers.size() - 1).build());
-			currentContainers.get(currentContainers.size() - 1).addChilds(elt);
-		}
-		return elt;
+		return lrMethod.getElement(this, method, ctx);
 	}
 
 	@Override
 	protected Element aggregateResult(final Element aggregate, final Element nextResult) {
 		return currentContainers.get(0).build();
+	}
+	
+	public void addInCurrentContainer(Element element){
+		element = setUniqueNameInContainer(element,	currentContainers.get(currentContainers.size() - 1).build());
+		currentContainers.get(currentContainers.size() - 1).addChilds(element);
 	}
 
 	static Element setUniqueNameInContainer(final Element element, final Container container) {
@@ -130,26 +129,11 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 		
 		@Override
 		public List<String> visitMethodcall(MethodcallContext ctx) {
-			final String methodName = ctx.Identifier().getText();
-			final ImmutableMethodCall.Builder methodBuilder = ImmutableMethodCall.builder().name(methodName);
-			final ParametersVisitor paramsVisitor = new ParametersVisitor();
-			if (ctx.expressionlist() != null) {
-				List<String> params = ctx.expressionlist().accept(paramsVisitor);
-				methodBuilder.addAllParameters(params);
+			final Element element = LoadRunnerVUVisitor.this.visitMethodcall(ctx);
+			if(element instanceof Function){
+				return ImmutableList.of(((Function)element).getReturnValue());				
 			}
-			final MethodCall method = methodBuilder.build();
-			final LoadRunnerMethod lrMethod = LoadRunnerSupportedMethods.get(method.getName());
-			if(lrMethod == null){
-				readUnsupportedFunction(method.getName(), ctx);
-				return ImmutableList.of();
-			}	
-			Element elt = lrMethod.getElement(LoadRunnerVUVisitor.this, method, ctx);
-			if(!(elt instanceof ReturnTypeElement)){
-				return ImmutableList.of();
-			}
-			final ReturnTypeElement returnTypeElement = (ReturnTypeElement)setUniqueNameInContainer(elt, currentContainers.get(currentContainers.size() - 1).build());
-			currentContainers.get(currentContainers.size() - 1).addChilds(returnTypeElement);
-			return ImmutableList.of("${" + returnTypeElement.getVariableName() + "}");						
+			return ImmutableList.of();
 		}		
 	}
 		

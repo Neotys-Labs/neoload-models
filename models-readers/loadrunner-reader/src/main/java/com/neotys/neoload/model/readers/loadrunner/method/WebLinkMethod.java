@@ -20,6 +20,7 @@ public class WebLinkMethod implements LoadRunnerMethod {
 		visitor.getCurrentValidators().clear();
 		visitor.getCurrentHeaders().clear();
 		visitor.setCurrentRequestFromPage(page);
+		visitor.addInCurrentContainer(page);
 		return page;
 	}
 }

@@ -77,6 +77,8 @@ public class WebAddCookieMethod implements LoadRunnerMethod {
 		if(maxAge != -1L){
 			builder.expires(Long.toString(maxAge));
 		}	
-		return builder.build();
+		final Element addCookie = builder.build();
+		visitor.addInCurrentContainer(addCookie);
+		return addCookie;
 	}
 }

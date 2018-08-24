@@ -17,6 +17,8 @@ public class WebCleanupCookiesMethod implements LoadRunnerMethod {
 	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		Preconditions.checkNotNull(method);
 		visitor.readSupportedFunction(method.getName(), ctx);		
-		return ImmutableClearCookies.builder().name(method.getName()).build();
+		final Element clearCookies = ImmutableClearCookies.builder().name(method.getName()).build();
+		visitor.addInCurrentContainer(clearCookies);
+		return clearCookies;
 	}
 }

@@ -19,6 +19,8 @@ public class LREndTransactionMethod implements LoadRunnerMethod {
 			return null;
 		}
 		visitor.readSupportedFunction(method.getName(), ctx);
-		return visitor.getCurrentContainers().remove(size - 1).build();
+		final Element transaction = visitor.getCurrentContainers().remove(size - 1).build();
+		visitor.addInCurrentContainer(transaction);
+		return transaction;
 	}
 }
