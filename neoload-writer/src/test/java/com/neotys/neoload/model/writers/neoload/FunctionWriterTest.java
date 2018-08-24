@@ -1,5 +1,9 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -28,17 +32,21 @@ public class FunctionWriterTest {
 	}
 	
 	@Test
-	public void testAtoiWriteXml() throws ParserConfigurationException, TransformerException {
+	public void testAtoiWriteXml() throws ParserConfigurationException, TransformerException, IOException {
 		final Atoi atoi = ImmutableAtoi.builder().name("atoi_1").returnValue("${atoi_1}").args(ImmutableList.of("1")).build();
 		final Document doc = WrittingTestUtils.generateEmptyDocument();
-		AtoiWriter.of(atoi).writeXML(doc, WrittingTestUtils.generateTestRootElement(doc), Files.createTempDir().getAbsolutePath());
+		final String outputfolder = Files.createTempDir().getAbsolutePath();
+		AtoiWriter.of(atoi).writeXML(doc, WrittingTestUtils.generateTestRootElement(doc), outputfolder);
 		final String generatedXML = WrittingTestUtils.getXmlString(doc);
-		final String timestamp = generatedXML.substring(generatedXML.indexOf("ts=") + 4, generatedXML.indexOf("ts=") + 17);		
-		final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><js-action filename=\"scripts/jsAction_" + WriterUtils.getElementUid(atoi)+ ".js\" "
+		final String timestamp = generatedXML.substring(generatedXML.indexOf("ts=") + 4, generatedXML.indexOf("ts=") + 17);
+		final String jsFile = "scripts/jsAction_" + WriterUtils.getElementUid(atoi) + ".js";
+		final String expectedResultXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><js-action filename=\"" + jsFile + "\" "
 				+ "name=\"atoi_1\" ts=\"" + timestamp + "\" "
 				+ "uid=\"" + WriterUtils.getElementUid(atoi)+ "\"/></test-root>";	
-		
-		Assertions.assertThat(generatedXML).isEqualTo(expectedResult);	
+		final String expectedResultJS = "context.variableManager.setValue(\"atoi_1\", parseInt(\"1\"));";
+		final String generatedJS = Files.asCharSource(new File(outputfolder + File.separator + jsFile), Charset.defaultCharset()).read();
+		Assertions.assertThat(generatedXML).isEqualTo(expectedResultXML);	
+		Assertions.assertThat(generatedJS).isEqualTo(expectedResultJS);
 	}
 }
