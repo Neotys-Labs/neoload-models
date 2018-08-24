@@ -16,10 +16,11 @@ import com.neotys.neoload.model.core.Element;
 public class WriterUtils {
 	
 	public static final String WEIGHTED_ACTION_XML_TAG_NAME = "weighted-embedded-action";
-	public static final String EMBEDDED_ACTION_XML_TAG_NAME = "embedded-action";
-	public static final String XML_UID_NAME_ATTR = "uid";
+	public static final String EMBEDDED_ACTION_XML_TAG_NAME = "embedded-action";	
 	public static final String IMMUTABLE = "Immutable";
-	
+	public static final String NL_VARIABLE_START = "${";
+	public static final String NL_VARIABLE_END = "}";
+		
     static Logger logger = LoggerFactory.getLogger(NeoLoadWriter.class);
     
     private static Map<Element, String> elementUids = LazyMap.lazyMap(new HashMap<Element, String>(), a -> UUID.randomUUID().toString());
@@ -58,11 +59,18 @@ public class WriterUtils {
         final String uid = WriterUtils.getElementUid(modelElem);
     	final org.w3c.dom.Element newElem = document.createElement(embeddedActionName.orElse(EMBEDDED_ACTION_XML_TAG_NAME));
     	if (uidAsAttributes) {
-    		newElem.setAttribute(XML_UID_NAME_ATTR, uid);
+    		newElem.setAttribute(ElementWriter.XML_UID_TAG, uid);
     	}else {
     		newElem.setTextContent(uid);
     	}
     	parentXmlElement.appendChild(newElem);
     }
+    
+    public static boolean isNLVariable(final String value){
+		return value.startsWith(NL_VARIABLE_START) && value.endsWith(NL_VARIABLE_END);
+	}	
 
+	public static String extractVariableName(final String value) {
+		return value.substring(NL_VARIABLE_START.length(), value.length()-NL_VARIABLE_END.length());
+	}
 }

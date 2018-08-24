@@ -34,6 +34,9 @@ public class MethodUtils {
 		ITEMDATA,
 		LAST
 	}
+	
+	private static final String NL_VARIABLE_START = "${";
+	private static final String NL_VARIABLE_END = "}";
 
 	private static Map<String, String> variablesMapping = null;
 	
@@ -106,13 +109,16 @@ public class MethodUtils {
 		return param;
 	}
 
-	protected static String normalizeVariables(final String leftBrace, final String rightBrace, String param) {
-		Matcher m = getVariablePatternWithBrace(leftBrace, rightBrace).matcher(param);
-		StringBuilder sb = new StringBuilder();
+	protected static String normalizeVariables(final String leftBrace, final String rightBrace, final String param) {
+		if(param.startsWith(NL_VARIABLE_START) && param.endsWith(NL_VARIABLE_END)){
+			return param;
+		}
+		final Matcher m = getVariablePatternWithBrace(leftBrace, rightBrace).matcher(param);
+		final StringBuilder sb = new StringBuilder();
 		int lastIndex = 0;
 		while (m.find()) {
 			String paramName = param.substring(m.start() + leftBrace.length(), m.end() - rightBrace.length());
-			sb.append(param.substring(lastIndex, m.start())).append("${").append(getCorrespondingVariableNameForNL(paramName)).append("}");
+			sb.append(param.substring(lastIndex, m.start())).append(NL_VARIABLE_START).append(getCorrespondingVariableNameForNL(paramName)).append(NL_VARIABLE_END);
 			lastIndex = m.end();
 		}
 		if (lastIndex == 0) {

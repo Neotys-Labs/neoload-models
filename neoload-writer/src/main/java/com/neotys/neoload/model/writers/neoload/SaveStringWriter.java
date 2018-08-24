@@ -14,10 +14,10 @@ public class SaveStringWriter extends JavascriptWriter {
 		content.append(((SaveString)element).getVariableName());
 		content.append("\", ");
 		final String variableValue = ((SaveString)element).getVariableValue();
-		if(variableValue.startsWith("${") && variableValue.endsWith("}")){
+		if(WriterUtils.isNLVariable(variableValue)){
 			// NL Variable
 			content.append("context.variableManager.getValue(\"");
-			content.append(variableValue.substring(2, variableValue.length()-1));
+			content.append(WriterUtils.extractVariableName(variableValue));
 			content.append("\")");
 		} else {
 			// Plain text
