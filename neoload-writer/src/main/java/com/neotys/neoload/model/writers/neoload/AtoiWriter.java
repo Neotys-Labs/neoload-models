@@ -12,7 +12,7 @@ public class AtoiWriter extends JavascriptWriter {
 	protected String getJavascriptContent() {
 		final StringBuilder content = new StringBuilder("context.variableManager.setValue(\"");
 		content.append(((Atoi)element).getName());
-		content.append("\", ");
+		content.append("\", parseInt(\"");
 		final String variableValue = ((Atoi)element).getArgs().get(0);
 		if(WriterUtils.isNLVariable(variableValue)){
 			// NL Variable
@@ -25,7 +25,7 @@ public class AtoiWriter extends JavascriptWriter {
 			content.append(variableValue);
 			content.append("\"");
 		}		
-		content.append(");");				
+		content.append("\"));");				
 		return content.toString();
 	}
 	public static AtoiWriter of(final Atoi atoi) {
