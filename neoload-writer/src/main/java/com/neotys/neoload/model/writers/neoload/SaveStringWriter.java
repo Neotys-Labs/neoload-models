@@ -10,9 +10,20 @@ public class SaveStringWriter extends JavascriptWriter {
 	
 	@Override
 	protected String getJavascriptContent() {
-		final StringBuilder content = new StringBuilder("context.variableManager.setValue(\"");
-		content.append(((SaveString)element).getVariableName());
-		content.append("\", ");
+		final StringBuilder content = new StringBuilder("context.variableManager.setValue(");
+		final String variableName = ((SaveString)element).getVariableName();
+		if(WriterUtils.isNLVariable(variableName)){
+			// NL Variable
+			content.append("context.variableManager.getValue(\"");
+			content.append(WriterUtils.extractVariableName(variableName));
+			content.append("\")");
+		} else {
+			// Plain text
+			content.append("\"");
+			content.append(variableName);
+			content.append("\"");
+		}	
+		content.append(", ");
 		final String variableValue = ((SaveString)element).getVariableValue();
 		if(WriterUtils.isNLVariable(variableValue)){
 			// NL Variable
