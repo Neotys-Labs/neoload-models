@@ -24,6 +24,6 @@ public class LREvalStringMethod implements LoadRunnerMethod {
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);	
 		final String returnValue = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0));
-		return ImmutableEvalString.builder().name(method.getName()).returnValue(returnValue).build();
+		return ImmutableEvalString.builder().name(MethodUtils.unquote(method.getName())).returnValue(returnValue).build();
 	}	
 }	
