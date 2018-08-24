@@ -102,11 +102,15 @@ public class MethodUtils {
 		return Optional.of(result.subList(0, boundaryIndex.getValue()));
 	}
 	
-	protected static String unquote(String param) {
+	public static String unquote(String param) {
 		if (param.startsWith("\"") && param.endsWith("\"")) {
 			return param.substring(1, param.length() - 1);
 		}
 		return param;
+	}
+	
+	public static String getVariableSyntax(final String variableName) {
+		return NL_VARIABLE_START + variableName + NL_VARIABLE_END;
 	}
 
 	protected static String normalizeVariables(final String leftBrace, final String rightBrace, final String param) {

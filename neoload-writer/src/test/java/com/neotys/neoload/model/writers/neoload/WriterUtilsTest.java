@@ -57,4 +57,24 @@ public class WriterUtilsTest {
     	final String generatedResult = WrittingTestUtils.getXmlString(doc);
     	assertEquals(expectedResult, generatedResult);
     }
+    
+    @Test
+    public void isNLVariableTest() {    	
+    	assertEquals(false, WriterUtils.isNLVariable(null));    	
+    	assertEquals(false, WriterUtils.isNLVariable(""));
+    	assertEquals(false, WriterUtils.isNLVariable("toto"));
+    	assertEquals(false, WriterUtils.isNLVariable("${}"));
+    	assertEquals(false, WriterUtils.isNLVariable("$"));
+    	assertEquals(false, WriterUtils.isNLVariable("{}"));
+    	assertEquals(false, WriterUtils.isNLVariable("$}"));
+    	assertEquals(false, WriterUtils.isNLVariable("${"));
+    	assertEquals(false, WriterUtils.isNLVariable("${toto"));
+    	assertEquals(false, WriterUtils.isNLVariable("{toto}"));
+    	assertEquals(true, WriterUtils.isNLVariable("${toto}"));
+    }
+    
+    @Test
+    public void extractVariableNameTest() {    	
+    	assertEquals("toto", WriterUtils.extractVariableName("${toto}"));
+    }
 }

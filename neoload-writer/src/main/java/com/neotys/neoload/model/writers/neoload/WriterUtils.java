@@ -67,7 +67,9 @@ public class WriterUtils {
     }
     
     public static boolean isNLVariable(final String value){
-		return value.startsWith(NL_VARIABLE_START) && value.endsWith(NL_VARIABLE_END);
+		return value!=null && value.startsWith(NL_VARIABLE_START) 
+				&& value.endsWith(NL_VARIABLE_END) 
+				&& value.length()>(NL_VARIABLE_START.length()+NL_VARIABLE_END.length());
 	}	
 
 	public static String extractVariableName(final String value) {

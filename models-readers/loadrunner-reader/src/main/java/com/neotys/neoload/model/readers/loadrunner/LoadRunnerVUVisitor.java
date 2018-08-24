@@ -76,8 +76,10 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<Element> {
 	}
 	
 	public void addInCurrentContainer(Element element){
-		element = setUniqueNameInContainer(element,	currentContainers.get(currentContainers.size() - 1).build());
-		currentContainers.get(currentContainers.size() - 1).addChilds(element);
+		if(element!=null){
+			element = setUniqueNameInContainer(element,	currentContainers.get(currentContainers.size() - 1).build());
+			currentContainers.get(currentContainers.size() - 1).addChilds(element);
+		}
 	}
 
 	static Element setUniqueNameInContainer(final Element element, final Container container) {
