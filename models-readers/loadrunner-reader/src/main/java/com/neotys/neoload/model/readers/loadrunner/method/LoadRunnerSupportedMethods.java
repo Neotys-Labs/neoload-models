@@ -35,6 +35,8 @@ public class LoadRunnerSupportedMethods {
 		
 		SUPPORTED_METHODS.put("lr_eval_string", new LREvalStringMethod());
 		SUPPORTED_METHODS.put("lr_save_string", new LRSaveStringMethod());
+		SUPPORTED_METHODS.put("atoi", new AtoiMethod());
+		
 	}
 	
 	private LoadRunnerSupportedMethods() {
