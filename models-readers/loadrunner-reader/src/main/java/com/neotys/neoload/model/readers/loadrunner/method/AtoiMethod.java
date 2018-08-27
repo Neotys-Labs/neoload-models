@@ -22,9 +22,8 @@ public class AtoiMethod implements LoadRunnerMethod {
 
 	@Override
 	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
-		Preconditions.checkNotNull(method);
-		Preconditions.checkNotNull(method.getParameters(), method.getName() + " method must have a parameter");
-		if(method.getParameters().isEmpty()){
+		Preconditions.checkNotNull(method);		
+		if(method.getParameters() == null || method.getParameters().size()!=1){
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, method.getName() + " method must have a parameter");
 			return null;
 		} 		

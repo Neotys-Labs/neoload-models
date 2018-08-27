@@ -11,7 +11,7 @@ public class AtoiWriter extends JavascriptWriter {
 	@Override
 	protected String getJavascriptContent() {
 		final StringBuilder content = new StringBuilder("context.variableManager.setValue(\"");
-		content.append(((Atoi)element).getName());
+		content.append(element.getName());
 		content.append("\", parseInt(");
 		final String variableValue = ((Atoi)element).getArgs().get(0);
 		if(WriterUtils.isNLVariable(variableValue)){

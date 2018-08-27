@@ -25,7 +25,7 @@ public class SprintfMethod implements LoadRunnerMethod {
 			return null;
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);
-		final String variableName = method.getParameters().get(0);
+		final String variableName = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0));
 		final String format = method.getParameters().get(1);			
 		final List<String> args = new ArrayList<>();
 		for(int index = 2; index < method.getParameters().size(); index++){
