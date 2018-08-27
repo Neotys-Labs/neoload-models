@@ -112,6 +112,13 @@ public class MethodUtils {
 	public static String getVariableSyntax(final String variableName) {
 		return NL_VARIABLE_START + variableName + NL_VARIABLE_END;
 	}
+	
+	public static String getVariableName(final String variableSyntax) {
+		if(variableSyntax!=null && variableSyntax.startsWith(NL_VARIABLE_START) && variableSyntax.endsWith(NL_VARIABLE_END)){
+			return variableSyntax.substring(NL_VARIABLE_START.length(), variableSyntax.length() - NL_VARIABLE_END.length());
+		}
+		return variableSyntax;
+	}
 
 	protected static String normalizeVariables(final String leftBrace, final String rightBrace, final String param) {
 		if(param.startsWith(NL_VARIABLE_START) && param.endsWith(NL_VARIABLE_END)){

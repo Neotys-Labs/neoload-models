@@ -8,6 +8,7 @@ import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
+import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.ImmutableSprintf;
 
 public class SprintfMethod implements LoadRunnerMethod {
@@ -28,9 +29,9 @@ public class SprintfMethod implements LoadRunnerMethod {
 		final String format = method.getParameters().get(1);			
 		final List<String> args = new ArrayList<>();
 		for(int index = 2; index < method.getParameters().size(); index++){
-			args.add(method.getParameters().get(index));
+			args.add(MethodUtils.getVariableName(method.getParameters().get(index)));
 		}		
-		final Element element = ImmutableSprintf.builder().name(method.getName()).variableName(variableName).format(format).args(args).build();
+		final Element element = ImmutableSprintf.builder().name(MethodUtils.unquote(method.getName())).variableName(variableName).format(format).args(args).build();
 		visitor.addInCurrentContainer(element);
 		return element;		
 	}

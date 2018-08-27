@@ -11,7 +11,7 @@ public class SprintfWriter extends JavascriptWriter {
 	@Override
 	protected String getJavascriptContent() {
 		final Sprintf sprintf = ((Sprintf) element);
-		final StringBuilder content = new StringBuilder("var sprintf = java.util.String.format(");
+		final StringBuilder content = new StringBuilder("var sprintf = java.lang.String.format(");
 		content.append(sprintf.getFormat());
 		for (final String arg : sprintf.getArgs()) {
 			content.append(", context.variableManager.getValue(\"");
@@ -19,19 +19,9 @@ public class SprintfWriter extends JavascriptWriter {
 			content.append("\")");
 		}
 		content.append(");\n");
-		final String variableName = sprintf.getVariableName();
-		if (WriterUtils.isNLVariable(variableName)) {
-			// NL Variable
-			content.append("context.variableManager.setValue(\"");
-			content.append(WriterUtils.extractVariableName(variableName));
-			content.append("\")");
-		} else {
-			// Plain text
-			content.append("\"");
-			content.append(variableName);
-			content.append("\"");
-		}
-		content.append(", sprintf);");
+		content.append("context.variableManager.setValue(\"");
+		content.append(sprintf.getVariableName());		
+		content.append("\", sprintf);");
 		return content.toString();
 	}
 
