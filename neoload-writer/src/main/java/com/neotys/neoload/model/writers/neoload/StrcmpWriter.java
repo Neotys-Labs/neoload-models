@@ -33,7 +33,7 @@ public class StrcmpWriter extends JavascriptWriter {
 			content.append(WriterUtils.extractVariableName(s1));
 			content.append("\")");
 		}
-		content.append(");\ncontext.variableManager.setValue(\"");
+		content.append("));\ncontext.variableManager.setValue(\"");
 		content.append(element.getName());
 		content.append("\", strcmp);");
 		return content.toString();

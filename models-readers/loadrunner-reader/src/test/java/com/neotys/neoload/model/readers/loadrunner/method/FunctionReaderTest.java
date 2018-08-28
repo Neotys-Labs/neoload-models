@@ -7,6 +7,8 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.function.Atoi;
 import com.neotys.neoload.model.function.ImmutableAtoi;
+import com.neotys.neoload.model.function.ImmutableStrcmp;
+import com.neotys.neoload.model.function.Strcmp;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.ImmutableMethodCall;
@@ -46,6 +48,21 @@ public class FunctionReaderTest {
 				.args(ImmutableList.of("1"))
 				.build();		
 		assertEquals(expectedAtoi, actualAtoi);
+	}
+	
+	@Test
+	public void testStrcmpReader() {				
+		final Strcmp actualStrcmp = (Strcmp) (new StrcmpMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+				.name("\"strcmp\"")
+				.addParameters("\"A\"")
+				.addParameters("\"B\"")
+				.build(), METHOD_CALL_CONTEXT);
+		final Strcmp expectedStrcmp = ImmutableStrcmp.builder()
+				.name("strcmp_1")
+				.returnValue("${strcmp_1}")	
+				.args(ImmutableList.of("\"A\"", "\"B\""))
+				.build();		
+		assertEquals(expectedStrcmp, actualStrcmp);
 	}
 
 }

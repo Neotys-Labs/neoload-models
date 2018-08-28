@@ -28,8 +28,8 @@ public class StrcmpMethod implements LoadRunnerMethod {
 			return null;
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);	
-		final String s0 = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0));
-		final String s1 = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(1));
+		final String s0 = method.getParameters().get(0);
+		final String s1 = method.getParameters().get(1);
 		final List<String> args = ImmutableList.of(s0, s1);
 		final String name = "strcmp_" + counter++;
 		final Strcmp strcmp = ImmutableStrcmp.builder().name(name).args(args).returnValue(MethodUtils.getVariableSyntax(name)).build();
