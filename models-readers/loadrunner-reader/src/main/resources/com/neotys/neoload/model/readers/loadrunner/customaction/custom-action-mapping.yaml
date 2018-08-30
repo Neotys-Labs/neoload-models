@@ -1,0 +1,8 @@
+sapgui_open_connection_ex: 
+  type: SapConnect
+  isHit: true
+  name: Connect
+  parameters:
+    connectionString: 
+      type: TEXT
+      value: arg0
