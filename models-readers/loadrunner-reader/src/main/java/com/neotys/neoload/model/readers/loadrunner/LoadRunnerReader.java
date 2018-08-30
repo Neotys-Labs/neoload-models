@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 public class LoadRunnerReader extends Reader {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoadRunnerReader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoadRunnerReader.class);
 
 	private static final String PATTERN = "\"\\s*\\n\\s*\"";
 	private static final String LOAD_PATTERN = "Load \"%s\"";
@@ -71,7 +71,7 @@ public class LoadRunnerReader extends Reader {
 		final List<File> projectFolders = new ArrayList<>();
 		final File rootFolder = new File(folder);
 		if (!rootFolder.isDirectory()) {
-			logger.error("Source parameter is not a folder. Please review your parameters and try again.");
+			LOGGER.error("Source parameter is not a folder. Please review your parameters and try again.");
 			throw new IllegalArgumentException("Source path is not a folder");
 		}
 		if (ProjectFileReader.containsUSRFile(rootFolder)) {
@@ -114,7 +114,7 @@ public class LoadRunnerReader extends Reader {
 			final ProjectFileReader projectFileReader = new ProjectFileReader(this, eventListener, projectFolder);
 			final Map<String, String> actionsMap = projectFileReader.getActions();
 			if (actionsMap.isEmpty()) {
-				logger.error("No action in the map. Ignore the script.");
+				LOGGER.error("No action in the map. Ignore the script.");
 				return;
 			}
 			final ParameterFileReader parameterFileReader = new ParameterFileReader(this, projectFileReader, projectFolder);
@@ -129,7 +129,7 @@ public class LoadRunnerReader extends Reader {
 			final boolean hasEnd = manageEnd(projectFolder, projectFileReader, userPathBuilder, vuserEndFile);
 
 			if(!hasInit && !hasAction && !hasEnd){
-				logger.error("No Init / Actions / End. Ignore the script.");
+				LOGGER.error("No Init / Actions / End. Ignore the script.");
 				return;
 			}
 			projectBuilder.addAllVariables(parameterFileReader.getAllVariables()).addUserPaths(
@@ -147,12 +147,12 @@ public class LoadRunnerReader extends Reader {
 				try (FileInputStream targetStream = new FileInputStream(pathUserEnd.toFile())) {
 					userPathBuilder.endContainer(Optional.ofNullable(parseCppFile(projectFileReader.getLeftBrace(),
 							projectFileReader.getRightBrace(), targetStream, "End")).orElse(DEFAULT_END_CONTAINER));
-					logger.info(String.format(LOAD_PATTERN, pathUserEnd));
+					LOGGER.info(String.format(LOAD_PATTERN, pathUserEnd));
 					eventListener.readSupportedAction(vuserEndFile);
 					return true;
 				} catch (IOException | RecognitionException e) {
 					eventListener.readUnsupportedAction(vuserEndFile);
-					logger.error("Error reading end file", e);
+					LOGGER.error("Error reading end file", e);
 				}
 			} else {
 				eventListener.readUnsupportedAction(vuserEndFile);
@@ -172,12 +172,12 @@ public class LoadRunnerReader extends Reader {
 							final Container container = parseCppFile(projectFileReader.getLeftBrace(), projectFileReader.getRightBrace(),
 									targetStream, actionName);
 							actionsContainerBuilder.addChilds(container);
-							logger.info(String.format(LOAD_PATTERN, pathAction));
+							LOGGER.info(String.format(LOAD_PATTERN, pathAction));
 							eventListener.readSupportedAction(actionFile);
 							asAtLeastOneAction.set(true);
 						} catch (IOException | RecognitionException e) {
 							eventListener.readUnsupportedAction(actionFile);
-							logger.error("Error reading action file", e);
+							LOGGER.error("Error reading action file", e);
 						}
 					} else {
 						eventListener.readUnsupportedAction(actionFile);
@@ -197,12 +197,12 @@ public class LoadRunnerReader extends Reader {
 				try (FileInputStream targetStream = new FileInputStream(pathUserInit.toFile())) {
 					userPathBuilder.initContainer(Optional.ofNullable(parseCppFile(projectFileReader.getLeftBrace(),
 							projectFileReader.getRightBrace(), targetStream, "Init")).orElse(DEFAULT_INIT_CONTAINER));
-					logger.info(String.format(LOAD_PATTERN, pathUserInit));
+					LOGGER.info(String.format(LOAD_PATTERN, pathUserInit));
 					eventListener.readSupportedAction(vuserInitFile);
 					return true;
 				} catch (IOException | RecognitionException e) {
 					eventListener.readUnsupportedAction(vuserInitFile);
-					logger.error("Error reading init file", e);
+					LOGGER.error("Error reading init file", e);
 				}
 			} else {
 				eventListener.readUnsupportedAction(vuserInitFile);
