@@ -3,6 +3,8 @@ package com.neotys.neoload.model.readers.loadrunner.method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMappingLoader;
+
 public class LoadRunnerSupportedMethods {
 
 	private static final Map<String, LoadRunnerMethod> SUPPORTED_METHODS = new HashMap<>();
@@ -39,6 +41,8 @@ public class LoadRunnerSupportedMethods {
 		SUPPORTED_METHODS.put("sprintf", new SprintfMethod());
 		SUPPORTED_METHODS.put("lr_param_sprintf", new SprintfMethod());
 		SUPPORTED_METHODS.put("strcmp", new StrcmpMethod());		
+		final CustomActionMethod customActionMethod = new CustomActionMethod();
+		CustomActionMappingLoader.getMapping().keySet().forEach(m -> SUPPORTED_METHODS.put(m, customActionMethod));
 	}
 	
 	private LoadRunnerSupportedMethods() {
