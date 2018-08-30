@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -14,7 +15,7 @@ import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 
 public class StrcmpMethod implements LoadRunnerMethod {
 	
-	private static int counter = 1; 
+	private static AtomicInteger counter = new AtomicInteger(0); 
 
 	public StrcmpMethod() {
 		super();
@@ -31,7 +32,7 @@ public class StrcmpMethod implements LoadRunnerMethod {
 		final String s0 = method.getParameters().get(0);
 		final String s1 = method.getParameters().get(1);
 		final List<String> args = ImmutableList.of(s0, s1);
-		final String name = "strcmp_" + counter++;
+		final String name = "strcmp_" + counter.incrementAndGet();
 		final Strcmp strcmp = ImmutableStrcmp.builder().name(name).args(args).returnValue(MethodUtils.getVariableSyntax(name)).build();
 		visitor.addInCurrentContainer(strcmp);
 		return strcmp;
