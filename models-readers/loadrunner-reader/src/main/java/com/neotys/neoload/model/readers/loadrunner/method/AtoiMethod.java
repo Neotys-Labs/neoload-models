@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -14,7 +15,7 @@ import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 
 public class AtoiMethod implements LoadRunnerMethod {
 	
-	private static int counter = 1; 
+	private static AtomicInteger counter = new AtomicInteger(0); 
 
 	public AtoiMethod() {
 		super();
@@ -30,7 +31,7 @@ public class AtoiMethod implements LoadRunnerMethod {
 		visitor.readSupportedFunction(method.getName(), ctx);	
 		final String arg0 = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0));
 		final List<String> args = ImmutableList.of(arg0);
-		final String name = "atoi_" + counter++;
+		final String name = "atoi_" + counter.incrementAndGet();
 		final Atoi atoi = ImmutableAtoi.builder().name(name).args(args).returnValue(MethodUtils.getVariableSyntax(name)).build();
 		visitor.addInCurrentContainer(atoi);
 		return atoi;

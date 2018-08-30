@@ -37,7 +37,8 @@ public class LoadRunnerSupportedMethods {
 		SUPPORTED_METHODS.put("lr_save_string", new LRSaveStringMethod());
 		SUPPORTED_METHODS.put("atoi", new AtoiMethod());
 		SUPPORTED_METHODS.put("sprintf", new SprintfMethod());
-		SUPPORTED_METHODS.put("lr_param_sprintf", new SprintfMethod());		
+		SUPPORTED_METHODS.put("lr_param_sprintf", new SprintfMethod());
+		SUPPORTED_METHODS.put("strcmp", new StrcmpMethod());		
 	}
 	
 	private LoadRunnerSupportedMethods() {
