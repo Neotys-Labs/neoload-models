@@ -23,20 +23,7 @@ public class CustomActionMappingLoader {
 
 	private static final Yaml YAML = new Yaml();
 	
-	private static final Supplier<Map<String, Map<String, Object>>> MAPPING = Suppliers.memoize(new Supplier<Map<String, Map<String, Object>>>() {
-		@Override
-		public Map<String, Map<String, Object>> get() {
-			final Path customActionMappingFile = getCustomActionMappingFile();
-			final String content;
-			try {
-				content = new String(Files.readAllBytes(customActionMappingFile));
-			} catch (final IOException ioException) {
-				LOGGER.error("Error while reading file " + CUSTOM_ACTION_MAPPING_YAML, ioException);
-				return Maps.newHashMap();
-			}
-			return parseYaml(content);
-		}
-	});
+	private static final Supplier<Map<String, Map<String, Object>>> MAPPING = Suppliers.memoize(CustomActionMappingLoader::getCustomActionMapping);
 
 	private CustomActionMappingLoader() {
 	}
@@ -60,5 +47,17 @@ public class CustomActionMappingLoader {
 			LOGGER.error("Error while parsing file " + CUSTOM_ACTION_MAPPING_YAML, yamlException);
 			return Maps.newHashMap();
 		}
+	}
+	
+	private static Map<String, Map<String, Object>> getCustomActionMapping(){
+		final Path customActionMappingFile = getCustomActionMappingFile();
+		final String content;
+		try {
+			content = new String(Files.readAllBytes(customActionMappingFile));
+		} catch (final IOException ioException) {
+			LOGGER.error("Error while reading file " + CUSTOM_ACTION_MAPPING_YAML, ioException);
+			return Maps.newHashMap();
+		}
+		return parseYaml(content);
 	}
 }

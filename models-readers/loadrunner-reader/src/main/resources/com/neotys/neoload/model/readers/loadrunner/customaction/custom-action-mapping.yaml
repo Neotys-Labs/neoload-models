@@ -6,3 +6,7 @@ sapgui_open_connection_ex:
     connectionString: 
       type: TEXT
       value: arg0
+    objectId: 
+      type: TEXT
+      value: SAP_ACTIVE_SESSION/SAP_ACTIVE_WINDOW/sbar
+  ignoreArg: arg1, arg2    
