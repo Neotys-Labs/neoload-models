@@ -10,6 +10,7 @@ import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMappingLoader;
 import com.neotys.neoload.model.repository.CustomAction;
+import com.neotys.neoload.model.repository.CustomActionParameter;
 import com.neotys.neoload.model.repository.CustomActionParameter.Type;
 import com.neotys.neoload.model.repository.ImmutableCustomAction;
 import com.neotys.neoload.model.repository.ImmutableCustomAction.Builder;
@@ -42,7 +43,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 		if (type instanceof String) {
 			builder.type(type.toString());
 		} else {
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Invalid key " + ACTION_TYPE_KEY + " for method " + method.getName());
+			visitorLogWarn(visitor, method.getName(), ctx, ACTION_TYPE_KEY);
 			return null;
 		}
 
@@ -50,7 +51,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 		if (isHitObject instanceof Boolean) {
 			builder.isHit((Boolean) isHitObject);
 		} else {
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Invalid key " + IS_HIT_KEY + " for method " + method.getName());
+			visitorLogWarn(visitor, method.getName(), ctx, IS_HIT_KEY);
 			return null;
 		}
 
@@ -58,7 +59,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 		if (name instanceof String) {
 			builder.name(name.toString());
 		} else {
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Invalid key " + NAME_KEY + " for method " + method.getName());
+			visitorLogWarn(visitor, method.getName(), ctx, NAME_KEY);
 			return null;
 		}
 
@@ -66,36 +67,56 @@ public class CustomActionMethod implements LoadRunnerMethod {
 
 		final Object parametersObject = mapping.get(PARAMETERS_KEY);
 		if (parametersObject instanceof HashMap) {			
-			for(final Entry<?, ?> parameter : ((HashMap<?, ?>) parametersObject).entrySet()){
-				ImmutableCustomActionParameter.Builder paramBuilder = ImmutableCustomActionParameter.builder();				
-				if (parameter.getKey() instanceof String) {
-					paramBuilder.name(parameter.getKey().toString());
-				} else {
-					continue;
-				}
-				if (parameter.getValue() instanceof Map) {
-					final Object typeParamObject = ((Map<?,?>)parameter.getValue()).get(PARAMETER_TYPE_KEY);
-					if (typeParamObject instanceof String) {
-						paramBuilder.type(Type.valueOf(typeParamObject.toString()));
-					} else {
-						continue;
-					}
-					final Object valueParamObject = ((Map<?,?>)parameter.getValue()).get(PARAMETER_VALUE_KEY);
-					if (valueParamObject instanceof String) {
-						paramBuilder.value(valueParamObject.toString());
-					} else {
-						continue;
-					}
-				} else {
-					continue;
-				}
-			}
+			handleParameters(builder, (HashMap<?,?>)parametersObject);
 		}
 
-		//final String arg0 = method.getParameters().get(0);						
+		//final String arg0 = method.getParameters().get(0); TODO seb						
 
 		final CustomAction customAction = builder.build();
 		visitor.addInCurrentContainer(customAction);
 		return customAction;
+	}
+
+	private static void handleParameters(final Builder builder, final HashMap<?,?> parametersObject) {
+		for(final Entry<?, ?> parameter : ((HashMap<?, ?>) parametersObject).entrySet()){
+			final CustomActionParameter customActionParameter = getCustomActionParameter(parameter);
+			if(customActionParameter != null){
+				builder.addParameters(customActionParameter);
+			}				
+		}
+	}
+
+	private static void visitorLogWarn(final LoadRunnerVUVisitor visitor, final String methodName, final MethodcallContext ctx, final String actionTypeKey) {
+		visitor.readSupportedFunctionWithWarn(methodName, ctx, "Invalid key " + actionTypeKey + " for method " + methodName);
+	}
+
+	private static CustomActionParameter getCustomActionParameter(final Entry<?, ?> parameter) {
+		final ImmutableCustomActionParameter.Builder paramBuilder = ImmutableCustomActionParameter.builder();	
+		
+		final Object key = parameter.getKey();
+		if (key instanceof String) {
+			paramBuilder.name(key.toString());
+		} else {
+			return null;
+		}
+		
+		final Object value = parameter.getValue();
+		if (value instanceof Map) {
+			final Object typeParamObject = ((Map<?,?>)value).get(PARAMETER_TYPE_KEY);
+			if (typeParamObject instanceof String) {
+				paramBuilder.type(Type.valueOf(typeParamObject.toString()));
+			} else {
+				return null;
+			}
+			final Object valueParamObject = ((Map<?,?>)parameter.getValue()).get(PARAMETER_VALUE_KEY);
+			if (valueParamObject instanceof String) {
+				paramBuilder.value(valueParamObject.toString());
+			} else {
+				return null;
+			}					
+		} else {
+			return null;
+		}
+		return paramBuilder.build();
 	}
 }

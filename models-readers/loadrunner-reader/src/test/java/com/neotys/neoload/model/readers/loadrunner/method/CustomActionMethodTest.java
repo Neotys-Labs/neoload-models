@@ -26,7 +26,7 @@ public class CustomActionMethodTest {
 	public void test_sapgui_open_connection_ex() {
 		final CustomAction actualCustomAction = (CustomAction) (new CustomActionMethod()).getElement(LOAD_RUNNER_VISITOR,
 				ImmutableMethodCall.builder()
-					.name("\"sapgui_open_connection_ex\"")
+					.name("sapgui_open_connection_ex")
 					.addParameters("\"" + CONNECTION_STRING + "\"")
 					.addParameters("\"\"")
 					.addParameters("\"con[0]\"")
@@ -39,7 +39,7 @@ public class CustomActionMethodTest {
 				.isHit(true)
 				.parameters(ImmutableList.of(ImmutableCustomActionParameter.builder()
 						.name("connectionString")
-						.value(CONNECTION_STRING)
+						.value("arg0")// TODO seb CONNECTION_STRING
 						.type(Type.TEXT)
 						.build()))
 				.build();
