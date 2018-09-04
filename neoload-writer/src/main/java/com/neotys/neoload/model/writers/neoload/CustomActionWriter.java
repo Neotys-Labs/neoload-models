@@ -21,11 +21,11 @@ public class CustomActionWriter extends ElementWriter {
 
 	@Override
 	public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
-		final Element element = document.createElement(XML_TAG_NAME);
-		super.writeXML(document, element, outputFolder);
-		element.setAttribute(XML_ACTION_TYPE_ATT, ((CustomAction) element).getType());
-		element.setAttribute(XML_IS_HIT_ATT, String.valueOf(((CustomAction) element).isHit()));
-		((CustomAction) element).getParameters().forEach(p -> CustomActionParameterWriter.writeXML(document, currentElement, p));		
-		currentElement.appendChild(element);
+		final Element customAction = document.createElement(XML_TAG_NAME);
+		super.writeXML(document, customAction, outputFolder);
+		customAction.setAttribute(XML_ACTION_TYPE_ATT, ((CustomAction) element).getType());
+		customAction.setAttribute(XML_IS_HIT_ATT, String.valueOf(((CustomAction) element).isHit()));
+		((CustomAction) element).getParameters().forEach(p -> CustomActionParameterWriter.writeXML(document, customAction, p));		
+		currentElement.appendChild(customAction);
 	}
 }

@@ -78,7 +78,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 	}
 
 	private static void handleParameters(final Builder builder, final HashMap<?,?> parametersObject) {
-		for(final Entry<?, ?> parameter : ((HashMap<?, ?>) parametersObject).entrySet()){
+		for(final Entry<?, ?> parameter : parametersObject.entrySet()){
 			final CustomActionParameter customActionParameter = getCustomActionParameter(parameter);
 			if(customActionParameter != null){
 				builder.addParameters(customActionParameter);
