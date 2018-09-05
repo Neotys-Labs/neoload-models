@@ -6,7 +6,15 @@ sapgui_open_connection_ex:
     connectionString: 
       type: TEXT
       value: arg0
-  ignoreArg: arg1, arg2    
-  #objectId: 
-    #type: TEXT
-    #value: SAP_ACTIVE_SESSION/SAP_ACTIVE_WINDOW/sbar
+  ignoreArg: arg1, arg2
+sapgui_status_bar_get_text:
+  type: SapSetText
+  isHit: false
+  name: Connect
+  parameters:
+    objectId:
+      type: TEXT
+      value: SAP_ACTIVE_SESSION/SAP_ACTIVE_WINDOW/tbar[0]/okcd
+    value:
+      type: TEXT
+      value: arg0
