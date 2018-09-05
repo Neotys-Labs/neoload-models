@@ -7,21 +7,22 @@ import java.util.function.Function;
 import com.google.common.base.Objects;
 
 public class Either<L, R> {
+	
+	private final Optional<L> left;
+	private final Optional<R> right;
+	
+	private Either(Optional<L> l, Optional<R> r) {
+		left = l;
+		right = r;
+	}
+	
 	public static <L, R> Either<L, R> left(L value) {
 		return new Either<>(Optional.of(value), Optional.empty());
 	}
 
 	public static <L, R> Either<L, R> right(R value) {
 		return new Either<>(Optional.empty(), Optional.of(value));
-	}
-
-	private final Optional<L> left;
-	private final Optional<R> right;
-
-	private Either(Optional<L> l, Optional<R> r) {
-		left = l;
-		right = r;
-	}
+	}	
 
 	public <T> T map(
 			Function<? super L, ? extends T> lFunc,
