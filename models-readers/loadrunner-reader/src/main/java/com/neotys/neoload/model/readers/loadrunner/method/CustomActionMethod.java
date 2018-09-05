@@ -4,6 +4,7 @@ import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
+import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMappingLoader;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.repository.CustomAction;
@@ -32,7 +33,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 		methodMapping.getParameters().forEach(p ->  {
 			final ImmutableCustomActionParameter.Builder paramBuilder = ImmutableCustomActionParameter.builder();	
 			paramBuilder.name(p.getName());
-			paramBuilder.value(p.getValue(method.getParameters()));			
+			paramBuilder.value(MethodUtils.unquote(p.getValue(method.getParameters())));			
 			paramBuilder.type(p.getType());	
 			builder.addParameters(paramBuilder.build());
 		});

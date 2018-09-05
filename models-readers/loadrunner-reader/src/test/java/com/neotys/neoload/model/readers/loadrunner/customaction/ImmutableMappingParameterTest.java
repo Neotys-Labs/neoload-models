@@ -15,7 +15,7 @@ import com.neotys.neoload.model.repository.CustomActionParameter.Type;
 public class ImmutableMappingParameterTest {
 	
 	@Test
-	public void build() {		
+	public void testBuild() {		
 		final Map<String, Map<String, String>> parameters = new HashMap<>();
 		parameters.put("connectionString", getMap("type", "TEXT", "value", "toto"));
 		parameters.put("param2", getMap("type", "PASSWORD", "value", "arg1"));
