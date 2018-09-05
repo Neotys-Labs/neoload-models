@@ -17,6 +17,8 @@ import com.neotys.neoload.model.repository.ImmutableCustomActionParameter;
 
 public class CustomActionWriterTest {
 
+	private static final String CONNECTION_STRING = "   /SAP_CODEPAGE=1100   /FULLMENU SNC_PARTNERNAME=\"\" SNC_QOP=-1 /H/${SAP_IP_ADDRESS}/S/3217 /UPDOWNLOAD_CP=2";
+	
 	@Test
 	public void writeCustomActionXmlTest() throws ParserConfigurationException, TransformerException {
 		final Document doc = WrittingTestUtils.generateEmptyDocument();
@@ -28,7 +30,7 @@ public class CustomActionWriterTest {
 				.isHit(true)
 				.parameters(ImmutableList.of(ImmutableCustomActionParameter.builder()
 						.name("connectionString")
-						.value("arg0")// TODO seb CONNECTION_STRING
+						.value(CONNECTION_STRING)
 						.type(Type.TEXT)
 						.build()))
 				.build();
@@ -36,12 +38,11 @@ public class CustomActionWriterTest {
 		final String outputfolder = Files.createTempDir().getAbsolutePath();
 		CustomActionWriter.of(customAction).writeXML(doc, root, outputfolder);
 		final String generatedResultXML = WrittingTestUtils.getXmlString(doc);
-		
-		
+				
 		final String expectedResultXML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><test-root>"
 				+ "<custom-action actionType=\"SapConnect\" isHit=\"true\" name=\"Connect\" "
 				+ "uid=\"" + WriterUtils.getElementUid(customAction)+ "\">"
-				+ "<custom-action-parameter name=\"connectionString\" type=\"TEXT\" value=\"arg0\"/>"
+				+ "<custom-action-parameter name=\"connectionString\" type=\"TEXT\" value=\"" + CONNECTION_STRING.replace("\"", "&quot;") + "\"/>"
 				+ "</custom-action></test-root>";
 				
 		Assertions.assertThat(generatedResultXML).isEqualTo(expectedResultXML);		
