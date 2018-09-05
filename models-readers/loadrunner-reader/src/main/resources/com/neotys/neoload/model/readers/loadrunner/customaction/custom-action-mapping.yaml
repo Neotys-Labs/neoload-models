@@ -10,7 +10,7 @@ sapgui_open_connection_ex:
 sapgui_status_bar_get_text:
   type: SapSetText
   isHit: false
-  name: Connect
+  name: SetOkCode
   parameters:
     objectId:
       type: TEXT
