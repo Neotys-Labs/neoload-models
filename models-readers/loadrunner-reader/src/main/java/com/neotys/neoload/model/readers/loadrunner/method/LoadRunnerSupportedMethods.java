@@ -23,7 +23,7 @@ public class LoadRunnerSupportedMethods {
 		}
 	}
 	
-	private static final LoadRunnerMethod internalLoadMethod(final String methodName) throws InvalidCacheLoadException {
+	private static final LoadRunnerMethod internalLoadMethod(final String methodName) {
 		if (methodName == null) {
 			throw new InvalidCacheLoadException("Method name is null");
 		}										
