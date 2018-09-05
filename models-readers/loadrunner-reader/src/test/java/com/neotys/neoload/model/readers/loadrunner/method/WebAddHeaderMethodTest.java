@@ -26,7 +26,7 @@ public class WebAddHeaderMethodTest {
 	public void testGetElement() {
 		LOAD_RUNNER_VISITOR.getCurrentHeaders().clear();
 		LOAD_RUNNER_VISITOR.getGlobalHeaders().clear();
-		(new WebAddHeaderMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_ADD_HEADER, METHOD_CALL_CONTEXT);
+		(new WebaddheaderMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_ADD_HEADER, METHOD_CALL_CONTEXT);
 		assertEquals(1, LOAD_RUNNER_VISITOR.getCurrentHeaders().size());
 		assertEquals(0, LOAD_RUNNER_VISITOR.getGlobalHeaders().size());
 		final Header actualHeader = LOAD_RUNNER_VISITOR.getCurrentHeaders().get(0);

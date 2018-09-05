@@ -25,7 +25,7 @@ public class FunctionReaderTest {
 	
 	@Test
 	public void testEvalStringReader() {				
-		final EvalString actualEvalString = (EvalString) (new LREvalStringMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+		final EvalString actualEvalString = (EvalString) (new LrevalstringMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("\"lr_eval_string\"")
 				.addParameters("\"{think_time}\"")
 				.build(), METHOD_CALL_CONTEXT);

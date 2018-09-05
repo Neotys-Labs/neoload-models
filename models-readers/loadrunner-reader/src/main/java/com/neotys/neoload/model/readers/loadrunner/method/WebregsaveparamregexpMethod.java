@@ -1,19 +1,19 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
-public class WebRegSaveParamExMethod extends AbstractWebRegSaveParamMethod {
+public class WebregsaveparamregexpMethod extends AbstractWebRegSaveParamMethod {
 	
-	public WebRegSaveParamExMethod() {
+	public WebregsaveparamregexpMethod() {
 		super();
 	}
 	
 	@Override
 	boolean supportLBRB() {
-		return true;
+		return false;
 	}
 	
 	@Override
 	boolean supportRegExp() {
-		return false;
+		return true;
 	}
 	
 	@Override

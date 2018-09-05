@@ -29,7 +29,7 @@ public class LRThinkTimeMethodTest {
 	}
 	
 	public void assertDelay(final String lrDelay, final String modelDelay){
-		final Delay actualDelay = (Delay) (new LRThinkTimeMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+		final Delay actualDelay = (Delay) (new LrthinktimeMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("\"lr_think_time\"")
 				.addParameters(lrDelay)
 				.build(), METHOD_CALL_CONTEXT);

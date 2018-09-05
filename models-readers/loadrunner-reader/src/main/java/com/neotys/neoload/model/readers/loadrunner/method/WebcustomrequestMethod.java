@@ -4,19 +4,18 @@ import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
-import com.neotys.neoload.model.readers.loadrunner.WebSubmitData;
+import com.neotys.neoload.model.readers.loadrunner.WebCustomRequest;
 import com.neotys.neoload.model.repository.Page;
 
-public class WebSubmitDataMethod  implements LoadRunnerMethod {
+public class WebcustomrequestMethod  implements LoadRunnerMethod {
 	
-	public WebSubmitDataMethod() {
+	public WebcustomrequestMethod() {
 		super();
 	}
 
 	@Override
-	public Element getElement(LoadRunnerVUVisitor visitor, MethodCall method, MethodcallContext ctx) {
-		visitor.readSupportedFunction(method.getName(), ctx);
-		final Page page = WebSubmitData.toElement(visitor, method);
+	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {		
+		final Page page = WebCustomRequest.toElement(visitor, method, ctx);
 		visitor.getCurrentExtractors().clear();
 		visitor.getCurrentValidators().clear();
 		visitor.getCurrentHeaders().clear();

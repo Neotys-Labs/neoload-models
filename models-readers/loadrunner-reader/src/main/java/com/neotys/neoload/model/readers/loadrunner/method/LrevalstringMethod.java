@@ -8,9 +8,9 @@ import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.ImmutableEvalString;
 
-public class LREvalStringMethod implements LoadRunnerMethod {
+public class LrevalstringMethod implements LoadRunnerMethod {
 
-	public LREvalStringMethod() {
+	public LrevalstringMethod() {
 		super();
 	}
 

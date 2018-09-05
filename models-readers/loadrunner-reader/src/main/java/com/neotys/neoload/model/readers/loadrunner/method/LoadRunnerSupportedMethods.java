@@ -1,56 +1,50 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMappingLoader;
 
 public class LoadRunnerSupportedMethods {
 
-	private static final Map<String, LoadRunnerMethod> SUPPORTED_METHODS = new HashMap<>();
-	
-	static {
-		SUPPORTED_METHODS.put("web_url", new WebUrlMethod());
-		SUPPORTED_METHODS.put("web_submit_data", new WebSubmitDataMethod());
-		SUPPORTED_METHODS.put("web_custom_request", new WebCustomRequestMethod());
-		SUPPORTED_METHODS.put("web_link", new WebLinkMethod());
-		SUPPORTED_METHODS.put("web_submit_form", new WebSubmitFormMethod());
-		
-		SUPPORTED_METHODS.put("web_reg_save_param", new WebRegSaveParamMethod());
-		SUPPORTED_METHODS.put("web_reg_save_param_ex", new WebRegSaveParamExMethod());
-		SUPPORTED_METHODS.put("web_reg_save_param_regexp", new WebRegSaveParamRegexpMethod());
-		SUPPORTED_METHODS.put("web_reg_save_param_xpath", new WebRegSaveParamXpathMethod());
-		SUPPORTED_METHODS.put("web_reg_save_param_json", new WebRegSaveParamJsonMethod());
-		SUPPORTED_METHODS.put("web_reg_find", new WebRegFindMethod());
-		
-		SUPPORTED_METHODS.put("lr_think_time", new LRThinkTimeMethod());
-		SUPPORTED_METHODS.put("lr_start_transaction", new LRStartTransactionMethod());
-		SUPPORTED_METHODS.put("lr_end_transaction", new LREndTransactionMethod());
-		SUPPORTED_METHODS.put("lr_start_sub_transaction", new LRStartTransactionMethod());
-		SUPPORTED_METHODS.put("lr_end_sub_transaction", new LREndTransactionMethod());
-		
-		SUPPORTED_METHODS.put("web_cache_cleanup", new WebCacheCleanupMethod());
-		SUPPORTED_METHODS.put("web_cleanup_cookies", new WebCleanupCookiesMethod());
-		SUPPORTED_METHODS.put("web_add_cookie", new WebAddCookieMethod());
-		SUPPORTED_METHODS.put("web_add_header", new WebAddHeaderMethod());
-		SUPPORTED_METHODS.put("web_add_auto_header", new WebAddAutoHeaderMethod());
-		
-		SUPPORTED_METHODS.put("lr_eval_string", new LREvalStringMethod());
-		SUPPORTED_METHODS.put("lr_save_string", new LRSaveStringMethod());
-		SUPPORTED_METHODS.put("atoi", new AtoiMethod());
-		SUPPORTED_METHODS.put("sprintf", new SprintfMethod());
-		SUPPORTED_METHODS.put("lr_param_sprintf", new SprintfMethod());
-		SUPPORTED_METHODS.put("strcmp", new StrcmpMethod());		
-		final CustomActionMethod customActionMethod = new CustomActionMethod();
-		CustomActionMappingLoader.getMapping().keySet().forEach(m -> SUPPORTED_METHODS.put(m, customActionMethod));
-	}
-	
+	private static final LoadingCache<String, LoadRunnerMethod> SUPPORTED_METHODS = CacheBuilder.newBuilder().build(
+			new CacheLoader<String, LoadRunnerMethod>() {
+				@Override
+				public LoadRunnerMethod load(final String methodName) {
+					if (methodName == null) {
+						throw new InvalidCacheLoadException("Method name is null");
+					}										
+					if (CustomActionMappingLoader.getMapping().get(methodName)!=null) {
+						return new CustomActionMethod();
+					}
+					final String lowerCaseMethodName = methodName.replaceAll("_", "").toLowerCase();
+					if (lowerCaseMethodName.length() < 2) {
+						throw new InvalidCacheLoadException("Method name has less than 2 characters");
+					}
+					final String fullQualifiedMethodName = "com.neotys.neoload.model.readers.loadrunner.method."
+							+ lowerCaseMethodName.substring(0, 1).toUpperCase() + lowerCaseMethodName.substring(1) + "Method";
+					try {
+						return (LoadRunnerMethod) Class.forName(fullQualifiedMethodName).getConstructor().newInstance();
+					} catch (Exception e) {
+					}
+					if(methodName.equals("lr_start_sub_transaction")) return new LrstarttransactionMethod();
+					if(methodName.equals("lr_end_sub_transaction")) return new LrendtransactionMethod();
+					if(methodName.equals("lr_param_sprintf")) return new SprintfMethod();
+					throw new InvalidCacheLoadException("Method not supported");
+				}
+			});
+
 	private LoadRunnerSupportedMethods() {
 		super();
 	}
-	
-	public static final LoadRunnerMethod get(final String methodName){
-		return SUPPORTED_METHODS.get(methodName);
-	}
 
+	public static LoadRunnerMethod get(final String methodName) {
+		try {
+			return SUPPORTED_METHODS.get(methodName);
+		} catch (final Exception e) {
+			return null;
+		}
+	}
 }

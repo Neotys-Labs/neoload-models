@@ -37,7 +37,7 @@ public class WebRegSaveParamJsonMethodTest {
 				.jsonPath("$.[0].*")
 				.build();
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamJsonMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_REG_SAVE_PARAM_JSON, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamjsonMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_REG_SAVE_PARAM_JSON, METHOD_CALL_CONTEXT);
 		assertEquals(expectedVariableExtractor, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 	}
 }

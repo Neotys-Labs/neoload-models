@@ -10,8 +10,8 @@ import com.neotys.neoload.model.readers.loadrunner.ImmutableMethodCall;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
-import com.neotys.neoload.model.readers.loadrunner.method.WebLinkMethod;
-import com.neotys.neoload.model.readers.loadrunner.method.WebUrlMethod;
+import com.neotys.neoload.model.readers.loadrunner.method.WeblinkMethod;
+import com.neotys.neoload.model.readers.loadrunner.method.WeburlMethod;
 import com.neotys.neoload.model.repository.GetRequest;
 import com.neotys.neoload.model.repository.ImmutableGetFollowLinkRequest;
 import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
@@ -41,7 +41,7 @@ public class WebLinkMethodTest {
 				.addParameters("LAST")
 				.build();
 		
-		final ImmutablePage actualWebUrl = (ImmutablePage) (new WebUrlMethod()).getElement(LOAD_RUNNER_VISITOR, webUrlMethod, METHOD_CALL_CONTEXT);
+		final ImmutablePage actualWebUrl = (ImmutablePage) (new WeburlMethod()).getElement(LOAD_RUNNER_VISITOR, webUrlMethod, METHOD_CALL_CONTEXT);
 		
 		final MethodCall webLinkMethod = ImmutableMethodCall.builder()
 				.name("\"webLinkMethod\"")
@@ -51,7 +51,7 @@ public class WebLinkMethodTest {
 				.addParameters("LAST")
 				.build();
 		
-		final ImmutablePage actualWebLink = (ImmutablePage) (new WebLinkMethod()).getElement(LOAD_RUNNER_VISITOR, webLinkMethod, METHOD_CALL_CONTEXT);
+		final ImmutablePage actualWebLink = (ImmutablePage) (new WeblinkMethod()).getElement(LOAD_RUNNER_VISITOR, webLinkMethod, METHOD_CALL_CONTEXT);
 		
 		final Server expectedServer = ImmutableServer.builder()
 	            .name("jack")

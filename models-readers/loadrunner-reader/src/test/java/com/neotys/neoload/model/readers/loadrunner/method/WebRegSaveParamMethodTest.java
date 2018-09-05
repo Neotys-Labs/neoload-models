@@ -41,7 +41,7 @@ public class WebRegSaveParamMethodTest {
 				"left boundary").endExpression("").nbOccur(2).exitOnError(true).extractType(VariableExtractor.ExtractType.HEADERS).build();
 
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
 		assertEquals(expectedGenerator, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 
 	}
@@ -65,7 +65,7 @@ public class WebRegSaveParamMethodTest {
 				"left boundary").endExpression("right").nbOccur(2).exitOnError(false).extractType(VariableExtractor.ExtractType.BOTH).build();
 
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
 		assertEquals(expectedGenerator, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 
 	}
@@ -86,7 +86,7 @@ public class WebRegSaveParamMethodTest {
 				"textecourant").endExpression("<").nbOccur(3).exitOnError(true).extractType(VariableExtractor.ExtractType.BODY).build();
 
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
 		assertEquals(expectedGenerator, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 	}
 
@@ -103,7 +103,7 @@ public class WebRegSaveParamMethodTest {
 				"b").exitOnError(true).extractType(VariableExtractor.ExtractType.BOTH).build();
 
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
 		assertEquals(expectedGenerator, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 	}
 
@@ -119,7 +119,7 @@ public class WebRegSaveParamMethodTest {
 				"b").exitOnError(true).extractType(VariableExtractor.ExtractType.BOTH).build();
 
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
 		assertEquals(expectedGenerator, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 	}
 
@@ -136,7 +136,7 @@ public class WebRegSaveParamMethodTest {
 				"b").exitOnError(true).extractType(VariableExtractor.ExtractType.HEADERS).build();
 
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
 		assertEquals(expectedGenerator, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 	}
 
@@ -153,7 +153,7 @@ public class WebRegSaveParamMethodTest {
 				"b").exitOnError(true).extractType(VariableExtractor.ExtractType.BODY).build();
 
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamMethod()).getElement(LOAD_RUNNER_VISITOR, input, METHOD_CALL_CONTEXT);
 		assertEquals(expectedGenerator, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 	}
 }

@@ -10,7 +10,7 @@ import com.neotys.neoload.model.readers.loadrunner.ImmutableMethodCall;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
-import com.neotys.neoload.model.readers.loadrunner.method.WebAddCookieMethod;
+import com.neotys.neoload.model.readers.loadrunner.method.WebaddcookieMethod;
 import com.neotys.neoload.model.repository.AddCookie;
 import com.neotys.neoload.model.repository.ImmutableAddCookie;
 import com.neotys.neoload.model.repository.ImmutableServer;
@@ -37,7 +37,7 @@ public class WebAddCookieMethodTest {
 	@Test
 	public void testGetElement() {		
 		
-		final AddCookie actualAddCookie = (AddCookie) (new WebAddCookieMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_ADD_COOKIE_TEST, METHOD_CALL_CONTEXT);
+		final AddCookie actualAddCookie = (AddCookie) (new WebaddcookieMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_ADD_COOKIE_TEST, METHOD_CALL_CONTEXT);
 
 		final AddCookie expectedAddCookie = ImmutableAddCookie.builder()
 				.name("Set cookie NID for server host_test.com")

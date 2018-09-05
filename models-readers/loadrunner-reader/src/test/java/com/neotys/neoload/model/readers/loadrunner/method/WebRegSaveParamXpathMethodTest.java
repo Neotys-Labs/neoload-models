@@ -39,7 +39,7 @@ public class WebRegSaveParamXpathMethodTest {
 				.xPath("/HP_EXTENSION[1]/object[1]/object[1]/array[1]")
 				.build();
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamXpathMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_REG_SAVE_PARAM_XPATH, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamxpathMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_REG_SAVE_PARAM_XPATH, METHOD_CALL_CONTEXT);
 		assertEquals(expectedVariableExtractor, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 	}
 }

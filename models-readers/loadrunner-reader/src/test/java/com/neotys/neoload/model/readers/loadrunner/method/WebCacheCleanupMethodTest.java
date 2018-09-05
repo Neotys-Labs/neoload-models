@@ -26,7 +26,7 @@ public class WebCacheCleanupMethodTest {
 	@Test
 	public void testGetElement() {		
 		
-		final ClearCache actualClearCache = (ClearCache) (new WebCacheCleanupMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_CACHE_CLEANUP, METHOD_CALL_CONTEXT);
+		final ClearCache actualClearCache = (ClearCache) (new WebcachecleanupMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_CACHE_CLEANUP, METHOD_CALL_CONTEXT);
 
 		final ClearCache expectedClearCache = ImmutableClearCache.builder()
 				.name("web_cache_cleanup")

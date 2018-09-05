@@ -7,9 +7,9 @@ import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.repository.ImmutableDelay;
 
-public class LRThinkTimeMethod  implements LoadRunnerMethod {
+public class LrthinktimeMethod  implements LoadRunnerMethod {
 	
-	public LRThinkTimeMethod() {
+	public LrthinktimeMethod() {
 		super();
 	}
 

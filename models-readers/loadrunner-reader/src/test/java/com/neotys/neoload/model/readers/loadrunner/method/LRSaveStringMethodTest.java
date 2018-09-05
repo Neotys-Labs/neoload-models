@@ -28,7 +28,7 @@ public class LRSaveStringMethodTest {
 	@Test
 	public void testGetElement() {		
 		
-		final SaveString actualSaveString = (SaveString) (new LRSaveStringMethod()).getElement(LOAD_RUNNER_VISITOR, LR_SAVE_STRING_TEST, METHOD_CALL_CONTEXT);
+		final SaveString actualSaveString = (SaveString) (new LrsavestringMethod()).getElement(LOAD_RUNNER_VISITOR, LR_SAVE_STRING_TEST, METHOD_CALL_CONTEXT);
 
 		final SaveString exprectedSaveString = ImmutableSaveString.builder()
 				.name("Set variable think_time")

@@ -7,9 +7,9 @@ import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.ImmutableContainer;
 
-public class LRStartTransactionMethod  implements LoadRunnerMethod {
+public class LrstarttransactionMethod  implements LoadRunnerMethod {
 	
-	public LRStartTransactionMethod() {
+	public LrstarttransactionMethod() {
 		super();
 	}
 

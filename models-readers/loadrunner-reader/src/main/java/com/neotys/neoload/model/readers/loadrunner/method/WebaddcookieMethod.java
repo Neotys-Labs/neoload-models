@@ -17,11 +17,11 @@ import java.net.HttpCookie;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-public class WebAddCookieMethod implements LoadRunnerMethod {
+public class WebaddcookieMethod implements LoadRunnerMethod {
 		
-	private static final Logger LOGGER = LoggerFactory.getLogger(WebAddCookieMethod.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebaddcookieMethod.class);
 	
-	public WebAddCookieMethod() {
+	public WebaddcookieMethod() {
 		super();
 	}
 

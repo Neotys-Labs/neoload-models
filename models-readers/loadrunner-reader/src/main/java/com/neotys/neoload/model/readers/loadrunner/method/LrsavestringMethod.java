@@ -7,9 +7,9 @@ import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.repository.ImmutableSaveString;
 
-public class LRSaveStringMethod implements LoadRunnerMethod {
+public class LrsavestringMethod implements LoadRunnerMethod {
 
-	public LRSaveStringMethod() {
+	public LrsavestringMethod() {
 		super();
 	}
 

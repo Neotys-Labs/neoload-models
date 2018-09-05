@@ -5,9 +5,9 @@ import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 
-public class LREndTransactionMethod implements LoadRunnerMethod {
+public class LrendtransactionMethod implements LoadRunnerMethod {
 
-	public LREndTransactionMethod() {
+	public LrendtransactionMethod() {
 		super();
 	}
 

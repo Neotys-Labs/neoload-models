@@ -6,9 +6,9 @@ import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.WebRegFind;
 
-public class WebRegFindMethod  implements LoadRunnerMethod {
+public class WebregfindMethod  implements LoadRunnerMethod {
 	
-	public WebRegFindMethod() {
+	public WebregfindMethod() {
 		super();
 	}
 

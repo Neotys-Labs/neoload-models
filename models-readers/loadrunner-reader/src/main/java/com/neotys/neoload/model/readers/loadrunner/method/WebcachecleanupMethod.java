@@ -7,9 +7,9 @@ import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.repository.ImmutableClearCache;
 
-public class WebCacheCleanupMethod implements LoadRunnerMethod {
+public class WebcachecleanupMethod implements LoadRunnerMethod {
 
-	public WebCacheCleanupMethod() {
+	public WebcachecleanupMethod() {
 		super();
 	}
 

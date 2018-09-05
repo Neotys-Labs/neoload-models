@@ -7,9 +7,9 @@ import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.repository.ImmutableClearCookies;
 
-public class WebCleanupCookiesMethod implements LoadRunnerMethod {
+public class WebcleanupcookiesMethod implements LoadRunnerMethod {
 
-	public WebCleanupCookiesMethod() {
+	public WebcleanupcookiesMethod() {
 		super();
 	}
 

@@ -40,7 +40,7 @@ public class WebRegSaveParamExMethodTest {
 		final VariableExtractor expectedVariableExtractor = ImmutableVariableExtractor.builder().name("webRegSaveParam_TEST").startExpression(
 				"left boundary").endExpression("").nbOccur(2).exitOnError(true).extractType(VariableExtractor.ExtractType.HEADERS).build();
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
-		(new WebRegSaveParamMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_REG_SAVE_PARAM, METHOD_CALL_CONTEXT);
+		(new WebregsaveparamMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_REG_SAVE_PARAM, METHOD_CALL_CONTEXT);
 		assertEquals(expectedVariableExtractor, LOAD_RUNNER_VISITOR.getCurrentExtractors().get(0));
 	}
 
