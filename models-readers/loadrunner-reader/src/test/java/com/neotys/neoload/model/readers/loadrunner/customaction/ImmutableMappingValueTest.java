@@ -7,7 +7,7 @@ import org.junit.Test;
 public class ImmutableMappingValueTest {
 
 	@Test
-	public void testGetMapping() {
+	public void testBuild() {
 		assertImmutableMappingValuEquals(new ImmutableMappingValue(""), "");
 		assertImmutableMappingValuEquals(new ImmutableMappingValue("1"), "1");
 		assertImmutableMappingValuEquals(new ImmutableMappingValue("a"), "a");
