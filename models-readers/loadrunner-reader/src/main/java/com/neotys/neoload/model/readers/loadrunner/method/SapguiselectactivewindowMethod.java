@@ -8,26 +8,28 @@ import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.ImmutableSaveString;
 
-public class LrsavestringMethod implements LoadRunnerMethod {
+public class SapguiselectactivewindowMethod implements LoadRunnerMethod {
 
-	public LrsavestringMethod() {
+	private static final String SAP_ACTIVE_WINDOW = "SAP_ACTIVE_WINDOW";
+	
+	public SapguiselectactivewindowMethod() {
 		super();
 	}
 
 	@Override
 	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		Preconditions.checkNotNull(method);		
-		if(method.getParameters() == null || method.getParameters().size()!=2){
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, method.getName() + " method must have 2 parameters");
+		if(method.getParameters() == null || method.getParameters().size() == 0){
+			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, method.getName() + " method must have at least 1 parameter");
 			return null;
 		} 		
-		visitor.readSupportedFunction(method.getName(), ctx);
-		final String variableValue = MethodUtils.unquote(method.getParameters().get(0));
-		final String variableName = MethodUtils.unquote(method.getParameters().get(1));			
-		final String name = "Set variable " + variableName;
-		final Element element = ImmutableSaveString.builder().name(name).variableName(variableName).variableValue(variableValue).build();
+		visitor.readSupportedFunction(method.getName(), ctx);		
+		final Element element = ImmutableSaveString.builder()
+				.name(MethodUtils.unquote(method.getName()))
+				.variableName(SAP_ACTIVE_WINDOW)
+				.variableValue(MethodUtils.unquote(method.getParameters().get(0)))
+				.build();
 		visitor.addInCurrentContainer(element);
-		return element;
-		
+		return element;		
 	}
 }
