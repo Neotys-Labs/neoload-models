@@ -7,7 +7,7 @@ sapgui_open_connection_ex:
       type: TEXT
       value: arg0
   ignoreArg: arg1, arg2
-sapgui_status_bar_get_text:
+sapgui_set_ok_code:
   type: SapSetText
   isHit: false
   name: SetOkCode
@@ -16,5 +16,27 @@ sapgui_status_bar_get_text:
       type: TEXT
       value: SAP_ACTIVE_SESSION/SAP_ACTIVE_WINDOW/tbar[0]/okcd
     value:
+      type: TEXT
+      value: arg0
+sapgui_status_bar_get_text:
+  type: SapRead
+  isHit: false
+  name: readStatusBarText
+  parameters:
+    objectId:
+      type: TEXT
+      value: SAP_ACTIVE_SESSION/SAP_ACTIVE_WINDOW/sbar
+    textVariable:
+      type: TEXT
+      value: arg0
+sapgui_status_bar_get_type:
+  type: SapRead
+  isHit: false
+  name: readStatusBarType
+  parameters:
+    objectId:
+      type: TEXT
+      value: SAP_ACTIVE_SESSION/SAP_ACTIVE_WINDOW/sbar
+    typeVariable:
       type: TEXT
       value: arg0
