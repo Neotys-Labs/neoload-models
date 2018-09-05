@@ -39,7 +39,7 @@ public class CustomActionMethodTest {
 				.isHit(true)
 				.parameters(ImmutableList.of(ImmutableCustomActionParameter.builder()
 						.name("connectionString")
-						.value("arg0")// TODO seb CONNECTION_STRING
+						.value(CONNECTION_STRING)
 						.type(Type.TEXT)
 						.build()))
 				.build();
