@@ -3,12 +3,10 @@ package com.neotys.neoload.model.readers.loadrunner.customaction;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.repository.CustomActionParameter.Type;
 
 public class ImmutableMappingMethodTest {
@@ -17,8 +15,7 @@ public class ImmutableMappingMethodTest {
 	public void testBuild() {
 		final Map<String, Map<String, String>> parameters = new HashMap<>();
 		parameters.put("connectionString", getMap("type", "TEXT", "value", "toto"));
-		parameters.put("param2", getMap("type", "PASSWORD", "value", "arg1"));
-		final List<String> inputParameters = ImmutableList.of("--arg0--", "--arg1--", "--arg2--");
+		parameters.put("param2", getMap("type", "PASSWORD", "value", "arg1"));		
 		final Map<String, Object> methodMapping = new HashMap<>();
 		methodMapping.put("type", "SapConnect");
 		methodMapping.put("isHit", true);
@@ -31,10 +28,10 @@ public class ImmutableMappingMethodTest {
 		assertEquals("Connect", actualImmutableMappingMethod.getName());
 		assertEquals(2, actualImmutableMappingMethod.getParameters().size());
 		assertEquals("connectionString", actualImmutableMappingMethod.getParameters().get(0).getName());
-		assertEquals("toto", actualImmutableMappingMethod.getParameters().get(0).getValue(inputParameters));
+		assertEquals("toto", actualImmutableMappingMethod.getParameters().get(0).getValue().getLeft().get());
 		assertEquals(Type.TEXT, actualImmutableMappingMethod.getParameters().get(0).getType());
 		assertEquals("param2", actualImmutableMappingMethod.getParameters().get(1).getName());
-		assertEquals("--arg1--", actualImmutableMappingMethod.getParameters().get(1).getValue(inputParameters));
+		assertEquals(1, actualImmutableMappingMethod.getParameters().get(1).getValue().getRight().get().getIndex());
 		assertEquals(Type.PASSWORD, actualImmutableMappingMethod.getParameters().get(1).getType());
 	}
 

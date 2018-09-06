@@ -1,10 +1,10 @@
 package com.neotys.neoload.model.readers.loadrunner.customaction;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static com.neotys.neoload.model.repository.CustomActionParameter.Type;
+import com.neotys.neoload.model.repository.ArgumentNumber;
+import com.neotys.neoload.model.repository.CustomActionParameter.Type;
 
 public class ImmutableMappingParameter {
 	
@@ -25,8 +25,8 @@ public class ImmutableMappingParameter {
 		return name;
 	}
 	
-	public String getValue(final List<String> inputParameters) {
-		return value.getValue().map(s -> s, a -> inputParameters.get(a.getIndex()));
+	public Either<String, ArgumentNumber> getValue() {
+		return value.getValue();
 	}
 	
 	public Type getType() {

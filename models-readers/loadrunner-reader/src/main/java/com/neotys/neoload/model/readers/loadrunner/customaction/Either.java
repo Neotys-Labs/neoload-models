@@ -57,4 +57,12 @@ public class Either<L, R> {
 	  public int hashCode() {
 	    return Objects.hashCode(left, right);
 	  }
+	  
+	  protected Optional<L> getLeft() {
+		return left;
+	}
+	  
+	  protected Optional<R> getRight() {
+		return right;
+	}
 }
