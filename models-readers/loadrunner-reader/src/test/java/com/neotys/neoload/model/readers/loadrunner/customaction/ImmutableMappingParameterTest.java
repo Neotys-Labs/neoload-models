@@ -19,12 +19,12 @@ public class ImmutableMappingParameterTest {
 		parameters.put("param2", getMap("type", "PASSWORD", "value", "arg1"));
 		final ImmutableMappingParameter actualParam1 = ImmutableMappingParameter.build((Entry<?, ?>)parameters.entrySet().toArray()[0]);
 		assertEquals("connectionString", actualParam1.getName());
-		assertEquals("toto", actualParam1.getValue().getLeft().get());
+		assertEquals("toto", actualParam1.getValue());
 		assertEquals(Type.TEXT, actualParam1.getType());
 		
 		final ImmutableMappingParameter actualParam2 = ImmutableMappingParameter.build((Entry<?, ?>)parameters.entrySet().toArray()[1]);
 		assertEquals("param2", actualParam2.getName());
-		assertEquals(1, actualParam2.getValue().getRight().get().getIndex());
+		assertEquals("arg1", actualParam2.getValue());
 		assertEquals(Type.PASSWORD, actualParam2.getType());
 	}
 

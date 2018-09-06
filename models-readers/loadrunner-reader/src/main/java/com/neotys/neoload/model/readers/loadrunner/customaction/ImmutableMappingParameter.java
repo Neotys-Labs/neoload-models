@@ -3,7 +3,6 @@ package com.neotys.neoload.model.readers.loadrunner.customaction;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.neotys.neoload.model.repository.ArgumentNumber;
 import com.neotys.neoload.model.repository.CustomActionParameter.Type;
 
 public class ImmutableMappingParameter {
@@ -12,10 +11,10 @@ public class ImmutableMappingParameter {
 	private static final String VALUE_KEY = "value";
 	
 	private final String name;
-	private final ImmutableMappingValue value;
+	private final String value;
 	private final Type type;
 
-	private ImmutableMappingParameter(final String name, final ImmutableMappingValue value, final Type type) {
+	private ImmutableMappingParameter(final String name, final String value, final Type type) {
 		this.name = name;
 		this.value = value;
 		this.type = type;
@@ -25,8 +24,8 @@ public class ImmutableMappingParameter {
 		return name;
 	}
 	
-	public Either<String, ArgumentNumber> getValue() {
-		return value.getValue();
+	public String getValue() {
+		return value;
 	}
 	
 	public Type getType() {
@@ -53,7 +52,7 @@ public class ImmutableMappingParameter {
 		if (!(valueObject instanceof String)) {			
 			return null;
 		}
-		final ImmutableMappingValue value = ImmutableMappingValue.build(valueObject.toString());
+		final String value = valueObject.toString();
 		return new ImmutableMappingParameter(name, value, type);		
 	}
 }

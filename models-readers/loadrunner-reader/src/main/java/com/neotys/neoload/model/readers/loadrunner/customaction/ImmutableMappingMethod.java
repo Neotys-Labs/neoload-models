@@ -12,6 +12,7 @@ public class ImmutableMappingMethod {
 	private static final String NAME_KEY = "name";	
 	private static final String PARAMETERS_KEY = "parameters";
 	private static final String IGNORE_ARGS_KEY = "ignoreArgs";
+	private static final String ARG_PATTERN = "arg";
 	
 	private final String type;
 	private final boolean isHit;
@@ -80,9 +81,9 @@ public class ImmutableMappingMethod {
 		if (ignoreArgsObject instanceof String) {		
 			for(final String argX : ((String)ignoreArgsObject).split(",")){
 				final String arg = argX.trim();
-				if(arg.startsWith(ImmutableMappingValue.ARG_PATTERN)){				
+				if(arg.startsWith(ARG_PATTERN)){				
 					try{
-						ignoreArgs.add(Integer.parseInt(arg.substring(ImmutableMappingValue.ARG_PATTERN.length())));
+						ignoreArgs.add(Integer.parseInt(arg.substring(ARG_PATTERN.length())));
 					} catch(final Exception e){				
 					}
 				}

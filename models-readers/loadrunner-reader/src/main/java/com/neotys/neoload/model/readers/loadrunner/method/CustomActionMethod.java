@@ -3,15 +3,16 @@ package com.neotys.neoload.model.readers.loadrunner.method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.collect.ImmutableSet;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
-import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMappingLoader;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
+import com.neotys.neoload.model.readers.loadrunner.customaction.MappingValueUtil;
 import com.neotys.neoload.model.repository.CustomAction;
 import com.neotys.neoload.model.repository.ImmutableCustomAction;
 import com.neotys.neoload.model.repository.ImmutableCustomAction.Builder;
@@ -19,6 +20,8 @@ import com.neotys.neoload.model.repository.ImmutableCustomActionParameter;
 
 public class CustomActionMethod implements LoadRunnerMethod {
 
+	private final AtomicInteger counter = new AtomicInteger(0);
+	
 	public CustomActionMethod() {
 		super();
 	}
@@ -40,7 +43,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 		methodMapping.getParameters().forEach(p ->  {
 			final ImmutableCustomActionParameter.Builder paramBuilder = ImmutableCustomActionParameter.builder();	
 			paramBuilder.name(p.getName());			
-			paramBuilder.value(MethodUtils.unquote(p.getValue().map(s -> s, a -> readParameter(method, a.getIndex(), readIndex))));			
+			paramBuilder.value(MappingValueUtil.parseMappingValue(method.getParameters(), p.getValue(), method.getName(), counter, readIndex));			
 			paramBuilder.type(p.getType());	
 			builder.addParameters(paramBuilder.build());
 		});
@@ -66,10 +69,5 @@ public class CustomActionMethod implements LoadRunnerMethod {
 			}
 		}
 		return unreadParameters;
-	}
-
-	private static String readParameter(final MethodCall method, final int index, final Set<Integer> readIndex){
-		readIndex.add(index);
-		return method.getParameters().get(index);
-	}
+	}	
 }

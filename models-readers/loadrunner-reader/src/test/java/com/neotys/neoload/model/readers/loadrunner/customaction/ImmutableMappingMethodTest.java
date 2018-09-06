@@ -29,10 +29,10 @@ public class ImmutableMappingMethodTest {
 		assertEquals("Connect", actualImmutableMappingMethod.getName());
 		assertEquals(2, actualImmutableMappingMethod.getParameters().size());
 		assertEquals("connectionString", actualImmutableMappingMethod.getParameters().get(0).getName());
-		assertEquals("toto", actualImmutableMappingMethod.getParameters().get(0).getValue().getLeft().get());
+		assertEquals("toto", actualImmutableMappingMethod.getParameters().get(0).getValue());
 		assertEquals(Type.TEXT, actualImmutableMappingMethod.getParameters().get(0).getType());
 		assertEquals("param2", actualImmutableMappingMethod.getParameters().get(1).getName());
-		assertEquals(1, actualImmutableMappingMethod.getParameters().get(1).getValue().getRight().get().getIndex());
+		assertEquals("arg1", actualImmutableMappingMethod.getParameters().get(1).getValue());
 		assertEquals(Type.PASSWORD, actualImmutableMappingMethod.getParameters().get(1).getType());
 		assertEquals(2, actualImmutableMappingMethod.getIgnoreArgs().size());
 		assertEquals(1, actualImmutableMappingMethod.getIgnoreArgs().get(0).intValue());
