@@ -8,8 +8,8 @@ public class ConstantVariableWriter extends VariableWriter {
 
 	public static final String XML_TAG_NAME = "variable-constant";
 	public static final String XML_CONST_VALUE = "constantValue";
-	
-	protected ConstantVariableWriter(ConstantVariable variable) {
+
+	public ConstantVariableWriter(ConstantVariable variable) {
 		super(variable);
 	}
 	

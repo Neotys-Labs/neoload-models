@@ -40,6 +40,15 @@ public class WriterUtilsTest {
                 .numOfFirstRowData(0)
                 .build();
         assertThat(WriterUtils.<VariableWriter>getWriterFor(var).getClass().getSimpleName()).isEqualTo("FileVariableWriter");
+
+        ConstantVariable constantVariable = ImmutableConstantVariable.builder()
+                .name("TEST")
+                .constantValue("3")
+                .policy(Variable.VariablePolicy.EACH_VUSER)
+                .order(Variable.VariableOrder.SEQUENTIAL)
+                .scope(Variable.VariableScope.LOCAL)
+                .build();
+        assertThat(WriterUtils.getWriterFor(constantVariable).getClass().getSimpleName()).isEqualTo("ConstantVariableWriter");
     }
     
     @Test
