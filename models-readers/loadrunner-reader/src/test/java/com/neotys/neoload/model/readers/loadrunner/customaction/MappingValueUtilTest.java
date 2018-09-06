@@ -25,20 +25,50 @@ public class MappingValueUtilTest {
 		assertEquals("before arg0 after", MappingValueUtil.parseMappingValue(inputParameters, "before arg0 after", METHOD_NAME, counter, readIndex));
 		assertEquals(0, readIndex.size());
 				
-		assertEquals("before valueArg0 after", MappingValueUtil.parseMappingValue(inputParameters, "before %%%arg0%%% after", METHOD_NAME, counter, readIndex));
+		assertEquals("before valueArg0 after", MappingValueUtil.parseMappingValue(inputParameters, "before ¤¤¤arg0¤¤¤ after", METHOD_NAME, counter, readIndex));
 		assertEquals(1, readIndex.size());
 		assertEquals(0, readIndex.iterator().next().intValue());		
 		
-		assertEquals("- valueArg0 - valueArg0 -", MappingValueUtil.parseMappingValue(inputParameters, "- %%%arg0%%% - %%%arg0%%% -", METHOD_NAME, counter, readIndex));
+		assertEquals("- valueArg0 - valueArg0 -", MappingValueUtil.parseMappingValue(inputParameters, "- ¤¤¤arg0¤¤¤ - ¤¤¤arg0¤¤¤ -", METHOD_NAME, counter, readIndex));
 		assertEquals(1, readIndex.size());
 		assertEquals(0, readIndex.iterator().next().intValue());
 		
-		assertEquals("- valueArg0 - valueArg1 -", MappingValueUtil.parseMappingValue(inputParameters, "- %%%arg0%%% - %%%arg1%%% -", METHOD_NAME, counter, readIndex));
+		assertEquals("- valueArg0 - valueArg1 -", MappingValueUtil.parseMappingValue(inputParameters, "- ¤¤¤arg0¤¤¤ - ¤¤¤arg1¤¤¤ -", METHOD_NAME, counter, readIndex));
 		assertEquals(2, readIndex.size());
 		assertEquals(0, readIndex.toArray()[0]);
 		assertEquals(1, readIndex.toArray()[1]);
 		
-		assertEquals("- valueArg0 - %%%arg3%%% -", MappingValueUtil.parseMappingValue(inputParameters, "- %%%arg0%%% - %%%arg3%%% -", METHOD_NAME, counter, readIndex));
+		assertEquals("- valueArg0 - ¤¤¤arg3¤¤¤ -", MappingValueUtil.parseMappingValue(inputParameters, "- ¤¤¤arg0¤¤¤ - ¤¤¤arg3¤¤¤ -", METHOD_NAME, counter, readIndex));
+		assertEquals(2, readIndex.size());
+		assertEquals(0, readIndex.toArray()[0]);
+		assertEquals(1, readIndex.toArray()[1]);
+		
+		assertEquals("valueArg1", MappingValueUtil.parseMappingValue(inputParameters, "¤¤¤arg1¤¤¤", METHOD_NAME, counter, readIndex));
+		assertEquals(2, readIndex.size());
+		assertEquals(0, readIndex.toArray()[0]);
+		assertEquals(1, readIndex.toArray()[1]);
+		
+		assertEquals(" valueArg1", MappingValueUtil.parseMappingValue(inputParameters, " ¤¤¤arg1¤¤¤", METHOD_NAME, counter, readIndex));
+		assertEquals(2, readIndex.size());
+		assertEquals(0, readIndex.toArray()[0]);
+		assertEquals(1, readIndex.toArray()[1]);
+		
+		assertEquals("valueArg1 ", MappingValueUtil.parseMappingValue(inputParameters, "¤¤¤arg1¤¤¤ ", METHOD_NAME, counter, readIndex));
+		assertEquals(2, readIndex.size());
+		assertEquals(0, readIndex.toArray()[0]);
+		assertEquals(1, readIndex.toArray()[1]);
+		
+		assertEquals("valueArg11", MappingValueUtil.parseMappingValue(inputParameters, "¤¤¤arg1¤¤¤1", METHOD_NAME, counter, readIndex));
+		assertEquals(2, readIndex.size());
+		assertEquals(0, readIndex.toArray()[0]);
+		assertEquals(1, readIndex.toArray()[1]);
+		
+		assertEquals("valueArg1valueArg0", MappingValueUtil.parseMappingValue(inputParameters, "¤¤¤arg1¤¤¤¤¤¤arg0¤¤¤", METHOD_NAME, counter, readIndex));
+		assertEquals(2, readIndex.size());
+		assertEquals(0, readIndex.toArray()[0]);
+		assertEquals(1, readIndex.toArray()[1]);
+		
+		assertEquals("¤¤¤arg¤¤¤", MappingValueUtil.parseMappingValue(inputParameters, "¤¤¤arg¤¤¤", METHOD_NAME, counter, readIndex));
 		assertEquals(2, readIndex.size());
 		assertEquals(0, readIndex.toArray()[0]);
 		assertEquals(1, readIndex.toArray()[1]);
@@ -74,7 +104,7 @@ public class MappingValueUtilTest {
 		final Set<Integer> readIndex = new HashSet<>();			
 		assertEquals("a", MappingValueUtil.parseMappingValue(Lists.newArrayList(), "a", METHOD_NAME, counter, readIndex));
 		assertEquals(0, readIndex.size());		
-		assertEquals("%%%arg0%%%", MappingValueUtil.parseMappingValue(Lists.newArrayList(), "%%%arg0%%%", METHOD_NAME, counter, readIndex));
+		assertEquals("¤¤¤arg0¤¤¤", MappingValueUtil.parseMappingValue(Lists.newArrayList(), "¤¤¤arg0¤¤¤", METHOD_NAME, counter, readIndex));
 		assertEquals(0, readIndex.size());		
 	}
 

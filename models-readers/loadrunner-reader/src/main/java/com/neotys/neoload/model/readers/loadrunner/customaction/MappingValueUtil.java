@@ -10,10 +10,10 @@ import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 
 public class MappingValueUtil {
 
-	protected static final String VARIABLE_RETURN_VALUE = "%%%VariableReturnValue%%%";
-	private static final String ARGUMENT_REGEX_1 = "%%%arg";
+	protected static final String VARIABLE_RETURN_VALUE = "¤¤¤VariableReturnValue¤¤¤";
+	private static final String ARGUMENT_REGEX_1 = "¤¤¤arg";
 	private static final String ARGUMENT_REGEX_2 = "\\d+";
-	private static final String ARGUMENT_REGEX_3 = "%%%";
+	private static final String ARGUMENT_REGEX_3 = "¤¤¤";
 	private static final String ARGUMENT_REGEX = ARGUMENT_REGEX_1 + ARGUMENT_REGEX_2 + ARGUMENT_REGEX_3;
 	private MappingValueUtil() {}
 
@@ -29,7 +29,11 @@ public class MappingValueUtil {
 			final int argIndex = getArgIndex(text);
 			if(argIndex < inputParameters.size()){
 				readIndex.add(argIndex);
-				matcher.appendReplacement(result, inputParameters.get(argIndex));
+				final String parameterValue = MethodUtils.unquote(inputParameters.get(argIndex));
+				if(value.equals(text)){
+					return parameterValue;
+				}
+				matcher.appendReplacement(result, parameterValue);
 			} else {
 				matcher.appendReplacement(result, text);
 			}			

@@ -5,8 +5,8 @@ sapgui_open_connection_ex:
   parameters:
     connectionString: 
       type: TEXT
-      value: %%%arg0%%%
-  ignoreArgs: %%%arg1%%%, %%%arg2%%%
+      value: ¤¤¤arg0¤¤¤
+  ignoreArgs: ¤¤¤arg1¤¤¤, ¤¤¤arg2¤¤¤
 sapgui_set_ok_code:
   type: SapSetText
   isHit: false
@@ -17,7 +17,7 @@ sapgui_set_ok_code:
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/tbar[0]/okcd
     value:
       type: TEXT
-      value: %%%arg0%%%
+      value: ¤¤¤arg0¤¤¤
 sapgui_status_bar_get_text:
   type: SapRead
   isHit: false
@@ -28,7 +28,7 @@ sapgui_status_bar_get_text:
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/sbar
     textVariable:
       type: TEXT
-      value: %%%arg0%%%
+      value: ¤¤¤arg0¤¤¤
 sapgui_status_bar_get_type:
   type: SapRead
   isHit: false
@@ -39,40 +39,40 @@ sapgui_status_bar_get_type:
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/sbar
     typeVariable:
       type: TEXT
-      value: %%%arg0%%%
+      value: ¤¤¤arg0¤¤¤
 sapgui_is_object_available:
-  type: IsAvailable
+  type: SapIsAvailable
   isHit: false
   name: isavailable
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/%%%arg0%%%
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
     variable:
       type: TEXT
-      value: %%%VariableReturnValue%%%
+      value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_is_object_changeable:
-  type: IsChangeable
+  type: SapIsChangeable
   isHit: false
   name: ischangeable
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/%%%arg0%%%
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
     variable:
       type: TEXT
-      value: %%%VariableReturnValue%%%
+      value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_is_checkbox_selected: 
-  type: IsSelected
+  type: SapIsSelected
   isHit: false
   name: isselected
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/%%%arg0%%%
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
     variable:
       type: TEXT
-      value: %%%VariableReturnValue%%%
+      value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_is_radio_button_selected: 
   type: IsSelected
   isHit: false
@@ -80,10 +80,10 @@ sapgui_is_radio_button_selected:
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/%%%arg0%%%
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
     variable:
       type: TEXT
-      value: %%%VariableReturnValue%%%
+      value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_is_tab_selected: 
   type: IsSelected
   isHit: false
@@ -91,7 +91,7 @@ sapgui_is_tab_selected:
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/%%%arg0%%%
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
     variable:
       type: TEXT
-      value: %%%VariableReturnValue%%%
+      value: ¤¤¤VariableReturnValue¤¤¤
