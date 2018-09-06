@@ -5,7 +5,7 @@ import com.neotys.neoload.model.repository.ImmutableArgumentNumber;
 
 public class ImmutableMappingValue {
 	
-	private static final String ARG_PATTERN = "arg";
+	public static final String ARG_PATTERN = "arg";
 	
 	private final Either<String,ArgumentNumber> value;	
 	

@@ -21,6 +21,7 @@ public class ImmutableMappingMethodTest {
 		methodMapping.put("isHit", true);
 		methodMapping.put("name", "Connect");
 		methodMapping.put("parameters", parameters);
+		methodMapping.put("ignoreArgs", "arg1, arg2");
 
 		final ImmutableMappingMethod actualImmutableMappingMethod = ImmutableMappingMethod.build(methodMapping);
 		assertEquals("SapConnect", actualImmutableMappingMethod.getType());
@@ -33,6 +34,9 @@ public class ImmutableMappingMethodTest {
 		assertEquals("param2", actualImmutableMappingMethod.getParameters().get(1).getName());
 		assertEquals(1, actualImmutableMappingMethod.getParameters().get(1).getValue().getRight().get().getIndex());
 		assertEquals(Type.PASSWORD, actualImmutableMappingMethod.getParameters().get(1).getType());
+		assertEquals(2, actualImmutableMappingMethod.getIgnoreArgs().size());
+		assertEquals(1, actualImmutableMappingMethod.getIgnoreArgs().get(0).intValue());
+		assertEquals(2, actualImmutableMappingMethod.getIgnoreArgs().get(1).intValue());
 	}
 
 	private static Map<String, String> getMap(final String key1, final String value1, final String key2, final String value2) {

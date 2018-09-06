@@ -11,17 +11,20 @@ public class ImmutableMappingMethod {
 	private static final String IS_HIT_KEY = "isHit";
 	private static final String NAME_KEY = "name";	
 	private static final String PARAMETERS_KEY = "parameters";
+	private static final String IGNORE_ARGS_KEY = "ignoreArgs";
 	
 	private final String type;
 	private final boolean isHit;
 	private final String name;
 	private final List<ImmutableMappingParameter> parameters;
+	private final List<Integer> ignoreArgs;
 	
-	private ImmutableMappingMethod(final String type, final boolean isHit, final String name, final List<ImmutableMappingParameter> parameters) {
+	private ImmutableMappingMethod(final String type, final boolean isHit, final String name, final List<ImmutableMappingParameter> parameters, final List<Integer> ignoreArgs) {
 		this.type = type;
 		this.isHit = isHit;
 		this.name = name;
 		this.parameters = parameters;
+		this.ignoreArgs = ignoreArgs;
 	}
 	
 	public String getType() {
@@ -38,6 +41,10 @@ public class ImmutableMappingMethod {
 	
 	public List<ImmutableMappingParameter> getParameters() {
 		return parameters;
+	}
+	
+	public List<Integer> getIgnoreArgs() {
+		return ignoreArgs;
 	}
 	
 	public static ImmutableMappingMethod build(final Map<?,?> methodMapping){
@@ -67,6 +74,20 @@ public class ImmutableMappingMethod {
 		for(final Entry<?, ?> entry : ((Map<?,?>)parametersObject).entrySet()){
 			parameters.add(ImmutableMappingParameter.build(entry));
 		}		
-		return new ImmutableMappingMethod(type, isHit, name, parameters);
+		
+		final Object ignoreArgsObject = methodMapping.get(IGNORE_ARGS_KEY);
+		final List<Integer> ignoreArgs = new ArrayList<>();
+		if (ignoreArgsObject instanceof String) {		
+			for(final String argX : ((String)ignoreArgsObject).split(",")){
+				final String arg = argX.trim();
+				if(arg.startsWith(ImmutableMappingValue.ARG_PATTERN)){				
+					try{
+						ignoreArgs.add(Integer.parseInt(arg.substring(ImmutableMappingValue.ARG_PATTERN.length())));
+					} catch(final Exception e){				
+					}
+				}
+			}
+		}	
+		return new ImmutableMappingMethod(type, isHit, name, parameters, ignoreArgs);
 	}
 }

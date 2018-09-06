@@ -6,7 +6,7 @@ sapgui_open_connection_ex:
     connectionString: 
       type: TEXT
       value: arg0
-  ignoreArg: arg1, arg2
+  ignoreArgs: arg1, arg2
 sapgui_set_ok_code:
   type: SapSetText
   isHit: false
@@ -14,7 +14,7 @@ sapgui_set_ok_code:
   parameters:
     objectId:
       type: TEXT
-      value: SAP_ACTIVE_SESSION/SAP_ACTIVE_WINDOW/tbar[0]/okcd
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/tbar[0]/okcd
     value:
       type: TEXT
       value: arg0
@@ -25,7 +25,7 @@ sapgui_status_bar_get_text:
   parameters:
     objectId:
       type: TEXT
-      value: SAP_ACTIVE_SESSION/SAP_ACTIVE_WINDOW/sbar
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/sbar
     textVariable:
       type: TEXT
       value: arg0
@@ -36,7 +36,7 @@ sapgui_status_bar_get_type:
   parameters:
     objectId:
       type: TEXT
-      value: SAP_ACTIVE_SESSION/SAP_ACTIVE_WINDOW/sbar
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/sbar
     typeVariable:
       type: TEXT
       value: arg0
