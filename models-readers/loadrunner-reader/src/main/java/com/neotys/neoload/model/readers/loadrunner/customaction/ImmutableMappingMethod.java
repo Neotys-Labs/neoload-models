@@ -80,12 +80,9 @@ public class ImmutableMappingMethod {
 		final List<Integer> ignoreArgs = new ArrayList<>();
 		if (ignoreArgsObject instanceof String) {		
 			for(final String argX : ((String)ignoreArgsObject).split(",")){
-				final String arg = argX.trim();
-				if(arg.startsWith(ARG_PATTERN)){				
-					try{
-						ignoreArgs.add(Integer.parseInt(arg.substring(ARG_PATTERN.length())));
-					} catch(final Exception e){				
-					}
+				try{
+					ignoreArgs.add(Integer.parseInt(argX.trim().substring(ARG_PATTERN.length())));
+				} catch(final Exception e){				
 				}
 			}
 		}	
