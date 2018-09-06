@@ -22,11 +22,11 @@ public class CustomActionMethod implements LoadRunnerMethod {
 
 	private final AtomicInteger counter = new AtomicInteger(0);
 	
+	private static final Set<String> IGNORED_PARAMETER_VALUE = ImmutableSet.of("LAST", "");
+	
 	public CustomActionMethod() {
 		super();
-	}
-	
-	private static final Set<String> INGORED_PARAMETER_VALUE = ImmutableSet.of("LAST", "");
+	}	
 
 	@Override
 	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
@@ -63,7 +63,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 		for(int index = 0; index < inputParameters.size(); index++){
 			if(!readIndex.contains(index)){
 				final String unreadParameter = inputParameters.get(index);
-				if(!INGORED_PARAMETER_VALUE.contains(unreadParameter)){
+				if(!IGNORED_PARAMETER_VALUE.contains(unreadParameter)){
 					unreadParameters.add(inputParameters.get(index));
 				}
 			}
