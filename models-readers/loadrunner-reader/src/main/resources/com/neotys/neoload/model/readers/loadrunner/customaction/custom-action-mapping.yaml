@@ -184,6 +184,80 @@ sapgui_grid_get_cell_data:
     textVariable:
       type: TEXT
       value: ¤¤¤arg4¤¤¤
+sapgui_grid_open_context_menu:
+  type: SapRightClick
+  isHit: false
+  name: gridOpenContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_grid_press_column_header:
+  type: SapSelect
+  isHit: false
+  name: gridPressColumnHeader (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    pressColumnHeader:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_press_ENTER:
+  type: SapPress
+  isHit: false
+  name: gridPressENTER (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    key:
+      type: TEXT
+      value: ENTER
+sapgui_grid_press_F1:
+  type: SapPress
+  isHit: false
+  name: gridPressF1 (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    key:
+      type: TEXT
+      value: F1
+sapgui_grid_press_F4:
+  type: SapPress
+  isHit: false
+  name: gridPressF4 (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    key:
+      type: TEXT
+      value: F4
+sapgui_grid_press_toolbar_button:
+  type: SapClick
+  isHit: false
+  name: gridPressToolbarButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    toolbarButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_press_toolbar_context_button:
+  type: SapClick
+  isHit: false
+  name: gridPressToolbarContextButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    toolbarContextButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
 sapgui_get_status_bar_text:
   type: SapRead
   isHit: false
@@ -247,6 +321,23 @@ sapgui_is_checkbox_selected:
     objectId:
       type: TEXT
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_grid_is_checkbox_selected:
+  type: SapIsSelected
+  isHit: false
+  name: gridIsCheckboxSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
     variable:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
