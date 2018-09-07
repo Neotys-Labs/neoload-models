@@ -49,7 +49,8 @@ public class CustomActionMethod implements LoadRunnerMethod {
 		});
 		final CustomAction customAction = builder.build();
 		visitor.addInCurrentContainer(customAction);
-		final Set<String> unreadParameters = getUnreadParameters(method.getParameters(), readIndex);
+		readIndex.addAll(methodMapping.getIgnoreArgs());
+		final Set<String> unreadParameters = getUnreadParameters(method.getParameters(), readIndex);		
 		if(unreadParameters.isEmpty()){
 			visitor.readSupportedFunction(method.getName(), ctx);
 		} else {

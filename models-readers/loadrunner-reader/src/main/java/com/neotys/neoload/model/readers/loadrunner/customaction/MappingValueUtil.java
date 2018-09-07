@@ -43,7 +43,7 @@ public class MappingValueUtil {
 		return MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), result.toString());
 	}
 	
-	private static int getArgIndex(final String content){
+	public static int getArgIndex(final String content){
 		try{
 			return Integer.parseInt(content.substring(ARGUMENT_REGEX_1.length(), content.length() - ARGUMENT_REGEX_3.length()));
 		} catch(final Exception e){}

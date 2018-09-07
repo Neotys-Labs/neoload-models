@@ -11,8 +11,7 @@ public class ImmutableMappingMethod {
 	private static final String IS_HIT_KEY = "isHit";
 	private static final String NAME_KEY = "name";	
 	private static final String PARAMETERS_KEY = "parameters";
-	private static final String IGNORE_ARGS_KEY = "ignoreArgs";
-	private static final String ARG_PATTERN = "arg";
+	private static final String IGNORE_ARGS_KEY = "ignoreArgs";	
 	
 	private final String type;
 	private final boolean isHit;
@@ -80,10 +79,7 @@ public class ImmutableMappingMethod {
 		final List<Integer> ignoreArgs = new ArrayList<>();
 		if (ignoreArgsObject instanceof String) {		
 			for(final String argX : ((String)ignoreArgsObject).split(",")){
-				try{
-					ignoreArgs.add(Integer.parseInt(argX.trim().substring(ARG_PATTERN.length())));
-				} catch(final Exception e){				
-				}
+				ignoreArgs.add(MappingValueUtil.getArgIndex(argX.trim()));			
 			}
 		}	
 		return new ImmutableMappingMethod(type, isHit, name, parameters, ignoreArgs);
