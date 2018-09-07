@@ -355,6 +355,44 @@ sapgui_grid_set_cell_data:
     value:
       type: TEXT
       value: ¤¤¤arg4¤¤¤
+sapgui_select_combobox_entry:
+  type: SapSelect
+  isHit: false
+  name: selectComboboxEntry (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    optionValue:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_select_menu:
+  type: SapClick
+  isHit: false
+  name: selectMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_select_radio_button:
+  type: SapSelect
+  isHit: false
+  name: selectRadioButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_set_checkbox:
+  type: SapSelect
+  isHit: false
+  name: selectCheckbox (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg2¤¤¤
+    optionValue:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
 sapgui_get_status_bar_text:
   type: SapRead
   isHit: false
