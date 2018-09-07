@@ -6,7 +6,7 @@ sapgui_open_connection_ex:
     connectionString: 
       type: TEXT
       value: ¤¤¤arg0¤¤¤
-  ignoreArgs: ¤¤¤arg1¤¤¤, ¤¤¤arg2¤¤¤
+  ignoreArgs: ¤¤¤arg1¤¤¤
 sapgui_open_connection: 
   type: SapConnect
   isHit: true
@@ -15,7 +15,7 @@ sapgui_open_connection:
     connectionName: 
       type: TEXT
       value: ¤¤¤arg0¤¤¤
-  ignoreArgs: ¤¤¤arg1¤¤¤
+  ignoreArgs: 
 sapgui_set_ok_code:
   type: SapSetText
   isHit: false
@@ -477,7 +477,7 @@ sapgui_grid_is_checkbox_selected:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_is_radio_button_selected: 
-  type: IsSelected
+  type: SapIsSelected
   isHit: false
   name: isselected
   parameters:
@@ -488,7 +488,7 @@ sapgui_is_radio_button_selected:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_is_tab_selected: 
-  type: IsSelected
+  type: SapIsSelected
   isHit: false
   name: isselected
   parameters:
@@ -498,3 +498,11 @@ sapgui_is_tab_selected:
     variable:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_set_focus: 
+  type: SapFocus
+  isHit: true
+  name: SetFocus
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
