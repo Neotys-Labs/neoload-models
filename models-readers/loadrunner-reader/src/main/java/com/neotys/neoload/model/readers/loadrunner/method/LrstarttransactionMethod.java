@@ -4,7 +4,6 @@ import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
-import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.ImmutableContainer;
 
 public class LrstarttransactionMethod  implements LoadRunnerMethod {
@@ -24,7 +23,7 @@ public class LrstarttransactionMethod  implements LoadRunnerMethod {
 		}		
 		visitor.readSupportedFunction(method.getName(), ctx);
 		final String firstParameter = method.getParameters().get(0);
-		final String transactionName = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), firstParameter);
+		final String transactionName = firstParameter.replaceAll("[^a-zA-Z0-9]+","_");
 		final ImmutableContainer.Builder currentContainer = ImmutableContainer.builder().name(transactionName);
 		visitor.getCurrentContainers().add(currentContainer);		
 		return null;
