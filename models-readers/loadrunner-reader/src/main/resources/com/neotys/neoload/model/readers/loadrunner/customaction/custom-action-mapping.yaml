@@ -18,6 +18,17 @@ sapgui_set_ok_code:
     value:
       type: TEXT
       value: ¤¤¤arg0¤¤¤
+sapgui_send_vkey:
+  type: SapPress
+  isHit: true
+  name: sendVkey
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}
+    key:
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
 sapgui_status_bar_get_text:
   type: SapRead
   isHit: false
