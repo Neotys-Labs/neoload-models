@@ -506,3 +506,14 @@ sapgui_set_focus:
     objectId:
       type: TEXT
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+sapgui_set_password:
+  type: SapSetText
+  isHit: false
+  name: setText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg2¤¤¤
+    value:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
