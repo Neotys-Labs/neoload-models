@@ -29,6 +29,33 @@ sapgui_send_vkey:
     key:
       type: TEXT
       value: ¤¤¤arg0¤¤¤
+sapgui_set_text:
+  type: SapSetText
+  isHit: false
+  name: setText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    value:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_press_button:
+  type: SapClick
+  isHit: true
+  name: click (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_select_tab:
+  type: SapClick
+  isHit: true
+  name: click (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
 sapgui_status_bar_get_text:
   type: SapRead
   isHit: false
