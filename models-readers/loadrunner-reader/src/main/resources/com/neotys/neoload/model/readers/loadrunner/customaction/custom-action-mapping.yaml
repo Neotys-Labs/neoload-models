@@ -7,6 +7,15 @@ sapgui_open_connection_ex:
       type: TEXT
       value: ¤¤¤arg0¤¤¤
   ignoreArgs: ¤¤¤arg1¤¤¤, ¤¤¤arg2¤¤¤
+sapgui_open_connection: 
+  type: SapConnect
+  isHit: true
+  name: Connect
+  parameters:
+    connectionName: 
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+  ignoreArgs: ¤¤¤arg1¤¤¤
 sapgui_set_ok_code:
   type: SapSetText
   isHit: false
