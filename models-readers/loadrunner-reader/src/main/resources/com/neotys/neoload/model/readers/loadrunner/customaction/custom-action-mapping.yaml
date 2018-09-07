@@ -258,6 +258,103 @@ sapgui_grid_press_toolbar_context_button:
     toolbarContextButton:
       type: TEXT
       value: ¤¤¤arg2¤¤¤
+sapgui_grid_select_all:
+  type: SapSelect
+  isHit: false
+  name: gridSelectAll (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    all:
+      type: TEXT
+      value: true
+sapgui_grid_select_cell:
+  type: SapSelect
+  isHit: false
+  name: gridSelectCell (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    currentCellRow:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    currentCellColumn:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_grid_select_column:
+  type: SapSelect
+  isHit: false
+  name: gridSelectColumn (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_select_context_menu:
+  type: SapClick
+  isHit: false
+  name: gridSelectContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    contextButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_select_rows:
+  type: SapSelect
+  isHit: false
+  name: gridSelectRows (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    rows:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_select_toolbar_menu:
+  type: SapClick
+  isHit: false
+  name: gridSelectToolbarMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    menuItem:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_selection_changed:
+  type: SapSelect
+  isHit: false
+  name: gridSelectionChanged (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    selectionChanged:
+      type: TEXT
+      value: true
+sapgui_grid_set_cell_data:
+  type: SapSetText
+  isHit: false
+  name: gridSetCellData (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    value:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
 sapgui_get_status_bar_text:
   type: SapRead
   isHit: false
