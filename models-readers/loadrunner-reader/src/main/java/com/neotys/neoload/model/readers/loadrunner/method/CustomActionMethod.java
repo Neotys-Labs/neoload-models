@@ -35,11 +35,11 @@ public class CustomActionMethod implements LoadRunnerMethod {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot find mapping for method " + method.getName());
 			return null;
 		}		
+		final Set<Integer> readIndex = new HashSet<>();
 		final Builder builder = ImmutableCustomAction.builder();
 		builder.type(methodMapping.getType());
 		builder.isHit(methodMapping.isHit());
-		builder.name(methodMapping.getName());
-		final Set<Integer> readIndex = new HashSet<>();
+		builder.name(MappingValueUtil.parseMappingValue(method.getParameters(), methodMapping.getName(), method.getName(), counter, readIndex));		
 		methodMapping.getParameters().forEach(p ->  {
 			final ImmutableCustomActionParameter.Builder paramBuilder = ImmutableCustomActionParameter.builder();	
 			paramBuilder.name(p.getName());			
