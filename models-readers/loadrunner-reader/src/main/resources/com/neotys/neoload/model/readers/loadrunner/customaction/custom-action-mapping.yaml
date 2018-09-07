@@ -98,6 +98,92 @@ sapgui_select_tab:
     objectId:
       type: TEXT
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_grid_clear_selection:
+  type: SapUnselect
+  isHit: false
+  name: gridClearSelection (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    clear:
+      type: TEXT
+      value: true
+sapgui_grid_click:
+  type: SapClick
+  isHit: false
+  name: gridClick (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_grid_click_current_cell:
+  type: SapClick
+  isHit: false
+  name: gridClickCurrenCell (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_grid_deselect_column:
+  type: SapSelect
+  isHit: false
+  name: gridDeselectColumn (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    optionValue:
+      type: TEXT
+      value: false
+sapgui_grid_double_click:
+  type: SapDoubleClick
+  isHit: false
+  name: gridDoubleClick (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_grid_double_click_current_cell:
+  type: SapDoubleClick
+  isHit: false
+  name: gridDoubleClickCurrenCell (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_grid_get_cell_data:
+  type: SapRead
+  isHit: false
+  name: gridGetCellData (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
 sapgui_get_status_bar_text:
   type: SapRead
   isHit: false
