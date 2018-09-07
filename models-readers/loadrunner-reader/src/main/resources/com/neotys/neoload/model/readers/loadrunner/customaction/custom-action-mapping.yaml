@@ -36,10 +36,10 @@ sapgui_set_text:
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg2¤¤¤
     value:
       type: TEXT
-      value: ¤¤¤arg2¤¤¤
+      value: ¤¤¤arg1¤¤¤
 sapgui_press_button:
   type: SapClick
   isHit: true
