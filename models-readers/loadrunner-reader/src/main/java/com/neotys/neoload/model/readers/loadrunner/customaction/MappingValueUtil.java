@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 
 public class MappingValueUtil {
@@ -17,7 +18,7 @@ public class MappingValueUtil {
 	private static final String ARGUMENT_REGEX = ARGUMENT_REGEX_1 + ARGUMENT_REGEX_2 + ARGUMENT_REGEX_3;
 	private MappingValueUtil() {}
 
-	public static String parseMappingValue(final List<String> inputParameters, final String value, final String methodName, final AtomicInteger counter, final Set<Integer> readIndex){
+	public static String parseMappingValue(final LoadRunnerVUVisitor visitor, final List<String> inputParameters, final String value, final String methodName, final AtomicInteger counter, final Set<Integer> readIndex){
 		if(VARIABLE_RETURN_VALUE.equals(value)){
 			return methodName + "_" + counter.incrementAndGet();
 		}
@@ -29,7 +30,7 @@ public class MappingValueUtil {
 			final int argIndex = getArgIndex(text);
 			if(argIndex < inputParameters.size()){
 				readIndex.add(argIndex);
-				final String parameterValue = MethodUtils.unquote(inputParameters.get(argIndex));
+				final String parameterValue = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), inputParameters.get(argIndex));
 				if(value.equals(text)){
 					return parameterValue;
 				}
@@ -39,7 +40,7 @@ public class MappingValueUtil {
 			}			
 		}
 		matcher.appendTail(result);
-		return MethodUtils.unquote(result.toString());
+		return MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), result.toString());
 	}
 	
 	private static int getArgIndex(final String content){

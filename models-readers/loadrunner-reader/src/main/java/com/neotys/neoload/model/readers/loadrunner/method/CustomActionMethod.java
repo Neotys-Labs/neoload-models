@@ -39,11 +39,11 @@ public class CustomActionMethod implements LoadRunnerMethod {
 		final Builder builder = ImmutableCustomAction.builder();
 		builder.type(methodMapping.getType());
 		builder.isHit(methodMapping.isHit());
-		builder.name(MappingValueUtil.parseMappingValue(method.getParameters(), methodMapping.getName(), method.getName(), counter, readIndex));		
+		builder.name(MappingValueUtil.parseMappingValue(visitor, method.getParameters(), methodMapping.getName(), method.getName(), counter, readIndex));		
 		methodMapping.getParameters().forEach(p ->  {
 			final ImmutableCustomActionParameter.Builder paramBuilder = ImmutableCustomActionParameter.builder();	
 			paramBuilder.name(p.getName());			
-			paramBuilder.value(MappingValueUtil.parseMappingValue(method.getParameters(), p.getValue(), method.getName(), counter, readIndex));			
+			paramBuilder.value(MappingValueUtil.parseMappingValue(visitor, method.getParameters(), p.getValue(), method.getName(), counter, readIndex));			
 			paramBuilder.type(p.getType());	
 			builder.addParameters(paramBuilder.build());
 		});

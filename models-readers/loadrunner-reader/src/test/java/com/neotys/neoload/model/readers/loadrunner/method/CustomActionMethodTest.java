@@ -20,14 +20,15 @@ public class CustomActionMethodTest {
 	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
 	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
 	private static final MethodcallContext METHOD_CALL_CONTEXT = new MethodcallContext(null, 0);
-	private static final String CONNECTION_STRING = "   /SAP_CODEPAGE=1100   /FULLMENU SNC_PARTNERNAME=\"\" SNC_QOP=-1 /H/${SAP_IP_ADDRESS}/S/3217 /UPDOWNLOAD_CP=2";
+	private static final String CONNECTION_STRING_LR = "   /SAP_CODEPAGE=1100   /FULLMENU SNC_PARTNERNAME=\"\" SNC_QOP=-1 /H/{SAP_IP_ADDRESS}/S/3217 /UPDOWNLOAD_CP=2";
+	private static final String CONNECTION_STRING_NL = "   /SAP_CODEPAGE=1100   /FULLMENU SNC_PARTNERNAME=\"\" SNC_QOP=-1 /H/${SAP_IP_ADDRESS}/S/3217 /UPDOWNLOAD_CP=2";
 
 	@Test
 	public void test_sapgui_open_connection_ex() {
 		final CustomAction actualCustomAction = (CustomAction) (new CustomActionMethod()).getElement(LOAD_RUNNER_VISITOR,
 				ImmutableMethodCall.builder()
 					.name("sapgui_open_connection_ex")
-					.addParameters("\"" + CONNECTION_STRING + "\"")
+					.addParameters("\"" + CONNECTION_STRING_LR + "\"")
 					.addParameters("\"\"")
 					.addParameters("\"con[0]\"")
 					.build()
@@ -39,7 +40,7 @@ public class CustomActionMethodTest {
 				.isHit(true)
 				.parameters(ImmutableList.of(ImmutableCustomActionParameter.builder()
 						.name("connectionString")
-						.value(CONNECTION_STRING)
+						.value(CONNECTION_STRING_NL)
 						.type(Type.TEXT)
 						.build()))
 				.build();
