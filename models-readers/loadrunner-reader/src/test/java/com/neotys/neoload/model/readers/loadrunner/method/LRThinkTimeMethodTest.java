@@ -24,7 +24,7 @@ public class LRThinkTimeMethodTest {
 		assertDelay("10", "10000");
 		assertDelay("10.00", "10000");	
 		assertDelay("0", "0");
-		assertDelay("a", "a000");
+		assertDelay("a", "${a}000");		
 		assertDelay("${a}", "${a}000");
 	}
 	

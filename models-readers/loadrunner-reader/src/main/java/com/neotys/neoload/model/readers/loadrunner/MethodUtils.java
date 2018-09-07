@@ -110,6 +110,9 @@ public class MethodUtils {
 	}
 	
 	public static String getVariableSyntax(final String variableName) {
+		if(variableName.startsWith(NL_VARIABLE_START) && variableName.endsWith(NL_VARIABLE_END)){
+			return variableName;
+		}
 		return NL_VARIABLE_START + variableName + NL_VARIABLE_END;
 	}
 	
