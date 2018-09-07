@@ -13,6 +13,7 @@ import com.neotys.neoload.model.repository.ImmutableCustomActionParameter;
 
 public class SapguilogonMethod implements LoadRunnerMethod {
 
+	private static final String GUI_TEXT_FIELD = "GuiTextField";
 	public SapguilogonMethod() {
 		super();
 	}
@@ -38,7 +39,7 @@ public class SapguilogonMethod implements LoadRunnerMethod {
 				"username", 
 				"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/usr/txtRSYST-BNAME", 
 				"RSYST-BNAME", 
-				"GuiTextField", 
+				GUI_TEXT_FIELD, 
 				method.getParameters().get(0), 
 				Type.TEXT
 			);		
@@ -49,7 +50,7 @@ public class SapguilogonMethod implements LoadRunnerMethod {
 				"password", 
 				"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/usr/pwdRSYST-BCODE", 
 				"RSYST-BCODE", 
-				"GuiTextField", 
+				GUI_TEXT_FIELD, 
 				method.getParameters().get(1), 
 				Type.PASSWORD
 			);		
@@ -60,7 +61,7 @@ public class SapguilogonMethod implements LoadRunnerMethod {
 				"clientnum", 
 				"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/usr/txtRSYST-MANDT", 
 				"RSYST-MANDT", 
-				"GuiTextField", 
+				GUI_TEXT_FIELD, 
 				method.getParameters().get(2), 
 				Type.TEXT
 			);		
@@ -71,7 +72,7 @@ public class SapguilogonMethod implements LoadRunnerMethod {
 				"language", 
 				"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/usr/txtRSYST-LANGU", 
 				"RSYST-LANGU", 
-				"GuiTextField", 
+				GUI_TEXT_FIELD, 
 				method.getParameters().get(3), 
 				Type.TEXT
 			);		
