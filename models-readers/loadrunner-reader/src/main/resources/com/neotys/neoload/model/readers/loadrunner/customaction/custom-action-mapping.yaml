@@ -517,3 +517,11 @@ sapgui_set_password:
     value:
       type: TEXT
       value: ¤¤¤arg1¤¤¤
+sapgui_window_close: 
+  type: SapClose
+  isHit: true
+  name: close
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/
