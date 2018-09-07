@@ -40,7 +40,7 @@ public class MappingValueUtil {
 			}			
 		}
 		matcher.appendTail(result);
-		return MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), result.toString());
+		return result.toString();
 	}
 	
 	public static int getArgIndex(final String content){

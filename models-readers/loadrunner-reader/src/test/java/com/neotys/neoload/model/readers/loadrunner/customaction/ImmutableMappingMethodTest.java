@@ -21,7 +21,7 @@ public class ImmutableMappingMethodTest {
 		methodMapping.put("isHit", true);
 		methodMapping.put("name", "Connect");
 		methodMapping.put("parameters", parameters);
-		methodMapping.put("ignoreArgs", "arg1, arg2");
+		methodMapping.put("ignoreArgs", "¤¤¤arg1¤¤¤, ¤¤¤arg2¤¤¤");
 
 		final ImmutableMappingMethod actualImmutableMappingMethod = ImmutableMappingMethod.build(methodMapping);
 		assertEquals("SapConnect", actualImmutableMappingMethod.getType());
