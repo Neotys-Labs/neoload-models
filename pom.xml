@@ -4,7 +4,7 @@
 
 	<groupId>com.neotys.neoload</groupId>
 	<artifactId>neoload-models</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<modules>
 		<module>neoload-project</module>
 		<module>neoload-writer</module>
