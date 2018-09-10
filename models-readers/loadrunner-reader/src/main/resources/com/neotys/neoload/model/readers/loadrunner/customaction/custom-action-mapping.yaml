@@ -1,7 +1,7 @@
 sapgui_open_connection_ex: 
   type: SapConnect
   isHit: true
-  name: Connect
+  name: openConnectionEx
   parameters:
     connectionString: 
       type: TEXT
@@ -10,7 +10,7 @@ sapgui_open_connection_ex:
 sapgui_open_connection: 
   type: SapConnect
   isHit: true
-  name: Connect
+  name: openConnection
   parameters:
     connectionName: 
       type: TEXT
@@ -19,7 +19,7 @@ sapgui_open_connection:
 sapgui_set_ok_code:
   type: SapSetText
   isHit: false
-  name: SetOkCode
+  name: setOkCode
   parameters:
     objectId:
       type: TEXT
@@ -52,7 +52,7 @@ sapgui_set_text:
 sapgui_press_button:
   type: SapClick
   isHit: true
-  name: click (¤¤¤arg0¤¤¤)
+  name: pressButton (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
       type: TEXT
@@ -396,7 +396,7 @@ sapgui_set_checkbox:
 sapgui_get_status_bar_text:
   type: SapRead
   isHit: false
-  name: readStatusBarText
+  name: getStatusBarText
   parameters:
     objectId:
       type: TEXT
@@ -407,7 +407,7 @@ sapgui_get_status_bar_text:
 sapgui_status_bar_get_text:
   type: SapRead
   isHit: false
-  name: readStatusBarText
+  name: statusBarGetText
   parameters:
     objectId:
       type: TEXT
@@ -418,7 +418,7 @@ sapgui_status_bar_get_text:
 sapgui_status_bar_get_type:
   type: SapRead
   isHit: false
-  name: readStatusBarType
+  name: statusBarGetType
   parameters:
     objectId:
       type: TEXT
@@ -429,7 +429,7 @@ sapgui_status_bar_get_type:
 sapgui_is_object_available:
   type: SapIsAvailable
   isHit: false
-  name: isavailable
+  name: isObjectAvailable
   parameters:
     objectId:
       type: TEXT
@@ -440,7 +440,7 @@ sapgui_is_object_available:
 sapgui_is_object_changeable:
   type: SapIsChangeable
   isHit: false
-  name: ischangeable
+  name: isObjectChangeable
   parameters:
     objectId:
       type: TEXT
@@ -451,11 +451,11 @@ sapgui_is_object_changeable:
 sapgui_is_checkbox_selected: 
   type: SapIsSelected
   isHit: false
-  name: isselected
+  name: isCheckBoxSelected (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
     variable:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
@@ -541,29 +541,29 @@ sapgui_table_is_row_selected:
 sapgui_is_radio_button_selected: 
   type: SapIsSelected
   isHit: false
-  name: isselected
+  name: isRadioButtonSelected (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
     variable:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_is_tab_selected: 
   type: SapIsSelected
   isHit: false
-  name: isselected
+  name: isTabSelected (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
     variable:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_tree_is_checkbox_selected:
   type: SapIsSelected
   isHit: false
-  name: isCheckboxSelected (¤¤¤arg0¤¤¤)
+  name: treeIsCheckboxSelected (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
       type: TEXT
@@ -580,7 +580,7 @@ sapgui_tree_is_checkbox_selected:
 sapgui_set_focus: 
   type: SapFocus
   isHit: true
-  name: SetFocus
+  name: setFocus
   parameters:
     objectId:
       type: TEXT
@@ -588,7 +588,7 @@ sapgui_set_focus:
 sapgui_table_set_row_selected:
   type: SapSelect
   isHit: true
-  name: setRowSelected
+  name: tableSetRowSelected
   parameters:
     objectId:
       type: TEXT
@@ -847,4 +847,4 @@ sapgui_window_close:
   parameters:
     objectId:
       type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}
