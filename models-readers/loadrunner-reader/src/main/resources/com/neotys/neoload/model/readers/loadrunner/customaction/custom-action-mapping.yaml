@@ -111,7 +111,7 @@ sapgui_grid_clear_selection:
       value: true
 sapgui_grid_click:
   type: SapClick
-  isHit: false
+  isHit: true
   name: gridClick (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -125,7 +125,7 @@ sapgui_grid_click:
       value: ¤¤¤arg3¤¤¤
 sapgui_grid_click_current_cell:
   type: SapClick
-  isHit: false
+  isHit: true
   name: gridClickCurrenCell (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -147,7 +147,7 @@ sapgui_grid_deselect_column:
       value: false
 sapgui_grid_double_click:
   type: SapDoubleClick
-  isHit: false
+  isHit: true
   name: gridDoubleClick (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -161,7 +161,7 @@ sapgui_grid_double_click:
       value: ¤¤¤arg3¤¤¤
 sapgui_grid_double_click_current_cell:
   type: SapDoubleClick
-  isHit: false
+  isHit: true
   name: gridDoubleClickCurrenCell (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -205,7 +205,7 @@ sapgui_grid_press_column_header:
       value: ¤¤¤arg2¤¤¤
 sapgui_grid_press_ENTER:
   type: SapPress
-  isHit: false
+  isHit: true
   name: gridPressENTER (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -216,7 +216,7 @@ sapgui_grid_press_ENTER:
       value: ENTER
 sapgui_grid_press_F1:
   type: SapPress
-  isHit: false
+  isHit: true
   name: gridPressF1 (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -227,7 +227,7 @@ sapgui_grid_press_F1:
       value: F1
 sapgui_grid_press_F4:
   type: SapPress
-  isHit: false
+  isHit: true
   name: gridPressF4 (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -238,7 +238,7 @@ sapgui_grid_press_F4:
       value: F4
 sapgui_grid_press_toolbar_button:
   type: SapClick
-  isHit: false
+  isHit: true
   name: gridPressToolbarButton (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -249,7 +249,7 @@ sapgui_grid_press_toolbar_button:
       value: ¤¤¤arg2¤¤¤
 sapgui_grid_press_toolbar_context_button:
   type: SapClick
-  isHit: false
+  isHit: true
   name: gridPressToolbarContextButton (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -296,7 +296,7 @@ sapgui_grid_select_column:
       value: ¤¤¤arg2¤¤¤
 sapgui_grid_select_context_menu:
   type: SapClick
-  isHit: false
+  isHit: true
   name: gridSelectContextMenu (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -318,7 +318,7 @@ sapgui_grid_select_rows:
       value: ¤¤¤arg2¤¤¤
 sapgui_grid_select_toolbar_menu:
   type: SapClick
-  isHit: false
+  isHit: true
   name: gridSelectToolbarMenu (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -368,7 +368,7 @@ sapgui_select_combobox_entry:
       value: ¤¤¤arg2¤¤¤
 sapgui_select_menu:
   type: SapClick
-  isHit: false
+  isHit: true
   name: selectMenu (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -615,7 +615,7 @@ sapgui_text_edit_set_selection_indexes:
       value: ¤¤¤arg3¤¤¤
 sapgui_toolbar_press_button:
   type: SapClick
-  isHit: false
+  isHit: true
   name: toolbarPressButton (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -626,7 +626,7 @@ sapgui_toolbar_press_button:
       value: ¤¤¤arg2¤¤¤
 sapgui_toolbar_press_context_button:
   type: SapClick
-  isHit: false
+  isHit: true
   name: toolbarPressContextButton (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -637,7 +637,7 @@ sapgui_toolbar_press_context_button:
       value: ¤¤¤arg2¤¤¤
 sapgui_toolbar_select_menu_item:
   type: SapClick
-  isHit: false
+  isHit: true
   name: toolbarSelectMenuItem (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -648,7 +648,7 @@ sapgui_toolbar_select_menu_item:
       value: ¤¤¤arg2¤¤¤
 sapgui_tree_click_link:
   type: SapClick
-  isHit: false
+  isHit: true
   name: treeClickLink (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -662,7 +662,7 @@ sapgui_tree_click_link:
       value: ¤¤¤arg3¤¤¤
 sapgui_tree_double_click_item:
   type: SapDoubleClick
-  isHit: false
+  isHit: true
   name: treeDoubleClickItem (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -676,7 +676,7 @@ sapgui_tree_double_click_item:
       value: ¤¤¤arg3¤¤¤
 sapgui_tree_double_click_node:
   type: SapDoubleClick
-  isHit: false
+  isHit: true
   name: treeDoubleClickNode (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -687,7 +687,7 @@ sapgui_tree_double_click_node:
       value: ¤¤¤arg2¤¤¤
 sapgui_tree_expand_node:
   type: SapExpand
-  isHit: false
+  isHit: true
   name: treeExpandNode (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -723,7 +723,7 @@ sapgui_tree_open_node_context_menu:
       value: ¤¤¤arg2¤¤¤
 sapgui_tree_press_button:
   type: SapClick
-  isHit: false
+  isHit: true
   name: treePressButton (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -740,7 +740,7 @@ sapgui_tree_press_button:
       value: true
 sapgui_tree_press_key:
   type: SapPress
-  isHit: false
+  isHit: true
   name: treePressKey (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -762,7 +762,7 @@ sapgui_tree_scroll_to_node:
       value: ¤¤¤arg2¤¤¤
 sapgui_tree_select_context_menu:
   type: SapClick
-  isHit: false
+  isHit: true
   name: treeSelectContextMenu (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -773,7 +773,7 @@ sapgui_tree_select_context_menu:
       value: ¤¤¤arg2¤¤¤
 sapgui_tree_select_item:
   type: SapClick
-  isHit: false
+  isHit: true
   name: treeSelectItem (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
