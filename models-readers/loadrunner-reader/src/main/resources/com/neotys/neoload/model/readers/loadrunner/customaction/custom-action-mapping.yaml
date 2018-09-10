@@ -696,6 +696,70 @@ sapgui_tree_expand_node:
     nodeKey:
       type: TEXT
       value: ¤¤¤arg2¤¤¤
+sapgui_tree_open_item_context_menu:
+  type: SapRightClick
+  isHit: false
+  name: treeOpenItemContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_tree_open_node_context_menu:
+  type: SapRightClick
+  isHit: false
+  name: treeOpenNodeContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_press_button:
+  type: SapClick
+  isHit: false
+  name: treePressButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    buttonPress:
+      type: TEXT
+      value: true
+sapgui_tree_press_key:
+  type: SapPress
+  isHit: false
+  name: treePressKey (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    key:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_scroll_to_node:
+  type: SapSelect
+  isHit: false
+  name: treeScrollToNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    topNode:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
 sapgui_set_password:
   type: SapSetText
   isHit: false
