@@ -760,6 +760,75 @@ sapgui_tree_scroll_to_node:
     topNode:
       type: TEXT
       value: ¤¤¤arg2¤¤¤
+sapgui_tree_select_context_menu:
+  type: SapClick
+  isHit: false
+  name: treeSelectContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    menuItem:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_select_item:
+  type: SapClick
+  isHit: false
+  name: treeSelectItem (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    menuItem:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_tree_select_node:
+  type: SapClick
+  isHit: false
+  name: treeSelectNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_set_selected_node:
+  type: SapClick
+  isHit: false
+  name: treeSetSelectNode(¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_unselect_all:
+  type: SapUnselect
+  isHit: false
+  name: treeUnselectAll (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    clear:
+      type: TEXT
+      value: true
+sapgui_tree_unselect_node:
+  type: SapUnselect
+  isHit: false
+  name: treeUnselectNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
 sapgui_set_password:
   type: SapSetText
   isHit: false
