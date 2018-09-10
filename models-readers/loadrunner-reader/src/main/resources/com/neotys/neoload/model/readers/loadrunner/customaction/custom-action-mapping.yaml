@@ -560,6 +560,23 @@ sapgui_is_tab_selected:
     variable:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_tree_is_checkbox_selected:
+  type: SapIsSelected
+  isHit: false
+  name: isCheckboxSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_set_focus: 
   type: SapFocus
   isHit: true
@@ -627,6 +644,56 @@ sapgui_toolbar_select_menu_item:
       type: TEXT
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
     menuItem:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_click_link:
+  type: SapClick
+  isHit: false
+  name: treeClickLink (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_tree_double_click_item:
+  type: SapDoubleClick
+  isHit: false
+  name: treeDoubleClickItem (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_tree_double_click_node:
+  type: SapDoubleClick
+  isHit: false
+  name: treeDoubleClickNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_expand_node:
+  type: SapExpand
+  isHit: false
+  name: treeExpandNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
       type: TEXT
       value: ¤¤¤arg2¤¤¤
 sapgui_set_password:
