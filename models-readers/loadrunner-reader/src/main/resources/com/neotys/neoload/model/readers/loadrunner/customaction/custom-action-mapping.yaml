@@ -476,6 +476,68 @@ sapgui_grid_is_checkbox_selected:
     variable:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_table_is_column_selected:
+  type: SapIsSelected
+  isHit: false
+  name: tableIsColumnSelected
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_table_is_checkbox_selected:
+  type: SapIsSelected
+  isHit: false
+  name: tableIsCheckboxSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_table_is_radio_button_selected:
+  type: SapIsSelected
+  isHit: false
+  name: tableIsRadioButtonSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_table_is_row_selected:
+  type: SapIsSelected
+  isHit: false
+  name: tableIsRowSelected
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_is_radio_button_selected: 
   type: SapIsSelected
   isHit: false
