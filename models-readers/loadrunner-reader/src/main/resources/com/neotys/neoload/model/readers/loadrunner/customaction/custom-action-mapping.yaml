@@ -568,6 +568,67 @@ sapgui_set_focus:
     objectId:
       type: TEXT
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+sapgui_table_set_row_selected:
+  type: SapSelect
+  isHit: true
+  name: setRowSelected
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    absoluteRow:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+    optionValue:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_text_edit_set_selection_indexes:
+  type: SapSelect
+  isHit: false
+  name: textEditSetSelectionIndexes (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    start:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    end:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_toolbar_press_button:
+  type: SapClick
+  isHit: false
+  name: toolbarPressButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    toolbarButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_toolbar_press_context_button:
+  type: SapClick
+  isHit: false
+  name: toolbarPressContextButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    contextButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_toolbar_select_menu_item:
+  type: SapClick
+  isHit: false
+  name: toolbarSelectMenuItem (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    menuItem:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
 sapgui_set_password:
   type: SapSetText
   isHit: false
