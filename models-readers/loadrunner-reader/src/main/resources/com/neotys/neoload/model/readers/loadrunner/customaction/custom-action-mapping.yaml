@@ -186,7 +186,7 @@ sapgui_grid_get_cell_data:
       value: ¤¤¤arg4¤¤¤
 sapgui_grid_open_context_menu:
   type: SapRightClick
-  isHit: false
+  isHit: true
   name: gridOpenContextMenu (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -579,7 +579,7 @@ sapgui_tree_is_checkbox_selected:
       value: ¤¤¤VariableReturnValue¤¤¤
 sapgui_set_focus: 
   type: SapFocus
-  isHit: true
+  isHit: false
   name: setFocus
   parameters:
     objectId:
@@ -587,7 +587,7 @@ sapgui_set_focus:
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
 sapgui_table_set_row_selected:
   type: SapSelect
-  isHit: true
+  isHit: false
   name: tableSetRowSelected
   parameters:
     objectId:
@@ -698,7 +698,7 @@ sapgui_tree_expand_node:
       value: ¤¤¤arg2¤¤¤
 sapgui_tree_open_item_context_menu:
   type: SapRightClick
-  isHit: false
+  isHit: true
   name: treeOpenItemContextMenu (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -712,7 +712,7 @@ sapgui_tree_open_item_context_menu:
       value: ¤¤¤arg3¤¤¤
 sapgui_tree_open_node_context_menu:
   type: SapRightClick
-  isHit: false
+  isHit: true
   name: treeOpenNodeContextMenu (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
