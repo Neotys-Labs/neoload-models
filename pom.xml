@@ -9,6 +9,7 @@
 		<module>neoload-project</module>
 		<module>neoload-writer</module>
 		<module>models-readers</module>
+		<module>global-tests</module>
 	</modules>
 	<packaging>pom</packaging>
 
@@ -124,7 +125,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.neotys.neoload</groupId>
-				<artifactId>neoload-writter</artifactId>
+				<artifactId>neoload-writer</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
