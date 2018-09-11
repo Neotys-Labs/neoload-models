@@ -8,6 +8,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
+import com.google.common.base.Charsets;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
 import com.neotys.neoload.model.repository.Container;
@@ -19,7 +20,7 @@ public class LRStartTransactionMethodTest {
 	@Test
     public void transactionsReaderTest() {    	
         try(InputStream targetStream = this.getClass().getResourceAsStream("ActionTransaction.c")) {
-            Container container = LOAD_RUNNER_READER.parseCppFile("{", "}", targetStream, "MyContainer");
+            Container container = LOAD_RUNNER_READER.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
             assertThat(container).isNotNull();
             assertThat(container.getChilds().size()).isEqualTo(2);
             assertThat(container.getChilds().get(0).getName()).isEqualTo("level_1");

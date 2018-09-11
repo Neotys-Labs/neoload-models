@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
+import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.Project;
 import com.neotys.neoload.model.listener.TestEventListener;
@@ -25,7 +26,7 @@ public class LoadRunnerReaderTest {
         final String folder = new File(this.getClass().getResource("Action.c").getFile()).getParent();
         final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("Action.c")) {
-            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer");
+            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
             assertThat(container).isNotNull();
             assertThat(container.getChilds().size()).isEqualTo(5);
             assertThat(container.getChilds().get(0).getName()).isEqualTo("page1");
@@ -44,7 +45,7 @@ public class LoadRunnerReaderTest {
         final String folder = new File(this.getClass().getResource("ActionRequest.c").getFile()).getParent();
     	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("ActionRequest.c")) {
-            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer");
+            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
             assertThat(container).isNotNull();
             assertThat(container.getChilds().size()).isEqualTo(1);
             assertThat(container.getChilds().get(0).getName()).isEqualTo("page1");
