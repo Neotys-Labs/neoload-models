@@ -35,7 +35,7 @@ public class CustomActionMethodTest {
 				, METHOD_CALL_CONTEXT);
 	
 		final CustomAction expectedCustomAction = ImmutableCustomAction.builder()
-				.name("Connect")
+				.name("openConnectionEx")
 				.type("SapConnect")
 				.isHit(true)
 				.parameters(ImmutableList.of(ImmutableCustomActionParameter.builder()
