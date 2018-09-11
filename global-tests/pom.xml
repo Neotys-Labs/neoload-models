@@ -23,18 +23,15 @@
         </dependency>
         <dependency>
             <groupId>com.neotys.neoload</groupId>
-            <artifactId>neoload-project</artifactId>
-			<scope>test</scope>
+            <artifactId>neoload-project</artifactId>			
         </dependency>
         <dependency>
             <groupId>com.neotys.neoload</groupId>
-            <artifactId>loadrunner-reader</artifactId>
-			<scope>test</scope>
+            <artifactId>loadrunner-reader</artifactId>			
         </dependency>
 		<dependency>
             <groupId>com.neotys.neoload</groupId>
-            <artifactId>neoload-writer</artifactId>
-			<scope>test</scope>
+            <artifactId>neoload-writer</artifactId>			
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
