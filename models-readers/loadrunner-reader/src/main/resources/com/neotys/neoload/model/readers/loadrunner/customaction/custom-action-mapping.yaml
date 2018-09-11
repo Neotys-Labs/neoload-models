@@ -184,6 +184,54 @@ sapgui_grid_get_cell_data:
     textVariable:
       type: TEXT
       value: ¤¤¤arg4¤¤¤
+sapgui_table_get_text:
+  type: SapRead
+  isHit: false
+  name: tableGetText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
+sapgui_table_set_text:
+  type: SapSetText
+  isHit: false
+  name: tableSetText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    value:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
+sapgui_table_set_focus:
+  type: SapFocus
+  isHit: false
+  name: tableSetFocus (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
 sapgui_grid_open_context_menu:
   type: SapRightClick
   isHit: true
