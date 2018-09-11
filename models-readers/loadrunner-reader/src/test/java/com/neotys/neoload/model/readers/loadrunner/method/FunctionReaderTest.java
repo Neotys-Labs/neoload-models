@@ -1,6 +1,6 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ public class FunctionReaderTest {
 				.name("lr_eval_string")
 				.returnValue("${think_time}")	
 				.build();		
-		assertEquals(expectedEvalString, actualEvalString);
+		Assert.assertEquals(expectedEvalString, actualEvalString);
 	}
 	
 	@Test
@@ -47,7 +47,7 @@ public class FunctionReaderTest {
 				.returnValue("${atoi_1}")	
 				.args(ImmutableList.of("1"))
 				.build();		
-		assertEquals(expectedAtoi, actualAtoi);
+		Assert.assertEquals(expectedAtoi, actualAtoi);
 	}
 	
 	@Test
@@ -62,7 +62,7 @@ public class FunctionReaderTest {
 				.returnValue("${strcmp_1}")	
 				.args(ImmutableList.of("\"A\"", "\"B\""))
 				.build();		
-		assertEquals(expectedStrcmp, actualStrcmp);
+		Assert.assertEquals(expectedStrcmp, actualStrcmp);
 	}
 
 }
