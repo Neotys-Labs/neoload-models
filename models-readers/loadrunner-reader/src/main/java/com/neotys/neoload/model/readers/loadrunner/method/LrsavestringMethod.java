@@ -24,7 +24,7 @@ public class LrsavestringMethod implements LoadRunnerMethod {
 		visitor.readSupportedFunction(method.getName(), ctx);
 		final String variableValue = MethodUtils.unquote(method.getParameters().get(0));
 		final String variableName = MethodUtils.unquote(method.getParameters().get(1));			
-		final String name = "Set variable " + variableName;
+		final String name = "Set variable " + MethodUtils.normalizeName(variableName);
 		final Element element = ImmutableSaveString.builder().name(name).variableName(variableName).variableValue(variableValue).build();
 		visitor.addInCurrentContainer(element);
 		return element;

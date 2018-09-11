@@ -25,14 +25,14 @@ public class LRStartSubTransactionMethodTest {
 			assertThat(myContainer).isNotNull();
 			assertThat(myContainer.getChilds().size()).isEqualTo(1);
 			final Container level1 = (Container) myContainer.getChilds().get(0);
-			assertThat(level1.getName()).isEqualTo("level#1");
+			assertThat(level1.getName()).isEqualTo("level_1");
 			assertThat(level1.getChilds().size()).isEqualTo(3);
 			final Container level2 = (Container) level1.getChilds().get(0);
 			final Page page2 = (Page) level1.getChilds().get(1);
 			final Container level2b = (Container) level1.getChilds().get(2);
-			assertThat(level2.getName()).isEqualTo("level#2a");
+			assertThat(level2.getName()).isEqualTo("level_2a");
 			assertThat(page2.getName()).isEqualTo("page#2");
-			assertThat(level2b.getName()).isEqualTo("level#2b");
+			assertThat(level2b.getName()).isEqualTo("level_2b");
 
 		} catch (IOException e) {
 			fail("Error reading test stream", e);

@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutableParameter;
@@ -25,9 +24,6 @@ import com.neotys.neoload.model.repository.ImmutableParameter.Builder;
 import com.neotys.neoload.model.repository.Parameter;
 
 public class MethodUtils {
-
-	private static final List<Character> forbiddenCharsInNames = ImmutableList.of('£', '', '$', '\"', '[', ']', '<', '>', '|', '*', '¤', '?', '§',
-			'µ', '#', '`', '@', '^', '²', '°', '¨', '\\');
 
 	enum ITEM_BOUNDARY {
 		EXTRARES,
@@ -162,11 +158,10 @@ public class MethodUtils {
 
 
 	public static String normalizeName(final String name) {
-		Preconditions.checkNotNull(name);
-		final StringBuilder invalidCharsRegExp = new StringBuilder("[");
-		forbiddenCharsInNames.forEach(character -> invalidCharsRegExp.append(Pattern.quote(character.toString())));
-		invalidCharsRegExp.append("]");
-		return name.replaceAll(invalidCharsRegExp.toString(),"_");
+		if(name == null){
+			return name;
+		}
+		return unquote(name.trim()).replaceAll("[^a-zA-Z_0-9 \\-_\\.]","_");
 	}
 
 	/**

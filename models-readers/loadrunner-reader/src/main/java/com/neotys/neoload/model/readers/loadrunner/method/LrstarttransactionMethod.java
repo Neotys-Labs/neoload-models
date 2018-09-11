@@ -24,7 +24,7 @@ public class LrstarttransactionMethod  implements LoadRunnerMethod {
 		}		
 		visitor.readSupportedFunction(method.getName(), ctx);
 		final String firstParameter = method.getParameters().get(0);
-		final String transactionName = MethodUtils.unquote(firstParameter.replaceAll("[^a-zA-Z0-9 -_]+","_"));
+		final String transactionName = MethodUtils.normalizeName(firstParameter);
 		final ImmutableContainer.Builder currentContainer = ImmutableContainer.builder().name(transactionName);
 		visitor.getCurrentContainers().add(currentContainer);		
 		return null;
