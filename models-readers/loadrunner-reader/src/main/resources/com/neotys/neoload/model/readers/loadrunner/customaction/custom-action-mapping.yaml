@@ -799,7 +799,7 @@ sapgui_tree_select_node:
 sapgui_tree_set_selected_node:
   type: SapClick
   isHit: false
-  name: treeSetSelectNode(¤¤¤arg0¤¤¤)
+  name: treeSetSelectNode (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
       type: TEXT
