@@ -16,5 +16,12 @@ public class LrToNlTest {
 		final String expectedXml = "<delay-action duration=\"1000\" isThinkTime=\"true\" name=\"delay\" uid=\"" + uid + "\"/>"; 
 		Assert.assertEquals(expectedXml, actualXml);
 	}	
+	
+	@Test
+	public void test_lr_eval_string() throws Exception{		
+		Assert.assertEquals("", NlWriterUtil.write(LrReaderUtil.read("lr_eval_string(\"a\")")));
+		Assert.assertEquals("", NlWriterUtil.write(LrReaderUtil.read("lr_eval_string(\"{a}\")")));
+		Assert.assertEquals("", NlWriterUtil.write(LrReaderUtil.read("lr_eval_string(lr_eval_string(\"${a}\"))")));
+	}	
 
 }

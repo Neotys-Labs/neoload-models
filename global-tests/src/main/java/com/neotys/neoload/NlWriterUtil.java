@@ -38,8 +38,11 @@ public class NlWriterUtil {
 		final File result = File.createTempFile(LrToNlTest.class.toString(), "");
 		StreamResult repositoryStream = new StreamResult(result);
 		transformer.transform(repositorySource, repositoryStream);
-		final String fullXML = new String(Files.readAllBytes(Paths.get(result.getAbsolutePath())));
-		return fullXML.substring(fullXML.indexOf("</action-container>") + "</action-container>".length() + 2, fullXML.indexOf("</root>") -2);
+		final String fullXML = new String(Files.readAllBytes(Paths.get(result.getAbsolutePath())));		
+		if(fullXML.contains("</action-container>")){
+			return fullXML.substring(fullXML.indexOf("</action-container>") + "</action-container>".length() + 2, fullXML.indexOf("</root>") -2);
+		}
+		return fullXML.substring(fullXML.indexOf("weightsEnabled=\"false\"/>") + "weightsEnabled=\"false\"/>".length() + 2, fullXML.indexOf("</root>"));			
 	}
 
 	private static String getTmpFile() {
