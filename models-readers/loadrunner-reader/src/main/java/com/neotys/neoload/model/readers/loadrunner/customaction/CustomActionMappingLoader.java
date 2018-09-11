@@ -1,22 +1,21 @@
 package com.neotys.neoload.model.readers.loadrunner.customaction;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class CustomActionMappingLoader {
 	
@@ -35,10 +34,9 @@ public class CustomActionMappingLoader {
 	}
 	
 	private static Map<String, ImmutableMappingMethod> getCustomActionMapping(){
-		final Path customActionMappingFile = getCustomActionMappingFile();
 		final String content;
 		try {
-			content = new String(Files.readAllBytes(customActionMappingFile));
+			content = getCustomActionMappingFileContent();
 		} catch (final IOException ioException) {
 			LOGGER.error("Error while reading file " + CUSTOM_ACTION_MAPPING_YAML, ioException);
 			return Maps.newHashMap();
@@ -46,12 +44,11 @@ public class CustomActionMappingLoader {
 		return parseYaml(content);
 	}
 
-	private static Path getCustomActionMappingFile() {
-		final Path customActionMappingFile = Paths.get(CUSTOM_ACTION_MAPPING_YAML);
-		if (customActionMappingFile.toFile().exists()) {
-			return customActionMappingFile;
+	private static String getCustomActionMappingFileContent() throws IOException {
+		final InputStream in = CustomActionMappingLoader.class.getResourceAsStream(CUSTOM_ACTION_MAPPING_YAML);
+		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(in))) {
+			return buffer.lines().collect(Collectors.joining("\n"));
 		}
-		return new File(CustomActionMappingLoader.class.getResource(CUSTOM_ACTION_MAPPING_YAML).getFile()).toPath();
 	}
 
 	private static Map<String, ImmutableMappingMethod> parseYaml(final String content) {
