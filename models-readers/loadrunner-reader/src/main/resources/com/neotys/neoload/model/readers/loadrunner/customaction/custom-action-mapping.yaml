@@ -843,7 +843,7 @@ sapgui_set_password:
 sapgui_window_close: 
   type: SapClose
   isHit: true
-  name: close
+  name: windowClose
   parameters:
     objectId:
       type: TEXT
