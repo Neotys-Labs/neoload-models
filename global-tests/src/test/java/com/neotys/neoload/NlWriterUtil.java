@@ -64,7 +64,7 @@ public class NlWriterUtil {
 		
 	public static String getExpectedJSXml(final com.neotys.neoload.model.core.Element element, final String actualXml, final String expectedJSName) {
 		final String uid = WriterUtils.getElementUid(element);
-		return "<js-action filename=\"scripts/jsAction_" + uid + ".js\" name=\"" + expectedJSName + "\" ts=\"" + NlWriterUtil.getTimestamp(actualXml) + "\" uid=\"" + uid + "\"/>";
+		return "<js-action filename=\"scripts/jsAction_" + uid + ".js\" name=\"" + expectedJSName + "\" ts=\"" + NlWriterUtil.getTimestamp(actualXml.substring(actualXml.indexOf(expectedJSName))) + "\" uid=\"" + uid + "\"/>";
 	}
 	
 	public static String readFile(final String file) throws IOException {
