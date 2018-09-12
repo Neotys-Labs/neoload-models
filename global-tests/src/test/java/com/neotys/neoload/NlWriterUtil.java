@@ -19,8 +19,12 @@ import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.writers.neoload.ContainerWriter;
 
 public class NlWriterUtil {
-
+	
 	public static String write(final Container model) throws Exception {
+		return write(model, getTmpFile());
+	}
+
+	public static String write(final Container model, final String outputfolder) throws Exception {
 
 		final DocumentBuilderFactory repositoryDocFactory = DocumentBuilderFactory.newInstance();
 		final DocumentBuilder repositoryDocBuilder;
@@ -28,7 +32,7 @@ public class NlWriterUtil {
 		final Document document = repositoryDocBuilder.newDocument();
 		final Element element = document.createElement("root");
 		document.appendChild(element);
-		ContainerWriter.of(model, "action-container").writeXML(document, element, getTmpFile());
+		ContainerWriter.of(model, "action-container").writeXML(document, element, outputfolder);
 		final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
@@ -38,14 +42,14 @@ public class NlWriterUtil {
 		final File result = File.createTempFile(LrToNlTest.class.toString(), "");
 		StreamResult repositoryStream = new StreamResult(result);
 		transformer.transform(repositorySource, repositoryStream);
-		final String fullXML = new String(Files.readAllBytes(Paths.get(result.getAbsolutePath())));		
+		final String fullXML = new String(Files.readAllBytes(Paths.get(result.getAbsolutePath()))).replaceAll("[\\r\\n]", "");		
 		if(fullXML.contains("</action-container>")){
-			return fullXML.substring(fullXML.indexOf("</action-container>") + "</action-container>".length() + 2, fullXML.indexOf("</root>") -2);
+			return fullXML.substring(fullXML.indexOf("</action-container>") + "</action-container>".length(), fullXML.indexOf("</root>"));
 		}
-		return fullXML.substring(fullXML.indexOf("weightsEnabled=\"false\"/>") + "weightsEnabled=\"false\"/>".length() + 2, fullXML.indexOf("</root>"));			
+		return fullXML.substring(fullXML.indexOf("weightsEnabled=\"false\"/>") + "weightsEnabled=\"false\"/>".length(), fullXML.indexOf("</root>"));			
 	}
-
-	private static String getTmpFile() {
+	
+	public static String getTmpFile() {
 		try {
 			final File temp = File.createTempFile(LrToNlTest.class.toString(), "");
 			temp.deleteOnExit();
@@ -54,4 +58,8 @@ public class NlWriterUtil {
 		}
 		return null;
 	}
+	
+	public static String getTimestamp(final String xml){
+		return xml.substring(xml.indexOf("ts=") + 4, xml.indexOf("ts=") + 17);
+	}	
 }
