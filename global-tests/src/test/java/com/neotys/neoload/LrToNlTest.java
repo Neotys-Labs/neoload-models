@@ -1,8 +1,5 @@
 package com.neotys.neoload;
 
-import java.io.File;
-import java.nio.charset.Charset;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,15 +40,30 @@ public class LrToNlTest {
 	
 	@Test
 	public void test_lr_save_string() throws Exception{
-		Container model = LrReaderUtil.read("lr_save_string(\"\",\"a\");");
-		final String outputfolder = Files.createTempDir().getAbsolutePath();
-		String actualXml = NlWriterUtil.write(model, outputfolder);		
-		String uid = WriterUtils.getElementUid(model.getChilds().get(0));
-		final String jsFile = "scripts/jsAction_" + uid + ".js";
-		String expectedXml = "<js-action filename=\"" + jsFile + "\" name=\"Set variable a\" ts=\"" + NlWriterUtil.getTimestamp(actualXml) + "\" uid=\"" + uid + "\"/>"; 
-		Assert.assertEquals(expectedXml, actualXml);
-		final String expectedResultJS = "context.variableManager.setValue(\"a\", \"\");";
-		final String generatedJS = Files.asCharSource(new File(outputfolder + File.separator + jsFile), Charset.defaultCharset()).read();
-		Assertions.assertThat(generatedJS).isEqualTo(expectedResultJS);		
+		final String setVariable = "Set variable ";
+		assertJavascriptXMLandContent("lr_save_string(\"\",\"a\");", "context.variableManager.setValue(\"a\", \"\");", setVariable+"a");	
+		assertJavascriptXMLandContent("lr_save_string( \"variableValue1\" , \"variableName\" ) ; ; ", "context.variableManager.setValue(\"variableName\", \"variableValue1\");", setVariable+"variableName");	
+		assertJavascriptXMLandContent("lr_save_string(\"variableValue2\",lr_eval_string(\"{variableName}\"));", "context.variableManager.setValue(context.variableManager.getValue(\"variableName\"), \"variableValue2\");", setVariable+"__variableName_");
+		assertJavascriptXMLandContent("lr_save_string(lr_eval_string(\"{variableValue2}\"),\"{variableName}\");", "context.variableManager.setValue(\"{variableName}\", context.variableManager.getValue(\"variableValue2\"));", setVariable+"_variableName_");
+		assertJavascriptXMLandContent("lr_save_string(lr_eval_string(\"variableValue2\"),\"variableName\");", "context.variableManager.setValue(\"variableName\", \"variableValue2\");", setVariable+"variableName");
+		assertJavascriptXMLandContent("lr_save_string(lr_eval_string(\"{variableValue2}\"),\"variableName\");", "context.variableManager.setValue(\"variableName\", context.variableManager.getValue(\"variableValue2\"));", setVariable+"variableName");
+		assertJavascriptXMLandContent("atoi(\"1\");", "context.variableManager.setValue(\"atoi_1\", parseInt(\"1\"));", "atoi_1");
+		assertJavascriptXMLandContent("atoi(\"1\");", "context.variableManager.setValue(\"atoi_2\", parseInt(\"1\"));", "atoi_2");
+		assertJavascriptXMLandContent("lr_save_string(lr_eval_string(\"{atoi_2}\"),\"think_time\");", "context.variableManager.setValue(\"think_time\", context.variableManager.getValue(\"atoi_2\"));", setVariable + "think_time");			
 	}
+
+	public void assertJavascriptXMLandContent(final String lrMethod, final String expectedResultJS, final String expectedJSName) throws Exception {
+		// Read
+		final Container model = LrReaderUtil.read(lrMethod);
+		// Write
+		final String outputfolder = Files.createTempDir().getAbsolutePath();
+		final String actualXml = NlWriterUtil.write(model, outputfolder);
+		// Check XML content
+		Assert.assertEquals(NlWriterUtil.getExpectedJSXml(model.getChilds().get(0), actualXml, expectedJSName), actualXml);
+		// Check JS content
+		final String uid = WriterUtils.getElementUid(model.getChilds().get(0));
+		Assertions.assertThat(NlWriterUtil.readFile(outputfolder + "/scripts/jsAction_" + uid + ".js")).isEqualTo(expectedResultJS);
+	}
+
+	
 }

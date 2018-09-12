@@ -1,6 +1,8 @@
 package com.neotys.neoload;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -17,6 +19,7 @@ import org.w3c.dom.Element;
 
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.writers.neoload.ContainerWriter;
+import com.neotys.neoload.model.writers.neoload.WriterUtils;
 
 public class NlWriterUtil {
 	
@@ -58,8 +61,17 @@ public class NlWriterUtil {
 		}
 		return null;
 	}
+		
+	public static String getExpectedJSXml(final com.neotys.neoload.model.core.Element element, final String actualXml, final String expectedJSName) {
+		final String uid = WriterUtils.getElementUid(element);
+		return "<js-action filename=\"scripts/jsAction_" + uid + ".js\" name=\"" + expectedJSName + "\" ts=\"" + NlWriterUtil.getTimestamp(actualXml) + "\" uid=\"" + uid + "\"/>";
+	}
 	
-	public static String getTimestamp(final String xml){
+	public static String readFile(final String file) throws IOException {
+		return com.google.common.io.Files.asCharSource(new File(file), Charset.defaultCharset()).read();
+	}
+	
+	private static String getTimestamp(final String xml){
 		return xml.substring(xml.indexOf("ts=") + 4, xml.indexOf("ts=") + 17);
 	}	
 }
