@@ -30,7 +30,7 @@ public class LrthinktimeMethod  implements LoadRunnerMethod {
 
 	private static String parseDelay(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx, final String delayInS) {
 		final Pattern pattern = Pattern.compile("[a-z-_]", Pattern.CASE_INSENSITIVE);
-		if(pattern.matcher(delayInS).find()){
+		if(pattern.matcher(delayInS).find() && !delayInS.contains("{") && !delayInS.contains("}")){
 			visitor.readSupportedFunction(method.getName(), ctx);
 			return MethodUtils.getVariableSyntax(delayInS)+"000";
 		}		
