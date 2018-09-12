@@ -32,7 +32,7 @@ public class LRThinkTimeMethodTest {
 		final Delay actualDelay = (Delay) (new LrthinktimeMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("\"lr_think_time\"")
 				.addParameters(lrDelay)
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		final Delay expectedDelay = ImmutableDelay.builder()
 				.name("delay")
 				.delay(modelDelay)

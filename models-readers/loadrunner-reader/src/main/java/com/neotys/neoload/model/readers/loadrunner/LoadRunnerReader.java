@@ -284,7 +284,7 @@ public class LoadRunnerReader extends Reader {
 			}
 		}
 		LoadRunnerVUVisitor visitor = new LoadRunnerVUVisitor(this, leftBrace, rightBrace, name);
-		Container container = (Container) visitor.visit(tree);
+		Container container = (Container) visitor.visit(tree).get(0);
 		// end unended container
 		while (visitor.getCurrentContainers().size() > 1) {
 			container = visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1).build();

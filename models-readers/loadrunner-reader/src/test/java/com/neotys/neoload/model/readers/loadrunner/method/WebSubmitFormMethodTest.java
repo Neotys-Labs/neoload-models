@@ -42,7 +42,7 @@ public class WebSubmitFormMethodTest {
 				.addParameters("LAST")
 				.build();
 		
-		final ImmutablePage actualWebUrl = (ImmutablePage) (new WeburlMethod()).getElement(LOAD_RUNNER_VISITOR, webUrlMethod, METHOD_CALL_CONTEXT);
+		final ImmutablePage actualWebUrl = (ImmutablePage) (new WeburlMethod()).getElement(LOAD_RUNNER_VISITOR, webUrlMethod, METHOD_CALL_CONTEXT).get(0);
 		
 		final MethodCall webLinkMethod = ImmutableMethodCall.builder()
 				.name("\"webLinkMethod\"")
@@ -77,7 +77,7 @@ public class WebSubmitFormMethodTest {
 				.addParameters("LAST")
 				.build();
 		
-		final ImmutablePage actualWebSubmitForm = (ImmutablePage) (new WebsubmitformMethod()).getElement(LOAD_RUNNER_VISITOR, webSubmitFormMethod, METHOD_CALL_CONTEXT);
+		final ImmutablePage actualWebSubmitForm = (ImmutablePage) (new WebsubmitformMethod()).getElement(LOAD_RUNNER_VISITOR, webSubmitFormMethod, METHOD_CALL_CONTEXT).get(0);
 				
 		final Server expectedServer = ImmutableServer.builder()
 	            .name("jack")

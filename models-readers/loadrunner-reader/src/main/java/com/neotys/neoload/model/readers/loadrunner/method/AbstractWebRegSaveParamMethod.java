@@ -1,24 +1,26 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.neotys.neoload.model.core.Element;
-import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
-import com.neotys.neoload.model.repository.ImmutableVariableExtractor;
-import com.neotys.neoload.model.repository.ImmutableVariableExtractor.Builder;
-import com.neotys.neoload.model.repository.VariableExtractor.ExtractType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.core.Element;
+import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.readers.loadrunner.SearchAttribute;
 import com.neotys.neoload.model.readers.loadrunner.WarningCallbBack;
+import com.neotys.neoload.model.repository.ImmutableVariableExtractor;
+import com.neotys.neoload.model.repository.ImmutableVariableExtractor.Builder;
+import com.neotys.neoload.model.repository.VariableExtractor.ExtractType;
 
 public abstract class AbstractWebRegSaveParamMethod implements LoadRunnerMethod {
 
@@ -68,13 +70,12 @@ public abstract class AbstractWebRegSaveParamMethod implements LoadRunnerMethod 
 	}
 
 	@Override
-	public final Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
+	public final List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		final WarningCallbBack warningCallback = new WarningCallbBack();
 		Preconditions.checkNotNull(method);
 		try {
 			final Builder extractBuilder = parseExtractor(visitor, method, warningCallback);
-			visitor.getCurrentExtractors().add(extractBuilder.build());
-			return null;
+			visitor.getCurrentExtractors().add(extractBuilder.build());			
 		} finally {
 			if (warningCallback.isWarning()) {
 				visitor.readSupportedFunctionWithWarn(method.getName(), ctx, warningCallback.getMessage());
@@ -82,6 +83,7 @@ public abstract class AbstractWebRegSaveParamMethod implements LoadRunnerMethod 
 				visitor.readSupportedFunction(method.getName(), ctx);
 			}
 		}
+		return Collections.emptyList();
 	}
 
 	final Builder parseExtractor(final LoadRunnerVUVisitor visitor, final MethodCall method, final WarningCallbBack warningCallback) {

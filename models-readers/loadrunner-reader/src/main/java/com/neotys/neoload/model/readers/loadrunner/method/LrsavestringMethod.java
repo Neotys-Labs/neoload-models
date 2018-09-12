@@ -1,6 +1,10 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
@@ -15,19 +19,16 @@ public class LrsavestringMethod implements LoadRunnerMethod {
 	}
 
 	@Override
-	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
+	public List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		Preconditions.checkNotNull(method);		
 		if(method.getParameters() == null || method.getParameters().size()!=2){
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, method.getName() + " method must have 2 parameters");
-			return null;
+			Collections.emptyList();
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);
 		final String variableValue = MethodUtils.unquote(method.getParameters().get(0));
 		final String variableName = MethodUtils.unquote(method.getParameters().get(1));			
 		final String name = "Set variable " + MethodUtils.normalizeName(variableName);
-		final Element element = ImmutableSaveString.builder().name(name).variableName(variableName).variableValue(variableValue).build();
-		visitor.addInCurrentContainer(element);
-		return element;
-		
+		return ImmutableList.of(ImmutableSaveString.builder().name(name).variableName(variableName).variableValue(variableValue).build());		
 	}
 }

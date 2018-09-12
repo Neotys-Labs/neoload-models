@@ -1,6 +1,9 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.List;
+
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
@@ -14,11 +17,9 @@ public class WebcleanupcookiesMethod implements LoadRunnerMethod {
 	}
 
 	@Override
-	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
+	public List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		Preconditions.checkNotNull(method);
 		visitor.readSupportedFunction(method.getName(), ctx);		
-		final Element clearCookies = ImmutableClearCookies.builder().name(method.getName()).build();
-		visitor.addInCurrentContainer(clearCookies);
-		return clearCookies;
+		return ImmutableList.of(ImmutableClearCookies.builder().name(method.getName()).build());
 	}
 }

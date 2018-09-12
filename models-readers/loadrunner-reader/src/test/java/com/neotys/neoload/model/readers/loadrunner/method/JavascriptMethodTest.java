@@ -27,7 +27,7 @@ public class JavascriptMethodTest {
 				.addParameters("\"1\"")
 				.addParameters("\"think_time\"")
 				.build(), 
-				METHOD_CALL_CONTEXT);
+				METHOD_CALL_CONTEXT).get(0);
 
 		final SaveString exprectedSaveString = ImmutableSaveString.builder()
 				.name("Set variable think_time")
@@ -46,7 +46,7 @@ public class JavascriptMethodTest {
 				.name("\"sapgui_select_active_session\"")
 				.addParameters("\"ses[0]\"")
 				.build(), 
-				METHOD_CALL_CONTEXT);
+				METHOD_CALL_CONTEXT).get(0);
 
 		final SaveString exprectedSaveString = ImmutableSaveString.builder()
 				.name("sapgui_select_active_session")
@@ -65,7 +65,7 @@ public class JavascriptMethodTest {
 				.name("\"sapgui_select_active_window\"")
 				.addParameters("\"wnd[0]\"")
 				.build(), 
-				METHOD_CALL_CONTEXT);
+				METHOD_CALL_CONTEXT).get(0);
 
 		final SaveString exprectedSaveString = ImmutableSaveString.builder()
 				.name("sapgui_select_active_window")

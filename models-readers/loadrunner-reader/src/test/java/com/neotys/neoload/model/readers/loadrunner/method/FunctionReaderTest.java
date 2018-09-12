@@ -28,7 +28,7 @@ public class FunctionReaderTest {
 		final EvalString actualEvalString = (EvalString) (new LrevalstringMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("\"lr_eval_string\"")
 				.addParameters("\"{think_time}\"")
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		final EvalString expectedEvalString = ImmutableEvalString.builder()
 				.name("lr_eval_string")
 				.returnValue("${think_time}")	
@@ -41,7 +41,7 @@ public class FunctionReaderTest {
 		final Atoi actualAtoi = (Atoi) (new AtoiMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("\"atoi\"")
 				.addParameters("\"1\"")
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		final Atoi expectedAtoi = ImmutableAtoi.builder()
 				.name("atoi_1")
 				.returnValue("${atoi_1}")	
@@ -56,7 +56,7 @@ public class FunctionReaderTest {
 				.name("\"strcmp\"")
 				.addParameters("\"A\"")
 				.addParameters("\"B\"")
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		final Strcmp expectedStrcmp = ImmutableStrcmp.builder()
 				.name("strcmp_1")
 				.returnValue("${strcmp_1}")	

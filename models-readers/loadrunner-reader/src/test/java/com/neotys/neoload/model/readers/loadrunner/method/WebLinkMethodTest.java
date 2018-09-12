@@ -41,7 +41,7 @@ public class WebLinkMethodTest {
 				.addParameters("LAST")
 				.build();
 		
-		final ImmutablePage actualWebUrl = (ImmutablePage) (new WeburlMethod()).getElement(LOAD_RUNNER_VISITOR, webUrlMethod, METHOD_CALL_CONTEXT);
+		final ImmutablePage actualWebUrl = (ImmutablePage) (new WeburlMethod()).getElement(LOAD_RUNNER_VISITOR, webUrlMethod, METHOD_CALL_CONTEXT).get(0);
 		
 		final MethodCall webLinkMethod = ImmutableMethodCall.builder()
 				.name("\"webLinkMethod\"")
@@ -51,7 +51,7 @@ public class WebLinkMethodTest {
 				.addParameters("LAST")
 				.build();
 		
-		final ImmutablePage actualWebLink = (ImmutablePage) (new WeblinkMethod()).getElement(LOAD_RUNNER_VISITOR, webLinkMethod, METHOD_CALL_CONTEXT);
+		final ImmutablePage actualWebLink = (ImmutablePage) (new WeblinkMethod()).getElement(LOAD_RUNNER_VISITOR, webLinkMethod, METHOD_CALL_CONTEXT).get(0);
 		
 		final Server expectedServer = ImmutableServer.builder()
 	            .name("jack")

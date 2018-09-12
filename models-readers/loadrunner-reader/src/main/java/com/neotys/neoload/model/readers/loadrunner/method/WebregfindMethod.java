@@ -1,5 +1,8 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
@@ -13,10 +16,10 @@ public class WebregfindMethod  implements LoadRunnerMethod {
 	}
 
 	@Override
-	public Element getElement(LoadRunnerVUVisitor visitor, MethodCall method, CPP14Parser.MethodcallContext ctx) {
+	public List<Element> getElement(LoadRunnerVUVisitor visitor, MethodCall method, CPP14Parser.MethodcallContext ctx) {
 		visitor.readSupportedFunction(method.getName(), ctx);
 		visitor.getCurrentValidators().add(WebRegFind.toValidator(visitor.getLeftBrace(), visitor.getRightBrace(), method));
-		return null;		
+		return Collections.emptyList();		
 	}
 
 }

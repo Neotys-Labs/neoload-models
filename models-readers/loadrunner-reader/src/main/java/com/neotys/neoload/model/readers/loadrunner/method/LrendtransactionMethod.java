@@ -1,5 +1,9 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.Collections;
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
@@ -12,15 +16,13 @@ public class LrendtransactionMethod implements LoadRunnerMethod {
 	}
 
 	@Override
-	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
+	public List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		final int size = visitor.getCurrentContainers().size();
 		if (size <= 1) {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot end non existing transaction.");
-			return null;
+			return Collections.emptyList();
 		}
 		visitor.readSupportedFunction(method.getName(), ctx);
-		final Element transaction = visitor.getCurrentContainers().remove(size - 1).build();
-		visitor.addInCurrentContainer(transaction);
-		return transaction;
+		return ImmutableList.of(visitor.getCurrentContainers().remove(size - 1).build());
 	}
 }

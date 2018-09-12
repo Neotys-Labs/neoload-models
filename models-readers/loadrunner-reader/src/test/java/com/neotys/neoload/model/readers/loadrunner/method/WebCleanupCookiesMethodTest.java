@@ -26,7 +26,7 @@ public class WebCleanupCookiesMethodTest {
 	@Test
 	public void testGetElement() {		
 		
-		final ClearCookies actualClearCookies = (ClearCookies) (new WebcleanupcookiesMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_CLEANUP_COOKIES, METHOD_CALL_CONTEXT);
+		final ClearCookies actualClearCookies = (ClearCookies) (new WebcleanupcookiesMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_CLEANUP_COOKIES, METHOD_CALL_CONTEXT).get(0);
 
 		final ClearCookies expectedClearCookies = ImmutableClearCookies.builder()
 				.name("web_cleanup_cookies")

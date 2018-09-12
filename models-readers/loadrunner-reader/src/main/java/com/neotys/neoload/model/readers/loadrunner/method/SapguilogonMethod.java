@@ -1,5 +1,8 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
@@ -19,19 +22,19 @@ public class SapguilogonMethod implements LoadRunnerMethod {
 	}
 
 	@Override
-	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
+	public List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		Preconditions.checkNotNull(method);		
 		if(method.getParameters() == null || method.getParameters().size() < 4){
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, method.getName() + " method must have at least 4 parameters");
-			return null;
+			return Collections.emptyList();
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);
-		visitor.addInCurrentContainer(createUsername(method));
-		visitor.addInCurrentContainer(createPassword(method));
-		visitor.addInCurrentContainer(createClientNum(method));		
-		visitor.addInCurrentContainer(createLanguage(method));
-		visitor.addInCurrentContainer(createPressEnter());
-		return null;		
+		return ImmutableList.of(
+				createUsername(method), 
+				createPassword(method), 
+				createClientNum(method), 		
+				createLanguage(method), 
+				createPressEnter());				
 	}
 
 	private static ImmutableCustomAction createUsername(final MethodCall method) {

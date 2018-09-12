@@ -28,7 +28,7 @@ public class SprintfMethodTest {
 				.addParameters("formattedVariable")
 				.addParameters("\"format_%s\"")
 				.addParameters("rawVariable")			
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		Sprintf exprectedSprintf = ImmutableSprintf.builder()
 				.name("sprintf")
 				.variableName("formattedVariable")
@@ -43,7 +43,7 @@ public class SprintfMethodTest {
 				.addParameters("formattedVariable")
 				.addParameters("\"format_%s\"")
 				.addParameters("${Type}")			
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		exprectedSprintf = ImmutableSprintf.builder()
 				.name("sprintf")
 				.variableName("formattedVariable")
@@ -59,7 +59,7 @@ public class SprintfMethodTest {
 				.addParameters("\"format_%s_%d\"")
 				.addParameters("variable1")			
 				.addParameters("variable2")
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		exprectedSprintf = ImmutableSprintf.builder()
 				.name("sprintf")
 				.variableName("formattedVariable")
@@ -74,7 +74,7 @@ public class SprintfMethodTest {
 				.addParameters("formattedVariable")
 				.addParameters("\"{format_%s}\"")
 				.addParameters("rawVariable")			
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		exprectedSprintf = ImmutableSprintf.builder()
 				.name("sprintf")
 				.variableName("formattedVariable")
@@ -89,7 +89,7 @@ public class SprintfMethodTest {
 				.addParameters("formattedVariable")
 				.addParameters("\"format_%d\"")
 				.addParameters("i+1")			
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		exprectedSprintf = ImmutableSprintf.builder()
 				.name("sprintf")
 				.variableName("formattedVariable")
@@ -103,7 +103,7 @@ public class SprintfMethodTest {
 				.name("\"sprintf\"")
 				.addParameters("formattedVariable")
 				.addParameters("\"\"")			
-				.build(), METHOD_CALL_CONTEXT);
+				.build(), METHOD_CALL_CONTEXT).get(0);
 		exprectedSprintf = ImmutableSprintf.builder()
 				.name("sprintf")
 				.variableName("formattedVariable")

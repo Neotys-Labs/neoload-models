@@ -32,7 +32,7 @@ public class CustomActionMethodTest {
 					.addParameters("\"\"")
 					.addParameters("\"con[0]\"")
 					.build()
-				, METHOD_CALL_CONTEXT);
+				, METHOD_CALL_CONTEXT).get(0);
 	
 		final CustomAction expectedCustomAction = ImmutableCustomAction.builder()
 				.name("openConnectionEx")

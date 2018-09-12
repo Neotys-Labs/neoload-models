@@ -1,8 +1,10 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
@@ -17,15 +19,13 @@ public class LrthinktimeMethod  implements LoadRunnerMethod {
 	}
 
 	@Override
-	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
+	public List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		Preconditions.checkNotNull(method);		
 		Preconditions.checkNotNull(method.getParameters(), method.getName() + " method must have a parameter");
 		Preconditions.checkArgument(!method.getParameters().isEmpty(), method.getName() + " method must have a parameter");		
 		final String delayInS = method.getParameters().get(0);
 		final String delayInMs = parseDelay(visitor, method, ctx, delayInS);		
-		final Element delay = ImmutableDelay.builder().name("delay").delay(delayInMs).isThinkTime(true).build();
-		visitor.addInCurrentContainer(delay);
-		return delay;
+		return ImmutableList.of(ImmutableDelay.builder().name("delay").delay(delayInMs).isThinkTime(true).build());
 	}
 
 	private static String parseDelay(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx, final String delayInS) {

@@ -37,7 +37,7 @@ public class WebAddCookieMethodTest {
 	@Test
 	public void testGetElement() {		
 		
-		final AddCookie actualAddCookie = (AddCookie) (new WebaddcookieMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_ADD_COOKIE_TEST, METHOD_CALL_CONTEXT);
+		final AddCookie actualAddCookie = (AddCookie) (new WebaddcookieMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_ADD_COOKIE_TEST, METHOD_CALL_CONTEXT).get(0);
 
 		final AddCookie expectedAddCookie = ImmutableAddCookie.builder()
 				.name("Set cookie NID for server host_test.com")

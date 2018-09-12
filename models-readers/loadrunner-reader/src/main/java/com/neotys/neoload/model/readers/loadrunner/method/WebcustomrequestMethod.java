@@ -1,5 +1,8 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
@@ -14,14 +17,13 @@ public class WebcustomrequestMethod  implements LoadRunnerMethod {
 	}
 
 	@Override
-	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {		
+	public List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {		
 		final Page page = WebCustomRequest.toElement(visitor, method, ctx);
 		visitor.getCurrentExtractors().clear();
 		visitor.getCurrentValidators().clear();
 		visitor.getCurrentHeaders().clear();
 		visitor.setCurrentRequestFromPage(page);
-		visitor.addInCurrentContainer(page);
-		return page;
+		return ImmutableList.of(page);
 	}
 
 }

@@ -1,10 +1,12 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
@@ -29,11 +31,11 @@ public class CustomActionMethod implements LoadRunnerMethod {
 	}	
 
 	@Override
-	public Element getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
+	public List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
 		final ImmutableMappingMethod methodMapping = CustomActionMappingLoader.getMapping().get(method.getName());
 		if (methodMapping == null) {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot find mapping for method " + method.getName());
-			return null;
+			return Collections.emptyList();
 		}		
 		final Set<Integer> readIndex = new HashSet<>();
 		final Builder builder = ImmutableCustomAction.builder();
@@ -47,8 +49,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 			paramBuilder.type(p.getType());	
 			builder.addParameters(paramBuilder.build());
 		});
-		final CustomAction customAction = builder.build();
-		visitor.addInCurrentContainer(customAction);
+		final CustomAction customAction = builder.build();		
 		readIndex.addAll(methodMapping.getIgnoreArgs());
 		final Set<String> unreadParameters = getUnreadParameters(method.getParameters(), readIndex);		
 		if(unreadParameters.isEmpty()){
@@ -56,7 +57,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 		} else {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Unread parameter: " + unreadParameters.toString());
 		}		
-		return customAction;
+		return ImmutableList.of(customAction);		
 	}	
 	
 	private static Set<String> getUnreadParameters(final List<String> inputParameters, final Set<Integer> readIndex) {
