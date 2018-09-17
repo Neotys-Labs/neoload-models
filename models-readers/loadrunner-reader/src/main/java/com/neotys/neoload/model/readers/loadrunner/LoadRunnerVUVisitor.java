@@ -7,8 +7,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.Token;
+import org.apache.commons.collections4.CollectionUtils;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.function.Function;
 import com.neotys.neoload.model.listener.EventListener;
@@ -77,7 +79,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		final LoadRunnerMethod lrMethod = LoadRunnerSupportedMethods.get(method.getName());
 		if(lrMethod == null){
 			readUnsupportedFunction(method.getName(), ctx);
-			return null;
+			return Collections.emptyList();
 		}
 		final List<Element> elements = lrMethod.getElement(this, method, ctx);
 		for(final Element element: elements){
@@ -99,7 +101,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		
 		final Element condition = selectionstatementContext.getChild(2).accept(this).get(0);
 		if(condition instanceof Container){
-			if(((Container) condition).getChilds()!=null && !((Container) condition).getChilds().isEmpty()){
+			if(!CollectionUtils.isEmpty(((Container) condition).getChilds())){
 				final Element child = ((Container) condition).getChilds().get(0);
 				if(child instanceof CustomAction){
 					final String variableName = getVariableName((CustomAction)child);

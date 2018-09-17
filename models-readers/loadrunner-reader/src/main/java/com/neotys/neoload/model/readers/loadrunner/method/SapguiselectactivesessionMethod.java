@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
@@ -24,7 +25,7 @@ public class SapguiselectactivesessionMethod implements LoadRunnerMethod {
 		Preconditions.checkNotNull(method);		
 		if(method.getParameters() == null || method.getParameters().isEmpty()){
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, method.getName() + " method must have at least 1 parameter");
-			return null;
+			return Collections.emptyList();
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);
 		return ImmutableList.of(ImmutableSaveString.builder()

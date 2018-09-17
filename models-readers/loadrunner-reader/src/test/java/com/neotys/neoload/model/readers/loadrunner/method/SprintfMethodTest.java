@@ -13,13 +13,14 @@ import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.repository.ImmutableSprintf;
 import com.neotys.neoload.model.repository.Sprintf;
 
+@SuppressWarnings("squid:S2699")
 public class SprintfMethodTest {
 		
 	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
 	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
 	private static final MethodcallContext METHOD_CALL_CONTEXT = new MethodcallContext(null, 0);
 	
-	@Test
+	@Test		
 	public void testSprintfGetElement() {		
 		
 		// sprintf(formattedVariable,"format_%s",rawVariable);
