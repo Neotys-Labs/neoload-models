@@ -1,7 +1,9 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
-import org.junit.Assert;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.METHOD_CALL_CONTEXT;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -9,20 +11,12 @@ import com.neotys.neoload.model.function.Atoi;
 import com.neotys.neoload.model.function.ImmutableAtoi;
 import com.neotys.neoload.model.function.ImmutableStrcmp;
 import com.neotys.neoload.model.function.Strcmp;
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.ImmutableMethodCall;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.repository.EvalString;
 import com.neotys.neoload.model.repository.ImmutableEvalString;
-
+@SuppressWarnings("squid:S2699")
 public class FunctionReaderTest {
-		
-	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
-	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
-	private static final MethodcallContext METHOD_CALL_CONTEXT = new MethodcallContext(null, 0);
-	
+
 	@Test
 	public void testEvalStringReader() {				
 		final EvalString actualEvalString = (EvalString) (new LrevalstringMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()

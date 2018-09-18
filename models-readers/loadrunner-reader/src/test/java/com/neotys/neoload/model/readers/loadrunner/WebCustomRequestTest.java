@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.METHOD_CALL_CONTEXT;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Base64;
@@ -7,8 +9,6 @@ import java.util.Base64;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
@@ -20,12 +20,8 @@ import com.neotys.neoload.model.repository.PostRequest;
 import com.neotys.neoload.model.repository.Request;
 import com.neotys.neoload.model.repository.Request.HttpMethod;
 import com.neotys.neoload.model.repository.Server;
-
+@SuppressWarnings("squid:S2699")
 public class WebCustomRequestTest {
-	
-	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
-	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
-	private static final MethodcallContext METHOD_CALL_CONTEXT = new MethodcallContext(null, 0);
 	
 	public static final MethodCall WEB_CUSTOM_DATA_TEST = ImmutableMethodCall.builder()
 			.name("\"test_web_custom_data\"")

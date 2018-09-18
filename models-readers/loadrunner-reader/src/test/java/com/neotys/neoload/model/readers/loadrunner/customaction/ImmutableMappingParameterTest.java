@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import org.junit.Test;
 
 import com.neotys.neoload.model.repository.CustomActionParameter.Type;
-
+@SuppressWarnings("squid:S2699")
 public class ImmutableMappingParameterTest {
 	
 	@Test

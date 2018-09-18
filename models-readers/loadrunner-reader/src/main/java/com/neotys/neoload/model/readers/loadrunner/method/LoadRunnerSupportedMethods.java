@@ -1,33 +1,50 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.cache.CacheLoader.InvalidCacheLoadException;
-import com.google.common.cache.LoadingCache;
 import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMappingLoader;
+import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 
 public class LoadRunnerSupportedMethods {
 
-	private static final LoadingCache<String, LoadRunnerMethod> SUPPORTED_METHODS = CacheBuilder.newBuilder().build(
-			CacheLoader.from(LoadRunnerSupportedMethods::internalLoadMethod));
-
-	private LoadRunnerSupportedMethods() {
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoadRunnerSupportedMethods.class);
+	private final CustomActionMappingLoader customActionMappingLoader;
+	private final Map<String, LoadRunnerMethod> supportedMethods;
+	
+	public LoadRunnerSupportedMethods(final String additionalCustomActionMappingContent) {
 		super();
-	}
-
-	public static LoadRunnerMethod get(final String methodName) {
-		try {
-			return SUPPORTED_METHODS.get(methodName);
-		} catch (final Exception e) {
-			return null;
-		}
+		this.customActionMappingLoader = new CustomActionMappingLoader(additionalCustomActionMappingContent);
+		this.supportedMethods = new HashMap<>();
 	}
 	
-	private static final LoadRunnerMethod internalLoadMethod(final String methodName) {
+	public LoadRunnerMethod get(final String methodName) {
+		LoadRunnerMethod method = supportedMethods.get(methodName);
+		if(supportedMethods.containsKey(method)){
+			return method;
+		}
+		try{
+			method = internalLoadMethod(methodName);
+		} catch(final Exception exception){
+			LOGGER.error("Error while loading method " + methodName, exception);
+		}		
+		supportedMethods.put(methodName, method);
+		return method;
+	}
+	
+	public ImmutableMappingMethod getCustomActionMappingMethod(String methodName) {
+		return customActionMappingLoader.getMethod(methodName);
+	}
+	
+	private final LoadRunnerMethod internalLoadMethod(final String methodName) {
 		if (methodName == null) {
 			throw new InvalidCacheLoadException("Method name is null");
 		}										
-		if (CustomActionMappingLoader.getMapping().get(methodName)!=null) {
+		if (customActionMappingLoader.getMethod(methodName)!=null) {
 			return new CustomActionMethod();
 		}
 		final String lowerCaseMethodName = methodName.replaceAll("_", "").toLowerCase();
@@ -44,5 +61,5 @@ public class LoadRunnerSupportedMethods {
 		if("lr_end_sub_transaction".equals(methodName)) return new LrendtransactionMethod();
 		if("lr_param_sprintf".equals(methodName)) return new SprintfMethod();
 		throw new InvalidCacheLoadException("Method not supported");
-	}
+	}	
 }

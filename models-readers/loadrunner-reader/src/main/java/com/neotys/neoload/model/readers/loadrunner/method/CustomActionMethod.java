@@ -12,7 +12,6 @@ import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
-import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMappingLoader;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.readers.loadrunner.customaction.MappingValueUtil;
 import com.neotys.neoload.model.repository.CustomAction;
@@ -32,7 +31,7 @@ public class CustomActionMethod implements LoadRunnerMethod {
 
 	@Override
 	public List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {
-		final ImmutableMappingMethod methodMapping = CustomActionMappingLoader.getMapping().get(method.getName());
+		final ImmutableMappingMethod methodMapping = visitor.getCustomActionMappingMethod(method.getName());
 		if (methodMapping == null) {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot find mapping for method " + method.getName());
 			return Collections.emptyList();

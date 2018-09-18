@@ -18,13 +18,14 @@ import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.Delay;
 import com.neotys.neoload.model.repository.Page;
-
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
+@SuppressWarnings("squid:S2699")
 public class LoadRunnerReaderTest {
 	
     @Test
     public void methodReaderTest() {
         final String folder = new File(this.getClass().getResource("Action.c").getFile()).getParent();
-        final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "");
+        final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("Action.c")) {
             Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
             assertThat(container).isNotNull();
@@ -43,7 +44,7 @@ public class LoadRunnerReaderTest {
     @Test
     public void methodReaderTestFullRequest() {
         final String folder = new File(this.getClass().getResource("ActionRequest.c").getFile()).getParent();
-    	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "");
+    	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("ActionRequest.c")) {
             Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
             assertThat(container).isNotNull();
@@ -72,7 +73,7 @@ public class LoadRunnerReaderTest {
         FileUtils.copyInputStreamToFile(LoadRunnerReaderTest.class.getResourceAsStream("projectTest/projectTest.usr"), new File(myTempDir.getPath(),"projectTest.usr"));
         FileUtils.copyInputStreamToFile(LoadRunnerReaderTest.class.getResourceAsStream("projectTest/parameterTest.prm"), new File(myTempDir.getPath(),"parameterTest.prm"));
 
-        LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), myTempDir.getPath(), "myProject");
+        LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), myTempDir.getPath(), "myProject", "");
         Project project = reader.read();
         assertThat(project.getUserPaths().size()).isEqualTo(1);
         assertThat(project.getUserPaths().get(0).getInitContainer().getChilds().size()).isEqualTo(1);
@@ -84,19 +85,19 @@ public class LoadRunnerReaderTest {
     }
 
     @Test
-    public void getOrAddServerTest() {
-        final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "",  "");
-        assertThat(reader.currentProjectServers.size()).isEqualTo(0);
-        assertThat(reader.getOrAddServerIfNotExist("myhost","myhost", "80",Optional.of("http")).getName()).isEqualTo("myhost");
-        assertThat(reader.currentProjectServers.size()).isEqualTo(1);
-        assertThat(reader.getOrAddServerIfNotExist("myhost","myhost", "80",Optional.of("http")).getName()).isEqualTo("myhost");
-        assertThat(reader.currentProjectServers.size()).isEqualTo(1);        
-        assertThat(reader.getOrAddServerIfNotExist("myhost2","myhost2", "80",Optional.of("http")).getName()).isEqualTo("myhost2");
-        assertThat(reader.currentProjectServers.size()).isEqualTo(2);
-        assertThat(reader.getOrAddServerIfNotExist("myhost2","myhost", "8080",Optional.of("http")).getName()).isEqualTo("myhost2_1");
-        assertThat(reader.currentProjectServers.size()).isEqualTo(3);
-        assertThat(reader.getOrAddServerIfNotExist("myhost2","myhost", "80",Optional.of("https")).getName()).isEqualTo("myhost2_2");
-        assertThat(reader.currentProjectServers.size()).isEqualTo(4);
+    public void getOrAddServerTest() {     
+    	LOAD_RUNNER_READER.clear();
+        assertThat(LOAD_RUNNER_READER.currentProjectServers.size()).isEqualTo(0);
+        assertThat(LOAD_RUNNER_READER.getOrAddServerIfNotExist("myhost","myhost", "80",Optional.of("http")).getName()).isEqualTo("myhost");
+        assertThat(LOAD_RUNNER_READER.currentProjectServers.size()).isEqualTo(1);
+        assertThat(LOAD_RUNNER_READER.getOrAddServerIfNotExist("myhost","myhost", "80",Optional.of("http")).getName()).isEqualTo("myhost");
+        assertThat(LOAD_RUNNER_READER.currentProjectServers.size()).isEqualTo(1);        
+        assertThat(LOAD_RUNNER_READER.getOrAddServerIfNotExist("myhost2","myhost2", "80",Optional.of("http")).getName()).isEqualTo("myhost2");
+        assertThat(LOAD_RUNNER_READER.currentProjectServers.size()).isEqualTo(2);
+        assertThat(LOAD_RUNNER_READER.getOrAddServerIfNotExist("myhost2","myhost", "8080",Optional.of("http")).getName()).isEqualTo("myhost2_1");
+        assertThat(LOAD_RUNNER_READER.currentProjectServers.size()).isEqualTo(3);
+        assertThat(LOAD_RUNNER_READER.getOrAddServerIfNotExist("myhost2","myhost", "80",Optional.of("https")).getName()).isEqualTo("myhost2_2");
+        assertThat(LOAD_RUNNER_READER.currentProjectServers.size()).isEqualTo(4);
     }
    
 }

@@ -1,30 +1,29 @@
 package com.neotys.neoload.model.readers.loadrunner.filereader;
-
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.net.URL;
 
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
-import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import org.junit.Test;
 
+import com.neotys.neoload.model.listener.TestEventListener;
+import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
 import com.neotys.neoload.model.repository.ConstantVariable;
 import com.neotys.neoload.model.repository.CounterNumberVariable;
 import com.neotys.neoload.model.repository.FileVariable;
 import com.neotys.neoload.model.repository.RandomNumberVariable;
 import com.neotys.neoload.model.repository.Variable;
-
+@SuppressWarnings("squid:S2699")
 public class ParameterFileReaderTest {
 
 	@Test
 	public void loadTest() {
 		final URL url = this.getClass().getResource("../projectTest");
 		final File projectFolder = new File(url.getFile());
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		final ProjectFileReader projectFileReader = new ProjectFileReader(reader, new TestEventListener(), projectFolder);
-		ParameterFileReader pfr = new ParameterFileReader(reader,projectFileReader, projectFolder);
+		
+		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
+		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
 		assertThat(pfr.getVariable("param inexistant")).isNull();
 		assertThat(pfr.getVariable("NewParam")).isNotNull();
@@ -33,10 +32,9 @@ public class ParameterFileReaderTest {
 	@Test
 	public void tableVariableNameTest() {
 		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		final ProjectFileReader projectFileReader = new ProjectFileReader(reader, new TestEventListener(), projectFolder);
-		ParameterFileReader pfr = new ParameterFileReader(reader,projectFileReader, projectFolder);
+		File projectFolder = new File(url.getFile());		
+		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
+		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
 		assertThat(MethodUtils.getCorrespondingVariableNameForNL("param inexistant")).isEqualTo("param inexistant");
 
@@ -59,10 +57,9 @@ public class ParameterFileReaderTest {
 	@Test
 	public void tableVariableColumnsWithSameFileTest() {
 		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		final ProjectFileReader projectFileReader = new ProjectFileReader(reader, new TestEventListener(), projectFolder);
-		ParameterFileReader pfr = new ParameterFileReader(reader,projectFileReader, projectFolder);
+		File projectFolder = new File(url.getFile());		
+		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
+		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
 		assertThat(pfr.getVariable("user")).isNotNull();
 		assertThat(pfr.getVariable("user")).isInstanceOf(FileVariable.class);
@@ -74,10 +71,9 @@ public class ParameterFileReaderTest {
 	@Test
 	public void tableVariableColumnsWithDifferentFileTest() {
 		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		final ProjectFileReader projectFileReader = new ProjectFileReader(reader, new TestEventListener(), projectFolder);
-		ParameterFileReader pfr = new ParameterFileReader(reader,projectFileReader, projectFolder);
+		File projectFolder = new File(url.getFile());		
+		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
+		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
 		assertThat(pfr.getVariable("NewParam")).isNotNull();
 		assertThat(pfr.getVariable("NewParam")).isInstanceOf(FileVariable.class);
@@ -91,10 +87,9 @@ public class ParameterFileReaderTest {
 	@Test
 	public void tableVariableColumnsWithDifferentFileSizeTest() {
 		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		final ProjectFileReader projectFileReader = new ProjectFileReader(reader, new TestEventListener(), projectFolder);
-		ParameterFileReader pfr = new ParameterFileReader(reader,projectFileReader, projectFolder);
+		File projectFolder = new File(url.getFile());		
+		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
+		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
 		assertThat(pfr.getVariable("param1")).isNotNull();
 		assertThat(pfr.getVariable("param1")).isInstanceOf(FileVariable.class);
@@ -107,10 +102,9 @@ public class ParameterFileReaderTest {
 	@Test
 	public void tableVariableColumnsWithDifferentFileSize2Test() {
 		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "", "");
-		final ProjectFileReader projectFileReader = new ProjectFileReader(reader, new TestEventListener(), projectFolder);
-		ParameterFileReader pfr = new ParameterFileReader(reader,projectFileReader, projectFolder);
+		File projectFolder = new File(url.getFile());		
+		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
+		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
 		assertThat(pfr.getVariable("param2_1")).isNotNull();
 		assertThat(pfr.getVariable("param2_1")).isInstanceOf(FileVariable.class);
@@ -124,10 +118,9 @@ public class ParameterFileReaderTest {
 	@Test
 	public void getPolicyTest() {
 		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());
-		final LoadRunnerReader lrRreader = new LoadRunnerReader(new TestEventListener(), "", "");
-		final ProjectFileReader projectFileReader = new ProjectFileReader(lrRreader, new TestEventListener(), projectFolder);
-		final ParameterFileReader reader = new ParameterFileReader(lrRreader, projectFileReader, projectFolder);
+		File projectFolder = new File(url.getFile());		
+		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
+		final ParameterFileReader reader = new ParameterFileReader(LOAD_RUNNER_READER, projectFileReader, projectFolder);
 		assertThat(reader.getPolicy("EachOccurrence", "")).isEqualTo(Variable.VariablePolicy.EACH_USE);
 		assertThat(reader.getPolicy("EachIteration", "")).isEqualTo(Variable.VariablePolicy.EACH_ITERATION);
 		assertThat(reader.getPolicy("Once", "")).isEqualTo(Variable.VariablePolicy.EACH_VUSER);

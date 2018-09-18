@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.METHOD_CALL_CONTEXT;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -7,19 +9,11 @@ import java.util.List;
 import org.junit.Test;
 
 import com.neotys.neoload.model.core.Element;
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.ImmutableMethodCall;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.repository.CustomAction;
 import com.neotys.neoload.model.repository.CustomActionParameter.Type;
-
+@SuppressWarnings("squid:S2699")
 public class SapguilogonMethodTest {
-
-	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
-	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
-	private static final MethodcallContext METHOD_CALL_CONTEXT = new MethodcallContext(null, 0);
 	
 	@Test
 	public void test_sapgui_logon_() {

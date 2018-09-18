@@ -1,5 +1,5 @@
 package com.neotys.neoload.model.readers.loadrunner;
-
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -9,14 +9,10 @@ import java.io.InputStream;
 import org.junit.Test;
 
 import com.google.common.base.Charsets;
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.Page;
-
+@SuppressWarnings("squid:S2699")
 public class LRStartSubTransactionMethodTest {
-	
-	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
 		
 	@Test
 	public void subTransactionsReaderTest() {

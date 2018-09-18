@@ -1,13 +1,5 @@
 package com.neotys.neoload.model.readers.loadrunner.customaction;
 
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.google.common.collect.Maps;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +9,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
+import com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException;
+import com.google.common.collect.Maps;
+
 public class CustomActionMappingLoader {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomActionMappingLoader.class);
@@ -24,19 +23,20 @@ public class CustomActionMappingLoader {
 	
 	private static final Yaml YAML = new Yaml();
 	
-	private static final Supplier<Map<String, ImmutableMappingMethod>> MAPPING = Suppliers.memoize(CustomActionMappingLoader::getCustomActionMapping);
-
-	private CustomActionMappingLoader() {
-	}
-
-	public static Map<String, ImmutableMappingMethod> getMapping() {
-		return MAPPING.get();
+	private final Map<String, ImmutableMappingMethod> mapping;
+		
+	public CustomActionMappingLoader(final String additionalContent) {
+		this.mapping = computeCustomActionMapping(additionalContent);
 	}
 	
-	private static Map<String, ImmutableMappingMethod> getCustomActionMapping(){
+	public ImmutableMappingMethod getMethod(final String methodName){
+		return mapping.get(methodName);
+	}
+	
+	private static Map<String, ImmutableMappingMethod> computeCustomActionMapping(final String additionalContent){
 		final String content;
 		try {
-			content = getCustomActionMappingFileContent();
+			content = getCustomActionMappingFileContent() + additionalContent;
 		} catch (final IOException ioException) {
 			LOGGER.error("Error while reading file " + CUSTOM_ACTION_MAPPING_YAML, ioException);
 			return Maps.newHashMap();

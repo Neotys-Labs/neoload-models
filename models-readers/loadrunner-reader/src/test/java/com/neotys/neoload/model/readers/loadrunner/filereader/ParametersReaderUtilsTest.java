@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import com.neotys.neoload.model.repository.FileVariable;
 import com.neotys.neoload.model.repository.Variable;
-
+@SuppressWarnings("squid:S2699")
 public class ParametersReaderUtilsTest {
 
 	@Test

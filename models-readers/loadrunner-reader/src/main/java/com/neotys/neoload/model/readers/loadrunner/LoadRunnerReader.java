@@ -39,8 +39,11 @@ import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.parsers.CPP14Lexer;
 import com.neotys.neoload.model.parsers.CPP14Parser;
 import com.neotys.neoload.model.readers.Reader;
+import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ParameterFileReader;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ProjectFileReader;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.ImmutableContainer;
 import com.neotys.neoload.model.repository.ImmutableServer;
@@ -59,6 +62,7 @@ public class LoadRunnerReader extends Reader {
 	private final EventListener eventListener;
 	private final String projectName;
 	private File currentScriptFolder = null;
+	private final LoadRunnerSupportedMethods lrSupportedMethods;
 
 	@VisibleForTesting
 	protected Map<String, Server> currentProjectServers = new HashMap<>();
@@ -66,10 +70,11 @@ public class LoadRunnerReader extends Reader {
 
 	private List<File> dataFilesToCopy = new ArrayList<>();
 
-	public LoadRunnerReader(final EventListener eventListener, final String folder, final String projectName) {
+	public LoadRunnerReader(final EventListener eventListener, final String folder, final String projectName, final String additionalCustomActionMappingContent) {
 		super(folder);
 		this.eventListener = eventListener;
 		this.projectName = projectName;
+		this.lrSupportedMethods = new LoadRunnerSupportedMethods(additionalCustomActionMappingContent);		
 	}
 
 	/**
@@ -354,5 +359,13 @@ public class LoadRunnerReader extends Reader {
 				url.getHost(),
 				String.valueOf(url.getPort() != -1 ? url.getPort() : url.getDefaultPort()),
 				Optional.of(url.getProtocol()));
+	}
+
+	public LoadRunnerMethod getLrSupportedMethod(final String methodName) {
+		return lrSupportedMethods.get(methodName);
+	}
+
+	public ImmutableMappingMethod getCustomActionMappingMethod(String methodName) {
+		return lrSupportedMethods.getCustomActionMappingMethod(methodName);
 	}
 }

@@ -18,8 +18,8 @@ import com.neotys.neoload.model.parsers.CPP14Parser;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.parsers.CPP14Parser.SelectionstatementContext;
 import com.neotys.neoload.model.parsers.CPP14Parser.StatementContext;
+import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
-import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
 import com.neotys.neoload.model.repository.Condition.Operator;
 import com.neotys.neoload.model.repository.Conditions.MatchType;
 import com.neotys.neoload.model.repository.Container;
@@ -50,7 +50,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	private final LoadRunnerReader reader;
 	private final EventListener eventListener;
 	private Optional<Request> currentRequest = Optional.empty();
-
+	
 	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final String containerName) {
 		this.mainContainer = ImmutableContainer.builder().name(containerName);
 		this.currentContainers.clear();
@@ -62,7 +62,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		this.leftBrace = leftBrace;
 		this.rightBrace = rightBrace;
 		this.reader = reader;
-		this.eventListener = reader.getEventListener();
+		this.eventListener = reader.getEventListener();	
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 			methodBuilder.addAllParameters(params);
 		}
 		final MethodCall method = methodBuilder.build();
-		final LoadRunnerMethod lrMethod = LoadRunnerSupportedMethods.get(method.getName());
+		final LoadRunnerMethod lrMethod = reader.getLrSupportedMethod(method.getName());
 		if(lrMethod == null){
 			readUnsupportedFunction(method.getName(), ctx);
 			return Collections.emptyList();
@@ -272,5 +272,9 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 				}
 			}			 			
 		}
+	}
+
+	public ImmutableMappingMethod getCustomActionMappingMethod(final String methodName) {
+		return reader.getCustomActionMappingMethod(methodName);
 	}
 }
