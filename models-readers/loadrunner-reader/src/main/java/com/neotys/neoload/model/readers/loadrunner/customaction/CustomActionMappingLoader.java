@@ -57,10 +57,9 @@ public class CustomActionMappingLoader {
 					continue;
 				}
 				final ImmutableMappingMethod methodMapping = ImmutableMappingMethod.build((Map<?,?>) methodMappingMap);
-				if(methodMapping == null){
-					continue;
-				}
-				methodMappings.put(methodName.toString(), methodMapping);				
+				if(methodMapping != null){
+					methodMappings.put(methodName.toString(), methodMapping);
+				}								
 			}					
 		} catch (final YAMLException yamlException) {
 			LOGGER.error("Error while parsing file " + CUSTOM_ACTION_MAPPING_YAML, yamlException);			

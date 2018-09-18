@@ -10,8 +10,7 @@ import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMapp
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 
 public class LoadRunnerSupportedMethods {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoadRunnerSupportedMethods.class);
+	
 	private final CustomActionMappingLoader customActionMappingLoader;
 	private final Map<String, LoadRunnerMethod> supportedMethods;
 	

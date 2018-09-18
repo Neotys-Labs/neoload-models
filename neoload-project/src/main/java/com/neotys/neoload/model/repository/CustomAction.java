@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.repository;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import org.immutables.value.Value;
 
@@ -13,4 +15,5 @@ public interface CustomAction extends Element {
 	String getType();
 	boolean isHit();
 	List<CustomActionParameter> getParameters();
+	Optional<Path> getLibraryPath();
 }

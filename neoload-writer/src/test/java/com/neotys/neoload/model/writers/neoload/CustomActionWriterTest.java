@@ -1,5 +1,10 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.IOException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -47,5 +52,32 @@ public class CustomActionWriterTest {
 				
 		Assertions.assertThat(generatedResultXML).isEqualTo(expectedResultXML);		
 	}
+	
+	@Test
+	public void testCopyFileToExtlib() throws ParserConfigurationException, IOException{
+		final Document doc = WrittingTestUtils.generateEmptyDocument();
+		final Element root = WrittingTestUtils.generateTestRootElement(doc);
+		final File library = File.createTempFile("myLibrary", ".jar");
+		library.deleteOnExit();
+		final CustomAction customAction = ImmutableCustomAction.builder()
+				.name("Connect")
+				.type("SapConnect")
+				.isHit(true)
+				.libraryPath(library.toPath())
+				.parameters(ImmutableList.of(ImmutableCustomActionParameter.builder()
+						.name("connectionString")
+						.value(CONNECTION_STRING)
+						.type(Type.TEXT)
+						.build()))
+				.build();
+				
+		final String outputfolder = Files.createTempDir().getAbsolutePath();
+		final File extlib = new File(outputfolder + File.separator + "lib" + File.separator + "extlib");					
+		CustomActionWriter.of(customAction).writeXML(doc, root, outputfolder);
+		assertEquals(1, extlib.listFiles().length);
+		assertEquals(library.getName(), extlib.listFiles()[0].getName());						
+		assertEquals(extlib.getAbsolutePath(), extlib.listFiles()[0].getParent());
+	}
+	
 
 }
