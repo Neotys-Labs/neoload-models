@@ -23,7 +23,7 @@ public class LrsavestringMethod implements LoadRunnerMethod {
 		Preconditions.checkNotNull(method);		
 		if(method.getParameters() == null || method.getParameters().size()!=2){
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, method.getName() + " method must have 2 parameters");
-			Collections.emptyList();
+			return Collections.emptyList();
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);
 		final String variableValue = MethodUtils.unquote(method.getParameters().get(0));

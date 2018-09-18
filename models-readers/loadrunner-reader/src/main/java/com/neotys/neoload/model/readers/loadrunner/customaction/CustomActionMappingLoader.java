@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.readers.loadrunner.customaction;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -26,28 +25,22 @@ public class CustomActionMappingLoader {
 	private final Map<String, ImmutableMappingMethod> mapping;
 		
 	public CustomActionMappingLoader(final String additionalContent) {
-		this.mapping = computeCustomActionMapping(additionalContent);
+		this.mapping = new HashMap<>();
+		this.mapping.putAll(parseYaml(getCustomActionMappingFileContent()));
+		this.mapping.putAll(parseYaml(additionalContent));
 	}
 	
 	public ImmutableMappingMethod getMethod(final String methodName){
 		return mapping.get(methodName);
-	}
-	
-	private static Map<String, ImmutableMappingMethod> computeCustomActionMapping(final String additionalContent){
-		final String content;
-		try {
-			content = getCustomActionMappingFileContent() + additionalContent;
-		} catch (final IOException ioException) {
-			LOGGER.error("Error while reading file " + CUSTOM_ACTION_MAPPING_YAML, ioException);
-			return Maps.newHashMap();
-		}
-		return parseYaml(content);
-	}
+	}	
 
-	private static String getCustomActionMappingFileContent() throws IOException {
+	private static String getCustomActionMappingFileContent() {
 		final InputStream in = CustomActionMappingLoader.class.getResourceAsStream(CUSTOM_ACTION_MAPPING_YAML);
 		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(in))) {
 			return buffer.lines().collect(Collectors.joining("\n"));
+		} catch(final Exception exception){
+			LOGGER.error("Error while reading file " + CUSTOM_ACTION_MAPPING_YAML, exception);
+			return "";
 		}
 	}
 
