@@ -25,6 +25,10 @@ public class WebSubmitFormMethodTest {
 	
 	@Test
 	public void testGetElement() {		
+		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
+		LOAD_RUNNER_VISITOR.getCurrentHeaders().clear();
+		LOAD_RUNNER_VISITOR.getGlobalHeaders().clear();
+		
 		final MethodCall webUrlMethod = ImmutableMethodCall.builder()
 				.name("\"webUrlMethod\"")
 				.addParameters("\"loadtest\"")
@@ -114,7 +118,6 @@ public class WebSubmitFormMethodTest {
 				.isDynamic(true)
 				.build();
 
-		assertEquals(expectedPage, actualWebSubmitForm);
-		
+		assertEquals(expectedPage, actualWebSubmitForm);		
 	}	
 }
