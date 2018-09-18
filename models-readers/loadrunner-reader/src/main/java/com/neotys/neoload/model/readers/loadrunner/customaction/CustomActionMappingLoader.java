@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException;
-import com.google.common.collect.Maps;
+import com.google.common.base.Strings;
 
 public class CustomActionMappingLoader {
 	
@@ -46,24 +46,25 @@ public class CustomActionMappingLoader {
 
 	private static Map<String, ImmutableMappingMethod> parseYaml(final String content) {
 		final Map<String, ImmutableMappingMethod> methodMappings = new HashMap<>();
+		if(Strings.isNullOrEmpty(content)){
+			return methodMappings;
+		}
 		try {			
 			for(Entry<?,?> entry : ((Map<?,?>)YAML.loadAs(content, Map.class)).entrySet()){
 				final Object methodName = entry.getKey();
 				final Object methodMappingMap = entry.getValue();
 				if(methodName == null || !(methodMappingMap instanceof Map)){
-					LOGGER.error("Error while parsing file " + CUSTOM_ACTION_MAPPING_YAML);
-					return Maps.newHashMap();
+					continue;
 				}
 				final ImmutableMappingMethod methodMapping = ImmutableMappingMethod.build((Map<?,?>) methodMappingMap);
 				if(methodMapping == null){
-					return Maps.newHashMap();
+					continue;
 				}
 				methodMappings.put(methodName.toString(), methodMapping);				
-			}		
-			return methodMappings;
+			}					
 		} catch (final YAMLException yamlException) {
-			LOGGER.error("Error while parsing file " + CUSTOM_ACTION_MAPPING_YAML, yamlException);
-			return Maps.newHashMap();
-		}		
+			LOGGER.error("Error while parsing file " + CUSTOM_ACTION_MAPPING_YAML, yamlException);			
+		}
+		return methodMappings;
 	}	
 }
