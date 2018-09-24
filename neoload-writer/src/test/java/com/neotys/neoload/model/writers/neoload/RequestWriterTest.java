@@ -1,12 +1,14 @@
 package com.neotys.neoload.model.writers.neoload;
 
 import com.google.common.io.Files;
-import com.neotys.neoload.model.repository.PostBinaryRequest;
+import com.neotys.neoload.model.repository.*;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
@@ -201,5 +203,33 @@ public class RequestWriterTest {
 						"Content-Length: 150" + System.lineSeparator() + System.lineSeparator() +
 						"</responseHeaders>")
 				.contains("<responsePageFileDescription>recorded-responses/res_responseBody_");
+	}
+
+	@Test
+	public void writeMultipartRequestTest() throws ParserConfigurationException {
+
+		// write the repository
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document document = docBuilder.newDocument();
+		Element xmlRequest = document.createElement("http-action");
+		PostMultipartRequestWriter.of(WrittingTestUtils.POST_MULTIPART_REQUEST_TEST).writeXML(document, xmlRequest, Files.createTempDir().getAbsolutePath());
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").getLength()).isEqualTo(1);
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().getLength()).isEqualTo(3);
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("stringPart");
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(0).getAttributes().getNamedItem("value").getNodeValue()).isEqualTo("partValue");
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(0).getAttributes().getNamedItem("charSet").getNodeValue()).isEqualTo("UTF-8");
+
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(1).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("filePart");
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(1).getAttributes().getNamedItem("contentType").getNodeValue()).isEqualTo("image/jpg");
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(1).getAttributes().getNamedItem("attachedFilename").getNodeValue()).isEqualTo("filename.jpg");
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(1).getAttributes().getNamedItem("filename").getNodeValue()).isEqualTo("filename.jpg");
+
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(2).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("filePart");
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(2).getAttributes().getNamedItem("contentType").getNodeValue()).isEqualTo("image/jpg");
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(2).getAttributes().getNamedItem("attachedFilename").getNodeValue()).isEqualTo("filename.jpg");
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(2).getAttributes().getNamedItem("filename").getNodeValue()).isEqualTo("sentFileName.jpg");
+		Assertions.assertThat(xmlRequest.getElementsByTagName("multiparts").item(0).getChildNodes().item(2).getAttributes().getNamedItem("transferEncoding").getNodeValue()).isEqualTo("transfer");
+
 	}
 }
