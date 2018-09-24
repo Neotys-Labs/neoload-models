@@ -167,6 +167,15 @@ public class WrittingTestUtils {
 			.addPostParameters(ImmutableParameter.builder().name("address").value("e").build())
 			.addPostParameters(ImmutableParameter.builder().name("sex").value("Male").build())
 			.build();
+
+	public static final PostMultipartRequest POST_MULTIPART_REQUEST_TEST = ImmutablePostMultipartRequest.builder()
+			.name("POST_MULTIPART_REQUEST_TEST")
+			.server(SERVER_JACK9090_TEST)
+			.httpMethod(HttpMethod.POST)
+			.addParts(ImmutablePart.builder().name("stringPart").value("partValue").charSet("UTF-8").build())
+			.addParts(ImmutablePart.builder().name("filePart").contentType("image/jpg").sourceFilename("filename.jpg").build())
+			.addParts(ImmutablePart.builder().name("filePart").contentType("image/jpg").sourceFilename("filename.jpg").filename("sentFileName.jpg").transferEncoding("transfer").build())
+			.build();
 	
 	public static final Page PAGE_GET_SUBMIT_FORM_REQUEST_TEST = ImmutablePage.builder()
 			.addChilds(POST_SUBMIT_FORM_REQUEST_TEST)
