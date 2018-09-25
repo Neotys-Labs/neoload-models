@@ -15,7 +15,7 @@ import com.neotys.neoload.model.repository.ImmutableRegexpValidator;
 import com.neotys.neoload.model.repository.ImmutableTextValidator;
 import com.neotys.neoload.model.repository.RegexpValidator;
 import com.neotys.neoload.model.repository.Validator;
-
+@SuppressWarnings("squid:S2699")
 public class WebRegFindTest {
 
 

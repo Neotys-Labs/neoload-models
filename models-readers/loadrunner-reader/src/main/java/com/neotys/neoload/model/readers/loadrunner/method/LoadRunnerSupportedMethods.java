@@ -3,50 +3,53 @@ package com.neotys.neoload.model.readers.loadrunner.method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMappingLoader;
+import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
+
 public class LoadRunnerSupportedMethods {
-
-	private static final Map<String, LoadRunnerMethod> SUPPORTED_METHODS = new HashMap<>();
 	
-	static {
-		SUPPORTED_METHODS.put("web_url", new WebUrlMethod());
-		SUPPORTED_METHODS.put("web_submit_data", new WebSubmitDataMethod());
-		SUPPORTED_METHODS.put("web_custom_request", new WebCustomRequestMethod());
-		SUPPORTED_METHODS.put("web_link", new WebLinkMethod());
-		SUPPORTED_METHODS.put("web_submit_form", new WebSubmitFormMethod());
-		
-		SUPPORTED_METHODS.put("web_reg_save_param", new WebRegSaveParamMethod());
-		SUPPORTED_METHODS.put("web_reg_save_param_ex", new WebRegSaveParamExMethod());
-		SUPPORTED_METHODS.put("web_reg_save_param_regexp", new WebRegSaveParamRegexpMethod());
-		SUPPORTED_METHODS.put("web_reg_save_param_xpath", new WebRegSaveParamXpathMethod());
-		SUPPORTED_METHODS.put("web_reg_save_param_json", new WebRegSaveParamJsonMethod());
-		SUPPORTED_METHODS.put("web_reg_find", new WebRegFindMethod());
-		
-		SUPPORTED_METHODS.put("lr_think_time", new LRThinkTimeMethod());
-		SUPPORTED_METHODS.put("lr_start_transaction", new LRStartTransactionMethod());
-		SUPPORTED_METHODS.put("lr_end_transaction", new LREndTransactionMethod());
-		SUPPORTED_METHODS.put("lr_start_sub_transaction", new LRStartTransactionMethod());
-		SUPPORTED_METHODS.put("lr_end_sub_transaction", new LREndTransactionMethod());
-		
-		SUPPORTED_METHODS.put("web_cache_cleanup", new WebCacheCleanupMethod());
-		SUPPORTED_METHODS.put("web_cleanup_cookies", new WebCleanupCookiesMethod());
-		SUPPORTED_METHODS.put("web_add_cookie", new WebAddCookieMethod());
-		SUPPORTED_METHODS.put("web_add_header", new WebAddHeaderMethod());
-		SUPPORTED_METHODS.put("web_add_auto_header", new WebAddAutoHeaderMethod());
-		
-		SUPPORTED_METHODS.put("lr_eval_string", new LREvalStringMethod());
-		SUPPORTED_METHODS.put("lr_save_string", new LRSaveStringMethod());
-		SUPPORTED_METHODS.put("atoi", new AtoiMethod());
-		SUPPORTED_METHODS.put("sprintf", new SprintfMethod());
-		SUPPORTED_METHODS.put("lr_param_sprintf", new SprintfMethod());
-		SUPPORTED_METHODS.put("strcmp", new StrcmpMethod());		
-	}
+	private final CustomActionMappingLoader customActionMappingLoader;
+	private final Map<String, LoadRunnerMethod> supportedMethods;
 	
-	private LoadRunnerSupportedMethods() {
+	public LoadRunnerSupportedMethods(final String additionalCustomActionMappingContent) {
 		super();
+		this.customActionMappingLoader = new CustomActionMappingLoader(additionalCustomActionMappingContent);
+		this.supportedMethods = new HashMap<>();
 	}
 	
-	public static final LoadRunnerMethod get(final String methodName){
-		return SUPPORTED_METHODS.get(methodName);
+	public LoadRunnerMethod get(final String methodName) {		
+		if(supportedMethods.containsKey(methodName)){
+			return supportedMethods.get(methodName);
+		}
+		final LoadRunnerMethod method = internalLoadMethod(methodName);		
+		supportedMethods.put(methodName, method);
+		return method;
 	}
-
+	
+	public ImmutableMappingMethod getCustomActionMappingMethod(String methodName) {
+		return customActionMappingLoader.getMethod(methodName);
+	}
+	
+	private final LoadRunnerMethod internalLoadMethod(final String methodName) {
+		if (methodName == null) {
+			return null;
+		}										
+		if (customActionMappingLoader.getMethod(methodName)!=null) {
+			return new CustomActionMethod();
+		}
+		final String lowerCaseMethodName = methodName.replaceAll("_", "").toLowerCase();
+		if (lowerCaseMethodName.length() < 2) {
+			return null;
+		}
+		final String fullQualifiedMethodName = "com.neotys.neoload.model.readers.loadrunner.method."
+				+ lowerCaseMethodName.substring(0, 1).toUpperCase() + lowerCaseMethodName.substring(1) + "Method";
+		try {
+			return (LoadRunnerMethod) Class.forName(fullQualifiedMethodName).getConstructor().newInstance();
+		} catch (Exception e) {
+		}
+		if("lr_start_sub_transaction".equals(methodName)) return new LrstarttransactionMethod();
+		if("lr_end_sub_transaction".equals(methodName)) return new LrendtransactionMethod();
+		if("lr_param_sprintf".equals(methodName)) return new SprintfMethod();
+		return null;
+	}	
 }

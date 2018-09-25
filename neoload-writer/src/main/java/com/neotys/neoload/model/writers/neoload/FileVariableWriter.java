@@ -32,9 +32,8 @@ public class FileVariableWriter	extends VariableWriter {
     public static final String XML_TAG_COLOMN = "column";
     public static final String XML_COLOMN_ATTR_NAME = "name";
     public static final String XML_COLOMN_ATTR_NUMBER = "number";
-
     
-    static Logger logger = LoggerFactory.getLogger(FileVariableWriter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileVariableWriter.class);
     
 	public FileVariableWriter(FileVariable variable) {
 		super(variable);
@@ -81,9 +80,9 @@ public class FileVariableWriter	extends VariableWriter {
 	static String dumpDataInFile(File folder, String variableName, List<String> columnsNames, String delimiter, String [][] data) {
 		if(folder == null || !folder.isDirectory()) {
 			if (folder == null) {
-				logger.error("the output folder does not exists");
+				LOGGER.error("the output folder does not exists");
 			} else {
-				logger.error("the folder \"" + folder.getAbsolutePath() + "\" does not exists");
+				LOGGER.error("the folder \"" + folder.getAbsolutePath() + "\" does not exists");
 			}
 			return null;
 		}
@@ -123,7 +122,7 @@ public class FileVariableWriter	extends VariableWriter {
 			Arrays.asList(data).stream().forEach(csvWriter::writeNext);
 			
 		} catch (IOException e) {
-			logger.error("An error occured while writing the parameter File \"" + dataFile.getAbsolutePath() + "\":\n" + e);
+			LOGGER.error("An error occured while writing the parameter File \"" + dataFile.getAbsolutePath() + "\":\n" + e);
 		}
 		
 		return VARIABLE_DIRECTORY + File.separator + dataFile.getName();

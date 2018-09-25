@@ -1,11 +1,8 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.repository.*;
-import com.neotys.neoload.model.repository.Request.HttpMethod;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
+import static org.junit.Assert.assertEquals;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,12 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
 
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.repository.GetRequest;
+import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
+import com.neotys.neoload.model.repository.ImmutableParameter;
+import com.neotys.neoload.model.repository.ImmutableServer;
+import com.neotys.neoload.model.repository.Request;
+import com.neotys.neoload.model.repository.Request.HttpMethod;
+import com.neotys.neoload.model.repository.Server;
+@SuppressWarnings("squid:S2699")
 public class WebRequestTest {
-		
-	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
-	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
 		
 	public static final MethodCall WEB_URL_FULL_TEST = ImmutableMethodCall.builder()
 			.name("\"test_web_url\"")
@@ -86,7 +90,12 @@ public class WebRequestTest {
 	
 	@Test
 	public void buildRequestFromURLTest() throws MalformedURLException {
-		final URL urlTest = new URL("https://test_server.com:8080/request/path?param1=value1&param2&param3=value%203");		
+		final URL urlTest = new URL("https://test_server.com:8080/request/path?param1=value1&param2&param3=value%203");
+		
+		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
+		LOAD_RUNNER_VISITOR.getCurrentHeaders().clear();
+		LOAD_RUNNER_VISITOR.getGlobalHeaders().clear();
+		
 		final GetRequest generatedResult = WebRequest.buildGetRequestFromURL(LOAD_RUNNER_VISITOR, urlTest, Optional.empty(), ImmutableList.of());
 
 		// no matter the request name, it is generated randomly
@@ -166,10 +175,9 @@ public class WebRequestTest {
 	@Test
     public void getServerTest() throws MalformedURLException {
 		final URL urlTest = new URL("https://test_server.com:8080/request/path");
-		final URL urlTest2 = new URL("https://test_server.com:80/request/path");
-		final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), "","");
-		final Server serverGenerated1 = reader.getServer(urlTest);
-		final Server serverGenerated2 = reader.getServer(urlTest2);
+		final URL urlTest2 = new URL("https://test_server.com:80/request/path");		
+		final Server serverGenerated1 = LOAD_RUNNER_READER.getServer(urlTest);
+		final Server serverGenerated2 = LOAD_RUNNER_READER.getServer(urlTest2);
 		
 		assertEquals(SERVER_TEST, serverGenerated1);
 		assertEquals(SERVER_TEST2, serverGenerated2);

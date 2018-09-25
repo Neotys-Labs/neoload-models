@@ -1,10 +1,10 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Optional;
 
-import com.neotys.neoload.model.listener.TestEventListener;
 import org.junit.Test;
 
 import com.neotys.neoload.model.repository.GetRequest;
@@ -15,12 +15,9 @@ import com.neotys.neoload.model.repository.ImmutableServer;
 import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.Request.HttpMethod;
 import com.neotys.neoload.model.repository.Server;
-
+@SuppressWarnings("squid:S2699")
 public class WebUrlTest {
-	
-	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
-	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
-		
+
 	public static final MethodCall WEB_URL_FULL_TEST = ImmutableMethodCall.builder()
 			.name("\"test_web_url\"")
 			.addParameters("\"test_web_url_full\"")
@@ -87,6 +84,10 @@ public class WebUrlTest {
 
 	@Test
 	public void toElementTest() {		
+		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
+		LOAD_RUNNER_VISITOR.getCurrentHeaders().clear();
+		LOAD_RUNNER_VISITOR.getGlobalHeaders().clear();
+		
 		final ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(LOAD_RUNNER_VISITOR, WEB_URL_VERY_SIMPLE_TEST);
 
 		final GetRequest request = ImmutableGetPlainRequest.builder()
@@ -107,6 +108,11 @@ public class WebUrlTest {
 
 	@Test
 	public void toElementWithResourceTest() {
+		
+		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
+		LOAD_RUNNER_VISITOR.getCurrentHeaders().clear();
+		LOAD_RUNNER_VISITOR.getGlobalHeaders().clear();
+		
 		final ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(LOAD_RUNNER_VISITOR, WEB_URL_SIMPLE_TEST);
 
 		final GetRequest resource = ImmutableGetPlainRequest.builder()
@@ -128,6 +134,11 @@ public class WebUrlTest {
 
 	@Test
 	public void toElementWithRelativeResourceTest() {
+		
+		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
+		LOAD_RUNNER_VISITOR.getCurrentHeaders().clear();
+		LOAD_RUNNER_VISITOR.getGlobalHeaders().clear();
+		
 		final ImmutablePage pageGenerated = (ImmutablePage) WebUrl.toElement(LOAD_RUNNER_VISITOR, WEB_URL_FULL_TEST);
 
 		// https://server.test.com/test/path?testArgNoValue&testArgWithValue=value"

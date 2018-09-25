@@ -1,0 +1,898 @@
+sapgui_open_connection_ex: 
+  type: SapConnect
+  isHit: true
+  name: openConnectionEx
+  parameters:
+    connectionString: 
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+  ignoreArgs: ¤¤¤arg1¤¤¤
+sapgui_open_connection: 
+  type: SapConnect
+  isHit: true
+  name: openConnection
+  parameters:
+    connectionName: 
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+  ignoreArgs: 
+sapgui_set_ok_code:
+  type: SapSetText
+  isHit: false
+  name: setOkCode
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/tbar[0]/okcd
+    value:
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+sapgui_send_vkey:
+  type: SapPress
+  isHit: true
+  name: sendVkey
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}
+    key:
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+sapgui_set_text:
+  type: SapSetText
+  isHit: false
+  name: setText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg2¤¤¤
+    value:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+sapgui_press_button:
+  type: SapClick
+  isHit: true
+  name: pressButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_get_active_window_title:
+  type: SapRead
+  isHit: false
+  name: getActiveWindowTitle
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+sapgui_get_ok_code:
+  type: SapRead
+  isHit: false
+  name: getOkCode
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/tbar[0]/okcd
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+sapgui_get_text:
+  type: SapRead
+  isHit: false
+  name: getText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_select_tab:
+  type: SapClick
+  isHit: true
+  name: selectTab (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_grid_clear_selection:
+  type: SapUnselect
+  isHit: false
+  name: gridClearSelection (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    clear:
+      type: TEXT
+      value: true
+sapgui_grid_click:
+  type: SapClick
+  isHit: true
+  name: gridClick (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_grid_click_current_cell:
+  type: SapClick
+  isHit: true
+  name: gridClickCurrenCell (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_grid_deselect_column:
+  type: SapSelect
+  isHit: false
+  name: gridDeselectColumn (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    optionValue:
+      type: TEXT
+      value: false
+sapgui_grid_double_click:
+  type: SapDoubleClick
+  isHit: true
+  name: gridDoubleClick (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_grid_double_click_current_cell:
+  type: SapDoubleClick
+  isHit: true
+  name: gridDoubleClickCurrenCell (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_grid_get_cell_data:
+  type: SapRead
+  isHit: false
+  name: gridGetCellData (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
+sapgui_table_get_text:
+  type: SapRead
+  isHit: false
+  name: tableGetText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
+sapgui_table_set_text:
+  type: SapSetText
+  isHit: false
+  name: tableSetText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    value:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
+sapgui_table_set_focus:
+  type: SapFocus
+  isHit: false
+  name: tableSetFocus (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_grid_open_context_menu:
+  type: SapRightClick
+  isHit: true
+  name: gridOpenContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_grid_press_column_header:
+  type: SapSelect
+  isHit: false
+  name: gridPressColumnHeader (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    pressColumnHeader:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_press_ENTER:
+  type: SapPress
+  isHit: true
+  name: gridPressENTER (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    key:
+      type: TEXT
+      value: ENTER
+sapgui_grid_press_F1:
+  type: SapPress
+  isHit: true
+  name: gridPressF1 (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    key:
+      type: TEXT
+      value: F1
+sapgui_grid_press_F4:
+  type: SapPress
+  isHit: true
+  name: gridPressF4 (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    key:
+      type: TEXT
+      value: F4
+sapgui_grid_press_toolbar_button:
+  type: SapClick
+  isHit: true
+  name: gridPressToolbarButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    toolbarButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_press_toolbar_context_button:
+  type: SapClick
+  isHit: true
+  name: gridPressToolbarContextButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    toolbarContextButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_select_all:
+  type: SapSelect
+  isHit: false
+  name: gridSelectAll (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    all:
+      type: TEXT
+      value: true
+sapgui_grid_select_cell:
+  type: SapSelect
+  isHit: false
+  name: gridSelectCell (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    currentCellRow:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    currentCellColumn:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_grid_select_column:
+  type: SapSelect
+  isHit: false
+  name: gridSelectColumn (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_select_context_menu:
+  type: SapClick
+  isHit: true
+  name: gridSelectContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    contextButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_select_rows:
+  type: SapSelect
+  isHit: false
+  name: gridSelectRows (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    rows:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_select_toolbar_menu:
+  type: SapClick
+  isHit: true
+  name: gridSelectToolbarMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    menuItem:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_grid_selection_changed:
+  type: SapSelect
+  isHit: false
+  name: gridSelectionChanged (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    selectionChanged:
+      type: TEXT
+      value: true
+sapgui_grid_set_cell_data:
+  type: SapSetText
+  isHit: false
+  name: gridSetCellData (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    value:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
+sapgui_select_combobox_entry:
+  type: SapSelect
+  isHit: false
+  name: selectComboboxEntry (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    optionValue:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_select_menu:
+  type: SapClick
+  isHit: true
+  name: selectMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_select_radio_button:
+  type: SapSelect
+  isHit: false
+  name: selectRadioButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+sapgui_set_checkbox:
+  type: SapSelect
+  isHit: false
+  name: selectCheckbox (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg2¤¤¤
+    optionValue:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+sapgui_get_status_bar_text:
+  type: SapRead
+  isHit: false
+  name: getStatusBarText
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/sbar
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+sapgui_status_bar_get_text:
+  type: SapRead
+  isHit: false
+  name: statusBarGetText
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/sbar
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+sapgui_status_bar_get_type:
+  type: SapRead
+  isHit: false
+  name: statusBarGetType
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/sbar
+    typeVariable:
+      type: TEXT
+      value: ¤¤¤arg0¤¤¤
+sapgui_is_object_available:
+  type: SapIsAvailable
+  isHit: false
+  name: isObjectAvailable
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_is_object_changeable:
+  type: SapIsChangeable
+  isHit: false
+  name: isObjectChangeable
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_is_checkbox_selected: 
+  type: SapIsSelected
+  isHit: false
+  name: isCheckBoxSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_grid_is_checkbox_selected:
+  type: SapIsSelected
+  isHit: false
+  name: gridIsCheckboxSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_table_is_column_selected:
+  type: SapIsSelected
+  isHit: false
+  name: tableIsColumnSelected
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_table_is_checkbox_selected:
+  type: SapIsSelected
+  isHit: false
+  name: tableIsCheckboxSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_table_is_radio_button_selected:
+  type: SapIsSelected
+  isHit: false
+  name: tableIsRadioButtonSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    column:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_table_is_row_selected:
+  type: SapIsSelected
+  isHit: false
+  name: tableIsRowSelected
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    row:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_is_radio_button_selected: 
+  type: SapIsSelected
+  isHit: false
+  name: isRadioButtonSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_is_tab_selected: 
+  type: SapIsSelected
+  isHit: false
+  name: isTabSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_tree_is_checkbox_selected:
+  type: SapIsSelected
+  isHit: false
+  name: treeIsCheckboxSelected (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    variable:
+      type: TEXT
+      value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_set_focus: 
+  type: SapFocus
+  isHit: false
+  name: setFocus
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+sapgui_table_set_row_selected:
+  type: SapSelect
+  isHit: false
+  name: tableSetRowSelected
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    absoluteRow:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+    optionValue:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_text_edit_set_selection_indexes:
+  type: SapSelect
+  isHit: false
+  name: textEditSetSelectionIndexes (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    start:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    end:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_toolbar_press_button:
+  type: SapClick
+  isHit: true
+  name: toolbarPressButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    toolbarButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_toolbar_press_context_button:
+  type: SapClick
+  isHit: true
+  name: toolbarPressContextButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    contextButton:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_toolbar_select_menu_item:
+  type: SapClick
+  isHit: true
+  name: toolbarSelectMenuItem (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    menuItem:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_click_link:
+  type: SapClick
+  isHit: true
+  name: treeClickLink (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_tree_double_click_item:
+  type: SapDoubleClick
+  isHit: true
+  name: treeDoubleClickItem (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_tree_double_click_node:
+  type: SapDoubleClick
+  isHit: true
+  name: treeDoubleClickNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_expand_node:
+  type: SapExpand
+  isHit: true
+  name: treeExpandNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_open_item_context_menu:
+  type: SapRightClick
+  isHit: true
+  name: treeOpenItemContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_tree_open_node_context_menu:
+  type: SapRightClick
+  isHit: true
+  name: treeOpenNodeContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_press_button:
+  type: SapClick
+  isHit: true
+  name: treePressButton (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    buttonPress:
+      type: TEXT
+      value: true
+sapgui_tree_press_key:
+  type: SapPress
+  isHit: true
+  name: treePressKey (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    key:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_scroll_to_node:
+  type: SapSelect
+  isHit: false
+  name: treeScrollToNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    topNode:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_select_context_menu:
+  type: SapClick
+  isHit: true
+  name: treeSelectContextMenu (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    menuItem:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_select_item:
+  type: SapClick
+  isHit: true
+  name: treeSelectItem (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    menuItem:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+sapgui_tree_select_node:
+  type: SapClick
+  isHit: false
+  name: treeSelectNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_set_selected_node:
+  type: SapClick
+  isHit: false
+  name: treeSetSelectNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_tree_unselect_all:
+  type: SapUnselect
+  isHit: false
+  name: treeUnselectAll (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    clear:
+      type: TEXT
+      value: true
+sapgui_tree_unselect_node:
+  type: SapUnselect
+  isHit: false
+  name: treeUnselectNode (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_set_password:
+  type: SapSetText
+  isHit: false
+  name: setText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg2¤¤¤
+    value:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+sapgui_window_close: 
+  type: SapClose
+  isHit: true
+  name: windowClose
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}

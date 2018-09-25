@@ -4,11 +4,12 @@
 
 	<groupId>com.neotys.neoload</groupId>
 	<artifactId>neoload-models</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<modules>
 		<module>neoload-project</module>
 		<module>neoload-writer</module>
 		<module>models-readers</module>
+		<module>global-tests</module>
 	</modules>
 	<packaging>pom</packaging>
 
@@ -124,7 +125,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.neotys.neoload</groupId>
-				<artifactId>neoload-writter</artifactId>
+				<artifactId>neoload-writer</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -243,7 +244,7 @@
 			<dependency>
 				<groupId>org.codehaus.sonar-plugins.java</groupId>
 				<artifactId>sonar-jacoco-listeners</artifactId>
-				<version>3.2</version>
+				<version>3.8</version>
 				<scope>test</scope>
 			</dependency>
 

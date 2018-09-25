@@ -1,14 +1,13 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
+
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.METHOD_CALL_CONTEXT;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.ImmutableMethodCall;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
 import com.neotys.neoload.model.repository.GetRequest;
 import com.neotys.neoload.model.repository.ImmutableGetFollowLinkRequest;
@@ -21,15 +20,15 @@ import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.PostSubmitFormRequest;
 import com.neotys.neoload.model.repository.Request.HttpMethod;
 import com.neotys.neoload.model.repository.Server;
-
+@SuppressWarnings("squid:S2699")
 public class WebSubmitFormMethodTest {
-	
-	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
-	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
-	private static final MethodcallContext METHOD_CALL_CONTEXT = new MethodcallContext(null, 0);
 	
 	@Test
 	public void testGetElement() {		
+		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
+		LOAD_RUNNER_VISITOR.getCurrentHeaders().clear();
+		LOAD_RUNNER_VISITOR.getGlobalHeaders().clear();
+		
 		final MethodCall webUrlMethod = ImmutableMethodCall.builder()
 				.name("\"webUrlMethod\"")
 				.addParameters("\"loadtest\"")
@@ -42,7 +41,7 @@ public class WebSubmitFormMethodTest {
 				.addParameters("LAST")
 				.build();
 		
-		final ImmutablePage actualWebUrl = (ImmutablePage) (new WebUrlMethod()).getElement(LOAD_RUNNER_VISITOR, webUrlMethod, METHOD_CALL_CONTEXT);
+		final ImmutablePage actualWebUrl = (ImmutablePage) (new WeburlMethod()).getElement(LOAD_RUNNER_VISITOR, webUrlMethod, METHOD_CALL_CONTEXT).get(0);
 		
 		final MethodCall webLinkMethod = ImmutableMethodCall.builder()
 				.name("\"webLinkMethod\"")
@@ -52,7 +51,7 @@ public class WebSubmitFormMethodTest {
 				.addParameters("LAST")
 				.build();
 		
-		(new WebLinkMethod()).getElement(LOAD_RUNNER_VISITOR, webLinkMethod, METHOD_CALL_CONTEXT);
+		(new WeblinkMethod()).getElement(LOAD_RUNNER_VISITOR, webLinkMethod, METHOD_CALL_CONTEXT);
 		
 		final MethodCall webSubmitFormMethod = ImmutableMethodCall.builder()
 				.name("\"webSubmitFormMethod\"")
@@ -77,7 +76,7 @@ public class WebSubmitFormMethodTest {
 				.addParameters("LAST")
 				.build();
 		
-		final ImmutablePage actualWebSubmitForm = (ImmutablePage) (new WebSubmitFormMethod()).getElement(LOAD_RUNNER_VISITOR, webSubmitFormMethod, METHOD_CALL_CONTEXT);
+		final ImmutablePage actualWebSubmitForm = (ImmutablePage) (new WebsubmitformMethod()).getElement(LOAD_RUNNER_VISITOR, webSubmitFormMethod, METHOD_CALL_CONTEXT).get(0);
 				
 		final Server expectedServer = ImmutableServer.builder()
 	            .name("jack")
@@ -119,7 +118,6 @@ public class WebSubmitFormMethodTest {
 				.isDynamic(true)
 				.build();
 
-		assertEquals(expectedPage, actualWebSubmitForm);
-		
+		assertEquals(expectedPage, actualWebSubmitForm);		
 	}	
 }

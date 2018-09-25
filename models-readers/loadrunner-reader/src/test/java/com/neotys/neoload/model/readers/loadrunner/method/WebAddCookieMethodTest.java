@@ -1,21 +1,18 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.METHOD_CALL_CONTEXT;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.ImmutableMethodCall;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
-import com.neotys.neoload.model.readers.loadrunner.method.WebAddCookieMethod;
 import com.neotys.neoload.model.repository.AddCookie;
 import com.neotys.neoload.model.repository.ImmutableAddCookie;
 import com.neotys.neoload.model.repository.ImmutableServer;
 import com.neotys.neoload.model.repository.Server;
-
+@SuppressWarnings("squid:S2699")
 public class WebAddCookieMethodTest {
 	
 	public static final MethodCall WEB_ADD_COOKIE_TEST = ImmutableMethodCall.builder()
@@ -29,15 +26,11 @@ public class WebAddCookieMethodTest {
             .port("80")
             .scheme("http")
             .build();
-	
-	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "");
-	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
-	private static final MethodcallContext METHOD_CALL_CONTEXT = new MethodcallContext(null, 0);
-	
+
 	@Test
 	public void testGetElement() {		
 		
-		final AddCookie actualAddCookie = (AddCookie) (new WebAddCookieMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_ADD_COOKIE_TEST, METHOD_CALL_CONTEXT);
+		final AddCookie actualAddCookie = (AddCookie) (new WebaddcookieMethod()).getElement(LOAD_RUNNER_VISITOR, WEB_ADD_COOKIE_TEST, METHOD_CALL_CONTEXT).get(0);
 
 		final AddCookie expectedAddCookie = ImmutableAddCookie.builder()
 				.name("Set cookie NID for server host_test.com")

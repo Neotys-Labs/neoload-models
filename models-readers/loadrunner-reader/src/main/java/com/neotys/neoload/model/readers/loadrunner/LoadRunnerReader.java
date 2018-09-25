@@ -1,5 +1,36 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.any23.encoding.TikaEncodingDetector;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterables;
 import com.neotys.neoload.model.ImmutableProject;
@@ -8,32 +39,20 @@ import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.parsers.CPP14Lexer;
 import com.neotys.neoload.model.parsers.CPP14Parser;
 import com.neotys.neoload.model.readers.Reader;
+import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ParameterFileReader;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ProjectFileReader;
-import com.neotys.neoload.model.repository.*;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
+import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.ImmutableServer;
+import com.neotys.neoload.model.repository.ImmutableUserPath;
+import com.neotys.neoload.model.repository.Server;
 
 public class LoadRunnerReader extends Reader {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoadRunnerReader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoadRunnerReader.class);
 
 	private static final String PATTERN = "\"\\s*\\n\\s*\"";
 	private static final String LOAD_PATTERN = "Load \"%s\"";
@@ -43,6 +62,7 @@ public class LoadRunnerReader extends Reader {
 	private final EventListener eventListener;
 	private final String projectName;
 	private File currentScriptFolder = null;
+	private final LoadRunnerSupportedMethods lrSupportedMethods;
 
 	@VisibleForTesting
 	protected Map<String, Server> currentProjectServers = new HashMap<>();
@@ -50,10 +70,11 @@ public class LoadRunnerReader extends Reader {
 
 	private List<File> dataFilesToCopy = new ArrayList<>();
 
-	public LoadRunnerReader(final EventListener eventListener, final String folder, final String projectName) {
+	public LoadRunnerReader(final EventListener eventListener, final String folder, final String projectName, final String additionalCustomActionMappingContent) {
 		super(folder);
 		this.eventListener = eventListener;
 		this.projectName = projectName;
+		this.lrSupportedMethods = new LoadRunnerSupportedMethods(additionalCustomActionMappingContent);		
 	}
 
 	/**
@@ -71,7 +92,7 @@ public class LoadRunnerReader extends Reader {
 		final List<File> projectFolders = new ArrayList<>();
 		final File rootFolder = new File(folder);
 		if (!rootFolder.isDirectory()) {
-			logger.error("Source parameter is not a folder. Please review your parameters and try again.");
+			LOGGER.error("Source parameter is not a folder. Please review your parameters and try again.");
 			throw new IllegalArgumentException("Source path is not a folder");
 		}
 		if (ProjectFileReader.containsUSRFile(rootFolder)) {
@@ -114,7 +135,7 @@ public class LoadRunnerReader extends Reader {
 			final ProjectFileReader projectFileReader = new ProjectFileReader(this, eventListener, projectFolder);
 			final Map<String, String> actionsMap = projectFileReader.getActions();
 			if (actionsMap.isEmpty()) {
-				logger.error("No action in the map. Ignore the script.");
+				LOGGER.error("No action in the map. Ignore the script.");
 				return;
 			}
 			final ParameterFileReader parameterFileReader = new ParameterFileReader(this, projectFileReader, projectFolder);
@@ -128,8 +149,8 @@ public class LoadRunnerReader extends Reader {
 			final boolean hasAction = manageAction(projectFolder, projectFileReader, actionsMap, userPathBuilder, actionsContainerBuilder);
 			final boolean hasEnd = manageEnd(projectFolder, projectFileReader, userPathBuilder, vuserEndFile);
 
-			if(!hasInit && !hasAction && !hasEnd){
-				logger.error("No Init / Actions / End. Ignore the script.");
+			if (!hasInit && !hasAction && !hasEnd) {
+				LOGGER.error("No Init / Actions / End. Ignore the script.");
 				return;
 			}
 			projectBuilder.addAllVariables(parameterFileReader.getAllVariables()).addUserPaths(
@@ -144,15 +165,16 @@ public class LoadRunnerReader extends Reader {
 		if (vuserEndFile != null) {
 			if (vuserEndFile.endsWith(".c")) {
 				Path pathUserEnd = Paths.get(projectFolder.getAbsolutePath(), vuserEndFile);
+				final Charset charset = guessCharset(pathUserEnd.toFile());
 				try (FileInputStream targetStream = new FileInputStream(pathUserEnd.toFile())) {
 					userPathBuilder.endContainer(Optional.ofNullable(parseCppFile(projectFileReader.getLeftBrace(),
-							projectFileReader.getRightBrace(), targetStream, "End")).orElse(DEFAULT_END_CONTAINER));
-					logger.info(String.format(LOAD_PATTERN, pathUserEnd));
+							projectFileReader.getRightBrace(), targetStream, "End", charset)).orElse(DEFAULT_END_CONTAINER));
+					LOGGER.info(String.format(LOAD_PATTERN, pathUserEnd));
 					eventListener.readSupportedAction(vuserEndFile);
 					return true;
 				} catch (IOException | RecognitionException e) {
 					eventListener.readUnsupportedAction(vuserEndFile);
-					logger.error("Error reading end file", e);
+					LOGGER.error("Error reading end file", e);
 				}
 			} else {
 				eventListener.readUnsupportedAction(vuserEndFile);
@@ -167,17 +189,18 @@ public class LoadRunnerReader extends Reader {
 		actionsMap.forEach(
 				(actionName, actionFile) -> {
 					if (actionFile.endsWith(".c")) {
-						Path pathAction = Paths.get(projectFolder.getAbsolutePath(), actionFile);
+						final Path pathAction = Paths.get(projectFolder.getAbsolutePath(), actionFile);
+						final Charset charset = guessCharset(pathAction.toFile());
 						try (FileInputStream targetStream = new FileInputStream(pathAction.toFile())) {
 							final Container container = parseCppFile(projectFileReader.getLeftBrace(), projectFileReader.getRightBrace(),
-									targetStream, actionName);
+									targetStream, actionName, charset);
 							actionsContainerBuilder.addChilds(container);
-							logger.info(String.format(LOAD_PATTERN, pathAction));
+							LOGGER.info(String.format(LOAD_PATTERN, pathAction));
 							eventListener.readSupportedAction(actionFile);
 							asAtLeastOneAction.set(true);
 						} catch (IOException | RecognitionException e) {
 							eventListener.readUnsupportedAction(actionFile);
-							logger.error("Error reading action file", e);
+							LOGGER.error("Error reading action file", e);
 						}
 					} else {
 						eventListener.readUnsupportedAction(actionFile);
@@ -193,22 +216,30 @@ public class LoadRunnerReader extends Reader {
 		if (vuserInitFile != null) {
 			if (vuserInitFile.endsWith(".c")) {
 				final Path pathUserInit = Paths.get(projectFolder.getAbsolutePath(), vuserInitFile);
-
+				final Charset charset = guessCharset(pathUserInit.toFile());
 				try (FileInputStream targetStream = new FileInputStream(pathUserInit.toFile())) {
 					userPathBuilder.initContainer(Optional.ofNullable(parseCppFile(projectFileReader.getLeftBrace(),
-							projectFileReader.getRightBrace(), targetStream, "Init")).orElse(DEFAULT_INIT_CONTAINER));
-					logger.info(String.format(LOAD_PATTERN, pathUserInit));
+							projectFileReader.getRightBrace(), targetStream, "Init", charset)).orElse(DEFAULT_INIT_CONTAINER));
+					LOGGER.info(String.format(LOAD_PATTERN, pathUserInit));
 					eventListener.readSupportedAction(vuserInitFile);
 					return true;
 				} catch (IOException | RecognitionException e) {
 					eventListener.readUnsupportedAction(vuserInitFile);
-					logger.error("Error reading init file", e);
+					LOGGER.error("Error reading init file", e);
 				}
 			} else {
 				eventListener.readUnsupportedAction(vuserInitFile);
 			}
 		}
 		return false;
+	}
+	
+	public static Charset guessCharset(final File file) {
+		try (FileInputStream targetStream = new FileInputStream(file)) {
+		  return Charset.forName(new TikaEncodingDetector().guessEncoding(targetStream));    
+		} catch(final Exception e){
+			return Charset.defaultCharset();
+		}
 	}
 
 	/**
@@ -219,38 +250,35 @@ public class LoadRunnerReader extends Reader {
 	 */
 	public Server getOrAddServerIfNotExist(final String name, final String host, final String port, final Optional<String> scheme) {
 		// Search if exact same server exists
-		for(final Server server : currentProjectServers.values()){
+		for (final Server server : currentProjectServers.values()) {
 			if (server.getHost().equals(host)
 					&& server.getPort().equals(port)
 					&& server.getScheme().equals(scheme)
 					&& server.getName().equals(name)) {
 				return server;
 			}
-		}				
-		final Server server = ImmutableServer.builder()
-			.name(currentProjectServers.get(name) == null ? name : findUniqueName(name, currentProjectServers.keySet()))
-			.host(host)
-			.port(port)
-			.scheme(scheme)
-			.build();
+		}
+		final Server server = ImmutableServer.builder().name(
+				currentProjectServers.get(name) == null ? name : findUniqueName(name, currentProjectServers.keySet())).host(host).port(port).scheme(
+						scheme).build();
 		currentProjectServers.put(server.getName(), server);
-		return server;		
+		return server;
 	}
 
 	private static String findUniqueName(final String name, final Set<String> keySet) {
 		int i = 0;
 		String uniqueName = name;
-		while(keySet.contains(uniqueName)){
+		while (keySet.contains(uniqueName)) {
 			uniqueName = name + "_" + (++i);
 		}
 		return uniqueName;
 	}
 
 	@VisibleForTesting
-	protected Container parseCppFile(final String leftBrace, final String rightBrace, final InputStream stream,
-			final String name) throws IOException {
+	public Container parseCppFile(final String leftBrace, final String rightBrace, final InputStream stream,
+			final String name, final Charset charset) throws IOException {
 
-		CPP14Lexer lexer = new CPP14Lexer(loadAndCorrectGrammarFromLR(stream));
+		CPP14Lexer lexer = new CPP14Lexer(loadAndCorrectGrammarFromLR(stream, charset));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		CPP14Parser parser = new CPP14Parser(tokens);
 		ParseTree tree = parser.declaration();
@@ -261,22 +289,22 @@ public class LoadRunnerReader extends Reader {
 			}
 		}
 		LoadRunnerVUVisitor visitor = new LoadRunnerVUVisitor(this, leftBrace, rightBrace, name);
-		Container container = (Container) visitor.visit(tree);
+		Container container = (Container) visitor.visit(tree).get(0);
 		// end unended container
-		while(visitor.getCurrentContainers().size()>1){
+		while (visitor.getCurrentContainers().size() > 1) {
 			container = visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1).build();
 			final Container parent = visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).build();
 			container = (Container) LoadRunnerVUVisitor.setUniqueNameInContainer(container, parent);
-			container = visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).addChilds(container).build();			
+			container = visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).addChilds(container).build();
 		}
 		return container;
 
 	}
 
 	@VisibleForTesting
-	protected static CharStream loadAndCorrectGrammarFromLR(InputStream stream) throws IOException {
-		StringWriter writer = new StringWriter();
-		IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
+	protected static CharStream loadAndCorrectGrammarFromLR(final InputStream stream, final Charset charset) throws IOException {		
+		StringWriter writer = new StringWriter();		
+		IOUtils.copy(stream, writer, charset);
 		String loadedFileAsString = writer.toString();
 		return CharStreams.fromString(loadedFileAsString.replaceAll(PATTERN, ""));
 	}
@@ -305,32 +333,39 @@ public class LoadRunnerReader extends Reader {
 	public Path getCurrentScriptFolder() {
 		return currentScriptFolder != null ? currentScriptFolder.toPath() : Paths.get(folder);
 	}
-	
+
 	public Path getCurrentScriptDataFolder() {
 		return getCurrentScriptFolder().resolve("data");
 	}
 
 	/**
-     * Build or get the server from the list of server already build from the passed url
-     * @param url extracting the server from this url
-     * @return the corresponding server
+	 * Build or get the server from the list of server already build from the passed url
+	 * @param url extracting the server from this url
+	 * @return the corresponding server
 	 * @throws MalformedURLException
-     */
-    public Server getServer(final String url) throws MalformedURLException {
-        return getServer(new URL(url));
-    }
+	 */
+	public Server getServer(final String url) throws MalformedURLException {
+		return getServer(new URL(url));
+	}
 
-	 /**
-     * Build or get the server from the list of server already build from the passed url
-     * @param url extracting the server from this url
-     * @return the corresponding server
-     */
-    public Server getServer(final URL url) {
-        return getOrAddServerIfNotExist(
-        		MethodUtils.normalizeName(url.getHost()), 
-        		url.getHost(), 
-        		String.valueOf(url.getPort()!=-1 ? url.getPort() : url.getDefaultPort()), 
-        		Optional.of(url.getProtocol())
-        	);        
-    }
+	/**
+	* Build or get the server from the list of server already build from the passed url
+	* @param url extracting the server from this url
+	* @return the corresponding server
+	*/
+	public Server getServer(final URL url) {
+		return getOrAddServerIfNotExist(
+				MethodUtils.normalizeName(url.getHost()),
+				url.getHost(),
+				String.valueOf(url.getPort() != -1 ? url.getPort() : url.getDefaultPort()),
+				Optional.of(url.getProtocol()));
+	}
+
+	public LoadRunnerMethod getLrSupportedMethod(final String methodName) {
+		return lrSupportedMethods.get(methodName);
+	}
+
+	public ImmutableMappingMethod getCustomActionMappingMethod(String methodName) {
+		return lrSupportedMethods.getCustomActionMappingMethod(methodName);
+	}
 }
