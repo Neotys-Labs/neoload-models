@@ -27,10 +27,10 @@ public class IfThenElseWriter extends ElementWriter {
 		super.writeXML(document, ifElement, outputFolder);
 		currentElement.appendChild(ifElement);
 		
-		final IfThenElse ifThenElse = ((IfThenElse) this.element);
-		ConditionsWriter.writeXML(document, ifElement, ifThenElse.getConditions());
-		ContainerWriter.of(ifThenElse.getThen(), XML_TAG_THEN).writeXML(document, ifElement, outputFolder);
-		final Container elseContainer = ifThenElse.getElse().orElse(ImmutableContainer.builder().name(XML_TAG_ELSE).build());
-		ContainerWriter.of(elseContainer, XML_TAG_ELSE).writeXML(document, ifElement, outputFolder);		
+//		final IfThenElse ifThenElse = ((IfThenElse) this.element);
+//		ConditionsWriter.writeXML(document, ifElement, ifThenElse.getConditions());
+//		ContainerWriter.of(ifThenElse.getThen(), XML_TAG_THEN).writeXML(document, ifElement, outputFolder);
+//		final Container elseContainer = ifThenElse.getElse().orElse(ImmutableContainer.builder().name(XML_TAG_ELSE).build());
+//		ContainerWriter.of(elseContainer, XML_TAG_ELSE).writeXML(document, ifElement, outputFolder);		
 	}
 }
