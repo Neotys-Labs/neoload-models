@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.Token;
-import org.apache.commons.collections4.CollectionUtils;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
@@ -16,22 +15,12 @@ import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
 import com.neotys.neoload.model.parsers.CPP14Parser;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
-import com.neotys.neoload.model.parsers.CPP14Parser.SelectionstatementContext;
-import com.neotys.neoload.model.parsers.CPP14Parser.StatementContext;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
-import com.neotys.neoload.model.repository.Condition.Operator;
-import com.neotys.neoload.model.repository.Conditions.MatchType;
 import com.neotys.neoload.model.repository.Container;
-import com.neotys.neoload.model.repository.CustomAction;
-import com.neotys.neoload.model.repository.CustomActionParameter;
 import com.neotys.neoload.model.repository.EvalString;
 import com.neotys.neoload.model.repository.Header;
-import com.neotys.neoload.model.repository.ImmutableCondition;
-import com.neotys.neoload.model.repository.ImmutableConditions;
 import com.neotys.neoload.model.repository.ImmutableContainer;
-import com.neotys.neoload.model.repository.ImmutableIfThenElse;
-import com.neotys.neoload.model.repository.ImmutableIfThenElse.Builder;
 import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.Request;
 import com.neotys.neoload.model.repository.Validator;
@@ -88,51 +77,79 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		}		
 		return elements;
 	}
+
+//	@Override
+//	public List<Element> visitSelectionstatement(final SelectionstatementContext selectionstatementContext) {
+//		
+//		final String methodName = selectionstatementContext.getChild(0).getText();
+//		if(!"if".equals(methodName)){
+//			return super.visitSelectionstatement(selectionstatementContext);
+//		}
+//		final Builder ifThenElseBuilder = ImmutableIfThenElse.builder().name(methodName);
+//		
+//		final Element condition = selectionstatementContext.getChild(2).accept(new ConditionContextVisitor());
+//		final ImmutableConditions.Builder conditionsBuilder = ImmutableConditions.builder();
+//		if(condition instanceof CustomAction){
+//			conditionsBuilder.addConditions(ImmutableCondition.builder()
+//					.operand1(getVariableName((CustomAction)condition))
+//					.operator(Operator.EQUALS)
+//					.operand2("true")
+//					.build())
+//				.matchType(MatchType.ANY)
+//				.build();			
+//		}	
+//		ifThenElseBuilder.conditions(conditionsBuilder.build());
+//		final List<Element> thenElements = selectionstatementContext.getChild(4).accept(new StatementContextVisitor());
+//		ifThenElseBuilder.then(thenElements);
+//		if(selectionstatementContext.getChildCount() > 6){
+//			final List<Element> elseElements = selectionstatementContext.getChild(6).accept(new StatementContextVisitor());
+//			ifThenElseBuilder.getElse(elseElements);
+//		}						
+//		addInCurrentContainer(ifThenElseBuilder.build());
+//		return Collections.emptyList();		
+//	}
 	
-	private static final boolean isNotEmptyContainer(final Element element){
-		return element instanceof Container && !CollectionUtils.isEmpty(((Container) element).getChilds());	
-	}
-	
-	@Override
-	public List<Element> visitSelectionstatement(final SelectionstatementContext selectionstatementContext) {
-		if(true){
-			return super.visitSelectionstatement(selectionstatementContext);
-		}
-		// TODO: seb
-		final String methodName = selectionstatementContext.getChild(0).getText();
-		final Builder builder = ImmutableIfThenElse.builder().name(methodName);
+//	private class ConditionContextVisitor extends CPP14BaseVisitor<Element> {
+//
+//		@Override
+//		public Element visitCondition(final ConditionContext ctx) {
+//			final Element element = ctx.expression().accept(this);
+//			return element;
+//		}
+//		
+//		@Override
+//		public Element visitMethodcall(MethodcallContext ctx) {
+//			final Element element = LoadRunnerVUVisitor.this.visitMethodcall(ctx).get(0);
+//			return element;
+//		}
+//	}
+//	
+//	private class StatementContextVisitor extends CPP14BaseVisitor<List<Element>> {
+//		
+//		@Override
+//		public List<Element> visitStatementseq(StatementseqContext ctx) {		
+//			final List<Element> elements = new ArrayList<>();
+//			for(final ParseTree child : ctx.statementseq().children){
+//				elements.addAll(child.accept(this));
+//			}
+//			return elements;
+//		}
+//		
+//		@Override
+//		public List<Element> visitMethodcall(MethodcallContext ctx) {
+//			final List<Element> elements = LoadRunnerVUVisitor.this.visitMethodcall(ctx);
+//			return elements;
+//		}
+//	}
 		
-		final Element condition = selectionstatementContext.getChild(2).accept(this).get(0);
-		if(isNotEmptyContainer(condition)){		
-			final Element child = ((Container) condition).getChilds().get(0);
-			if(child instanceof CustomAction){
-				final String variableName = getVariableName((CustomAction)child);
-				builder.conditions(ImmutableConditions.builder()
-						.addConditions(ImmutableCondition.builder()
-								.operand1(variableName)
-								.operator(Operator.EQUALS)
-								.operand2("true")
-								.build())
-						.matchType(MatchType.ANY)
-						.build());			
-			}					
-		}	
-				
-		final ImmutableContainer.Builder thenContainerBuilder = ImmutableContainer.builder().name("Then");
-		final StatementContext thenStatementContext = (StatementContext) selectionstatementContext.getChild(4);
-		thenContainerBuilder.addAllChilds(thenStatementContext.accept(this));		
-		addInCurrentContainer(builder.then(thenContainerBuilder.build()).build());
-		return Collections.emptyList();		
-	}
-		
-	private static String getVariableName(final CustomAction customAction) {
-		for(final CustomActionParameter parameter : customAction.getParameters()){
-			if("variable".equals(parameter.getName())){
-				return parameter.getValue();
-			}
-		}
-		return "";
-	}
+//	private static String getVariableName(final CustomAction customAction) {
+//		for(final CustomActionParameter parameter : customAction.getParameters()){
+//			if("variable".equals(parameter.getName())){
+//				return parameter.getValue();
+//			}
+//		}
+//		return "";
+//	}
 
 	@Override
 	protected List<Element> aggregateResult(final List<Element> aggregate, final List<Element> nextResult) {

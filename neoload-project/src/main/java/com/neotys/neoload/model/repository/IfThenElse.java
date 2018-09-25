@@ -1,6 +1,6 @@
 package com.neotys.neoload.model.repository;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.immutables.value.Value;
@@ -12,15 +12,12 @@ import com.neotys.neoload.model.core.Element;
 @JsonDeserialize(as = ImmutableIfThenElse.class)
 public interface  IfThenElse extends Element {
 	Conditions getConditions();
-	Container getThen();
-	Optional<Container> getElse();
-
-    @Override
-    default Stream<Element> flattened() {
-    	if(getElse().isPresent()){
-    		return Stream.of(getThen(), getElse().get()).flatMap(Container::flattened);	
-    	}
-    	return getThen().flattened();    	
-    }
+	List<Element> getThen();
+	List<Element> getElse();
+	
+	 @Override
+	default Stream<Element> flattened() {
+		return Stream.concat(Stream.of(this), Stream.concat(getThen().stream(), getElse().stream()));
+	}
 }
 
