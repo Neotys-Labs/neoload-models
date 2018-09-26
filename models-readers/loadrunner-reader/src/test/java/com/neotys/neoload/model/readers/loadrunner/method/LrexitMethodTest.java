@@ -12,8 +12,9 @@ import java.util.List;
 import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
 import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.METHOD_CALL_CONTEXT;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("squid:S2699")
 public class LrexitMethodTest {
 
 	@Test
@@ -111,8 +112,8 @@ public class LrexitMethodTest {
 				.addParameters("LR_EXIT_VUSER_AFTER_ACTION", "LR_AUTO")
 				.build(), METHOD_CALL_CONTEXT);
 
-		assertNull(generatedElement_LR_EXIT_ACTION_AND_CONTINUE);
-		assertNull(generatedElement_LR_EXIT_VUSER_AFTER_ITERATION);
-		assertNull(generatedElement_LR_EXIT_VUSER_AFTER_ACTION);
+		assertTrue(generatedElement_LR_EXIT_ACTION_AND_CONTINUE.isEmpty());
+		assertTrue(generatedElement_LR_EXIT_VUSER_AFTER_ITERATION.isEmpty());
+		assertTrue(generatedElement_LR_EXIT_VUSER_AFTER_ACTION.isEmpty());
 	}
 }

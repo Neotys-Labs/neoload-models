@@ -26,7 +26,7 @@ public class LrexitMethod implements LoadRunnerMethod {
 		Preconditions.checkNotNull(method);
 		if (method.getParameters() == null || method.getParameters().size() < 2) {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, method.getName() + " method must have at least 2 parameters");
-			return null;
+			return ImmutableList.of();
 		}
 		visitor.readSupportedFunction(method.getName(), ctx);
 		final String continuationOptionString = normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(),
@@ -40,22 +40,17 @@ public class LrexitMethod implements LoadRunnerMethod {
 
 			switch (continuationOption) {
 				case LR_EXIT_VUSER:
-					return ImmutableList.of(ImmutableStop.builder()
-							.name(MethodUtils.unquote(method.getName()))
-							.startNewVirtualUser(true)
-							.build());
+					return buildStopElement(method);
 				case LR_EXIT_ITERATION_AND_CONTINUE:
 				case LR_EXIT_MAIN_ITERATION_AND_CONTINUE:
 					if (ExitStatus.LR_PASS == exitStatus || ExitStatus.LR_AUTO == exitStatus) {
-						return ImmutableList.of(ImmutableGoToNextIteration.builder()
-								.name(MethodUtils.unquote(method.getName()))
-								.build());
+						return buildGoToNextIterationElement(method);
 					} else if (ExitStatus.LR_FAIL == exitStatus) {
-						return ImmutableList.of(ImmutableJavascript.builder()
-								.name(MethodUtils.unquote(method.getName()))
-								.content("RuntimeContext.fail();")
-								.build());
+						return buildJavaScriptElement(method);
 					}
+					break;
+				default:
+					//do not support these continuation options
 					break;
 			}
 		} catch (final IllegalArgumentException e) {
@@ -64,7 +59,27 @@ public class LrexitMethod implements LoadRunnerMethod {
 		visitor.readSupportedFunctionWithWarn(method.getName(), ctx,
 				method.getName() + " has 2 not supported parameters, continuationOption: " + continuationOptionString
 						+ ", exitStatus: " + exitStatusString);
-		return null;
+		return ImmutableList.of();
+	}
+
+	private ImmutableList<Element> buildStopElement(final MethodCall method) {
+		return ImmutableList.of(ImmutableStop.builder()
+				.name(MethodUtils.unquote(method.getName()))
+				.startNewVirtualUser(true)
+				.build());
+	}
+
+	private ImmutableList<Element> buildGoToNextIterationElement(final MethodCall method) {
+		return ImmutableList.of(ImmutableGoToNextIteration.builder()
+				.name(MethodUtils.unquote(method.getName()))
+				.build());
+	}
+
+	private ImmutableList<Element> buildJavaScriptElement(final MethodCall method) {
+		return ImmutableList.of(ImmutableJavascript.builder()
+				.name(MethodUtils.unquote(method.getName()))
+				.content("RuntimeContext.fail();")
+				.build());
 	}
 
 	private enum ContinuationOption {
