@@ -1,5 +1,33 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Iterables;
+import com.neotys.neoload.model.ImmutableProject;
+import com.neotys.neoload.model.Project;
+import com.neotys.neoload.model.listener.EventListener;
+import com.neotys.neoload.model.parsers.CPP14Lexer;
+import com.neotys.neoload.model.parsers.CPP14Parser;
+import com.neotys.neoload.model.readers.Reader;
+import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
+import com.neotys.neoload.model.readers.loadrunner.filereader.ParameterFileReader;
+import com.neotys.neoload.model.readers.loadrunner.filereader.ProjectFileReader;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
+import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
+import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.ImmutableServer;
+import com.neotys.neoload.model.repository.ImmutableUserPath;
+import com.neotys.neoload.model.repository.Server;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.commons.io.IOUtils;
+import org.mozilla.universalchardet.UniversalDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,35 +48,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.apache.any23.encoding.TikaEncodingDetector;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Iterables;
-import com.neotys.neoload.model.ImmutableProject;
-import com.neotys.neoload.model.Project;
-import com.neotys.neoload.model.listener.EventListener;
-import com.neotys.neoload.model.parsers.CPP14Lexer;
-import com.neotys.neoload.model.parsers.CPP14Parser;
-import com.neotys.neoload.model.readers.Reader;
-import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
-import com.neotys.neoload.model.readers.loadrunner.filereader.ParameterFileReader;
-import com.neotys.neoload.model.readers.loadrunner.filereader.ProjectFileReader;
-import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
-import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
-import com.neotys.neoload.model.repository.Container;
-import com.neotys.neoload.model.repository.ImmutableContainer;
-import com.neotys.neoload.model.repository.ImmutableServer;
-import com.neotys.neoload.model.repository.ImmutableUserPath;
-import com.neotys.neoload.model.repository.Server;
 
 public class LoadRunnerReader extends Reader {
 
@@ -233,19 +232,37 @@ public class LoadRunnerReader extends Reader {
 		}
 		return false;
 	}
-	
-	public static Charset guessCharset(final File file) {
+
+	private static Charset guessCharset(final File file) {
 		try (FileInputStream targetStream = new FileInputStream(file)) {
-		  return Charset.forName(new TikaEncodingDetector().guessEncoding(targetStream));    
+		  return Charset.forName(guessEncoding(targetStream));
 		} catch(final Exception e){
 			return Charset.defaultCharset();
+		}
+	}
+
+	private static String guessEncoding(InputStream is) throws IOException {
+		UniversalDetector detector = new UniversalDetector(null);
+
+		int numberRead;
+		final byte[] buffer = new byte[1024];
+		while ((numberRead = is.read(buffer)) > 0 && !detector.isDone()) {
+			detector.handleData(buffer, 0, numberRead);
+		}
+		detector.dataEnd();
+
+		String encoding = detector.getDetectedCharset();
+		detector.reset();
+		if (encoding != null) {
+			return encoding;
+		} else {
+			throw new IOException("Not detected");
 		}
 	}
 
 	/**
 	 * Check if a identical server already exist, if exist the function return it
 	 * If not but there exist a server with the same "uid", we create a new server with a different uid.
-	 * @param newServer to test
 	 * @return the unique server to use
 	 */
 	public Server getOrAddServerIfNotExist(final String name, final String host, final String port, final Optional<String> scheme) {
