@@ -86,9 +86,9 @@ public class LrexitMethod implements LoadRunnerMethod {
 			case LR_PASS:
 				return Optional.empty();
 			case LR_AUTO:
-				return Optional.of(buildJavaScript("RuntimeContext.fail();"));
+				return Optional.of(buildJavaScript("context.fail();"));
 			case LR_FAIL:
-				return Optional.of(buildJavaScript("RuntimeContext.fail('Exit with failure status');"));
+				return Optional.of(buildJavaScript("context.fail('Exit with failure status');"));
 			default:
 				throw new IllegalArgumentException("Do not support the status exit: " + exitStatus);
 		}
