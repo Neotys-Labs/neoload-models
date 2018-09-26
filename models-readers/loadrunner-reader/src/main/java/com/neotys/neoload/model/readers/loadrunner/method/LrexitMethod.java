@@ -43,10 +43,9 @@ public class LrexitMethod implements LoadRunnerMethod {
 					return buildStopElement(method);
 				case LR_EXIT_ITERATION_AND_CONTINUE:
 				case LR_EXIT_MAIN_ITERATION_AND_CONTINUE:
-					if (ExitStatus.LR_PASS == exitStatus || ExitStatus.LR_AUTO == exitStatus) {
-						return buildGoToNextIterationElement(method);
-					} else if (ExitStatus.LR_FAIL == exitStatus) {
-						return buildJavaScriptElement(method);
+					final List<Element> elements = buildGoToNextIterationOrJavaScripElement(method, exitStatus);
+					if (!elements.isEmpty()) {
+						return elements;
 					}
 					break;
 				default:
@@ -69,17 +68,18 @@ public class LrexitMethod implements LoadRunnerMethod {
 				.build());
 	}
 
-	private ImmutableList<Element> buildGoToNextIterationElement(final MethodCall method) {
-		return ImmutableList.of(ImmutableGoToNextIteration.builder()
-				.name(MethodUtils.unquote(method.getName()))
-				.build());
-	}
-
-	private ImmutableList<Element> buildJavaScriptElement(final MethodCall method) {
-		return ImmutableList.of(ImmutableJavascript.builder()
-				.name(MethodUtils.unquote(method.getName()))
-				.content("RuntimeContext.fail();")
-				.build());
+	private List<Element> buildGoToNextIterationOrJavaScripElement(final MethodCall method, final ExitStatus exitStatus) {
+		if (ExitStatus.LR_PASS == exitStatus || ExitStatus.LR_AUTO == exitStatus) {
+			return ImmutableList.of(ImmutableGoToNextIteration.builder()
+					.name(MethodUtils.unquote(method.getName()))
+					.build());
+		} else if (ExitStatus.LR_FAIL == exitStatus) {
+			return ImmutableList.of(ImmutableJavascript.builder()
+					.name(MethodUtils.unquote(method.getName()))
+					.content("RuntimeContext.fail();")
+					.build());
+		}
+		return ImmutableList.of();
 	}
 
 	private enum ContinuationOption {
