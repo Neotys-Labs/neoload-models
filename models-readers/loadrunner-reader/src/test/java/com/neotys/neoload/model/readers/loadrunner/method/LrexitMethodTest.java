@@ -16,85 +16,98 @@ import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("squid:S2699")
 public class LrexitMethodTest {
+	private static Element STOP_ELEMENT = ImmutableStop.builder()
+			.name("lr_exit")
+			.startNewVirtualUser(true)
+			.build();
+	private static Element GO_TO_NEXT_ITERATION_ELEMENT = ImmutableGoToNextIteration.builder()
+			.name("lr_exit")
+			.build();
+	private static Element FAIL_JAVA_SCRIPT_ELEMENT = ImmutableJavascript.builder()
+			.name("failure-log")
+			.content("RuntimeContext.fail();")
+			.build();
+	private static Element FAIL_JAVA_SCRIPT_WITH_MESSAGE_ELEMENT = ImmutableJavascript.builder()
+			.name("failure-log")
+			.content("RuntimeContext.fail('Exit with failure status');")
+			.build();
 
 	@Test
 	public void testLrExitGetElement_LR_EXIT_VUSER() {
-		Element generatedElement_PASS = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+		List<Element> generatedElements_PASS = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("lr_exit")
 				.addParameters("LR_EXIT_VUSER", "LR_PASS")
-				.build(), METHOD_CALL_CONTEXT).get(0);
-		Element generatedElement_FAIL = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+				.build(), METHOD_CALL_CONTEXT);
+		assertEquals(generatedElements_PASS.size(), 1);
+		assertEquals(generatedElements_PASS.get(0), STOP_ELEMENT);
+
+		List<Element> generatedElements_FAIL = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("lr_exit")
 				.addParameters("LR_EXIT_VUSER", "LR_FAIL")
-				.build(), METHOD_CALL_CONTEXT).get(0);
-		Element generatedElement_AUTO = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+				.build(), METHOD_CALL_CONTEXT);
+		assertEquals(generatedElements_FAIL.size(), 2);
+		assertEquals(generatedElements_FAIL.get(0), FAIL_JAVA_SCRIPT_WITH_MESSAGE_ELEMENT);
+		assertEquals(generatedElements_FAIL.get(1), STOP_ELEMENT);
+
+		List<Element> generatedElements_AUTO = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("lr_exit")
 				.addParameters("LR_EXIT_VUSER", "LR_AUTO")
-				.build(), METHOD_CALL_CONTEXT).get(0);
-
-		Element expectedElement = ImmutableStop.builder()
-				.name("lr_exit")
-				.startNewVirtualUser(true)
-				.build();
-		assertEquals(expectedElement, generatedElement_PASS);
-		assertEquals(expectedElement, generatedElement_FAIL);
-		assertEquals(expectedElement, generatedElement_AUTO);
+				.build(), METHOD_CALL_CONTEXT);
+		assertEquals(generatedElements_AUTO.size(), 2);
+		assertEquals(generatedElements_AUTO.get(0), FAIL_JAVA_SCRIPT_ELEMENT);
+		assertEquals(generatedElements_AUTO.get(1), STOP_ELEMENT);
 	}
 
 	@Test
 	public void testLrExitGetElement_LR_EXIT_ITERATION_AND_CONTINUE() {
-		Element generatedElement_PASS = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+		List<Element> generatedElements_PASS = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("lr_exit")
 				.addParameters("LR_EXIT_ITERATION_AND_CONTINUE", "LR_PASS")
-				.build(), METHOD_CALL_CONTEXT).get(0);
-		Element generatedElement_FAIL = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+				.build(), METHOD_CALL_CONTEXT);
+		assertEquals(generatedElements_PASS.size(), 1);
+		assertEquals(generatedElements_PASS.get(0), GO_TO_NEXT_ITERATION_ELEMENT);
+
+		List<Element> generatedElements_FAIL = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("lr_exit")
 				.addParameters("LR_EXIT_ITERATION_AND_CONTINUE", "LR_FAIL")
-				.build(), METHOD_CALL_CONTEXT).get(0);
-		Element generatedElement_AUTO = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+				.build(), METHOD_CALL_CONTEXT);
+		assertEquals(generatedElements_FAIL.size(), 2);
+		assertEquals(generatedElements_FAIL.get(0), FAIL_JAVA_SCRIPT_WITH_MESSAGE_ELEMENT);
+		assertEquals(generatedElements_FAIL.get(1), GO_TO_NEXT_ITERATION_ELEMENT);
+
+		List<Element> generatedElements_AUTO = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("lr_exit")
 				.addParameters("LR_EXIT_ITERATION_AND_CONTINUE", "LR_AUTO")
-				.build(), METHOD_CALL_CONTEXT).get(0);
-
-		Element expectedElement_PASS_OR_AUTO = ImmutableGoToNextIteration.builder()
-				.name("lr_exit")
-				.build();
-		assertEquals(expectedElement_PASS_OR_AUTO, generatedElement_PASS);
-		assertEquals(expectedElement_PASS_OR_AUTO, generatedElement_AUTO);
-
-		Element expectedElement_FAIL = ImmutableJavascript.builder()
-				.name("lr_exit")
-				.content("RuntimeContext.fail();")
-				.build();
-		assertEquals(expectedElement_FAIL, generatedElement_FAIL);
+				.build(), METHOD_CALL_CONTEXT);
+		assertEquals(generatedElements_AUTO.size(), 2);
+		assertEquals(generatedElements_AUTO.get(0), FAIL_JAVA_SCRIPT_ELEMENT);
+		assertEquals(generatedElements_AUTO.get(1), GO_TO_NEXT_ITERATION_ELEMENT);
 	}
 
 	@Test
 	public void testLrExitGetElement_LR_EXIT_MAIN_ITERATION_AND_CONTINUE() {
-		Element generatedElement_PASS = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+		List<Element> generatedElements_PASS = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("lr_exit")
 				.addParameters("LR_EXIT_MAIN_ITERATION_AND_CONTINUE", "LR_PASS")
-				.build(), METHOD_CALL_CONTEXT).get(0);
-		Element generatedElement_FAIL = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+				.build(), METHOD_CALL_CONTEXT);
+		assertEquals(generatedElements_PASS.size(), 1);
+		assertEquals(generatedElements_PASS.get(0), GO_TO_NEXT_ITERATION_ELEMENT);
+
+		List<Element> generatedElements_FAIL = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("lr_exit")
 				.addParameters("LR_EXIT_MAIN_ITERATION_AND_CONTINUE", "LR_FAIL")
-				.build(), METHOD_CALL_CONTEXT).get(0);
-		Element generatedElement_AUTO = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
+				.build(), METHOD_CALL_CONTEXT);
+		assertEquals(generatedElements_FAIL.size(), 2);
+		assertEquals(generatedElements_FAIL.get(0), FAIL_JAVA_SCRIPT_WITH_MESSAGE_ELEMENT);
+		assertEquals(generatedElements_FAIL.get(1), GO_TO_NEXT_ITERATION_ELEMENT);
+
+		List<Element> generatedElements_AUTO = (new LrexitMethod()).getElement(LOAD_RUNNER_VISITOR, ImmutableMethodCall.builder()
 				.name("lr_exit")
 				.addParameters("LR_EXIT_MAIN_ITERATION_AND_CONTINUE", "LR_AUTO")
-				.build(), METHOD_CALL_CONTEXT).get(0);
-
-		Element expectedElement_PASS_OR_AUTO = ImmutableGoToNextIteration.builder()
-				.name("lr_exit")
-				.build();
-		assertEquals(expectedElement_PASS_OR_AUTO, generatedElement_PASS);
-		assertEquals(expectedElement_PASS_OR_AUTO, generatedElement_AUTO);
-
-		Element expectedElement_FAIL = ImmutableJavascript.builder()
-				.name("lr_exit")
-				.content("RuntimeContext.fail();")
-				.build();
-		assertEquals(expectedElement_FAIL, generatedElement_FAIL);
+				.build(), METHOD_CALL_CONTEXT);
+		assertEquals(generatedElements_AUTO.size(), 2);
+		assertEquals(generatedElements_AUTO.get(0), FAIL_JAVA_SCRIPT_ELEMENT);
+		assertEquals(generatedElements_AUTO.get(1), GO_TO_NEXT_ITERATION_ELEMENT);
 	}
 
 	@Test
