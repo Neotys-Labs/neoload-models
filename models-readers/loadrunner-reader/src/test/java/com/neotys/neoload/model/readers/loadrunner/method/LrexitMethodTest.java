@@ -25,11 +25,11 @@ public class LrexitMethodTest {
 			.build();
 	private static Element FAIL_JAVA_SCRIPT_ELEMENT = ImmutableJavascript.builder()
 			.name("failure-log")
-			.content("RuntimeContext.fail();")
+			.content("context.fail();")
 			.build();
 	private static Element FAIL_JAVA_SCRIPT_WITH_MESSAGE_ELEMENT = ImmutableJavascript.builder()
 			.name("failure-log")
-			.content("RuntimeContext.fail('Exit with failure status');")
+			.content("context.fail('Exit with failure status');")
 			.build();
 
 	@Test
