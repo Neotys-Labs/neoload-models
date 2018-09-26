@@ -25,6 +25,10 @@ public class JavascriptWriter extends ElementWriter {
 		super(javascript);
 	}
 
+	public JavascriptWriter(com.neotys.neoload.model.repository.Javascript javascript) {
+		super(javascript);
+	}
+
 	@Override
 	public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
 		final Element xmlJS = document.createElement(XML_TAG_NAME);
