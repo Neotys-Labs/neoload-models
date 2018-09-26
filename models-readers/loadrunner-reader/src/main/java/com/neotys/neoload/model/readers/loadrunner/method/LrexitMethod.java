@@ -12,6 +12,7 @@ import com.neotys.neoload.model.repository.ImmutableJavascript;
 import com.neotys.neoload.model.repository.ImmutableStop;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.normalizeString;
 
@@ -40,14 +41,10 @@ public class LrexitMethod implements LoadRunnerMethod {
 
 			switch (continuationOption) {
 				case LR_EXIT_VUSER:
-					return buildStopElement(method);
+					return buildStopElements(method, exitStatus);
 				case LR_EXIT_ITERATION_AND_CONTINUE:
 				case LR_EXIT_MAIN_ITERATION_AND_CONTINUE:
-					final List<Element> elements = buildGoToNextIterationOrJavaScripElement(method, exitStatus);
-					if (!elements.isEmpty()) {
-						return elements;
-					}
-					break;
+					return buildGoToNextIterations(method, exitStatus);
 				default:
 					//do not support these continuation options
 					break;
@@ -61,25 +58,47 @@ public class LrexitMethod implements LoadRunnerMethod {
 		return ImmutableList.of();
 	}
 
-	private ImmutableList<Element> buildStopElement(final MethodCall method) {
-		return ImmutableList.of(ImmutableStop.builder()
+	private ImmutableList<Element> buildStopElements(final MethodCall method, final ExitStatus exitStatus) {
+		ImmutableList.Builder<Element> builder = ImmutableList.builder();
+		buildJavaScriptIfNeeded(exitStatus).ifPresent(builder::add);
+
+		builder.add(ImmutableStop.builder()
 				.name(MethodUtils.unquote(method.getName()))
 				.startNewVirtualUser(true)
 				.build());
+
+		return builder.build();
 	}
 
-	private List<Element> buildGoToNextIterationOrJavaScripElement(final MethodCall method, final ExitStatus exitStatus) {
-		if (ExitStatus.LR_PASS == exitStatus || ExitStatus.LR_AUTO == exitStatus) {
-			return ImmutableList.of(ImmutableGoToNextIteration.builder()
-					.name(MethodUtils.unquote(method.getName()))
-					.build());
-		} else if (ExitStatus.LR_FAIL == exitStatus) {
-			return ImmutableList.of(ImmutableJavascript.builder()
-					.name(MethodUtils.unquote(method.getName()))
-					.content("RuntimeContext.fail();")
-					.build());
+	private List<Element> buildGoToNextIterations(final MethodCall method, final ExitStatus exitStatus) {
+		ImmutableList.Builder<Element> builder = ImmutableList.builder();
+		buildJavaScriptIfNeeded(exitStatus).ifPresent(builder::add);
+
+		builder.add(ImmutableGoToNextIteration.builder()
+				.name(MethodUtils.unquote(method.getName()))
+				.build());
+
+		return builder.build();
+	}
+
+	private Optional<Element> buildJavaScriptIfNeeded(final ExitStatus exitStatus) {
+		switch (exitStatus) {
+			case LR_PASS:
+				return Optional.empty();
+			case LR_AUTO:
+				return Optional.of(buildJavaScript("RuntimeContext.fail();"));
+			case LR_FAIL:
+				return Optional.of(buildJavaScript("RuntimeContext.fail('Exit with failure status');"));
+			default:
+				throw new IllegalArgumentException("Do not support the status exit: " + exitStatus);
 		}
-		return ImmutableList.of();
+	}
+
+	private Element buildJavaScript(final String javaScriptContent) {
+		return ImmutableJavascript.builder()
+				.name("failure-log")
+				.content(javaScriptContent)
+				.build();
 	}
 
 	private enum ContinuationOption {
