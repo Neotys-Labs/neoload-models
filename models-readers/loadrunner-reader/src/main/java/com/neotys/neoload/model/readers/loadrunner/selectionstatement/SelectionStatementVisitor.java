@@ -1,0 +1,95 @@
+package com.neotys.neoload.model.readers.loadrunner.selectionstatement;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.neotys.neoload.model.core.Element;
+import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
+import com.neotys.neoload.model.parsers.CPP14Parser.SelectionstatementContext;
+import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
+import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
+import com.neotys.neoload.model.repository.Condition;
+import com.neotys.neoload.model.repository.Conditions;
+import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.CustomAction;
+import com.neotys.neoload.model.repository.CustomActionParameter;
+import com.neotys.neoload.model.repository.IfThenElse;
+import com.neotys.neoload.model.repository.ImmutableCondition;
+import com.neotys.neoload.model.repository.ImmutableConditions;
+import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.ImmutableIfThenElse;
+
+public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
+
+	private static final String LR_METHOD_IF = "if";
+	private static final String NL_IF_ACTION_NAME = "condition";
+	private static final String NL_THEN_CONTAINER_NAME = "Then";
+	private static final String NL_ELSE_CONTAINER_NAME = "Else";
+	
+	private final LoadRunnerVUVisitor visitor;
+	 
+	
+	public SelectionStatementVisitor(final LoadRunnerVUVisitor visitor) {
+		this.visitor = visitor;
+	}
+	
+	@Override
+	public Element visitSelectionstatement(SelectionstatementContext selectionstatementContext) {
+		final String methodName = selectionstatementContext.getChild(0).getText();
+		if(LR_METHOD_IF.equals(methodName)){
+			return handleIf(selectionstatementContext);
+		}
+		return super.visitSelectionstatement(selectionstatementContext);
+	}
+
+	private Element handleIf(SelectionstatementContext selectionstatementContext) {
+		final IfThenElse ifThenElse = ImmutableIfThenElse.builder()
+			.name(NL_IF_ACTION_NAME)
+			.conditions(readConditions(selectionstatementContext))		
+			.then(readThen(selectionstatementContext))
+			.getElse(readElse(selectionstatementContext))
+			.build();
+		visitor.addInCurrentContainer(ifThenElse);
+		return ifThenElse;
+	}
+	
+	private Conditions readConditions(final SelectionstatementContext selectionstatementContext) {
+		final Element condition = selectionstatementContext.getChild(2).accept(new ConditionContextVisitor(visitor));
+		final ImmutableConditions.Builder conditionsBuilder = ImmutableConditions.builder();
+		if(condition instanceof CustomAction){
+			conditionsBuilder.addConditions(ImmutableCondition.builder()
+					.operand1(getVariableSyntax((CustomAction)condition))
+					.operator(Condition.Operator.EQUALS)
+					.operand2("true")
+					.build())
+				.matchType(Conditions.MatchType.ANY)
+				.build();			
+		}	
+		final Conditions conditions = conditionsBuilder.build();
+		return conditions;
+	}
+	
+	private Container readThen(SelectionstatementContext selectionstatementContext) {
+		final List<Element> thenElements = selectionstatementContext.getChild(4).accept(new StatementContextVisitor(visitor, NL_THEN_CONTAINER_NAME));
+		final Container thenContainer = ImmutableContainer.builder().name(NL_THEN_CONTAINER_NAME).addAllChilds(thenElements).build();
+		return thenContainer;
+	}
+	
+	private Container readElse(SelectionstatementContext selectionstatementContext) {
+		final List<Element> elseElements = new ArrayList<>();
+		if(selectionstatementContext.getChildCount() > 6){
+			elseElements.addAll(selectionstatementContext.getChild(6).accept(new StatementContextVisitor(visitor, NL_ELSE_CONTAINER_NAME)));			
+		}		
+		final Container elseContainer = ImmutableContainer.builder().name(NL_ELSE_CONTAINER_NAME).addAllChilds(elseElements).build();
+		return elseContainer;
+	}
+
+	private static String getVariableSyntax(final CustomAction customAction) {
+		for(final CustomActionParameter parameter : customAction.getParameters()){
+			if("variable".equals(parameter.getName())){
+				return MethodUtils.getVariableSyntax(parameter.getValue());
+			}
+		}
+		return "";
+	}
+}
