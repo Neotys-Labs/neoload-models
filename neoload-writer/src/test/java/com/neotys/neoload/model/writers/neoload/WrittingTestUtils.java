@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.repository.*;
+import com.neotys.neoload.model.repository.CustomActionParameter.Type;
 import com.neotys.neoload.model.repository.Request.HttpMethod;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -188,6 +190,70 @@ public class WrittingTestUtils {
 			.addChilds(PAGE_TEST)
 			.name("Container_name")
 			.build();
+	
+	static final CustomAction SET_OK_CODE_CUSTOM_ACTION = ImmutableCustomAction.builder()
+			.name("setOkCode")
+			.type("SetText")
+			.isHit(false)
+			.parameters(ImmutableList.of(ImmutableCustomActionParameter.builder()
+					.name("objectId")
+					.value("x")
+					.type(Type.TEXT)
+					.build()))
+			.build();
+	
+	static final CustomAction IS_OBJECT_AVAILABLE_CUSTOM_ACTION = ImmutableCustomAction.builder()
+			.name("isObjectAvailable")
+			.type("IsAvailable")
+			.isHit(false)
+			.parameters(ImmutableList.of(ImmutableCustomActionParameter.builder()
+					.name("objectId")
+					.value("x")
+					.type(Type.TEXT)
+					.build()))
+			.build();
+	
+	public static final IfThenElse IF_THEN_TEST_2 = ImmutableIfThenElse.builder()
+			.name("condition")
+			.conditions(ImmutableConditions.builder()
+					.addConditions(ImmutableCondition.builder()
+							.operand1("${sapgui_is_object_available_2}")
+							.operator(Condition.Operator.EQUALS)
+							.operand2("true")
+							.build()
+							)
+					.matchType(Conditions.MatchType.ANY)
+					.build())
+			.then(ImmutableContainer.builder()
+					.name("Then")
+					.addChilds(SET_OK_CODE_CUSTOM_ACTION)
+					.build())
+			.getElse(ImmutableContainer.builder()
+					.name("Else")					
+					.build())
+			.build();
+	
+	public static final IfThenElse IF_THEN_TEST_1 = ImmutableIfThenElse.builder()
+			.name("condition")
+			.conditions(ImmutableConditions.builder()
+					.addConditions(ImmutableCondition.builder()
+							.operand1("${sapgui_is_object_available_1}")
+							.operator(Condition.Operator.EQUALS)
+							.operand2("true")
+							.build()
+							)
+					.matchType(Conditions.MatchType.ANY)
+					.build())
+			.then(ImmutableContainer.builder()
+					.name("Then")
+					.addChilds(SET_OK_CODE_CUSTOM_ACTION)					
+					.build())
+			.getElse(ImmutableContainer.builder()
+					.name("Else")
+					.addChilds(SET_OK_CODE_CUSTOM_ACTION, IS_OBJECT_AVAILABLE_CUSTOM_ACTION, IF_THEN_TEST_2)					
+					.build())
+			.build();
+	
 
 	private static final List<String> COLUMNS;
 	static {
