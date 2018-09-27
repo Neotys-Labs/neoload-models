@@ -28,8 +28,7 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 	private static final String CUSTOM_ACTION_VARIABLE_PARAMETER = "variable";
 	
 	private final LoadRunnerVUVisitor visitor;
-	 
-	
+	 	
 	public SelectionStatementVisitor(final LoadRunnerVUVisitor visitor) {
 		this.visitor = visitor;
 	}
