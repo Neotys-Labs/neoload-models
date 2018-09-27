@@ -43,15 +43,24 @@ public class ContainerWriter extends ElementWriter {
 		super.writeXML(document, xmlContainerElement, outputFolder);
 		currentElement.appendChild(xmlContainerElement);
 		Container theContainer = ((Container) this.element);
+		setPropertyAttributes(xmlContainerElement);
+		writeEmbeddedActions(document, outputFolder, xmlContainerElement, theContainer);
+	}
 
-		xmlContainerElement.setAttribute(XML_ELEMENT_NUMBER, DEFAULT_ELEMENT_NUMBER);
-		xmlContainerElement.setAttribute(XML_EXECUTION_TYPE, DEFAULT_EXECUTION_TYPE);
-		xmlContainerElement.setAttribute(XML_WEIGHTS_ENABLED, DEFAULT_WEIGHTS_ENABLED);
-
+	protected static void writeEmbeddedActions(final Document document, final String outputFolder, Element xmlContainerElement, Container theContainer) {
 		theContainer.getChilds().forEach(elt -> {
 			WriterUtils.generateEmbeddedAction(document, xmlContainerElement, elt, Optional.of(WriterUtils.WEIGHTED_ACTION_XML_TAG_NAME), true);
 			WriterUtils.<ElementWriter>getWriterFor(elt).writeXML(document, document.getDocumentElement(), outputFolder);
 		});
-
+	}
+	
+	protected void setPropertyAttributes(final Element xmlContainerElement){
+		xmlContainerElement.setAttribute(XML_ELEMENT_NUMBER, DEFAULT_ELEMENT_NUMBER);
+		xmlContainerElement.setAttribute(XML_EXECUTION_TYPE, DEFAULT_EXECUTION_TYPE);
+		xmlContainerElement.setAttribute(XML_WEIGHTS_ENABLED, DEFAULT_WEIGHTS_ENABLED);
+	}
+	
+	public Optional<String> getTagName() {
+		return tagName;
 	}
 }

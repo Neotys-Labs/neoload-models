@@ -14,13 +14,23 @@ import com.neotys.neoload.model.function.Function;
 import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
 import com.neotys.neoload.model.parsers.CPP14Parser;
+import com.neotys.neoload.model.parsers.CPP14Parser.ConditionContext;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
+import com.neotys.neoload.model.parsers.CPP14Parser.SelectionstatementContext;
+import com.neotys.neoload.model.parsers.CPP14Parser.StatementContext;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
+import com.neotys.neoload.model.repository.Condition;
+import com.neotys.neoload.model.repository.Conditions;
 import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.CustomAction;
+import com.neotys.neoload.model.repository.CustomActionParameter;
 import com.neotys.neoload.model.repository.EvalString;
 import com.neotys.neoload.model.repository.Header;
+import com.neotys.neoload.model.repository.ImmutableCondition;
+import com.neotys.neoload.model.repository.ImmutableConditions;
 import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.ImmutableIfThenElse;
 import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.Request;
 import com.neotys.neoload.model.repository.Validator;
@@ -78,78 +88,87 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		return elements;
 	}
 
-//	@Override
-//	public List<Element> visitSelectionstatement(final SelectionstatementContext selectionstatementContext) {
-//		
-//		final String methodName = selectionstatementContext.getChild(0).getText();
-//		if(!"if".equals(methodName)){
-//			return super.visitSelectionstatement(selectionstatementContext);
-//		}
-//		final Builder ifThenElseBuilder = ImmutableIfThenElse.builder().name(methodName);
-//		
-//		final Element condition = selectionstatementContext.getChild(2).accept(new ConditionContextVisitor());
-//		final ImmutableConditions.Builder conditionsBuilder = ImmutableConditions.builder();
-//		if(condition instanceof CustomAction){
-//			conditionsBuilder.addConditions(ImmutableCondition.builder()
-//					.operand1(getVariableName((CustomAction)condition))
-//					.operator(Operator.EQUALS)
-//					.operand2("true")
-//					.build())
-//				.matchType(MatchType.ANY)
-//				.build();			
-//		}	
-//		ifThenElseBuilder.conditions(conditionsBuilder.build());
-//		final List<Element> thenElements = selectionstatementContext.getChild(4).accept(new StatementContextVisitor());
-//		ifThenElseBuilder.then(thenElements);
-//		if(selectionstatementContext.getChildCount() > 6){
-//			final List<Element> elseElements = selectionstatementContext.getChild(6).accept(new StatementContextVisitor());
-//			ifThenElseBuilder.getElse(elseElements);
-//		}						
-//		addInCurrentContainer(ifThenElseBuilder.build());
-//		return Collections.emptyList();		
-//	}
-	
-//	private class ConditionContextVisitor extends CPP14BaseVisitor<Element> {
-//
-//		@Override
-//		public Element visitCondition(final ConditionContext ctx) {
-//			final Element element = ctx.expression().accept(this);
-//			return element;
-//		}
-//		
-//		@Override
-//		public Element visitMethodcall(MethodcallContext ctx) {
-//			final Element element = LoadRunnerVUVisitor.this.visitMethodcall(ctx).get(0);
-//			return element;
-//		}
-//	}
-//	
-//	private class StatementContextVisitor extends CPP14BaseVisitor<List<Element>> {
-//		
-//		@Override
-//		public List<Element> visitStatementseq(StatementseqContext ctx) {		
-//			final List<Element> elements = new ArrayList<>();
-//			for(final ParseTree child : ctx.statementseq().children){
-//				elements.addAll(child.accept(this));
-//			}
-//			return elements;
-//		}
-//		
-//		@Override
-//		public List<Element> visitMethodcall(MethodcallContext ctx) {
-//			final List<Element> elements = LoadRunnerVUVisitor.this.visitMethodcall(ctx);
-//			return elements;
-//		}
-//	}
+	@Override
+	public List<Element> visitSelectionstatement(final SelectionstatementContext selectionstatementContext) {
 		
-//	private static String getVariableName(final CustomAction customAction) {
-//		for(final CustomActionParameter parameter : customAction.getParameters()){
-//			if("variable".equals(parameter.getName())){
-//				return parameter.getValue();
-//			}
-//		}
-//		return "";
-//	}
+		final String methodName = selectionstatementContext.getChild(0).getText();
+		if(!"if".equals(methodName)){
+			return super.visitSelectionstatement(selectionstatementContext);
+		}
+		final ImmutableIfThenElse.Builder ifThenElseBuilder = ImmutableIfThenElse.builder().name(methodName);
+		
+		final Element condition = selectionstatementContext.getChild(2).accept(new ConditionContextVisitor());
+		final ImmutableConditions.Builder conditionsBuilder = ImmutableConditions.builder();
+		if(condition instanceof CustomAction){
+			conditionsBuilder.addConditions(ImmutableCondition.builder()
+					.operand1(getVariableName((CustomAction)condition))
+					.operator(Condition.Operator.EQUALS)
+					.operand2("true")
+					.build())
+				.matchType(Conditions.MatchType.ANY)
+				.build();			
+		}	
+		ifThenElseBuilder.conditions(conditionsBuilder.build());
+		final List<Element> thenElements = selectionstatementContext.getChild(4).accept(new StatementContextVisitor("Then"));
+		final Container thenContainer = ImmutableContainer.builder().name("Then").addAllChilds(thenElements).build();
+		ifThenElseBuilder.then(thenContainer);
+		final List<Element> elseElements = new ArrayList<>();
+		if(selectionstatementContext.getChildCount() > 6){
+			elseElements.addAll(selectionstatementContext.getChild(6).accept(new StatementContextVisitor("Else")));			
+		}		
+		final Container elseContainer = ImmutableContainer.builder().name("Else").addAllChilds(elseElements).build();
+		ifThenElseBuilder.getElse(elseContainer);		
+		addInCurrentContainer(ifThenElseBuilder.build());
+		return Collections.emptyList();		
+	}
+	
+	private class ConditionContextVisitor extends CPP14BaseVisitor<Element> {
+
+		@Override
+		public Element visitCondition(final ConditionContext ctx) {
+			final Element element = ctx.expression().accept(this);
+			return element;
+		}
+		
+		@Override
+		public Element visitMethodcall(MethodcallContext ctx) {
+			final Element element = LoadRunnerVUVisitor.this.visitMethodcall(ctx).get(0);
+			return element;
+		}
+	}
+	
+	private class StatementContextVisitor extends CPP14BaseVisitor<List<Element>> {
+		
+		private final ImmutableContainer.Builder currentContainer;
+		
+		public StatementContextVisitor(final String name){
+			super();
+			this.currentContainer = ImmutableContainer.builder().name(name);
+		}
+		
+		@Override
+		public List<Element> visitStatement(StatementContext ctx) {
+			super.visitStatement(ctx);
+			return currentContainer.build().getChilds();
+		}
+				
+		@Override
+		public List<Element> visitMethodcall(MethodcallContext ctx) {			 
+			currentContainers.add(currentContainer);
+			LoadRunnerVUVisitor.this.visitMethodcall(ctx);
+			currentContainers.remove(currentContainers.size()-1);
+			return Collections.emptyList();
+		}
+	}
+		
+	private static String getVariableName(final CustomAction customAction) {
+		for(final CustomActionParameter parameter : customAction.getParameters()){
+			if("variable".equals(parameter.getName())){
+				return parameter.getValue();
+			}
+		}
+		return "";
+	}
 
 	@Override
 	protected List<Element> aggregateResult(final List<Element> aggregate, final List<Element> nextResult) {
@@ -158,24 +177,24 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	
 	public void addInCurrentContainer(Element element){
 		if(element!=null){
-			element = setUniqueNameInContainer(element,	currentContainers.get(currentContainers.size() - 1).build());
+			element = setUniqueNameInContainer(element,	currentContainers.get(currentContainers.size() - 1).build().getChilds());
 			currentContainers.get(currentContainers.size() - 1).addChilds(element);
 		}
 	}
 
-	static Element setUniqueNameInContainer(final Element element, final Container container) {
+	static Element setUniqueNameInContainer(final Element element, final List<Element> childs) {
 		if (element == null)
 			return element;
 		int i = 0;
 		Element elementWithUniqueName = element;
-		while (!isUniqueInContainer(elementWithUniqueName, container)) {
+		while (!isUniqueInContainer(elementWithUniqueName, childs)) {
 			elementWithUniqueName = element.withName(element.getName() + "_" + (++i));
 		}
 		return elementWithUniqueName;
 	}
 
-	private static boolean isUniqueInContainer(final Element element, final Container container) {
-		return container.getChilds().stream().filter(element1 -> element1.getName().equals(element.getName())).count() == 0;
+	private static boolean isUniqueInContainer(final Element element, final List<Element> childs) {
+		return childs.stream().filter(element1 -> element1.getName().equals(element.getName())).count() == 0;
 	}
 
 	private class ParametersVisitor extends CPP14BaseVisitor<List<String>> {

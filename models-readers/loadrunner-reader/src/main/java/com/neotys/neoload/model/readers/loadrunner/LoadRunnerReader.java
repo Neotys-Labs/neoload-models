@@ -255,9 +255,8 @@ public class LoadRunnerReader extends Reader {
 		detector.reset();
 		if (encoding != null) {
 			return encoding;
-		} else {
-			throw new IOException("Not detected");
-		}
+		} 
+		throw new IOException("Not detected");		
 	}
 
 	/**
@@ -311,7 +310,7 @@ public class LoadRunnerReader extends Reader {
 		while (visitor.getCurrentContainers().size() > 1) {
 			container = visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1).build();
 			final Container parent = visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).build();
-			container = (Container) LoadRunnerVUVisitor.setUniqueNameInContainer(container, parent);
+			container = (Container) LoadRunnerVUVisitor.setUniqueNameInContainer(container, parent.getChilds());
 			container = visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).addChilds(container).build();
 		}
 		return container;

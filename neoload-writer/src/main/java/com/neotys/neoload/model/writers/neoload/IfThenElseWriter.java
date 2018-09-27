@@ -3,9 +3,7 @@ package com.neotys.neoload.model.writers.neoload;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.IfThenElse;
-import com.neotys.neoload.model.repository.ImmutableContainer;
 
 public class IfThenElseWriter extends ElementWriter {
 
@@ -27,10 +25,9 @@ public class IfThenElseWriter extends ElementWriter {
 		super.writeXML(document, ifElement, outputFolder);
 		currentElement.appendChild(ifElement);
 		
-//		final IfThenElse ifThenElse = ((IfThenElse) this.element);
-//		ConditionsWriter.writeXML(document, ifElement, ifThenElse.getConditions());
-//		ContainerWriter.of(ifThenElse.getThen(), XML_TAG_THEN).writeXML(document, ifElement, outputFolder);
-//		final Container elseContainer = ifThenElse.getElse().orElse(ImmutableContainer.builder().name(XML_TAG_ELSE).build());
-//		ContainerWriter.of(elseContainer, XML_TAG_ELSE).writeXML(document, ifElement, outputFolder);		
+		final IfThenElse ifThenElse = ((IfThenElse) this.element);		
+		ContainerForMultiWriter.of(ifThenElse.getThen(), XML_TAG_THEN).writeXML(document, ifElement, outputFolder);		
+		ContainerForMultiWriter.of(ifThenElse.getElse(), XML_TAG_ELSE).writeXML(document, ifElement, outputFolder);
+		ConditionsWriter.writeXML(document, ifElement, ifThenElse.getConditions());
 	}
 }
