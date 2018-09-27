@@ -25,6 +25,7 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 	private static final String NL_IF_ACTION_NAME = "condition";
 	private static final String NL_THEN_CONTAINER_NAME = "Then";
 	private static final String NL_ELSE_CONTAINER_NAME = "Else";
+	private static final String CUSTOM_ACTION_VARIABLE_PARAMETER = "variable";
 	
 	private final LoadRunnerVUVisitor visitor;
 	 
@@ -49,7 +50,7 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 			.then(readThen(selectionstatementContext))
 			.getElse(readElse(selectionstatementContext))
 			.build();
-		visitor.addInCurrentContainer(ifThenElse);
+		visitor.addInContainers(ifThenElse);
 		return ifThenElse;
 	}
 	
@@ -65,14 +66,12 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 				.matchType(Conditions.MatchType.ANY)
 				.build();			
 		}	
-		final Conditions conditions = conditionsBuilder.build();
-		return conditions;
+		return conditionsBuilder.build();
 	}
 	
 	private Container readThen(SelectionstatementContext selectionstatementContext) {
 		final List<Element> thenElements = selectionstatementContext.getChild(4).accept(new StatementContextVisitor(visitor, NL_THEN_CONTAINER_NAME));
-		final Container thenContainer = ImmutableContainer.builder().name(NL_THEN_CONTAINER_NAME).addAllChilds(thenElements).build();
-		return thenContainer;
+		return ImmutableContainer.builder().name(NL_THEN_CONTAINER_NAME).addAllChilds(thenElements).build();
 	}
 	
 	private Container readElse(SelectionstatementContext selectionstatementContext) {
@@ -80,13 +79,12 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 		if(selectionstatementContext.getChildCount() > 6){
 			elseElements.addAll(selectionstatementContext.getChild(6).accept(new StatementContextVisitor(visitor, NL_ELSE_CONTAINER_NAME)));			
 		}		
-		final Container elseContainer = ImmutableContainer.builder().name(NL_ELSE_CONTAINER_NAME).addAllChilds(elseElements).build();
-		return elseContainer;
+		return ImmutableContainer.builder().name(NL_ELSE_CONTAINER_NAME).addAllChilds(elseElements).build();
 	}
 
 	private static String getVariableSyntax(final CustomAction customAction) {
 		for(final CustomActionParameter parameter : customAction.getParameters()){
-			if("variable".equals(parameter.getName())){
+			if(CUSTOM_ACTION_VARIABLE_PARAMETER.equals(parameter.getName())){
 				return MethodUtils.getVariableSyntax(parameter.getValue());
 			}
 		}

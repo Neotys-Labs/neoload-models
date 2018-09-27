@@ -72,8 +72,8 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		}
 		final List<Element> elements = lrMethod.getElement(this, method, ctx);
 		for(final Element element: elements){
-			if(!(element instanceof EvalString)){
-				addInCurrentContainer(element);
+			if(element!=null && !(element instanceof EvalString)){
+				addInContainers(element);
 			}
 		}		
 		return elements;
@@ -89,11 +89,9 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		return ImmutableList.of(currentContainers.get(0).build());
 	}
 	
-	public void addInCurrentContainer(Element element){
-		if(element!=null){
-			element = setUniqueNameInContainer(element,	currentContainers.get(currentContainers.size() - 1).build().getChilds());
-			currentContainers.get(currentContainers.size() - 1).addChilds(element);
-		}
+	public ImmutableContainer.Builder addInContainers(Element element){
+		element = setUniqueNameInContainer(element,	currentContainers.get(currentContainers.size() - 1).build().getChilds());
+		return currentContainers.get(currentContainers.size() - 1).addChilds(element);	
 	}
 
 	static Element setUniqueNameInContainer(final Element element, final List<Element> childs) {

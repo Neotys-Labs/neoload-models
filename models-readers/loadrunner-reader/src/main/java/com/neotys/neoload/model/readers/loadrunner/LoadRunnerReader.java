@@ -309,9 +309,7 @@ public class LoadRunnerReader extends Reader {
 		// end unended container
 		while (visitor.getCurrentContainers().size() > 1) {
 			container = visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1).build();
-			final Container parent = visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).build();
-			container = (Container) LoadRunnerVUVisitor.setUniqueNameInContainer(container, parent.getChilds());
-			container = visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1).addChilds(container).build();
+			container = visitor.addInContainers(container).build();					
 		}
 		return container;
 
