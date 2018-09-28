@@ -2,6 +2,9 @@ package com.neotys.neoload.model.readers.loadrunner.selectionstatement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
@@ -54,20 +57,51 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 	}
 	
 	private Conditions readConditions(final SelectionstatementContext selectionstatementContext) {
-		final Element condition = selectionstatementContext.getChild(2).accept(new ConditionContextVisitor(visitor));
-		final ImmutableConditions.Builder conditionsBuilder = ImmutableConditions.builder();
-		if(condition instanceof CustomAction){
-			conditionsBuilder.addConditions(ImmutableCondition.builder()
-					.operand1(getVariableSyntax((CustomAction)condition))
-					.operator(Condition.Operator.EQUALS)
-					.operand2("true")
-					.build())
-				.matchType(Conditions.MatchType.ANY)
-				.build();			
+		final ParseTree conditionTree = selectionstatementContext.getChild(2);		
+		final Element element = conditionTree.accept(new ConditionContextVisitor(visitor));		
+		final String operand1;
+		if(element instanceof CustomAction){
+			operand1 = getVariableSyntax((CustomAction)element);
+		} else {
+			operand1 = extractBooleanCondition(conditionTree);
 		}	
+		final Condition condition = ImmutableCondition.builder()
+				.operand1(operand1)
+				.operator(Condition.Operator.EQUALS)
+				.operand2("true")
+				.build();		
+		final ImmutableConditions.Builder conditionsBuilder = ImmutableConditions.builder();
+		conditionsBuilder.addConditions(condition);
+		conditionsBuilder.description(extractDescription(conditionTree));
+		conditionsBuilder.matchType(Conditions.MatchType.ANY);
 		return conditionsBuilder.build();
 	}
 	
+	private static String extractBooleanCondition(final ParseTree conditionTree) {
+		if(conditionTree.getChildCount() == 0){
+			return "true";
+		}
+		final ParseTree tree = conditionTree.getChild(0);
+		if(tree == null){
+			return "true";
+		}
+		if("false".equals(tree.getText())){
+			return "false";
+		}
+		return "true";
+	}
+
+	private static Optional<String> extractDescription(final ParseTree conditionTree) {
+		if(conditionTree.getChildCount() == 0){
+			return Optional.empty();
+		}
+		final ParseTree tree = conditionTree.getChild(0);
+		if(tree == null){
+			return Optional.empty();
+		}
+		return Optional.ofNullable(tree.getText());
+	}
+
 	private Container readThen(SelectionstatementContext selectionstatementContext) {
 		final List<Element> thenElements = selectionstatementContext.getChild(4).accept(new StatementContextVisitor(visitor, NL_THEN_CONTAINER_NAME));
 		return ImmutableContainer.builder().name(NL_THEN_CONTAINER_NAME).addAllChilds(thenElements).build();
