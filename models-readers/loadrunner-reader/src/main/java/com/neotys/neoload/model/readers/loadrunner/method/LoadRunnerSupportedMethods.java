@@ -1,15 +1,17 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.neotys.neoload.model.readers.loadrunner.customaction.CustomActionMappingLoader;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoadRunnerSupportedMethods {
 	
 	private final CustomActionMappingLoader customActionMappingLoader;
 	private final Map<String, LoadRunnerMethod> supportedMethods;
+
+	private ContainerInFileMethod containerInFileMethod;
 	
 	public LoadRunnerSupportedMethods(final String additionalCustomActionMappingContent) {
 		super();
@@ -21,7 +23,10 @@ public class LoadRunnerSupportedMethods {
 		if(supportedMethods.containsKey(methodName)){
 			return supportedMethods.get(methodName);
 		}
-		final LoadRunnerMethod method = internalLoadMethod(methodName);		
+		final LoadRunnerMethod method = internalLoadMethod(methodName);
+		if (containerInFileMethod != null && containerInFileMethod.containsContainer(methodName)) {
+			return containerInFileMethod;
+		}
 		supportedMethods.put(methodName, method);
 		return method;
 	}
@@ -51,5 +56,9 @@ public class LoadRunnerSupportedMethods {
 		if("lr_end_sub_transaction".equals(methodName)) return new LrendtransactionMethod();
 		if("lr_param_sprintf".equals(methodName)) return new SprintfMethod();
 		return null;
-	}	
+	}
+
+	public void setContainerInFileMethod(final ContainerInFileMethod containerInFileMethod) {
+		this.containerInFileMethod = containerInFileMethod;
+	}
 }

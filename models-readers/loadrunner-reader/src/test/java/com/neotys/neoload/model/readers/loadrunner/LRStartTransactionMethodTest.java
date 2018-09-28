@@ -1,22 +1,23 @@
 package com.neotys.neoload.model.readers.loadrunner;
-import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+
+import com.google.common.base.Charsets;
+import com.neotys.neoload.model.repository.Container;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Test;
-
-import com.google.common.base.Charsets;
-import com.neotys.neoload.model.repository.Container;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 @SuppressWarnings("squid:S2699")
 public class LRStartTransactionMethodTest {
 
 	@Test
     public void transactionsReaderTest() {    	
         try(InputStream targetStream = this.getClass().getResourceAsStream("ActionTransaction.c")) {
-            Container container = LOAD_RUNNER_READER.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
+            final MutableContainer container = new MutableContainer("MyContainer");
+            LOAD_RUNNER_READER.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
             assertThat(container).isNotNull();
             assertThat(container.getChilds().size()).isEqualTo(2);
             assertThat(container.getChilds().get(0).getName()).isEqualTo("level_1");

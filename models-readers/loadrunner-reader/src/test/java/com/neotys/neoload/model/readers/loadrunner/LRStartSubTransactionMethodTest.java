@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 
 import org.junit.Test;
 
@@ -18,7 +19,8 @@ public class LRStartSubTransactionMethodTest {
 	public void subTransactionsReaderTest() {
 
 		try (InputStream targetStream = this.getClass().getResourceAsStream("ActionSubTransaction.c")) {
-			final Container myContainer = LOAD_RUNNER_READER.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
+			final MutableContainer myContainer = new MutableContainer("MyContainer");
+			LOAD_RUNNER_READER.parseCppFile(myContainer, "{", "}", targetStream, Charsets.UTF_8);
 			assertThat(myContainer).isNotNull();
 			assertThat(myContainer.getChilds().size()).isEqualTo(1);
 			final Container level1 = (Container) myContainer.getChilds().get(0);

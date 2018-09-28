@@ -23,6 +23,6 @@ public class LrendtransactionMethod implements LoadRunnerMethod {
 			return Collections.emptyList();
 		}
 		visitor.readSupportedFunction(method.getName(), ctx);
-		return ImmutableList.of(visitor.getCurrentContainers().remove(size - 1).build());
+		return ImmutableList.of(LoadRunnerVUVisitor.toContainer(visitor.getCurrentContainers().remove(size - 1)));
 	}
 }

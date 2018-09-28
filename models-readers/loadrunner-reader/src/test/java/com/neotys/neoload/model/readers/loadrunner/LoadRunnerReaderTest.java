@@ -1,16 +1,5 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Optional;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
-
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.Project;
@@ -18,7 +7,17 @@ import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.Delay;
 import com.neotys.neoload.model.repository.Page;
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
+
 import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 @SuppressWarnings("squid:S2699")
 public class LoadRunnerReaderTest {
 	
@@ -27,7 +26,8 @@ public class LoadRunnerReaderTest {
         final String folder = new File(this.getClass().getResource("Action.c").getFile()).getParent();
         final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("Action.c")) {
-            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
+            final MutableContainer container = new MutableContainer("MyContainer");
+            reader.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
             assertThat(container).isNotNull();
             assertThat(container.getChilds().size()).isEqualTo(5);
             assertThat(container.getChilds().get(0).getName()).isEqualTo("page1");
@@ -46,7 +46,8 @@ public class LoadRunnerReaderTest {
         final String folder = new File(this.getClass().getResource("ActionRequest.c").getFile()).getParent();
     	final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("ActionRequest.c")) {
-            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
+            final MutableContainer container = new MutableContainer("MyContainer");
+            reader.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
             assertThat(container).isNotNull();
             assertThat(container.getChilds().size()).isEqualTo(1);
             assertThat(container.getChilds().get(0).getName()).isEqualTo("page1");

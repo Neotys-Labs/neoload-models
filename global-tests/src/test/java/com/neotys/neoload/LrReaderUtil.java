@@ -1,15 +1,12 @@
 package com.neotys.neoload;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.InputStream;
-
 import com.google.common.base.Charsets;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
+import com.neotys.neoload.model.readers.loadrunner.MutableContainer;
 import com.neotys.neoload.model.repository.Container;
+
+import java.io.*;
 
 public class LrReaderUtil {
 	
@@ -17,7 +14,9 @@ public class LrReaderUtil {
 	
 	public static Container read(final String content) {
 		try {
-			return LOAD_RUNNER_READER.parseCppFile("{", "}", getInputStream(content), "MyContainer", Charsets.UTF_8);
+			final MutableContainer container = new MutableContainer("container");
+			LOAD_RUNNER_READER.parseCppFile(container, "{", "}", getInputStream(content), Charsets.UTF_8);
+			return container;
 		} catch (final Exception e) {
 		}
 		return null;
