@@ -6,7 +6,10 @@ Action()
 		sapgui_set_ok_code("2");		
 	} else {
 		sapgui_set_ok_code("3");
-		if (sapgui_is_object_available("wnd[1]")){
+		if (true){
+			sapgui_set_ok_code("4");
+		}
+		if (false){
 			sapgui_set_ok_code("4");
 		}		
 	}	

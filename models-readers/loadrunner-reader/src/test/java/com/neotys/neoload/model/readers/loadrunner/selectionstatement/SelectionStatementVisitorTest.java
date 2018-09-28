@@ -46,12 +46,12 @@ public class SelectionStatementVisitorTest {
             assertThat(elseContainer.getName()).isEqualTo("Else");
             assertThat(elseContainer.getChilds().size()).isEqualTo(3);
             assertThat(elseContainer.getChilds().get(0).getName()).isEqualTo("setOkCode");
-            assertThat(elseContainer.getChilds().get(1).getName()).isEqualTo("isObjectAvailable");
-            assertThat(elseContainer.getChilds().get(2).getName()).isEqualTo("condition");
-            final IfThenElse ifThenElse2 = (IfThenElse) elseContainer.getChilds().get(2);
+            assertThat(elseContainer.getChilds().get(1).getName()).isEqualTo("condition");
+            assertThat(elseContainer.getChilds().get(2).getName()).isEqualTo("condition_1");
+            final IfThenElse ifThenElse2 = (IfThenElse) elseContainer.getChilds().get(1);
             assertThat(ifThenElse2.getConditions().getMatchType()).isEqualTo(MatchType.ANY);
             assertThat(ifThenElse2.getConditions().getConditions().size()).isEqualTo(1);
-            assertThat(ifThenElse2.getConditions().getConditions().get(0).getOperand1()).isEqualTo("${sapgui_is_object_available_2}");
+            assertThat(ifThenElse2.getConditions().getConditions().get(0).getOperand1()).isEqualTo("true");
             assertThat(ifThenElse2.getConditions().getConditions().get(0).getOperator()).isEqualTo(Condition.Operator.EQUALS);
             assertThat(ifThenElse2.getConditions().getConditions().get(0).getOperand2()).isEqualTo("true");
             final Container thenContainer2 = ifThenElse2.getThen();
@@ -61,6 +61,19 @@ public class SelectionStatementVisitorTest {
             final Container elseContainer2 = ifThenElse2.getElse();
             assertThat(elseContainer2.getName()).isEqualTo("Else");
             assertThat(elseContainer2.getChilds().size()).isEqualTo(0);            
+            final IfThenElse ifThenElse3 = (IfThenElse) elseContainer.getChilds().get(2);           
+            assertThat(ifThenElse3.getConditions().getMatchType()).isEqualTo(MatchType.ANY);
+            assertThat(ifThenElse3.getConditions().getConditions().size()).isEqualTo(1);
+            assertThat(ifThenElse3.getConditions().getConditions().get(0).getOperand1()).isEqualTo("false");
+            assertThat(ifThenElse3.getConditions().getConditions().get(0).getOperator()).isEqualTo(Condition.Operator.EQUALS);
+            assertThat(ifThenElse3.getConditions().getConditions().get(0).getOperand2()).isEqualTo("true");
+            final Container thenContainer3 = ifThenElse3.getThen();
+            assertThat(thenContainer3.getName()).isEqualTo("Then");   
+            assertThat(thenContainer3.getChilds().size()).isEqualTo(1);
+            assertThat(thenContainer3.getChilds().get(0).getName()).isEqualTo("setOkCode");            
+            final Container elseContainer3 = ifThenElse2.getElse();
+            assertThat(elseContainer3.getName()).isEqualTo("Else");
+            assertThat(elseContainer3.getChilds().size()).isEqualTo(0);
         }catch(IOException e) {
             fail("Error reading test stream", e);
         }
