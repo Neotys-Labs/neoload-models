@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Iterables;
 import com.neotys.neoload.model.ImmutableProject;
 import com.neotys.neoload.model.Project;
 import com.neotys.neoload.model.listener.EventListener;
@@ -11,13 +10,10 @@ import com.neotys.neoload.model.readers.Reader;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ParameterFileReader;
 import com.neotys.neoload.model.readers.loadrunner.filereader.ProjectFileReader;
+import com.neotys.neoload.model.readers.loadrunner.method.ContainerInFileMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerSupportedMethods;
-import com.neotys.neoload.model.repository.Container;
-import com.neotys.neoload.model.repository.ImmutableContainer;
-import com.neotys.neoload.model.repository.ImmutableServer;
-import com.neotys.neoload.model.repository.ImmutableUserPath;
-import com.neotys.neoload.model.repository.Server;
+import com.neotys.neoload.model.repository.*;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -28,26 +24,18 @@ import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LoadRunnerReader extends Reader {
 
@@ -55,8 +43,6 @@ public class LoadRunnerReader extends Reader {
 
 	private static final String PATTERN = "\"\\s*\\n\\s*\"";
 	private static final String LOAD_PATTERN = "Load \"%s\"";
-	private static final Container DEFAULT_INIT_CONTAINER = ImmutableContainer.builder().name("Init").build();
-	private static final Container DEFAULT_END_CONTAINER = ImmutableContainer.builder().name("End").build();
 
 	private final EventListener eventListener;
 	private final String projectName;
@@ -69,7 +55,8 @@ public class LoadRunnerReader extends Reader {
 
 	private List<File> dataFilesToCopy = new ArrayList<>();
 
-	public LoadRunnerReader(final EventListener eventListener, final String folder, final String projectName, final String additionalCustomActionMappingContent) {
+	public LoadRunnerReader(final EventListener eventListener, final String folder, final String projectName,
+							final String additionalCustomActionMappingContent) {
 		super(folder);
 		this.eventListener = eventListener;
 		this.projectName = projectName;
@@ -132,7 +119,7 @@ public class LoadRunnerReader extends Reader {
 			currentScriptFolder = projectFolder;
 			eventListener.startScript(currentScriptFolder.getName());
 			final ProjectFileReader projectFileReader = new ProjectFileReader(this, eventListener, projectFolder);
-			final Map<String, String> actionsMap = projectFileReader.getActions();
+			final Map<String, String> actionsMap = projectFileReader.getAllActionsMap();
 			if (actionsMap.isEmpty()) {
 				LOGGER.error("No action in the map. Ignore the script.");
 				return;
@@ -141,59 +128,39 @@ public class LoadRunnerReader extends Reader {
 
 			final ImmutableUserPath.Builder userPathBuilder = ImmutableUserPath.builder();
 
-			final String vuserInitFile = actionsMap.remove(Iterables.getFirst(actionsMap.keySet(), "vuser_init"));
-			final boolean hasInit = manageInit(projectFolder, projectFileReader, userPathBuilder, vuserInitFile);
-			final String vuserEndFile = actionsMap.remove(Iterables.getLast(actionsMap.keySet(), "vuser_end"));
-			final ImmutableContainer.Builder actionsContainerBuilder = ImmutableContainer.builder().name("Actions");
-			final boolean hasAction = manageAction(projectFolder, projectFileReader, actionsMap, userPathBuilder, actionsContainerBuilder);
-			final boolean hasEnd = manageEnd(projectFolder, projectFileReader, userPathBuilder, vuserEndFile);
+			final boolean hasAction = manageActions(projectFolder, projectFileReader, actionsMap, projectBuilder, userPathBuilder);
 
-			if (!hasInit && !hasAction && !hasEnd) {
+			final UserPath userPath = userPathBuilder.name(projectFileReader.getVirtualUserName()).build();
+
+			if (!hasAction) {
 				LOGGER.error("No Init / Actions / End. Ignore the script.");
 				return;
 			}
-			projectBuilder.addAllVariables(parameterFileReader.getAllVariables()).addUserPaths(
-					userPathBuilder.name(projectFileReader.getVirtualUserName()).build());
+			projectBuilder.addAllVariables(parameterFileReader.getAllVariables()).addUserPaths(userPath);
 		} finally {
 			eventListener.endScript();
 		}
 	}
 
-	private boolean manageEnd(final File projectFolder, final ProjectFileReader projectFileReader, final ImmutableUserPath.Builder userPathBuilder,
-			final String vuserEndFile) {
-		if (vuserEndFile != null) {
-			if (vuserEndFile.endsWith(".c")) {
-				Path pathUserEnd = Paths.get(projectFolder.getAbsolutePath(), vuserEndFile);
-				final Charset charset = guessCharset(pathUserEnd.toFile());
-				try (FileInputStream targetStream = new FileInputStream(pathUserEnd.toFile())) {
-					userPathBuilder.endContainer(Optional.ofNullable(parseCppFile(projectFileReader.getLeftBrace(),
-							projectFileReader.getRightBrace(), targetStream, "End", charset)).orElse(DEFAULT_END_CONTAINER));
-					LOGGER.info(String.format(LOAD_PATTERN, pathUserEnd));
-					eventListener.readSupportedAction(vuserEndFile);
-					return true;
-				} catch (IOException | RecognitionException e) {
-					eventListener.readUnsupportedAction(vuserEndFile);
-					LOGGER.error("Error reading end file", e);
-				}
-			} else {
-				eventListener.readUnsupportedAction(vuserEndFile);
-			}
-		}
-		return false;
-	}
+	private boolean manageActions(final File projectFolder, final ProjectFileReader projectFileReader, final Map<String, String> actionsMap,
+								  final ImmutableProject.Builder projectBuilder, final ImmutableUserPath.Builder userPathBuilder) {
 
-	private boolean manageAction(final File projectFolder, final ProjectFileReader projectFileReader, final Map<String, String> actionsMap,
-			final ImmutableUserPath.Builder userPathBuilder, final ImmutableContainer.Builder actionsContainerBuilder) {
+		final Map<String, MutableContainer> containersByName = actionsMap.keySet().stream()
+				.collect(Collectors.toMap(Function.identity(), MutableContainer::new));
+
+		lrSupportedMethods.setContainerInFileMethod(new ContainerInFileMethod(containersByName));
+
 		final AtomicBoolean asAtLeastOneAction = new AtomicBoolean(false);
 		actionsMap.forEach(
 				(actionName, actionFile) -> {
 					if (actionFile.endsWith(".c")) {
 						final Path pathAction = Paths.get(projectFolder.getAbsolutePath(), actionFile);
 						final Charset charset = guessCharset(pathAction.toFile());
+
+						final MutableContainer containerBuilder = containersByName.get(actionName);
 						try (FileInputStream targetStream = new FileInputStream(pathAction.toFile())) {
-							final Container container = parseCppFile(projectFileReader.getLeftBrace(), projectFileReader.getRightBrace(),
-									targetStream, actionName, charset);
-							actionsContainerBuilder.addChilds(container);
+							parseCppFile(containerBuilder, projectFileReader.getLeftBrace(), projectFileReader.getRightBrace(),
+									targetStream, charset);
 							LOGGER.info(String.format(LOAD_PATTERN, pathAction));
 							eventListener.readSupportedAction(actionFile);
 							asAtLeastOneAction.set(true);
@@ -206,31 +173,43 @@ public class LoadRunnerReader extends Reader {
 					}
 				});
 
-		userPathBuilder.actionsContainer(actionsContainerBuilder.build());
-		return asAtLeastOneAction.get();
-	}
+		lrSupportedMethods.setContainerInFileMethod(null);
 
-	private boolean manageInit(final File projectFolder, final ProjectFileReader projectFileReader, final ImmutableUserPath.Builder userPathBuilder,
-			final String vuserInitFile) {
-		if (vuserInitFile != null) {
-			if (vuserInitFile.endsWith(".c")) {
-				final Path pathUserInit = Paths.get(projectFolder.getAbsolutePath(), vuserInitFile);
-				final Charset charset = guessCharset(pathUserInit.toFile());
-				try (FileInputStream targetStream = new FileInputStream(pathUserInit.toFile())) {
-					userPathBuilder.initContainer(Optional.ofNullable(parseCppFile(projectFileReader.getLeftBrace(),
-							projectFileReader.getRightBrace(), targetStream, "Init", charset)).orElse(DEFAULT_INIT_CONTAINER));
-					LOGGER.info(String.format(LOAD_PATTERN, pathUserInit));
-					eventListener.readSupportedAction(vuserInitFile);
-					return true;
-				} catch (IOException | RecognitionException e) {
-					eventListener.readUnsupportedAction(vuserInitFile);
-					LOGGER.error("Error reading init file", e);
-				}
-			} else {
-				eventListener.readUnsupportedAction(vuserInitFile);
-			}
+		final ImmutableContainer.Builder initContainerBuilder = ImmutableContainer.builder().name("Init");
+		projectFileReader.getInits().stream().map(containersByName::get).filter(Objects::nonNull).forEach(initContainerBuilder::addChilds);
+
+		final ImmutableContainer.Builder actionsContainerBuilder = ImmutableContainer.builder().name("Actions");
+		if (projectFileReader.getActions().isEmpty()) {
+			containersByName.values().stream()
+					.filter(c -> !projectFileReader.getInits().contains(c.getName()) && !projectFileReader.getEnds().contains(c.getName()))
+					.forEach(actionsContainerBuilder::addChilds);
+		} else {
+			projectFileReader.getActions().stream().map(containersByName::get).filter(Objects::nonNull).forEach(actionsContainerBuilder::addChilds);
 		}
-		return false;
+
+		final ImmutableContainer.Builder endContainerBuilder = ImmutableContainer.builder().name("End");
+		projectFileReader.getEnds().stream().map(containersByName::get).filter(Objects::nonNull).forEach(endContainerBuilder::addChilds);
+
+		final ImmutableContainer init = initContainerBuilder.build();
+		final ImmutableContainer actions = actionsContainerBuilder.build();
+		final ImmutableContainer end = endContainerBuilder.build();
+
+		// when a container appears more than once in User Path, we add it in shared containers
+		containersByName.values().forEach(container ->
+		{
+			if (Stream.concat(Stream.concat(init.flattened(), actions.flattened()), end.flattened()).filter(container::equals).count() > 1) {
+				container.setShared(true);
+				projectBuilder.addSharedElements(container);
+			}
+		});
+
+		// TODO if only one child to init actions End then directly add children?
+
+		userPathBuilder.initContainer(init)
+				.actionsContainer(actions)
+				.endContainer(end);
+
+		return asAtLeastOneAction.get();
 	}
 
 	private static Charset guessCharset(final File file) {
@@ -291,8 +270,8 @@ public class LoadRunnerReader extends Reader {
 	}
 
 	@VisibleForTesting
-	public Container parseCppFile(final String leftBrace, final String rightBrace, final InputStream stream,
-			final String name, final Charset charset) throws IOException {
+	public void parseCppFile(final MutableContainer mutableContainer, final String leftBrace, final String rightBrace,
+								  final InputStream stream, final Charset charset) throws IOException {
 
 		CPP14Lexer lexer = new CPP14Lexer(loadAndCorrectGrammarFromLR(stream, charset));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -304,15 +283,13 @@ public class LoadRunnerReader extends Reader {
 				throw exception;
 			}
 		}
-		LoadRunnerVUVisitor visitor = new LoadRunnerVUVisitor(this, leftBrace, rightBrace, name);
-		Container container = (Container) visitor.visit(tree).get(0);
+		LoadRunnerVUVisitor visitor = new LoadRunnerVUVisitor(this, leftBrace, rightBrace, mutableContainer);
+		visitor.visit(tree);
 		// end unended container
 		while (visitor.getCurrentContainers().size() > 1) {
-			container = visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1).build();
-			container = visitor.addInContainers(container).build();					
+			final Container container = LoadRunnerVUVisitor.toContainer(visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1));
+			visitor.addInContainers(container);
 		}
-		return container;
-
 	}
 
 	@VisibleForTesting

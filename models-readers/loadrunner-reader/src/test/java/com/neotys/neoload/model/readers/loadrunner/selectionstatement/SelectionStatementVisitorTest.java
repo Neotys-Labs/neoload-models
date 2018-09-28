@@ -1,22 +1,22 @@
 package com.neotys.neoload.model.readers.loadrunner.selectionstatement;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import com.google.common.base.Charsets;
+import com.neotys.neoload.model.core.Element;
+import com.neotys.neoload.model.listener.TestEventListener;
+import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
+import com.neotys.neoload.model.readers.loadrunner.MutableContainer;
+import com.neotys.neoload.model.repository.Condition;
+import com.neotys.neoload.model.repository.Conditions.MatchType;
+import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.IfThenElse;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Test;
-
-import com.google.common.base.Charsets;
-import com.neotys.neoload.model.core.Element;
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
-import com.neotys.neoload.model.repository.Condition;
-import com.neotys.neoload.model.repository.Conditions.MatchType;
-import com.neotys.neoload.model.repository.Container;
-import com.neotys.neoload.model.repository.IfThenElse;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 @SuppressWarnings("squid:S2699")
 public class SelectionStatementVisitorTest {
 
@@ -25,7 +25,8 @@ public class SelectionStatementVisitorTest {
 		final String folder = new File(this.getClass().getResource("ActionSelectionStatement.c").getFile()).getParent();
         final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
         try(InputStream targetStream = this.getClass().getResourceAsStream("ActionSelectionStatement.c")) {
-            Container container = reader.parseCppFile("{", "}", targetStream, "MyContainer", Charsets.UTF_8);
+            final MutableContainer container = new MutableContainer("name");
+            reader.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
             assertThat(container).isNotNull();
             assertThat(container.getChilds().size()).isEqualTo(4);
             final Element isObjectAvailable = container.getChilds().get(0);

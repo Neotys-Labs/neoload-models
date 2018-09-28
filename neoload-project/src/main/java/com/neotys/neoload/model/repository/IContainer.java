@@ -1,11 +1,12 @@
 package com.neotys.neoload.model.repository;
 
 import com.neotys.neoload.model.core.Element;
+import com.neotys.neoload.model.core.ShareableElement;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface IContainer extends Element {
+public interface IContainer extends ShareableElement {
     List<Element> getChilds();
 
     @Override

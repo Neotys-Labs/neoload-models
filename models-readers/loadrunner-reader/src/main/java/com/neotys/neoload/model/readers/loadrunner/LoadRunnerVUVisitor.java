@@ -1,13 +1,6 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.antlr.v4.runtime.Token;
-
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.function.Function;
@@ -19,18 +12,17 @@ import com.neotys.neoload.model.parsers.CPP14Parser.SelectionstatementContext;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
 import com.neotys.neoload.model.readers.loadrunner.selectionstatement.SelectionStatementVisitor;
-import com.neotys.neoload.model.repository.EvalString;
-import com.neotys.neoload.model.repository.Header;
-import com.neotys.neoload.model.repository.ImmutableContainer;
-import com.neotys.neoload.model.repository.Page;
-import com.neotys.neoload.model.repository.Request;
-import com.neotys.neoload.model.repository.Validator;
-import com.neotys.neoload.model.repository.VariableExtractor;
+import com.neotys.neoload.model.repository.*;
+import org.antlr.v4.runtime.Token;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
-
-	private final ImmutableContainer.Builder mainContainer;
-	private final List<ImmutableContainer.Builder> currentContainers = new ArrayList<>();
+	private final List<Object> currentContainers = new ArrayList<>();
 	private List<VariableExtractor> currentExtractors;
 	private List<Validator> currentValidators;
 	private List<Header> currentHeaders;
@@ -40,11 +32,14 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	private final LoadRunnerReader reader;
 	private final EventListener eventListener;
 	private Optional<Request> currentRequest = Optional.empty();
+
+	@VisibleForTesting
+	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final String mutableContainer) {
+		this(reader, leftBrace, rightBrace, new MutableContainer(mutableContainer));
+	}
 	
-	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final String containerName) {
-		this.mainContainer = ImmutableContainer.builder().name(containerName);
-		this.currentContainers.clear();
-		this.currentContainers.add(mainContainer);
+	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final Container Container) {
+		currentContainers.add(Container);
 		this.currentExtractors = new ArrayList<>();
 		this.currentValidators = new ArrayList<>();
 		this.currentHeaders = new ArrayList<>();
@@ -90,12 +85,29 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	
 	@Override
 	protected List<Element> aggregateResult(final List<Element> aggregate, final List<Element> nextResult) {
-		return ImmutableList.of(currentContainers.get(0).build());
+		final Object current = currentContainers.get(0);
+		return ImmutableList.of(toContainer(current));
 	}
-	
-	public ImmutableContainer.Builder addInContainers(Element element){
-		element = setUniqueNameInContainer(element,	currentContainers.get(currentContainers.size() - 1).build().getChilds());
-		return currentContainers.get(currentContainers.size() - 1).addChilds(element);	
+
+	public static Container toContainer(final Object current) {
+		if (current instanceof ImmutableContainer.Builder) {
+			return ((ImmutableContainer.Builder) current).build();
+		}
+		return (Container) current;
+	}
+
+	public void addInContainers(Element element){
+		final Object lastContainer = currentContainers.get(currentContainers.size() - 1);
+		element = setUniqueNameInContainer(element,	toContainer(lastContainer).getChilds());
+		addChild(lastContainer,element);
+	}
+
+	private void addChild(final Object container, final Element element) {
+		if (container instanceof ImmutableContainer.Builder) {
+			((ImmutableContainer.Builder) container).addChilds(element);
+			return;
+		}
+		((Container) container).getChilds().add(element);
 	}
 
 	static Element setUniqueNameInContainer(final Element element, final List<Element> childs) {
@@ -191,7 +203,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		return token.getLine();
 	}
 	
-	public List<ImmutableContainer.Builder> getCurrentContainers() {
+	public List<Object> getCurrentContainers() {
 		return currentContainers;
 	}
 

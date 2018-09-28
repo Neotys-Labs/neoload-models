@@ -1,0 +1,11 @@
+Main()
+{
+	
+	// Enter Transaction
+	sapgui_select_active_window("wnd[0]");
+	sapgui_set_ok_code("/ntest");
+	
+	lr_think_time(1);
+
+	return 0;
+}
