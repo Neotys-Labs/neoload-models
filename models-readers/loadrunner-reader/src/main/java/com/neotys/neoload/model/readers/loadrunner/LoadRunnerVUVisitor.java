@@ -81,7 +81,11 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 
 	@Override
 	public List<Element> visitSelectionstatement(final SelectionstatementContext selectionstatementContext) {
-		return ImmutableList.of(selectionstatementContext.accept((new SelectionStatementVisitor(this))));		
+		final Element element = selectionstatementContext.accept((new SelectionStatementVisitor(this)));
+		if(element == null){
+			return Collections.emptyList();
+		}
+		return ImmutableList.of(element);		
 	}
 	
 	@Override

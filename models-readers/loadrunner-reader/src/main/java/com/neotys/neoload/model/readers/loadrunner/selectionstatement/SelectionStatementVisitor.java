@@ -38,6 +38,9 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 	
 	@Override
 	public Element visitSelectionstatement(SelectionstatementContext selectionstatementContext) {
+		if(selectionstatementContext.getChildCount() == 0){
+			return super.visitSelectionstatement(selectionstatementContext);
+		}
 		final String methodName = selectionstatementContext.getChild(0).getText();
 		if(LR_METHOD_IF.equals(methodName)){
 			return handleIf(selectionstatementContext);

@@ -13,5 +13,8 @@ Action()
 			sapgui_set_ok_code("4");
 		}		
 	}	
+	if(sapgui_is_object_available("wnd[2]")){		
+	} else {		
+	}	
 	return 0;
 }
