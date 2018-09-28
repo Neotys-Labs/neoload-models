@@ -1,11 +1,10 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.repository.*;
-import com.neotys.neoload.model.repository.CustomActionParameter.Type;
-import com.neotys.neoload.model.repository.Request.HttpMethod;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.io.File;
+import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,11 +14,48 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.StringWriter;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.repository.Condition;
+import com.neotys.neoload.model.repository.Conditions;
+import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.CustomAction;
+import com.neotys.neoload.model.repository.CustomActionParameter.Type;
+import com.neotys.neoload.model.repository.FileVariable;
+import com.neotys.neoload.model.repository.GetFollowLinkRequest;
+import com.neotys.neoload.model.repository.GetPlainRequest;
+import com.neotys.neoload.model.repository.IfThenElse;
+import com.neotys.neoload.model.repository.ImmutableCondition;
+import com.neotys.neoload.model.repository.ImmutableConditions;
+import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.ImmutableCustomAction;
+import com.neotys.neoload.model.repository.ImmutableCustomActionParameter;
+import com.neotys.neoload.model.repository.ImmutableFileVariable;
+import com.neotys.neoload.model.repository.ImmutableGetFollowLinkRequest;
+import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
+import com.neotys.neoload.model.repository.ImmutableIfThenElse;
+import com.neotys.neoload.model.repository.ImmutablePage;
+import com.neotys.neoload.model.repository.ImmutableParameter;
+import com.neotys.neoload.model.repository.ImmutablePart;
+import com.neotys.neoload.model.repository.ImmutablePostBinaryRequest;
+import com.neotys.neoload.model.repository.ImmutablePostFormRequest;
+import com.neotys.neoload.model.repository.ImmutablePostMultipartRequest;
+import com.neotys.neoload.model.repository.ImmutablePostSubmitFormRequest;
+import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
+import com.neotys.neoload.model.repository.ImmutableRecordedFiles;
+import com.neotys.neoload.model.repository.ImmutableServer;
+import com.neotys.neoload.model.repository.Page;
+import com.neotys.neoload.model.repository.Parameter;
+import com.neotys.neoload.model.repository.PostFormRequest;
+import com.neotys.neoload.model.repository.PostMultipartRequest;
+import com.neotys.neoload.model.repository.PostRequest;
+import com.neotys.neoload.model.repository.PostSubmitFormRequest;
+import com.neotys.neoload.model.repository.PostTextRequest;
+import com.neotys.neoload.model.repository.Request.HttpMethod;
+import com.neotys.neoload.model.repository.Server;
 
 public class WrittingTestUtils {
 	private WrittingTestUtils() {}
@@ -202,7 +238,7 @@ public class WrittingTestUtils {
 					.build()))
 			.build();
 	
-	static final CustomAction IS_OBJECT_AVAILABLE_CUSTOM_ACTION = ImmutableCustomAction.builder()
+	public static final CustomAction IS_OBJECT_AVAILABLE_CUSTOM_ACTION = ImmutableCustomAction.builder()
 			.name("isObjectAvailable")
 			.type("IsAvailable")
 			.isHit(false)
@@ -254,7 +290,6 @@ public class WrittingTestUtils {
 					.build())
 			.build();
 	
-
 	private static final List<String> COLUMNS;
 	static {
 		COLUMNS = new ArrayList<>();

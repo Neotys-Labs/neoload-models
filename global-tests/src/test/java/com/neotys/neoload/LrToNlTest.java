@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.google.common.io.Files;
 import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.IfThenElse;
 import com.neotys.neoload.model.writers.neoload.WriterUtils;
 
 public class LrToNlTest {
@@ -41,7 +42,8 @@ public class LrToNlTest {
 	}	
 	
 	private static final AtomicInteger ATOI_COUNTER = new AtomicInteger(0);
-	
+	private static final AtomicInteger IS_OBJECT_AVAILABLE_COUNTER = new AtomicInteger(0);
+		
 	@Test
 	public void test_lr_save_string() throws Exception{
 		final String setVariable = "Set variable ";
@@ -84,9 +86,64 @@ public class LrToNlTest {
 		final String uid1 = WriterUtils.getElementUid(model.getChilds().get(0));
 		Assertions.assertThat(NlWriterUtil.readFile(outputfolder + "/scripts/jsAction_" + uid1 + ".js")).isEqualTo("context.variableManager.setValue(\"atoi_" + ATOI_COUNTER.get() + "\", parseInt(\"1\"));");
 		final String uid2 = WriterUtils.getElementUid(model.getChilds().get(1));
-		Assertions.assertThat(NlWriterUtil.readFile(outputfolder + "/scripts/jsAction_" + uid2 + ".js")).isEqualTo("context.variableManager.setValue(\"think_time\", context.variableManager.getValue(\"atoi_" + ATOI_COUNTER.get() + "\"));");
-				
+		Assertions.assertThat(NlWriterUtil.readFile(outputfolder + "/scripts/jsAction_" + uid2 + ".js")).isEqualTo("context.variableManager.setValue(\"think_time\", context.variableManager.getValue(\"atoi_" + ATOI_COUNTER.get() + "\"));");				
 	}
-
+	
+	@Test
+	public void test_if_then_else() throws Exception{
+		// Read
+		final Container model = LrReaderUtil.read("if (sapgui_is_object_available(\"wnd[1]\")){lr_think_time(2);} else {lr_think_time(3);}");
+		// Write
+		final String outputfolder = Files.createTempDir().getAbsolutePath();
+		final String actualXml = NlWriterUtil.write(model, outputfolder);
+		// Check XML content
+		final IfThenElse ifThenElse = (IfThenElse) model.getChilds().get(1);
+		final int isObjectAvailable = IS_OBJECT_AVAILABLE_COUNTER.incrementAndGet();
+		final String expectedXml = "<custom-action actionType=\"SapIsAvailable\" isHit=\"false\" "
+				+ "name=\"isObjectAvailable\" uid=\"" + WriterUtils.getElementUid(model.getChilds().get(0))
+				+ "\"><custom-action-parameter name=\"objectId\" type=\"TEXT\" "
+				+ "value=\"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/wnd[1]\"/>"
+				+ "<custom-action-parameter name=\"variable\" type=\"TEXT\" "
+				+ "value=\"sapgui_is_object_available_" + isObjectAvailable + "\"/></custom-action>"
+				+ "<if-action name=\"condition\" uid=\"" + WriterUtils.getElementUid(ifThenElse)
+				+ "\"><then-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
+				+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(ifThenElse.getThen().getChilds().get(0))
+				+ "\"/></then-container><else-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
+				+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(ifThenElse.getElse().getChilds().get(0))
+				+ "\"/></else-container><conditions match-type=\"1\"><condition operand1=\"${sapgui_is_object_available_" + isObjectAvailable + "}\" "
+				+ "operand2=\"true\" operator=\"EQUALS\"/></conditions></if-action><delay-action duration=\"2000\" "
+				+ "isThinkTime=\"true\" name=\"delay\" uid=\"" + WriterUtils.getElementUid(ifThenElse.getThen().getChilds().get(0)) 
+				+ "\"/><delay-action duration=\"3000\" isThinkTime=\"true\" name=\"delay\" uid=\"" 
+				+ WriterUtils.getElementUid(ifThenElse.getElse().getChilds().get(0)) + "\"/>";
+ 		Assert.assertEquals(expectedXml, actualXml);						
+	}
+	
+	@Test
+	public void test_if_then() throws Exception{
+		// Read
+		final Container model = LrReaderUtil.read("if (sapgui_is_object_available(\"wnd[1]\")){lr_think_time(2);}");
+		// Write
+		final String outputfolder = Files.createTempDir().getAbsolutePath();
+		final String actualXml = NlWriterUtil.write(model, outputfolder);
+		// Check XML content
+		final IfThenElse ifThenElse = (IfThenElse) model.getChilds().get(1);
+		final int isObjectAvailable = IS_OBJECT_AVAILABLE_COUNTER.incrementAndGet();
+		final String expectedXml = "<custom-action actionType=\"SapIsAvailable\" isHit=\"false\" "
+				+ "name=\"isObjectAvailable\" uid=\"" + WriterUtils.getElementUid(model.getChilds().get(0))
+				+ "\"><custom-action-parameter name=\"objectId\" type=\"TEXT\" "
+				+ "value=\"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/wnd[1]\"/>"
+				+ "<custom-action-parameter name=\"variable\" type=\"TEXT\" "
+				+ "value=\"sapgui_is_object_available_" + isObjectAvailable + "\"/></custom-action>"
+				+ "<if-action name=\"condition\" uid=\"" + WriterUtils.getElementUid(ifThenElse)
+				+ "\"><then-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
+				+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(ifThenElse.getThen().getChilds().get(0))
+				+ "\"/></then-container><else-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\"/>"
+				+ "<conditions match-type=\"1\"><condition operand1=\"${sapgui_is_object_available_" + isObjectAvailable + "}\" "
+				+ "operand2=\"true\" operator=\"EQUALS\"/></conditions></if-action><delay-action duration=\"2000\" "
+				+ "isThinkTime=\"true\" name=\"delay\" uid=\"" + WriterUtils.getElementUid(ifThenElse.getThen().getChilds().get(0)) 
+				+ "\"/>";
+ 		Assert.assertEquals(expectedXml, actualXml);						
+	}
+	
 	
 }
