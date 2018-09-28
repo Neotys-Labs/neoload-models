@@ -106,7 +106,8 @@ public class LrToNlTest {
 				+ "<custom-action-parameter name=\"variable\" type=\"TEXT\" "
 				+ "value=\"sapgui_is_object_available_" + isObjectAvailable + "\"/></custom-action>"
 				+ "<if-action name=\"condition\" uid=\"" + WriterUtils.getElementUid(ifThenElse)
-				+ "\"><then-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
+				+ "\"><description>sapgui_is_object_available(\"wnd[1]\")</description>"
+				+ "<then-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
 				+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(ifThenElse.getThen().getChilds().get(0))
 				+ "\"/></then-container><else-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
 				+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(ifThenElse.getElse().getChilds().get(0))
@@ -135,7 +136,8 @@ public class LrToNlTest {
 				+ "<custom-action-parameter name=\"variable\" type=\"TEXT\" "
 				+ "value=\"sapgui_is_object_available_" + isObjectAvailable + "\"/></custom-action>"
 				+ "<if-action name=\"condition\" uid=\"" + WriterUtils.getElementUid(ifThenElse)
-				+ "\"><then-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
+				+ "\"><description>sapgui_is_object_available(\"wnd[1]\")</description>"
+				+ "<then-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
 				+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(ifThenElse.getThen().getChilds().get(0))
 				+ "\"/></then-container><else-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\"/>"
 				+ "<conditions match-type=\"1\"><condition operand1=\"${sapgui_is_object_available_" + isObjectAvailable + "}\" "
