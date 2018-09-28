@@ -23,9 +23,9 @@ public class IfThenElseWriter extends ElementWriter {
 	public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
 		final Element ifElement = document.createElement(XML_TAG_NAME);
 		super.writeXML(document, ifElement, outputFolder);
-		currentElement.appendChild(ifElement);
-		
-		final IfThenElse ifThenElse = ((IfThenElse) this.element);		
+		currentElement.appendChild(ifElement);		
+		final IfThenElse ifThenElse = ((IfThenElse) this.element);
+		ElementWriter.writeDescription(document, ifElement, ifThenElse.getConditions().getDescription());
 		ContainerForMultiWriter.of(ifThenElse.getThen(), XML_TAG_THEN).writeXML(document, ifElement, outputFolder);		
 		ContainerForMultiWriter.of(ifThenElse.getElse(), XML_TAG_ELSE).writeXML(document, ifElement, outputFolder);
 		ConditionsWriter.writeXML(document, ifElement, ifThenElse.getConditions());

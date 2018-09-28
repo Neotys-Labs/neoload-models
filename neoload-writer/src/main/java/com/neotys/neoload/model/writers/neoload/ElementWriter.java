@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import java.util.Optional;
+
 import org.w3c.dom.Document;
 
 import com.neotys.neoload.model.core.Element;
@@ -17,9 +19,13 @@ public class ElementWriter {
     }
 
     public void writeDescription(final Document document, final org.w3c.dom.Element currentElement) {
-        this.element.getDescription().ifPresent(s -> {
-            org.w3c.dom.Element descElement = document.createElement(ElementWriter.XML_DESCRIPTION_TAG);
-            descElement.setNodeValue(s);
+    	writeDescription(document, currentElement, this.element.getDescription());
+    }
+    
+    public static void writeDescription(final Document document, final org.w3c.dom.Element currentElement, final Optional<String> description) {
+    	description.ifPresent(s -> {
+            org.w3c.dom.Element descElement = document.createElement(ElementWriter.XML_DESCRIPTION_TAG);            
+            descElement.setTextContent(s);
             currentElement.appendChild(descElement);
         });
     }
