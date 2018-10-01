@@ -3,6 +3,7 @@ package com.neotys.neoload.model.readers.loadrunner;
 import com.google.common.annotations.VisibleForTesting;
 import com.neotys.neoload.model.ImmutableProject;
 import com.neotys.neoload.model.Project;
+import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.parsers.CPP14Lexer;
 import com.neotys.neoload.model.parsers.CPP14Parser;
@@ -142,8 +143,11 @@ public class LoadRunnerReader extends Reader {
 		}
 	}
 
-	private boolean manageActions(final File projectFolder, final ProjectFileReader projectFileReader, final Map<String, String> actionsMap,
-								  final ImmutableProject.Builder projectBuilder, final ImmutableUserPath.Builder userPathBuilder) {
+	private boolean manageActions(final File projectFolder,
+								  final ProjectFileReader projectFileReader,
+								  final Map<String, String> actionsMap,
+								  final ImmutableProject.Builder projectBuilder,
+								  final ImmutableUserPath.Builder userPathBuilder) {
 
 		final Map<String, MutableContainer> containersByName = actionsMap.keySet().stream()
 				.collect(Collectors.toMap(Function.identity(), MutableContainer::new));
@@ -175,6 +179,15 @@ public class LoadRunnerReader extends Reader {
 
 		lrSupportedMethods.setContainerInFileMethod(null);
 
+		manageInitActionsEnd(projectFileReader, containersByName, projectBuilder, userPathBuilder);
+
+		return asAtLeastOneAction.get();
+	}
+
+	private void manageInitActionsEnd(final ProjectFileReader projectFileReader,
+									  final Map<String, MutableContainer> containersByName,
+									  final ImmutableProject.Builder projectBuilder,
+									  final ImmutableUserPath.Builder userPathBuilder) {
 		final ImmutableContainer.Builder initContainerBuilder = ImmutableContainer.builder().name("Init");
 		projectFileReader.getInits().stream().map(containersByName::get).filter(Objects::nonNull).forEach(initContainerBuilder::addChilds);
 
@@ -203,13 +216,33 @@ public class LoadRunnerReader extends Reader {
 			}
 		});
 
-		// TODO if only one child to init actions End then directly add children?
+		// if init, actions or end has only child container not shared then we remove it.
+		if(hasOneNotSharedChild(init)){
+			final Container childContainer = (Container) init.getChilds().get(0);
+			userPathBuilder.initContainer(ImmutableContainer.builder().name("Init").addAllChilds(childContainer.getChilds()).build());
+		} else{
+			userPathBuilder.initContainer(init);
+		}
+		if(hasOneNotSharedChild(actions)){
+			final Container childContainer = (Container) actions.getChilds().get(0);
+			userPathBuilder.actionsContainer(ImmutableContainer.builder().name("Actions").addAllChilds(childContainer.getChilds()).build());
+		} else{
+			userPathBuilder.actionsContainer(actions);
+		}
+		if(hasOneNotSharedChild(end)){
+			final Container childContainer = (Container) end.getChilds().get(0);
+			userPathBuilder.endContainer(ImmutableContainer.builder().name("End").addAllChilds(childContainer.getChilds()).build());
+		} else{
+			userPathBuilder.endContainer(end);
+		}
+	}
 
-		userPathBuilder.initContainer(init)
-				.actionsContainer(actions)
-				.endContainer(end);
-
-		return asAtLeastOneAction.get();
+	private static boolean hasOneNotSharedChild(final Container container) {
+		if (container.getChilds().size() != 1) {
+			return false;
+		}
+		final Element child = container.getChilds().get(0);
+		return child instanceof Container && !((Container) child).isShared();
 	}
 
 	private static Charset guessCharset(final File file) {
