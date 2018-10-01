@@ -34,12 +34,12 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	private Optional<Request> currentRequest = Optional.empty();
 
 	@VisibleForTesting
-	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final String mutableContainer) {
-		this(reader, leftBrace, rightBrace, new MutableContainer(mutableContainer));
+	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final String mutableContainerName) {
+		this(reader, leftBrace, rightBrace, new MutableContainer(mutableContainerName));
 	}
 	
-	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final Container Container) {
-		currentContainers.add(Container);
+	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final MutableContainer mutableContainer) {
+		currentContainers.add(mutableContainer);
 		this.currentExtractors = new ArrayList<>();
 		this.currentValidators = new ArrayList<>();
 		this.currentHeaders = new ArrayList<>();
