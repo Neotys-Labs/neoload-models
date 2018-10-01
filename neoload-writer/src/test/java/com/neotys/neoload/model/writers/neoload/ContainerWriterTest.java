@@ -36,7 +36,7 @@ public class ContainerWriterTest {
     }
 
 	@Test
-	public void writeContainerXmlWithOneContainer() throws ParserConfigurationException, TransformerException {
+	public void writeContainerXmlWithOneSharedContainerAsChild() throws ParserConfigurationException, TransformerException {
 		Document doc = WrittingTestUtils.generateEmptyDocument();
 		Element root = WrittingTestUtils.generateTestRootElement(doc);
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -47,6 +47,30 @@ public class ContainerWriterTest {
 				+ "</test-root>";
 
 		ContainerWriter.of(WrittingTestUtils.CONTAINER_WITH_SHARED_CHILD_TEST).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		String generatedResult = WrittingTestUtils.getXmlString(doc);
+		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
+
+	}
+
+	@Test
+	public void writeMutableContainer() throws ParserConfigurationException, TransformerException {
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><basic-logical-action-container element-number=\"1\" execution-type=\"0\" name=\"mutable\" "
+				+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.MUTABLE_CONTAINER_TEST)+ "\" weightsEnabled=\"false\">"
+				+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.PAGE_TEST)+ "\"/>"
+				+ "</basic-logical-action-container>"
+				+ "<http-page executeResourcesDynamically=\"false\" name=\"page_name\" thinkTime=\"0\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.PAGE_TEST)+ "\">"
+				+ "<embedded-action>" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "</embedded-action></http-page>"
+				+ "<http-action actionType=\"1\" "
+				+ "method=\"GET\" name=\"request_test\" "
+				+ "path=\"/test_path\" serverUid=\"server_test\" "
+				+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
+				+ "</test-root>";
+
+		WriterUtils.<ElementWriter>getWriterFor(WrittingTestUtils.MUTABLE_CONTAINER_TEST).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
 
 		String generatedResult = WrittingTestUtils.getXmlString(doc);
 		Assertions.assertThat(generatedResult).isEqualTo(expectedResult);
