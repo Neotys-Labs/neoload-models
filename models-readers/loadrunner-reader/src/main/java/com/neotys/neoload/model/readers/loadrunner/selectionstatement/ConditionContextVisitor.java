@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.readers.loadrunner.selectionstatement;
 
+import java.util.List;
+
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
 import com.neotys.neoload.model.parsers.CPP14Parser.ConditionContext;
@@ -21,6 +23,10 @@ public class ConditionContextVisitor extends CPP14BaseVisitor<Element> {
 	
 	@Override
 	public Element visitMethodcall(MethodcallContext ctx) {
-		return visitor.visitMethodcall(ctx).get(0);
+		final List<Element> elements = visitor.visitMethodcall(ctx);
+		if(elements.size() == 1){
+			return elements.get(0);			
+		}
+		return null;
 	}	
 }
