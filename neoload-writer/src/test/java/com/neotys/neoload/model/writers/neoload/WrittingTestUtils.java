@@ -15,6 +15,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import com.neotys.neoload.model.readers.loadrunner.MutableContainer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -237,7 +238,12 @@ public class WrittingTestUtils {
 			.addChilds(SHARED_CONTAINER_TEST)
 			.name("Container_with_shared_child")
 			.build();
-	
+
+	public static final Container MUTABLE_CONTAINER_TEST = new MutableContainer("mutable");
+
+	static{
+		MUTABLE_CONTAINER_TEST.getChilds().add(PAGE_TEST);
+	}
 	static final CustomAction SET_OK_CODE_CUSTOM_ACTION = ImmutableCustomAction.builder()
 			.name("setOkCode")
 			.type("SetText")
