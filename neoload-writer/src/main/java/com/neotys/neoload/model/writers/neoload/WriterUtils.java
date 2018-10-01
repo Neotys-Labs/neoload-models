@@ -18,10 +18,11 @@ public class WriterUtils {
 	public static final String WEIGHTED_ACTION_XML_TAG_NAME = "weighted-embedded-action";
 	public static final String EMBEDDED_ACTION_XML_TAG_NAME = "embedded-action";	
 	public static final String IMMUTABLE = "Immutable";
+	private static final String MUTABLE_CONTAINER = "MutableContainer";
 	public static final String NL_VARIABLE_START = "${";
 	public static final String NL_VARIABLE_END = "}";
 		
-    static Logger logger = LoggerFactory.getLogger(NeoLoadWriter.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(NeoLoadWriter.class);
     
     private static Map<Element, String> elementUids = LazyMap.lazyMap(new HashMap<Element, String>(), a -> UUID.randomUUID().toString());
     
@@ -33,14 +34,20 @@ public class WriterUtils {
 
     public static  <T> T getWriterFor(Object object) {
         String elementClassName = object.getClass().getSimpleName();
-        if(elementClassName.startsWith(IMMUTABLE)) elementClassName = elementClassName.substring(IMMUTABLE.length());
+		String packageName = object.getClass().getPackage().getName();
+        if(elementClassName.startsWith(IMMUTABLE)){
+        	elementClassName = elementClassName.substring(IMMUTABLE.length());
+		} else if(elementClassName.startsWith(MUTABLE_CONTAINER)) {
+			elementClassName = "Container";
+			packageName = "com.neotys.neoload.model.repository";
+		}
         Class writerClass;
         try {
             writerClass = Class.forName("com.neotys.neoload.model.writers.neoload."+elementClassName+"Writer");
-            Constructor<?> constructor = writerClass.getConstructor(Class.forName(object.getClass().getPackage().getName() + "." + elementClassName));
+			Constructor<?> constructor = writerClass.getConstructor(Class.forName(packageName + "." + elementClassName));
             return (T)constructor.newInstance(object);
         } catch (Exception e) {
-            logger.error("Cannot instanciate Element writer:" + elementClassName,e);
+            LOGGER.error("Cannot instanciate Element writer:" + elementClassName,e);
         }
         return null;
     }
