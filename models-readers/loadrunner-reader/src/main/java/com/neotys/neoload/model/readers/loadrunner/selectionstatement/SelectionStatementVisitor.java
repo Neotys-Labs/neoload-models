@@ -62,9 +62,9 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 	private Conditions readConditions(final SelectionstatementContext selectionstatementContext) {
 		final ParseTree conditionTree = selectionstatementContext.getChild(2);		
 		final Element element = conditionTree.accept(new ConditionContextVisitor(visitor));
-		final Optional<String> description = extractDescription(conditionTree);
+		final Optional<String> conditionString = extractCondition(conditionTree);
 		if(element == null){
-			visitor.readSupportedFunctionWithWarn(LR_METHOD_IF, selectionstatementContext.getParent(), "Condition not supported " + description.orElse(""));
+			visitor.readSupportedFunctionWithWarn(LR_METHOD_IF, selectionstatementContext.getParent(), "Condition not supported " + conditionString.orElse(""));
 		} else {
 			visitor.readSupportedFunction(LR_METHOD_IF, selectionstatementContext.getParent());
 		}
@@ -77,11 +77,11 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 		final Condition condition = ImmutableCondition.builder()
 				.operand1(operand1)
 				.operator(Condition.Operator.EQUALS)
-				.operand2("true")
+				.operand2(conditionString.orElse("").startsWith("!") ? Boolean.FALSE.toString() : Boolean.TRUE.toString())
 				.build();		
 		final ImmutableConditions.Builder conditionsBuilder = ImmutableConditions.builder();
 		conditionsBuilder.addConditions(condition);
-		conditionsBuilder.description(description);
+		conditionsBuilder.description(conditionString);
 		conditionsBuilder.matchType(Conditions.MatchType.ANY);
 		return conditionsBuilder.build();
 	}
@@ -100,7 +100,7 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 		return "true";
 	}
 
-	private static Optional<String> extractDescription(final ParseTree conditionTree) {
+	private static Optional<String> extractCondition(final ParseTree conditionTree) {
 		if(conditionTree.getChildCount() == 0){
 			return Optional.empty();
 		}
