@@ -61,7 +61,13 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 	
 	private Conditions readConditions(final SelectionstatementContext selectionstatementContext) {
 		final ParseTree conditionTree = selectionstatementContext.getChild(2);		
-		final Element element = conditionTree.accept(new ConditionContextVisitor(visitor));		
+		final Element element = conditionTree.accept(new ConditionContextVisitor(visitor));
+		final Optional<String> description = extractDescription(conditionTree);
+		if(element == null){
+			visitor.readSupportedFunctionWithWarn(LR_METHOD_IF, selectionstatementContext.getParent(), "Condition not supported " + description.orElse(""));
+		} else {
+			visitor.readSupportedFunction(LR_METHOD_IF, selectionstatementContext.getParent());
+		}
 		final String operand1;
 		if(element instanceof CustomAction){
 			operand1 = getVariableSyntax((CustomAction)element);
@@ -75,7 +81,7 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 				.build();		
 		final ImmutableConditions.Builder conditionsBuilder = ImmutableConditions.builder();
 		conditionsBuilder.addConditions(condition);
-		conditionsBuilder.description(extractDescription(conditionTree));
+		conditionsBuilder.description(description);
 		conditionsBuilder.matchType(Conditions.MatchType.ANY);
 		return conditionsBuilder.build();
 	}
