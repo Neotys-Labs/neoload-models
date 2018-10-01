@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
+	// current containers are ImmutableContainer.Builder or MutableContainer
 	private final List<Object> currentContainers = new ArrayList<>();
 	private List<VariableExtractor> currentExtractors;
 	private List<Validator> currentValidators;
@@ -89,6 +90,9 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		return ImmutableList.of(toContainer(current));
 	}
 
+	/**
+	 * Build the container if the parameter is an ImmutableContainer.Builder or return directly the MutableContainer.
+	 */
 	public static Container toContainer(final Object current) {
 		if (current instanceof ImmutableContainer.Builder) {
 			return ((ImmutableContainer.Builder) current).build();
@@ -110,9 +114,9 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		((Container) container).getChilds().add(element);
 	}
 
-	static Element setUniqueNameInContainer(final Element element, final List<Element> childs) {
+	private static Element setUniqueNameInContainer(final Element element, final List<Element> childs) {
 		if (element == null)
-			return element;
+			return null;
 		int i = 0;
 		Element elementWithUniqueName = element;
 		while (!isUniqueInContainer(elementWithUniqueName, childs)) {
@@ -122,7 +126,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	}
 
 	private static boolean isUniqueInContainer(final Element element, final List<Element> childs) {
-		return childs.stream().filter(element1 -> element1.getName().equals(element.getName())).count() == 0;
+		return childs.stream().noneMatch(element1 -> element1.getName().equals(element.getName()));
 	}
 
 	private class ParametersVisitor extends CPP14BaseVisitor<List<String>> {
@@ -195,7 +199,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		return globalHeaders;
 	}
 	
-	public static int getLineNumber(final CPP14Parser.MethodcallContext ctx) {
+	private static int getLineNumber(final CPP14Parser.MethodcallContext ctx) {
 		final Token token = ctx.getStart();
 		if (token == null) {
 			return 0;
