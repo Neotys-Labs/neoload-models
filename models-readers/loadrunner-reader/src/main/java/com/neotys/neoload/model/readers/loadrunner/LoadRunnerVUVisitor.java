@@ -1,5 +1,14 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
@@ -12,14 +21,14 @@ import com.neotys.neoload.model.parsers.CPP14Parser.SelectionstatementContext;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
 import com.neotys.neoload.model.readers.loadrunner.selectionstatement.SelectionStatementVisitor;
-import com.neotys.neoload.model.repository.*;
-import org.antlr.v4.runtime.Token;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.EvalString;
+import com.neotys.neoload.model.repository.Header;
+import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.Page;
+import com.neotys.neoload.model.repository.Request;
+import com.neotys.neoload.model.repository.Validator;
+import com.neotys.neoload.model.repository.VariableExtractor;
 
 public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	// current containers are ImmutableContainer.Builder or MutableContainer
@@ -106,7 +115,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		addChild(lastContainer,element);
 	}
 
-	private void addChild(final Object container, final Element element) {
+	private static void addChild(final Object container, final Element element) {
 		if (container instanceof ImmutableContainer.Builder) {
 			((ImmutableContainer.Builder) container).addChilds(element);
 			return;
@@ -199,7 +208,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		return globalHeaders;
 	}
 	
-	private static int getLineNumber(final CPP14Parser.MethodcallContext ctx) {
+	private static int getLineNumber(final ParserRuleContext ctx) {
 		final Token token = ctx.getStart();
 		if (token == null) {
 			return 0;
@@ -211,15 +220,15 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		return currentContainers;
 	}
 
-	public void readSupportedFunction(final String functionName, final CPP14Parser.MethodcallContext ctx) {
+	public void readSupportedFunction(final String functionName, final ParserRuleContext ctx) {
 		eventListener.readSupportedFunction(getCurrentScriptName(), functionName, LoadRunnerVUVisitor.getLineNumber(ctx));		
 	}
 	
-	public void readSupportedFunctionWithWarn(final String functionName, final CPP14Parser.MethodcallContext ctx, final String warning) {
+	public void readSupportedFunctionWithWarn(final String functionName, final ParserRuleContext ctx, final String warning) {
 		eventListener.readSupportedFunctionWithWarn(getCurrentScriptName(), functionName, LoadRunnerVUVisitor.getLineNumber(ctx), warning);		
 	}
 	
-	public void readUnsupportedFunction(final String functionName, final CPP14Parser.MethodcallContext ctx) {
+	public void readUnsupportedFunction(final String functionName, final ParserRuleContext ctx) {
 		eventListener.readUnsupportedFunction(getCurrentScriptName(), functionName, LoadRunnerVUVisitor.getLineNumber(ctx));		
 	}
 	
