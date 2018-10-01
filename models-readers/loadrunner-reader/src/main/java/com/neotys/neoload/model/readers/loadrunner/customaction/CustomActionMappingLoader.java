@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException;
+import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 
 public class CustomActionMappingLoader {
@@ -36,7 +37,7 @@ public class CustomActionMappingLoader {
 
 	private static String getCustomActionMappingFileContent() {
 		final InputStream in = CustomActionMappingLoader.class.getResourceAsStream(CUSTOM_ACTION_MAPPING_YAML);
-		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(in))) {
+		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(in, Charsets.UTF_8))) {
 			return buffer.lines().collect(Collectors.joining("\n"));
 		} catch(final Exception exception){
 			LOGGER.error("Error while reading file " + CUSTOM_ACTION_MAPPING_YAML, exception);
@@ -44,7 +45,7 @@ public class CustomActionMappingLoader {
 		}
 	}
 
-	private static Map<String, ImmutableMappingMethod> parseYaml(final String content) {
+	private static Map<String, ImmutableMappingMethod> parseYaml(final String content) {		
 		final Map<String, ImmutableMappingMethod> methodMappings = new HashMap<>();
 		if(Strings.isNullOrEmpty(content)){
 			return methodMappings;
