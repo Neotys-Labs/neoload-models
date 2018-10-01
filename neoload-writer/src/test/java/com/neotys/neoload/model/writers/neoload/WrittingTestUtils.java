@@ -226,6 +226,17 @@ public class WrittingTestUtils {
 			.addChilds(PAGE_TEST)
 			.name("Container_name")
 			.build();
+
+	public static final Container SHARED_CONTAINER_TEST = ImmutableContainer.builder()
+			.addChilds(PAGE_TEST)
+			.name("Shared_Container_name")
+			.isShared(true)
+			.build();
+
+	public static final Container CONTAINER_WITH_SHARED_CHILD_TEST = ImmutableContainer.builder()
+			.addChilds(SHARED_CONTAINER_TEST)
+			.name("Container_with_shared_child")
+			.build();
 	
 	static final CustomAction SET_OK_CODE_CUSTOM_ACTION = ImmutableCustomAction.builder()
 			.name("setOkCode")

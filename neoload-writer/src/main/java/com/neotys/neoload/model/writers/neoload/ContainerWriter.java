@@ -1,11 +1,10 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import java.util.Optional;
-
+import com.neotys.neoload.model.repository.Container;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.neotys.neoload.model.repository.Container;
+import java.util.Optional;
 
 public class ContainerWriter extends ElementWriter {
 
@@ -50,7 +49,10 @@ public class ContainerWriter extends ElementWriter {
 	protected static void writeEmbeddedActions(final Document document, final String outputFolder, Element xmlContainerElement, Container theContainer) {
 		theContainer.getChilds().forEach(elt -> {
 			WriterUtils.generateEmbeddedAction(document, xmlContainerElement, elt, Optional.of(WriterUtils.WEIGHTED_ACTION_XML_TAG_NAME), true);
-			WriterUtils.<ElementWriter>getWriterFor(elt).writeXML(document, document.getDocumentElement(), outputFolder);
+			// we don't write teh definition of embedded shared containers
+			if (!(elt instanceof Container) || !((Container) elt).isShared()) {
+				WriterUtils.<ElementWriter>getWriterFor(elt).writeXML(document, document.getDocumentElement(), outputFolder);
+			}
 		});
 	}
 	
