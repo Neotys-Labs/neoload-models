@@ -10,15 +10,12 @@ public final class StopAfterToStringConverter extends StdConverter<StopAfter, St
 		
 		final StopAfter.Type type = stopAfter.getType();
 		switch (type) {
-			case CURRENT_ITERATION: {
+			case CURRENT_ITERATION:
 				return "current_iteration";
-			}
-			case TIME: {
+			case TIME:
 				return TimeDurationHelper.convertToString((Integer) stopAfter.getValue().get());
-			}
-			default: {
+			default:
 				return null;
-			}
 		}
 	}
 }

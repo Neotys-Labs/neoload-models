@@ -25,11 +25,4 @@ public interface RampupLoadPolicy extends LoadPolicy {
 	Duration getIncrementEvery();
 	@JsonProperty("increment_rampup")
 	Optional<Integer> getRampup();
-	
-	
-	
-//	@Value.Check
-//	default void check() {
-//		Preconditions.checkState(expression, errorMessage);
-//	}
 }

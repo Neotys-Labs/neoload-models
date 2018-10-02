@@ -15,25 +15,20 @@ public final class StringToStopAfterConverter extends StdConverter<String, StopA
 			return ERROR_VALUE;
 		}
 		
-		try {
-			// Time case
-			final Integer value = TimeDurationHelper.convertToInteger(input);
-			if (value != null) {
-				return ImmutableStopAfter.builder()
-						.value(value)
-						.type(Type.TIME)
-						.build();		
-			}
-			// Current Iteration case
-			if ("current_iteration".equals(input.trim())) {
-				return ImmutableStopAfter.builder()
-						.type(Type.CURRENT_ITERATION)
-						.build();
-			}
-			return ERROR_VALUE;
+		// Time case
+		final Integer value = TimeDurationHelper.convertToInteger(input);
+		if (value != null) {
+			return ImmutableStopAfter.builder()
+					.value(value)
+					.type(Type.TIME)
+					.build();		
 		}
-		catch(final Throwable exception) {
-			return ERROR_VALUE;
-		}		
+		// Current Iteration case
+		if ("current_iteration".equals(input.trim())) {
+			return ImmutableStopAfter.builder()
+					.type(Type.CURRENT_ITERATION)
+					.build();
+		}
+		return ERROR_VALUE;
 	}
 }

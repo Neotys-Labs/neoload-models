@@ -8,18 +8,14 @@ public final class DurationToStringConverter extends StdConverter<Duration, Stri
 	public String convert(final Duration duration) {
 		if (duration == null) return null;
 		
-		//final Duration duration = optional.get();
 		final Duration.Type type = duration.getType();
 		switch (type) {
-			case TIME: {
+			case TIME: 
 				return TimeDurationHelper.convertToString(duration.getValue());
-			}
-			case ITERATION: {
+			case ITERATION: 
 				return IterationDurationHelper.convertToString(duration.getValue());
-			}
-			default: {
+			default:
 				return null;
-			}
 		}
 	}
 }
