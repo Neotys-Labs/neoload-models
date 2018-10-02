@@ -9,12 +9,12 @@ import java.util.stream.Stream;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUserPath.class)
 public interface UserPath extends Element {
-	Container getInitContainer();
-	Container getActionsContainer();
-	Container getEndContainer();
+	ContainerForMulti getInitContainer();
+	ContainerForMulti getActionsContainer();
+	ContainerForMulti getEndContainer();
 
 	@Override
 	default Stream<Element> flattened() {
-		return Stream.of(getInitContainer(), getActionsContainer(), getEndContainer()).flatMap(Container::flattened);
+		return Stream.of(getInitContainer(), getActionsContainer(), getEndContainer()).flatMap(ContainerForMulti::flattened);
 	}
 }

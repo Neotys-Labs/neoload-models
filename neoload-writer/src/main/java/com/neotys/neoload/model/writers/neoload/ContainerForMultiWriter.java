@@ -1,28 +1,27 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import java.util.Optional;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.neotys.neoload.model.repository.Container;
+import com.neotys.neoload.model.repository.ContainerForMulti;
+import com.neotys.neoload.model.repository.IContainer;
 
-public class ContainerForMultiWriter extends ContainerWriter {
+public class ContainerForMultiWriter extends ElementWriter {
 
-	private ContainerForMultiWriter(final Container container, final String tagName) {
-		super(container, Optional.of(tagName));
+	public ContainerForMultiWriter(final ContainerForMulti containerForMulti) {
+		super(containerForMulti);
 	}
 
-	public static ContainerForMultiWriter of(final Container container, final String tagName) {
-		return new ContainerForMultiWriter(container, tagName);
+	public static ContainerForMultiWriter of(final ContainerForMulti containerForMulti) {
+		return new ContainerForMultiWriter(containerForMulti);
 	}
 
 	@Override
 	public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
-		Element xmlContainerElement = document.createElement(getTagName().get());		
+		Element xmlContainerElement = document.createElement(((ContainerForMulti) this.element).getTag());		
 		currentElement.appendChild(xmlContainerElement);
-		Container theContainer = ((Container) this.element);
-		setPropertyAttributes(xmlContainerElement);
-		writeEmbeddedActions(document, outputFolder, xmlContainerElement, theContainer);
+		IContainer theContainer = ((IContainer) this.element);
+		ContainerWriter.setPropertyAttributes(xmlContainerElement);
+		ContainerWriter.writeEmbeddedActions(document, outputFolder, xmlContainerElement, theContainer);
 	}
 }

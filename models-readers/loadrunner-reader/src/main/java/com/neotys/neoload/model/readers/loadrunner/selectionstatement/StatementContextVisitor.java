@@ -9,28 +9,28 @@ import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.parsers.CPP14Parser.SelectionstatementContext;
 import com.neotys.neoload.model.parsers.CPP14Parser.StatementContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
-import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.ImmutableContainerForMulti;
 
 public class StatementContextVisitor extends CPP14BaseVisitor<List<Element>> {
 
 	private final LoadRunnerVUVisitor visitor;
-	private final ImmutableContainer.Builder currentContainer;
+	private final ImmutableContainerForMulti.Builder builder;
 
-	public StatementContextVisitor(final LoadRunnerVUVisitor visitor, final String name) {
+	public StatementContextVisitor(final LoadRunnerVUVisitor visitor, final ImmutableContainerForMulti.Builder builder) {
 		super();
 		this.visitor = visitor;
-		this.currentContainer = ImmutableContainer.builder().name(name);
+		this.builder = builder;
 	}
 
 	@Override
 	public List<Element> visitStatement(StatementContext ctx) {
 		super.visitStatement(ctx);
-		return currentContainer.build().getChilds();
+		return builder.build().getChilds();
 	}
 
 	@Override
 	public List<Element> visitMethodcall(MethodcallContext ctx) {
-		visitor.getCurrentContainers().add(currentContainer);
+		visitor.getCurrentContainers().add(builder);
 		visitor.visitMethodcall(ctx);
 		visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1);
 		return Collections.emptyList();
@@ -38,7 +38,7 @@ public class StatementContextVisitor extends CPP14BaseVisitor<List<Element>> {
 	
 	@Override
 	public List<Element> visitSelectionstatement(final SelectionstatementContext selectionstatementContext) {
-		visitor.getCurrentContainers().add(currentContainer);
+		visitor.getCurrentContainers().add(builder);
 		visitor.visitSelectionstatement(selectionstatementContext);
 		visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1);
 		return Collections.emptyList();		

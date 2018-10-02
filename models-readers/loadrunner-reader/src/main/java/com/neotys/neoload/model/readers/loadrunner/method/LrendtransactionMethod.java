@@ -8,6 +8,8 @@ import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
+import com.neotys.neoload.model.repository.ContainerForMulti;
+import com.neotys.neoload.model.repository.ImmutableContainerForMulti;
 
 public class LrendtransactionMethod implements LoadRunnerMethod {
 
@@ -21,6 +23,11 @@ public class LrendtransactionMethod implements LoadRunnerMethod {
 		if (size <= 1) {
 			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot end non existing transaction.");
 			return Collections.emptyList();
+		}		
+		final Object last = visitor.getCurrentContainers().get(size - 1);
+		if(last instanceof ImmutableContainerForMulti.Builder){
+			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "Cannot end a transaction that has not be started in current block.");
+			return Collections.emptyList();	
 		}
 		visitor.readSupportedFunction(method.getName(), ctx);
 		return ImmutableList.of(LoadRunnerVUVisitor.toContainer(visitor.getCurrentContainers().remove(size - 1)));
