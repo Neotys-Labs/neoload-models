@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.error.YAMLException;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 

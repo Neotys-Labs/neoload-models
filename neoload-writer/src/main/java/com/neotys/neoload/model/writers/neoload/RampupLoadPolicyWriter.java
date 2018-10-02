@@ -1,41 +1,55 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.neotys.neoload.model.scenario.RampupLoadPolicy;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class RampupLoadPolicyWriter extends LoadPolicyWriter {
+import com.neotys.neoload.model.scenario.Duration;
+import com.neotys.neoload.model.scenario.Duration.Type;
+import com.neotys.neoload.model.scenario.RampupLoadPolicy;
 
-    public static final String XML_TAG_NAME = "rampup-volume-policy";
-    public static final String XML_INITIALUSERNUMBER_ATTR = "initialUserNumber";
-    public static final String XML_USERINCREMENT_ATTR = "userIncrement";
-    public static final String XML_MAXUSERNUMBER_ATTR = "maxUserNumber";
-    public static final String XML_ITERATION_ATTR = "iterationNumber";
-    public static final String XML_DELAYINCREMENT_ATTR = "delayIncrement";
-    public static final String XML_DELAYTYPEINCREMENT_ATTR = "delayTypeIncrement";
+class RampupLoadPolicyWriter extends LoadPolicyWriter {
 
-    public RampupLoadPolicyWriter(RampupLoadPolicy rampupLoadPolicy) { super(rampupLoadPolicy); }
+	private static final String XML_TAG_NAME = "rampup-volume-policy";
+	private static final String XML_ATTR_INITIALUSERNUMBER = "initialUserNumber";
+	private static final String XML_ATTR_USERINCREMENT = "userIncrement";
+	private static final String XML_ATTR_MAXUSERNUMBER = "maxUserNumber";
+	private static final String XML_ATTR_ITERATIONNUMBER = "iterationNumber";
+	private static final String XML_ATTR_DELAYINCREMENT = "delayIncrement";
+	private static final String XML_ATTR_DELAYTYPEINCREMENT = "delayTypeIncrement";
+
+    public RampupLoadPolicyWriter(final RampupLoadPolicy rampupLoadPolicy) {
+    	super(rampupLoadPolicy);
+    }
 
     @Override
-    public void writeXML(Document document, Element currentElement) {
-        RampupLoadPolicy rampupLoadPolicy = (RampupLoadPolicy) this.loadPolicy;
-        Element volumePolicyElement = super.createElement(document, currentElement);
+    protected void writeVolumePolicyXML(Document document, Element currentElement) {
+        final RampupLoadPolicy rampupLoadPolicy = (RampupLoadPolicy) this.loadPolicy;
+        
+    	final Element volumePolicyElement = super.createVolumePolicyElement(document, currentElement);
         Element xmlElement = document.createElement(XML_TAG_NAME);
 
-        xmlElement.setAttribute(XML_INITIALUSERNUMBER_ATTR, String.valueOf(rampupLoadPolicy.getInitialLoad()));
-        xmlElement.setAttribute(XML_USERINCREMENT_ATTR, String.valueOf(rampupLoadPolicy.getIncrementLoad()));
-        rampupLoadPolicy.getIncrementTime().ifPresent(incrementTime -> {
-            xmlElement.setAttribute(XML_DELAYINCREMENT_ATTR, String.valueOf(incrementTime));
-            // Type is always seconds
-            xmlElement.setAttribute(XML_DELAYTYPEINCREMENT_ATTR, "1");
+        // Initial User Number attribute
+        xmlElement.setAttribute(XML_ATTR_INITIALUSERNUMBER, String.valueOf(rampupLoadPolicy.getMinUsers()));
+        // User Increment attribute
+        xmlElement.setAttribute(XML_ATTR_USERINCREMENT, String.valueOf(rampupLoadPolicy.getIncrementUsers()));
+        // Delay Increment & Delay Type Increment attribute
+        final Duration incrementEvery = rampupLoadPolicy.getIncrementEvery();
+        xmlElement.setAttribute(XML_ATTR_DELAYINCREMENT, String.valueOf(incrementEvery.getValue()));
+        xmlElement.setAttribute(XML_ATTR_DELAYTYPEINCREMENT, "2");
+        if (incrementEvery.getType() == Type.TIME) {           		
+        	// Type is always seconds
+           	xmlElement.setAttribute(XML_ATTR_DELAYTYPEINCREMENT, "1");
+        }
+        // Max User Number attribute        
+        xmlElement.setAttribute(XML_ATTR_MAXUSERNUMBER, "0");
+        rampupLoadPolicy.getMaxUsers().ifPresent(maxUsers -> xmlElement.setAttribute(XML_ATTR_MAXUSERNUMBER, String.valueOf(maxUsers)));
+        // Iteration Number attribute
+        xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, "1");
+        rampupLoadPolicy.getDuration().ifPresent(duration -> {
+        	if (duration.getType() == Type.ITERATION) {
+        		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.getValue()));
+        	}
         });
-        rampupLoadPolicy.getIncrementIteration().ifPresent(incrementIterations -> {
-            xmlElement.setAttribute(XML_DELAYINCREMENT_ATTR, String.valueOf(incrementIterations));
-            // type is iteration
-            xmlElement.setAttribute(XML_DELAYTYPEINCREMENT_ATTR, "0");
-        });
-        rampupLoadPolicy.getMaximumLoad().ifPresent(maxVU -> xmlElement.setAttribute(XML_MAXUSERNUMBER_ATTR, String.valueOf(maxVU)));
-        rampupLoadPolicy.getIterationNumber().ifPresent(iterationNumber -> xmlElement.setAttribute(XML_ITERATION_ATTR, String.valueOf(iterationNumber)));
         volumePolicyElement.appendChild(xmlElement);
     }
 }
