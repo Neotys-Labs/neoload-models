@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.readers.loadrunner.method;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -19,6 +20,9 @@ public class WebcustomrequestMethod  implements LoadRunnerMethod {
 	@Override
 	public List<Element> getElement(final LoadRunnerVUVisitor visitor, final MethodCall method, final MethodcallContext ctx) {		
 		final Page page = WebCustomRequest.toElement(visitor, method, ctx);
+		if(page == null){
+			return Collections.emptyList();
+		}
 		visitor.getCurrentExtractors().clear();
 		visitor.getCurrentValidators().clear();
 		visitor.getCurrentHeaders().clear();
