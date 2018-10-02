@@ -56,6 +56,8 @@ public class LoadRunnerReader extends Reader {
 
 	private List<File> dataFilesToCopy = new ArrayList<>();
 
+	protected Set<String> currentSharedContainerNames= new HashSet<>();
+
 	public LoadRunnerReader(final EventListener eventListener, final String folder, final String projectName,
 							final String additionalCustomActionMappingContent) {
 		super(folder);
@@ -211,7 +213,10 @@ public class LoadRunnerReader extends Reader {
 		containersByName.values().forEach(container ->
 		{
 			if (Stream.concat(Stream.concat(init.flattened(), actions.flattened()), end.flattened()).filter(container::equals).count() > 1) {
+				final String uniqueName = findUniqueName(container.getName(), currentSharedContainerNames);
+				currentSharedContainerNames.add(uniqueName);
 				container.setShared(true);
+				container.setName(uniqueName);
 				projectBuilder.addSharedElements(container);
 			}
 		});

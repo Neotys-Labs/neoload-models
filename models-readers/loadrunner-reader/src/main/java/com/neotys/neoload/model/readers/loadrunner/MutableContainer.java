@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class MutableContainer implements Container {
 
-	private final String name;
+	private String name;
 	private final List<Element> childs = new ArrayList<>();
 	private boolean isShared = false;
 
@@ -28,6 +28,10 @@ public class MutableContainer implements Container {
 		return name;
 	}
 
+	public void setName(final String name) {
+		this.name = name;
+	}
+
 	@Override
 	public Optional<String> getDescription() {
 		return Optional.empty();
@@ -38,7 +42,7 @@ public class MutableContainer implements Container {
 		return new MutableContainer(name);
 	}
 
-	public void setShared(boolean shared) {
+	public void setShared(final boolean shared) {
 		isShared = shared;
 	}
 
