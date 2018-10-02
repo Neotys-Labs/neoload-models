@@ -1,4 +1,4 @@
-Main()
+MainTransaction()
 {
 	
 	// Enter Transaction
@@ -6,6 +6,9 @@ Main()
 	sapgui_set_ok_code("/ntest");
 	
 	lr_think_time(1);
+
+    // Cross Reference: not supported by NeoLoad
+    Action();
 
 	return 0;
 }
