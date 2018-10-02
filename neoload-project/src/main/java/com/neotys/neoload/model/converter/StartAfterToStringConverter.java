@@ -8,7 +8,6 @@ public final class StartAfterToStringConverter extends StdConverter<StartAfter, 
 	public String convert(final StartAfter startAfter) {
 		if (startAfter == null) return null;
 		
-		//final Duration duration = optional.get();
 		final StartAfter.Type type = startAfter.getType();
 		switch (type) {
 			case POPULATION:

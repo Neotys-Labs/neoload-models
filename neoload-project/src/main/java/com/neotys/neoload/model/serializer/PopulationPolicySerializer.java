@@ -26,7 +26,7 @@ public final class PopulationPolicySerializer extends StdSerializer<PopulationPo
     }
 
     @Override
-    public void serialize(final PopulationPolicy population, final JsonGenerator jgen, final SerializerProvider sp) throws IOException, JsonGenerationException {
+    public void serialize(final PopulationPolicy population, final JsonGenerator jgen, final SerializerProvider sp) throws IOException {
     	// Start object tag
         jgen.writeStartObject();
         // Name field
