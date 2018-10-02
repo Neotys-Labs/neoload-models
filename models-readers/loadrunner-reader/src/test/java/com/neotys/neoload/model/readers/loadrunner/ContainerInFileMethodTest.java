@@ -55,6 +55,11 @@ public class ContainerInFileMethodTest {
 		final MutableContainer foundActionsContainers = (MutableContainer) userPath.getActionsContainer().getChilds().get(1);
 		assertThat(foundActionsContainers.getChilds()).usingElementComparatorIgnoringFields("childs").containsExactly(loginContainer, thinkTime, main, logoutContainer);
 
+		final MutableContainer foundMainTransaction = (MutableContainer) foundActionsContainers.getChilds().get(2);
+		// cross reference should not be found
+		assertThat(foundMainTransaction.getChilds()).hasSize(3);
+		assertThat(foundMainTransaction.getChilds()).usingElementComparatorIgnoringFields("childs").doesNotContain(foundActionsContainers);
+
 		final Element logoutInActions = foundActionsContainers.getChilds().get(3);
 		final Element logoutInShared = project.getSharedElements().get(0);
 		assertThat(logoutInActions).isSameAs(logoutInShared);
