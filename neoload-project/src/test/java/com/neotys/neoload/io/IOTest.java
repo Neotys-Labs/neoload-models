@@ -189,14 +189,20 @@ public class IOTest {
 
 	@Test
 	public void readScenariosInLightVersion() throws IOException, URISyntaxException {
-		readScenarios("test-scenarios-light-version", "yaml", getScenariosInLightVersion());
-		readScenarios("test-scenarios-light-version", "json", getScenariosInLightVersion());
+		final Project project = getScenariosInLightVersion();
+		assertNotNull(project);
+		
+		readScenarios("test-scenarios-light-version", "yaml", project);
+		readScenarios("test-scenarios-light-version", "json", project);
 	}
 
 	@Test
 	public void readScenariosInFullVersion() throws IOException, URISyntaxException {
-		readScenarios("test-scenarios-full-version", "yaml", getScenariosInFullVersion());
-		readScenarios("test-scenarios-full-version", "json", getScenariosInFullVersion());
+		final Project project = getScenariosInFullVersion();
+		assertNotNull(project);
+		
+		readScenarios("test-scenarios-full-version", "yaml", project);
+		readScenarios("test-scenarios-full-version", "json", project);
 	}
 
 	protected void readScenarios(final String fileName, final String extension, final Project expectedProject) throws IOException, URISyntaxException {
@@ -213,14 +219,20 @@ public class IOTest {
 
 	@Test
 	public void writeScenariosInLightVersion() throws IOException, URISyntaxException {
-		writeScenarios("test-scenarios-light-version", "yaml", getScenariosInLightVersion());
-		writeScenarios("test-scenarios-light-version", "json", getScenariosInLightVersion());
+		final Project project = getScenariosInLightVersion();
+		assertNotNull(project);
+		
+		writeScenarios("test-scenarios-light-version", "yaml", project);
+		writeScenarios("test-scenarios-light-version", "json", project);
 	}
 
 	@Test
 	public void writeScenariosInFullVersion() throws IOException, URISyntaxException {
-		writeScenarios("test-scenarios-full-version", "yaml", getScenariosInFullVersion());
-		writeScenarios("test-scenarios-full-version", "json", getScenariosInFullVersion());
+		final Project project = getScenariosInFullVersion();
+		assertNotNull(project);
+		
+		writeScenarios("test-scenarios-full-version", "yaml", project);
+		writeScenarios("test-scenarios-full-version", "json", project);
 	}
 
 	protected void writeScenarios(final String fileName, final String extension, final Project expectedProject) throws IOException, URISyntaxException {

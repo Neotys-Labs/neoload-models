@@ -47,7 +47,7 @@ public final class PopulationPolicyDeserializer extends StdDeserializer<Populati
 	}
 	
     @Override
-    public PopulationPolicy deserialize(final JsonParser parser, final DeserializationContext ctx) throws IOException, JsonProcessingException {
+    public PopulationPolicy deserialize(final JsonParser parser, final DeserializationContext ctx) throws IOException {
     	final ObjectCodec codec = parser.getCodec();
         final JsonNode node = codec.readTree(parser);
         
