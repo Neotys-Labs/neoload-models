@@ -7,9 +7,6 @@ import org.w3c.dom.Element;
 public class UserPathWriter extends ElementWriter{
 
     public static final String XML_TAG_NAME = "virtual-user";
-    public static final String XML_TAG_INIT = "init-container";
-    public static final String XML_TAG_ACTIONS = "actions-container";
-    public static final String XML_TAG_END = "end-container";
     public static final String XML_USERPATH_NAME_ATTR = "uid";
 
     private UserPath userPath;
@@ -30,13 +27,13 @@ public class UserPathWriter extends ElementWriter{
         super.writeDescription(document, element);
         repositoryElement.appendChild(element);
         // write init-container
-        ContainerWriter.of(this.userPath.getInitContainer(), XML_TAG_INIT).writeXML(document, element, outputFolder);
+        ContainerForMultiWriter.of(this.userPath.getInitContainer()).writeXML(document, element, outputFolder);
 
         // write actions-container
-        ContainerWriter.of(this.userPath.getActionsContainer(), XML_TAG_ACTIONS).writeXML(document, element, outputFolder);
+        ContainerForMultiWriter.of(this.userPath.getActionsContainer()).writeXML(document, element, outputFolder);
 
         // write end-container
-        ContainerWriter.of(this.userPath.getEndContainer(), XML_TAG_END).writeXML(document, element, outputFolder);
+        ContainerForMultiWriter.of(this.userPath.getEndContainer()).writeXML(document, element, outputFolder);
     }
     
 }

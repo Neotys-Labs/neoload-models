@@ -35,7 +35,7 @@ public class NlWriterUtil {
 		final Document document = repositoryDocBuilder.newDocument();
 		final Element element = document.createElement("root");
 		document.appendChild(element);
-		ContainerWriter.of(model, "action-container").writeXML(document, element, outputfolder);
+		ContainerWriter.of(model).writeXML(document, element, outputfolder);
 		final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
@@ -46,8 +46,8 @@ public class NlWriterUtil {
 		StreamResult repositoryStream = new StreamResult(result);
 		transformer.transform(repositorySource, repositoryStream);
 		final String fullXML = new String(Files.readAllBytes(Paths.get(result.getAbsolutePath()))).replaceAll("[\\r\\n]", "");		
-		if(fullXML.contains("</action-container>")){
-			return fullXML.substring(fullXML.indexOf("</action-container>") + "</action-container>".length(), fullXML.indexOf("</root>"));
+		if(fullXML.contains("</basic-logical-action-container>")){
+			return fullXML.substring(fullXML.indexOf("</basic-logical-action-container>") + "</basic-logical-action-container>".length(), fullXML.indexOf("</root>"));
 		}
 		return fullXML.substring(fullXML.indexOf("weightsEnabled=\"false\"/>") + "weightsEnabled=\"false\"/>".length(), fullXML.indexOf("</root>"));			
 	}

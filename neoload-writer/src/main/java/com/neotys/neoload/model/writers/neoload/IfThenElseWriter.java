@@ -8,8 +8,6 @@ import com.neotys.neoload.model.repository.IfThenElse;
 public class IfThenElseWriter extends ElementWriter {
 
 	private static final String XML_TAG_NAME = "if-action";	
-	private static final String XML_TAG_THEN = "then-container";
-	private static final String XML_TAG_ELSE= "else-container";	
     
 	public IfThenElseWriter(final IfThenElse ifThenElse) {
 		super(ifThenElse);	
@@ -26,8 +24,8 @@ public class IfThenElseWriter extends ElementWriter {
 		currentElement.appendChild(ifElement);		
 		final IfThenElse ifThenElse = ((IfThenElse) this.element);
 		ElementWriter.writeDescription(document, ifElement, ifThenElse.getConditions().getDescription());
-		ContainerForMultiWriter.of(ifThenElse.getThen(), XML_TAG_THEN).writeXML(document, ifElement, outputFolder);		
-		ContainerForMultiWriter.of(ifThenElse.getElse(), XML_TAG_ELSE).writeXML(document, ifElement, outputFolder);
+		ContainerForMultiWriter.of(ifThenElse.getThen()).writeXML(document, ifElement, outputFolder);		
+		ContainerForMultiWriter.of(ifThenElse.getElse()).writeXML(document, ifElement, outputFolder);
 		ConditionsWriter.writeXML(document, ifElement, ifThenElse.getConditions());
 	}
 }

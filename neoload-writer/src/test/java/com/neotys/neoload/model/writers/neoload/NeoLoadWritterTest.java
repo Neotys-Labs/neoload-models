@@ -51,17 +51,11 @@ public class NeoLoadWritterTest {
     public UserPath getUserPath(String name) {
         return ImmutableUserPath.builder()
                 .name(name)
-                .initContainer(getContainer("Init"))
-                .actionsContainer(getContainer("Actions"))
-                .endContainer(getContainer("End"))
+                .initContainer(ImmutableContainerForMulti.builder().name("Init").tag("init-container").build())
+                .actionsContainer(ImmutableContainerForMulti.builder().name("Actions").tag("actions-container").build())
+                .endContainer(ImmutableContainerForMulti.builder().name("End").tag("end-container").build())
                 .build();
-    }
-
-    public Container getContainer(String name) {
-        return ImmutableContainer.builder()
-                .name(name)
-                .build();
-    }
+   }
     
     @Test
     public void writeProjectTestWithVariable() throws IOException {

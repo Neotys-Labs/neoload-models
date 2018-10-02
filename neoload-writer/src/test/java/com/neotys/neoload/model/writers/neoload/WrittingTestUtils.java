@@ -15,11 +15,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import com.neotys.neoload.model.readers.loadrunner.MutableContainer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.readers.loadrunner.MutableContainer;
 import com.neotys.neoload.model.repository.Condition;
 import com.neotys.neoload.model.repository.Conditions;
 import com.neotys.neoload.model.repository.Container;
@@ -32,6 +32,7 @@ import com.neotys.neoload.model.repository.IfThenElse;
 import com.neotys.neoload.model.repository.ImmutableCondition;
 import com.neotys.neoload.model.repository.ImmutableConditions;
 import com.neotys.neoload.model.repository.ImmutableContainer;
+import com.neotys.neoload.model.repository.ImmutableContainerForMulti;
 import com.neotys.neoload.model.repository.ImmutableCustomAction;
 import com.neotys.neoload.model.repository.ImmutableCustomActionParameter;
 import com.neotys.neoload.model.repository.ImmutableFileVariable;
@@ -277,12 +278,14 @@ public class WrittingTestUtils {
 							)
 					.matchType(Conditions.MatchType.ANY)
 					.build())
-			.then(ImmutableContainer.builder()
+			.then(ImmutableContainerForMulti.builder()
 					.name("Then")
+					.tag("then-container")
 					.addChilds(SET_OK_CODE_CUSTOM_ACTION)
 					.build())
-			.getElse(ImmutableContainer.builder()
-					.name("Else")					
+			.getElse(ImmutableContainerForMulti.builder()
+					.name("Else")	
+					.tag("else-container")
 					.build())
 			.build();
 	
@@ -297,12 +300,14 @@ public class WrittingTestUtils {
 							)
 					.matchType(Conditions.MatchType.ANY)
 					.build())
-			.then(ImmutableContainer.builder()
+			.then(ImmutableContainerForMulti.builder()
 					.name("Then")
+					.tag("then-container")
 					.addChilds(SET_OK_CODE_CUSTOM_ACTION)					
 					.build())
-			.getElse(ImmutableContainer.builder()
+			.getElse(ImmutableContainerForMulti.builder()
 					.name("Else")
+					.tag("else-container")
 					.addChilds(SET_OK_CODE_CUSTOM_ACTION, IS_OBJECT_AVAILABLE_CUSTOM_ACTION, IF_THEN_TEST_2)					
 					.build())
 			.build();

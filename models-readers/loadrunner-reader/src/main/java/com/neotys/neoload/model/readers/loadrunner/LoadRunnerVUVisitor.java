@@ -107,11 +107,13 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	/**
 	 * Build the container if the parameter is an ImmutableContainer.Builder or return directly the MutableContainer.
 	 */
-	public static Container toContainer(final Object current) {
+	public static IContainer toContainer(final Object current) {
 		if (current instanceof ImmutableContainer.Builder) {
 			return ((ImmutableContainer.Builder) current).build();
+		} else if (current instanceof ImmutableContainerForMulti.Builder) {
+			return ((ImmutableContainerForMulti.Builder) current).build();
 		}
-		return (Container) current;
+		return (IContainer) current;
 	}
 
 	public void addInContainers(Element element){
@@ -129,6 +131,9 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	private static void addChild(final Object container, final Element element) {
 		if (container instanceof ImmutableContainer.Builder) {
 			((ImmutableContainer.Builder) container).addChilds(element);
+			return;
+		} else if (container instanceof ImmutableContainerForMulti.Builder) {
+			((ImmutableContainerForMulti.Builder) container).addChilds(element);
 			return;
 		}
 		((Container) container).getChilds().add(element);

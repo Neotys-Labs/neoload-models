@@ -44,6 +44,14 @@ public class LoadRunnerReader extends Reader {
 
 	private static final String PATTERN = "\"\\s*\\n\\s*\"";
 	private static final String LOAD_PATTERN = "Load \"%s\"";
+	
+	private static final String TAG_INIT = "init-container";
+	private static final String TAG_ACTIONS = "actions-container";
+	private static final String TAG_END = "end-container";
+	
+	private static final String NAME_INIT = "Init";
+	private static final String NAME_ACTIONS = "Actions";
+	private static final String NAME_END = "End";
 
 	private final EventListener eventListener;
 	private final String projectName;
@@ -190,10 +198,10 @@ public class LoadRunnerReader extends Reader {
 									  final Map<String, MutableContainer> containersByName,
 									  final ImmutableProject.Builder projectBuilder,
 									  final ImmutableUserPath.Builder userPathBuilder) {
-		final ImmutableContainer.Builder initContainerBuilder = ImmutableContainer.builder().name("Init");
+		final ImmutableContainerForMulti.Builder initContainerBuilder = ImmutableContainerForMulti.builder().name(NAME_INIT).tag(TAG_INIT);
 		projectFileReader.getInits().stream().map(containersByName::get).filter(Objects::nonNull).forEach(initContainerBuilder::addChilds);
 
-		final ImmutableContainer.Builder actionsContainerBuilder = ImmutableContainer.builder().name("Actions");
+		final ImmutableContainerForMulti.Builder actionsContainerBuilder = ImmutableContainerForMulti.builder().name(NAME_ACTIONS).tag(TAG_ACTIONS);
 		if (projectFileReader.getActions().isEmpty()) {
 			containersByName.values().stream()
 					.filter(c -> !projectFileReader.getInits().contains(c.getName()) && !projectFileReader.getEnds().contains(c.getName()))
@@ -202,12 +210,12 @@ public class LoadRunnerReader extends Reader {
 			projectFileReader.getActions().stream().map(containersByName::get).filter(Objects::nonNull).forEach(actionsContainerBuilder::addChilds);
 		}
 
-		final ImmutableContainer.Builder endContainerBuilder = ImmutableContainer.builder().name("End");
+		final ImmutableContainerForMulti.Builder endContainerBuilder = ImmutableContainerForMulti.builder().name(NAME_END).tag(TAG_END);
 		projectFileReader.getEnds().stream().map(containersByName::get).filter(Objects::nonNull).forEach(endContainerBuilder::addChilds);
 
-		final ImmutableContainer init = initContainerBuilder.build();
-		final ImmutableContainer actions = actionsContainerBuilder.build();
-		final ImmutableContainer end = endContainerBuilder.build();
+		final ImmutableContainerForMulti init = initContainerBuilder.build();
+		final ImmutableContainerForMulti actions = actionsContainerBuilder.build();
+		final ImmutableContainerForMulti end = endContainerBuilder.build();
 
 		// when a container appears more than once in User Path, we add it in shared containers
 		containersByName.values().forEach(container ->
@@ -224,25 +232,25 @@ public class LoadRunnerReader extends Reader {
 		// if init, actions or end has only child container not shared then we remove it.
 		if(hasOneNotSharedChild(init)){
 			final Container childContainer = (Container) init.getChilds().get(0);
-			userPathBuilder.initContainer(ImmutableContainer.builder().name("Init").addAllChilds(childContainer.getChilds()).build());
+			userPathBuilder.initContainer(ImmutableContainerForMulti.builder().name(NAME_INIT).tag(TAG_INIT).addAllChilds(childContainer.getChilds()).build());
 		} else{
 			userPathBuilder.initContainer(init);
 		}
 		if(hasOneNotSharedChild(actions)){
 			final Container childContainer = (Container) actions.getChilds().get(0);
-			userPathBuilder.actionsContainer(ImmutableContainer.builder().name("Actions").addAllChilds(childContainer.getChilds()).build());
+			userPathBuilder.actionsContainer(ImmutableContainerForMulti.builder().name(NAME_ACTIONS).tag(TAG_ACTIONS).addAllChilds(childContainer.getChilds()).build());
 		} else{
 			userPathBuilder.actionsContainer(actions);
 		}
 		if(hasOneNotSharedChild(end)){
 			final Container childContainer = (Container) end.getChilds().get(0);
-			userPathBuilder.endContainer(ImmutableContainer.builder().name("End").addAllChilds(childContainer.getChilds()).build());
+			userPathBuilder.endContainer(ImmutableContainerForMulti.builder().name(NAME_END).tag(TAG_END).addAllChilds(childContainer.getChilds()).build());
 		} else{
 			userPathBuilder.endContainer(end);
 		}
 	}
 
-	private static boolean hasOneNotSharedChild(final Container container) {
+	private static boolean hasOneNotSharedChild(final ImmutableContainerForMulti container) {
 		if (container.getChilds().size() != 1) {
 			return false;
 		}
@@ -325,7 +333,7 @@ public class LoadRunnerReader extends Reader {
 		visitor.visit(tree);
 		// end unended container
 		while (visitor.getCurrentContainers().size() > 1) {
-			final Container container = LoadRunnerVUVisitor.toContainer(visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1));
+			final IContainer container = LoadRunnerVUVisitor.toContainer(visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1));
 			visitor.addInContainers(container);
 		}
 	}

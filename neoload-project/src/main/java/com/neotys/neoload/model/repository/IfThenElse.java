@@ -10,12 +10,12 @@ import java.util.stream.Stream;
 @JsonDeserialize(as = ImmutableIfThenElse.class)
 public interface IfThenElse extends Element {
 	Conditions getConditions();
-	Container getThen();
-	Container getElse();
+	ContainerForMulti getThen();
+	ContainerForMulti getElse();
 	
 	 @Override
 	default Stream<Element> flattened() {
-		 return Stream.of(getThen(), getElse()).flatMap(Container::flattened);
+		 return Stream.of(getThen(), getElse()).flatMap(ContainerForMulti::flattened);
 	}
 }
 
