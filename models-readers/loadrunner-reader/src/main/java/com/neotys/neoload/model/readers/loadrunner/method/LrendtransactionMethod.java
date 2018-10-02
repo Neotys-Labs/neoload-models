@@ -8,7 +8,6 @@ import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodCall;
-import com.neotys.neoload.model.repository.ContainerForMulti;
 import com.neotys.neoload.model.repository.ImmutableContainerForMulti;
 
 public class LrendtransactionMethod implements LoadRunnerMethod {
