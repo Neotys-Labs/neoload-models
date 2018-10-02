@@ -11,13 +11,13 @@ import com.neotys.neoload.model.repository.ImmutableUserPath;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT, property="type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = ImmutableProject.class, name = "Project"),
-        @JsonSubTypes.Type(value = ImmutableUserPath.class, name = "UserPath"),
-        @JsonSubTypes.Type(value = ImmutableDelay.class, name = "Delay"),
-        @JsonSubTypes.Type(value = ImmutableContainer.class, name = "Container") }
-)
+//@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT, property="type")
+//@JsonSubTypes({
+//        @JsonSubTypes.Type(value = ImmutableProject.class, name = "Project"),
+//        @JsonSubTypes.Type(value = ImmutableUserPath.class, name = "UserPath"),
+//        @JsonSubTypes.Type(value = ImmutableDelay.class, name = "Delay"),
+//        @JsonSubTypes.Type(value = ImmutableContainer.class, name = "Container") }
+//)
 public interface Element {
     String getName();
     Optional<String> getDescription();

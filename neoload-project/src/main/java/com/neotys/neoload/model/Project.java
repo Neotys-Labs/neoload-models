@@ -1,5 +1,6 @@
 package com.neotys.neoload.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.repository.*;
 import com.neotys.neoload.model.scenario.Scenario;
@@ -11,10 +12,15 @@ import java.util.List;
 @JsonDeserialize(as = ImmutableProject.class)
 public interface Project {
 	String getName();
+	@JsonIgnore
 	List<Container> getSharedElements();
+	@JsonIgnore
 	List<UserPath> getUserPaths();
+	@JsonIgnore
 	List<Server> getServers();
+	@JsonIgnore
 	List<Variable> getVariables();
+	@JsonIgnore
 	List<Population> getPopulations();
 	List<Scenario> getScenarios();
 }

@@ -1,56 +1,77 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import com.neotys.neoload.model.scenario.Duration;
+import com.neotys.neoload.model.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.scenario.PeaksLoadPolicy;
+import com.neotys.neoload.model.scenario.Duration.Type;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
+class PeaksLoadPolicyWriter extends LoadPolicyWriter {
 
-    public static final String XML_TAG_NAME = "peaks-volume-policy";
-    public static final String XML_MINLOAD_ATTR = "defaultUserNumber";
-    public static final String XML_MINDURATION_ATTR = "defaultDelay";
-    public static final String XML_MINTYPE_ATTR = "defaultDelayType";
-    public static final String XML_MAXLOAD_ATTR = "peakUserNumber";
-    public static final String XML_MAXDURATION_ATTR = "peakDelay";
-    public static final String XML_MAXTYPE_ATTR = "peakDelayType";
-    public static final String XML_STARTPOLICY_ATTR = "startPoint";
+	private static final String XML_TAG_NAME = "peaks-volume-policy";
+    
+	private static final String XML_ATTR_MINLOAD = "defaultUserNumber";
+	private static final String XML_ATTR_MINDURATION = "defaultDelay";
+	private static final String XML_ATTR_MINTYPE = "defaultDelayType";
+	private static final String XML_ATTR_MAXLOAD = "peakUserNumber";
+	private static final String XML_ATTR_MAXDURATION = "peakDelay";
+	private static final String XML_ATTR_MAXTYPE = "peakDelayType";
+	private static final String XML_ATTR_STARTPOLICY = "startPoint";
+	private static final String XML_ATTR_ITERATIONNUMBER = "iterationNumber";
 
-    public PeaksLoadPolicyWriter(PeaksLoadPolicy peaksLoadPolicy) { super(peaksLoadPolicy); }
+    public PeaksLoadPolicyWriter(final PeaksLoadPolicy peaksLoadPolicy) {
+    	super(peaksLoadPolicy);
+    }
 
     @Override
-    public void writeXML(Document document, Element currentElement) {
-        PeaksLoadPolicy peaksLoadPolicy = (PeaksLoadPolicy) this.loadPolicy;
-        Element volumePolicyElement = super.createElement(document, currentElement);
-        Element xmlElement = document.createElement(XML_TAG_NAME);
+    protected void writeVolumePolicyXML(Document document, Element currentElement) {
+        final PeaksLoadPolicy peaksLoadPolicy = (PeaksLoadPolicy) this.loadPolicy;
+        
+        final Element volumePolicyElement = super.createVolumePolicyElement(document, currentElement);
+        final Element xmlElement = document.createElement(XML_TAG_NAME);
 
-        xmlElement.setAttribute(XML_MINLOAD_ATTR, String.valueOf(peaksLoadPolicy.getMinimumLoad()));
-        peaksLoadPolicy.getMinimumTime().ifPresent(minimumTime -> {
-            xmlElement.setAttribute(XML_MINDURATION_ATTR, String.valueOf(minimumTime));
-            // Type is always seconds
-            xmlElement.setAttribute(XML_MINTYPE_ATTR, "1");
-        });
-        peaksLoadPolicy.getMinimumIteration().ifPresent(minimumIteration -> {
-            xmlElement.setAttribute(XML_MINDURATION_ATTR, String.valueOf(minimumIteration));
-            // Type is always seconds
-            xmlElement.setAttribute(XML_MINTYPE_ATTR, "0");
-        });
+        // Default User Number attribute
+        final PeakLoadPolicy minimumLoadPolicy = peaksLoadPolicy.getMinimum();
+        xmlElement.setAttribute(XML_ATTR_MINLOAD, String.valueOf(minimumLoadPolicy.getUsers()));
+        // Default Delay attribute
+        final Duration minimumDuration = minimumLoadPolicy.getDuration();
+        xmlElement.setAttribute(XML_ATTR_MINDURATION, String.valueOf(minimumDuration.getValue()));
+        // Default Delay Type attribute
+        xmlElement.setAttribute(XML_ATTR_MINTYPE, "2");
+        if (minimumDuration.getType() == Type.TIME) {           		
+        	// Type is always seconds
+            xmlElement.setAttribute(XML_ATTR_MINTYPE, "1");
+        }                 
 
-        xmlElement.setAttribute(XML_MAXLOAD_ATTR, String.valueOf(peaksLoadPolicy.getMaximumLoad()));
-        peaksLoadPolicy.getMaximumTime().ifPresent(maximumTime -> {
-            xmlElement.setAttribute(XML_MAXDURATION_ATTR, String.valueOf(maximumTime));
-            // Type is always seconds
-            xmlElement.setAttribute(XML_MAXTYPE_ATTR, "1");
-        });
-        peaksLoadPolicy.getMaximumIteration().ifPresent(maximumIteration -> {
-            xmlElement.setAttribute(XML_MAXDURATION_ATTR, String.valueOf(maximumIteration));
-            // Type is always seconds
-            xmlElement.setAttribute(XML_MAXTYPE_ATTR, "0");
-        });
-        if(peaksLoadPolicy.getStartPolicy() == PeaksLoadPolicy.StartPolicy.MINIMUM_LOAD) {
-            xmlElement.setAttribute(XML_STARTPOLICY_ATTR, "0");
-        } else {
-            xmlElement.setAttribute(XML_STARTPOLICY_ATTR, "1");
+        // Peak User Number attribute
+        final PeakLoadPolicy maximumLoadPolicy = peaksLoadPolicy.getMaximum();
+        xmlElement.setAttribute(XML_ATTR_MAXLOAD, String.valueOf(maximumLoadPolicy.getUsers()));
+        // Peak Delay attribute
+        final Duration maximumDuration = maximumLoadPolicy.getDuration();
+        xmlElement.setAttribute(XML_ATTR_MAXDURATION, String.valueOf(maximumDuration.getValue()));
+        // Peak Delay Type attribute
+        xmlElement.setAttribute(XML_ATTR_MAXTYPE, "2");
+        if (maximumDuration.getType() == Type.TIME) {           		
+        	// Type is always seconds
+            xmlElement.setAttribute(XML_ATTR_MAXTYPE, "1");
+        }          
+       
+        // Start Point attribute
+        xmlElement.setAttribute(XML_ATTR_STARTPOLICY, "0"); // Minimum
+        if(peaksLoadPolicy.getStart() == PeaksLoadPolicy.Peak.MAXIMUM) {
+            xmlElement.setAttribute(XML_ATTR_STARTPOLICY, "1");
         }
+        
+        // Iteration Number attribute
+        xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, "1");
+        peaksLoadPolicy.getDuration().ifPresent(duration -> {
+        	if (duration.getType() == Type.ITERATION) {
+        		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.getValue()));
+        	}
+        });
+        
         volumePolicyElement.appendChild(xmlElement);
     }
 }

@@ -1,0 +1,37 @@
+name: MyProject
+scenarios:
+- name: MyScenario1
+  description: My scenario 1 with 3 populations
+  sla_profile: MySlaProfile
+  populations:
+  - name: MyPopulation11
+    constant_load:
+      users: 500
+      duration: 15m
+      start_after: 30s
+      rampup: 1m
+      stop_after: 30s
+  - name: MyPopulation12
+    rampup_load:
+      min_users: 0
+      max_users: 500
+      increment_users: 10
+      increment_every: 1 iteration
+      duration: 15 iterations
+      start_after: MyPopulation11
+      increment_rampup: 1m30s
+      stop_after: current_iteration
+  - name: MyPopulation13
+    peaks_load:
+      minimum:
+        users: 100
+        duration: 1 iteration
+      maximum:
+        users: 500
+        duration: 1 iteration
+      start: maximum
+      duration: 15 iterations
+      start_after: 1m
+      step_rampup: 15s
+      stop_after: 1m
+ 
