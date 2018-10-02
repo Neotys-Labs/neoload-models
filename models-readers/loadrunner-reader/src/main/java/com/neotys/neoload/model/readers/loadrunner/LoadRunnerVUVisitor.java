@@ -1,14 +1,5 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.core.Element;
@@ -19,16 +10,18 @@ import com.neotys.neoload.model.parsers.CPP14Parser;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
 import com.neotys.neoload.model.parsers.CPP14Parser.SelectionstatementContext;
 import com.neotys.neoload.model.readers.loadrunner.customaction.ImmutableMappingMethod;
+import com.neotys.neoload.model.readers.loadrunner.method.ContainerInFileMethod;
 import com.neotys.neoload.model.readers.loadrunner.method.LoadRunnerMethod;
 import com.neotys.neoload.model.readers.loadrunner.selectionstatement.SelectionStatementVisitor;
-import com.neotys.neoload.model.repository.Container;
-import com.neotys.neoload.model.repository.EvalString;
-import com.neotys.neoload.model.repository.Header;
-import com.neotys.neoload.model.repository.ImmutableContainer;
-import com.neotys.neoload.model.repository.Page;
-import com.neotys.neoload.model.repository.Request;
-import com.neotys.neoload.model.repository.Validator;
-import com.neotys.neoload.model.repository.VariableExtractor;
+import com.neotys.neoload.model.repository.*;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	// current containers are ImmutableContainer.Builder or MutableContainer
@@ -49,7 +42,7 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	}
 	
 	public LoadRunnerVUVisitor(final LoadRunnerReader reader, final String leftBrace, final String rightBrace, final MutableContainer mutableContainer) {
-		currentContainers.add(mutableContainer);
+		this.currentContainers.add(mutableContainer);
 		this.currentExtractors = new ArrayList<>();
 		this.currentValidators = new ArrayList<>();
 		this.currentHeaders = new ArrayList<>();
@@ -76,6 +69,18 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 			return Collections.emptyList();
 		}
 		final List<Element> elements = lrMethod.getElement(this, method, ctx);
+		if(lrMethod instanceof ContainerInFileMethod){
+			final MutableContainer container = (MutableContainer) elements.get(0);
+			if(!canAddContainer(container)) {
+				final Object lastContainer = currentContainers.get(currentContainers.size() - 1);
+				final String lastContainerName = toContainer(lastContainer).getName();
+				final String warning = "Container " + container.getName() + " not added in container "
+						+ lastContainerName + " since it already has a child referencing "
+						+ lastContainerName + " or one of its parent.";
+				readSupportedFunctionWithWarn(method.getName(), ctx, warning);
+				return Collections.emptyList();
+			}
+		}
 		for(final Element element: elements){
 			if(element!=null && !(element instanceof EvalString)){
 				addInContainers(element);
@@ -112,7 +117,13 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 	public void addInContainers(Element element){
 		final Object lastContainer = currentContainers.get(currentContainers.size() - 1);
 		element = setUniqueNameInContainer(element,	toContainer(lastContainer).getChilds());
-		addChild(lastContainer,element);
+		addChild(lastContainer, element);
+	}
+
+	private boolean canAddContainer(final MutableContainer container) {
+		return container.flattened()
+				.filter(element -> element instanceof MutableContainer)
+				.noneMatch(currentContainers::contains);
 	}
 
 	private static void addChild(final Object container, final Element element) {
