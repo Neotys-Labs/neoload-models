@@ -15,23 +15,18 @@ public final class StringToStartAfterConverter extends StdConverter<String, Star
 			return ERROR_VALUE;
 		}
 		
-		try {
-			// Time case
-			final Integer value = TimeDurationHelper.convertToInteger(input);
-			if (value != null) {
-				return ImmutableStartAfter.builder()
-						.value(value)
-						.type(Type.TIME)
-						.build();		
-			}
-			// Population case
+		// Time case
+		final Integer value = TimeDurationHelper.convertToInteger(input);
+		if (value != null) {
 			return ImmutableStartAfter.builder()
-					.value(input)
-					.type(Type.POPULATION)
-					.build();
+					.value(value)
+					.type(Type.TIME)
+					.build();		
 		}
-		catch(final Throwable exception) {
-			return ERROR_VALUE;
-		}		
+		// Population case
+		return ImmutableStartAfter.builder()
+				.value(input)
+				.type(Type.POPULATION)
+				.build();
 	}
 }

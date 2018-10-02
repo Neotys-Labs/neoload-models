@@ -11,6 +11,10 @@ final class IterationDurationHelper {
 	
 	private static final Pattern ITERATION_PATTERN = Pattern.compile("(\\d+)iteration|(\\d+) iteration|(\\d+)iterations|(\\d+) iterations");
 	private static final int[] ITERATION_FACTORS = new int[] {0, 1, 1, 1, 1};
+	
+	private IterationDurationHelper() {
+		super();
+	}
 
 	protected static String convertToString(final Integer input) {
 		if (input == null) return null;

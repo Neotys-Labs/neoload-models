@@ -14,15 +14,10 @@ public final class StringToTimeDurationConverter extends StdConverter<String, Op
 			return ERROR_VALUE;
 		}
 		
-		try {
-			Integer value = TimeDurationHelper.convertToInteger(input);
-			if (value != null) {
-				return Optional.of(Integer.valueOf(value));
-			}
-			return ERROR_VALUE;
+		Integer value = TimeDurationHelper.convertToInteger(input);
+		if (value != null) {
+			return Optional.of(value);
 		}
-		catch(final Throwable exception) {
-			return ERROR_VALUE;
-		}		
+		return ERROR_VALUE;
 	}
 }

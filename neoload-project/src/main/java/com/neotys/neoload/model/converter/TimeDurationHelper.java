@@ -13,6 +13,10 @@ final class TimeDurationHelper {
 	private static final Pattern TIME_PATTERN = Pattern.compile("(\\d+)|(\\d+)s|(\\d+)m|(\\d+)h|(\\d+)m(\\d+)s|(\\d+)h(\\d+)s|(\\d+)h(\\d+)m|(\\d+)h(\\d+)m(\\d+)s");
 	private static final int[] TIME_FACTORS = new int[] {0, 1, 1, 60, 60 * 60, 60, 1, 60 * 60, 1, 60 * 60, 60, 60 * 60, 60, 1};
 
+	private TimeDurationHelper() {
+		super();
+	}
+
 	protected static String convertToString(final Integer input) {
 		if (input == null) return null;
 		if (input <= 0) return ZERO;

@@ -18,25 +18,20 @@ public final class StringToDurationConverter extends StdConverter<String, Durati
 			return ERROR_VALUE;
 		}
 		
-		try {
-			Integer value = TimeDurationHelper.convertToInteger(input);
-			if (value != null) {
-				return ImmutableDuration.builder()
-						.value(value)
-						.type(Type.TIME)
-						.build();		
-			}
-			value = IterationDurationHelper.convertToInteger(input);
-			if (value != null) {
-				return ImmutableDuration.builder()
-						.value(value)
-						.type(Type.ITERATION)
-						.build();
-			}
-			return ERROR_VALUE;				
+		Integer value = TimeDurationHelper.convertToInteger(input);
+		if (value != null) {
+			return ImmutableDuration.builder()
+					.value(value)
+					.type(Type.TIME)
+					.build();		
 		}
-		catch(final Throwable exception) {
-			return ERROR_VALUE;
-		}		
+		value = IterationDurationHelper.convertToInteger(input);
+		if (value != null) {
+			return ImmutableDuration.builder()
+					.value(value)
+					.type(Type.ITERATION)
+					.build();
+		}
+		return ERROR_VALUE;
 	}
 }
