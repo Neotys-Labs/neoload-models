@@ -10,13 +10,11 @@ public final class StartAfterToStringConverter extends StdConverter<StartAfter, 
 		
 		String convertedValue = null;
 		final StartAfter.Type type = startAfter.getType();
-		switch (type) {
-			case POPULATION:
-				convertedValue = (String) startAfter.getValue();
-				break;
-			case TIME:
-				convertedValue = TimeDurationHelper.convertToString((Integer) startAfter.getValue());
-				break;
+		if (type == StartAfter.Type.TIME) {
+			convertedValue = TimeDurationHelper.convertToString((Integer) startAfter.getValue());
+		}
+		else {
+			convertedValue = (String) startAfter.getValue();
 		}
 		return convertedValue;
 	}

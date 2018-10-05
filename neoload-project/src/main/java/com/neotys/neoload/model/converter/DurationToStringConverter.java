@@ -10,13 +10,11 @@ public final class DurationToStringConverter extends StdConverter<Duration, Stri
 		
 		String convertedValue = null;
 		final Duration.Type type = duration.getType();
-		switch (type) {
-			case TIME: 
-				convertedValue = TimeDurationHelper.convertToString(duration.getValue());
-				break;
-			case ITERATION: 
-				convertedValue = IterationDurationHelper.convertToString(duration.getValue());
-				break;
+		if (type == Duration.Type.TIME) { 
+			convertedValue = TimeDurationHelper.convertToString(duration.getValue());
+		}
+		else {
+			convertedValue = IterationDurationHelper.convertToString(duration.getValue());
 		}
 		return convertedValue;
 	}
