@@ -7,11 +7,12 @@ import com.neotys.neoload.model.scenario.Scenario;
 import org.immutables.value.Value;
 
 import java.util.List;
+import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableProject.class)
 public interface Project {
-	String getName();
+	Optional<String> getName();
 	@JsonIgnore
 	List<Container> getSharedElements();
 	@JsonIgnore
