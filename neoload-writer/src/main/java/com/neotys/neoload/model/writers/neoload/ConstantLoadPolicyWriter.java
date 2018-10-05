@@ -26,7 +26,6 @@ class ConstantLoadPolicyWriter extends LoadPolicyWriter {
         // UserNumber attribute
         xmlElement.setAttribute(XML_ATTR_USERNUMBER, String.valueOf(constantLoadPolicy.getUsers()));
         // IterationNumber attribute
-        xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, "1");
         constantLoadPolicy.getDuration().ifPresent(duration -> {
         	if (duration.getType() == Type.ITERATION) {
         		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.getValue()));

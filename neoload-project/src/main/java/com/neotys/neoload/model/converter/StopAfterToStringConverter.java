@@ -8,14 +8,16 @@ public final class StopAfterToStringConverter extends StdConverter<StopAfter, St
 	public String convert(final StopAfter stopAfter) {
 		if (stopAfter == null) return null;
 		
+		String convertedValue = null;
 		final StopAfter.Type type = stopAfter.getType();
 		switch (type) {
 			case CURRENT_ITERATION:
-				return "current_iteration";
+				convertedValue = "current_iteration";
+				break;
 			case TIME:
-				return TimeDurationHelper.convertToString((Integer) stopAfter.getValue().get());
-			default:
-				return null;
+				convertedValue = TimeDurationHelper.convertToString((Integer) stopAfter.getValue().get());
+				break;
 		}
+		return convertedValue;
 	}
 }

@@ -1,9 +1,9 @@
 package com.neotys.neoload.model.serializer;
 
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FILED_CONSTANT_LOAD;
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FILED_NAME;
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FILED_PEAKS_LOAD;
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FILED_RAMPUP_LOAD;
+import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_CONSTANT_LOAD;
+import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_NAME;
+import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_PEAKS_LOAD;
+import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_RAMPUP_LOAD;
 
 import java.io.IOException;
 
@@ -28,17 +28,17 @@ public final class PopulationPolicyDeserializer extends StdDeserializer<Populati
     }
 
 	private static LoadPolicy getLoadPolicy(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
-		JsonNode loadPolicyNode = node.get(FILED_CONSTANT_LOAD);
+		JsonNode loadPolicyNode = node.get(FIELD_CONSTANT_LOAD);
 		if (loadPolicyNode != null) {
 			return codec.treeToValue(loadPolicyNode, ConstantLoadPolicy.class);
 		}
 
-		loadPolicyNode = node.get(FILED_RAMPUP_LOAD);
+		loadPolicyNode = node.get(FIELD_RAMPUP_LOAD);
 		if (loadPolicyNode != null) {
 			return codec.treeToValue(loadPolicyNode, RampupLoadPolicy.class);
 		}
 		
-		loadPolicyNode = node.get(FILED_PEAKS_LOAD);
+		loadPolicyNode = node.get(FIELD_PEAKS_LOAD);
 		if (loadPolicyNode != null) {
 			return codec.treeToValue(loadPolicyNode, PeaksLoadPolicy.class);
 		}
@@ -51,7 +51,7 @@ public final class PopulationPolicyDeserializer extends StdDeserializer<Populati
     	final ObjectCodec codec = parser.getCodec();
         final JsonNode node = codec.readTree(parser);
         
-        final String name = node.get(FILED_NAME).asText();
+        final String name = node.get(FIELD_NAME).asText();
         final LoadPolicy loadPolicy = getLoadPolicy(codec, node);
         
         return ImmutablePopulationPolicy.builder()

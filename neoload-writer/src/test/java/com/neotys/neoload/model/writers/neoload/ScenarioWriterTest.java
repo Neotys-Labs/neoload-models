@@ -1,8 +1,8 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.neotys.neoload.model.scenario.*;
-import com.neotys.neoload.model.scenario.Duration.Type;
-import com.neotys.neoload.model.scenario.PeaksLoadPolicy.Peak;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -10,11 +10,83 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import com.neotys.neoload.model.scenario.Duration.Type;
+import com.neotys.neoload.model.scenario.ImmutableConstantLoadPolicy;
+import com.neotys.neoload.model.scenario.ImmutableDuration;
+import com.neotys.neoload.model.scenario.ImmutablePeakLoadPolicy;
+import com.neotys.neoload.model.scenario.ImmutablePeaksLoadPolicy;
+import com.neotys.neoload.model.scenario.ImmutablePopulationPolicy;
+import com.neotys.neoload.model.scenario.ImmutableRampupLoadPolicy;
+import com.neotys.neoload.model.scenario.ImmutableScenario;
+import com.neotys.neoload.model.scenario.ImmutableStartAfter;
+import com.neotys.neoload.model.scenario.ImmutableStopAfter;
+import com.neotys.neoload.model.scenario.PeaksLoadPolicy.Peak;
+import com.neotys.neoload.model.scenario.Scenario;
+import com.neotys.neoload.model.scenario.StartAfter;
+import com.neotys.neoload.model.scenario.StopAfter;
 
 public class ScenarioWriterTest {
+
+	private void checkLoadPolicyNoLimit(final Element xmlPopulation) {
+        //<duration-policy-entry type="0"/>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("0");
+        
+        // <volume-policy-entry>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        
+        // <start-stop-policy-entry stop-type="0" start-type="0"/>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("0");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("0");
+        
+        // <runtime-policy vuStartMode="0"/>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("0");
+	}
+	
+	private void checkLoadPolicyTime(final Element xmlPopulation) {
+        //<duration-policy-entry time="240" timeUnit="0" type="2"/>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("2");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("240");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("timeUnit").getNodeValue()).isEqualTo("0");
+
+        // <volume-policy-entry>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        
+        // <start-stop-policy-entry stop-type="1" stop-delay="180000" start-type="1" start-delay="60000"/>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("1");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("180000");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("1");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("60000");
+        
+        // <runtime-policy vuStartMode="1" vuStartDelay="120000"/>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("1");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("120000");
+	}
+
+	private void checkLoadPolicyIteration(final Element xmlPopulation) {
+        //<duration-policy-entry type="1"/>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("1");
+
+        // <volume-policy-entry>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        
+        // <start-stop-policy-entry stop-type="2" start-type="2" start-population="myPopulation0"/>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("2");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("2");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-population").getNodeValue()).isEqualTo("myPopulation0");
+        
+        // <runtime-policy vuStartMode="1" vuStartDelay="120000"/>
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("1");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("120000");
+	}
 
     @Test
     public void writeScenarioConstantNoLimitTest() throws ParserConfigurationException {
@@ -42,30 +114,12 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("population-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
 
-        //<duration-policy-entry time="120" timeUnit="0" type="2"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("120");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("timeUnit").getNodeValue()).isEqualTo("0");
-        
-        // <volume-policy-entry>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyNoLimit(xmlPopulation);
         
         // <constant-volume-policy userNumber="25"/>
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("constant-volume-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("userNumber").getNodeValue()).isEqualTo("25");
-        
-        // <start-stop-policy-entry stop-type="0" stop-delay="60000" start-type="0" start-delay="0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("60000");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("0");
-        
-        // <runtime-policy vuStartMode="0" vuStartDelay="0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("0");
     }
 
     @Test
@@ -107,30 +161,12 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("population-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
 
-        //<duration-policy-entry time="240" timeUnit="0" type="2"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("2");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("240");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("timeUnit").getNodeValue()).isEqualTo("0");
-
-        // <volume-policy-entry>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyTime(xmlPopulation);
         
         // <constant-volume-policy userNumber="25"/>
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("constant-volume-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("userNumber").getNodeValue()).isEqualTo("25");
-        
-        // <start-stop-policy-entry stop-type="1" stop-delay="180000" start-type="1" start-delay="60000"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("180000");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("60000");
-        
-        // <runtime-policy vuStartMode="1" vuStartDelay="120000"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("120000");
     }
 
     @Test
@@ -180,30 +216,13 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("population-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
         
-        //<duration-policy-entry type="1"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("1");
-
-        // <volume-policy-entry>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyIteration(xmlPopulation);
         
         // <constant-volume-policy iterationNumber="12" userNumber="25"/>
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("constant-volume-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("iterationNumber").getNodeValue()).isEqualTo("12");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("userNumber").getNodeValue()).isEqualTo("25");
-        
-        // <start-stop-policy-entry stop-type="2" stop-delay="60000" start-type="2" start-delay="0" start-population="myPopulation0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("2");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("60000");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("2");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-population").getNodeValue()).isEqualTo("myPopulation0");
-        
-        // <runtime-policy vuStartMode="1" vuStartDelay="120000"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("120000");
     }
 
     @Test
@@ -248,14 +267,8 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("population-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
 
-        //<duration-policy-entry time="120" timeUnit="0" type="0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("120");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("timeUnit").getNodeValue()).isEqualTo("0");
-
-        // <volume-policy-entry>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyNoLimit(xmlPopulation);
         
         // <peaks-volume-policy defaultUserNumber="10" peakUserNumber="25" defaultDelay="10" peakDelay="20" defaultDelayType="1" peakDelayType="1"/>
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("peaks-volume-policy");
@@ -265,18 +278,7 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("peakDelay").getNodeValue()).isEqualTo("20");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("defaultDelayType").getNodeValue()).isEqualTo("1");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("peakDelayType").getNodeValue()).isEqualTo("1");
-        
-        // <start-stop-policy-entry stop-type="0" stop-delay="60000" start-type="0" start-delay="0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("60000");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("0");
-        
-        // <runtime-policy vuStartMode="0" vuStartDelay="0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("0");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("startPoint").getNodeValue()).isEqualTo("0");
     }
 
     @Test
@@ -302,7 +304,7 @@ public class ScenarioWriterTest {
                 								.build())
                 						.build())
                 				.duration(ImmutableDuration.builder()
-                						.value(122)
+                						.value(240)
                 						.type(Type.TIME)
                 						.build())
                 				.start(Peak.MINIMUM)
@@ -334,14 +336,8 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("population-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
 
-        //<duration-policy-entry time="122" timeUnit="0" type="2"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("2");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("122");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("timeUnit").getNodeValue()).isEqualTo("0");
-
-        // <volume-policy-entry>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyTime(xmlPopulation);
         
         // <peaks-volume-policy defaultUserNumber="10" peakUserNumber="25" defaultDelay="10" peakDelay="20" defaultDelayType="1" peakDelayType="1"/>
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("peaks-volume-policy");
@@ -351,18 +347,7 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("peakDelay").getNodeValue()).isEqualTo("20");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("defaultDelayType").getNodeValue()).isEqualTo("1");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("peakDelayType").getNodeValue()).isEqualTo("1");
-        
-        // <start-stop-policy-entry stop-type="1" stop-delay="180000" start-type="1" start-delay="60000"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("180000");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("60000");
-        
-        // <runtime-policy vuStartMode="1" vuStartDelay="120000"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("120000");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("startPoint").getNodeValue()).isEqualTo("0");
     }
 
     @Test
@@ -393,7 +378,7 @@ public class ScenarioWriterTest {
                 						.value(20)
                 						.type(Type.ITERATION)
                 						.build())
-                				.start(Peak.MINIMUM)
+                				.start(Peak.MAXIMUM)
                 		    	.startAfter(ImmutableStartAfter.builder()
                 						.value("myPopulation0")
                 						.type(StartAfter.Type.POPULATION)
@@ -426,12 +411,8 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("population-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
 
-        //<duration-policy-entry type="1"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("1");
-
-        // <volume-policy-entry>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyIteration(xmlPopulation);
         
         // <peaks-volume-policy defaultUserNumber="10" peakUserNumber="25" defaultDelay="2" peakDelay="2" defaultDelayType="2" peakDelayType="2"/>
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("peaks-volume-policy");
@@ -441,19 +422,8 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("peakDelay").getNodeValue()).isEqualTo("2");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("defaultDelayType").getNodeValue()).isEqualTo("2");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("peakDelayType").getNodeValue()).isEqualTo("2");
-        
-        // <start-stop-policy-entry stop-type="2" stop-delay="60000" start-type="2" start-delay="0" start-population="myPopulation0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("2");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("60000");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("2");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-population").getNodeValue()).isEqualTo("myPopulation0");
-        
-        // <runtime-policy vuStartMode="1" vuStartDelay="120000"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("120000");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("startPoint").getNodeValue()).isEqualTo("1");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("iterationNumber").getNodeValue()).isEqualTo("20");
     }
 
 
@@ -491,14 +461,8 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("population-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
 
-        //<duration-policy-entry time="120" timeUnit="0" type="0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("120");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("timeUnit").getNodeValue()).isEqualTo("0");
-
-        // <volume-policy-entry>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyNoLimit(xmlPopulation);
 
         // <rampup-volume-policy initialUserNumber="10" userIncrement="15" maxUserNumber="50" delayIncrement="15" delayTypeIncrement="1"/>
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("rampup-volume-policy");
@@ -508,18 +472,6 @@ public class ScenarioWriterTest {
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("maxUserNumber").getNodeValue()).isEqualTo("50");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayIncrement").getNodeValue()).isEqualTo("15");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayTypeIncrement").getNodeValue()).isEqualTo("1");
-        
-        // <start-stop-policy-entry stop-type="0" stop-delay="60000" start-type="0" start-delay="0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("60000");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("0");
-        
-        // <runtime-policy vuStartMode="0" vuStartDelay="0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("0");
     }
 
     @Test
@@ -538,7 +490,7 @@ public class ScenarioWriterTest {
                 						.type(Type.TIME)
                 						.build())
                 				.duration(ImmutableDuration.builder()
-                						.value(122)
+                						.value(240)
                 						.type(Type.TIME)
                 						.build())
                 				.startAfter(ImmutableStartAfter.builder()
@@ -567,15 +519,9 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("population-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
 
-        //<duration-policy-entry time="122" timeUnit="0" type="2"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("2");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("122");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("timeUnit").getNodeValue()).isEqualTo("0");
-
-        // <volume-policy-entry>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
-
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyTime(xmlPopulation);
+        
         // <rampup-volume-policy initialUserNumber="10" userIncrement="15" maxUserNumber="50" delayIncrement="15" delayTypeIncrement="1"/>
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("rampup-volume-policy");
         Node volumePolicyNode = xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0);
@@ -584,18 +530,6 @@ public class ScenarioWriterTest {
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("maxUserNumber").getNodeValue()).isEqualTo("50");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayIncrement").getNodeValue()).isEqualTo("15");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayTypeIncrement").getNodeValue()).isEqualTo("1");
-        
-        // <start-stop-policy-entry stop-type="1" stop-delay="180000" start-type="1" start-delay="60000"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("180000");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("60000");
-        
-        // <runtime-policy vuStartMode="1" vuStartDelay="120000"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("120000");
     }
     
     @Test
@@ -651,12 +585,8 @@ public class ScenarioWriterTest {
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("population-policy");
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
 
-        //<duration-policy-entry type="1"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("duration-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getAttributes().getNamedItem("type").getNodeValue()).isEqualTo("1");
-
-        // <volume-policy-entry>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getNodeName()).isEqualTo("volume-policy-entry");
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyIteration(xmlPopulation);
 
         // <rampup-volume-policy initialUserNumber="10" userIncrement="15" maxUserNumber="50" delayIncrement="2" delayTypeIncrement="2"/>
         Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("rampup-volume-policy");
@@ -666,18 +596,6 @@ public class ScenarioWriterTest {
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("maxUserNumber").getNodeValue()).isEqualTo("50");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayIncrement").getNodeValue()).isEqualTo("2");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayTypeIncrement").getNodeValue()).isEqualTo("2");
-        
-        // <start-stop-policy-entry stop-type="2" stop-delay="60000" start-type="2" start-delay="0" start-population="myPopulation0"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getNodeName()).isEqualTo("start-stop-policy-entry");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("stop-type").getNodeValue()).isEqualTo("2");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("stop-delay").getNodeValue()).isEqualTo("60000");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-type").getNodeValue()).isEqualTo("2");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-delay").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(2).getAttributes().getNamedItem("start-population").getNodeValue()).isEqualTo("myPopulation0");
-        
-        // <runtime-policy vuStartMode="1" vuStartDelay="120000"/>
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getNodeName()).isEqualTo("runtime-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getAttributes().getNamedItem("vuStartMode").getNodeValue()).isEqualTo("1");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(3).getAttributes().getNamedItem("vuStartDelay").getNodeValue()).isEqualTo("120000");
+        Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("iterationNumber").getNodeValue()).isEqualTo("20");
     }
 }
