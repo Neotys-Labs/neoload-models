@@ -24,7 +24,7 @@ public class NeoLoadWritterTest {
                 .addUserPaths(getUserPath("MyPath"))
                 .build();
         File tmpDir = Files.createTempDir();
-        final String nlProjectFolder = tmpDir.getPath() + File.separator + project.getName();
+        final String nlProjectFolder = tmpDir.getPath() + File.separator + project.getName().orElse("MyProject");;
         NeoLoadWriter writer = new NeoLoadWriter(project, nlProjectFolder, null);
         writer.write(true);
         assertThat(new File(tmpDir, "Test project" + File.separator + "config.zip")).exists();
@@ -40,7 +40,7 @@ public class NeoLoadWritterTest {
                 .addUserPaths(getUserPath("MyPath"))
                 .build();
         File tmpDir = Files.createTempDir();
-        final String nlProjectFolder = tmpDir.getPath() + File.separator + project.getName();
+        final String nlProjectFolder = tmpDir.getPath() + File.separator + project.getName().orElse("MyProject");
         NeoLoadWriter writer = new NeoLoadWriter(project, nlProjectFolder, null);
         writer.write(false);
         assertThat(new File(tmpDir, "Test project" + File.separator + "config")).exists();
@@ -105,7 +105,7 @@ public class NeoLoadWritterTest {
                 .addVariables(var1)
                 .addVariables(var2)
                 .build();
-    	final String nlProjectFolder = tmpDirDest.getPath() + File.separator + project.getName();
+    	final String nlProjectFolder = tmpDirDest.getPath() + File.separator + project.getName().orElse("MyProject");;
         NeoLoadWriter writer = new NeoLoadWriter(project, nlProjectFolder, fileMap);
         writer.write(true);
         assertThat(new File(tmpDirDest.getAbsolutePath() + File.separator + "Test project" + File.separator + "variables" ,"file1")).exists();
