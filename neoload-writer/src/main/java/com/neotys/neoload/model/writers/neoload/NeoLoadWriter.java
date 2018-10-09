@@ -36,8 +36,8 @@ public class NeoLoadWriter {
 
 	private static Logger logger = LoggerFactory.getLogger(NeoLoadWriter.class);
 
-	private static final String PROJECT_VERSION = "6.4";
-	private static final String PRODUCT_VERSION = "6.6.0";
+	private static final String PROJECT_VERSION = "6.5";
+	private static final String PRODUCT_VERSION = "6.7.0";
 
 	private static final String CONFIG_ZIP = "config.zip";
 	private static final String CONFIG_FOLDER = "config";
