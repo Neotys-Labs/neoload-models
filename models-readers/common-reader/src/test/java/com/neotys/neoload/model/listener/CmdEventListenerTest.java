@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.listener;
 
+import com.google.common.io.Files;
+import com.neotys.neoload.model.stats.ProjectType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -38,5 +40,20 @@ public class CmdEventListenerTest {
 		cmdEventListener.endScript();
 		cmdEventListener.endReadingScripts();
 		cmdEventListener.printSummary();
+	}
+
+	@Test
+	public void shouldGeneratoJsonReport(){
+		final CmdEventListener cmdEventListener = new CmdEventListener("source", Files.createTempDir().getPath(), "nlProject");
+		cmdEventListener.startReadingScripts(2);
+		cmdEventListener.startScript("scriptPath");
+		cmdEventListener.readSupportedAction("myAction");
+		cmdEventListener.endScript();
+		cmdEventListener.startScript("scriptPath2");
+		cmdEventListener.readSupportedAction("myAction");
+		cmdEventListener.readUnsupportedFunction("scriptName", "myFunction", 10);
+		cmdEventListener.endScript();
+		cmdEventListener.endReadingScripts();
+		cmdEventListener.generateJsonReport(ProjectType.LOAD_RUNNER, "statusCode");
 	}
 }
