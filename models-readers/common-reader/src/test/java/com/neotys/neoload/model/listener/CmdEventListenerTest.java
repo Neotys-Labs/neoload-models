@@ -24,4 +24,19 @@ public class CmdEventListenerTest {
 		final String summary = cmdEventListener.newSummary();
 		assertNotNull(summary);
 	}
+
+	@Test
+	public void shouldPrintSummary(){
+		final CmdEventListener cmdEventListener = new CmdEventListener("source", "dest", "nlProject");
+		cmdEventListener.startReadingScripts(2);
+		cmdEventListener.startScript("scriptPath");
+		cmdEventListener.readSupportedAction("myAction");
+		cmdEventListener.endScript();
+		cmdEventListener.startScript("scriptPath2");
+		cmdEventListener.readSupportedAction("myAction");
+		cmdEventListener.readUnsupportedFunction("scriptName", "myFunction", 10);
+		cmdEventListener.endScript();
+		cmdEventListener.endReadingScripts();
+		cmdEventListener.printSummary();
+	}
 }
