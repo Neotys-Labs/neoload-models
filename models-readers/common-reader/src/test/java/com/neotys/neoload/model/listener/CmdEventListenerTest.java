@@ -13,8 +13,11 @@ public class CmdEventListenerTest {
 		cmdEventListener.startScript("scriptPath");
 		cmdEventListener.readSupportedAction("myAction");
 		cmdEventListener.readUnsupportedAction("myActionNotSupported");
+		cmdEventListener.readUnsupportedParameter("scriptName", "type", "myParameter");
+		cmdEventListener.readSupportedFunctionWithWarn("scriptName", "myFunction", 12, "my warning");
 		cmdEventListener.readSupportedFunction("scriptName", "myFunction", 10);
-		cmdEventListener.readSupportedParameterWithWarn("scriptName", "myFunction", "myParameter", "my warning");
+		cmdEventListener.readSupportedParameter("scriptName", "type", "myParameter");
+		cmdEventListener.readSupportedParameterWithWarn("scriptName", "type", "myParameter", "my warning");
 		cmdEventListener.readUnsupportedAction("myActionNotSupported");
 		cmdEventListener.endScript();
 		cmdEventListener.endReadingScripts();
