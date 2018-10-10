@@ -278,8 +278,9 @@ public abstract class WebRequest {
 		}		
 		return extractPathFromUrl(snapshotProperties.get().getProperty("URL1", ""));		
 	}
-	
-	private static Optional<String> extractPathFromUrl(final String url){
+
+	@VisibleForTesting
+	static Optional<String> extractPathFromUrl(final String url){
 		if(!Strings.isNullOrEmpty(url)){
 			try {
 				return Optional.of((new URL(url)).getPath());								

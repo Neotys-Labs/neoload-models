@@ -252,5 +252,12 @@ public class WebRequestTest {
 		URL url = WebRequest.getUrlFromParameterString("{", "}", "[myserver]/index.html");
 		assertEquals(null, url);
 	}
+
+	@Test
+	public void testExtractPathOfUrl(){
+		assertEquals(Optional.empty(), WebRequest.extractPathFromUrl(null));
+		assertEquals(Optional.empty(), WebRequest.extractPathFromUrl(""));
+		assertEquals(Optional.of("/path"), WebRequest.extractPathFromUrl("http://www.neotys.com/path"));
+	}
 	
 }
