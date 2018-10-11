@@ -5,8 +5,8 @@ import com.neotys.neoload.model.Project;
 import com.neotys.neoload.model.repository.FileVariable;
 import com.neotys.neoload.model.repository.ImmutableFileVariable;
 import com.neotys.neoload.model.repository.Variable;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -265,7 +265,7 @@ public class NeoLoadWriter {
 
 		try (final Writer out = new FileWriter(nlp)) {
 			nlpProperties.setHeader("Project description file");
-			nlpProperties.save(out);
+			nlpProperties.write(out);
 		} catch (ConfigurationException e) {
 			logger.error("Error while saving NLP file", e);
 		}

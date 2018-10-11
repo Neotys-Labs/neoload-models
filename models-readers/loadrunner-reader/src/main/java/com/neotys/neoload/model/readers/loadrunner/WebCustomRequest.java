@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
@@ -16,6 +15,8 @@ import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
 import com.neotys.neoload.model.repository.Page;
 import com.neotys.neoload.model.repository.PostRequest;
 import com.neotys.neoload.model.repository.RecordedFiles;
+import org.apache.commons.lang3.StringUtils;
+
 import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.ITEM_BOUNDARY.EXTRARES;
 public class WebCustomRequest extends WebRequest {
 	
