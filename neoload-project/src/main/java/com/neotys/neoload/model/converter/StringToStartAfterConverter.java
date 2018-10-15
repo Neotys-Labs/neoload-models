@@ -2,12 +2,10 @@ package com.neotys.neoload.model.converter;
 
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.google.common.base.Strings;
-import com.neotys.neoload.model.scenario.ImmutableStartAfter;
 import com.neotys.neoload.model.scenario.StartAfter;
-import com.neotys.neoload.model.scenario.StartAfter.Type;
 
 public final class StringToStartAfterConverter extends StdConverter<String, StartAfter> {
-	private static final StartAfter ERROR_VALUE = null;
+	private static final StartAfter ERROR_VALUE = StartAfter.builder().build();
 
 	@Override
 	public StartAfter convert(final String input) {
@@ -18,15 +16,15 @@ public final class StringToStartAfterConverter extends StdConverter<String, Star
 		// Time case
 		final Integer value = TimeDurationHelper.convertToInteger(input);
 		if (value != null) {
-			return ImmutableStartAfter.builder()
+			return StartAfter.builder()
 					.value(value)
-					.type(Type.TIME)
+					.type(StartAfter.Type.TIME)
 					.build();		
 		}
 		// Population case
-		return ImmutableStartAfter.builder()
+		return StartAfter.builder()
 				.value(input)
-				.type(Type.POPULATION)
+				.type(StartAfter.Type.POPULATION)
 				.build();
 	}
 }

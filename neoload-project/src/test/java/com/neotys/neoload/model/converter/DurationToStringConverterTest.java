@@ -5,23 +5,23 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.neotys.neoload.model.converter.DurationToStringConverter;
 import com.neotys.neoload.model.scenario.Duration;
 import com.neotys.neoload.model.scenario.Duration.Type;
-import com.neotys.neoload.model.scenario.ImmutableDuration;
 
 
 public class DurationToStringConverterTest {
 	private static final String ZERO = "0";
 	
 	private Duration convertToTimeDuration(final int input) {
-		return ImmutableDuration.builder()
+		return Duration.builder()
 				.value(input)
 				.type(Type.TIME)
 				.build();
 	}
 	
 	private Duration convertToIterationDuration(final int input) {
-		return ImmutableDuration.builder()
+		return Duration.builder()
 				.value(input)
 				.type(Type.ITERATION)
 				.build();

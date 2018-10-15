@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import java.util.Optional;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -42,10 +44,12 @@ class RampupLoadPolicyWriter extends LoadPolicyWriter {
         }
         // Max User Number attribute        
         xmlElement.setAttribute(XML_ATTR_MAXUSERNUMBER, "0");
-        rampupLoadPolicy.getMaxUsers().ifPresent(maxUsers -> xmlElement.setAttribute(XML_ATTR_MAXUSERNUMBER, String.valueOf(maxUsers)));
+        Optional.ofNullable(rampupLoadPolicy.getMaxUsers()).ifPresent(maxUsers -> {
+        	xmlElement.setAttribute(XML_ATTR_MAXUSERNUMBER, String.valueOf(maxUsers));
+        });
         // Iteration Number attribute
         xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, "1");
-        rampupLoadPolicy.getDuration().ifPresent(duration -> {
+        Optional.ofNullable(rampupLoadPolicy.getDuration()).ifPresent(duration -> {
         	if (duration.getType() == Type.ITERATION) {
         		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.getValue()));
         	}

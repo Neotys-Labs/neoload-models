@@ -1,9 +1,9 @@
 package com.neotys.neoload.model.serializer;
 
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_CONSTANT_LOAD;
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_NAME;
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_PEAKS_LOAD;
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_RAMPUP_LOAD;
+import static com.neotys.neoload.model.core.Element.NAME;
+import static com.neotys.neoload.model.scenario.PopulationPolicy.CONSTANT_LOAD;
+import static com.neotys.neoload.model.scenario.PopulationPolicy.PEAKS_LOAD;
+import static com.neotys.neoload.model.scenario.PopulationPolicy.RAMPUP_LOAD;
 
 import java.io.IOException;
 
@@ -29,18 +29,18 @@ public final class PopulationPolicySerializer extends StdSerializer<PopulationPo
     	// Start object tag
         jgen.writeStartObject();
         // Name field
-        jgen.writeStringField(FIELD_NAME, population.getName());
+        jgen.writeStringField(NAME, population.getName());
         // LoadPolicy field
         String loadPolicyFieldName = null;
         final LoadPolicy loadPolicy = population.getLoadPolicy();
         if (loadPolicy instanceof ConstantLoadPolicy) {
-        	loadPolicyFieldName = FIELD_CONSTANT_LOAD;
+        	loadPolicyFieldName = CONSTANT_LOAD;
         }
         else if (loadPolicy instanceof RampupLoadPolicy) {
-        	loadPolicyFieldName = FIELD_RAMPUP_LOAD;
+        	loadPolicyFieldName = RAMPUP_LOAD;
         }
         else if (loadPolicy instanceof PeaksLoadPolicy) {
-        	loadPolicyFieldName = FIELD_PEAKS_LOAD;
+        	loadPolicyFieldName = PEAKS_LOAD;
         }
         if (loadPolicyFieldName != null) {
         	jgen.writeObjectField(loadPolicyFieldName, loadPolicy);

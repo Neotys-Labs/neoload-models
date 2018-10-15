@@ -5,21 +5,23 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.scenario.ImmutableStartAfter;
+import com.neotys.neoload.model.converter.StringToStartAfterConverter;
 import com.neotys.neoload.model.scenario.StartAfter;
 import com.neotys.neoload.model.scenario.StartAfter.Type;
 
 
 public class StringToStartAfterConverterTest {
+	private static final StartAfter ERROR = StartAfter.builder().build();
+
 	private static StartAfter convertToStartAfter(final int input) {
-		return ImmutableStartAfter.builder()
+		return StartAfter.builder()
 				.value(input)
 				.type(Type.TIME)
 				.build();
 	}
 	
 	private static StartAfter convertToStartAfter(final String input) {
-		return ImmutableStartAfter.builder()
+		return StartAfter.builder()
 				.value(input)
 				.type(Type.POPULATION)
 				.build();
@@ -29,9 +31,9 @@ public class StringToStartAfterConverterTest {
 	public void shouldConvertCorrectly() {
 		final StringToStartAfterConverter converter = new StringToStartAfterConverter();
 		// Input: NULL - Output: -1
-		assertEquals(null, converter.convert(null));
+		assertEquals(ERROR, converter.convert(null));
 		// Input: EMPTY - Output: -1
-		assertEquals(null, converter.convert(""));
+		assertEquals(ERROR, converter.convert(""));
 
 		// TIME
 		// Input: 48h30m15s - Output: 48 * 60 * 60 + 30 * 60 + 15

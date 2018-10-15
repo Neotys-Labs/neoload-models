@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import java.util.Optional;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -31,7 +33,7 @@ class ScenarioWriter {
         xmlScenario.setAttribute(XML_ATTR_NAME, scenario.getName());
         // Sla Profile Enabled & Sla Profile Name attributes
         xmlScenario.setAttribute(XML_ATTR_SLAPROFILEENABLED, "false");
-        scenario.getSlaProfile().ifPresent(slaProfile -> {
+        Optional.ofNullable(scenario.getSlaProfile()).ifPresent(slaProfile -> {
         	xmlScenario.setAttribute(XML_ATTR_SLAPROFILEENABLED, "true");
         	xmlScenario.setAttribute(XML_ATTR_SLAPROFILENAME, slaProfile);
         });

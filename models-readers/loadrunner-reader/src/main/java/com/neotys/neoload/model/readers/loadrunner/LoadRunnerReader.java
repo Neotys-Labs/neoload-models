@@ -105,7 +105,7 @@ public class LoadRunnerReader extends Reader {
 	public synchronized Project read() {
 		try {
 
-			final ImmutableProject.Builder projectBuilder = ImmutableProject.builder().name(this.projectName);
+			final ImmutableProject.Builder projectBuilder = Project.builder().name(this.projectName);
 			final List<File> projectFolders = getProjectFolders();
 
 			final int totalScriptNumber = projectFolders.size();

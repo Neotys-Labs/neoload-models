@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import java.util.Optional;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,7 +28,7 @@ class ConstantLoadPolicyWriter extends LoadPolicyWriter {
         // UserNumber attribute
         xmlElement.setAttribute(XML_ATTR_USERNUMBER, String.valueOf(constantLoadPolicy.getUsers()));
         // IterationNumber attribute
-        constantLoadPolicy.getDuration().ifPresent(duration -> {
+        Optional.ofNullable(constantLoadPolicy.getDuration()).ifPresent(duration -> {
         	if (duration.getType() == Type.ITERATION) {
         		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.getValue()));
         	}
