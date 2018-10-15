@@ -78,7 +78,7 @@ public class NeoLoadWriter {
 				return;
 			}
 			writeXML(zipConfig);
-			writeNLP(project.getName().isPresent() ? project.getName().get() : "MyProject", zipConfig);
+			writeNLP(project.getName(), zipConfig);
 			logger.info("Project saved.");
 
 		} catch (ParserConfigurationException | TransformerException | IOException e) {

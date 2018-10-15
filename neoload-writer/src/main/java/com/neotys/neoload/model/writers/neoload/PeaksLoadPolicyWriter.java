@@ -1,12 +1,14 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.neotys.neoload.model.scenario.Duration;
-import com.neotys.neoload.model.scenario.PeakLoadPolicy;
-import com.neotys.neoload.model.scenario.PeaksLoadPolicy;
-import com.neotys.neoload.model.scenario.Duration.Type;
+import java.util.Optional;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.neotys.neoload.model.scenario.Duration;
+import com.neotys.neoload.model.scenario.Duration.Type;
+import com.neotys.neoload.model.scenario.PeakLoadPolicy;
+import com.neotys.neoload.model.scenario.PeaksLoadPolicy;
 
 class PeaksLoadPolicyWriter extends LoadPolicyWriter {
 
@@ -66,7 +68,7 @@ class PeaksLoadPolicyWriter extends LoadPolicyWriter {
         
         // Iteration Number attribute
         xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, "1");
-        peaksLoadPolicy.getDuration().ifPresent(duration -> {
+        Optional.ofNullable(peaksLoadPolicy.getDuration()).ifPresent(duration -> {
         	if (duration.getType() == Type.ITERATION) {
         		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.getValue()));
         	}

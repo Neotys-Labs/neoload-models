@@ -1,9 +1,9 @@
 package com.neotys.neoload.model.serializer;
 
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_CONSTANT_LOAD;
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_NAME;
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_PEAKS_LOAD;
-import static com.neotys.neoload.model.serializer.PopulationPolicyConstants.FIELD_RAMPUP_LOAD;
+import static com.neotys.neoload.model.core.Element.NAME;
+import static com.neotys.neoload.model.scenario.PopulationPolicy.CONSTANT_LOAD;
+import static com.neotys.neoload.model.scenario.PopulationPolicy.PEAKS_LOAD;
+import static com.neotys.neoload.model.scenario.PopulationPolicy.RAMPUP_LOAD;
 
 import java.io.IOException;
 
@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.neotys.neoload.model.scenario.ConstantLoadPolicy;
-import com.neotys.neoload.model.scenario.ImmutablePopulationPolicy;
 import com.neotys.neoload.model.scenario.LoadPolicy;
 import com.neotys.neoload.model.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.scenario.PopulationPolicy;
@@ -28,17 +27,17 @@ public final class PopulationPolicyDeserializer extends StdDeserializer<Populati
     }
 
 	private static LoadPolicy getLoadPolicy(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
-		JsonNode loadPolicyNode = node.get(FIELD_CONSTANT_LOAD);
+		JsonNode loadPolicyNode = node.get(CONSTANT_LOAD);
 		if (loadPolicyNode != null) {
 			return codec.treeToValue(loadPolicyNode, ConstantLoadPolicy.class);
 		}
 
-		loadPolicyNode = node.get(FIELD_RAMPUP_LOAD);
+		loadPolicyNode = node.get(RAMPUP_LOAD);
 		if (loadPolicyNode != null) {
 			return codec.treeToValue(loadPolicyNode, RampupLoadPolicy.class);
 		}
 		
-		loadPolicyNode = node.get(FIELD_PEAKS_LOAD);
+		loadPolicyNode = node.get(PEAKS_LOAD);
 		if (loadPolicyNode != null) {
 			return codec.treeToValue(loadPolicyNode, PeaksLoadPolicy.class);
 		}
@@ -51,10 +50,14 @@ public final class PopulationPolicyDeserializer extends StdDeserializer<Populati
     	final ObjectCodec codec = parser.getCodec();
         final JsonNode node = codec.readTree(parser);
         
-        final String name = node.get(FIELD_NAME).asText();
+        String name = null;
+        final JsonNode nodeName = node.get(NAME);
+        if (nodeName != null) {
+        	name = nodeName.asText();
+        }
         final LoadPolicy loadPolicy = getLoadPolicy(codec, node);
         
-        return ImmutablePopulationPolicy.builder()
+        return PopulationPolicy.builder()
         		.name(name)
         		.loadPolicy(loadPolicy)
         		.build();

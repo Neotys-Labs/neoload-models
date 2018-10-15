@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import java.util.Optional;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -47,7 +49,7 @@ abstract class LoadPolicyWriter {
         final Element xmlElement = document.createElement(XML_TAG_DURATION_POLICY_NAME);
 
         xmlElement.setAttribute(XML_ATTR_TYPE, "0");
-        loadPolicy.getDuration().ifPresent(duration -> {
+        Optional.ofNullable(loadPolicy.getDuration()).ifPresent(duration -> {
         	if (duration.getType() == Type.TIME) {
         		xmlElement.setAttribute(XML_ATTR_TYPE, "2");
                 xmlElement.setAttribute(XML_ATTR_TIME, String.valueOf(duration.getValue()));
@@ -67,7 +69,7 @@ abstract class LoadPolicyWriter {
     	Element xmlElement = document.createElement(XML_TAG_START_STOP_POLICY_NAME);
 
     	xmlElement.setAttribute(XML_ATTR_START_TYPE, "0");
-        loadPolicy.getStartAfter().ifPresent(startAfter -> {
+    	Optional.ofNullable(loadPolicy.getStartAfter()).ifPresent(startAfter -> {
         	if (startAfter.getType() == StartAfter.Type.TIME) {
         		xmlElement.setAttribute(XML_ATTR_START_TYPE, "1");
                 xmlElement.setAttribute(XML_ATTR_START_DELAY, String.valueOf((Integer)startAfter.getValue() * 1000));
@@ -78,10 +80,10 @@ abstract class LoadPolicyWriter {
         	}
         });  
     	xmlElement.setAttribute(XML_ATTR_STOP_TYPE, "0");
-        loadPolicy.getStopAfter().ifPresent(stopAfter -> {
+    	Optional.ofNullable(loadPolicy.getStopAfter()).ifPresent(stopAfter -> {
         	if (stopAfter.getType() == StopAfter.Type.TIME) {
         		xmlElement.setAttribute(XML_ATTR_STOP_TYPE, "1");
-                xmlElement.setAttribute(XML_ATTR_STOP_DELAY, String.valueOf((Integer)stopAfter.getValue().get() * 1000));
+                xmlElement.setAttribute(XML_ATTR_STOP_DELAY, String.valueOf((Integer)stopAfter.getValue() * 1000));
         	}
         	else {
         		xmlElement.setAttribute(XML_ATTR_STOP_TYPE, "2");
@@ -94,7 +96,7 @@ abstract class LoadPolicyWriter {
     	Element xmlElement = document.createElement(XML_TAG_RUNTIME_POLICY_NAME);
 
     	xmlElement.setAttribute(XML_ATTR_VU_START_MODE, "0");
-        loadPolicy.getRampup().ifPresent(duration -> {
+    	Optional.ofNullable(loadPolicy.getRampup()).ifPresent(duration -> {
         	xmlElement.setAttribute(XML_ATTR_VU_START_MODE, "1");
             xmlElement.setAttribute(XML_ATTR_VU_START_DELAY, String.valueOf(duration * 1000));
         });

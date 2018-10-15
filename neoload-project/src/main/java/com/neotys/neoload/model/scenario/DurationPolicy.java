@@ -1,7 +1,10 @@
 package com.neotys.neoload.model.scenario;
 
-import java.util.Optional;
+import javax.validation.Valid;
 
 public interface DurationPolicy {
-	Optional<Duration> getDuration();
+	public static final String DURATION = "duration";
+
+	@Valid
+	Duration getDuration();
 }

@@ -3,14 +3,9 @@ package com.neotys.neoload.model.converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.scenario.Duration;
-import com.neotys.neoload.model.scenario.ImmutableDuration;
-import com.neotys.neoload.model.scenario.Duration.Type;
 
 public final class StringToDurationConverter extends StdConverter<String, Duration> {
-	private static final Duration ERROR_VALUE = ImmutableDuration.builder()
-			.value(-1)
-			.type(Type.TIME)
-			.build();
+	private static final Duration ERROR_VALUE = Duration.builder().build();
 
 	@Override
 	public Duration convert(final String input) {
@@ -20,16 +15,16 @@ public final class StringToDurationConverter extends StdConverter<String, Durati
 		
 		Integer value = TimeDurationHelper.convertToInteger(input);
 		if (value != null) {
-			return ImmutableDuration.builder()
+			return Duration.builder()
 					.value(value)
-					.type(Type.TIME)
+					.type(Duration.Type.TIME)
 					.build();		
 		}
 		value = IterationDurationHelper.convertToInteger(input);
 		if (value != null) {
-			return ImmutableDuration.builder()
+			return Duration.builder()
 					.value(value)
-					.type(Type.ITERATION)
+					.type(Duration.Type.ITERATION)
 					.build();
 		}
 		return ERROR_VALUE;

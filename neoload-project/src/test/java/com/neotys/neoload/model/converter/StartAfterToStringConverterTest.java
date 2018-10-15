@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.scenario.ImmutableStartAfter;
 import com.neotys.neoload.model.scenario.StartAfter;
 import com.neotys.neoload.model.scenario.StartAfter.Type;
 
@@ -14,14 +13,14 @@ public class StartAfterToStringConverterTest {
 	private static final String ZERO = "0";
 	
 	private static StartAfter convertToStartAfter(final int input) {
-		return ImmutableStartAfter.builder()
+		return StartAfter.builder()
 				.value(input)
 				.type(Type.TIME)
 				.build();
 	}
 	
 	private static StartAfter convertToStartAfter(final String input) {
-		return ImmutableStartAfter.builder()
+		return StartAfter.builder()
 				.value(input)
 				.type(Type.POPULATION)
 				.build();

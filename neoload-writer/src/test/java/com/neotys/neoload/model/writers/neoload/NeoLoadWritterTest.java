@@ -1,9 +1,6 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.google.common.io.Files;
-import com.neotys.neoload.model.ImmutableProject;
-import com.neotys.neoload.model.repository.*;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,14 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
+import com.google.common.io.Files;
+import com.neotys.neoload.model.Project;
+import com.neotys.neoload.model.repository.FileVariable;
+import com.neotys.neoload.model.repository.ImmutableContainerForMulti;
+import com.neotys.neoload.model.repository.ImmutableFileVariable;
+import com.neotys.neoload.model.repository.ImmutableUserPath;
+import com.neotys.neoload.model.repository.UserPath;
 
 public class NeoLoadWritterTest {
 
     @Test
     public void writeProjectTestZip() {
 
-        ImmutableProject project = ImmutableProject.builder()
+        Project project = Project.builder()
                 .name("Test project")
                 .addUserPaths(getUserPath("MyPath"))
                 .build();
@@ -35,7 +40,7 @@ public class NeoLoadWritterTest {
     @Test
     public void writeProjectTestFolder() {
 
-        ImmutableProject project = ImmutableProject.builder()
+        Project project = Project.builder()
                 .name("Test project")
                 .addUserPaths(getUserPath("MyPath"))
                 .build();
@@ -99,7 +104,7 @@ public class NeoLoadWritterTest {
     			.noValuesLeftBehavior(FileVariable.VariableNoValuesLeftBehavior.STOP)
     			.build();
         
-    	ImmutableProject project = ImmutableProject.builder()
+    	Project project = Project.builder()
                 .name("Test project")
                 .addUserPaths(getUserPath("MyPath"))
                 .addVariables(var1)

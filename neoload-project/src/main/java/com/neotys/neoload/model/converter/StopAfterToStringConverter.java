@@ -11,7 +11,7 @@ public final class StopAfterToStringConverter extends StdConverter<StopAfter, St
 		String convertedValue = null;
 		final StopAfter.Type type = stopAfter.getType();
 		if (type == StopAfter.Type.TIME) {
-			convertedValue = TimeDurationHelper.convertToString((Integer) stopAfter.getValue().get());
+			convertedValue = TimeDurationHelper.convertToString((Integer) stopAfter.getValue());
 		}
 		else {
 			convertedValue = "current_iteration";
