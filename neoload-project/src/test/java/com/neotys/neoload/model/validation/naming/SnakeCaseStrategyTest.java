@@ -15,6 +15,7 @@ public class SnakeCaseStrategyTest {
 		
 		assertEquals("", strategy.translate(""));
 		assertEquals("rampup", strategy.translate("rampup"));
+		assertEquals("rampup", strategy.translate("_rampup"));
 		assertEquals("load_policy", strategy.translate("loadPolicy"));
 		assertEquals("load_policy", strategy.translate("load_policy"));
 		assertEquals("constant_load_policy", strategy.translate("ConstantLoadPolicy"));

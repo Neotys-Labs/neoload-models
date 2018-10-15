@@ -21,21 +21,21 @@ public final class SnakeCaseStrategy implements PropertyNamingStrategy {
         boolean wasPrevTranslated = false;
         for (int i = 0; i < length; i++) {
             char c = input.charAt(i);
-            if (i > 0 || c != '_') { // skip first starting underscore
-                if (Character.isUpperCase(c)) {
-                    if (!wasPrevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != '_') {
-                        result.append('_');
-                        resultLength++;
-                    }
-                    c = Character.toLowerCase(c);
-                    wasPrevTranslated = true;
+            if ((i == 0) && (c == '_')) continue;
+            
+            if (Character.isUpperCase(c)) {
+                if (!wasPrevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != '_') {
+                    result.append('_');
+                    resultLength++;
                 }
-                else {
-                    wasPrevTranslated = false;
-                }
-                result.append(c);
-                resultLength++;
+                c = Character.toLowerCase(c);
+                wasPrevTranslated = true;
             }
+            else {
+                wasPrevTranslated = false;
+            }
+            result.append(c);
+            resultLength++;
         }
         return resultLength > 0 ? result.toString() : input;   	
     }
