@@ -17,11 +17,11 @@ public final class RequiredValidator extends AbstractConstraintValidator<Require
 		}
 		
 		if (object instanceof Collection<?>) {
-			return ((Collection<?>) object).size() > 0;
+			return !((Collection<?>) object).isEmpty();
 		}
 		
 		if (object instanceof Map<?,?>) {
-			return ((Map<?,?>) object).size() > 0;
+			return !((Map<?,?>) object).isEmpty();
 		}
 		
 		return true;

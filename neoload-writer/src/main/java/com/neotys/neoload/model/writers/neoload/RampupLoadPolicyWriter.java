@@ -44,9 +44,7 @@ class RampupLoadPolicyWriter extends LoadPolicyWriter {
         }
         // Max User Number attribute        
         xmlElement.setAttribute(XML_ATTR_MAXUSERNUMBER, "0");
-        Optional.ofNullable(rampupLoadPolicy.getMaxUsers()).ifPresent(maxUsers -> {
-        	xmlElement.setAttribute(XML_ATTR_MAXUSERNUMBER, String.valueOf(maxUsers));
-        });
+        Optional.ofNullable(rampupLoadPolicy.getMaxUsers()).ifPresent(maxUsers -> {xmlElement.setAttribute(XML_ATTR_MAXUSERNUMBER, String.valueOf(maxUsers));});
         // Iteration Number attribute
         xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, "1");
         Optional.ofNullable(rampupLoadPolicy.getDuration()).ifPresent(duration -> {

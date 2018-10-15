@@ -16,8 +16,6 @@ public final class DurationValidator extends AbstractConstraintValidator<Composi
 
 		final Integer value = duration.getValue();
 		if (value == null) return false;
-		if (value <= 0) return false;
-		
-		return true;
+		return value > 0;
 	}
 }
