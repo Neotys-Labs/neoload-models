@@ -69,7 +69,7 @@ public final class Validator {
         		.build();
 	}
 	
-	private <T> List<String> normalizeErrors(final Set<ConstraintViolation<T>> violations) {
+	protected <T> List<String> normalizeErrors(final Set<ConstraintViolation<T>> violations) {
 		final List<String> errors = new ArrayList<>();
     	for (final ConstraintViolation<T> violation : violations) {
     		errors.add("Incorrect value for '"+ normalizePath(violation.getPropertyPath()) + "': " + violation.getMessage());
@@ -78,7 +78,7 @@ public final class Validator {
     	return errors;
 	}
 	
-	private String normalizePath(final Path path) {
+	protected String normalizePath(final Path path) {
 		if (path == null) {
 			return "N/A";
 		}

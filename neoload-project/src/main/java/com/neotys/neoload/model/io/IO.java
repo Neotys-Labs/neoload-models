@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -23,12 +21,6 @@ import com.google.common.base.Strings;
 
 
 public final class IO {
-	private static final Map<String, String> PROPERTIES_DICTIONARY;
-	static {
-		PROPERTIES_DICTIONARY = new HashMap<>();
-		PROPERTIES_DICTIONARY.put("workgroupName", "workgroup");
-	}
-
 	private static final String YAML_STARTS_WITH = "---";
 	private static final String JSON_STARTS_WITH = "{";
 	private static final String JSON_ENDS_WITH = "}";
@@ -79,21 +71,28 @@ public final class IO {
 	}
 
 	protected Format getFormat(final File file) {
+		if (file == null) return null;
+		
 		// Gets the extension from the specified file
 		final String extension = FilenameUtils.getExtension(file.getAbsolutePath());
 		if (Strings.isNullOrEmpty(extension)) {
 			throw new IllegalArgumentException("The extension of the file must be 'yaml' or 'json'");
 		}
 		// Convert extension to format
-		return Format.valueOf(extension.toUpperCase());
+		try {
+			return Format.valueOf(extension.toUpperCase());
+		}
+		catch (final IllegalArgumentException iae) {
+			throw new IllegalArgumentException("The extension of the file must be 'yaml' or 'json'");
+		}
 	}
 
 	protected Format getFormat(final String content) {
-		if ((content == null) || (content.isEmpty())) {
-			return null;
-		}
+		if ((content == null) || (content.isEmpty())) return null;
 		
 		final String tmp = content.trim();
+		if (tmp.isEmpty()) return null;
+		
 		if (tmp.startsWith(YAML_STARTS_WITH)) {
 			return Format.YAML;
 		}
@@ -104,6 +103,10 @@ public final class IO {
 	}
 
 	protected synchronized ObjectMapper getMapper(final Format format) {
+		if (format == null) {
+			throw new IllegalArgumentException("The format is unknown");
+		}
+		
 		switch (format) {
 			case YAML:
 				if (yamlMapper == null) {

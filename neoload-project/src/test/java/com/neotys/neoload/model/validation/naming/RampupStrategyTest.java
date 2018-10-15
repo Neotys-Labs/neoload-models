@@ -13,7 +13,7 @@ import com.neotys.neoload.model.scenario.RampupLoadPolicy;
 
 public class RampupStrategyTest {
 	@Test
-	public void translate() {
+	public void apply() {
 		final RampupStrategy strategy = new RampupStrategy();
 		
 		assertEquals(ConstantLoadPolicy.RAMPUP, strategy.apply(NodeImpl.setPropertyValue(NodeImpl.createBeanNode(null), null)));
