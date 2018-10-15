@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.converter.StartAfterToStringConverter;
 import com.neotys.neoload.model.scenario.StartAfter;
 import com.neotys.neoload.model.scenario.StartAfter.Type;
 

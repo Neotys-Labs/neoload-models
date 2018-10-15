@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.converter.StringToDurationConverter;
 import com.neotys.neoload.model.scenario.Duration;
 import com.neotys.neoload.model.scenario.Duration.Type;
 
