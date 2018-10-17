@@ -786,6 +786,23 @@ sapgui_tree_press_button:
     buttonPress:
       type: TEXT
       value: true
+sapgui_tree_click_link:
+  type: SapClick
+  isHit: true
+  name: treeClickLink (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    clickLink:
+      type: TEXT
+      value: true
 sapgui_tree_press_key:
   type: SapPress
   isHit: true
