@@ -694,20 +694,6 @@ sapgui_toolbar_select_menu_item:
     menuItem:
       type: TEXT
       value: ¤¤¤arg2¤¤¤
-sapgui_tree_click_link:
-  type: SapClick
-  isHit: true
-  name: treeClickLink (¤¤¤arg0¤¤¤)
-  parameters:
-    objectId:
-      type: TEXT
-      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
-    nodeKey:
-      type: TEXT
-      value: ¤¤¤arg2¤¤¤
-    itemName:
-      type: TEXT
-      value: ¤¤¤arg3¤¤¤
 sapgui_tree_double_click_item:
   type: SapDoubleClick
   isHit: true
