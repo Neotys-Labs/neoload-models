@@ -803,6 +803,23 @@ sapgui_tree_click_link:
     clickLink:
       type: TEXT
       value: true
+sapgui_tree_set_checkbox:
+  type: SapClick
+  isHit: true
+  name: treeSetCheckbox (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    changeCheckbox:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
 sapgui_tree_press_key:
   type: SapPress
   isHit: true
