@@ -916,3 +916,14 @@ sapgui_window_close:
     objectId:
       type: TEXT
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}
+sapgui_calendar_select_interval:
+  type: SapSelect
+  isHit: false
+  name: calendarSelectInterval (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    selectionInterval:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
