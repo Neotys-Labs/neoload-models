@@ -625,6 +625,37 @@ sapgui_tree_is_checkbox_selected:
     variable:
       type: TEXT
       value: ¤¤¤VariableReturnValue¤¤¤
+sapgui_tree_get_item_text:
+  type: SapRead
+  isHit: false
+  name: treeGetItemText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/sbar/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    itemName:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg4¤¤¤
+sapgui_tree_get_node_text:
+  type: SapRead
+  isHit: false
+  name: treeGetNodeText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/sbar/¤¤¤arg1¤¤¤
+    nodeKey:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    textVariable:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
 sapgui_set_focus: 
   type: SapFocus
   isHit: false
