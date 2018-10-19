@@ -918,7 +918,7 @@ sapgui_window_close:
       value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}
 sapgui_calendar_select_interval:
   type: SapSelect
-  isHit: false
+  isHit: true
   name: calendarSelectInterval (¤¤¤arg0¤¤¤)
   parameters:
     objectId:
@@ -929,7 +929,7 @@ sapgui_calendar_select_interval:
       value: ¤¤¤arg2¤¤¤
 sapgui_htmlviewer_send_event:
   type: SapSelect
-  isHit: false
+  isHit: true
   name: htmlviewerSendEvent
   parameters:
     objectId:
