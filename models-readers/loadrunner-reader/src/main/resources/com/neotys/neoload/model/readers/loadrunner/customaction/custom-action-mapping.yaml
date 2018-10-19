@@ -927,3 +927,20 @@ sapgui_calendar_select_interval:
     selectionInterval:
       type: TEXT
       value: ¤¤¤arg2¤¤¤
+sapgui_htmlviewer_send_event:
+  type: SapSelect
+  isHit: false
+  name: htmlviewerSendEvent
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg0¤¤¤
+    frame:
+      type: TEXT
+      value: ¤¤¤arg1¤¤¤
+    data:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+    url:
+      type: TEXT
+      value: ¤¤¤arg3¤¤¤
