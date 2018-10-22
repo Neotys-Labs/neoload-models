@@ -21,6 +21,24 @@ import com.neotys.neoload.model.repository.UserPath;
 
 public class NeoLoadWritterTest {
 
+	@Test
+	public void valididateVersion() {
+		assertThat(NeoLoadWriter.validateVersion("", 2)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion(null, 2)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion("2", 2)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion("2a", 2)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion("2.a", 2)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion("2a.2", 2)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion(".2", 2)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion("2.", 2)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion("2.2.3", 2)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion("2.2", 2)).isEqualTo("2.2");
+		assertThat(NeoLoadWriter.validateVersion("2.0", 2)).isEqualTo("2.0");
+
+		assertThat(NeoLoadWriter.validateVersion("2.0", 3)).isEqualTo(null);
+		assertThat(NeoLoadWriter.validateVersion("2.2.3", 3)).isEqualTo("2.2.3");
+	}
+
     @Test
     public void writeProjectTestZip() {
 
@@ -36,6 +54,38 @@ public class NeoLoadWritterTest {
         assertThat(new File(tmpDir, "Test project" + File.separator + "config.zip")).isFile();
         assertThat(new File(tmpDir, "Test project" + File.separator + "Test project.nlp")).exists();
     }
+
+	@Test
+	public void writeProjectTestZipWithBothVersions() {
+
+		Project project = Project.builder()
+				.name("Test project")
+				.addUserPaths(getUserPath("MyPath"))
+				.build();
+		File tmpDir = Files.createTempDir();
+		final String nlProjectFolder = tmpDir.getPath() + File.separator + project.getName();
+		NeoLoadWriter writer = new NeoLoadWriter(project, nlProjectFolder, null);
+		writer.write(true, "6.4", "6.6.0");
+		assertThat(new File(tmpDir, "Test project" + File.separator + "config.zip")).exists();
+		assertThat(new File(tmpDir, "Test project" + File.separator + "config.zip")).isFile();
+		assertThat(new File(tmpDir, "Test project" + File.separator + "Test project.nlp")).exists();
+	}
+
+	@Test
+	public void writeProjectTestZipWithOnlyProductVersion() {
+
+		Project project = Project.builder()
+				.name("Test project")
+				.addUserPaths(getUserPath("MyPath"))
+				.build();
+		File tmpDir = Files.createTempDir();
+		final String nlProjectFolder = tmpDir.getPath() + File.separator + project.getName();
+		NeoLoadWriter writer = new NeoLoadWriter(project, nlProjectFolder, null);
+		writer.write(true, "6.4",null);
+		assertThat(new File(tmpDir, "Test project" + File.separator + "config.zip")).exists();
+		assertThat(new File(tmpDir, "Test project" + File.separator + "config.zip")).isFile();
+		assertThat(new File(tmpDir, "Test project" + File.separator + "Test project.nlp")).exists();
+	}
     
     @Test
     public void writeProjectTestFolder() {

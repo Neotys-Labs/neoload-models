@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.writers.neoload;
 
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.neotys.neoload.model.ImmutableProject;
 import com.neotys.neoload.model.Project;
 import com.neotys.neoload.model.repository.FileVariable;
@@ -12,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
+import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -29,15 +32,18 @@ import java.net.URI;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
+import static java.lang.Character.isDigit;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.Optional.ofNullable;
 
 public class NeoLoadWriter {
 
 	private static Logger logger = LoggerFactory.getLogger(NeoLoadWriter.class);
 
-	private static final String PROJECT_VERSION = "6.5";
-	private static final String PRODUCT_VERSION = "6.7.0";
+	public static final String DEFAULT_PROJECT_VERSION = "6.5";
+	public static final String DEFAULT_PRODUCT_VERSION = "6.7.0";
 
 	private static final String CONFIG_ZIP = "config.zip";
 	private static final String CONFIG_FOLDER = "config";
@@ -61,13 +67,20 @@ public class NeoLoadWriter {
 	private final String nlProjectFolder;
 	private Map<String, List<File>> fileToCopy;
 
-	public NeoLoadWriter(final Project project, final String nlProjectFolder, final Map<String, List<File>> map) {
+	public NeoLoadWriter(final Project project, final String nlProjectFolder, final Map<String, List<File>> fileToCopy) {
 		this.project = project;
 		this.nlProjectFolder = nlProjectFolder;
-		this.fileToCopy = map;
+		this.fileToCopy = fileToCopy;
 	}
 
+	/**
+	 * write the project with default project version and default product version.
+	 */
 	public void write(final boolean zipConfig) {
+		write(zipConfig, DEFAULT_PROJECT_VERSION, DEFAULT_PRODUCT_VERSION);
+	}
+
+	public void write(final boolean zipConfig, @Nullable final String projectVersion, @Nullable final String productVersion) {
 		try {
 			final File f = new File(nlProjectFolder);
 			if (!f.exists()) {
@@ -78,12 +91,39 @@ public class NeoLoadWriter {
 				return;
 			}
 			writeXML(zipConfig);
-			writeNLP(project.getName(), zipConfig);
+
+			final String safeProjectVersion = ofNullable(validateVersion(projectVersion, 2)).orElse(DEFAULT_PROJECT_VERSION);
+			final String safeProductVersion = ofNullable(validateVersion(productVersion, 3)).orElse(DEFAULT_PRODUCT_VERSION);
+			writeNLP(project.getName(), zipConfig, safeProjectVersion, safeProductVersion);
+
 			logger.info("Project saved.");
 
 		} catch (ParserConfigurationException | TransformerException | IOException e) {
 			logger.error("Error writing project.", e);
 		}
+	}
+
+	/**
+	 *
+	 * @return null if version is not valid, the version otherwise.
+	 */
+	@Nullable
+	static String validateVersion(@Nullable final String version, final int expectedSize) {
+		if (Strings.isNullOrEmpty(version)) {
+			return null;
+		}
+
+		final Iterable<String> iterable = () -> Splitter.on(".").split(version).iterator();
+		if (newStreamFromIterable(iterable).count() != expectedSize
+				|| newStreamFromIterable(iterable).anyMatch(s -> s.length() != 1 || !isDigit(s.charAt(0)))) {
+			logger.warn("Invalid version: " + version);
+			return null;
+		}
+		return version;
+	}
+
+	private static Stream<String> newStreamFromIterable(final Iterable<String> iterable) {
+		return StreamSupport.stream(iterable.spliterator(), false);
 	}
 
 	private void writeXML(final boolean zipConfig) throws ParserConfigurationException, TransformerException, IOException {
@@ -241,7 +281,9 @@ public class NeoLoadWriter {
 		});
 	}
 
-	private void writeNLP(final String name, final boolean zipConfig) throws IOException {
+	private void writeNLP(final String name, final boolean zipConfig,
+						  final String projectVersion, final String productVersion)
+			throws IOException {
 		File nlp = new File(nlProjectFolder, name + ".nlp");
 		if (!nlp.exists() && !nlp.createNewFile()) {
 			logger.error("Error, cannot create the NLP file");
@@ -252,12 +294,12 @@ public class NeoLoadWriter {
 		PropertiesConfiguration nlpProperties = new PropertiesConfiguration();
 		nlpProperties.getLayout().setGlobalSeparator("=");
 		nlpProperties.addProperty("project.name", name);
-		nlpProperties.addProperty("project.version", PROJECT_VERSION);
-		nlpProperties.addProperty("project.original.version", PROJECT_VERSION);
+		nlpProperties.addProperty("project.version", projectVersion);
+		nlpProperties.addProperty("project.original.version", projectVersion);
 		nlpProperties.addProperty("product.name", "NeoLoad");
 		nlpProperties.addProperty("product.original.name", "NeoLoad");
-		nlpProperties.addProperty("product.version", PRODUCT_VERSION);
-		nlpProperties.addProperty("product.original.version", PRODUCT_VERSION);
+		nlpProperties.addProperty("product.version", productVersion);
+		nlpProperties.addProperty("product.original.version", productVersion);
 		nlpProperties.addProperty("project.id", UUID.randomUUID().toString());
 		nlpProperties.addProperty("project.config.path", zipConfig ? CONFIG_ZIP : CONFIG_FOLDER);
 		nlpProperties.addProperty("project.config.storage", zipConfig ? "ZIP" : "FOLDER");
