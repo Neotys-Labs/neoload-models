@@ -14,7 +14,7 @@ Before you send us a pull request, please be sure that:
 3. You check existing open, and recently closed, pull requests to be sure that someone else hasn't already addressed the problem.
 4. You create an issue before working on a contribution that will take a significant amount of your time.
 
-For contributions that will take a significant amount of time, [open a new issue](https://github.com/Neotys-Labs/Script-Converter/issues/new) to pitch your idea before you get started. Explain the problem and describe the content you want to see added to the documentation. Let us know if you'll write it yourself or if you'd like us to help. We'll discuss your proposal with you and let you know whether we're likely to accept it. We don't want you to spend a lot of time on a contribution that might be outside the scope of the project or that's already in the works.
+For contributions that will take a significant amount of time, [open a new issue](https://github.com/Neotys-Labs/neoload-models/issues/new) to pitch your idea before you get started. Explain the problem and describe the content you want to see added to the documentation. Let us know if you'll write it yourself or if you'd like us to help. We'll discuss your proposal with you and let you know whether we're likely to accept it. We don't want you to spend a lot of time on a contribution that might be outside the scope of the project or that's already in the works.
 
 ## Dependencies
 The converter is based on several other components from the project [neoload-models](https://github.com/Neotys-Labs/neoload-models/)
