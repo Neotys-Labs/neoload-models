@@ -1,6 +1,7 @@
 package com.neotys.neoload.model;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -46,6 +47,8 @@ public interface Project {
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<Scenario> getScenarios();
+	@JsonIgnore
+	Map<String,String> getProjectSettings();
 	
 	class Builder extends ImmutableProject.Builder {}
 	public static Builder builder() {

@@ -1,18 +1,26 @@
 package com.neotys.neoload.model.writers.neoload;
 
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.neotys.neoload.model.ImmutableProject;
-import com.neotys.neoload.model.Project;
-import com.neotys.neoload.model.repository.FileVariable;
-import com.neotys.neoload.model.repository.ImmutableFileVariable;
-import com.neotys.neoload.model.repository.Variable;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
+import static java.lang.Character.isDigit;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.Optional.ofNullable;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilder;
@@ -24,19 +32,21 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.net.URI;
-import java.nio.file.*;
-import java.util.*;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
-import static java.lang.Character.isDigit;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static java.util.Optional.ofNullable;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.neotys.neoload.model.ImmutableProject;
+import com.neotys.neoload.model.Project;
+import com.neotys.neoload.model.repository.FileVariable;
+import com.neotys.neoload.model.repository.ImmutableFileVariable;
+import com.neotys.neoload.model.repository.Variable;
+import com.neotys.neoload.model.writers.neoload.settings.ProjectSettingsWriter;
 
 public class NeoLoadWriter {
 
@@ -60,6 +70,10 @@ public class NeoLoadWriter {
 
 		ConfigFiles(String fileName) {
 			this.fileName = fileName;
+		}
+		
+		public String getFileName() {
+			return fileName;
 		}
 	}
 
@@ -162,8 +176,8 @@ public class NeoLoadWriter {
 		transformer.transform(scenarioSource, scenarioStream);
 
 		// extract settings
-		FileUtils.copyInputStreamToFile(NeoLoadWriter.class.getResourceAsStream(ConfigFiles.SETTINGS.fileName),
-				new File(nlProjectFolder, "settings.xml"));
+		ProjectSettingsWriter.writeSettingsXML(nlProjectFolder, project.getProjectSettings());
+		
 		createConfig(zipConfig);
 		deleteConfigFiles();
 	}

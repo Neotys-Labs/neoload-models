@@ -270,9 +270,9 @@
 <headersSettings containerEnabled="true" headersEnabled="false" logicalActionEnabled="true" percentageOfVUToTrace="10" traceByVUEnabled="false" vuEnabled="true"/>
 <workstationSettings emDomain="SuperDomain" emLogin="admin" emPassword="" intervalEndDelay="0" intervalStartDelay="0" jwsHost="localhost" jwsPort="8081" linksEnabled="false"/>
 </caApmSettings>
-<dynaTraceSettings dynaTraceEnabled="false" logicalNamesEnabled="false" login="admin" password="" port="2020" recordSessionEnabled="false" server="" sessionLockingEnabled="false" ssl="false" systemName="" version="2.X"/>
-<appDynamicsSettings appDynamicsEnabled="false" containerNamesEnabled="false" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
-<nudgeSettings containerNamesEnabled="false" enabled="false" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
+<dynaTraceSettings dynaTraceEnabled="@dynatrace.enabled@" logicalNamesEnabled="@dynatrace.logicalnames.enabled@" login="@dynatrace.login@" password="@dynatrace.password@" port="@dynatrace.port@" recordSessionEnabled="@dynatrace.recordsession.enabled@" server="@dynatrace.server@" sessionLockingEnabled="@dynatrace.sessionlocking.enabled@" ssl="@dynatrace.ssl.enabled@" systemName="@dynatrace.systemname@" version="@dynatrace.version@"/>
+<appDynamicsSettings appDynamicsEnabled="@appdynamics.enabled@" containerNamesEnabled="false" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
+<nudgeSettings containerNamesEnabled="false" enabled="@nudge.enabled@" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
 <amfSettings amfGDSLocale110GA="false" amfServer="1"/>
 <ofSettings isHandlerIdAutomaticManagementEnabled="true" isHandlerIdCleanedAtRecord="true" isHandlerIdErrorReportingEnabled="true"/>
 <performanceSettings optimizationReferrerOnly="false"/>
@@ -355,11 +355,8 @@
 <plugin-identification-settings plugin="CUSTOM"/>
 <team-server-settings port="0" protocol="svn" resourcesFolderName="%resources%" thirdParty="false"/>
 <exportNeoSenseSettings destination="" mode="" recordedReqRespExported="false" screenShotsExported="false"/>
-<restApisSettings>
-<identification isEnabled="false"/>
-</restApisSettings>
 <exportNeoSenseSettings destination="" mode="" recordedReqRespExported="false" screenShotsExported="false"/>
 <restApisSettings>
-<identification isEnabled="false"/>
+<identification isEnabled="@restapi.identification.enabled@"/>
 </restApisSettings>
 </settings>
