@@ -71,7 +71,7 @@ public class ParametersReaderUtilsTest {
 		assertThat(newUserVariable.getName()).isEqualTo("userVarName");
 		assertThat(newUserVariable.getColumnsNames()).containsExactly("name","passwd");
 		assertThat(newUserVariable.getFirstLineIsColumnName()).isTrue();
-		assertThat(newUserVariable.getNumOfFirstRowData()).isEqualTo(1);
+		assertThat(newUserVariable.getNumOfFirstRowData()).isEqualTo(2);
 		assertThat(newUserVariable.getOrder()).isEqualTo(Optional.of(Variable.VariableOrder.SEQUENTIAL));
 
 	}

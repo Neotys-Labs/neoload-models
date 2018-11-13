@@ -20,7 +20,7 @@ public class ConstantVariableWriterTest {
 			.constantValue("Constant Value")
 			.description("Test desc")
 			.order(Variable.VariableOrder.SEQUENTIAL)
-			.scope(Variable.VariableScope.GLOBAL)
+			.scope(Variable.VariableScope.LOCAL)
 			.policy(Variable.VariablePolicy.EACH_VUSER)
 			.noValuesLeftBehavior(Variable.VariableNoValuesLeftBehavior.CYCLE)
 			.build(); 
@@ -32,7 +32,7 @@ public class ConstantVariableWriterTest {
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><variable-constant constantValue=\"Constant Value\"" +
-    			" name=\"ConstVariable\" order=\"1\" policy=\"4\" range=\"2\"" + 
+    			" name=\"ConstVariable\" order=\"1\" policy=\"4\" range=\"2\"" +
     			" whenOutOfValues=\"CYCLE_VALUES\">" + 
     			"<description>Test desc</description>" + 
     			"</variable-constant></test-root>";

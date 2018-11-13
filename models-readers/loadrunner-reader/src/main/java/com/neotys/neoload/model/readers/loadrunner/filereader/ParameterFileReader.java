@@ -94,7 +94,7 @@ public class ParameterFileReader extends IniFileReader {
 
 		CounterNumberVariable variable = ImmutableCounterNumberVariable.builder().name(paramName).startValue(
 				Integer.parseInt(MethodUtils.normalizeString(leftBrace, rightBrace, paramSection.get("StartValue")))).maxValue(
-						Integer.MAX_VALUE).increment(1).scope(VariableScope.UNIQUE).noValuesLeftBehavior(
+						Integer.MAX_VALUE).increment(1).scope(VariableScope.GLOBAL).noValuesLeftBehavior(
 								Variable.VariableNoValuesLeftBehavior.NO_VALUE).order(Variable.VariableOrder.SEQUENTIAL).policy(pol).build();
 		variables.put(paramName, variable);
 	}

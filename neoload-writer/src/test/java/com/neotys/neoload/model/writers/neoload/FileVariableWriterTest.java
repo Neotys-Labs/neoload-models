@@ -25,8 +25,8 @@ public class FileVariableWriterTest {
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><variable-file delimiters=\",\" "
     			+ "filename=\"path_du_fichier\" name=\"variable_test\" "
-    			+ "offset=\"3\" order=\"1\" policy=\"5\" range=\"2\" "
-    			+ "useFirstLine=\"false\" whenOutOfValues=\"CYCLE_VALUES\">"
+    			+ "offset=\"2\" order=\"1\" policy=\"5\" range=\"1\" "
+    			+ "useFirstLine=\"true\" whenOutOfValues=\"CYCLE_VALUES\">"
     			+ "<column name=\"colonneTest\" number=\"0\"/>"
     			+ "</variable-file></test-root>";
     	
@@ -44,8 +44,8 @@ public class FileVariableWriterTest {
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><variable-file delimiters=\",\" "
     			+ "filename=\"path_du_fichier\" name=\"variable_test\" "
-    			+ "offset=\"3\" order=\"2\" policy=\"1\" range=\"3\" "
-    			+ "useFirstLine=\"false\" whenOutOfValues=\"STOP_TEST\">"
+    			+ "offset=\"2\" order=\"2\" policy=\"1\" range=\"2\" "
+    			+ "useFirstLine=\"true\" whenOutOfValues=\"STOP_TEST\">"
     			+ "<column name=\"colonneTest\" number=\"0\"/>"
     			+ "</variable-file></test-root>";
     	
@@ -62,8 +62,8 @@ public class FileVariableWriterTest {
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><variable-file delimiters=\",\" "
     			+ "filename=\"path_du_fichier\" name=\"variable_test\" "
-    			+ "offset=\"3\" order=\"1\" policy=\"4\" range=\"1\" "
-    			+ "useFirstLine=\"false\" whenOutOfValues=\"CYCLE_VALUES\">"
+    			+ "offset=\"2\" order=\"1\" policy=\"4\" range=\"4\" "
+    			+ "useFirstLine=\"true\" whenOutOfValues=\"CYCLE_VALUES\">"
     			+ "<column name=\"colonneTest\" number=\"0\"/>"
     			+ "</variable-file></test-root>";
     	

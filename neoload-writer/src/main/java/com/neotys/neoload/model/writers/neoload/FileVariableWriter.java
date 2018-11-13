@@ -47,9 +47,8 @@ public class FileVariableWriter	extends VariableWriter {
 
 		FileVariable theFileVariable = (FileVariable) variable;
 		xmlVariable.setAttribute(XML_ATTR_DELIMITER, theFileVariable.getColumnsDelimiter());
-		xmlVariable.setAttribute(XML_ATTR_USE_FIRST_LINE, Boolean.toString(!theFileVariable.getFirstLineIsColumnName()));
-		//we add 1, because NeoLoad use the first line as the name of column which does not corresponding to the created name of the converter
-		xmlVariable.setAttribute(XML_ATTR_OFFSET, Integer.toString(theFileVariable.getNumOfFirstRowData() + 1));
+		xmlVariable.setAttribute(XML_ATTR_USE_FIRST_LINE, Boolean.toString(theFileVariable.getFirstLineIsColumnName()));
+		xmlVariable.setAttribute(XML_ATTR_OFFSET, Integer.toString(theFileVariable.getNumOfFirstRowData()));
 		
 		xmlVariable.setAttribute(XML_ATTR_FILENAME,
 				// Here we don't use the "orElse" method because if the value is not present we don't want

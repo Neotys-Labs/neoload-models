@@ -30,7 +30,7 @@ public class NumberVariableWritterTest {
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><variable-counter inc=\"1\" max=\"100\" name=\"CounterVariable_1\" order=\"1\" " 
-    			+ "policy=\"1\" range=\"1\" starting=\"1\" " 
+    			+ "policy=\"1\" range=\"4\" starting=\"1\" "
     			+ "whenOutOfValues=\"CYCLE_VALUES\"/></test-root>";
     	
     	(new CounterNumberVariableWriter(COUNTER)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
@@ -54,7 +54,7 @@ public class NumberVariableWritterTest {
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><variable-random-number max-value=\"100\" min-value=\"1\" "
     			+ "name=\"NumberRandomVariable_1\" policy=\"1\" "
-    			+ "range=\"3\"/></test-root>";
+    			+ "range=\"2\"/></test-root>";
     	
     	(new RandomNumberVariableWriter(RANDOM)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
     	

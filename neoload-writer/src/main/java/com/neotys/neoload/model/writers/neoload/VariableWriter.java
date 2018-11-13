@@ -32,9 +32,9 @@ public abstract class VariableWriter {
 	
 	protected int getScopeCode(Variable.VariableScope scope) {
 		switch (scope) {
-			case UNIQUE : return 1;
-			case GLOBAL : return 2;
-			case LOCAL : return 3;
+			case UNIQUE : return 4;
+			case GLOBAL : return 1;
+			case LOCAL : return 2;
 			default : return 1;
 		}
 	}

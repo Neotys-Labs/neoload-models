@@ -67,7 +67,7 @@ public class ParametersReaderUtils {
 				.fileName(filename)
 				//.fileName(MethodUtils.normalizeString(paramSection.get(TABLE)))
 				.firstLineIsColumnName(true)
-				.numOfFirstRowData(Integer.parseInt(MethodUtils.normalizeString(leftBrace, rightBrace, paramSection.get("StartRow"))))
+				.numOfFirstRowData(Integer.parseInt(MethodUtils.normalizeString(leftBrace, rightBrace, paramSection.get("StartRow")))+1)
 				.scope(getScope(nextRowType))
 				.order(getOrder(nextRowType, paramName))
 				.noValuesLeftBehavior(getNoValueLeftBehavior(noValueLeftBehavior, paramName))
