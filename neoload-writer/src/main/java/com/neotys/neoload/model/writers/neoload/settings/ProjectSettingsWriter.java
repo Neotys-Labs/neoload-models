@@ -24,6 +24,9 @@ public class ProjectSettingsWriter {
 	private static final String SETTINGS_XML_FILE = ConfigFiles.SETTINGS.getFileName();
 	private static Logger LOGGER = LoggerFactory.getLogger(ProjectSettingsWriter.class);
 
+	private ProjectSettingsWriter() {
+	}
+
 
 	public static void writeSettingsXML(final String nlProjectFolder, final Map<String,String> overwrittenProjectSettings) throws IOException{
 		final Map<String,String> allProjectSettings = new HashMap<>(PROJECT_SETTINGS_DEFAULT);
@@ -36,11 +39,13 @@ public class ProjectSettingsWriter {
 	            buffer.append((char) intValueOfChar);
 	        }	      
 	        final File targetFile = new File(nlProjectFolder,SETTINGS_XML_FILE);
-	        targetFile.createNewFile();
-	     
-	        Writer targetFileWriter = new FileWriter(targetFile);
-	        targetFileWriter.write(buffer.toString());
-	        targetFileWriter.close();     
+	        if(targetFile.createNewFile()) {
+				try (Writer targetFileWriter = new FileWriter(targetFile)) {
+					targetFileWriter.write(buffer.toString());
+				}
+			} else {
+	        	LOGGER.error("Cannot create "+ConfigFiles.SETTINGS.getFileName()+" file");
+			}
 	    }
 	}
 
