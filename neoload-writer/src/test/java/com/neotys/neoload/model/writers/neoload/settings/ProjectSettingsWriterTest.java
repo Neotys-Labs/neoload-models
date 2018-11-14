@@ -17,7 +17,7 @@ public class ProjectSettingsWriterTest {
 		final Project project = Project.builder()
                 .name("Test project")
                 .build();
-		File tmpDir = Files.createTempDir();       
+		final File tmpDir = Files.createTempDir();       
 		ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), project.getProjectSettings());
 		final String settingsXMLContent = readFile(tmpDir + File.separator + "settings.xml");
 		Assertions.assertThat(settingsXMLContent).doesNotContain("@");
@@ -31,7 +31,7 @@ public class ProjectSettingsWriterTest {
                 .name("Test project")
                 .putProjectSettings("dynatrace.enabled", "true")
                 .build();
-		File tmpDir = Files.createTempDir();       
+		final File tmpDir = Files.createTempDir();       
 		ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), project.getProjectSettings());
 		final String settingsXMLContent = readFile(tmpDir + File.separator + "settings.xml");
 		Assertions.assertThat(settingsXMLContent).doesNotContain("@");
@@ -39,8 +39,20 @@ public class ProjectSettingsWriterTest {
 		Assertions.assertThat(settingsXMLContent).contains("dynaTraceEnabled=\"true\"");
 	}
 	
+	@Test
+	public void testWriteSettingsXMLExistingFile() throws IOException{
+		final File tmpDir = Files.createTempDir();  
+		ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), "content");
+		final String settingsXMLContent = readFile(tmpDir + File.separator + "settings.xml");
+		Assertions.assertThat(settingsXMLContent).isEqualTo("content");
+	}
+	
+	@Test(expected=IOException.class)
+	public void testIOExceptionWhenCannotCreateFile() throws IOException{		  
+		ProjectSettingsWriter.writeSettingsXML(" invalid file path ", "content");		
+	}		
+	
 	public static String readFile(final String file) throws IOException {
 		return com.google.common.io.Files.asCharSource(new File(file), Charset.defaultCharset()).read();
-	}
-
+	}	
 }

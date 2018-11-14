@@ -8,11 +8,12 @@ import java.util.Map;
 
 public class TokenReplacingReader extends Reader {
 
-	protected PushbackReader pushbackReader = null;
-	protected Map<String,String> tokenResolver = null;
-	protected StringBuilder tokenNameBuffer = new StringBuilder();
-	protected String tokenValue = null;
-	protected int tokenValueIndex = 0;
+	private PushbackReader pushbackReader = null;
+	private Map<String,String> tokenResolver = null;
+	private StringBuilder tokenNameBuffer = new StringBuilder();
+	private String tokenValue = null;
+	private int tokenValueIndex = 0;
+	private static final String OPERATION_NOT_SUPPORTED = "Operation Not Supported";
 
 	public TokenReplacingReader(final Reader source, final Map<String,String> tokenResolver) {
 		this.pushbackReader = new PushbackReader(source, 2);
@@ -21,7 +22,7 @@ public class TokenReplacingReader extends Reader {
 
 	@Override
 	public int read(CharBuffer target) throws IOException {
-		throw new RuntimeException("Operation Not Supported");
+		throw new RuntimeException(OPERATION_NOT_SUPPORTED);
 	}
 
 	@Override
@@ -60,12 +61,12 @@ public class TokenReplacingReader extends Reader {
 	}
 
 	@Override
-	public int read(char cbuf[]) throws IOException {
+	public int read(final char[] cbuf) throws IOException {
 		return read(cbuf, 0, cbuf.length);
 	}
 
 	@Override
-	public int read(char cbuf[], int off, int len) throws IOException {
+	public int read(final char[] cbuf, final int off, final int len) throws IOException {
 		int charsRead = 0;
 		for (int i = 0 ; i < len ; i++) {
 			int nextChar = read();
@@ -88,7 +89,7 @@ public class TokenReplacingReader extends Reader {
 
 	@Override
 	public long skip(long n) throws IOException {
-		throw new RuntimeException("Operation Not Supported");
+		throw new RuntimeException(OPERATION_NOT_SUPPORTED);
 	}
 
 	@Override
@@ -102,12 +103,12 @@ public class TokenReplacingReader extends Reader {
 	}
 
 	@Override
-	public void mark(int readAheadLimit) throws IOException {
-		throw new RuntimeException("Operation Not Supported");
+	public void mark(final int readAheadLimit) throws IOException {
+		throw new RuntimeException(OPERATION_NOT_SUPPORTED);
 	}
 
 	@Override
 	public void reset() throws IOException {
-		throw new RuntimeException("Operation Not Supported");
+		throw new RuntimeException(OPERATION_NOT_SUPPORTED);
 	}
 }

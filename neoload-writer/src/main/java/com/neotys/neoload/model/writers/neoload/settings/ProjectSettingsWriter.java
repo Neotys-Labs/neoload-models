@@ -22,7 +22,7 @@ public class ProjectSettingsWriter {
 	private static final String PROJECT_SETTINGS_DEFAULT_FILE = "defaultProjectSettings.properties";
 	private static final Map<String,String> PROJECT_SETTINGS_DEFAULT = readProjectSettingsDefault();
 	private static final String SETTINGS_XML_FILE = ConfigFiles.SETTINGS.getFileName();
-	private static Logger LOGGER = LoggerFactory.getLogger(ProjectSettingsWriter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProjectSettingsWriter.class);
 
 	private ProjectSettingsWriter() {
 	}
@@ -38,16 +38,20 @@ public class ProjectSettingsWriter {
 	        while ((intValueOfChar = reader.read()) != -1) {
 	            buffer.append((char) intValueOfChar);
 	        }	      
-	        final File targetFile = new File(nlProjectFolder,SETTINGS_XML_FILE);
-	        if(targetFile.createNewFile()) {
-				try (Writer targetFileWriter = new FileWriter(targetFile)) {
-					targetFileWriter.write(buffer.toString());
-				}
-			} else {
-	        	LOGGER.error("Cannot create "+ConfigFiles.SETTINGS.getFileName()+" file");
-			}
+	        writeSettingsXML(nlProjectFolder, buffer.toString());	        
 	    }
 	}
+
+	public static void writeSettingsXML(final String nlProjectFolder, final String content) throws IOException {
+		final File targetFile = new File(nlProjectFolder,SETTINGS_XML_FILE);
+        if(!targetFile.createNewFile()) {
+        	throw new IOException("Cannot create "+ConfigFiles.SETTINGS.getFileName()+" file");
+        } 
+		try (Writer targetFileWriter = new FileWriter(targetFile)) {
+			targetFileWriter.write(content);
+		}		
+	}
+
 
 	private static Map<String,String> readProjectSettingsDefault() {
 		final Properties properties = new Properties();
