@@ -22,7 +22,7 @@ public class TokenReplacingReader extends Reader {
 
 	@Override
 	public int read(CharBuffer target) throws IOException {
-		throw new RuntimeException(OPERATION_NOT_SUPPORTED);
+		throw new IllegalAccessError(OPERATION_NOT_SUPPORTED);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class TokenReplacingReader extends Reader {
 
 	@Override
 	public long skip(long n) throws IOException {
-		throw new RuntimeException(OPERATION_NOT_SUPPORTED);
+		throw new IllegalAccessError(OPERATION_NOT_SUPPORTED);
 	}
 
 	@Override
@@ -104,11 +104,11 @@ public class TokenReplacingReader extends Reader {
 
 	@Override
 	public void mark(final int readAheadLimit) throws IOException {
-		throw new RuntimeException(OPERATION_NOT_SUPPORTED);
+		throw new IllegalAccessError(OPERATION_NOT_SUPPORTED);
 	}
 
 	@Override
 	public void reset() throws IOException {
-		throw new RuntimeException(OPERATION_NOT_SUPPORTED);
+		throw new IllegalAccessError(OPERATION_NOT_SUPPORTED);
 	}
 }
