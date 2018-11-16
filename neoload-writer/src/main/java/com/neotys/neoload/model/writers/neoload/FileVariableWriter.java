@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.writers.neoload;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -13,7 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.io.IO;
 import com.neotys.neoload.model.writers.RegExpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +96,7 @@ public class FileVariableWriter	extends VariableWriter {
 
 	static List<String> getColumsFromFirstLine(Optional<String> firstLine, String columnsDelimiter) {
 		if(!firstLine.isPresent()) return ImmutableList.of();
-		return Arrays.stream(firstLine.get().split(RegExpUtils.escape(columnsDelimiter))).map(s -> s.trim()).collect(Collectors.toList());
+		return Arrays.stream(firstLine.get().split(RegExpUtils.escape(columnsDelimiter))).map(String::trim).collect(Collectors.toList());
 	}
 	
 	

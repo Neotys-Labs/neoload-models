@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.writers.neoload;
 
 import com.google.common.io.Files;
+import com.neotys.neoload.model.repository.FileVariable;
+import com.neotys.neoload.model.repository.ImmutableFileVariable;
 import org.apache.log4j.lf5.util.ResourceUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -74,6 +76,69 @@ public class FileVariableWriterTest {
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
     	assertEquals(expectedResult, generatedResult);
+	}
+
+	@Test
+	public void writeXmlTestForColumnsInFile() throws ParserConfigurationException, TransformerException {
+
+		final FileVariable fileVariable = ImmutableFileVariable.builder()
+				.name("variable_test")
+				.columnsDelimiter(";")
+				.fileName("src/test/resources/com/neotys/neoload/model/writers/neoload/filevariable.csv")
+				.numOfFirstRowData(1)
+				.order(FileVariable.VariableOrder.SEQUENTIAL)
+				.policy(FileVariable.VariablePolicy.EACH_VUSER)
+				.firstLineIsColumnName(true)
+				.scope(FileVariable.VariableScope.UNIQUE)
+				.noValuesLeftBehavior(FileVariable.VariableNoValuesLeftBehavior.CYCLE)
+				.build();
+
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><variable-file delimiters=\";\" "
+				+ "filename=\"src/test/resources/com/neotys/neoload/model/writers/neoload/filevariable.csv\" name=\"variable_test\" "
+				+ "offset=\"1\" order=\"1\" policy=\"4\" range=\"4\" "
+				+ "useFirstLine=\"true\" whenOutOfValues=\"CYCLE_VALUES\">"
+				+ "<column name=\"myfirstcol\" number=\"0\"/>"
+				+ "<column name=\"mysecondcol\" number=\"1\"/>"
+				+ "<column name=\"mythirdcol\" number=\"2\"/>"
+				+ "</variable-file></test-root>";
+
+		(new FileVariableWriter(fileVariable)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		String generatedResult = WrittingTestUtils.getXmlString(doc);
+		assertEquals(expectedResult, generatedResult);
+	}
+
+	@Test
+	public void writeXmlTestForColumnsWithoutFile() throws ParserConfigurationException, TransformerException {
+
+		final FileVariable fileVariable = ImmutableFileVariable.builder()
+				.name("variable_test")
+				.columnsDelimiter(";")
+				.fileName("INVALIDFILE.csv")
+				.numOfFirstRowData(1)
+				.order(FileVariable.VariableOrder.SEQUENTIAL)
+				.policy(FileVariable.VariablePolicy.EACH_VUSER)
+				.firstLineIsColumnName(true)
+				.scope(FileVariable.VariableScope.UNIQUE)
+				.noValuesLeftBehavior(FileVariable.VariableNoValuesLeftBehavior.CYCLE)
+				.build();
+
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><variable-file delimiters=\";\" "
+				+ "filename=\"INVALIDFILE.csv\" name=\"variable_test\" "
+				+ "offset=\"1\" order=\"1\" policy=\"4\" range=\"4\" "
+				+ "useFirstLine=\"true\" whenOutOfValues=\"CYCLE_VALUES\"/>"
+				+ "</test-root>";
+
+		(new FileVariableWriter(fileVariable)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		String generatedResult = WrittingTestUtils.getXmlString(doc);
+		assertEquals(expectedResult, generatedResult);
 	}
 	
 	@Test
