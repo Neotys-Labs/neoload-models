@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.writers.neoload;
 
 import com.google.common.io.Files;
+import org.apache.log4j.lf5.util.ResourceUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -89,6 +92,22 @@ public class FileVariableWriterTest {
 		
         assertTrue(new File(tmpDir,fileName).exists());
 		
+	}
+
+	@Test
+	public void getColumnsFromFileTest() throws IOException {
+		System.out.println(System.getProperty("user.dir"));
+		Assertions.assertThat(FileVariableWriter.getColumnsFromFile("src/test/resources/com/neotys/neoload/model/writers/neoload/filevariable.csv", ";")).containsExactly("myfirstcol", "mysecondcol", "mythirdcol");
+	}
+
+	@Test
+	public void getColumsFromFirstLineTest() {
+		Assertions.assertThat(FileVariableWriter.getColumsFromFirstLine(Optional.empty(), ",")).isEmpty();
+		Assertions.assertThat(FileVariableWriter.getColumsFromFirstLine(Optional.of(""), ",")).containsExactly("");
+		Assertions.assertThat(FileVariableWriter.getColumsFromFirstLine(Optional.of("test,test2"), ",")).containsExactly("test", "test2");
+		Assertions.assertThat(FileVariableWriter.getColumsFromFirstLine(Optional.of("test, test2"), ",")).containsExactly("test", "test2");
+		Assertions.assertThat(FileVariableWriter.getColumsFromFirstLine(Optional.of("test,test2"), ";")).containsExactly("test,test2");
+		Assertions.assertThat(FileVariableWriter.getColumsFromFirstLine(Optional.of("test.test2"), ".")).containsExactly("test","test2");
 	}
 	
 	@Test

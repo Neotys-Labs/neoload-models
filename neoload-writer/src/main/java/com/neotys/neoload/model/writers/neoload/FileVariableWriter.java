@@ -1,13 +1,20 @@
 package com.neotys.neoload.model.writers.neoload;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.io.IO;
+import com.neotys.neoload.model.writers.RegExpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -63,8 +70,17 @@ public class FileVariableWriter	extends VariableWriter {
 		);
 		
 		//generate Column nodes
+		List<String> cols = theFileVariable.getColumnsNames();
+		if(cols.isEmpty() && theFileVariable.getFirstLineIsColumnName() && theFileVariable.getFileName().isPresent()) {
+			// read the first line and get the columns names
+			try {
+				cols = getColumnsFromFile(theFileVariable.getFileName().get(), theFileVariable.getColumnsDelimiter());
+			}catch(IOException e) {
+				LOGGER.warn("Cannot read columns in file variable "+theFileVariable.getFileName().get());
+			}
+		}
 		int counter = 0;
-		for(String columnName : theFileVariable.getColumnsNames()) {
+		for(String columnName : cols) {
 			org.w3c.dom.Element xmlColumn = document.createElement(XML_TAG_COLOMN);
 			xmlColumn.setAttribute(XML_COLOMN_ATTR_NAME, columnName);
 			xmlColumn.setAttribute(XML_COLOMN_ATTR_NUMBER, Integer.toString(counter++));
@@ -72,6 +88,17 @@ public class FileVariableWriter	extends VariableWriter {
 		}
 		
 		currentElement.appendChild(xmlVariable);
+	}
+
+	static List<String> getColumnsFromFile(String fileName, String columnsDelimiter) throws IOException {
+		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+			return getColumsFromFirstLine(stream.findFirst(), columnsDelimiter);
+		}
+	}
+
+	static List<String> getColumsFromFirstLine(Optional<String> firstLine, String columnsDelimiter) {
+		if(!firstLine.isPresent()) return ImmutableList.of();
+		return Arrays.stream(firstLine.get().split(RegExpUtils.escape(columnsDelimiter))).map(s -> s.trim()).collect(Collectors.toList());
 	}
 	
 	
