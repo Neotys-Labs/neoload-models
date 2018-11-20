@@ -9,7 +9,7 @@ To contribute, send us a pull request:
 4. Create a pull request, answering any questions in the pull request form.
 
 Before you send us a pull request, please be sure that:
-1. You signed the [contributor's agreement](neotys-cla.pdf) and sent it to opensource@neotys.com. This will allow us to review and accept contributions. One agreement covers several GitHub repositories.
+1. You signed the [contributor's agreement](https://www.neotys.com/documents/legal/neotys-contributor-license-agreement.pdf) and sent it to opensource@neotys.com. This will allow us to review and accept contributions. One agreement covers several GitHub repositories.
 2. You're working from the latest source on the master branch.
 3. You check existing open, and recently closed, pull requests to be sure that someone else hasn't already addressed the problem.
 4. You create an issue before working on a contribution that will take a significant amount of your time.
