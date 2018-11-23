@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.neotys.neoload.model.Project;
+import com.neotys.neoload.model.population.Population;
+import com.neotys.neoload.model.population.UserPathPolicy;
 import com.neotys.neoload.model.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.scenario.PopulationPolicy;
 import com.neotys.neoload.model.scenario.Scenario;
@@ -23,6 +25,22 @@ public class ProjectTest {
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_PROJECT_NAME = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_PROJECT_USER_PATHS_NAMES;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'user_paths': must contain only unique names.").append(LINE_SEPARATOR);
+		CONSTRAINTS_PROJECT_USER_PATHS_NAMES = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_PROJECT_POPULATIONS_NAMES;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'populations': must contain only unique names.").append(LINE_SEPARATOR);
+		CONSTRAINTS_PROJECT_POPULATIONS_NAMES = sb.toString();
 	}
 
 	private static final String CONSTRAINTS_PROJECT_SCENARIOS_NAMES;
@@ -58,6 +76,44 @@ public class ProjectTest {
 		assertFalse(validation.getMessage().isPresent());	
 	}	
 	
+	@Test
+	public void validatePopulationsNames() {
+		final Validator validator = new Validator();
+		
+		Project project = Project.builder()
+				.addPopulations(Population.builder()
+						.name("MyPopulation")
+						.addUserPaths(UserPathPolicy.builder()
+								.name("MyUserPath")
+								.distribution(100.0)
+								.build())
+						.build())
+				.build();
+        Validation validation = validator.validate(project, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());	
+		
+		project = Project.builder()
+				.addPopulations(Population.builder()
+						.name("MyPopulation")
+						.addUserPaths(UserPathPolicy.builder()
+								.name("MyUserPath")
+								.distribution(100.0)
+								.build())
+						.build())
+				.addPopulations(Population.builder()
+						.name("MyPopulation")
+						.addUserPaths(UserPathPolicy.builder()
+								.name("MyUserPath")
+								.distribution(100.0)
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(project, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_PROJECT_POPULATIONS_NAMES, validation.getMessage().get());	
+	}
+
 	@Test
 	public void validateScenariosNames() {
 		final Validator validator = new Validator();

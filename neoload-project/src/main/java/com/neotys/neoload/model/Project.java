@@ -12,8 +12,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.neotys.neoload.model.population.Population;
 import com.neotys.neoload.model.repository.Container;
-import com.neotys.neoload.model.repository.Population;
 import com.neotys.neoload.model.repository.Server;
 import com.neotys.neoload.model.repository.UserPath;
 import com.neotys.neoload.model.repository.Variable;
@@ -27,6 +27,10 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Project {
+	public static final String USER_PATHS = "user_paths";
+	public static final String ACTIONS = "actions";
+	public static final String END = "end";
+	
 	public static final String DEFAULT_NAME = "MyProject";
 	
 	@RequiredCheck(groups={NeoLoad.class})
@@ -36,13 +40,17 @@ public interface Project {
 	}
 	@JsonIgnore
 	List<Container> getSharedElements();
+//	@JsonProperty(USER_PATHS)
+//	@UniqueElementNameCheck(groups={NeoLoad.class})
+//	@Valid
 	@JsonIgnore
 	List<UserPath> getUserPaths();
 	@JsonIgnore
 	List<Server> getServers();
 	@JsonIgnore
 	List<Variable> getVariables();
-	@JsonIgnore
+	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@Valid
 	List<Population> getPopulations();
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid

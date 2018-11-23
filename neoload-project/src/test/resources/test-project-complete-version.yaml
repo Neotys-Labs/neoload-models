@@ -1,0 +1,14 @@
+populations:
+- name: population
+  user_paths:
+  - name: userPath1
+    distribution: 50%
+  - name: userPath2
+    distribution: 50%
+scenarios:
+- name: scenario
+  populations: 
+  - name: population
+    constant_load: 
+      users: 50
+      duration: 5m

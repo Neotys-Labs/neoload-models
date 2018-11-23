@@ -3,6 +3,7 @@ package com.neotys.neoload.model.validation.validator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,18 +47,18 @@ public final class Validator {
         final Set<ConstraintViolation<T>> violations = validator.validate(object, groups);
       
         // Manages the results
-        final int size = violations.size();
-        if (size != 0) {
+        if (violations.size() != 0) {
         	final StringBuilder sb = new StringBuilder();
-            sb.append("Data Model is invalid. Violation Number: " + size + ".");    
-            sb.append(LINE_SEPARATOR);
-        	int count = 1;
+            int count = 1;
         	final List<String> errors = normalizeErrors(violations);
         	for (final String error : errors) {
         		sb.append("Violation " + count + " - " + error);
         		sb.append(LINE_SEPARATOR);
 	        	count = count + 1;
         	}
+        	
+        	sb.insert(0, LINE_SEPARATOR);
+        	sb.insert(0, "Data Model is invalid. Violation Number: " + errors.size() + ".");    
         	
         	return Validation.builder()
             		.message(sb.toString())
@@ -70,12 +71,13 @@ public final class Validator {
 	}
 	
 	protected <T> List<String> normalizeErrors(final Set<ConstraintViolation<T>> violations) {
-		final List<String> errors = new ArrayList<>();
+		final Set<String> errors = new HashSet<>(); // --> Only one same error Validation <-> Immutable
     	for (final ConstraintViolation<T> violation : violations) {
     		errors.add("Incorrect value for '"+ normalizePath(violation.getPropertyPath()) + "': " + violation.getMessage());
     	}
-    	Collections.sort(errors);
-    	return errors;
+    	final List<String> sortedErrors = new ArrayList<>(errors);
+    	Collections.sort(sortedErrors);
+    	return sortedErrors;
 	}
 	
 	protected String normalizePath(final Path path) {
