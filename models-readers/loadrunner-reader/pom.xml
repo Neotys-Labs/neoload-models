@@ -12,10 +12,11 @@
     <artifactId>loadrunner-reader</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.neotys.neoload</groupId>
-            <artifactId>neoload-project</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>com.neotys.neoload</groupId>
+			<artifactId>neoload-project</artifactId>
+			<version>${neoload-project-v2.version}</version>
+		</dependency>
         <dependency>
             <groupId>com.neotys.neoload</groupId>
             <artifactId>common-reader</artifactId>

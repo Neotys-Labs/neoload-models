@@ -87,6 +87,7 @@
 		<project.scm.id>git</project.scm.id>
 		<encoding>UTF-8</encoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<neoload-project-v2.version>2.0.6</neoload-project-v2.version>
 		<immutables.version>2.5.5</immutables.version>
 		<commons-configuration2.version>2.1.1</commons-configuration2.version>
 		<commons-io.version>2.6</commons-io.version>
@@ -112,6 +113,11 @@
 		<dependencies>
 
 			<!-- Local -->
+			<dependency>
+				<groupId>com.neotys.neoload</groupId>
+				<artifactId>neoload-project</artifactId>
+				<version>${neoload-project-v2.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.neotys.neoload</groupId>
 				<artifactId>neoload-project</artifactId>
