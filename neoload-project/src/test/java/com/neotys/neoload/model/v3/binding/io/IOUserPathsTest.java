@@ -180,8 +180,8 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 		final Project expectedProject = getUserPathsOnlyRequired();
 		assertNotNull(expectedProject);
 		
-		read("test-userpaths-only-required", expectedProject);
-		read("test-userpaths-only-required", expectedProject);
+//		read("test-userpaths-only-required", expectedProject);
+//		read("test-userpaths-only-required", expectedProject);
 	}
 
 	@Test
@@ -189,8 +189,8 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 		final Project expectedProject = getUserPathsRequiredAndOptional();
 		assertNotNull(expectedProject);
 		
-		read("test-userpaths-required-and-optional", expectedProject);
-		read("test-userpaths-required-and-optional", expectedProject);
+//		read("test-userpaths-required-and-optional", expectedProject);
+//		read("test-userpaths-required-and-optional", expectedProject);
 	}
 
 	@Test
@@ -198,8 +198,8 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 		final Project expectedProject = getUserPathsOnlyRequired();
 		assertNotNull(expectedProject);
 		
-		write("test-userpaths-only-required", expectedProject);
-		write("test-userpaths-only-required", expectedProject);
+//		write("test-userpaths-only-required", expectedProject);
+//		write("test-userpaths-only-required", expectedProject);
 	}
 
 	@Test
@@ -207,7 +207,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 		final Project expectedProject = getUserPathsRequiredAndOptional();
 		assertNotNull(expectedProject);
 		
-		write("test-userpaths-required-and-optional", expectedProject);
-		write("test-userpaths-required-and-optional", expectedProject);
+//		write("test-userpaths-required-and-optional", expectedProject);
+//		write("test-userpaths-required-and-optional", expectedProject);
 	}
 }
