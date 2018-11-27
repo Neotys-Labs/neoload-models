@@ -24,7 +24,6 @@
         <dependency>
             <groupId>com.neotys.neoload</groupId>
             <artifactId>neoload-project</artifactId>	
-			<version>${neoload-project-v2.version}</version>
 			<scope>test</scope>		
         </dependency>
         <dependency>

@@ -15,7 +15,6 @@
 		<dependency>
 			<groupId>com.neotys.neoload</groupId>
 			<artifactId>neoload-project</artifactId>
-			<version>${neoload-project-v2.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
