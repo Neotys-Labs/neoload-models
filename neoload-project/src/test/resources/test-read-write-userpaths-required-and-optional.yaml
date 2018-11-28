@@ -1,0 +1,29 @@
+name: MyProject
+user_paths:
+- name: MyUserPath1
+  description: My User Path 1
+  user_session: reset_on
+  init:
+    description: My Init Container from My User Path 1
+  actions:
+    description: My Actions Container from My User Path 1
+  end:
+    description: My End Container from My User Path 1
+- name: MyUserPath2
+  description: My User Path 2
+  user_session: reset_off
+  init:
+    description: My Init Container from My User Path 2
+  actions:
+    description: My Actions Container from My User Path 2
+  end:
+    description: My End Container from My User Path 2
+- name: MyUserPath3
+  description: My User Path 3
+  user_session: reset_auto
+  init:
+    description: My Init Container from My User Path 3
+  actions:
+    description: My Actions Container from My User Path 3
+  end:
+    description: My End Container from My User Path 3

@@ -13,6 +13,9 @@ import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
+import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.Request;
+import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -78,6 +81,41 @@ public class ProjectTest {
 		assertFalse(validation.getMessage().isPresent());	
 	}	
 	
+	@Test
+	public void validateUserPathsNames() {
+		final Validator validator = new Validator();
+		
+		Project project = Project.builder()
+				.addUserPaths(UserPath.builder()
+						.name("MyUserPath")
+						.actions(Container.builder()
+								.addElements(Request.builder().url("url").build())
+								.build())
+						.build())
+				.build();
+        Validation validation = validator.validate(project, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());	
+		
+		project = Project.builder()
+				.addUserPaths(UserPath.builder()
+						.name("MyUserPath")
+						.actions(Container.builder()
+								.addElements(Request.builder().url("url").build())
+								.build())
+						.build())
+				.addUserPaths(UserPath.builder()
+						.name("MyUserPath")
+						.actions(Container.builder()
+								.addElements(Request.builder().url("url").build())
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(project, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_PROJECT_USER_PATHS_NAMES, validation.getMessage().get());	
+	}
+
 	@Test
 	public void validatePopulationsNames() {
 		final Validator validator = new Validator();

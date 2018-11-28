@@ -5,12 +5,14 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.v3.project.Project;
-
 
 public class ProjectTest {
 	@Test
 	public void name() {
+		assertEquals("servers", Project.SERVERS);
+		assertEquals("user_paths", Project.USER_PATHS);
+		assertEquals("scenarios", Project.SCENARIOS);
+		
 		assertEquals("MyProject", Project.DEFAULT_NAME);
 		
 		final Project project1 = Project.builder().build();
