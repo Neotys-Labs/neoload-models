@@ -1,0 +1,16 @@
+{
+  "name": "MyProject",
+  "servers": [
+    {
+      "name": "serverName",
+      "hostname": "mypc.intranet.neotys.com",
+      "port": 443,
+      "scheme": "https",
+      "authentication": {
+        "login": "neotysuser",
+        "password": "admin@admin",
+        "realm": "realm-value"
+      }
+    }
+  ]
+}

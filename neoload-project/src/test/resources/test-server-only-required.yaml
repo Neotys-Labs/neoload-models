@@ -1,0 +1,4 @@
+name: MyProject
+servers:
+- name: serverName
+  hostname: mypc.intranet.neotys.com

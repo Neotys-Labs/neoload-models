@@ -1,41 +1,37 @@
 package com.neotys.neoload.model.v3.project.server;
 
 
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
+
+import javax.validation.Valid;
+import java.util.Optional;
 
 @JsonInclude(value=Include.NON_EMPTY)
+@JsonPropertyOrder({Element.NAME, Server.SCHEME, Server.HOST, Server.PORT, Server.AUTHENTICATION})
 @JsonDeserialize(as = ImmutableServer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface Server {
-	public static final String NAME = "name";
-	public static final String HOST = "host";
-	public static final String PORT = "port";
-	public static final String SCHEME = "scheme";
-	
-	public static final String AUTHENTICATION = "authentication";
-	public static final String BASIC_AUTHENTICATION = "basic_authentication";
-	public static final String NTLM_AUTHENTICATION = "ntlm_authentication";
-	public static final String NEGOCIATE_AUTHENTICATION = "negotiate_authentication";
-	
-	public static final String DEFAULT_PORT = "80";
-	public static final Scheme DEFAULT_SCHEME = Scheme.HTTP;
-	
-	public static final String SCHEME_HTTP = "http";
-	public static final String SCHEME_HTTPS = "https";
-	
+public interface Server extends Element {
+	String SCHEME 	= "scheme";
+	String HOST 	= "hostname";
+	String PORT 	= "port";
+	String AUTHENTICATION = "authentication";
+
+	String SCHEME_HTTP = "http";
+	String SCHEME_HTTPS = "https";
+	Scheme DEFAULT_SCHEME = Scheme.HTTP;
+
+	long DEFAULT_PORT = 80;
+
 	enum Scheme {
 		@JsonProperty(Server.SCHEME_HTTP)
 		HTTP,
@@ -45,24 +41,32 @@ public interface Server {
 
 	@RequiredCheck(groups={NeoLoad.class})
 	String getName();
+
+	@JsonProperty(SCHEME)
+	@RequiredCheck
+	@Value.Default
+	default Scheme getScheme() {
+		return DEFAULT_SCHEME;
+	}
+
+	@JsonProperty(HOST)
 	@RequiredCheck(groups={NeoLoad.class})
     String getHost();
-	@RequiredCheck(groups={NeoLoad.class})
+
+	@JsonProperty(PORT)
+//	FIXME NNA @RangeCheck(min = 1, max = 65535)
+	@RequiredCheck
 	@Value.Default
-    default String getPort() {
+    default long getPort() {
     	return DEFAULT_PORT;
     }
-	@RequiredCheck(groups={NeoLoad.class})
-	@Value.Default
-    default Scheme getScheme() {
-    	return DEFAULT_SCHEME;
-    }
-    
-    @Valid
-    Optional<Authentication> getAuthentication();
-    
+
+	@RequiredCheck
+	@Valid
+	Optional<Authentication> getAuthentication();
+
 	class Builder extends ImmutableServer.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }
