@@ -15,8 +15,6 @@ import java.util.Optional;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface BasicAuthentication extends LoginPasswordAuthentication {
-	String BASIC_AUTHENTICATION 		= "basic_authentication";
-
 	String REALM = "realm";
 
 	@JsonProperty(REALM)

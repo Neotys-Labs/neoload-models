@@ -97,8 +97,8 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.name("serverName3")
 				.host("mypc3.intranet.neotys.com")
 				.authentication(ImmutableNtlmAuthentication.builder()
-						.login("neotysuserntml")
-						.password("admin@adminntml").build())
+						.login("neotysuserntlm")
+						.password("admin@adminntlm").build())
 				.build();
 
 		final Server server4 = Server.builder()
