@@ -82,7 +82,9 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		return scheme;
 	}
 
-	private Optional<Authentication> getAuthentication(final ObjectCodec objectCodec, final JsonNode jsonNode) throws JsonProcessingException {
+	private Optional<Authentication> getAuthentication(final ObjectCodec objectCodec, final JsonNode jsonNode) throws IOException {
+		checkNoOrOnlyOneAuthentication(jsonNode);
+
 		JsonNode authentication = jsonNode.get(BASIC_AUTHENTICATION);
 		if (authentication != null) {
 			return Optional.of(objectCodec.treeToValue(authentication, BasicAuthentication.class));
@@ -99,5 +101,14 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		}
 
 		return Optional.empty();
+	}
+
+	private void checkNoOrOnlyOneAuthentication(final JsonNode jsonNode) throws IOException {
+		 final int authenticationsCount = (jsonNode.has(BASIC_AUTHENTICATION) ? 1 : 0)
+											 + (jsonNode.has(NTLM_AUTHENTICATION) ? 1 : 0)
+											 + (jsonNode.has(NEGOCIATE_AUTHENTICATION) ? 1 : 0);
+		if (authenticationsCount > 1) {
+			throw new IOException("Only one authentication can be defined in a Server.");
+		}
 	}
 }
