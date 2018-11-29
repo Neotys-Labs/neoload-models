@@ -15,6 +15,7 @@ import com.neotys.neoload.model.v3.project.server.Server;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication.BASIC_AUTHENTICATION;
 import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication.NEGOCIATE_AUTHENTICATION;
 import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication.NTLM_AUTHENTICATION;
@@ -36,9 +37,11 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		final ObjectCodec codec = jsonParser.getCodec();
 		final JsonNode jsonNode = codec.readTree(jsonParser);
 
+		checkMandatoryFieldsForServer(jsonNode);
+
 		final String name = jsonNode.get(NAME).asText();
 		final Server.Scheme scheme = getScheme(jsonNode);
-		final String host = jsonNode.get(HOST).asText();
+		final String host = jsonNode.findValue(HOST).asText();
 		final long port = getPort(jsonNode);
 
 		return Server.builder()
@@ -48,6 +51,14 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 				.port(port)
 				.authentication(getAuthentication(codec, jsonNode))
 				.build();
+	}
+
+	private void checkMandatoryFieldsForServer(final JsonNode jsonNode) throws IOException {
+		for (String field : newArrayList(NAME, HOST)) {
+			if (!jsonNode.hasNonNull(field)) {
+				throw new IOException("'" + field + "'" + " field is mandatory for Server");
+			}
+		}
 	}
 
 	private long getPort(final JsonNode jsonNode) {
