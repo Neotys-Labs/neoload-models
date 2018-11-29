@@ -4,6 +4,7 @@ package com.neotys.neoload.model.v3.binding.io;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.server.ImmutableBasicAuthentication;
 import com.neotys.neoload.model.v3.project.server.ImmutableNegociateAuthentication;
+import com.neotys.neoload.model.v3.project.server.ImmutableNtlmAuthentication;
 import com.neotys.neoload.model.v3.project.server.Server;
 import org.junit.Test;
 
@@ -92,10 +93,22 @@ public class IOServerTest extends AbstractIOElementsTest {
 						.domain("domain-valuenego").build())
 				.build();
 
+		final Server server3 = Server.builder()
+				.name("serverName3")
+				.host("mypc3.intranet.neotys.com")
+				.authentication(ImmutableNtlmAuthentication.builder()
+						.login("neotysuserntml")
+						.password("admin@adminntml").build())
+				.build();
+
+		final Server server4 = Server.builder()
+				.name("serverName4")
+				.host("mypc4.intranet.neotys.com")
+				.build();
 
 		return Project.builder()
 				.name("MyProject")
-				.addServers(server1, server2)
+				.addServers(server1, server2, server3, server4)
 				.build();
 	}
 }

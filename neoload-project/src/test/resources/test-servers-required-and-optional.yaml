@@ -16,3 +16,10 @@ servers:
     login: neotysusernego
     password: admin@adminnego
     domain: domain-valuenego
+- name: serverName3
+  hostname: mypc3.intranet.neotys.com
+  ntlm_authentication:
+    login: neotysuserntml
+    password: admin@adminntml
+- name: serverName4
+  hostname: mypc4.intranet.neotys.com

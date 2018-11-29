@@ -16,6 +16,8 @@ import java.util.Optional;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface NegociateAuthentication extends LoginPasswordAuthentication {
+	String NEGOCIATE_AUTHENTICATION 	= "negociate_authentication";
+
 	String DOMAIN = "domain";
 
 	@JsonProperty(DOMAIN)

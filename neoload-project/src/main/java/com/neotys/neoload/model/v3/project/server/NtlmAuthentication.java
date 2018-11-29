@@ -15,6 +15,8 @@ import java.util.Optional;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface NtlmAuthentication extends LoginPasswordAuthentication {
+	String NTLM_AUTHENTICATION 			= "ntlm_authentication";
+
 	String DOMAIN = "domain";
 
 	@JsonProperty(DOMAIN)
