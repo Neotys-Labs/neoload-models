@@ -22,7 +22,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Population extends Element {
-	public static final String USER_PATHS = "user_paths";
+	String USER_PATHS = "user_paths";
 
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
@@ -30,7 +30,7 @@ public interface Population extends Element {
 	List<UserPathPolicy> getUserPaths();
 
 	class Builder extends ImmutablePopulation.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }

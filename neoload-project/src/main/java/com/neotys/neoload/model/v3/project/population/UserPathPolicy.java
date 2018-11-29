@@ -1,10 +1,13 @@
 package com.neotys.neoload.model.v3.project.population;
 
+import java.util.Optional;
+
 import javax.validation.constraints.Digits;
 
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,12 +21,15 @@ import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, UserPathPolicy.DISTRIBUTION /*, UserPathPolicy.BROWSER, UserPathPolicy.WAN_EMULATION */})
+@JsonPropertyOrder({Element.NAME, UserPathPolicy.DISTRIBUTION})
 @JsonDeserialize(as = ImmutableUserPathPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface UserPathPolicy extends Element {
-	public static final String DISTRIBUTION = "distribution";
+	String DISTRIBUTION = "distribution";
+	
+	@JsonIgnore
+	Optional<String> getDescription();
 	
 	@JsonSerialize(converter=DoubleToPercentageConverter.class)
 	@JsonDeserialize(converter=PercentageToDoubleConverter.class)
@@ -33,7 +39,7 @@ public interface UserPathPolicy extends Element {
 	Double getDistribution();
 	
 	class Builder extends ImmutableUserPathPolicy.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }
