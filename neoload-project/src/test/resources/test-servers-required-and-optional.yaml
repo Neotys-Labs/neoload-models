@@ -1,0 +1,18 @@
+name: MyProject
+servers:
+- name: serverName
+  hostname: mypc.intranet.neotys.com
+  port: 443
+  scheme: https
+  basic_authentication:
+    login: neotysuser
+    password: admin@admin
+    realm: realm-value
+- name: serverName2
+  hostname: mypc2.intranet.neotys.com
+  port: 81
+  scheme: http
+  negociate_authentication:
+    login: neotysusernego
+    password: admin@adminnego
+    domain: domain-valuenego

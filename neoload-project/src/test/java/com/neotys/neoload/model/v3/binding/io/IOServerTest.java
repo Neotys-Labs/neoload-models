@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.server.ImmutableBasicAuthentication;
+import com.neotys.neoload.model.v3.project.server.ImmutableNegociateAuthentication;
 import com.neotys.neoload.model.v3.project.server.Server;
 import org.junit.Test;
 
@@ -30,6 +31,14 @@ public class IOServerTest extends AbstractIOElementsTest {
 		read("test-server-required-and-optional", expectedProjectWithRequiredAndOptional);
 	}
 
+	@Test
+	public void readServersRequiredAndOptional() throws IOException, URISyntaxException {
+		final Project expectedProjectWithRequiredAndOptional = buildProjectContainingServersWithRequiredAndOptional();
+		assertNotNull(expectedProjectWithRequiredAndOptional);
+
+		read("test-servers-required-and-optional", expectedProjectWithRequiredAndOptional);
+	}
+
 	private Project buildProjectContainingServerWithOnlyRequired() {
 		final Server server = Server.builder()
 				.name("serverName")
@@ -49,13 +58,44 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.port(443)
 				.scheme(Server.Scheme.HTTPS)
 				.authentication(ImmutableBasicAuthentication.builder()
-				.login("neotysuser")
-				.password("admin@admin").realm("realm-value").build())
+					.login("neotysuser")
+					.password("admin@admin").realm("realm-value").build())
 				.build();
 
 		return Project.builder()
 				.name("MyProject")
 				.addServers(server)
+				.build();
+	}
+
+
+	private Project buildProjectContainingServersWithRequiredAndOptional() {
+		final Server server1 = Server.builder()
+				.name("serverName")
+				.host("mypc.intranet.neotys.com")
+				.port(443)
+				.scheme(Server.Scheme.HTTPS)
+				.authentication(ImmutableBasicAuthentication.builder()
+						.login("neotysuser")
+						.password("admin@admin")
+						.realm("realm-value").build())
+				.build();
+
+		final Server server2 = Server.builder()
+				.name("serverName2")
+				.host("mypc2.intranet.neotys.com")
+				.port(81)
+				.scheme(Server.Scheme.HTTP)
+				.authentication(ImmutableNegociateAuthentication.builder()
+						.login("neotysusernego")
+						.password("admin@adminnego")
+						.domain("domain-valuenego").build())
+				.build();
+
+
+		return Project.builder()
+				.name("MyProject")
+				.addServers(server1, server2)
 				.build();
 	}
 }
