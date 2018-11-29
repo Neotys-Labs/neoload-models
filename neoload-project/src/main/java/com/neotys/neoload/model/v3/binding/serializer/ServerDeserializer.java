@@ -32,7 +32,7 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 	}
 
 	@Override
-	public Server deserialize(final JsonParser jsonParser, final DeserializationContext context) throws IOException, JsonProcessingException {
+	public Server deserialize(final JsonParser jsonParser, final DeserializationContext context) throws IOException {
 		final ObjectCodec codec = jsonParser.getCodec();
 		final JsonNode jsonNode = codec.readTree(jsonParser);
 
