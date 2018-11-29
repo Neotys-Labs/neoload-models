@@ -9,8 +9,10 @@ import org.junit.Test;
 public class ProjectTest {
 	@Test
 	public void name() {
+		assertEquals("name", Project.NAME);
 		assertEquals("servers", Project.SERVERS);
 		assertEquals("user_paths", Project.USER_PATHS);
+		assertEquals("populations", Project.POPULATIONS);
 		assertEquals("scenarios", Project.SCENARIOS);
 		
 		assertEquals("MyProject", Project.DEFAULT_NAME);
