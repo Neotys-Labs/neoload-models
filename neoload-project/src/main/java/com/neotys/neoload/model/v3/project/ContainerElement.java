@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.project;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
@@ -15,4 +16,9 @@ public interface ContainerElement extends ShareableElement {
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	List<Element> getElements();
+	
+    @Override
+    default Stream<Element> flattened() {
+        return Stream.concat(Stream.of(this), getElements().stream().flatMap(Element::flattened));
+    }
 }

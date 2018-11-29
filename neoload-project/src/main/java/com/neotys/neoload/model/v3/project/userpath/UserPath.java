@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
+import java.util.stream.Stream;
+
 import javax.validation.Valid;
 
 import org.immutables.value.Value;
@@ -58,6 +60,11 @@ public interface UserPath extends Element {
 	@JsonProperty(END)
 	@Valid	
 	Container getEnd();
+
+	@Override
+	default Stream<Element> flattened() {
+		return Stream.of(getInit(), getActions(), getEnd()).flatMap(Container::flattened);
+	}
 
 	class Builder extends ImmutableUserPath.Builder {}
 	static Builder builder() {
