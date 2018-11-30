@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.converter.DoubleToPercentageConverter;
 import com.neotys.neoload.model.v3.binding.converter.PercentageToDoubleConverter;
 import com.neotys.neoload.model.v3.project.Element;
-import com.neotys.neoload.model.v3.validation.constraints.NeotysDigits;
+import com.neotys.neoload.model.v3.validation.constraints.DigitsCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
@@ -32,7 +32,7 @@ public interface UserPathPolicy extends Element {
 	@JsonSerialize(converter=DoubleToPercentageConverter.class)
 	@JsonDeserialize(converter=PercentageToDoubleConverter.class)
 	@JsonProperty(DISTRIBUTION)
-	@NeotysDigits(integer=3, fraction=1, groups={NeoLoad.class})
+	@DigitsCheck(integer=3, fraction=1, groups={NeoLoad.class})
 	@RangeCheck(min=0, max=100, groups={NeoLoad.class})
 	Double getDistribution();
 	

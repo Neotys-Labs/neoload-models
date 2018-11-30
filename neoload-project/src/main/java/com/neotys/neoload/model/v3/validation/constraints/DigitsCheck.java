@@ -7,20 +7,19 @@ package com.neotys.neoload.model.v3.validation.constraints;
  * See the license.txt file in the root directory or <http://www.apache.org/licenses/LICENSE-2.0>.
  */
 
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import javax.validation.Constraint;
-import javax.validation.Payload;
 
 /**
  * The annotated element must be a number within accepted range
@@ -39,10 +38,10 @@ import javax.validation.Payload;
  */
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
 @Retention(RUNTIME)
-@Repeatable(NeotysDigits.List.class)
+@Repeatable(DigitsCheck.List.class)
 @Documented
 @Constraint(validatedBy = {})
-public @interface NeotysDigits {
+public @interface DigitsCheck {
 
 	String message() default "{javax.validation.constraints.Digits.message}";
 
@@ -65,7 +64,7 @@ public @interface NeotysDigits {
 	@Documented
 	@interface List {
 
-		NeotysDigits[] value();
+		DigitsCheck[] value();
 	}
 }
 
