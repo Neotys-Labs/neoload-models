@@ -16,7 +16,7 @@ The server settings are centralized, which means the target server for the test 
 | Name        | Description                                                  | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ----------------- |
 | name        | The name of the server.                                      | Required          |
-| hostname | The host name of the server.                                    | Required          |
+| host | The host of the server.                                    | Required          |
 | port | The port of the server. The default value is 80.                    | Optional          |
 | scheme | The scheme of the server. The available values are "http" and "https". The default value is http.    | Optional          |
 | basic-authentication | The Basic Authentication used to authenticate to the server.                    | Optional          |
@@ -52,9 +52,9 @@ Define 2 servers: a server with only the host-name, a secure server https with a
 ```yaml
 servers:
 - name: my-server
-  hostname: host-server
+  host: host-server
 - name: my-secure-server
-  hostname: host-secure-server
+  host: host-secure-server
   port: 443
   scheme: https
   basic-authentication:
