@@ -3,7 +3,7 @@
   "servers": [
     {
       "name": "serverName",
-      "hostname": "mypc.intranet.neotys.com",
+      "host": "mypc.intranet.neotys.com",
       "port": 443,
       "scheme": "https",
       "basic_authentication": {
@@ -14,7 +14,7 @@
     },
     {
       "name": "serverName2",
-      "hostname": "mypc2.intranet.neotys.com",
+      "host": "mypc2.intranet.neotys.com",
       "port": 81,
       "scheme": "http",
       "negociate_authentication": {
@@ -25,7 +25,7 @@
     },
     {
       "name": "serverName3",
-      "hostname": "mypc3.intranet.neotys.com",
+      "host": "mypc3.intranet.neotys.com",
       "ntlm_authentication": {
         "login": "neotysuserntlm",
         "password": "admin@adminntlm"
@@ -33,7 +33,7 @@
     },
     {
       "name": "serverName4",
-      "hostname": "mypc4.intranet.neotys.com"
+      "host": "mypc4.intranet.neotys.com"
     }
   ]
 }

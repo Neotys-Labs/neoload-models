@@ -1,7 +1,7 @@
 name: MyProject
 servers:
 - name: serverName
-  hostname: mypc.intranet.neotys.com
+  host: mypc.intranet.neotys.com
   port: 443
   scheme: https
   basic_authentication:

@@ -44,6 +44,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 		final Server server = Server.builder()
 				.name("serverName")
 				.host("mypc.intranet.neotys.com")
+				.port(80L)
 				.build();
 
 		return Project.builder()
@@ -96,6 +97,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 		final Server server3 = Server.builder()
 				.name("serverName3")
 				.host("mypc3.intranet.neotys.com")
+				.port(80L)
 				.authentication(ImmutableNtlmAuthentication.builder()
 						.login("neotysuserntlm")
 						.password("admin@adminntlm").build())
@@ -104,6 +106,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 		final Server server4 = Server.builder()
 				.name("serverName4")
 				.host("mypc4.intranet.neotys.com")
+				.port(80L)
 				.build();
 
 		return Project.builder()

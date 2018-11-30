@@ -17,7 +17,7 @@ import com.neotys.neoload.model.v3.project.Element;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Container extends ContainerElement {
-	public static final String DEFAULT_NAME = "#container#";
+	String DEFAULT_NAME = "#container#";
 
 	@JsonIgnore
 	@Value.Default
