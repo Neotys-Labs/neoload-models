@@ -1,11 +1,11 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.binding.serializer.DelayDeserializer;
+import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
@@ -15,15 +15,9 @@ import org.immutables.value.Value;
 @JsonDeserialize(using = DelayDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface Delay {
+public interface Delay extends Element {
 	String DEFAULT_NAME = "#delay#";
 	String DELAY = "delay";
-
-	@JsonIgnore
-	@Value.Default
-	default String getName() {
-		return DEFAULT_NAME;
-	}
 
 	@JsonProperty(DELAY)
 	@RequiredCheck(groups = {NeoLoad.class})

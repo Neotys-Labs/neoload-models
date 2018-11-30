@@ -1,8 +1,10 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
-import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -22,12 +24,18 @@ public class IODelayTest extends AbstractIOElementsTest {
 	}
 
 	private Project buildProjectContainingDelay() {
-		final Project project = Project.builder()
-				.name("MyProject")
-				.addUserPaths()
+		final Delay delay = Delay.builder().delay("10s").build();
+
+		final Container container = Container.builder().
+				addElements(delay).build();
+
+		final UserPath userPath = UserPath.builder()
+				.name("user_path_1")
+				.actions(container)
 				.build();
-
-
-		return project;
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
 	}
 }

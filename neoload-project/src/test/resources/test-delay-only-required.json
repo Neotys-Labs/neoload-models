@@ -1,0 +1,15 @@
+{
+  "name": "MyProject",
+  "user_paths": [
+    {
+      "name": "user_path_1",
+      "actions": {
+        "do": [
+          {
+            "delay": "10s"
+          }
+        ]
+      }
+    }
+  ]
+}
