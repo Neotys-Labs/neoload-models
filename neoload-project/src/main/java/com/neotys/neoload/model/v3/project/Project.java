@@ -48,11 +48,6 @@ public interface Project {
 
 	@JsonIgnore
 	List<Container> getSharedElements();
-	
-	@JsonProperty(SERVERS)
-	@UniqueElementNameCheck(groups={NeoLoad.class})
-	@Valid
-	List<Server> getServers();
 
 	@JsonProperty(USER_PATHS)
 	@UniqueElementNameCheck(groups={NeoLoad.class})
@@ -71,6 +66,11 @@ public interface Project {
 	
 	@JsonIgnore
 	List<Variable> getVariables();
+
+	@JsonProperty(SERVERS)
+	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@Valid
+	List<Server> getServers();
 
 	@JsonIgnore
 	Map<String,String> getProjectSettings();
