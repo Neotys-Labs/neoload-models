@@ -44,6 +44,6 @@ final class PercentageHelper {
 				return null;
 			}
 		}
-		return null;		
+		throw new IllegalArgumentException("The value '" + input + "' is not a valid percentage.");		
 	}
 }

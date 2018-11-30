@@ -5,10 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.v3.binding.converter.DoubleToPercentageConverter;
-import com.neotys.neoload.model.v3.project.scenario.Duration;
-import com.neotys.neoload.model.v3.project.scenario.Duration.Type;
-
 
 public class DoubleToPercentageConverterTest {
 	@Test
