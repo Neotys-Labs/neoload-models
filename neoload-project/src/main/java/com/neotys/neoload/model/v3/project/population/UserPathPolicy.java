@@ -34,7 +34,7 @@ public interface UserPathPolicy extends Element {
 	@JsonSerialize(converter=DoubleToPercentageConverter.class)
 	@JsonDeserialize(converter=PercentageToDoubleConverter.class)
 	@JsonProperty(DISTRIBUTION)
-	@Digits(integer=3, fraction=1, groups={NeoLoad.class})
+//	@Digits(integer=3, fraction=1, groups={NeoLoad.class})
 	@RangeCheck(min=0, max=100, groups={NeoLoad.class})
 	Double getDistribution();
 	
