@@ -42,7 +42,6 @@ public interface Server extends Element {
 	String getHost();
 
 	@RequiredCheck(groups = {NeoLoad.class})
-	@RangeCheck(min = 1, max = 65535, groups = {NeoLoad.class})
 	@Value.Default
 	default Long getPort() {
 		return DEFAULT_PORT;
