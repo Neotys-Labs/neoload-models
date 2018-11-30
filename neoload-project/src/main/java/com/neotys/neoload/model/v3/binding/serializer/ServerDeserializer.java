@@ -18,7 +18,8 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication.BASIC_AUTHENTICATION;
 import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication.NEGOCIATE_AUTHENTICATION;
 import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication.NTLM_AUTHENTICATION;
-import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_PORT;
+import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTPS_PORT;
+import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTP_PORT;
 import static com.neotys.neoload.model.v3.project.server.Server.HOST;
 import static com.neotys.neoload.model.v3.project.server.Server.NAME;
 import static com.neotys.neoload.model.v3.project.server.Server.PORT;
@@ -41,7 +42,7 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		final String name = jsonNode.get(NAME).asText();
 		final Server.Scheme scheme = getScheme(jsonNode);
 		final String host = jsonNode.findValue(HOST).asText();
-		final long port = getPort(jsonNode);
+		final long port = getPort(jsonNode, scheme);
 
 		return Server.builder()
 				.name(name)
@@ -60,12 +61,12 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		}
 	}
 
-	private long getPort(final JsonNode jsonNode) {
+	private long getPort(final JsonNode jsonNode, final Server.Scheme scheme) {
 		final JsonNode jsonNodePort = jsonNode.get(PORT);
 		if (jsonNodePort != null) {
 			return jsonNodePort.asLong();
 		}
-		return DEFAULT_PORT;
+		return scheme == Server.Scheme.HTTPS ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
 	}
 
 	private Server.Scheme getScheme(final JsonNode jsonNode) {
@@ -103,9 +104,9 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 	}
 
 	private void checkNoOrOnlyOneAuthentication(final JsonNode jsonNode) throws IOException {
-		 final int authenticationsCount = (jsonNode.has(BASIC_AUTHENTICATION) ? 1 : 0)
-											 + (jsonNode.has(NTLM_AUTHENTICATION) ? 1 : 0)
-											 + (jsonNode.has(NEGOCIATE_AUTHENTICATION) ? 1 : 0);
+		final int authenticationsCount = (jsonNode.has(BASIC_AUTHENTICATION) ? 1 : 0)
+				+ (jsonNode.has(NTLM_AUTHENTICATION) ? 1 : 0)
+				+ (jsonNode.has(NEGOCIATE_AUTHENTICATION) ? 1 : 0);
 		if (authenticationsCount > 1) {
 			throw new IOException("Only one authentication can be defined in a Server.");
 		}

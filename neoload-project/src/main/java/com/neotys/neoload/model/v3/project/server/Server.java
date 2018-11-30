@@ -23,12 +23,13 @@ import java.util.Optional;
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Server extends Element {
 	String NAME = "name";
-	String HOST = "hostname";
+	String HOST = "host";
 	String PORT = "port";
 	String SCHEME = "scheme";
 
 	Scheme DEFAULT_SCHEME = Scheme.HTTP;
-	long DEFAULT_PORT = 80;
+	long DEFAULT_HTTP_PORT = 80;
+	long DEFAULT_HTTPS_PORT = 443;
 
 	enum Scheme {
 		HTTP,
@@ -40,10 +41,7 @@ public interface Server extends Element {
 
 	@RequiredCheck(groups = {NeoLoad.class})
 	@RangeCheck(min = 1, max = 65535, groups = {NeoLoad.class})
-	@Value.Default
-	default Long getPort() {
-		return DEFAULT_PORT;
-	}
+	Long getPort();
 
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Value.Default
