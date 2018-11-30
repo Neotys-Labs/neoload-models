@@ -23,8 +23,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Scenario extends Element {
-	public static final String SLA_PROFILE = "sla_profile";
-	public static final String POPULATIONS = "populations";
+	String SLA_PROFILE = "sla_profile";
+	String POPULATIONS = "populations";
 
 	@JsonProperty(SLA_PROFILE)
 	String getSlaProfile();
@@ -34,7 +34,7 @@ public interface Scenario extends Element {
 	List<PopulationPolicy> getPopulations();
 	
 	class Builder extends ImmutableScenario.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }

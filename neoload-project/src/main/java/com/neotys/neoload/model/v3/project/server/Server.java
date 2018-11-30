@@ -7,9 +7,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.binding.serializer.ServerDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
+import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
+import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @JsonInclude(value = Include.NON_EMPTY)
@@ -31,20 +35,24 @@ public interface Server extends Element {
 		HTTPS
 	}
 
-	String getName();
-
+	@RequiredCheck(groups = {NeoLoad.class})
 	String getHost();
 
+	@RequiredCheck(groups = {NeoLoad.class})
+	@RangeCheck(min = 1, max = 65535, groups = {NeoLoad.class})
 	@Value.Default
 	default Long getPort() {
 		return DEFAULT_PORT;
 	}
 
+	@RequiredCheck(groups = {NeoLoad.class})
 	@Value.Default
 	default Scheme getScheme() {
 		return DEFAULT_SCHEME;
 	}
 
+	@RequiredCheck(groups = {NeoLoad.class})
+	@Valid
 	Optional<Authentication> getAuthentication();
 
 	class Builder extends ImmutableServer.Builder {
