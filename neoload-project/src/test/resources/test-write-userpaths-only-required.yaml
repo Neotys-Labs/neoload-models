@@ -2,4 +2,9 @@ name: MyProject
 user_paths:
 - name: MyUserPath
   user_session: reset_auto
-  actions: {}
+  actions:
+    do:
+    - transaction:
+        name: MyTransaction
+        do:
+        - delay: 1s

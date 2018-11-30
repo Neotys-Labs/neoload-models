@@ -1,4 +1,10 @@
 name: MyProject
 user_paths:
 - name: MyUserPath
-  actions: {}
+  actions: 
+    do:
+    - transaction:
+        name: MyTransaction
+        do:
+        - delay: 1s
+    

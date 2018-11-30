@@ -16,8 +16,10 @@ import com.neotys.neoload.model.v3.project.Element;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Transaction extends ContainerElement {
+	String TRANSACTION = "transaction";
+	
 	class Builder extends ImmutableTransaction.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }

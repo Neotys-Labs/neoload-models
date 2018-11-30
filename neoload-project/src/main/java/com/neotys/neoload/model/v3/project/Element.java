@@ -15,6 +15,7 @@ public interface Element {
 	@RequiredCheck(groups={NeoLoad.class})
 	String getName();
 
+	@JsonProperty(DESCRIPTION)
 	Optional<String> getDescription();
     
     Element withName(String of);

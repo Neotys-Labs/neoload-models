@@ -26,7 +26,7 @@ public interface Container extends ContainerElement {
 	}
 
 	class Builder extends ImmutableContainer.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }
