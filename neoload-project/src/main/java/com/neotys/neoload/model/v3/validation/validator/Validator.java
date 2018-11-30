@@ -50,7 +50,7 @@ public final class Validator {
         final Set<ConstraintViolation<T>> violations = validator.validate(object, groups);
       
         // Manages the results
-        if (violations.size() != 0) {
+        if (!violations.isEmpty()) {
         	final StringBuilder sb = new StringBuilder();
             int count = 1;
         	final List<String> errors = normalizeErrors(violations);
