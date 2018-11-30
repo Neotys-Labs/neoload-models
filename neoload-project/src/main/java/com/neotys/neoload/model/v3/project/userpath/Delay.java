@@ -19,6 +19,14 @@ public interface Delay extends Element {
 	String DEFAULT_NAME = "#delay#";
 	String DELAY = "delay";
 
+	@JsonProperty(NAME)
+	@RequiredCheck(groups={NeoLoad.class})
+	@Override
+	@Value.Default
+	default String getName() {
+		return DEFAULT_NAME;
+	}
+
 	@JsonProperty(DELAY)
 	@RequiredCheck(groups = {NeoLoad.class})
 	String getDelay();
