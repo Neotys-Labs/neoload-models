@@ -48,12 +48,12 @@ public interface Project {
 
 	@JsonIgnore
 	List<Container> getSharedElements();
-	
-	@JsonProperty(SERVERS)
+
+	@JsonProperty(SCENARIOS)
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid
-	List<Server> getServers();
-
+	List<Scenario> getScenarios();
+	
 	@JsonProperty(USER_PATHS)
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid
@@ -64,10 +64,10 @@ public interface Project {
 	@Valid
 	List<Population> getPopulations();
 	
-	@JsonProperty(SCENARIOS)
+	@JsonProperty(SERVERS)
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid
-	List<Scenario> getScenarios();
+	List<Server> getServers();
 	
 	@JsonIgnore
 	List<Variable> getVariables();
