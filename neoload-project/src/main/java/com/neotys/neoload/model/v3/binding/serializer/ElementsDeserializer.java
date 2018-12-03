@@ -16,6 +16,8 @@ import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.Transaction;
 
+import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
+
 public class ElementsDeserializer extends StdDeserializer<List<Element>> {
 	private static final long serialVersionUID = -5696608939252369276L;
 
@@ -41,9 +43,8 @@ public class ElementsDeserializer extends StdDeserializer<List<Element>> {
 			}
 			else if (elementNode.has(Delay.DELAY)) {
 				final String delayValue = elementNode.get(Delay.DELAY).asText();
-				final StringToTimeDurationConverter stringToTimeDurationConverter = new StringToTimeDurationConverter();
-				final Integer delayInteger = stringToTimeDurationConverter.convert(delayValue);
-				element = Delay.builder().delay(String.valueOf(delayInteger)).build();
+				final Long delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
+				element = Delay.builder().delay(String.valueOf(delay)).build();
 			}
 			
 			if (element != null) {

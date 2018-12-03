@@ -21,7 +21,7 @@ final class TimeDurationHelper {
 		if (input == null) return null;
 		if (input <= 0) return ZERO;
 		
-		final int value = input.intValue();
+		final int value = input;
 		final int hours = value / 3600;
 		final int minutes = (value - hours * 3600) / 60;
 		final int secondes = (value - hours * 3600 - minutes * 60);
