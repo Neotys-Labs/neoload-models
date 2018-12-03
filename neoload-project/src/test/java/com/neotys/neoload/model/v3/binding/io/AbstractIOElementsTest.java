@@ -18,7 +18,7 @@ abstract class AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 		
 		read(fileName, "yaml", expectedProject);
-		//read(fileName, "json", expectedProject);
+		read(fileName, "json", expectedProject);
 	}
 
 	protected void read(final String fileName, final String extension, final Project expectedProject) throws IOException, URISyntaxException {

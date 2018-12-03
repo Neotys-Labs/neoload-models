@@ -41,12 +41,13 @@ public class ElementsDeserializer extends StdDeserializer<List<Element>> {
 				final JsonNode transactionNode = elementNode.get(Transaction.TRANSACTION);
 				element = codec.treeToValue(transactionNode, Transaction.class);
 			}
-			else if (elementNode.has(Delay.DELAY)) {
-				final String delayValue = elementNode.get(Delay.DELAY).asText();
+			else if (elementNode.has(Delay.DELAY) || elementNode.has(Delay.THINK_TIME)) {
+				final boolean isThinkTime = elementNode.has(Delay.THINK_TIME);
+				final String delayValue = elementNode.get(isThinkTime ? Delay.THINK_TIME : Delay.DELAY).asText();
 				final Long delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
-				element = Delay.builder().delay(String.valueOf(delay)).build();
+				element = Delay.builder().delay(String.valueOf(delay)).isThinkTime(isThinkTime).build();
 			}
-			
+
 			if (element != null) {
 				elements.add(element);
 			}

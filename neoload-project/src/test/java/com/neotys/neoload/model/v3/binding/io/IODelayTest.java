@@ -24,10 +24,11 @@ public class IODelayTest extends AbstractIOElementsTest {
 	}
 
 	private Project buildProjectContainingDelay() {
-		final Delay delay = Delay.builder().delay("3790100").build();
+		final Delay delay = Delay.builder().delay("180100").build();
+		final Delay thinkTime = Delay.builder().delay("3790100").isThinkTime(true).build();
 
 		final Container container = Container.builder().
-				addElements(delay).build();
+				addElements(delay, thinkTime).build();
 
 		final UserPath userPath = UserPath.builder()
 				.name("user_path_1")

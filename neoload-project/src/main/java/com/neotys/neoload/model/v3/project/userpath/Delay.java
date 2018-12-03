@@ -17,6 +17,7 @@ import org.immutables.value.Value;
 public interface Delay extends Element {
 	String DEFAULT_NAME = "#delay#";
 	String DELAY = "delay";
+	String THINK_TIME = "think_time";
 
 	@JsonProperty(NAME)
 	@RequiredCheck(groups={NeoLoad.class})
@@ -29,6 +30,8 @@ public interface Delay extends Element {
 	@JsonProperty(DELAY)
 	@RequiredCheck(groups = {NeoLoad.class})
 	String getDelay();
+
+	boolean isThinkTime();
 
 	class Builder extends ImmutableDelay.Builder {}
 	static Builder builder() {
