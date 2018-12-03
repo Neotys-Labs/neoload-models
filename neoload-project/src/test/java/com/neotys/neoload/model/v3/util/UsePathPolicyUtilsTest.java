@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class UsePathPolicyUtilsTest {
 		);
 		newUserPathPolicies = UserPathPolicyUtils.computeDistributions(userPathPolicies);
 		assertEquals(1, newUserPathPolicies.size());
-		assertEquals(100.0, newUserPathPolicies.get(0).getDistribution().doubleValue(), 0.0);
+		assertEquals(Optional.ofNullable(new Double(100.0)), newUserPathPolicies.get(0).getDistribution());
 		userPathPolicies = Arrays.asList(
 				UserPathPolicy.builder()
 					.name("UserPath1")
@@ -42,8 +43,8 @@ public class UsePathPolicyUtilsTest {
 		);
 		newUserPathPolicies = UserPathPolicyUtils.computeDistributions(userPathPolicies);
 		assertEquals(2, newUserPathPolicies.size());
-		assertEquals(50.0, newUserPathPolicies.get(0).getDistribution().doubleValue(), 0.0);
-		assertEquals(50.0, newUserPathPolicies.get(1).getDistribution().doubleValue(), 0.0);
+		assertEquals(Optional.ofNullable(new Double(50.0)), newUserPathPolicies.get(0).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(50.0)), newUserPathPolicies.get(1).getDistribution());
 		userPathPolicies = Arrays.asList(
 				UserPathPolicy.builder()
 					.name("UserPath1")
@@ -57,9 +58,9 @@ public class UsePathPolicyUtilsTest {
 		);
 		newUserPathPolicies = UserPathPolicyUtils.computeDistributions(userPathPolicies);
 		assertEquals(3, newUserPathPolicies.size());
-		assertEquals(33.3, newUserPathPolicies.get(0).getDistribution().doubleValue(), 0.0);
-		assertEquals(33.3, newUserPathPolicies.get(1).getDistribution().doubleValue(), 0.0);
-		assertEquals(33.4, newUserPathPolicies.get(2).getDistribution().doubleValue(), 0.0);
+		assertEquals(Optional.ofNullable(new Double(33.3)), newUserPathPolicies.get(0).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(33.3)), newUserPathPolicies.get(1).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(33.4)), newUserPathPolicies.get(2).getDistribution());
 		
 		userPathPolicies = Arrays.asList(
 				UserPathPolicy.builder()
@@ -76,9 +77,9 @@ public class UsePathPolicyUtilsTest {
 		);
 		newUserPathPolicies = UserPathPolicyUtils.computeDistributions(userPathPolicies);
 		assertEquals(3, newUserPathPolicies.size());
-		assertEquals(25.0, newUserPathPolicies.get(0).getDistribution().doubleValue(), 0.0);
-		assertEquals(50.0, newUserPathPolicies.get(1).getDistribution().doubleValue(), 0.0);
-		assertEquals(25.0, newUserPathPolicies.get(2).getDistribution().doubleValue(), 0.0);
+		assertEquals(Optional.ofNullable(new Double(25.0)), newUserPathPolicies.get(0).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(50.0)), newUserPathPolicies.get(1).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(25.0)), newUserPathPolicies.get(2).getDistribution());
 		userPathPolicies = Arrays.asList(
 				UserPathPolicy.builder()
 					.name("UserPath1")
@@ -93,9 +94,9 @@ public class UsePathPolicyUtilsTest {
 		);
 		newUserPathPolicies = UserPathPolicyUtils.computeDistributions(userPathPolicies);
 		assertEquals(3, newUserPathPolicies.size());
-		assertEquals(25.0, newUserPathPolicies.get(0).getDistribution().doubleValue(), 0.0);
-		assertEquals(50.0, newUserPathPolicies.get(1).getDistribution().doubleValue(), 0.0);
-		assertEquals(25.0, newUserPathPolicies.get(2).getDistribution().doubleValue(), 0.0);
+		assertEquals(Optional.ofNullable(new Double(25.0)), newUserPathPolicies.get(0).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(50.0)), newUserPathPolicies.get(1).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(25.0)), newUserPathPolicies.get(2).getDistribution());
 		userPathPolicies = Arrays.asList(
 				UserPathPolicy.builder()
 					.name("UserPath1")
@@ -113,10 +114,10 @@ public class UsePathPolicyUtilsTest {
 		);
 		newUserPathPolicies = UserPathPolicyUtils.computeDistributions(userPathPolicies);
 		assertEquals(4, newUserPathPolicies.size());
-		assertEquals(16.7, newUserPathPolicies.get(0).getDistribution().doubleValue(), 0.0);
-		assertEquals(16.7, newUserPathPolicies.get(1).getDistribution().doubleValue(), 0.0);
-		assertEquals(16.6, newUserPathPolicies.get(2).getDistribution().doubleValue(), 0.0);
-		assertEquals(50.0, newUserPathPolicies.get(3).getDistribution().doubleValue(), 0.0);
+		assertEquals(Optional.ofNullable(new Double(16.7)), newUserPathPolicies.get(0).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(16.7)), newUserPathPolicies.get(1).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(16.6)), newUserPathPolicies.get(2).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(50.0)), newUserPathPolicies.get(3).getDistribution());
 			
 		userPathPolicies = Arrays.asList(
 				UserPathPolicy.builder()
@@ -129,8 +130,8 @@ public class UsePathPolicyUtilsTest {
 		);
 		newUserPathPolicies = UserPathPolicyUtils.computeDistributions(userPathPolicies);
 		assertEquals(2, newUserPathPolicies.size());
-		assertEquals(100.0, newUserPathPolicies.get(0).getDistribution().doubleValue(), 0.0);
-		assertEquals(0.0, newUserPathPolicies.get(1).getDistribution().doubleValue(), 0.0);
+		assertEquals(Optional.ofNullable(new Double(100.0)), newUserPathPolicies.get(0).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(0.0)), newUserPathPolicies.get(1).getDistribution());
 		userPathPolicies = Arrays.asList(
 				UserPathPolicy.builder()
 					.name("UserPath1")
@@ -146,9 +147,9 @@ public class UsePathPolicyUtilsTest {
 		);
 		newUserPathPolicies = UserPathPolicyUtils.computeDistributions(userPathPolicies);
 		assertEquals(3, newUserPathPolicies.size());
-		assertEquals(100.0, newUserPathPolicies.get(0).getDistribution().doubleValue(), 0.0);
-		assertEquals(100.0, newUserPathPolicies.get(1).getDistribution().doubleValue(), 0.0);
-		assertEquals(0.0, newUserPathPolicies.get(2).getDistribution().doubleValue(), 0.0);
+		assertEquals(Optional.ofNullable(new Double(100.0)), newUserPathPolicies.get(0).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(100.0)), newUserPathPolicies.get(1).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(0.0)), newUserPathPolicies.get(2).getDistribution());
 		userPathPolicies = Arrays.asList(
 				UserPathPolicy.builder()
 					.name("UserPath1")
@@ -168,10 +169,10 @@ public class UsePathPolicyUtilsTest {
 		);
 		newUserPathPolicies = UserPathPolicyUtils.computeDistributions(userPathPolicies);
 		assertEquals(4, newUserPathPolicies.size());
-		assertEquals(100.0, newUserPathPolicies.get(0).getDistribution().doubleValue(), 0.0);
-		assertEquals(100.0, newUserPathPolicies.get(1).getDistribution().doubleValue(), 0.0);
-		assertEquals(0.0, newUserPathPolicies.get(2).getDistribution().doubleValue(), 0.0);
-		assertEquals(100.0, newUserPathPolicies.get(3).getDistribution().doubleValue(), 0.0);
+		assertEquals(Optional.ofNullable(new Double(100.0)), newUserPathPolicies.get(0).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(100.0)), newUserPathPolicies.get(1).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(0.0)), newUserPathPolicies.get(2).getDistribution());
+		assertEquals(Optional.ofNullable(new Double(100.0)), newUserPathPolicies.get(3).getDistribution());
 	}
 
 	@Test

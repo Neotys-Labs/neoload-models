@@ -11,7 +11,6 @@ import org.junit.Test;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.project.userpath.Transaction;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath.UserSession;
 
@@ -21,9 +20,10 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         final UserPath userPath = UserPath.builder()
         		.name("MyUserPath")
         		.actions(Container.builder()
-        				.addElements(Transaction.builder()
+        				.name("actions")
+        				.addActions(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())        				
         				.build())
         		.build();
@@ -42,24 +42,27 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         		.description("My User Path 1")
         		.userSession(UserSession.RESET_ON)
         		.init(Container.builder()
+        				.name("init")
         				.description("My Init Container from My User Path 1")
-        				.addElements(Transaction.builder()
-        						.name("MyInitTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        				.addActions(Container.builder()
+        						.name("MyTransaction")
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())
         				.build())
         		.actions(Container.builder()
+        				.name("actions")
         				.description("My Actions Container from My User Path 1")
-        				.addElements(Transaction.builder()
-        						.name("MyActionsTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        				.addActions(Container.builder()
+        						.name("MyTransaction")
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())
         				.build())
         		.end(Container.builder()
+        				.name("end")
         				.description("My End Container from My User Path 1")
-        				.addElements(Transaction.builder()
-        						.name("MyEndTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        				.addActions(Container.builder()
+        						.name("MyTransaction")
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())
         				.build())
                 .build();
@@ -69,24 +72,27 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         		.description("My User Path 2")
         		.userSession(UserSession.RESET_OFF)
         		.init(Container.builder()
+        				.name("init")
         				.description("My Init Container from My User Path 2")
-        				.addElements(Transaction.builder()
-        						.name("MyInitTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        				.addActions(Container.builder()
+        						.name("MyTransaction")
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())
         				.build())
         		.actions(Container.builder()
+        				.name("actions")
         				.description("My Actions Container from My User Path 2")
-           				.addElements(Transaction.builder()
-        						.name("MyActionsTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+           				.addActions(Container.builder()
+        						.name("MyTransaction")
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())
         				.build())
         		.end(Container.builder()
+        				.name("end")
         				.description("My End Container from My User Path 2")
-        				.addElements(Transaction.builder()
-        						.name("MyEndTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        				.addActions(Container.builder()
+        						.name("MyTransaction")
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())
         				.build())
                 .build();
@@ -96,24 +102,27 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         		.description("My User Path 3")
         		.userSession(UserSession.RESET_AUTO)
         		.init(Container.builder()
+        				.name("init")
         				.description("My Init Container from My User Path 3")
-        				.addElements(Transaction.builder()
-        						.name("MyInitTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        				.addActions(Container.builder()
+        						.name("MyTransaction")
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())
         				.build())
         		.actions(Container.builder()
+        				.name("actions")
         				.description("My Actions Container from My User Path 3")
-           				.addElements(Transaction.builder()
-        						.name("MyActionsTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+           				.addActions(Container.builder()
+        						.name("MyTransaction")
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())
          				.build())
         		.end(Container.builder()
+        				.name("end")
         				.description("My End Container from My User Path 3")
-        				.addElements(Transaction.builder()
-        						.name("MyEndTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        				.addActions(Container.builder()
+        						.name("MyTransaction")
+        						.addActions(Delay.builder().delay("1000").build())
         						.build())
         				.build())
                 .build();
@@ -136,14 +145,14 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 		read("test-read-userpaths-only-required", expectedProject);
 	}
 
-//	@Test
-//	public void readUserPathsRequiredAndOptional() throws IOException, URISyntaxException {
-//		final Project expectedProject = getUserPathsRequiredAndOptional();
-//		assertNotNull(expectedProject);
-//		
-//		read("test-read-write-userpaths-required-and-optional", expectedProject);
-//	}
-//
+	@Test
+	public void readUserPathsRequiredAndOptional() throws IOException, URISyntaxException {
+		final Project expectedProject = getUserPathsRequiredAndOptional();
+		assertNotNull(expectedProject);
+		
+		read("test-read-write-userpaths-required-and-optional", expectedProject);
+	}
+
 //	@Test
 //	public void writeUserPathsOnlyRequired() throws IOException, URISyntaxException {
 //		final Project expectedProject = getUserPathsOnlyRequired();

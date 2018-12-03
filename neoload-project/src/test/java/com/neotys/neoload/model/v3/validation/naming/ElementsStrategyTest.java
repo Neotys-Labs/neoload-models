@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.ContainerElement;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Transaction;
 
 
 public class ElementsStrategyTest {
@@ -19,7 +18,5 @@ public class ElementsStrategyTest {
 		assertEquals(ContainerElement.DO, strategy.apply(NodeImpl.setPropertyValue(NodeImpl.createBeanNode(null), null)));
 
 		assertEquals(ContainerElement.DO, strategy.apply(NodeImpl.setPropertyValue(NodeImpl.createBeanNode(null), Container.builder().build())));
-		assertEquals(ContainerElement.DO, strategy.apply(NodeImpl.setPropertyValue(NodeImpl.createBeanNode(null), Transaction.builder().build())));
-
 	}
 }

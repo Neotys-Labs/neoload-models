@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 
@@ -22,9 +23,9 @@ public class UserPathPolicyUtils {
 		// Compute the total of distributions 
 		// Check if a distribution is null
 		for (final UserPathPolicy userPathPolicy : userPathPolicies) {
-			final Double distribution = userPathPolicy.getDistribution();
-			if (distribution != null) {
-				totalOfDistributions = totalOfDistributions + distribution;
+			final Optional<Double> distribution = userPathPolicy.getDistribution();
+			if (distribution.isPresent()) {
+				totalOfDistributions = totalOfDistributions + distribution.get();
 			}
 			else {
 				countOfDistributionsNotDefined = countOfDistributionsNotDefined + 1;
@@ -41,8 +42,8 @@ public class UserPathPolicyUtils {
 		int indexOfComputedDistributions = 0;
 		final List<UserPathPolicy> newUserPathPolicies = new ArrayList<>(countOfDistributions);
 		for (final UserPathPolicy userPathPolicy : userPathPolicies) {
-			final Double distribution = userPathPolicy.getDistribution();
-			if (distribution != null) {
+			final Optional<Double> distribution = userPathPolicy.getDistribution();
+			if (distribution.isPresent()) {
 				newUserPathPolicies.add(userPathPolicy);
 			}
 			else {

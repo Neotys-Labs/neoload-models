@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.validation.Valid;
@@ -12,13 +13,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.neotys.neoload.model.v3.binding.serializer.UserPathDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, UserPath.USER_SESSION, UserPath.INIT, UserPath.ACTIONS, UserPath.END})
-@JsonDeserialize(as = ImmutableUserPath.class)
+@JsonDeserialize(using = UserPathDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface UserPath extends Element {
@@ -50,7 +52,7 @@ public interface UserPath extends Element {
 	
 	@JsonProperty(INIT)
 	@Valid
-	Container getInit();
+	Optional<Container> getInit();
 	
 	@JsonProperty(ACTIONS)
 	@RequiredCheck(groups={NeoLoad.class})
@@ -59,11 +61,11 @@ public interface UserPath extends Element {
 	
 	@JsonProperty(END)
 	@Valid	
-	Container getEnd();
+	Optional<Container> getEnd();
 
 	@Override
 	default Stream<Element> flattened() {
-		return Stream.of(getInit(), getActions(), getEnd()).flatMap(Container::flattened);
+		return Stream.of(getInit().orElse(null), getActions(), getEnd().orElse(null)).flatMap(Container::flattened);
 	}
 
 	class Builder extends ImmutableUserPath.Builder {}

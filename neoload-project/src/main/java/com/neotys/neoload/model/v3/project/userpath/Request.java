@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
@@ -18,7 +17,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface Request extends Element {
+public interface Request extends Action {
 	public static final String URL = "url";
 
 	public static final String DEFAULT_NAME = "#request#";

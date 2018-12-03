@@ -15,6 +15,14 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 public class ContainerTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
+	private static final String CONSTRAINTS_CONTAINER_NAME_BLANK_AND_NULL;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
+		CONSTRAINTS_CONTAINER_NAME_BLANK_AND_NULL = sb.toString();
+	}
+
 	private static final String CONSTRAINTS_CONTAINER_NAME_BLANK;
 	static {
 		final StringBuilder sb = new StringBuilder();
@@ -36,31 +44,31 @@ public class ContainerTest {
 		final Validator validator = new Validator();
 		
 		Container container = Container.builder()
-				.name("")
-				.addElements(Request.builder().url("url").build())
+				.addActions(Request.builder().url("url").build())
 				.build();
 		Validation validation = validator.validate(container, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_CONTAINER_NAME_BLANK_AND_NULL, validation.getMessage().get());	
+
+		container = Container.builder()
+				.name("")
+				.addActions(Request.builder().url("url").build())
+				.build();
+		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_CONTAINER_NAME_BLANK, validation.getMessage().get());	
 
 		container = Container.builder()
 				.name(" 	\r\t\n")
-				.addElements(Request.builder().url("url").build())
+				.addActions(Request.builder().url("url").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_CONTAINER_NAME_BLANK, validation.getMessage().get());	
 
 		container = Container.builder()
-				.addElements(Request.builder().url("url").build())
-				.build();
-		validation = validator.validate(container, NeoLoad.class);
-		assertTrue(validation.isValid());
-		assertFalse(validation.getMessage().isPresent());	
-
-		container = Container.builder()
-				.name("actions")
-				.addElements(Request.builder().url("url").build())
+				.name("container")
+				.addActions(Request.builder().url("url").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -72,13 +80,15 @@ public class ContainerTest {
 		final Validator validator = new Validator();
 		
 		Container container = Container.builder()
+				.name("container")
 				.build();
 		Validation validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_CONTAINER_ELEMENTS, validation.getMessage().get());	
 
 		container = Container.builder()
-				.addElements(Request.builder().url("url").build())
+				.name("container")
+				.addActions(Request.builder().url("url").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());

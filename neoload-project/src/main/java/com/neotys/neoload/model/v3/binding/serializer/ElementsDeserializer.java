@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
+import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,51 +13,50 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationConverter;
-import com.neotys.neoload.model.v3.project.Element;
+import com.neotys.neoload.model.v3.project.userpath.Action;
+import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
-import com.neotys.neoload.model.v3.project.userpath.Transaction;
 
-import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
-
-public class ElementsDeserializer extends StdDeserializer<List<Element>> {
+public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 	private static final long serialVersionUID = -5696608939252369276L;
+
+	private static final String TRANSACTION = "transaction";
 
 	public ElementsDeserializer() {
 		super(List.class);
 	}
 
 	@Override
-	public List<Element> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-		final List<Element> elements = new ArrayList<>();
+	public List<Action> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+		final List<Action> actions = new ArrayList<>();
 		
 		final ObjectCodec codec = jsonParser.getCodec();
 		final JsonNode jsonNode = codec.readTree(jsonParser);
 
 		final Iterator<JsonNode> iterator = jsonNode.elements();
 		for (;iterator.hasNext();) {
-			final JsonNode elementNode = iterator.next();
+			final JsonNode actionNode = iterator.next();
 			
-			Element element = null; 
-			if (elementNode.has(Transaction.TRANSACTION)) {
-				final JsonNode transactionNode = elementNode.get(Transaction.TRANSACTION);
-				element = codec.treeToValue(transactionNode, Transaction.class);
-			} else if (elementNode.has(Delay.DELAY)) {
-				final String delayValue = elementNode.get(Delay.DELAY).asText();
+			Action action = null; 
+			if (actionNode.has(TRANSACTION)) {
+				final JsonNode transactionNode = actionNode.get(TRANSACTION);
+				action = codec.treeToValue(transactionNode, Container.class);
+			} else if (actionNode.has(Delay.DELAY)) {
+				final String delayValue = actionNode.get(Delay.DELAY).asText();
 				final Long delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
-				element = Delay.builder().delay(String.valueOf(delay)).build();
-			} else if (elementNode.has(ThinkTime.THINK_TIME)) {
-				final String thinkTimeValue = elementNode.get(ThinkTime.THINK_TIME).asText();
+				action = Delay.builder().delay(String.valueOf(delay)).build();
+			} else if (actionNode.has(ThinkTime.THINK_TIME)) {
+				final String thinkTimeValue = actionNode.get(ThinkTime.THINK_TIME).asText();
 				final Long thinkTime = STRING_TO_TIME_DURATION_WITH_MS.convert(thinkTimeValue);
-				element = ThinkTime.builder().thinkTime(String.valueOf(thinkTime)).build();
+				action = ThinkTime.builder().thinkTime(String.valueOf(thinkTime)).build();
 			}
-
-			if (element != null) {
-				elements.add(element);
+			
+			if (action != null) {
+				actions.add(action);
 			}
 		}
 	
-		return elements;
+		return actions;
 	}
 }
