@@ -24,7 +24,7 @@ public class IODelayTest extends AbstractIOElementsTest {
 	}
 
 	private Project buildProjectContainingDelay() {
-		final Delay delay = Delay.builder().delay("10s").build();
+		final Delay delay = Delay.builder().delay("3790100").build();
 
 		final Container container = Container.builder().
 				addElements(delay).build();
