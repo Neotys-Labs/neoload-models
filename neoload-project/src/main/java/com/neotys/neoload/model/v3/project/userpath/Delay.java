@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
+import javax.validation.constraints.Pattern;
+
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({Delay.DELAY})
 @JsonDeserialize(as = ImmutableDelay.class)
@@ -28,6 +30,7 @@ public interface Delay extends Action {
 
 	@JsonProperty(DELAY)
 	@RequiredCheck(groups = {NeoLoad.class})
+	@Pattern(regexp = "((((\\d+)(h))?((\\d+)(m))?((\\d+)(s))?((\\d+)(ms))?)|(\\d+))")
 	String getDelay();
 
 	class Builder extends ImmutableDelay.Builder {}

@@ -14,7 +14,7 @@ final class TimeDurationWithMsHelper {
 	private static final String SECONDS = "s";
 	private static final String MILLISECONDS = "ms";
 
-	private static final Pattern TIME_PATTERN = Pattern.compile("((\\d+)(h))?((\\d+)(m))?((\\d+)(s))?((\\d+)(ms))?");
+	private static final Pattern TIME_PATTERN = Pattern.compile("((((\\d+)(h))?((\\d+)(m))?((\\d+)(s))?((\\d+)(ms))?)|(\\d+))");
 
 	private TimeDurationWithMsHelper() {
 		super();
@@ -49,25 +49,38 @@ final class TimeDurationWithMsHelper {
 		return sb.toString();
 	}
 
-	protected static Long convertToLong(final String input) {
+	/**
+	 * Convert a string to millisecond
+	 * 2h 3m 4s 5ms 	-> 7384005
+	 * 3m 100ms 		-> 18100
+	 * 1000				-> 1000
+	 * @param input
+	 * @return
+	 */
+	protected static String convertToDuration(final String input) {
 		if (isNullOrEmpty(input)) {
-			return 0L;
+			return "0";
 		}
 		final String inputWithoutWhitespace = input.replaceAll("\\s+", "");
 		final Matcher matcher = TIME_PATTERN.matcher(inputWithoutWhitespace);
-		if (!matcher.matches() || (matcher.groupCount() != 12)) {
-			return 0L;
+		if (!matcher.matches()) {
+			return "0";
 		}
 
-		int hourNumber = extractNumberFromGroup(matcher.group(2));
-		final int minuteNumber = extractNumberFromGroup(matcher.group(5));
-		final int secondNumber = extractNumberFromGroup(matcher.group(8));
-		final int milliSecondNumber = extractNumberFromGroup(matcher.group(11));
+		if ((matcher.groupCount() == 15 && matcher.group(15) != null)) {
+			return input;
+		}
 
-		return Duration.ofHours(hourNumber).toMillis()
+		int hourNumber = extractNumberFromGroup(matcher.group(4));
+		final int minuteNumber = extractNumberFromGroup(matcher.group(7));
+		final int secondNumber = extractNumberFromGroup(matcher.group(10));
+		final int milliSecondNumber = extractNumberFromGroup(matcher.group(13));
+
+		return String.valueOf(
+				Duration.ofHours(hourNumber).toMillis()
 				+ Duration.ofMinutes(minuteNumber).toMillis()
 				+ Duration.ofSeconds(secondNumber).toMillis()
-				+ Duration.ofMillis(milliSecondNumber).toMillis();
+				+ Duration.ofMillis(milliSecondNumber).toMillis());
 	}
 
 	private static int extractNumberFromGroup(final String group) {

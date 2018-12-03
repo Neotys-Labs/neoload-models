@@ -3,8 +3,10 @@ package com.neotys.neoload.model.v3.binding.converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.google.common.base.Strings;
 
-public final class StringToTimeDurationWithMsConverter extends StdConverter<String, Long> {
-	private static final Long ERROR_VALUE = 0L;
+import static com.google.common.base.Strings.isNullOrEmpty;
+
+public final class StringToTimeDurationWithMsConverter extends StdConverter<String, String> {
+	private static final String ERROR_VALUE = "0";
 
 	public static final StringToTimeDurationWithMsConverter STRING_TO_TIME_DURATION_WITH_MS = new StringToTimeDurationWithMsConverter();
 
@@ -13,11 +15,16 @@ public final class StringToTimeDurationWithMsConverter extends StdConverter<Stri
 	}
 
 	@Override
-	public Long convert(final String input) {
-		if (Strings.isNullOrEmpty(input)) {
+	public String convert(final String input) {
+		if (isNullOrEmpty(input)) {
 			return ERROR_VALUE;
 		}
 
-		return TimeDurationWithMsHelper.convertToLong(input);
+		if (input.startsWith("${") && input.endsWith("}")) {
+			//variable
+			return input;
+		}
+
+		return TimeDurationWithMsHelper.convertToDuration(input);
 	}
 }
