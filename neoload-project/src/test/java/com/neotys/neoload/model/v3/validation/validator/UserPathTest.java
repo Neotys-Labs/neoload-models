@@ -69,6 +69,7 @@ public class UserPathTest {
 		userPath = UserPath.builder()
 				.name("")
 				.actions(Container.builder()
+						.name("actions")
 						.addElements(Request.builder().url("url").build())
 						.build())
 				.build();
@@ -79,6 +80,7 @@ public class UserPathTest {
 		userPath = UserPath.builder()
 				.name(" 	\r\t\n")
 				.actions(Container.builder()
+						.name("actions")
 						.addElements(Request.builder().url("url").build())
 						.build())
 				.build();
@@ -89,6 +91,7 @@ public class UserPathTest {
 		userPath = UserPath.builder()
 				.name("MyUserPath")
 				.actions(Container.builder()
+						.name("actions")
 						.addElements(Request.builder().url("url").build())
 						.build())
 				.build();

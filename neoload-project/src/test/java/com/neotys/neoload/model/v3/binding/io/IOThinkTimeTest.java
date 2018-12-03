@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 
 import org.junit.Test;
 
+import com.fasterxml.jackson.core.sym.Name;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
@@ -27,8 +28,10 @@ public class IOThinkTimeTest extends AbstractIOElementsTest {
 	private Project buildProjectContainingDelay() {
 		final ThinkTime thinkTime = ThinkTime.builder().thinkTime("3790100").build();
 
-		final Container container = Container.builder().
-				addElements(thinkTime).build();
+		final Container container = Container.builder()
+				.name("actions")
+				.addElements(thinkTime)
+				.build();
 
 		final UserPath userPath = UserPath.builder()
 				.name("user_path_1")

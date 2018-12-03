@@ -14,27 +14,22 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
-import javax.validation.OverridesAttribute;
 import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
-import com.neotys.neoload.model.v3.validation.constraints.RangeCheck.List;
+import com.neotys.neoload.model.v3.validation.constraintvalidators.RangeValidator;
 
 
 
-@Constraint(validatedBy = { })
-@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
-@Repeatable(List.class)
-@Min(0)
-@Max(Long.MAX_VALUE)
+@Repeatable(RangeCheck.List.class)
+@Constraint(validatedBy = { RangeValidator.class })
 @ReportAsSingleViolation
 public @interface RangeCheck {
-	@OverridesAttribute(constraint = Min.class, name = "value") long min() default 0;
+	long min() default 0;
 
-	@OverridesAttribute(constraint = Max.class, name = "value") long max() default Long.MAX_VALUE;
+	long max() default Long.MAX_VALUE;
 
 	String message() default "{com.neotys.neoload.model.v3.validation.constraints.RangeCheck.message}";
 
@@ -45,7 +40,7 @@ public @interface RangeCheck {
 	/**
 	 * Defines several {@code @Range} annotations on the same element.
 	 */
-	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
+	@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 	@Retention(RUNTIME)
 	@Documented
 	public @interface List {
