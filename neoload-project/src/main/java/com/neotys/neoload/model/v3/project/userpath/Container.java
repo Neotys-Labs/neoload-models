@@ -29,7 +29,7 @@ public interface Container extends Action {
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	@JsonDeserialize(using = ElementsDeserializer.class)
-	List<Action> getActions();
+	List<Action> getElements();
 
 	class Builder extends ImmutableContainer.Builder {}
 	static Builder builder() {

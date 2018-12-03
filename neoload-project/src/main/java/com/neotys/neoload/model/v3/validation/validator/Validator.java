@@ -29,7 +29,7 @@ public final class Validator {
 	private static final Map<String, PropertyNamingStrategy> PROPERTY_NAMING_STRATEGIES;
 	static {
 		PROPERTY_NAMING_STRATEGIES = new HashMap<>();
-		PROPERTY_NAMING_STRATEGIES.put("elements", new ElementsStrategy());
+		PROPERTY_NAMING_STRATEGIES.put("actions", new ElementsStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("loadPolicy", new LoadPolicyStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("rampup", new RampupStrategy());
 	}

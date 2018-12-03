@@ -58,7 +58,8 @@ public class UserPathTest {
 		
 		UserPath userPath = UserPath.builder()
 				.actions(Container.builder()
-						.addActions(Request.builder().url("url").build())
+						.name("actions")
+						.addElements(Request.builder().url("url").build())
 						.build())
 				.build();
 		Validation validation = validator.validate(userPath, NeoLoad.class);
@@ -68,7 +69,7 @@ public class UserPathTest {
 		userPath = UserPath.builder()
 				.name("")
 				.actions(Container.builder()
-						.addActions(Request.builder().url("url").build())
+						.addElements(Request.builder().url("url").build())
 						.build())
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -78,7 +79,7 @@ public class UserPathTest {
 		userPath = UserPath.builder()
 				.name(" 	\r\t\n")
 				.actions(Container.builder()
-						.addActions(Request.builder().url("url").build())
+						.addElements(Request.builder().url("url").build())
 						.build())
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -88,7 +89,7 @@ public class UserPathTest {
 		userPath = UserPath.builder()
 				.name("MyUserPath")
 				.actions(Container.builder()
-						.addActions(Request.builder().url("url").build())
+						.addElements(Request.builder().url("url").build())
 						.build())
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -110,7 +111,8 @@ public class UserPathTest {
 		userPath = UserPath.builder()
 				.name("MyUserPath")
 				.actions(Container.builder()
-						.addActions(Request.builder().url("url").build())
+						.name("actions")
+						.addElements(Request.builder().url("url").build())
 						.build())
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -127,6 +129,7 @@ public class UserPathTest {
 		UserPath userPath2 = UserPath.builder()
 				.name("")
 				.actions(Container.builder()
+						.name("actions")
 						.build())
 				.build();
 

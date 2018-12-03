@@ -28,7 +28,7 @@ public class IOThinkTimeTest extends AbstractIOElementsTest {
 		final ThinkTime thinkTime = ThinkTime.builder().thinkTime("3790100").build();
 
 		final Container container = Container.builder().
-				addActions(thinkTime).build();
+				addElements(thinkTime).build();
 
 		final UserPath userPath = UserPath.builder()
 				.name("user_path_1")

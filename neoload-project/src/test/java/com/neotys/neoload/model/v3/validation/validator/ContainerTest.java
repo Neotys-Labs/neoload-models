@@ -44,7 +44,7 @@ public class ContainerTest {
 		final Validator validator = new Validator();
 		
 		Container container = Container.builder()
-				.addActions(Request.builder().url("url").build())
+				.addElements(Request.builder().url("url").build())
 				.build();
 		Validation validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -52,7 +52,7 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name("")
-				.addActions(Request.builder().url("url").build())
+				.addElements(Request.builder().url("url").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -60,7 +60,7 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name(" 	\r\t\n")
-				.addActions(Request.builder().url("url").build())
+				.addElements(Request.builder().url("url").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -68,7 +68,7 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name("container")
-				.addActions(Request.builder().url("url").build())
+				.addElements(Request.builder().url("url").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -88,7 +88,7 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name("container")
-				.addActions(Request.builder().url("url").build())
+				.addElements(Request.builder().url("url").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());

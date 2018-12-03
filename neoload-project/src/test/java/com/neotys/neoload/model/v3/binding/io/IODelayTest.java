@@ -28,7 +28,7 @@ public class IODelayTest extends AbstractIOElementsTest {
 		final Delay delay = Delay.builder().delay("180100").build();
 
 		final Container container = Container.builder().
-				addActions(delay).build();
+				addElements(delay).build();
 
 		final UserPath userPath = UserPath.builder()
 				.name("user_path_1")
