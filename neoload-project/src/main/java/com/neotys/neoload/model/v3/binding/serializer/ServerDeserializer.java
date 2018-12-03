@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,6 +21,7 @@ import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentica
 import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication.NTLM_AUTHENTICATION;
 import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTPS_PORT;
 import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTP_PORT;
+import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_SCHEME;
 import static com.neotys.neoload.model.v3.project.server.Server.HOST;
 import static com.neotys.neoload.model.v3.project.server.Server.NAME;
 import static com.neotys.neoload.model.v3.project.server.Server.PORT;
@@ -40,7 +42,7 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		checkMandatoryFieldsForServer(jsonNode);
 
 		final String name = jsonNode.get(NAME).asText();
-		final Server.Scheme scheme = getScheme(jsonNode);
+		final Server.Scheme scheme = getScheme(codec, jsonNode);
 		final String host = jsonNode.findValue(HOST).asText();
 		final long port = getPort(jsonNode, scheme);
 
@@ -69,15 +71,10 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		return scheme == Server.Scheme.HTTPS ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
 	}
 
-	private Server.Scheme getScheme(final JsonNode jsonNode) {
-		Server.Scheme scheme = Server.Scheme.HTTP;
-		final JsonNode jsonScheme = jsonNode.get(SCHEME);
-		if (jsonScheme != null) {
-			try {
-				scheme = Server.Scheme.valueOf(jsonScheme.asText().toUpperCase());
-			} catch (IllegalArgumentException e) {
-				//log
-			}
+	private Server.Scheme getScheme(final ObjectCodec codec, final JsonNode jsonNode) throws JsonProcessingException {
+		Server.Scheme scheme = DeserializerHelper.asObject(codec, jsonNode, SCHEME, Server.Scheme.class);
+		if (scheme == null) {
+			scheme = DEFAULT_SCHEME;
 		}
 		return scheme;
 	}

@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.project.server;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.binding.serializer.ServerDeserializer;
@@ -28,11 +29,15 @@ public interface Server extends Element {
 	String SCHEME = "scheme";
 
 	Scheme DEFAULT_SCHEME = Scheme.HTTP;
+	String HTTP_SCHEME_VALUE = "http";
+	String HTTPS_SCHEME_VALUE = "https";
 	long DEFAULT_HTTP_PORT = 80;
 	long DEFAULT_HTTPS_PORT = 443;
 
 	enum Scheme {
+		@JsonProperty(Server.HTTP_SCHEME_VALUE)
 		HTTP,
+		@JsonProperty(Server.HTTPS_SCHEME_VALUE)
 		HTTPS
 	}
 
