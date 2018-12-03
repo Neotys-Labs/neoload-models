@@ -6,7 +6,7 @@
       "actions": {
         "do": [
           {
-            "delay": "3m 100ms"
+            "think_time": "1h 3m 10s 100ms"
           }
         ]
       }

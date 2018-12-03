@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationConverter;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
 import com.neotys.neoload.model.v3.project.userpath.Transaction;
 
 import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
@@ -40,12 +41,14 @@ public class ElementsDeserializer extends StdDeserializer<List<Element>> {
 			if (elementNode.has(Transaction.TRANSACTION)) {
 				final JsonNode transactionNode = elementNode.get(Transaction.TRANSACTION);
 				element = codec.treeToValue(transactionNode, Transaction.class);
-			}
-			else if (elementNode.has(Delay.DELAY) || elementNode.has(Delay.THINK_TIME)) {
-				final boolean isThinkTime = elementNode.has(Delay.THINK_TIME);
-				final String delayValue = elementNode.get(isThinkTime ? Delay.THINK_TIME : Delay.DELAY).asText();
+			} else if (elementNode.has(Delay.DELAY)) {
+				final String delayValue = elementNode.get(Delay.DELAY).asText();
 				final Long delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
-				element = Delay.builder().delay(String.valueOf(delay)).isThinkTime(isThinkTime).build();
+				element = Delay.builder().delay(String.valueOf(delay)).build();
+			} else if (elementNode.has(ThinkTime.THINK_TIME)) {
+				final String thinkTimeValue = elementNode.get(ThinkTime.THINK_TIME).asText();
+				final Long thinkTime = STRING_TO_TIME_DURATION_WITH_MS.convert(thinkTimeValue);
+				element = ThinkTime.builder().thinkTime(String.valueOf(thinkTime)).build();
 			}
 
 			if (element != null) {

@@ -10,13 +10,13 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({Delay.DELAY})
-@JsonDeserialize(as = ImmutableDelay.class)
+@JsonPropertyOrder({ThinkTime.THINK_TIME})
+@JsonDeserialize(as = ImmutableThinkTime.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface Delay extends Element {
-	String DEFAULT_NAME = "#delay#";
-	String DELAY = "delay";
+public interface ThinkTime extends Element {
+	String DEFAULT_NAME = "#thinktime#";
+	String THINK_TIME = "think_time";
 
 	@JsonProperty(NAME)
 	@RequiredCheck(groups={NeoLoad.class})
@@ -26,11 +26,11 @@ public interface Delay extends Element {
 		return DEFAULT_NAME;
 	}
 
-	@JsonProperty(DELAY)
+	@JsonProperty(THINK_TIME)
 	@RequiredCheck(groups = {NeoLoad.class})
-	String getDelay();
+	String getThinkTime();
 
-	class Builder extends ImmutableDelay.Builder {}
+	class Builder extends ImmutableThinkTime.Builder {}
 	static Builder builder() {
 		return new Builder();
 	}

@@ -4,6 +4,7 @@ package com.neotys.neoload.model.v3.binding.io;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import org.junit.Test;
 
@@ -13,21 +14,21 @@ import java.net.URISyntaxException;
 import static junit.framework.TestCase.assertNotNull;
 
 
-public class IODelayTest extends AbstractIOElementsTest {
+public class IOThinkTimeTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readServerOnlyRequired() throws IOException, URISyntaxException {
 		final Project expectedProject = buildProjectContainingDelay();
 		assertNotNull(expectedProject);
 
-		read("test-delay-only-required", expectedProject);
+		read("test-think-time-only-required", expectedProject);
 	}
 
 	private Project buildProjectContainingDelay() {
-		final Delay delay = Delay.builder().delay("180100").build();
+		final ThinkTime thinkTime = ThinkTime.builder().thinkTime("3790100").build();
 
 		final Container container = Container.builder().
-				addElements(delay).build();
+				addElements(thinkTime).build();
 
 		final UserPath userPath = UserPath.builder()
 				.name("user_path_1")
