@@ -2,13 +2,14 @@ package com.neotys.neoload.model.v3.binding.io;
 
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.variable.ImmutableConstantVariable;
-import com.neotys.neoload.model.v3.project.variable.Variable;
+import com.neotys.neoload.model.v3.project.variable.FileVariable;
+import com.neotys.neoload.model.v3.project.variable.ImmutableFileVariable;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static junit.framework.TestCase.assertNotNull;
 
 
@@ -23,14 +24,23 @@ public class IOVariableTest extends AbstractIOElementsTest {
 	}
 
 	private Project buildProjectContainingVariable() {
-		final Variable variable = ImmutableConstantVariable.builder()
-				.name("variable_name")
-				.value("variable_value")
-				.description("variable description")
+		final FileVariable fileVariable = ImmutableFileVariable.builder()
+				.name("cities_file")
+				.description("cities variable file description")
+				.columnNames(newArrayList("City", "Country", "Population", "Longitude", "Latitude"))
+				.isFirstLineColumnNames(false)
+				.startFromLine(5)
+				.delimiter(";")
+				.path("data/list_of_cities.csv")
+				.changePolicy(FileVariable.ChangePolicy.EACH_USER)
+				.scope(FileVariable.Scope.UNIQUE)
+				.order(FileVariable.Order.SEQUENTIAL)
+				.outOfValue(FileVariable.OutOfValue.STOP)
 				.build();
+
 		return Project.builder()
 				.name("MyProject")
-				.addVariables(variable)
+				.addVariables(fileVariable)
 				.build();
 	}
 }

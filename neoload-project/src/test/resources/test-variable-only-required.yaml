@@ -1,6 +1,14 @@
 name: MyProject
 variables:
-- constant:
-    name: variable_name
-    value: variable_value
-    description: variable description
+- file:
+    name: cities_file
+    description: cities variable file description
+    column_names: ["City", "Country", "Population", "Longitude", "Latitude"]
+    is_first_line_column_names: false
+    start_from_line: 5
+    delimiter: ";"
+    path: data/list_of_cities.csv
+    change_policy: each_user
+    scope: unique
+    order: sequential
+    out_of_value: stop_test
