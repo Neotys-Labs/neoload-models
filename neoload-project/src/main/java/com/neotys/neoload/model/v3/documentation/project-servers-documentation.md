@@ -21,7 +21,7 @@ The server settings are centralized, which means the target server for the test 
 | scheme | The scheme of the server. The available values are "http" and "https". The default value is http.    | Optional          |
 | basic-authentication | The Basic Authentication used to authenticate to the server.                    | Optional          |
 | ntlm-authentication | The NTLM Authentication used to authenticate to the server.                     | Optional          |
-| negociate-authentication | The Negociate Authentication used to authenticate to the server.           | Optional          |
+| negotiate-authentication | The Negotiate Authentication used to authenticate to the server.           | Optional          |
 
 ### basic-authentication
 | Name        | Description                                                     | Required/Optional |
@@ -37,7 +37,7 @@ The server settings are centralized, which means the target server for the test 
 | password    | The password of user account used to authenticate to the server.                                                   | Required          |
 | domain      | The domain.                                                     | Optional          |
 
-### negociate-authentication
+### negotiate-authentication
 | Name        | Description                                                     | Required/Optional |
 | ----------- | --------------------------------------------------------------- | ----------------- |
 | login       | The login of user account used to authenticate to the server.                                         | Required          |

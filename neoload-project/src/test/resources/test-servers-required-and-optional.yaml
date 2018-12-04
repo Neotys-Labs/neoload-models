@@ -12,7 +12,7 @@ servers:
   host: mypc2.intranet.neotys.com
   port: 81
   scheme: http
-  negociate_authentication:
+  negotiate_authentication:
     login: neotysusernego
     password: admin@adminnego
     domain: domain-valuenego

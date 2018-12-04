@@ -12,11 +12,11 @@ import org.immutables.value.Value.Style.ValidationMethod;
 import java.util.Optional;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonDeserialize(as = ImmutableNegociateAuthentication.class)
-@JsonPropertyOrder({LoginPasswordAuthentication.LOGIN, LoginPasswordAuthentication.PASSWORD, NegociateAuthentication.DOMAIN})
+@JsonDeserialize(as = ImmutableNegotiateAuthentication.class)
+@JsonPropertyOrder({LoginPasswordAuthentication.LOGIN, LoginPasswordAuthentication.PASSWORD, NegotiateAuthentication.DOMAIN})
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface NegociateAuthentication extends LoginPasswordAuthentication {
+public interface NegotiateAuthentication extends LoginPasswordAuthentication {
 
 	String DOMAIN = "domain";
 
