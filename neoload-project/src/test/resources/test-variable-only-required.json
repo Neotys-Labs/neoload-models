@@ -1,0 +1,12 @@
+{
+  "name": "MyProject",
+  "variables": [
+    {
+      "constant": {
+        "name": "variable_name",
+        "value": "variable_value",
+        "description": "variable description"
+      }
+    }
+  ]
+}
