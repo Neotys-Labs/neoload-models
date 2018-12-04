@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
+import javax.validation.constraints.Pattern;
+
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({ThinkTime.THINK_TIME})
 @JsonDeserialize(as = ImmutableThinkTime.class)
@@ -28,6 +30,7 @@ public interface ThinkTime extends Action {
 
 	@JsonProperty(THINK_TIME)
 	@RequiredCheck(groups = {NeoLoad.class})
+	@Pattern(regexp = "((((\\d+)(h\\s*))?((\\d+)(m\\s*))?((\\d+)(s\\s*))?((\\d+)(ms\\s*))?)|(\\d+))")
 	String getThinkTime();
 
 	class Builder extends ImmutableThinkTime.Builder {}
