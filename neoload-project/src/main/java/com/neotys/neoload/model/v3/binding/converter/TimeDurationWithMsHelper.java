@@ -14,7 +14,7 @@ final class TimeDurationWithMsHelper {
 	private static final String SECONDS = "s";
 	private static final String MILLISECONDS = "ms";
 
-	private static final Pattern TIME_PATTERN = Pattern.compile("((((\\d+)(h))?((\\d+)(m))?((\\d+)(s))?((\\d+)(ms))?)|(\\d+))");
+	private static final Pattern TIME_PATTERN = Pattern.compile("((((\\d+)(h\\s?))?((\\d+)(m\\s?))?((\\d+)(s\\s?))?((\\d+)(ms\\s?))?)|(\\d+))");
 
 	private TimeDurationWithMsHelper() {
 		super();
@@ -61,8 +61,8 @@ final class TimeDurationWithMsHelper {
 		if (isNullOrEmpty(input)) {
 			return "0";
 		}
-		final String inputWithoutWhitespace = input.replaceAll("\\s+", "");
-		final Matcher matcher = TIME_PATTERN.matcher(inputWithoutWhitespace);
+
+		final Matcher matcher = TIME_PATTERN.matcher(input.trim());
 		if (!matcher.matches()) {
 			return "0";
 		}
