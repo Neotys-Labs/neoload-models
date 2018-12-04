@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.v3.binding.converter;
 
 import com.fasterxml.jackson.databind.util.StdConverter;
-import com.google.common.base.Strings;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
