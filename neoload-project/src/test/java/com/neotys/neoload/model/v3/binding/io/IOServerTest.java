@@ -3,7 +3,7 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.server.ImmutableBasicAuthentication;
-import com.neotys.neoload.model.v3.project.server.ImmutableNegociateAuthentication;
+import com.neotys.neoload.model.v3.project.server.ImmutableNegotiateAuthentication;
 import com.neotys.neoload.model.v3.project.server.ImmutableNtlmAuthentication;
 import com.neotys.neoload.model.v3.project.server.Server;
 import org.junit.Test;
@@ -88,7 +88,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.host("mypc2.intranet.neotys.com")
 				.port(81L)
 				.scheme(Server.Scheme.HTTP)
-				.authentication(ImmutableNegociateAuthentication.builder()
+				.authentication(ImmutableNegotiateAuthentication.builder()
 						.login("neotysusernego")
 						.password("admin@adminnego")
 						.domain("domain-valuenego").build())
