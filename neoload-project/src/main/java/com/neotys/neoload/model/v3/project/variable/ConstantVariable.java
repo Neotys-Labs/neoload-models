@@ -10,7 +10,7 @@ import org.immutables.value.Value;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutableConstantVariable.class)
-@JsonPropertyOrder({Variable.NAME, ConstantVariable.VALUE, Variable.DESCRIPTION})
+@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, ConstantVariable.VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 public interface ConstantVariable extends Variable {
