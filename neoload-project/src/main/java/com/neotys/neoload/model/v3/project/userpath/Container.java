@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
@@ -31,11 +30,6 @@ public interface Container extends Action {
 	@Valid
 	@JsonDeserialize(using = ElementsDeserializer.class)
 	List<Action> getElements();
-
-    @Override
-    default Stream<Element> flattened() {
-        return Stream.concat(Stream.of(this), getElements().stream().flatMap(Element::flattened));
-    }
 
 	class Builder extends ImmutableContainer.Builder {}
 	static Builder builder() {
