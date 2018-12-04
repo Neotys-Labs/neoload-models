@@ -14,7 +14,7 @@ final class TimeDurationWithMsHelper {
 	private static final String SECONDS = "s";
 	private static final String MILLISECONDS = "ms";
 
-	private static final Pattern TIME_PATTERN = Pattern.compile("((((\\d+)(h\\s?))?((\\d+)(m\\s?))?((\\d+)(s\\s?))?((\\d+)(ms\\s?))?)|(\\d+))");
+	private static final Pattern TIME_PATTERN = Pattern.compile("((((\\d+)(h\\s*))?((\\d+)(m\\s*))?((\\d+)(s\\s*))?((\\d+)(ms\\s*))?)|(\\d+))");
 
 	private TimeDurationWithMsHelper() {
 		super();

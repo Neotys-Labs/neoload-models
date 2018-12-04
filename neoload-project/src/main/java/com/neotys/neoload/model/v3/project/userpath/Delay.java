@@ -30,7 +30,7 @@ public interface Delay extends Action {
 
 	@JsonProperty(DELAY)
 	@RequiredCheck(groups = {NeoLoad.class})
-	@Pattern(regexp = "((((\\d+)(h\\s?))?((\\d+)(m\\s?))?((\\d+)(s\\s?))?((\\d+)(ms\\s?))?)|(\\d+))")
+	@Pattern(regexp = "((((\\d+)(h\\s*))?((\\d+)(m\\s*))?((\\d+)(s\\s*))?((\\d+)(ms\\s*))?)|(\\d+))")
 	String getDelay();
 
 	class Builder extends ImmutableDelay.Builder {}
