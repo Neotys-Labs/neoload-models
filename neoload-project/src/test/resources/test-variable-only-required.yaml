@@ -1,5 +1,8 @@
 name: MyProject
 variables:
+- constant:
+    name: constant_variable
+    value: 118218
 - file:
     name: cities_file
     description: cities variable file description

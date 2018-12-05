@@ -3,7 +3,9 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
+import com.neotys.neoload.model.v3.project.variable.ImmutableConstantVariable;
 import com.neotys.neoload.model.v3.project.variable.ImmutableFileVariable;
+import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,7 +26,13 @@ public class IOVariableTest extends AbstractIOElementsTest {
 	}
 
 	private Project buildProjectContainingVariable() {
-		final FileVariable fileVariable = ImmutableFileVariable.builder()
+
+		final Variable constantVariable = ImmutableConstantVariable.builder()
+				.name("constant_variable")
+				.value("118218")
+				.build();
+
+		final Variable fileVariable = ImmutableFileVariable.builder()
 				.name("cities_file")
 				.description("cities variable file description")
 				.columnNames(newArrayList("City", "Country", "Population", "Longitude", "Latitude"))
@@ -40,7 +48,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
 		return Project.builder()
 				.name("MyProject")
-				.addVariables(fileVariable)
+				.addVariables(constantVariable, fileVariable)
 				.build();
 	}
 }
