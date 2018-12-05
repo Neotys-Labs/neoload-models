@@ -9,6 +9,7 @@ import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
 
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,6 +99,7 @@ public interface FileVariable extends Variable {
 
 	@JsonProperty(DELIMITER)
 	@Value.Default
+	@Size(min = 1, max = 1, groups={NeoLoad.class})
 	default String getDelimiter() {
 		return ",";
 	}
