@@ -17,16 +17,7 @@ import javax.validation.constraints.Pattern;
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 public interface Delay extends ActionDuration {
-	String DEFAULT_NAME = "#delay#";
 	String DELAY = "delay";
-
-	@JsonProperty(NAME)
-	@RequiredCheck(groups={NeoLoad.class})
-	@Override
-	@Value.Default
-	default String getName() {
-		return DEFAULT_NAME;
-	}
 
 	class Builder extends ImmutableDelay.Builder {}
 	static Builder builder() {

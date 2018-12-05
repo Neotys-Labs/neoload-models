@@ -3,7 +3,7 @@ Definition has several top-level keys.
 
 | Name      | Description        |
 | --------- | ------------------ |
-| Servers   | List of servers    |
+| servers   | List of servers    |
 You can find below an example of how to define servers when launching a test in command line using the `-project` parameter.
 
 Please read the full [command line documentation](https://www.neotys.com/documents/doc/neoload/latest/en/html/#643.htm).

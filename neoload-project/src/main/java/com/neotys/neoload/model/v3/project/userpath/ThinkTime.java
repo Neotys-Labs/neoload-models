@@ -17,16 +17,7 @@ import javax.validation.constraints.Pattern;
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 public interface ThinkTime extends ActionDuration {
-	String DEFAULT_NAME = "#thinktime#";
 	String THINK_TIME = "think_time";
-
-	@JsonProperty(NAME)
-	@RequiredCheck(groups={NeoLoad.class})
-	@Override
-	@Value.Default
-	default String getName() {
-		return DEFAULT_NAME;
-	}
 
 	class Builder extends ImmutableThinkTime.Builder {}
 	static Builder builder() {
