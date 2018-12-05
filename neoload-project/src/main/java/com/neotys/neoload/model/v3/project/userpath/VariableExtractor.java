@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueVariableExtractorPathCheck;
+import com.neotys.neoload.model.v3.validation.constraints.VariableExtractorFromPathCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
@@ -16,6 +17,7 @@ import javax.validation.constraints.Min;
 import java.util.Optional;
 
 @UniqueVariableExtractorPathCheck(groups={NeoLoad.class})
+@VariableExtractorFromPathCheck(groups={NeoLoad.class})
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, VariableExtractor.FROM, VariableExtractor.XPATH, VariableExtractor.JSON_PATH, VariableExtractor.REGEXP, VariableExtractor.MATCH_NUMBER, VariableExtractor.TEMPLATE, VariableExtractor.DECODE, VariableExtractor.EXTRACT_ONCE, VariableExtractor.DEFAULT, VariableExtractor.THROW_ASSERTION_ERROR})
 @JsonDeserialize(as = ImmutableVariableExtractor.class)

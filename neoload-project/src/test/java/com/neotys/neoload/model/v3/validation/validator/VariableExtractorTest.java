@@ -119,5 +119,13 @@ public class VariableExtractorTest {
 		validation = validator.validate(variableExtractor, NeoLoad.class);
 		assertTrue(validation.isValid());
 		assertFalse(validation.getMessage().isPresent());
+
+		variableExtractor = VariableExtractor.builder()
+				.name("name")
+				.xpath("xpath")
+				.from(VariableExtractor.From.HEADER)
+				.build();
+		validation = validator.validate(variableExtractor, NeoLoad.class);
+		assertFalse(validation.isValid());
 	}
 }
