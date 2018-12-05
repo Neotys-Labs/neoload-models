@@ -1,0 +1,8 @@
+name: MyProject
+extractors:
+- name: first-match-on-jsonpath
+  jsonpath: $.features[0].type
+  regexp: Fea(.*)
+  match_number: 1
+  decode: url
+  extract_once: true
