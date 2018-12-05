@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.neotys.neoload.model.v3.validation.constraints.FileVariableCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -18,6 +19,7 @@ import static com.neotys.neoload.model.v3.project.variable.FileVariable.IS_FIRST
 import static com.neotys.neoload.model.v3.project.variable.FileVariable.PATH;
 import static com.neotys.neoload.model.v3.project.variable.FileVariable.START_FROM_LINE;
 
+@FileVariableCheck(groups={NeoLoad.class})
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutableFileVariable.class)
 @JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, COLUMN_NAMES, IS_FIRST_LINE_COLUMN_NAMES, START_FROM_LINE,
