@@ -16,7 +16,7 @@ import javax.validation.constraints.Pattern;
 @JsonDeserialize(as = ImmutableThinkTime.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface ThinkTime extends Action {
+public interface ThinkTime extends ActionDuration {
 	String DEFAULT_NAME = "#thinktime#";
 	String THINK_TIME = "think_time";
 
@@ -27,11 +27,6 @@ public interface ThinkTime extends Action {
 	default String getName() {
 		return DEFAULT_NAME;
 	}
-
-	@JsonProperty(THINK_TIME)
-	@RequiredCheck(groups = {NeoLoad.class})
-	@Pattern(regexp = "((((\\d+)(h\\s*))?((\\d+)(m\\s*))?((\\d+)(s\\s*))?((\\d+)(ms\\s*))?)|(\\d+))")
-	String getThinkTime();
 
 	class Builder extends ImmutableThinkTime.Builder {}
 	static Builder builder() {

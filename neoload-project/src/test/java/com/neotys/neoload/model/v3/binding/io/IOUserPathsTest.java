@@ -1,18 +1,17 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath.UserSession;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import static org.junit.Assert.assertNotNull;
 
 
 public class IOUserPathsTest extends AbstractIOElementsTest {
@@ -23,7 +22,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.name("actions")
         				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())        				
         				.build())
         		.build();
@@ -46,7 +45,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.description("My Init Container from My User Path 1")
         				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())
         				.build())
         		.actions(Container.builder()
@@ -54,7 +53,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.description("My Actions Container from My User Path 1")
         				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())
         				.build())
         		.end(Container.builder()
@@ -62,7 +61,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.description("My End Container from My User Path 1")
         				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())
         				.build())
                 .build();
@@ -76,7 +75,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.description("My Init Container from My User Path 2")
         				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())
         				.build())
         		.actions(Container.builder()
@@ -84,7 +83,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.description("My Actions Container from My User Path 2")
            				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())
         				.build())
         		.end(Container.builder()
@@ -92,7 +91,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.description("My End Container from My User Path 2")
         				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())
         				.build())
                 .build();
@@ -106,7 +105,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.description("My Init Container from My User Path 3")
         				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())
         				.build())
         		.actions(Container.builder()
@@ -114,7 +113,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.description("My Actions Container from My User Path 3")
            				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())
          				.build())
         		.end(Container.builder()
@@ -122,7 +121,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
         				.description("My End Container from My User Path 3")
         				.addElements(Container.builder()
         						.name("MyTransaction")
-        						.addElements(Delay.builder().delay("1000").build())
+        						.addElements(Delay.builder().value("1000").build())
         						.build())
         				.build())
                 .build();

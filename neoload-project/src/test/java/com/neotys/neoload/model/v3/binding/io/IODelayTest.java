@@ -6,6 +6,7 @@ import static junit.framework.TestCase.assertNotNull;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
 import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.Project;
@@ -25,13 +26,14 @@ public class IODelayTest extends AbstractIOElementsTest {
 	}
 
 	private Project buildProjectContainingDelay() {
-		final Delay delay1 = Delay.builder().delay("180200").build();
-		final Delay delay2 = Delay.builder().delay("3790100").build();
-		final Delay delay3 = Delay.builder().delay("1000").build();
+		final Delay delay1 = Delay.builder().value("180200").build();
+		final Delay delay2 = Delay.builder().value("3790100").build();
+		final ThinkTime thinkTime = ThinkTime.builder().value("1000").build();
+		final Delay delay3 = Delay.builder().value("1000").build();
 
 		final Container container = Container.builder()
 				.name("actions")
-				.addElements(delay1, delay2, delay3)
+				.addElements(delay1, delay2, delay3, thinkTime)
 				.build();
 
 		final UserPath userPath = UserPath.builder()

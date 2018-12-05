@@ -26,7 +26,7 @@ public class IOThinkTimeTest extends AbstractIOElementsTest {
 	}
 
 	private Project buildProjectContainingDelay() {
-		final ThinkTime thinkTime = ThinkTime.builder().thinkTime("3790100").build();
+		final ThinkTime thinkTime = ThinkTime.builder().value("3790100").build();
 
 		final Container container = Container.builder()
 				.name("actions")

@@ -45,11 +45,11 @@ public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 			} else if (actionNode.has(Delay.DELAY)) {
 				final String delayValue = actionNode.get(Delay.DELAY).asText();
 				final String delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
-				action = Delay.builder().delay(String.valueOf(delay)).build();
+				action = Delay.builder().value(String.valueOf(delay)).build();
 			} else if (actionNode.has(ThinkTime.THINK_TIME)) {
 				final String thinkTimeValue = actionNode.get(ThinkTime.THINK_TIME).asText();
 				final String thinkTime = STRING_TO_TIME_DURATION_WITH_MS.convert(thinkTimeValue);
-				action = ThinkTime.builder().thinkTime(String.valueOf(thinkTime)).build();
+				action = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
 			}
 			
 			if (action != null) {
