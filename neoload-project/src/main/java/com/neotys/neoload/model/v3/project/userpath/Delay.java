@@ -16,7 +16,7 @@ import javax.validation.constraints.Pattern;
 @JsonDeserialize(as = ImmutableDelay.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface Delay extends Action {
+public interface Delay extends ActionDuration {
 	String DEFAULT_NAME = "#delay#";
 	String DELAY = "delay";
 
@@ -27,11 +27,6 @@ public interface Delay extends Action {
 	default String getName() {
 		return DEFAULT_NAME;
 	}
-
-	@JsonProperty(DELAY)
-	@RequiredCheck(groups = {NeoLoad.class})
-	@Pattern(regexp = "((((\\d+)(h\\s*))?((\\d+)(m\\s*))?((\\d+)(s\\s*))?((\\d+)(ms\\s*))?)|(\\d+))")
-	String getDelay();
 
 	class Builder extends ImmutableDelay.Builder {}
 	static Builder builder() {
