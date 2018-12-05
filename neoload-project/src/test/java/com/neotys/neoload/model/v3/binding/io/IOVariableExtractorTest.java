@@ -40,5 +40,6 @@ public class IOVariableExtractorTest extends AbstractIOElementsTest {
 //				.name("MyProject")
 //				.addVariableExtractir(variableExtractor)
 //				.build();
+		return null;
 	}
 }
