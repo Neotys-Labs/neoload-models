@@ -20,4 +20,11 @@ public interface ConstantVariable extends Variable {
 	@JsonProperty(VALUE)
 	@RequiredCheck(groups = {NeoLoad.class})
 	String getValue();
+
+	class Builder extends ImmutableConstantVariable.Builder {
+	}
+
+	static Builder builder() {
+		return new Builder();
+	}
 }

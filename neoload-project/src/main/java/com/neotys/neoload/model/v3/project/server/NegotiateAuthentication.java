@@ -22,4 +22,11 @@ public interface NegotiateAuthentication extends LoginPasswordAuthentication {
 
 	@JsonProperty(DOMAIN)
 	Optional<String> getDomain();
+
+	class Builder extends ImmutableNegotiateAuthentication.Builder {
+	}
+
+	static Builder builder() {
+		return new Builder();
+	}
 }

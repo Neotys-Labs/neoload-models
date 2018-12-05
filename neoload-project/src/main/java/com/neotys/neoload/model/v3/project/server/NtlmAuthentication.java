@@ -22,4 +22,11 @@ public interface NtlmAuthentication extends LoginPasswordAuthentication {
 
 	@JsonProperty(DOMAIN)
 	Optional<String> getDomain();
+
+	class Builder extends ImmutableNtlmAuthentication.Builder {
+	}
+
+	static Builder builder() {
+		return new Builder();
+	}
 }

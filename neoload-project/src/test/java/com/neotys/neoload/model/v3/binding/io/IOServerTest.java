@@ -2,9 +2,9 @@ package com.neotys.neoload.model.v3.binding.io;
 
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.server.ImmutableBasicAuthentication;
-import com.neotys.neoload.model.v3.project.server.ImmutableNegotiateAuthentication;
-import com.neotys.neoload.model.v3.project.server.ImmutableNtlmAuthentication;
+import com.neotys.neoload.model.v3.project.server.BasicAuthentication;
+import com.neotys.neoload.model.v3.project.server.NegotiateAuthentication;
+import com.neotys.neoload.model.v3.project.server.NtlmAuthentication;
 import com.neotys.neoload.model.v3.project.server.Server;
 import org.junit.Test;
 
@@ -59,7 +59,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.host("mypc.intranet.neotys.com")
 				.port(443L)
 				.scheme(Server.Scheme.HTTPS)
-				.authentication(ImmutableBasicAuthentication.builder()
+				.authentication(BasicAuthentication.builder()
 					.login("neotysuser")
 					.password("admin@admin").realm("realm-value").build())
 				.build();
@@ -77,7 +77,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.host("mypc.intranet.neotys.com")
 				.port(443L)
 				.scheme(Server.Scheme.HTTPS)
-				.authentication(ImmutableBasicAuthentication.builder()
+				.authentication(BasicAuthentication.builder()
 						.login("neotysuser")
 						.password("admin@admin")
 						.realm("realm-value").build())
@@ -88,7 +88,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.host("mypc2.intranet.neotys.com")
 				.port(81L)
 				.scheme(Server.Scheme.HTTP)
-				.authentication(ImmutableNegotiateAuthentication.builder()
+				.authentication(NegotiateAuthentication.builder()
 						.login("neotysusernego")
 						.password("admin@adminnego")
 						.domain("domain-valuenego").build())
@@ -98,7 +98,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.name("serverName3")
 				.host("mypc3.intranet.neotys.com")
 				.port(80L)
-				.authentication(ImmutableNtlmAuthentication.builder()
+				.authentication(NtlmAuthentication.builder()
 						.login("neotysuserntlm")
 						.password("admin@adminntlm").build())
 				.build();

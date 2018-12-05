@@ -60,4 +60,11 @@ public interface FileVariable extends Variable {
 	@JsonProperty(PATH)
 	@RequiredCheck(groups = {NeoLoad.class})
 	String getPath();
+
+	class Builder extends ImmutableFileVariable.Builder {
+	}
+
+	static Builder builder() {
+		return new Builder();
+	}
 }

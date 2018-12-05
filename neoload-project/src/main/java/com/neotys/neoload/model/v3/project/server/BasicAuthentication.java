@@ -21,4 +21,11 @@ public interface BasicAuthentication extends LoginPasswordAuthentication {
 
 	@JsonProperty(REALM)
 	Optional<String> getRealm();
+
+	class Builder extends ImmutableBasicAuthentication.Builder {
+	}
+
+	static Builder builder() {
+		return new Builder();
+	}
 }
