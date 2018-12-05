@@ -20,11 +20,10 @@ final class IterationDurationHelper {
 		if (input == null) return null;
 		if (input <= 0) return null;
 		
-		final int value = input.intValue();
 		final StringBuilder sb = new StringBuilder();
-		sb.append(value);
+		sb.append(input);
 		sb.append(SPACE);
-	    if (value > 1) {
+	    if (input > 1) {
 	    	sb.append(ITERATIONS);
 	    }
 	    else {
@@ -46,7 +45,7 @@ final class IterationDurationHelper {
 				value = value + Integer.valueOf(group) * ITERATION_FACTORS[i];
 			}
 		}
-		return Integer.valueOf(value);
+		return value;
 	}
 
 	

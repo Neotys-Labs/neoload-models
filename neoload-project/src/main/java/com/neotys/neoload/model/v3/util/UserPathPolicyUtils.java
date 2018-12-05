@@ -59,7 +59,7 @@ public class UserPathPolicyUtils {
 		return newUserPathPolicies;
 	}
 		
-	protected static final double[] computeDistributions(final int countOfDistributionsNotDefined, final double totalOfDistributions) {
+	protected static double[] computeDistributions(final int countOfDistributionsNotDefined, final double totalOfDistributions) {
 		if (countOfDistributionsNotDefined <= 0) return new double[0];
 		
 		final double[] computedDistributions = new double[countOfDistributionsNotDefined];

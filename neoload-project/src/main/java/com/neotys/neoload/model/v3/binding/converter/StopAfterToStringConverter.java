@@ -8,7 +8,7 @@ public final class StopAfterToStringConverter extends StdConverter<StopAfter, St
 	public String convert(final StopAfter stopAfter) {
 		if (stopAfter == null) return null;
 		
-		String convertedValue = null;
+		String convertedValue;
 		final StopAfter.Type type = stopAfter.getType();
 		if (type == StopAfter.Type.TIME) {
 			convertedValue = TimeDurationHelper.convertToString((Integer) stopAfter.getValue());

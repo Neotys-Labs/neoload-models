@@ -56,7 +56,7 @@ public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 				actions.add(action);
 			}
 		}
-	
+
 		return actions;
 	}
 }

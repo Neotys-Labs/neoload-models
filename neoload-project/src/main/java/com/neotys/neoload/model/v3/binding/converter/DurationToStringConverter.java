@@ -8,7 +8,7 @@ public final class DurationToStringConverter extends StdConverter<Duration, Stri
 	public String convert(final Duration duration) {
 		if (duration == null) return null;
 		
-		String convertedValue = null;
+		String convertedValue;
 		final Duration.Type type = duration.getType();
 		if (type == Duration.Type.TIME) { 
 			convertedValue = TimeDurationHelper.convertToString(duration.getValue());

@@ -55,6 +55,6 @@ final class TimeDurationHelper {
 				value = value + Integer.valueOf(group) * TIME_FACTORS[i];
 			}
 		}
-		return Integer.valueOf(value);
+		return value;
 	}
 }

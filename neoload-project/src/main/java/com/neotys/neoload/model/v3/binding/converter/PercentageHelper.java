@@ -19,11 +19,9 @@ final class PercentageHelper {
 
 	protected static String convertToString(final Double input) {
 		if (input == null) return null;
-		
-		final StringBuilder sb = new StringBuilder();
+
 		// DecimalFormat is not thread-safe; it's better to clone it here
-		sb.append(((DecimalFormat)(FORMAT.clone())).format(input)).append(UNIT);
-		return sb.toString();		
+		return ((DecimalFormat) (FORMAT.clone())).format(input) + UNIT;
 	}
 	
 	protected static Double convertToDouble(final String input) {

@@ -1,23 +1,16 @@
 package com.neotys.neoload.model.validation.validator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.neotys.neoload.model.validation.naming.LoadPolicyStrategy;
+import com.neotys.neoload.model.validation.naming.PropertyNamingStrategy;
+import com.neotys.neoload.model.validation.naming.RampupStrategy;
+import com.neotys.neoload.model.validation.naming.SnakeCaseStrategy;
 
 import javax.validation.Configuration;
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.Path.Node;
 import javax.validation.ValidatorFactory;
-
-import com.neotys.neoload.model.validation.naming.LoadPolicyStrategy;
-import com.neotys.neoload.model.validation.naming.PropertyNamingStrategy;
-import com.neotys.neoload.model.validation.naming.RampupStrategy;
-import com.neotys.neoload.model.validation.naming.SnakeCaseStrategy;
+import java.util.*;
 
 public final class Validator {
 	private static final String PROPERTY_PATH_SEPARATOR = ".";
@@ -49,7 +42,7 @@ public final class Validator {
         final int size = violations.size();
         if (size != 0) {
         	final StringBuilder sb = new StringBuilder();
-            sb.append("Data Model is invalid. Violation Number: " + size + ".");    
+            sb.append("Data Model is invalid. Violation Number: ").append(size).append(".");
             sb.append(LINE_SEPARATOR);
         	int count = 1;
         	final List<String> errors = normalizeErrors(violations);
@@ -85,8 +78,7 @@ public final class Validator {
 		
 		StringBuilder builder = new StringBuilder();
 		boolean first = true;
-		for (final Iterator<Node> iterator = path.iterator(); iterator.hasNext();) {
-			final Node node = iterator.next();
+		for (final Node node : path) {
 			final String input = node.toString();
 			if (input.isEmpty()) {
 				continue;
