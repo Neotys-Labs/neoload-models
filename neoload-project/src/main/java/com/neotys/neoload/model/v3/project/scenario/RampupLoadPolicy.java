@@ -1,10 +1,5 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
-import javax.validation.Valid;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,6 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
+
+import javax.validation.Valid;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({RampupLoadPolicy.MIN_USERS, RampupLoadPolicy.MAX_USERS, RampupLoadPolicy.INCREMENT_USERS, RampupLoadPolicy.INCREMENT_EVERY, DurationPolicy.DURATION, StartStopPolicy.START_AFTER, RampupLoadPolicy.INCREMENT_RAMPUP, StartStopPolicy.STOP_AFTER})
@@ -20,11 +19,11 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface RampupLoadPolicy extends LoadPolicy {
-	public static final String MIN_USERS = "min_users";
-	public static final String MAX_USERS = "max_users";
-	public static final String INCREMENT_USERS = "increment_users";
-	public static final String INCREMENT_EVERY = "increment_every";
-	public static final String INCREMENT_RAMPUP = "increment_rampup";
+	String MIN_USERS = "min_users";
+	String MAX_USERS = "max_users";
+	String INCREMENT_USERS = "increment_users";
+	String INCREMENT_EVERY = "increment_every";
+	String INCREMENT_RAMPUP = "increment_rampup";
 
 	@PositiveCheck(unit="user", groups={NeoLoad.class})
 	@JsonProperty(MIN_USERS)
@@ -43,7 +42,7 @@ public interface RampupLoadPolicy extends LoadPolicy {
 	Integer getRampup();
 	
 	class Builder extends ImmutableRampupLoadPolicy.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }

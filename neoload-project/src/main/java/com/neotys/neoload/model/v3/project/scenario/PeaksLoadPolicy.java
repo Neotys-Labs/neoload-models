@@ -1,11 +1,6 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
 
-import javax.validation.Valid;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,6 +8,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
+
+import javax.validation.Valid;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({PeaksLoadPolicy.MINIMUM, PeaksLoadPolicy.MAXIMUM, PeaksLoadPolicy.START, DurationPolicy.DURATION, StartStopPolicy.START_AFTER, PeaksLoadPolicy.STEP_RAMPUP, StartStopPolicy.STOP_AFTER})
@@ -20,10 +19,10 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface PeaksLoadPolicy extends LoadPolicy {
-	public static final String MINIMUM = "minimum";
-	public static final String MAXIMUM = "maximum";
-	public static final String START = "start";
-	public static final String STEP_RAMPUP = "step_rampup";
+	String MINIMUM = "minimum";
+	String MAXIMUM = "maximum";
+	String START = "start";
+	String STEP_RAMPUP = "step_rampup";
 
 	enum Peak {
 		@JsonProperty(PeaksLoadPolicy.MINIMUM)
@@ -44,7 +43,7 @@ public interface PeaksLoadPolicy extends LoadPolicy {
 	Integer getRampup();
 	
 	class Builder extends ImmutablePeaksLoadPolicy.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }

@@ -1,8 +1,5 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -11,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({Request.URL})
@@ -18,9 +17,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Request extends Action {
-	public static final String URL = "url";
-
-	public static final String DEFAULT_NAME = "#request#";
+	String URL = "url";
+	String DEFAULT_NAME = "#request#";
 
 	@JsonIgnore
 	@Value.Default
@@ -33,7 +31,7 @@ public interface Request extends Action {
 	String getUrl();
 	
 	class Builder extends ImmutableRequest.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }
