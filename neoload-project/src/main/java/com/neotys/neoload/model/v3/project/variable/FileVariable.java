@@ -82,7 +82,7 @@ public interface FileVariable extends Variable {
 	String OUT_OF_VALUE 				= "out_of_value";
 
 	@JsonProperty(COLUMN_NAMES)
-	Optional<List<String>> getColumnNames();
+	List<String> getColumnNames();
 
 	@JsonProperty(IS_FIRST_LINE_COLUMN_NAMES)
 	@Value.Default
