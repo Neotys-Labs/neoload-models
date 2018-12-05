@@ -11,13 +11,13 @@ Please read the full [command line documentation](https://www.neotys.com/documen
 See more details about [Variables in NeoLoad](https://www.neotys.com/documents/doc/neoload/latest/en/html/#1057.htm).
 
 ### Constant variable
-A string which value cannot be modified.
+A string the value of which cannot be modified.
 
 | Name        | Description                   | Required/Optional |
 | ----------- | ----------------------------- | ----------------- |
-| name        | The variable name.            | Required          |
-| description | The variable description.     | Optional          |
-| value       | The variable value.           | Required          |
+| name        | The variable name           | Required          |
+| description | The variable description     | Optional          |
+| value       | The variable value           | Required          |
 
 
 ### File variable
@@ -27,15 +27,15 @@ A list or table of values loaded from a text file.
 | ------------- | ------------------------------------------------- | ----------------- |
 | name          | The variable name.                                | Required          |
 | description   | The variable description.                         | Optional          |
-| column_names  | The list of column names. Use `${\<variableName>.\<columnName>}` to access to variable values. | Optional          |
-| is_first_line_column_names | If `true`, the first line of the file can be used as columns headers name.<br>The value of this parameter is ignored if `column_names` parameter is specified.<br>The default value is `false`.| Optional          |
-| start_from_line | The default value is 1.  | Optional          |
+| column_names  | The list of column names. Use `${\<variableName>.\<columnName>}` to access variable values. | Optional          |
+| is_first_line_column_names | If `true`, the first line of the file can be used as column headers name.<br>The value of this parameter is ignored if `column_names` parameter is specified.<br>The default value is `false`.| Optional          |
+| start_from_line | The default value is "1".  | Optional          |
 | delimiter     | The delimiter is used to separate data columns.</br>The default value is ",".| Optional          |
 | path          | The relative (compared to the NeoLoad project folder) or absolute path of the source file.| Required          |
-| change_policy | The policy when the value must change. The change_policy value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`.| Optional          |
+| change_policy | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`.| Optional          |
 | scope         | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`.| Optional          |
 | order         | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`.| Optional          |
-| out_of_value  | When no values are left, several policies can be applied. The value of out_of_value can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`.| Optional          |
+| out_of_value  | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`.| Optional          |
 
 **Example:**
 
