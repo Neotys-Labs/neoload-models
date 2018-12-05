@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.v3.validation.constraints;
 
 import com.neotys.neoload.model.v3.validation.constraintvalidators.FileVariableValidator;
-import com.neotys.neoload.model.v3.validation.constraintvalidators.VariableExtractorFromPathValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
