@@ -27,6 +27,20 @@
         "order": "sequential",
         "out_of_value": "stop_test"
       }
+    },
+    {
+      "file": {
+        "name": "cities2_file",
+        "description": "cities2 variable file description",
+        "is_first_line_column_names": true,
+        "start_from_line": 1,
+        "delimiter": ";",
+        "path": "data/list_of_cities.csv",
+        "change_policy": "each_page",
+        "scope": "local",
+        "order": "random",
+        "out_of_value": "no_value_code"
+      }
     }
   ]
 }

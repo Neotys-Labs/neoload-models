@@ -46,9 +46,22 @@ public class IOVariableTest extends AbstractIOElementsTest {
 				.outOfValue(FileVariable.OutOfValue.STOP)
 				.build();
 
+		final Variable fileVariable2 = ImmutableFileVariable.builder()
+				.name("cities2_file")
+				.description("cities2 variable file description")
+				.isFirstLineColumnNames(true)
+				.startFromLine(1)
+				.delimiter(";")
+				.path("data/list_of_cities.csv")
+				.changePolicy(FileVariable.ChangePolicy.EACH_PAGE)
+				.scope(FileVariable.Scope.LOCAL)
+				.order(FileVariable.Order.RANDOM)
+				.outOfValue(FileVariable.OutOfValue.NO_VALUE)
+				.build();
+
 		return Project.builder()
 				.name("MyProject")
-				.addVariables(constantVariable, fileVariable)
+				.addVariables(constantVariable, fileVariable, fileVariable2)
 				.build();
 	}
 }
