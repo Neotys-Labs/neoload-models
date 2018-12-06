@@ -1,4 +1,4 @@
-# Variable
+# Variables
 Variables are used to add dynamic content to a scenario.
 
 They may be combined with other variables or with static content (e.g. ${product_${productID}}) and used in a number of places, such as in form parameter values.
