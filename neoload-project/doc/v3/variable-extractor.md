@@ -1,16 +1,7 @@
-# NeoLoad Extractors definition
-Definition has several top-level keys.
-
-| Name        | Description           |
-| ----------- | --------------------- |
-| Extractors  | List of extractors    |
-
-You can find below an example of how to define extractors.
-
-## Extractor
+# Extractor
 Extractors allow chaining several API calls where the argument of a call can be extracted from a previous call.
 
-**Available settings are:**
+#### Available settings are
 
 | Name                   | Description                                                  | Required/Optional |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
@@ -27,13 +18,13 @@ Extractors allow chaining several API calls where the argument of a call can be 
 | throw_assertion_error  | Raises an assertion error when no match found. The default value is "true".                                                                                                                                                                                                                                                                                                            | Optional          |
 
 
-**Example:**
+#### Example
 
 Defining 2 extractors: one  matching any number in header, and another one matching the first occurence of regular expression on JSONPath.
 
 ```yaml
 extractors:
-- name: any-number-on-header
+- name: any-number-on-body
   regexp: ([0-9]*)
 - name: first-match-on-jsonpath
   jsonpath: $.features[0].type
