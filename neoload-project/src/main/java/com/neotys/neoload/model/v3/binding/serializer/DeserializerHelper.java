@@ -23,7 +23,6 @@ final class DeserializerHelper {
         final JsonNode nodeObject = node.get(fieldName);
         if (nodeObject != null) {
         	object = codec.treeToValue(nodeObject, clazz);
-        			
         }
         return object;
     }

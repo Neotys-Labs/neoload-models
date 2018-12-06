@@ -1,13 +1,25 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
-import com.neotys.neoload.model.v3.validation.naming.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.validation.Configuration;
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.Path.Node;
 import javax.validation.ValidatorFactory;
-import java.util.*;
+
+import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.validation.naming.ElementsStrategy;
+import com.neotys.neoload.model.v3.validation.naming.LoadPolicyStrategy;
+import com.neotys.neoload.model.v3.validation.naming.PropertyNamingStrategy;
+import com.neotys.neoload.model.v3.validation.naming.RampupStrategy;
+import com.neotys.neoload.model.v3.validation.naming.SnakeCaseStrategy;
 
 public final class Validator {
 	private static final String PROPERTY_PATH_SEPARATOR = ".";
@@ -16,7 +28,7 @@ public final class Validator {
 	private static final Map<String, PropertyNamingStrategy> PROPERTY_NAMING_STRATEGIES;
 	static {
 		PROPERTY_NAMING_STRATEGIES = new HashMap<>();
-		PROPERTY_NAMING_STRATEGIES.put("elements", new ElementsStrategy());
+		PROPERTY_NAMING_STRATEGIES.put(ElementsStrategy.PROPERTY_NAME, new ElementsStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("loadPolicy", new LoadPolicyStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("rampup", new RampupStrategy());
 	}
@@ -78,8 +90,8 @@ public final class Validator {
 		StringBuilder builder = new StringBuilder();
 		boolean first = true;
 		for (final Node node : path) {
-			final String input = node.toString();
-			if (input.isEmpty()) {
+			final String input = node.getName();
+			if (Strings.isNullOrEmpty(input)) {
 				continue;
 			}
 

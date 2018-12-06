@@ -18,7 +18,7 @@ import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
-@JsonInclude(value = Include.NON_EMPTY)
+@JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, UserPath.USER_SESSION, UserPath.INIT, UserPath.ACTIONS, UserPath.END})
 @JsonDeserialize(using = UserPathDeserializer.class)
 @Value.Immutable
@@ -34,7 +34,7 @@ public interface UserPath extends Element {
 	String END = "end";
 
 	UserSession DEFAULT_USER_SESSION = UserSession.RESET_AUTO;
-
+	
 	enum UserSession {
 		@JsonProperty(UserPath.RESET_ON)
 		RESET_ON,
@@ -43,24 +43,24 @@ public interface UserPath extends Element {
 		@JsonProperty(UserPath.RESET_AUTO)
 		RESET_AUTO;
 	}
-
-	@JsonProperty(value = USER_SESSION)
+	
+	@JsonProperty(USER_SESSION)
 	@Value.Default
 	default UserSession getUserSession() {
 		return DEFAULT_USER_SESSION;
 	}
-
+	
 	@JsonProperty(INIT)
 	@Valid
 	Optional<Container> getInit();
-
+	
 	@JsonProperty(ACTIONS)
-	@RequiredCheck(groups = {NeoLoad.class})
-	@Valid
+	@RequiredCheck(groups={NeoLoad.class})
+	@Valid	
 	Container getActions();
-
+	
 	@JsonProperty(END)
-	@Valid
+	@Valid	
 	Optional<Container> getEnd();
 
 	@Override
@@ -68,9 +68,7 @@ public interface UserPath extends Element {
 		return Stream.of(getInit().orElse(null), getActions(), getEnd().orElse(null)).flatMap(Container::flattened);
 	}
 
-	class Builder extends ImmutableUserPath.Builder {
-	}
-
+	class Builder extends ImmutableUserPath.Builder {}
 	static Builder builder() {
 		return new Builder();
 	}

@@ -28,6 +28,7 @@ public interface Scenario extends Element {
 
 	@JsonProperty(SLA_PROFILE)
 	String getSlaProfile();
+	@JsonProperty(POPULATIONS)
 	@RequiredCheck(groups={NeoLoad.class})
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid

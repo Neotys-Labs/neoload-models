@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
+import static com.neotys.neoload.model.v3.binding.serializer.DeserializerHelper.asObject;
+import static com.neotys.neoload.model.v3.binding.serializer.DeserializerHelper.asText;
 import static com.neotys.neoload.model.v3.project.Element.NAME;
 import static com.neotys.neoload.model.v3.project.scenario.PopulationPolicy.CONSTANT_LOAD;
 import static com.neotys.neoload.model.v3.project.scenario.PopulationPolicy.PEAKS_LOAD;
@@ -26,22 +28,22 @@ public final class PopulationPolicyDeserializer extends StdDeserializer<Populati
         super(PopulationPolicy.class);
     }
 
-	private static LoadPolicy getLoadPolicy(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
-		JsonNode loadPolicyNode = node.get(CONSTANT_LOAD);
-		if (loadPolicyNode != null) {
-			return codec.treeToValue(loadPolicyNode, ConstantLoadPolicy.class);
+	private static LoadPolicy asLoadPolicy(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
+		// Constant Load Policy
+		LoadPolicy loadPolicy = asObject(codec, node, CONSTANT_LOAD, ConstantLoadPolicy.class);
+		if (loadPolicy != null) {
+			return loadPolicy;
 		}
-
-		loadPolicyNode = node.get(RAMPUP_LOAD);
-		if (loadPolicyNode != null) {
-			return codec.treeToValue(loadPolicyNode, RampupLoadPolicy.class);
+		// Rampup Load Policy
+		loadPolicy = asObject(codec, node, RAMPUP_LOAD, RampupLoadPolicy.class);
+		if (loadPolicy != null) {
+			return loadPolicy;
 		}
-		
-		loadPolicyNode = node.get(PEAKS_LOAD);
-		if (loadPolicyNode != null) {
-			return codec.treeToValue(loadPolicyNode, PeaksLoadPolicy.class);
+		// Peaks Load Policy
+		loadPolicy = asObject(codec, node, PEAKS_LOAD, PeaksLoadPolicy.class);
+		if (loadPolicy != null) {
+			return loadPolicy;
 		}
-		
 		return null;
 	}
 	
@@ -50,12 +52,8 @@ public final class PopulationPolicyDeserializer extends StdDeserializer<Populati
     	final ObjectCodec codec = parser.getCodec();
         final JsonNode node = codec.readTree(parser);
         
-        String name = null;
-        final JsonNode nodeName = node.get(NAME);
-        if (nodeName != null) {
-        	name = nodeName.asText();
-        }
-        final LoadPolicy loadPolicy = getLoadPolicy(codec, node);
+        String name = asText(node, NAME);
+        final LoadPolicy loadPolicy = asLoadPolicy(codec, node);
         
         return PopulationPolicy.builder()
         		.name(name)

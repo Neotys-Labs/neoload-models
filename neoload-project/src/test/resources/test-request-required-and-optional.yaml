@@ -1,0 +1,27 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    do:
+    - request:
+        url: /select?name=neoload
+        server: neotys
+        method: POST
+        headers:
+        - Content-Type: text/html; charset=utf-8
+        - Accept-Encoding: gzip, compress, br
+        body: |
+          My Body
+          line 1
+          line 2
+    - request:
+        url: /select?name=neoload
+        server: neotys
+        method: POST
+        headers:
+        - Content-Type: text/html; charset=utf-8
+        - Accept-Encoding: gzip, compress, br
+        body: >
+          My Body
+          line 1
+          line 2

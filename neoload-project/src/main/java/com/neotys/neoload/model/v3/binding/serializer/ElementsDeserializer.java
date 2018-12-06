@@ -1,5 +1,12 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
+import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -8,19 +15,14 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.neotys.neoload.model.v3.project.userpath.Action;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
 
 public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 	private static final long serialVersionUID = -5696608939252369276L;
 
 	private static final String TRANSACTION = "transaction";
+	private static final String REQUEST = "request";
 
 	public ElementsDeserializer() {
 		super(List.class);
@@ -41,6 +43,9 @@ public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 			if (actionNode.has(TRANSACTION)) {
 				final JsonNode transactionNode = actionNode.get(TRANSACTION);
 				action = codec.treeToValue(transactionNode, Container.class);
+			} else if (actionNode.has(REQUEST)) {
+				final JsonNode requestNode = actionNode.get(REQUEST);
+				action = codec.treeToValue(requestNode, Request.class);
 			} else if (actionNode.has(Delay.DELAY)) {
 				final String delayValue = actionNode.get(Delay.DELAY).asText();
 				final String delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
@@ -55,7 +60,7 @@ public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 				actions.add(action);
 			}
 		}
-
+	
 		return actions;
 	}
 }

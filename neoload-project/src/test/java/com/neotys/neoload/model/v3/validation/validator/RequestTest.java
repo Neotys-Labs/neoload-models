@@ -1,0 +1,254 @@
+package com.neotys.neoload.model.v3.validation.validator;
+
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.Request;
+import com.neotys.neoload.model.v3.project.userpath.Request.Method;
+import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+
+
+public class RequestTest {
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	
+
+	private static final String CONSTRAINTS_USER_PATH_REQUEST_NAME_BLANK;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.do[0].name': missing value.").append(LINE_SEPARATOR);
+		CONSTRAINTS_USER_PATH_REQUEST_NAME_BLANK = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK_AND_NULL;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.do[0].url': missing value.").append(LINE_SEPARATOR);
+		CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK_AND_NULL = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.do[0].url': missing value.").append(LINE_SEPARATOR);
+		CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_USER_PATH_REQUEST_METHOD_BLANK;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.do[0].method': missing value.").append(LINE_SEPARATOR);
+		CONSTRAINTS_USER_PATH_REQUEST_METHOD_BLANK = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_COMPLETE_VERSION;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 3.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions.do[0].method': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'user_paths[0].actions.do[0].name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value for 'user_paths[0].actions.do[0].url': missing value.").append(LINE_SEPARATOR);
+		CONSTRAINTS_COMPLETE_VERSION = sb.toString();
+	}
+
+	@Test
+	public void validateName() {
+		final Validator validator = new Validator();
+		
+		UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.name("")
+								.url("url")
+								.build())
+						.build())
+				.build();
+		Validation validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_REQUEST_NAME_BLANK, validation.getMessage().get());	
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.name(" 	\r\t\n")
+								.url("url")
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_REQUEST_NAME_BLANK, validation.getMessage().get());	
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.name("MyHttpRequest")
+								.url("url")
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());	
+	}	
+	
+	@Test
+	public void validateUrl() {
+		final Validator validator = new Validator();
+		
+		UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.build())
+						.build())
+				.build();
+		Validation validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK_AND_NULL, validation.getMessage().get());	
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.url("")
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK, validation.getMessage().get());	
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.url(" 	\r\t\n")
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK, validation.getMessage().get());	
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.url("url")
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());	
+	}	
+
+	@Test
+	public void validateMethod() {
+		final Validator validator = new Validator();
+		
+		UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.url("url")
+								.method("")
+								.build())
+						.build())
+				.build();
+		Validation validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_REQUEST_METHOD_BLANK, validation.getMessage().get());	
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.url("url")
+								.method(" 	\r\t\n")
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_REQUEST_METHOD_BLANK, validation.getMessage().get());	
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.name("MyHttpRequest")
+								.url("url")
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());	
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.name("MyHttpRequest")
+								.url("url")
+								.method(Method.POST.name())
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());	
+	}	
+	
+	
+	@Test
+	public void validateCompleteVersion() {
+		final Validator validator = new Validator();
+		
+		UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addElements(Request.builder()
+								.name("")
+								.method("")
+								.build())
+						.build())
+				.build();
+
+		final Project project = Project.builder()
+        		.name("MyProject")
+        		.addUserPaths(userPath)
+        		.build();
+
+		Validation validation = validator.validate(project, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_COMPLETE_VERSION, validation.getMessage().get());	
+	}	
+}
