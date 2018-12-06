@@ -17,8 +17,8 @@ The server settings are centralized, which means the target server for the test 
 | ----------- | ------------------------------------------------------------ | ----------------- |
 | name        | The name of the server.                                      | Required          |
 | host | The host of the server.                                    | Required          |
-| port | The port of the server. The default value is "80".                    | Optional          |
 | scheme | The scheme of the server. The available values are "http" and "https". The default value is "http".    | Optional          |
+| port | The port of the server. The default value is "80" (for http scheme) or "443" (for https scheme).                    | Optional          |
 | basic-authentication | The Basic Authentication used to authenticate on the server.                    | Optional          |
 | ntlm-authentication | The NTLM Authentication used to authenticate on the server.                     | Optional          |
 | negotiate-authentication | The Negotiate Authentication used to authenticate on the server.           | Optional          |
@@ -55,8 +55,8 @@ servers:
   host: host-server
 - name: my-secure-server
   host: host-secure-server
-  port: 443
   scheme: https
+  port: 443
   basic-authentication:
    login: admin
    password: secret
