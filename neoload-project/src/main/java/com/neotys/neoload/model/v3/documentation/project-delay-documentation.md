@@ -14,7 +14,7 @@ The Think time Action simulates the time spent by a user on the preceding Page b
 The Delay or Think time duration is expressed in hours, minutes, seconds, milliseconds.
 Some valid examples of Delay or Think time durations:
 
-| Duration        | Value                                                     |
+| Value        | Duration                                                     |
 | ----------- | ----------------------------------------------------------- |
 | 100       | 100 milliseconds                                          |
 | 2m  | 2 minutes                                     |

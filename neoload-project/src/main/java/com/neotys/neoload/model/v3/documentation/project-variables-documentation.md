@@ -4,6 +4,7 @@ Definition has several top-level keys.
 | Name      | Description        |
 | --------- | ------------------ |
 | variables   | List of variables    |
+
 You can find below an example of how to define variables when launching a test in command line using the `-project` parameter.
 
 Please read the full [command line documentation](https://www.neotys.com/documents/doc/neoload/latest/en/html/#643.htm).
@@ -27,7 +28,7 @@ A list or table of values loaded from a text file.
 | ------------- | ------------------------------------------------- | ----------------- |
 | name          | The variable name.                                | Required          |
 | description   | The variable description.                         | Optional          |
-| column_names  | The list of column names. Use `${\<variableName>.\<columnName>}` to access variable values. | Optional          |
+| column_names  | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | Optional          |
 | is_first_line_column_names | If `true`, the first line of the file can be used as column headers name.<br>The value of this parameter is ignored if `column_names` parameter is specified.<br>The default value is `false`.| Optional          |
 | start_from_line | The default value is "1".  | Optional          |
 | delimiter     | The delimiter is used to separate data columns.</br>The default value is ",".| Optional          |
