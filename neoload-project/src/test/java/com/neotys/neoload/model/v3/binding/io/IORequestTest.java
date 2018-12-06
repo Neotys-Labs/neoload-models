@@ -13,6 +13,7 @@ import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Header;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
 
 
@@ -54,6 +55,10 @@ public class IORequestTest extends AbstractIOElementsTest {
         								.value("gzip, compress, br")
         								.build())
         						.body("My Body\nline 1\nline 2\n")
+        						.addExtractors(VariableExtractor.builder()
+        								.name("MyVariable1")
+        								.jsonPath("MyJsonPath")
+        								.build())
         						.build())     
         				.addElements(Request.builder()
         						.url("/select?name=neoload")
@@ -67,9 +72,12 @@ public class IORequestTest extends AbstractIOElementsTest {
         								.name("Accept-Encoding")
         								.value("gzip, compress, br")
         								.build())
-        						.body("My Body line 1 line 2")
-        						.build())        				
-
+           						.body("My Body line 1 line 2")
+        						.addExtractors(VariableExtractor.builder()
+        								.name("MyVariable1")
+        								.jsonPath("MyJsonPath")
+        								.build())
+        						.build())   
         				.build())
         		.build();
 

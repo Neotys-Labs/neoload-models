@@ -14,6 +14,9 @@ user_paths:
           My Body
           line 1
           line 2
+        extractors:
+        - name: MyVariable1
+          jsonpath: MyJsonPath
     - request:
         url: /select?name=neoload
         server: neotys
@@ -21,7 +24,10 @@ user_paths:
         headers:
         - Content-Type: text/html; charset=utf-8
         - Accept-Encoding: gzip, compress, br
-        body: >
+        body: >-
           My Body
           line 1
           line 2
+        extractors:
+        - name: MyVariable1
+          jsonpath: MyJsonPath

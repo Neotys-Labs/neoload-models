@@ -18,7 +18,13 @@
                   "Accept-Encoding": "gzip, compress, br"
                 }
               ],
-              "body": "My Body\nline 1\nline 2\n"
+              "body": "My Body\nline 1\nline 2\n",
+              "extractors": [
+                {
+                  "name": "MyVariable1",
+                  "jsonpath": "MyJsonPath"
+                }
+              ]
             }
           },
           {
@@ -34,9 +40,15 @@
                   "Accept-Encoding": "gzip, compress, br"
                 }
               ],
-              "body": "My Body line 1 line 2"
+              "body": "My Body line 1 line 2",
+              "extractors": [
+                {
+                  "name": "MyVariable1",
+                  "jsonpath": "MyJsonPath"
+                }
+              ]
             }
-          }          
+          }
         ]
       }
     }

@@ -28,6 +28,7 @@ public interface Request extends Action {
 	String METHOD = "method";
 	String HEADERS = "headers";
 	String BODY = "body";
+	String EXTRACTORS = "extractors";
 	
 	String DEFAULT_NAME = "#request#";
 	String DEFAULT_METHOD = Method.GET.name();
@@ -83,6 +84,8 @@ public interface Request extends Action {
 	@JsonProperty(BODY)
 	Optional<String> getBody();
 	
+	@JsonProperty(EXTRACTORS)
+	List<VariableExtractor> getExtractors();
 	
 	class Builder extends ImmutableRequest.Builder {}
 	static Builder builder() {
