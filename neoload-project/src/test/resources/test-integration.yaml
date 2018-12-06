@@ -1,0 +1,29 @@
+name: MyProject
+servers:
+- name: serverName
+  host: mypc.intranet.company.com
+variables:
+- file:
+    name: products_file
+    path: data/list_of_products.csv
+user_paths:
+- name: MyUserPath
+  actions:
+    do:
+    - transaction:
+        name: MyTransaction
+        do:
+        - request:
+            url: http://www.company.com/select?name:product
+        - think_time: 1s
+populations:
+- name: MyPopulation
+  user_paths:
+  - name: MyUserPath
+    distribution: 100%
+scenarios:
+- name: MyScenario
+  populations:
+  - name: MyPopulation
+    constant_load:
+      users: 500
