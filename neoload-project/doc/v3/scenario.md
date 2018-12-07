@@ -159,6 +159,7 @@ The simulated load from a population is determined by a duration and a number of
 This load policy generates a load with a fixed number of Virtual Users. 
 
 **Available settings are:**
+
 | Name     | Description                                                  | Required/Optional |
 | -------- | ------------------------------------------------------------ | ----------------- |
 | users    | The fixed number of Virtual Users.                           | Required          |
@@ -231,6 +232,7 @@ scenarios:
 This load policy generates a load with a number of Virtual Users that increases throughout the test. Useful for checking the server behavior under an increasing load.
 
 **Available settings are:**
+
 | Name            | Description                                                  | Required/Optional |
 | --------------- | ------------------------------------------------------------ | ----------------- |
 | min_users       | The initial number of Virtual Users.                         | Required          |
@@ -240,6 +242,7 @@ This load policy generates a load with a number of Virtual Users that increases 
 | duration        | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | Optional          |
 
 **Advanced settings are:**
+
 | Name             | Description                                                  | Required/Optional |
 | ---------------- | ------------------------------------------------------------ | ----------------- |
 | start_after      | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population. | Optional          |
@@ -313,6 +316,7 @@ scenarios:
 This load policy generates a load with a fixed number of Virtual Users with periodic phases of low and high load. Useful for checking whether the server recovers its normal behavior after a load peak. 
 
 **Available settings are:**
+
 | Name     | Description                                                  | Required/Optional |
 | -------- | ------------------------------------------------------------ | ----------------- |
 | minimum  | The phase of low load.                                       | Required          |
@@ -321,6 +325,7 @@ This load policy generates a load with a fixed number of Virtual Users with peri
 | duration | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | Optional          |
 
 **Available settings for the minimum and maximum phases are:**
+
 | Name     | Description                                                  | Required/Optional |
 | -------- | ------------------------------------------------------------ | ----------------- |
 | users    | The fixed number of Virtual Users.                           | Required          |
