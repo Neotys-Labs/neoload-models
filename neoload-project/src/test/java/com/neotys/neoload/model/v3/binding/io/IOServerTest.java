@@ -9,7 +9,6 @@ import com.neotys.neoload.model.v3.project.server.Server;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static junit.framework.TestCase.assertNotNull;
 
@@ -17,7 +16,7 @@ import static junit.framework.TestCase.assertNotNull;
 public class IOServerTest extends AbstractIOElementsTest {
 
 	@Test
-	public void readServerOnlyRequired() throws IOException, URISyntaxException {
+	public void readServerOnlyRequired() throws IOException {
 		final Project expectedProjectWithOnlyRequired = buildProjectContainingServerWithOnlyRequired();
 		assertNotNull(expectedProjectWithOnlyRequired);
 
@@ -25,7 +24,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readServerRequiredAndOptional() throws IOException, URISyntaxException {
+	public void readServerRequiredAndOptional() throws IOException {
 		final Project expectedProjectWithRequiredAndOptional = buildProjectContainingServerWithRequiredAndOptional();
 		assertNotNull(expectedProjectWithRequiredAndOptional);
 
@@ -33,7 +32,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readServersRequiredAndOptional() throws IOException, URISyntaxException {
+	public void readServersRequiredAndOptional() throws IOException {
 		final Project expectedProjectWithRequiredAndOptional = buildProjectContainingServersWithRequiredAndOptional();
 		assertNotNull(expectedProjectWithRequiredAndOptional);
 
@@ -60,8 +59,9 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.port(443L)
 				.scheme(Server.Scheme.HTTPS)
 				.authentication(BasicAuthentication.builder()
-					.login("neotysuser")
-					.password("admin@admin").realm("realm-value").build())
+						.login("neotysuser")
+						.password("admin@admin").realm("realm-value")
+						.build())
 				.build();
 
 		return Project.builder()
@@ -80,7 +80,8 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.authentication(BasicAuthentication.builder()
 						.login("neotysuser")
 						.password("admin@admin")
-						.realm("realm-value").build())
+						.realm("realm-value")
+						.build())
 				.build();
 
 		final Server server2 = Server.builder()
@@ -91,7 +92,8 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.authentication(NegotiateAuthentication.builder()
 						.login("neotysusernego")
 						.password("admin@adminnego")
-						.domain("domain-valuenego").build())
+						.domain("domain-valuenego")
+						.build())
 				.build();
 
 		final Server server3 = Server.builder()
@@ -100,7 +102,8 @@ public class IOServerTest extends AbstractIOElementsTest {
 				.port(80L)
 				.authentication(NtlmAuthentication.builder()
 						.login("neotysuserntlm")
-						.password("admin@adminntlm").build())
+						.password("admin@adminntlm")
+						.build())
 				.build();
 
 		final Server server4 = Server.builder()

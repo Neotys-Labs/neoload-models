@@ -1,28 +1,29 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import com.neotys.neoload.model.v3.project.Project;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 
-import com.neotys.neoload.model.v3.project.Project;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 abstract class AbstractIOElementsTest {
-	protected void read(final String fileName, final Project expectedProject) throws IOException, URISyntaxException {
+	protected void read(final String fileName, final Project expectedProject) throws IOException {
 		assertNotNull(expectedProject);
 		
 		read(fileName, "yaml", expectedProject);
 		read(fileName, "json", expectedProject);
 	}
 
-	protected void read(final String fileName, final String extension, final Project expectedProject) throws IOException, URISyntaxException {
-		final File file = new File(ClassLoader.getSystemResource(fileName + "." + extension).getFile());
+	protected void read(final String fileName, final String extension, final Project expectedProject) throws IOException {
+		final ClassLoader classLoader = getClass().getClassLoader();
+		final File file = new File(Objects.requireNonNull(classLoader.getResource(fileName + "." + extension)).getFile());
 		
 		final IO mapper1 = new IO();
 		final Project actualProject1 = mapper1.read(file, Project.class);
@@ -33,15 +34,16 @@ abstract class AbstractIOElementsTest {
 		assertEquals(expectedProject, actualProject2);
 	}
 	
-	protected void write(final String fileName, final Project expectedProject) throws IOException, URISyntaxException {
+	protected void write(final String fileName, final Project expectedProject) throws IOException {
 		assertNotNull(expectedProject);
 		
 		write(fileName, "yaml", expectedProject);
 		write(fileName, "json", expectedProject);
 	}
 
-	protected void write(final String fileName, final String extension, final Project expectedProject) throws IOException, URISyntaxException {
-		final File file = new File(ClassLoader.getSystemResource(fileName + "." + extension).getFile());
+	protected void write(final String fileName, final String extension, final Project expectedProject) throws IOException {
+		final ClassLoader classLoader = getClass().getClassLoader();
+		final File file = new File(Objects.requireNonNull(classLoader.getResource(fileName + "." + extension)).getFile());
 		
 		final IO mapper = new IO();
 

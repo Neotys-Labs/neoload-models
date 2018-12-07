@@ -21,10 +21,9 @@ final class TimeDurationHelper {
 		if (input == null) return null;
 		if (input <= 0) return ZERO;
 		
-		final int value = input.intValue();
-		final int hours = value / 3600;
-		final int minutes = (value - hours * 3600) / 60;
-		final int secondes = (value - hours * 3600 - minutes * 60);
+		final int hours = input / 3600;
+		final int minutes = (input - hours * 3600) / 60;
+		final int secondes = (input - hours * 3600 - minutes * 60);
 	    
 	    final StringBuilder sb = new StringBuilder();
 	    if (hours != 0) {
@@ -55,6 +54,6 @@ final class TimeDurationHelper {
 				value = value + Integer.valueOf(group) * TIME_FACTORS[i];
 			}
 		}
-		return Integer.valueOf(value);
+		return value;
 	}
 }

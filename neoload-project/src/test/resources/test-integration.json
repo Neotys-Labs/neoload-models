@@ -3,7 +3,7 @@
   "servers": [
     {
       "name": "serverName",
-      "host": "mypc.intranet.company.com",
+      "host": "mypc.intranet.company.com"
     }
   ],
   "variables": [

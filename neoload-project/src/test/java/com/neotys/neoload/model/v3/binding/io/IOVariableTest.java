@@ -8,7 +8,6 @@ import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static junit.framework.TestCase.assertNotNull;
@@ -17,7 +16,7 @@ import static junit.framework.TestCase.assertNotNull;
 public class IOVariableTest extends AbstractIOElementsTest {
 
 	@Test
-	public void readVariableOnlyRequired() throws IOException, URISyntaxException {
+	public void readVariableOnlyRequired() throws IOException {
 		final Project expectedProject = buildProjectContainingVariable();
 		assertNotNull(expectedProject);
 

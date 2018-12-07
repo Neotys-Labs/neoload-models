@@ -7,8 +7,8 @@ import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 public interface Element {
-	public static final String NAME = "name";
-	public static final String DESCRIPTION = "description";
+	String NAME = "name";
+	String DESCRIPTION = "description";
 
 	@RequiredCheck(groups={NeoLoad.class})
 	String getName();
