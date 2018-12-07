@@ -1,8 +1,10 @@
 # NeoLoad Project definition
 Definition has several top-level keys.
+
 | Name      | Description        |
 | --------- | ------------------ |
 | Scenarios | List of scenarios. |
+
 You can find bellow an example on how to define your scenario when launching a test in command line using the `-project` parameter.
 
 Please read the full [command line documentation](https://www.neotys.com/documents/doc/neoload/latest/en/html/#643.htm).
@@ -145,6 +147,7 @@ A population is a group of Virtual User types. Select an existing population to 
 The simulated load from a population is determined by a duration and a number of Virtual Users.
 
 **Available settings are:**
+
 | Name          | Description                                                  | Required/Optional |
 | ------------- | ------------------------------------------------------------ | ----------------- |
 | name          | The name of the population from NeoLoad project.             | Required          |
