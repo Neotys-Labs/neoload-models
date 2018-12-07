@@ -196,7 +196,7 @@ scenarios:
   - name: MyPopulation
     constant_load:
       users: 500
-	  duration: 15m
+      duration: 15m
       start_after: 45s
       stop_after: 1m30s	  
 ```
@@ -216,14 +216,14 @@ scenarios:
   - name: MyPopulation1
     constant_load:
       users: 100
-	  duration: 5 iterations
+      duration: 5 iterations
   - name: MyPopulation2
     constant_load:
       users: 500
-	  duration: 15 iterations
+      duration: 15 iterations
       start_after: MyPopulation1
       rampup: 30s
-	  stop_after: current_iteration
+      stop_after: current_iteration
 ```
 
 #### Ramp-up Load Policy
@@ -272,10 +272,10 @@ scenarios:
   - name: MyPopulation
     rampup_load:
       min_users: 10
-	  max_users: 1500
+      max_users: 1500
       increment_users: 5
       increment_every: 2s
-	  duration: 15m
+      duration: 15m
       start_after: 45s
       stop_after: 1m30s  
 ```
@@ -295,17 +295,17 @@ scenarios:
   - name: MyPopulation1
     constant_load:
       users: 100
-	  duration: 5 iterations
+      duration: 5 iterations
   - name: MyPopulation2
     rampup_load:
       min_users: 100
-	  max_users: 1500
+      max_users: 1500
       increment_users: 50
       increment_every: 1 iteration
-	  duration: 30 iterations
+      duration: 30 iterations
       start_after: MyPopulation1
       increment_rampup: 5s
-	  stop_after: current_iteration
+      stop_after: current_iteration
 ```
 
 #### Peaks Load Policy
@@ -370,7 +370,7 @@ scenarios:
         users: 500
         duration: 3m
       start: maximum
-	  duration: 1h20m
+      duration: 1h20m
       start_after: 45s
       stop_after: 1m30s  
 ```
@@ -390,7 +390,7 @@ scenarios:
   - name: MyPopulation1
     constant_load:
       users: 100
-	  duration: 5 iterations
+      duration: 5 iterations
   - name: MyPopulation2
     peaks_load:
       minimum:
@@ -400,10 +400,10 @@ scenarios:
         users: 500
         duration: 3 iterations
       start: minimum
-	  duration: 80 iterations
+      duration: 80 iterations
       start_after: MyPopulation1
       step_rampup: 15s
-	  stop_after: current_iteration
+      stop_after: current_iteration
 ```
 
 # Human-Readable Time Specifications
