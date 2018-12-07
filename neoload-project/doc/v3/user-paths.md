@@ -4,13 +4,11 @@
 
 | Name        | Description                                                  | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ----------------- |
-| name        | The name of User Path.                                      | Required          |
-...
-  + [Transactions](transaction.md)
-  + [Requests](request.md)
-  + [Delays](delay.md)
-  + [ThinkTimes](delay.md)
-  + [Variable Extractors](variable-extractor.md)
+| [Transactions](transaction.md)| The transaction list.                      | Optional          |
+| [Requests](request.md)        | The request list.                          | Optional          |
+| [Delays](delay.md)            | The delays list.                           | Optional          |
+| [ThinkTimes](delay.md)        | The think time list.                       | Optional          |
+| [Variable Extractors](variable-extractor.md)            | The variable extractor list.                           | Optional          |
 
 #### Example
 Defining a User Path.
