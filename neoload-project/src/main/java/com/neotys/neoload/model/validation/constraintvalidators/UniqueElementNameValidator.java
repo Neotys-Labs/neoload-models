@@ -1,14 +1,13 @@
 package com.neotys.neoload.model.validation.constraintvalidators;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.validation.ConstraintValidatorContext;
-
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.validation.constraints.UniqueElementNameCheck;
+
+import javax.validation.ConstraintValidatorContext;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class UniqueElementNameValidator extends AbstractConstraintValidator<UniqueElementNameCheck, List<? extends Element>> {
 	@Override

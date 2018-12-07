@@ -47,10 +47,10 @@ public final class DigitsValidator extends AbstractConstraintValidator<DigitsChe
 		}
 
 		if (object instanceof Number) {
-			return isValid((Number) object, context);
+			return isValid((Number) object);
 		}
 		else if (object instanceof CharSequence) {
-			return isValid((CharSequence) object, context);
+			return isValid((CharSequence) object);
 		}
 		return false;
 	}
@@ -66,7 +66,7 @@ public final class DigitsValidator extends AbstractConstraintValidator<DigitsChe
 		return bd;
 	}
 
-	protected boolean isValid(final CharSequence charSequence, final ConstraintValidatorContext context) {
+	protected boolean isValid(final CharSequence charSequence) {
 		//null values are valid
 		if ( charSequence == null ) {
 			return true;
@@ -83,7 +83,7 @@ public final class DigitsValidator extends AbstractConstraintValidator<DigitsChe
 		return ( maxIntegerLength >= integerPartLength && maxFractionLength >= fractionPartLength );
 	}
 	
-	protected boolean isValid(final Number num, final ConstraintValidatorContext context) {
+	protected boolean isValid(final Number num) {
 		//null values are valid
 		if ( num == null ) {
 			return true;

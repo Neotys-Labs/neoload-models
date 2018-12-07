@@ -10,7 +10,7 @@ public interface Validation {
 	Optional<String> getMessage();
 	
 	class Builder extends ImmutableValidation.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }

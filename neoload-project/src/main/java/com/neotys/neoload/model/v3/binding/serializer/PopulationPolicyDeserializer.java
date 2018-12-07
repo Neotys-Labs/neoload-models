@@ -21,12 +21,12 @@ import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
 
-public final class PopulationPolicyDeserializer extends StdDeserializer<PopulationPolicy>{
+public final class PopulationPolicyDeserializer extends StdDeserializer<PopulationPolicy> {
 	private static final long serialVersionUID = -9100000271338565024L;
 
 	public PopulationPolicyDeserializer() {
-        super(PopulationPolicy.class);
-    }
+		super(PopulationPolicy.class);
+	}
 
 	private static LoadPolicy asLoadPolicy(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
 		// Constant Load Policy
@@ -46,18 +46,18 @@ public final class PopulationPolicyDeserializer extends StdDeserializer<Populati
 		}
 		return null;
 	}
-	
-    @Override
-    public PopulationPolicy deserialize(final JsonParser parser, final DeserializationContext ctx) throws IOException {
-    	final ObjectCodec codec = parser.getCodec();
-        final JsonNode node = codec.readTree(parser);
-        
-        String name = asText(node, NAME);
-        final LoadPolicy loadPolicy = asLoadPolicy(codec, node);
-        
-        return PopulationPolicy.builder()
-        		.name(name)
-        		.loadPolicy(loadPolicy)
-        		.build();
-    }
+
+	@Override
+	public PopulationPolicy deserialize(final JsonParser parser, final DeserializationContext ctx) throws IOException {
+		final ObjectCodec codec = parser.getCodec();
+		final JsonNode node = codec.readTree(parser);
+
+		String name = asText(node, NAME);
+		final LoadPolicy loadPolicy = asLoadPolicy(codec, node);
+
+		return PopulationPolicy.builder()
+				.name(name)
+				.loadPolicy(loadPolicy)
+				.build();
+	}
 }

@@ -16,25 +16,25 @@ public final class HeaderDeserializer extends StdDeserializer<Header> {
 	private static final long serialVersionUID = 3419041330155288065L;
 
 	public HeaderDeserializer() {
-        super(List.class);
-    }
+		super(List.class);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public Header deserialize(final JsonParser parser, final DeserializationContext ctx) throws IOException {
-    	final ObjectCodec codec = parser.getCodec();
-        final JsonNode node = codec.readTree(parser);
-        
-        // Reader Header object as Map object
-        final Map<String, String> map = codec.treeToValue(node, Map.class);
-        // Convert Map into Header
-        if ((map != null) && (!map.isEmpty())) {
-        	final Map.Entry<String, String> entry = map.entrySet().stream().findFirst().get();
-        	return Header.builder()
-        			.name(entry.getKey())
-        			.value(Optional.ofNullable(entry.getValue()))
-        			.build();
-        }
-        return null;
-    }
+	public Header deserialize(final JsonParser parser, final DeserializationContext ctx) throws IOException {
+		final ObjectCodec codec = parser.getCodec();
+		final JsonNode node = codec.readTree(parser);
+
+		// Reader Header object as Map object
+		final Map<String, String> map = codec.treeToValue(node, Map.class);
+		// Convert Map into Header
+		if ((map != null) && (!map.isEmpty())) {
+			final Map.Entry<String, String> entry = map.entrySet().stream().findFirst().get();
+			return Header.builder()
+					.name(entry.getKey())
+					.value(Optional.ofNullable(entry.getValue()))
+					.build();
+		}
+		return null;
+	}
 }

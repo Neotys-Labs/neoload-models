@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
-import com.neotys.neoload.model.v3.validation.constraints.UniqueVariableExtractorPathCheck;
 import com.neotys.neoload.model.v3.validation.constraints.VariableExtractorFromPathCheck;
 
 import javax.validation.ConstraintValidatorContext;

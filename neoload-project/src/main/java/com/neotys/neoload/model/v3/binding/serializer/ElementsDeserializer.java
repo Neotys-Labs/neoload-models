@@ -31,15 +31,15 @@ public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 	@Override
 	public List<Action> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
 		final List<Action> actions = new ArrayList<>();
-		
+
 		final ObjectCodec codec = jsonParser.getCodec();
 		final JsonNode jsonNode = codec.readTree(jsonParser);
 
 		final Iterator<JsonNode> iterator = jsonNode.elements();
 		while (iterator.hasNext()) {
 			final JsonNode actionNode = iterator.next();
-			
-			Action action = null; 
+
+			Action action = null;
 			if (actionNode.has(TRANSACTION)) {
 				final JsonNode transactionNode = actionNode.get(TRANSACTION);
 				action = codec.treeToValue(transactionNode, Container.class);
@@ -55,12 +55,12 @@ public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 				final String thinkTime = STRING_TO_TIME_DURATION_WITH_MS.convert(thinkTimeValue);
 				action = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
 			}
-			
+
 			if (action != null) {
 				actions.add(action);
 			}
 		}
-	
+
 		return actions;
 	}
 }
