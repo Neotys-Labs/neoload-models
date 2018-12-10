@@ -17,30 +17,10 @@ A population is a group of virtual users.
 
 **Example:**
 
-Define three scenarios: a test with a *constant* load, a test with a *ramp-up* load or a test with *peaks* load with the same population.
+Define a population using one user path.
 
 ```yaml
 populations:
-- name: # required: string
-  description: # optional: string
+- name: population1
   user_paths:
-  - name: # required: string
-    distribution: # optional: string (1 decimal place) - example: 10% or 9.9%
-
-```
-
-## basic-authentication
-| Name        | Description                                                     | Required/Optional |
-| ----------- | --------------------------------------------------------------- | ----------------- |
-| login       | The login of the user account used to authenticate on the server.                                         | Required          |
-| password    | The password of the user account used to authenticate on the server.                                                   | Required          |
-| realm       | The realm.                                                      | Optional          |
-
-#### Example
-Defining a `basic-authentication` for a server.
-```yaml
-basic-authentication:
-  login: admin
-  password: secret
-  realm: realm-value
-```
+  - name: user_path_1
