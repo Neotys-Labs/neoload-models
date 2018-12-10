@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
@@ -43,7 +44,7 @@ public interface Request extends Action {
         TRACE,
         CUSTOM;
     	
-    	public Method of(final String name) {
+    	public static Method of(final String name) {
     		if (Strings.isNullOrEmpty(name)) {
     			throw new IllegalArgumentException("The parameter 'name' must not be null or empty.");
     		}
@@ -65,6 +66,7 @@ public interface Request extends Action {
 
 	@JsonProperty(URL)
 	@RequiredCheck(groups={NeoLoad.class})
+	@Pattern(regexp="^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)", groups={NeoLoad.class})
 	String getUrl();
 	
 	@JsonProperty(SERVER)

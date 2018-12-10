@@ -44,7 +44,9 @@ public class ContainerTest {
 		final Validator validator = new Validator();
 		
 		Container container = Container.builder()
-				.addElements(Request.builder().url("url").build())
+				.addElements(Request.builder()
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build())
 				.build();
 		Validation validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -52,7 +54,9 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name("")
-				.addElements(Request.builder().url("url").build())
+				.addElements(Request.builder()
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -60,7 +64,9 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name(" 	\r\t\n")
-				.addElements(Request.builder().url("url").build())
+				.addElements(Request.builder()
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -68,7 +74,9 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name("container")
-				.addElements(Request.builder().url("url").build())
+				.addElements(Request.builder()
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -88,7 +96,9 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name("container")
-				.addElements(Request.builder().url("url").build())
+				.addElements(Request.builder()
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());

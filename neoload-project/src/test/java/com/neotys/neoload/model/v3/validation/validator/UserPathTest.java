@@ -59,7 +59,9 @@ public class UserPathTest {
 		UserPath userPath = UserPath.builder()
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder().url("url").build())
+						.addElements(Request.builder()
+								.url("http://www.neotys.com:80/select?name=neoload")
+								.build())
 						.build())
 				.build();
 		Validation validation = validator.validate(userPath, NeoLoad.class);
@@ -70,7 +72,9 @@ public class UserPathTest {
 				.name("")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder().url("url").build())
+						.addElements(Request.builder()
+								.url("http://www.neotys.com:80/select?name=neoload")
+								.build())
 						.build())
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -81,7 +85,9 @@ public class UserPathTest {
 				.name(" 	\r\t\n")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder().url("url").build())
+						.addElements(Request.builder()
+								.url("http://www.neotys.com:80/select?name=neoload")
+								.build())
 						.build())
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -92,7 +98,9 @@ public class UserPathTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder().url("url").build())
+						.addElements(Request.builder()
+								.url("http://www.neotys.com:80/select?name=neoload")
+								.build())
 						.build())
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -115,7 +123,9 @@ public class UserPathTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder().url("url").build())
+						.addElements(Request.builder()
+								.url("http://www.neotys.com:80/select?name=neoload")
+								.build())
 						.build())
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);

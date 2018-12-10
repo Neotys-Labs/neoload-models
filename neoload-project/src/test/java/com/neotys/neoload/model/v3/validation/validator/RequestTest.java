@@ -43,6 +43,15 @@ public class RequestTest {
 		CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK = sb.toString();
 	}
 
+	private static final String CONSTRAINTS_USER_PATH_REQUEST_URL_PATTERN;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.do[0].url': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'actions.do[0].url': must match \"^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)\"").append(LINE_SEPARATOR);
+		CONSTRAINTS_USER_PATH_REQUEST_URL_PATTERN = sb.toString();
+	}
+
 	private static final String CONSTRAINTS_USER_PATH_REQUEST_METHOD_BLANK;
 	static {
 		final StringBuilder sb = new StringBuilder();
@@ -71,7 +80,7 @@ public class RequestTest {
 						.name("actions")
 						.addElements(Request.builder()
 								.name("")
-								.url("url")
+								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
 				.build();
@@ -85,7 +94,7 @@ public class RequestTest {
 						.name("actions")
 						.addElements(Request.builder()
 								.name(" 	\r\t\n")
-								.url("url")
+								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
 				.build();
@@ -99,7 +108,7 @@ public class RequestTest {
 						.name("actions")
 						.addElements(Request.builder()
 								.name("MyHttpRequest")
-								.url("url")
+								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
 				.build();
@@ -148,14 +157,14 @@ public class RequestTest {
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK, validation.getMessage().get());	
+		assertEquals(CONSTRAINTS_USER_PATH_REQUEST_URL_PATTERN, validation.getMessage().get());	
 
 		userPath = UserPath.builder()
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
 						.addElements(Request.builder()
-								.url("url")
+								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
 				.build();
@@ -173,7 +182,7 @@ public class RequestTest {
 				.actions(Container.builder()
 						.name("actions")
 						.addElements(Request.builder()
-								.url("url")
+								.url("http://www.neotys.com:80/select?name=neoload")
 								.method("")
 								.build())
 						.build())
@@ -187,7 +196,7 @@ public class RequestTest {
 				.actions(Container.builder()
 						.name("actions")
 						.addElements(Request.builder()
-								.url("url")
+								.url("http://www.neotys.com:80/select?name=neoload")
 								.method(" 	\r\t\n")
 								.build())
 						.build())
@@ -202,7 +211,7 @@ public class RequestTest {
 						.name("actions")
 						.addElements(Request.builder()
 								.name("MyHttpRequest")
-								.url("url")
+								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
 				.build();
@@ -216,7 +225,7 @@ public class RequestTest {
 						.name("actions")
 						.addElements(Request.builder()
 								.name("MyHttpRequest")
-								.url("url")
+								.url("http://www.neotys.com:80/select?name=neoload")
 								.method(Method.POST.name())
 								.build())
 						.build())
