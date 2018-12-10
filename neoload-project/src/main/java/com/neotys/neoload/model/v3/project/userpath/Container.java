@@ -22,14 +22,14 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutableContainer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface Container extends Action {
+public interface Container extends Step {
 	String STEPS = "steps";
 
 	@JsonProperty(STEPS)
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	@JsonDeserialize(using = ElementsDeserializer.class)
-	List<Action> getSteps();
+	List<Step> getSteps();
 
 	class Builder extends ImmutableContainer.Builder {}
 	static Builder builder() {

@@ -23,7 +23,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface Request extends Action {
+public interface Request extends Step {
 	String URL = "url";
 	String SERVER = "server";
 	String METHOD = "method";

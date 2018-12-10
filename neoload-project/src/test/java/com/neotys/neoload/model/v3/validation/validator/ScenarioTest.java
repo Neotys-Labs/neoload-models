@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.Duration;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
@@ -209,7 +209,7 @@ public class ScenarioTest {
         		.name("MyPopulation11")
         		.loadPolicy(ConstantLoadPolicy.builder()
         				.users(500)
-        				.duration(Duration.builder().build())
+        				.duration(LoadDuration.builder().build())
         				.startAfter(StartAfter.builder().build())
         				.rampup(60)
         				.stopAfter(StopAfter.builder().build())
@@ -222,8 +222,8 @@ public class ScenarioTest {
         				.minUsers(10)
         				.maxUsers(500)
         				.incrementUsers(10)
-        				.incrementEvery(Duration.builder().build())
-        				.duration(Duration.builder().build())
+        				.incrementEvery(LoadDuration.builder().build())
+        				.duration(LoadDuration.builder().build())
         				.startAfter(StartAfter.builder().build())
         				.rampup(90)
         				.stopAfter(StopAfter.builder().build())
@@ -235,14 +235,14 @@ public class ScenarioTest {
         		.loadPolicy(PeaksLoadPolicy.builder()
         				.minimum(PeakLoadPolicy.builder()
         						.users(100)
-        						.duration(Duration.builder().build())
+        						.duration(LoadDuration.builder().build())
         						.build())
         				.maximum(PeakLoadPolicy.builder()
         						.users(500)
-        						.duration(Duration.builder().build())
+        						.duration(LoadDuration.builder().build())
         						.build())
         				.start(Peak.MAXIMUM)
-        				.duration(Duration.builder().build())
+        				.duration(LoadDuration.builder().build())
         				.startAfter(StartAfter.builder().build())
         				.rampup(15)
         				.stopAfter(StopAfter.builder().build())

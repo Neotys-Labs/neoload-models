@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.v3.project.scenario.Duration;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -44,79 +44,79 @@ public class DurationTest {
 	public void validateValue() {
 		final Validator validator = new Validator();
 		
-		Duration duration = Duration.builder()
-				.type(Duration.Type.TIME)
+		LoadDuration duration = LoadDuration.builder()
+				.type(LoadDuration.Type.TIME)
 				.build();
 		Validation validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_VALUE_NULL, validation.getMessage().get());	
 
-		duration = Duration.builder()
-				.type(Duration.Type.ITERATION)
+		duration = LoadDuration.builder()
+				.type(LoadDuration.Type.ITERATION)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_VALUE_NULL, validation.getMessage().get());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(null)
-				.type(Duration.Type.TIME)
+				.type(LoadDuration.Type.TIME)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_VALUE_NULL, validation.getMessage().get());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(null)
-				.type(Duration.Type.ITERATION)
+				.type(LoadDuration.Type.ITERATION)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_VALUE_NULL, validation.getMessage().get());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(-10)
-				.type(Duration.Type.TIME)
+				.type(LoadDuration.Type.TIME)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(-10)
-				.type(Duration.Type.ITERATION)
+				.type(LoadDuration.Type.ITERATION)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(0)
-				.type(Duration.Type.TIME)
+				.type(LoadDuration.Type.TIME)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(0)
-				.type(Duration.Type.ITERATION)
+				.type(LoadDuration.Type.ITERATION)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(1)
-				.type(Duration.Type.TIME)
+				.type(LoadDuration.Type.TIME)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertTrue(validation.isValid());
 		assertFalse(validation.getMessage().isPresent());	
 		
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(1)
-				.type(Duration.Type.ITERATION)
+				.type(LoadDuration.Type.ITERATION)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -127,14 +127,14 @@ public class DurationTest {
 	public void validateType() {
 		final Validator validator = new Validator();
 		
-		Duration duration = Duration.builder()
+		LoadDuration duration = LoadDuration.builder()
 				.value(1)
 				.build();
 		Validation validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_TYPE, validation.getMessage().get());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(1)
 				.type(null)
 				.build();
@@ -142,17 +142,17 @@ public class DurationTest {
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_TYPE, validation.getMessage().get());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(1)
-				.type(Duration.Type.ITERATION)
+				.type(LoadDuration.Type.ITERATION)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertTrue(validation.isValid());
 		assertFalse(validation.getMessage().isPresent());	
 
-		duration = Duration.builder()
+		duration = LoadDuration.builder()
 				.value(1)
-				.type(Duration.Type.TIME)
+				.type(LoadDuration.Type.TIME)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertTrue(validation.isValid());

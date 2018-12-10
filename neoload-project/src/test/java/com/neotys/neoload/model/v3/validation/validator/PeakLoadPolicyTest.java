@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.v3.project.scenario.Duration;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
@@ -38,9 +38,9 @@ public class PeakLoadPolicyTest {
 		final Validator validator = new Validator();
 		
 		PeakLoadPolicy loadPolicy = PeakLoadPolicy.builder()
-				.duration(Duration.builder()
+				.duration(LoadDuration.builder()
 						.value(1)
-						.type(Duration.Type.TIME)
+						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
 		Validation validation = validator.validate(loadPolicy, NeoLoad.class);
@@ -49,9 +49,9 @@ public class PeakLoadPolicyTest {
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(-10)
-				.duration(Duration.builder()
+				.duration(LoadDuration.builder()
 						.value(1)
-						.type(Duration.Type.TIME)
+						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
@@ -60,9 +60,9 @@ public class PeakLoadPolicyTest {
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(0)
-				.duration(Duration.builder()
+				.duration(LoadDuration.builder()
 						.value(1)
-						.type(Duration.Type.TIME)
+						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
@@ -71,9 +71,9 @@ public class PeakLoadPolicyTest {
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(1)
-				.duration(Duration.builder()
+				.duration(LoadDuration.builder()
 						.value(1)
-						.type(Duration.Type.TIME)
+						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
@@ -102,9 +102,9 @@ public class PeakLoadPolicyTest {
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(1)
-				.duration(Duration.builder()
+				.duration(LoadDuration.builder()
 						.value(1)
-						.type(Duration.Type.TIME)
+						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);

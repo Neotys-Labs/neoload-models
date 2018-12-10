@@ -12,13 +12,13 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.neotys.neoload.model.v3.project.userpath.Action;
+import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
 
-public class ElementsDeserializer extends StdDeserializer<List<Action>> {
+public class ElementsDeserializer extends StdDeserializer<List<Step>> {
 	private static final long serialVersionUID = -5696608939252369276L;
 
 	private static final String TRANSACTION = "transaction";
@@ -29,8 +29,8 @@ public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 	}
 
 	@Override
-	public List<Action> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
-		final List<Action> actions = new ArrayList<>();
+	public List<Step> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
+		final List<Step> actions = new ArrayList<>();
 
 		final ObjectCodec codec = jsonParser.getCodec();
 		final JsonNode jsonNode = codec.readTree(jsonParser);
@@ -39,7 +39,7 @@ public class ElementsDeserializer extends StdDeserializer<List<Action>> {
 		while (iterator.hasNext()) {
 			final JsonNode actionNode = iterator.next();
 
-			Action action = null;
+			Step action = null;
 			if (actionNode.has(TRANSACTION)) {
 				final JsonNode transactionNode = actionNode.get(TRANSACTION);
 				action = codec.treeToValue(transactionNode, Container.class);

@@ -37,7 +37,7 @@ public interface RampupLoadPolicy extends LoadPolicy {
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	@JsonProperty(INCREMENT_EVERY)
-	Duration getIncrementEvery();
+	LoadDuration getIncrementEvery();
 	@JsonProperty(INCREMENT_RAMPUP)
 	Integer getRampup();
 	

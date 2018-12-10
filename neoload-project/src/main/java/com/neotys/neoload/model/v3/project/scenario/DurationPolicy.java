@@ -6,5 +6,5 @@ public interface DurationPolicy {
 	String DURATION = "duration";
 
 	@Valid
-	Duration getDuration();
+	LoadDuration getDuration();
 }

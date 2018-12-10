@@ -6,7 +6,7 @@ import org.immutables.value.Value;
 
 import javax.validation.constraints.Pattern;
 
-interface ActionDuration extends Action {
+interface StepDuration extends Step {
 	String DEFAULT_NAME = "#duration#";
 
 	@RequiredCheck(groups = {NeoLoad.class})

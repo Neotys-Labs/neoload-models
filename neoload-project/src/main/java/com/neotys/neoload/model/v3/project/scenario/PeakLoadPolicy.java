@@ -21,7 +21,7 @@ public interface PeakLoadPolicy {
     int getUsers();
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
-    Duration getDuration();
+    LoadDuration getDuration();
 	
 	class Builder extends ImmutablePeakLoadPolicy.Builder {}
 	public static Builder builder() {

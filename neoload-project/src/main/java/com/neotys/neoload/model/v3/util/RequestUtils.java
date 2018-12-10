@@ -2,7 +2,6 @@ package com.neotys.neoload.model.v3.util;
 
 import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTPS_PORT;
 import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTP_PORT;
-import static com.neotys.neoload.model.v3.project.server.Server.PORT;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -17,7 +16,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
@@ -120,11 +118,6 @@ public class RequestUtils {
 		final String port = matcher.group(URL_PORT_GROUP);
 		final String file = matcher.group(URL_FILE_GROUP);
 			
-		System.out.println("scheme: " + scheme);
-		System.out.println("host: " + host);
-		System.out.println("port: " + port);			
-		System.out.println("file: " + file);
-		
 		// Retrieve path and query from file
 		String rawPath = null;
 		String rawQuery = null;

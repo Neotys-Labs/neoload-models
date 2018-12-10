@@ -2,16 +2,16 @@ package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
 import javax.validation.ConstraintValidatorContext;
 
-import com.neotys.neoload.model.v3.project.scenario.Duration;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.validation.constraints.CompositeCheck;
 
-public final class DurationValidator extends AbstractConstraintValidator<CompositeCheck, Duration> {
+public final class DurationValidator extends AbstractConstraintValidator<CompositeCheck, LoadDuration> {
 	@Override
-	public boolean isValid(final Duration duration, final ConstraintValidatorContext context) {
+	public boolean isValid(final LoadDuration duration, final ConstraintValidatorContext context) {
 		
 		if (duration == null) return false;
 		
-		final Duration.Type type = duration.getType();
+		final LoadDuration.Type type = duration.getType();
 		if (type == null) return false;
 
 		final Integer value = duration.getValue();

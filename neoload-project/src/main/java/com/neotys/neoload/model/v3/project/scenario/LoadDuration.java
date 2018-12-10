@@ -16,13 +16,13 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(converter=StringToDurationConverter.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface Duration extends Composite<Integer, Duration.Type> {
+public interface LoadDuration extends Composite<Integer, LoadDuration.Type> {
 	enum Type {
 		ITERATION,
 		TIME
 	}
 
-	class Builder extends ImmutableDuration.Builder {}
+	class Builder extends ImmutableLoadDuration.Builder {}
 	public static Builder builder() {
 		return new Builder();
 	}

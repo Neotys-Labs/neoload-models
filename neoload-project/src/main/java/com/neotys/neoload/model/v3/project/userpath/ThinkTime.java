@@ -10,7 +10,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableThinkTime.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface ThinkTime extends ActionDuration {
+public interface ThinkTime extends StepDuration {
 	String THINK_TIME = "think_time";
 
 	class Builder extends ImmutableThinkTime.Builder {}

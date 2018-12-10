@@ -10,7 +10,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableDelay.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface Delay extends ActionDuration {
+public interface Delay extends StepDuration {
 	String DELAY = "delay";
 
 	class Builder extends ImmutableDelay.Builder {}

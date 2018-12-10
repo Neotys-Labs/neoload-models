@@ -1,20 +1,12 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
-import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.ImmutableVariableExtractor;
-import com.neotys.neoload.model.v3.project.userpath.Request;
-import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
-import com.neotys.neoload.model.v3.project.variable.ImmutableConstantVariable;
-import com.neotys.neoload.model.v3.project.variable.Variable;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
-import static com.neotys.neoload.model.v3.project.userpath.VariableExtractor.Decode.URL;
-import static junit.framework.TestCase.assertNotNull;
+import org.junit.Test;
+
+import com.neotys.neoload.model.v3.project.userpath.Request;
 
 
 public class IOVariableExtractorTest extends AbstractIOElementsTest {

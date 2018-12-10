@@ -6,22 +6,22 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.neotys.neoload.model.v3.binding.converter.StringToDurationConverter;
-import com.neotys.neoload.model.v3.project.scenario.Duration;
-import com.neotys.neoload.model.v3.project.scenario.Duration.Type;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration.Type;
 
 
 public class StringToDurationConverterTest {
-	private static final Duration ERROR = Duration.builder().build();
+	private static final LoadDuration ERROR = LoadDuration.builder().build();
 
-	private static Duration convertToTimeDuration(final int input) {
-		return Duration.builder()
+	private static LoadDuration convertToTimeDuration(final int input) {
+		return LoadDuration.builder()
 				.value(input)
 				.type(Type.TIME)
 				.build();
 	}
 	
-	private static Duration convertToIterationDuration(final int input) {
-		return Duration.builder()
+	private static LoadDuration convertToIterationDuration(final int input) {
+		return LoadDuration.builder()
 				.value(input)
 				.type(Type.ITERATION)
 				.build();
