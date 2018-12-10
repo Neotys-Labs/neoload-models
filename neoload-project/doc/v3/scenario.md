@@ -111,7 +111,7 @@ A scenario defines a test configuration. Select an existing SLA profile to verif
 | sla_profile | The SLA (Service Level Agreement) profile to verify in this scenario. | Optional          |
 | populations | The list of existing populations from NeoLoad project.       | Required          |
 
-**Example:**
+#### Example
 
 Define three scenarios: a test with a *constant* load, a test with a *ramp-up* load or a test with *peaks* load with the same population.
 
@@ -146,7 +146,7 @@ scenarios:
 A population is a group of Virtual User types. Select an existing population to test and defines its load policy.
 The simulated load from a population is determined by a duration and a number of Virtual Users.
 
-**Available settings are:**
+#### Available settings are
 
 | Name          | Description                                                  | Required/Optional |
 | ------------- | ------------------------------------------------------------ | ----------------- |
@@ -161,14 +161,14 @@ The simulated load from a population is determined by a duration and a number of
 
 This load policy generates a load with a fixed number of Virtual Users. 
 
-**Available settings are:**
+#### Available settings are
 
 | Name     | Description                                                  | Required/Optional |
 | -------- | ------------------------------------------------------------ | ----------------- |
 | users    | The fixed number of Virtual Users.                           | Required          |
 | duration | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | Optional          |
 
-**Advanced settings are:**
+#### Advanced settings are
 
 | Name        | Description                                                  | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ----------------- |
@@ -176,7 +176,7 @@ This load policy generates a load with a fixed number of Virtual Users.
 | rampup      | Define how Virtual Users start: simultaneously or with a preset [delay](#human-readable-time-specifications). | Optional          |
 | stop_after  | Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset [delay](#human-readable-time-specifications) to finish the current iteration or allow the population to end the current iteration for each Virtual User. | Optional          |
 
-**Example 1:**
+#### Example 1
 
 A test with a constant load of 500 Virtual Users. The duration of the test is unlimited (stop manually). The population starts at the start of the test. The Virtual Users simultaneously start. The population immediately stop.
 
@@ -189,7 +189,7 @@ scenarios:
       users: 500
 ```
 
-**Example 2:**
+#### Example 2
 
 A test with a constant load of 500 Virtual Users during 15 minutes. The population starts after 45 seconds. The Virtual Users simultaneously start. The population stops after 90 seconds.
 
@@ -205,7 +205,7 @@ scenarios:
       stop_after: 1m30s	  
 ```
 
-**Example 3:**
+#### Example 3
 
 A test including 2 constant loads:
 
@@ -252,7 +252,7 @@ This load policy generates a load with a number of Virtual Users that increases 
 | increment_rampup | Define how Virtual Users start: simultaneously or with a preset [delay](#human-readable-time-specifications). This rule is used each time new Virtual Users are created, at each load increase for a ramp-up load policy. | Optional          |
 | stop_after       | Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset [delay](#human-readable-time-specifications) to finish the current iteration or allow the population to end the current iteration for each Virtual User. | Optional          |
 
-**Example 1:**
+#### Example 1
 
 A test with a ramp-up load of 10 initial Virtual Users in incrementing 5 Virtual Users every 2 seconds. The duration of the test is unlimited (stop manually). The population starts at the start of the test. The Virtual Users simultaneously start. The population immediately stop.
 
@@ -267,7 +267,7 @@ scenarios:
       increment_every: 2s
 ```
 
-**Example 2:**
+#### Example 2
 
 A test with a ramp-up load of 10 initial Virtual Users in incrementing 5 Virtual Users every 2 seconds during 15 minutes and limited at 1500 maximum Virtual Users. The population starts after 45 seconds. The Virtual Users simultaneously start. The population stops after 90 seconds.
 
@@ -286,7 +286,7 @@ scenarios:
       stop_after: 1m30s  
 ```
 
-**Example 3:**
+#### Example 3
 
 A test including 2 load policies:
 
@@ -318,7 +318,7 @@ scenarios:
 
 This load policy generates a load with a fixed number of Virtual Users with periodic phases of low and high load. Useful for checking whether the server recovers its normal behavior after a load peak. 
 
-**Available settings are:**
+#### Available settings are
 
 | Name     | Description                                                  | Required/Optional |
 | -------- | ------------------------------------------------------------ | ----------------- |
@@ -327,14 +327,14 @@ This load policy generates a load with a fixed number of Virtual Users with peri
 | start    | Select the phase to start.                                   | Required          |
 | duration | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | Optional          |
 
-**Available settings for the minimum and maximum phases are:**
+#### Available settings for the minimum and maximum phases are
 
 | Name     | Description                                                  | Required/Optional |
 | -------- | ------------------------------------------------------------ | ----------------- |
 | users    | The fixed number of Virtual Users.                           | Required          |
 | duration | The duration of the phase: [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | Required          |
 
-**Advanced settings are:**
+#### Advanced settings are
 
 | Name        | Description                                                  | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ----------------- |
@@ -342,7 +342,7 @@ This load policy generates a load with a fixed number of Virtual Users with peri
 | step_rampup | Define how Virtual Users start: simultaneously or with a preset [delay](#human-readable-time-specifications). This rule is used each time new Virtual Users are created, at each load peak for a peak load policy. | Optional          |
 | stop_after  | Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset [delay](#human-readable-time-specifications) to finish the current iteration or allow the population to end the current iteration for each Virtual User. | Optional          |
 
-**Example 1:**
+#### Example 1
 
 A test with a peaks load: a minimum load of 100 Virtual Users during 5 minutes and a maximum load of 500 Virtual Users during 3 minutes. The test starts with the minimum load. The duration of the test is unlimited (stop manually). The population starts at the start of the test. The Virtual Users simultaneously start. The population immediately stop.
 
@@ -361,7 +361,7 @@ scenarios:
       start: minimum
 ```
 
-**Example 2:**
+#### Example 2
 
 A test with a peaks load: a minimum load of 100 Virtual Users during 5 minutes and a maximum load of 500 Virtual Users during 3 minutes. The test starts with the maximum load. The duration of the test is 80 minutes. The population starts after 45 seconds. The Virtual Users simultaneously start. The population stops after 90 seconds.
 
@@ -383,7 +383,7 @@ scenarios:
       stop_after: 1m30s  
 ```
 
-**Example 3:**
+#### Example 3
 
 A test including 2 load policies:
 
@@ -419,7 +419,7 @@ All time specifications, including delays and durations, are always expressed in
 
 `h` for hours, `m` for minutes, `s` for seconds
 
-**Examples:**
+#### Examples
 `90s`,`5m`,`2h30m30s`
 
 
@@ -428,5 +428,5 @@ All iteration specifications, including durations, are always expressed in unit 
 
 `iteration` or `iterations`
 
-**Examples:**
+#### Examples
 `1 iteration`, `15 iterations`
