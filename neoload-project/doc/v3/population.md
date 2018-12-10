@@ -2,18 +2,18 @@
 
 | Name        | Description          |
 | ------------| ---------------------|
-| populations | List of populations. |
+| populations | List of Populations. |
 
 ## Population
-A population is a group of virtual users.
+A Population is a group of virtual users.
 
 **Available settings are:**
 
 | Name        | Description                                                  | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ----------------- |
-| name        | The name of the population.                                  | Required          |
-| description | The description of the population.                           | Optional          |
-| user_paths  | The list of existing user paths                              | Required          |
+| name        | The name of the Population.                                  | Required          |
+| description | The description of the Population.                           | Optional          |
+| user_paths  | The list of existing User Paths                              | Required          |
 
 **Example:**
 

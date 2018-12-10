@@ -6,9 +6,9 @@ The server settings are centralized, which means the target server for the test 
 | Name        | Description                                                  | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ----------------- |
 | name        | The name of the server.                                      | Required          |
-| host | The host of the server.                                    | Required          |
-| scheme | The scheme of the server. The available values are "http" and "https". The default value is "http".    | Optional          |
-| port | The port of the server. The default value is "80" (for http scheme) or "443" (for https scheme).                    | Optional          |
+| host        | The host of the server.                                      | Required          |
+| scheme      | The scheme of the server. The available values are "http" and "https". The default value is "http".    | Optional          |
+| port        | The port of the server. The default value is "80" (for http scheme) or "443" (for https scheme).                    | Optional          |
 | [basic-authentication](#basic-authentication) | The Basic Authentication used to authenticate on the server.                    | Optional          |
 | [ntlm-authentication](#ntlm-authentication) | The NTLM Authentication used to authenticate on the server.                     | Optional          |
 | [negotiate-authentication](#negotiate-authentication) | The Negotiate Authentication used to authenticate on the server.           | Optional          |
