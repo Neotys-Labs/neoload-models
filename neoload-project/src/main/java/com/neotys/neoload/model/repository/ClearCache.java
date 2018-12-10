@@ -7,6 +7,7 @@ import com.neotys.neoload.model.core.Element;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableClearCache.class)
+@Deprecated
 public interface ClearCache extends Element {
 	
 }

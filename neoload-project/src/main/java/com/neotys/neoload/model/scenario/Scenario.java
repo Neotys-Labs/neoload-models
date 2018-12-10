@@ -22,6 +22,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutableScenario.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Deprecated
 public interface Scenario extends Element {
 	public static final String SLA_PROFILE = "sla_profile";
 	public static final String POPULATIONS = "populations";

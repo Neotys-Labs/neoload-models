@@ -2,6 +2,7 @@ package com.neotys.neoload.model.repository;
 
 import java.util.Optional;
 
+@Deprecated
 public interface Variable {
 	
 	enum VariablePolicy{

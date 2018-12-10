@@ -16,6 +16,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @JsonDeserialize(converter=StringToDurationConverter.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Deprecated
 public interface Duration extends Composite<Integer, Duration.Type> {
 	enum Type {
 		ITERATION,

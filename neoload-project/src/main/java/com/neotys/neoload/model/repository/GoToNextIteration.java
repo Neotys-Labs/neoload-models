@@ -6,6 +6,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableGoToNextIteration.class)
+@Deprecated
 public interface GoToNextIteration extends Element {
 
 }

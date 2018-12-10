@@ -5,6 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 import com.neotys.neoload.model.scenario.Duration;
 import com.neotys.neoload.model.validation.constraints.CompositeCheck;
 
+@Deprecated
 public final class DurationValidator extends AbstractConstraintValidator<CompositeCheck, Duration> {
 	@Override
 	public boolean isValid(final Duration duration, final ConstraintValidatorContext context) {

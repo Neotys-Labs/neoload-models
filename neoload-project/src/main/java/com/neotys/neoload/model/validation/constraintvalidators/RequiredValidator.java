@@ -7,6 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import com.neotys.neoload.model.validation.constraints.RequiredCheck;
 
+@Deprecated
 public final class RequiredValidator extends AbstractConstraintValidator<RequiredCheck, Object> {
 	@Override
 	public boolean isValid(final Object object, final ConstraintValidatorContext context) {

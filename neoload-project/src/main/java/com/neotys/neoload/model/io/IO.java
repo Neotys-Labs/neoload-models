@@ -19,7 +19,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.base.Strings;
 
-
+@Deprecated
 public final class IO {
 	private static final String YAML_STARTS_WITH = "---";
 	private static final String JSON_STARTS_WITH = "{";

@@ -5,6 +5,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContainerForMulti.class)
+@Deprecated
 public interface ContainerForMulti extends IContainer {
 	String getTag();
 }

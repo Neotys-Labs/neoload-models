@@ -26,6 +26,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutableProject.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Deprecated
 public interface Project {
 	public static final String DEFAULT_NAME = "MyProject";
 	

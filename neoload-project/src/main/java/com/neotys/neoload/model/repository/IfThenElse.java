@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableIfThenElse.class)
+@Deprecated
 public interface IfThenElse extends Element {
 	Conditions getConditions();
 	ContainerForMulti getThen();

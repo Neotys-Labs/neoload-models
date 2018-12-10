@@ -10,6 +10,7 @@ import com.neotys.neoload.model.converter.TimeDurationToStringConverter;
 import com.neotys.neoload.model.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.validation.groups.NeoLoad;
 
+@Deprecated
 public interface StartStopPolicy {
 	public static final String START_AFTER = "start_after";
 	public static final String STOP_AFTER = "stop_after";

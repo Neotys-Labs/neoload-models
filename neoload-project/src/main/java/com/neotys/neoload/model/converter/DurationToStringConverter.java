@@ -3,6 +3,7 @@ package com.neotys.neoload.model.converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.neotys.neoload.model.scenario.Duration;
 
+@Deprecated
 public final class DurationToStringConverter extends StdConverter<Duration, String> {
 	@Override
 	public String convert(final Duration duration) {

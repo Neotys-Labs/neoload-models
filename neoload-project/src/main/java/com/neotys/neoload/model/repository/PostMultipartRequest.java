@@ -5,6 +5,7 @@ import org.immutables.value.Value;
 import java.util.List;
 
 @Value.Immutable
+@Deprecated
 public interface PostMultipartRequest extends PostRequest {
 
     List<Part> getParts();

@@ -6,6 +6,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableStop.class)
+@Deprecated
 public interface Stop extends Element {
 
 	boolean startNewVirtualUser();

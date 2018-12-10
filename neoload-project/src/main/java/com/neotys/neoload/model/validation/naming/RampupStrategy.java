@@ -12,6 +12,7 @@ import com.neotys.neoload.model.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.scenario.RampupLoadPolicy;
 
+@Deprecated
 public final class RampupStrategy implements PropertyNamingStrategy {
     @Override
     public String apply(final Node node) {

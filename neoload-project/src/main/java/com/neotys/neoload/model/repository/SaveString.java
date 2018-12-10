@@ -7,6 +7,7 @@ import com.neotys.neoload.model.core.Element;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableSaveString.class)
+@Deprecated
 public interface SaveString extends Element {
 	String getVariableName();
 	String getVariableValue();	

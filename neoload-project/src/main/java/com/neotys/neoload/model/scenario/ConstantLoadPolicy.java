@@ -15,6 +15,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutableConstantLoadPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Deprecated
 public interface ConstantLoadPolicy extends LoadPolicy {
 	public static final String USERS = "users";
 	public static final String RAMPUP = "rampup";

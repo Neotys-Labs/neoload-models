@@ -16,6 +16,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @JsonDeserialize(converter=StringToStartAfterConverter.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Deprecated
 public interface StartAfter extends Composite<Object, StartAfter.Type> {
 	enum Type {
 		POPULATION,

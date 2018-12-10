@@ -6,6 +6,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableDelay.class)
+@Deprecated
 public interface Delay extends Element {
     String getDelay();
     boolean isThinkTime();

@@ -9,6 +9,7 @@ import com.neotys.neoload.model.core.Element;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableSprintf.class)
+@Deprecated
 public interface Sprintf extends Element {
 	String getVariableName();
 	String getFormat();

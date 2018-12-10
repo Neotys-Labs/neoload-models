@@ -16,6 +16,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @JsonDeserialize(converter=StringToStopAfterConverter.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Deprecated
 public interface StopAfter extends Composite<Object, StopAfter.Type>{
 	enum Type {
 		CURRENT_ITERATION,

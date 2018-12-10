@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableStrcmp.class)
+@Deprecated
 public interface Strcmp extends Function {
 	
 }

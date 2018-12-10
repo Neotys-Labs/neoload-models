@@ -5,6 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 import com.neotys.neoload.model.scenario.StartAfter;
 import com.neotys.neoload.model.validation.constraints.CompositeCheck;
 
+@Deprecated
 public final class StartAfterValidator extends AbstractConstraintValidator<CompositeCheck, StartAfter> {
 	@Override
 	public boolean isValid(final StartAfter startAfter, final ConstraintValidatorContext context) {

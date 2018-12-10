@@ -3,6 +3,7 @@ package com.neotys.neoload.model.converter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Deprecated
 final class IterationDurationHelper {
 	private static final char SPACE = ' ';
 	

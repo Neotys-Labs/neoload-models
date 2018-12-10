@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
+@Deprecated
 public interface Validation {
 	boolean isValid();
 	Optional<String> getMessage();

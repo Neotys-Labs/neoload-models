@@ -17,6 +17,7 @@ import javax.validation.constraints.Positive;
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 @ReportAsSingleViolation
+@Deprecated
 public @interface PositiveCheck {
 	String message() default "{com.neotys.neoload.model.validation.constraints.PositiveCheck.message}";
 	 

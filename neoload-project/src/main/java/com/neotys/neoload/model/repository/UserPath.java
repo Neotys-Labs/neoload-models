@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUserPath.class)
+@Deprecated
 public interface UserPath extends Element {
 	ContainerForMulti getInitContainer();
 	ContainerForMulti getActionsContainer();

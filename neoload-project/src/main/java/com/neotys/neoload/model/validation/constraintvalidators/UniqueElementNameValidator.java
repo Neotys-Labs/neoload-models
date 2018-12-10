@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Deprecated
 public final class UniqueElementNameValidator extends AbstractConstraintValidator<UniqueElementNameCheck, List<? extends Element>> {
 	@Override
 	public boolean isValid(final List<? extends Element> elements, final ConstraintValidatorContext context) {

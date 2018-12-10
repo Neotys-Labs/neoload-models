@@ -11,6 +11,7 @@ import java.util.stream.Stream;
  */
 
 @Value.Immutable
+@Deprecated
 public interface Page extends PageElement {
     List<Element> getChilds();
     int getThinkTime();

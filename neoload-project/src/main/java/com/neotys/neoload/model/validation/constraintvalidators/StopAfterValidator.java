@@ -5,6 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 import com.neotys.neoload.model.scenario.StopAfter;
 import com.neotys.neoload.model.validation.constraints.CompositeCheck;
 
+@Deprecated
 public final class StopAfterValidator extends AbstractConstraintValidator<CompositeCheck, StopAfter> {
 	@Override
 	public boolean isValid(final StopAfter stopAfter, final ConstraintValidatorContext context) {

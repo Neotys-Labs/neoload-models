@@ -4,5 +4,6 @@ import java.util.function.Function;
 
 import javax.validation.Path.Node;
 
+@Deprecated
 public interface PropertyNamingStrategy extends Function<Node, String> {
 }

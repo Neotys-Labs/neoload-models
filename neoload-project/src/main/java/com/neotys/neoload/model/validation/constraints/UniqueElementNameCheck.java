@@ -15,6 +15,7 @@ import com.neotys.neoload.model.validation.constraintvalidators.UniqueElementNam
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)
 @Constraint(validatedBy = UniqueElementNameValidator.class)
+@Deprecated
 public @interface UniqueElementNameCheck {
 	String message() default "{com.neotys.neoload.model.validation.constraints.UniqueElementNameCheck.message}";
 	 

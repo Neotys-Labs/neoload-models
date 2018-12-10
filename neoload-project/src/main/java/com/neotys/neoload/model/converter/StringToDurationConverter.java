@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.util.StdConverter;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.scenario.Duration;
 
+@Deprecated
 public final class StringToDurationConverter extends StdConverter<String, Duration> {
 	private static final Duration ERROR_VALUE = Duration.builder().build();
 

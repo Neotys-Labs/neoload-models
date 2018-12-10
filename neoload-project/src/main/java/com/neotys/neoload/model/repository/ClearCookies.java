@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableClearCookies.class)
+@Deprecated
 public interface ClearCookies extends Element {
 	
 }

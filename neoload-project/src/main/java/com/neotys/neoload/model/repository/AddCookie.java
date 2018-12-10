@@ -8,6 +8,7 @@ import com.neotys.neoload.model.core.Element;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableAddCookie.class)
+@Deprecated
 public interface AddCookie extends Element {
 	String getCookieName();
 	String getCookieValue();

@@ -17,6 +17,7 @@ import com.neotys.neoload.model.scenario.PopulationPolicy;
 import com.neotys.neoload.model.scenario.RampupLoadPolicy;
 
 
+@Deprecated
 public final class PopulationPolicySerializer extends StdSerializer<PopulationPolicy> {
 	private static final long serialVersionUID = 7048026935384614957L;
 

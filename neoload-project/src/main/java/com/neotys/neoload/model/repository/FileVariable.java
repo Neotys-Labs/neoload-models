@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
+@Deprecated
 public interface FileVariable extends Variable {
 	
 	String getColumnsDelimiter();

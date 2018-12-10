@@ -16,6 +16,7 @@ import com.neotys.neoload.model.validation.constraintvalidators.StopAfterValidat
 @Target( { TYPE })
 @Retention(RUNTIME)
 @Constraint(validatedBy = {DurationValidator.class, StartAfterValidator.class, StopAfterValidator.class})
+@Deprecated
 public @interface CompositeCheck { //GreaterThanOrEqualOne
 	String message() default "";
 	 

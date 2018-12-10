@@ -5,6 +5,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableCounterNumberVariable.class)
+@Deprecated
 public interface CounterNumberVariable extends Variable{
 	
 	int getStartValue();

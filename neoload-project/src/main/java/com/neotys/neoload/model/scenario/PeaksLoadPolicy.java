@@ -19,6 +19,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutablePeaksLoadPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Deprecated
 public interface PeaksLoadPolicy extends LoadPolicy {
 	public static final String MINIMUM = "minimum";
 	public static final String MAXIMUM = "maximum";

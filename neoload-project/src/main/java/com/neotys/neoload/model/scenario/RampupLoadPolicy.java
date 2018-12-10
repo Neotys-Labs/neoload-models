@@ -19,6 +19,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutableRampupLoadPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Deprecated
 public interface RampupLoadPolicy extends LoadPolicy {
 	public static final String MIN_USERS = "min_users";
 	public static final String MAX_USERS = "max_users";

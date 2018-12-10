@@ -7,5 +7,6 @@ import com.neotys.neoload.model.function.Function;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableEvalString.class)
+@Deprecated
 public interface EvalString extends Function {	
 }

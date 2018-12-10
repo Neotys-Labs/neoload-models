@@ -6,6 +6,7 @@ import com.neotys.neoload.model.core.ShareableElement;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Deprecated
 public interface IContainer extends ShareableElement {
     List<Element> getChilds();
 

@@ -5,5 +5,6 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableContainer.class)
+@Deprecated
 public interface Container extends IContainer {
 }

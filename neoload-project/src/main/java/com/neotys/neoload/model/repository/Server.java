@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableServer.class)
+@Deprecated
 public interface Server {
     String getName();
     String getHost();

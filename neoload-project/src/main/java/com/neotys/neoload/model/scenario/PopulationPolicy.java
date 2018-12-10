@@ -20,6 +20,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @JsonDeserialize(using=PopulationPolicyDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Deprecated
 public interface PopulationPolicy extends Element {
 	public static final String LOAD_POLICY = "load_policy";
 	public static final String CONSTANT_LOAD = "constant_load";

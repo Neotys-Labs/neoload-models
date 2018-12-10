@@ -17,6 +17,7 @@ import com.neotys.neoload.model.validation.constraintvalidators.RequiredValidato
 @Retention(RUNTIME)
 @Constraint(validatedBy = RequiredValidator.class)
 @ReportAsSingleViolation
+@Deprecated
 public @interface RequiredCheck {
 	String message() default "{com.neotys.neoload.model.validation.constraints.RequiredCheck.message}";
 	 

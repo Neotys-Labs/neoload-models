@@ -11,6 +11,7 @@ import com.neotys.neoload.model.core.Element;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableCustomAction.class)
+@Deprecated
 public interface CustomAction extends Element {
 	String getType();
 	boolean isHit();

@@ -3,6 +3,7 @@ package com.neotys.neoload.model.repository;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public interface Request extends PageElement {
 
     enum HttpMethod {
