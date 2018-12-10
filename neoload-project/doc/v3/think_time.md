@@ -3,12 +3,12 @@ Think time is the time the user normally takes to make a decision to do the next
 
 For example, it is the simulation of the time taken by a real user to read one page before clicking to the next one.
 
-## Available settings are
+#### Available settings are
 | Name        | Description                               | Required/Optional |
 | ----------- | ----------------------------------------  | ----------------- |
 | think_time  | The Think time duration                   | Required          |
 
-## Duration value
+#### Duration value
 The Think time duration is expressed in hours, minutes, seconds, milliseconds.
 Some valid examples of Think time durations:
 
@@ -19,7 +19,7 @@ Some valid examples of Think time durations:
 | 2m 100ms          | 2 minutes 100 milliseconds                    |
 | 1h 10m 15s 250ms  | 1 hour 10 minutes 15 seconds 250 milliseconds |
 
-## Example
+#### Example
 Defining a 100 milliseconds Think time.
 ```yaml
 think_time: 100

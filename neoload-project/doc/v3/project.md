@@ -18,7 +18,7 @@ Definition has several top-level keys:
 | [populations](population.md) | The Populations list.                         | Optional          |
 | [scenarios](scenario.md)     | The Scenario list.                            | Optional          |
 
-## Example
+#### Example
 Here is an example of a NeoLoad project.
 
 ```yaml

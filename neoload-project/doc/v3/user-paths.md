@@ -18,7 +18,7 @@
 | [Transactions](transaction.md)| The transaction list.                      | Optional          |
 | [Requests](request.md)        | The request list.                          | Optional          |
 | [Delays](delay.md)            | The delays list.                           | Optional          |
-| [ThinkTimes](think_time.md)        | The think time list.                       | Optional          |
+| [ThinkTimes](think_time.md)   | The think time list.                       | Optional          |
 | [Variable Extractors](variable-extractor.md)    | The variable extractor list.  | Optional          |
 
 #### Example

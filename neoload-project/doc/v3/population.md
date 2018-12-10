@@ -15,7 +15,7 @@ A Population is a group of virtual users.
 | description | The description of the Population.                           | Optional          |
 | user_paths  | The list of existing User Paths                              | Required          |
 
-**Example:**
+#### Example
 
 Define a population using one user path.
 
