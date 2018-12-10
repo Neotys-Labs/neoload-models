@@ -44,7 +44,7 @@ public class IOIntegrationTest extends AbstractIOElementsTest {
 		return Server.builder()
 				.name("serverName")
 				.host("mypc.intranet.company.com")
-				.port(80L)
+				.port("80")
 				.build();
 	}
 

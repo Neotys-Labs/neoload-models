@@ -43,7 +43,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 		final Server server = Server.builder()
 				.name("serverName")
 				.host("mypc.intranet.neotys.com")
-				.port(80L)
+				.port("80")
 				.build();
 
 		return Project.builder()
@@ -56,7 +56,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 		final Server server = Server.builder()
 				.name("serverName")
 				.host("mypc.intranet.neotys.com")
-				.port(443L)
+				.port("443")
 				.scheme(Server.Scheme.HTTPS)
 				.authentication(BasicAuthentication.builder()
 						.login("neotysuser")
@@ -75,7 +75,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 		final Server server1 = Server.builder()
 				.name("serverName")
 				.host("mypc.intranet.neotys.com")
-				.port(443L)
+				.port("443")
 				.scheme(Server.Scheme.HTTPS)
 				.authentication(BasicAuthentication.builder()
 						.login("neotysuser")
@@ -87,7 +87,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 		final Server server2 = Server.builder()
 				.name("serverName2")
 				.host("mypc2.intranet.neotys.com")
-				.port(81L)
+				.port("81")
 				.scheme(Server.Scheme.HTTP)
 				.authentication(NegotiateAuthentication.builder()
 						.login("neotysusernego")
@@ -99,7 +99,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 		final Server server3 = Server.builder()
 				.name("serverName3")
 				.host("mypc3.intranet.neotys.com")
-				.port(80L)
+				.port("80")
 				.authentication(NtlmAuthentication.builder()
 						.login("neotysuserntlm")
 						.password("admin@adminntlm")
@@ -109,7 +109,7 @@ public class IOServerTest extends AbstractIOElementsTest {
 		final Server server4 = Server.builder()
 				.name("serverName4")
 				.host("mypc4.intranet.neotys.com")
-				.port(80L)
+				.port("80")
 				.build();
 
 		return Project.builder()

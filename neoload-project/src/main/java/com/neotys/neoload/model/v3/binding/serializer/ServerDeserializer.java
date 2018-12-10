@@ -44,7 +44,7 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		final String name = jsonNode.get(NAME).asText();
 		final Server.Scheme scheme = getScheme(codec, jsonNode);
 		final String host = jsonNode.findValue(HOST).asText();
-		final long port = getPort(jsonNode, scheme);
+		final String port = getPort(jsonNode, scheme);
 
 		return Server.builder()
 				.name(name)
@@ -63,10 +63,10 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		}
 	}
 
-	private long getPort(final JsonNode jsonNode, final Server.Scheme scheme) {
+	private String getPort(final JsonNode jsonNode, final Server.Scheme scheme) {
 		final JsonNode jsonNodePort = jsonNode.get(PORT);
 		if (jsonNodePort != null) {
-			return jsonNodePort.asLong();
+			return jsonNodePort.asText();
 		}
 		return scheme == Server.Scheme.HTTPS ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
 	}

@@ -14,7 +14,8 @@ public class ServerTest {
 		assertEquals("port", Server.PORT);
 		assertEquals("scheme", Server.SCHEME);
 		
-		assertEquals(80, Server.DEFAULT_HTTP_PORT);
+		assertEquals("80", Server.DEFAULT_HTTP_PORT);
+		assertEquals("443", Server.DEFAULT_HTTPS_PORT);
 		assertEquals(Server.Scheme.HTTP, Server.DEFAULT_SCHEME);
 	}
 }

@@ -15,6 +15,8 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+
 import java.util.Optional;
 
 @JsonInclude(value = Include.NON_EMPTY)
@@ -31,8 +33,8 @@ public interface Server extends Element {
 	Scheme DEFAULT_SCHEME = Scheme.HTTP;
 	String HTTP_SCHEME_VALUE = "http";
 	String HTTPS_SCHEME_VALUE = "https";
-	long DEFAULT_HTTP_PORT = 80;
-	long DEFAULT_HTTPS_PORT = 443;
+	String DEFAULT_HTTP_PORT = "80";
+	String DEFAULT_HTTPS_PORT = "443";
 
 	enum Scheme {
 		@JsonProperty(Server.HTTP_SCHEME_VALUE)
@@ -45,8 +47,8 @@ public interface Server extends Element {
 	String getHost();
 
 	@RequiredCheck(groups = {NeoLoad.class})
-	@RangeCheck(min = 1, max = 65535, groups = {NeoLoad.class})
-	Long getPort();
+	@Pattern(regexp = "^((\\d+)|(\\$\\{.+\\}))$", groups = {NeoLoad.class})
+	String getPort();
 
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Value.Default
