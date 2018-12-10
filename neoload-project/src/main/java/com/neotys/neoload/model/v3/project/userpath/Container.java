@@ -18,18 +18,18 @@ import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, Container.DO})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, Container.STEPS})
 @JsonDeserialize(as = ImmutableContainer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Container extends Action {
-	String DO = "do";
+	String STEPS = "steps";
 
-	@JsonProperty(DO)
+	@JsonProperty(STEPS)
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	@JsonDeserialize(using = ElementsDeserializer.class)
-	List<Action> getElements();
+	List<Action> getSteps();
 
 	class Builder extends ImmutableContainer.Builder {}
 	static Builder builder() {

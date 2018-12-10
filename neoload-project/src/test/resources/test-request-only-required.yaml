@@ -2,6 +2,6 @@ name: MyProject
 user_paths:
 - name: MyUserPath
   actions:
-    do:
+    steps:
     - request:
         url: http://www.neotys.com/select?name:neoload

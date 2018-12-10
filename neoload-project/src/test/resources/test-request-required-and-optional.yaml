@@ -2,7 +2,7 @@ name: MyProject
 user_paths:
 - name: MyUserPath
   actions:
-    do:
+    steps:
     - request:
         url: /select?name=neoload
         server: neotys

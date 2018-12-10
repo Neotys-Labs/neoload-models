@@ -33,7 +33,7 @@ public class IODelayTest extends AbstractIOElementsTest {
 
 		final Container container = Container.builder()
 				.name("actions")
-				.addElements(delay1, delay2, delay3, thinkTime)
+				.addSteps(delay1, delay2, delay3, thinkTime)
 				.build();
 
 		final UserPath userPath = UserPath.builder()

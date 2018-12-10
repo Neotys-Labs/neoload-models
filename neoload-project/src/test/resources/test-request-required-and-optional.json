@@ -4,7 +4,7 @@
     {
       "name": "MyUserPath",
       "actions": {
-        "do": [
+        "steps": [
           {
             "request": {
               "url": "/select?name=neoload",

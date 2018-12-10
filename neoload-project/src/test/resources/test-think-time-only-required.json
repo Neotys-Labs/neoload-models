@@ -4,7 +4,7 @@
     {
       "name": "user_path_1",
       "actions": {
-        "do": [
+        "steps": [
           {
             "think_time": "1h 3m 10s 100ms"
           }

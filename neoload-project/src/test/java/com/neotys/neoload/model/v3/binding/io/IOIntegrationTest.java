@@ -60,9 +60,9 @@ public class IOIntegrationTest extends AbstractIOElementsTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Container.builder()
+						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addElements(Request.builder()
+								.addSteps(Request.builder()
 												.url("http://www.company.com/select?name:product")
 												.build(),
 										ThinkTime.builder().value("1000")

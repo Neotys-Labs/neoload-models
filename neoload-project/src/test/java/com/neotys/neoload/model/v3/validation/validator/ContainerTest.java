@@ -35,7 +35,7 @@ public class ContainerTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'do': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'steps': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_CONTAINER_ELEMENTS = sb.toString();
 	}
 
@@ -44,7 +44,7 @@ public class ContainerTest {
 		final Validator validator = new Validator();
 		
 		Container container = Container.builder()
-				.addElements(Request.builder()
+				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
 				.build();
@@ -54,7 +54,7 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name("")
-				.addElements(Request.builder()
+				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
 				.build();
@@ -64,7 +64,7 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name(" 	\r\t\n")
-				.addElements(Request.builder()
+				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
 				.build();
@@ -74,7 +74,7 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name("container")
-				.addElements(Request.builder()
+				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
 				.build();
@@ -96,7 +96,7 @@ public class ContainerTest {
 
 		container = Container.builder()
 				.name("container")
-				.addElements(Request.builder()
+				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
 				.build();

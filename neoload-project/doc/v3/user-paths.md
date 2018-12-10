@@ -27,10 +27,10 @@ Defining a User Path.
 user_paths:
 - name: MyUserPath
   actions:
-    do:
+    steps:
     - transaction:
         name: MyTransaction
-        do:
+        steps:
         - request:
             url: http://www.company.com/select?name:product
         - delay: 1s

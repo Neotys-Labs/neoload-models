@@ -23,7 +23,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.do[0].name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].name': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_NAME_BLANK = sb.toString();
 	}
 
@@ -31,7 +31,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.do[0].url': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].url': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK_AND_NULL = sb.toString();
 	}
 
@@ -39,7 +39,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.do[0].url': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].url': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK = sb.toString();
 	}
 
@@ -47,8 +47,8 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.do[0].url': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'actions.do[0].url': must match \"^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)\"").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].url': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'actions.steps[0].url': must match \"^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)\"").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_URL_PATTERN = sb.toString();
 	}
 
@@ -56,7 +56,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.do[0].method': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].method': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_METHOD_BLANK = sb.toString();
 	}
 
@@ -64,9 +64,9 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 3.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions.do[0].method': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'user_paths[0].actions.do[0].name': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'user_paths[0].actions.do[0].url': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions.steps[0].method': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'user_paths[0].actions.steps[0].name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value for 'user_paths[0].actions.steps[0].url': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_COMPLETE_VERSION = sb.toString();
 	}
 
@@ -78,7 +78,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.name("")
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
@@ -92,7 +92,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.name(" 	\r\t\n")
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
@@ -106,7 +106,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.name("MyHttpRequest")
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
@@ -125,7 +125,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.build())
 						.build())
 				.build();
@@ -137,7 +137,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url("")
 								.build())
 						.build())
@@ -150,7 +150,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url(" 	\r\t\n")
 								.build())
 						.build())
@@ -163,7 +163,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
@@ -181,7 +181,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.method("")
 								.build())
@@ -195,7 +195,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.method(" 	\r\t\n")
 								.build())
@@ -209,7 +209,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.name("MyHttpRequest")
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
@@ -223,7 +223,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.name("MyHttpRequest")
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.method(Method.POST.name())
@@ -244,7 +244,7 @@ public class RequestTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.name("")
 								.method("")
 								.build())

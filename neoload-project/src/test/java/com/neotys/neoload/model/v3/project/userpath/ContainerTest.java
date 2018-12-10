@@ -9,6 +9,6 @@ import org.junit.Test;
 public class ContainerTest {
 	@Test
 	public void constants() {
-		assertEquals("do", Container.DO);
+		assertEquals("steps", Container.STEPS);
 	}
 }

@@ -47,7 +47,7 @@ public class UserPathTest {
 		sb.append("Data Model is invalid. Violation Number: 4.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions': missing value.").append(LINE_SEPARATOR);
 		sb.append("Violation 2 - Incorrect value for 'user_paths[0].name': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'user_paths[1].actions.do': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value for 'user_paths[1].actions.steps': missing value.").append(LINE_SEPARATOR);
 		sb.append("Violation 4 - Incorrect value for 'user_paths[1].name': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_COMPLETE_VERSION = sb.toString();
 	}
@@ -59,7 +59,7 @@ public class UserPathTest {
 		UserPath userPath = UserPath.builder()
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
@@ -72,7 +72,7 @@ public class UserPathTest {
 				.name("")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
@@ -85,7 +85,7 @@ public class UserPathTest {
 				.name(" 	\r\t\n")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
@@ -98,7 +98,7 @@ public class UserPathTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())
@@ -123,7 +123,7 @@ public class UserPathTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addElements(Request.builder()
+						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
 								.build())
 						.build())

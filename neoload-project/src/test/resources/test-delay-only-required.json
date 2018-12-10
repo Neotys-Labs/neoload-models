@@ -4,7 +4,7 @@
     {
       "name": "user_path_1",
       "actions": {
-        "do": [
+        "steps": [
           {
             "delay": "3m 200ms"
           },

@@ -4,7 +4,7 @@
     {
       "name": "serverName",
       "host": "mypc.intranet.neotys.com",
-      "port": 443,
+      "port": "443",
       "scheme": "https",
       "basic_authentication": {
         "login": "neotysuser",
@@ -15,7 +15,7 @@
     {
       "name": "serverName2",
       "host": "mypc2.intranet.neotys.com",
-      "port": 81,
+      "port": "81",
       "scheme": "http",
       "negotiate_authentication": {
         "login": "neotysusernego",

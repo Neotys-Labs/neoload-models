@@ -3,8 +3,8 @@ user_paths:
 - name: MyUserPath
   user_session: reset_auto
   actions:
-    do:
+    steps:
     - transaction:
         name: MyTransaction
-        do:
+        steps:
         - delay: 1s

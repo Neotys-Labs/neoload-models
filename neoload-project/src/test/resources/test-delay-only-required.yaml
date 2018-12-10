@@ -2,7 +2,7 @@ name: MyProject
 user_paths:
 - name: user_path_1
   actions:
-    do:
+    steps:
     - delay: 3m 200ms
     - delay: 1h 3m 10s 100ms
     - delay: 1000
