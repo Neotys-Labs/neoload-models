@@ -9,7 +9,7 @@
 | user_sessions  | The available values are : reset_on, reset_off or reset_auto. The default value is reset_auto.  | Optional |
 | init         | The init container.                                         | Optional          |
 | actions      | The actions container.                                      | Required          |
-| and          | The end container.                                          | Optional          |
+| end          | The end container.                                          | Optional          |
 
 #### Available containers are:
 
@@ -19,7 +19,7 @@
 | [Requests](request.md)        | The request list.                          | Optional          |
 | [Delays](delay.md)            | The delays list.                           | Optional          |
 | [ThinkTimes](delay.md)        | The think time list.                       | Optional          |
-| [Variable Extractors](variable-extractor.md)            | The variable extractor list.                           | Optional          |
+| [Variable Extractors](variable-extractor.md)    | The variable extractor list.  | Optional          |
 
 #### Example
 Defining a User Path.
