@@ -6,7 +6,7 @@
 | ----------- | ------------------------------------------------------------ | ----------------- |
 | name        | The name of the User Path.                                   | Required          |
 | description | The description of the User Path.                            | Optional          |
-| user_sessions  | The available values are : reset_on, reset_off or reset_auto. The default value is reset_auto.  | Optional |
+| user_sessions  | The "user_sessions" value can be: <ul><li>`reset_on`</li><li>`reset_off`</li><li>`reset_auto`</li></ul></br>The default value is `reset_auto`. | Optional |
 | init         | The init container.                                         | Optional          |
 | actions      | The actions container.                                      | Required          |
 | end          | The end container.                                          | Optional          |
@@ -18,7 +18,7 @@
 | [Transactions](transaction.md)| The transaction list.                      | Optional          |
 | [Requests](request.md)        | The request list.                          | Optional          |
 | [Delays](delay.md)            | The delays list.                           | Optional          |
-| [ThinkTimes](delay.md)        | The think time list.                       | Optional          |
+| [ThinkTimes](think_time.md)        | The think time list.                       | Optional          |
 | [Variable Extractors](variable-extractor.md)    | The variable extractor list.  | Optional          |
 
 #### Example

@@ -30,11 +30,11 @@ servers:
 ```
 
 ## basic-authentication
-| Name        | Description                                                     | Required/Optional |
-| ----------- | --------------------------------------------------------------- | ----------------- |
-| login       | The login of the user account used to authenticate on the server.                                         | Required          |
-| password    | The password of the user account used to authenticate on the server.                                                   | Required          |
-| realm       | The realm.                                                      | Optional          |
+| Name        | Description                                                           | Required/Optional |
+| ----------- | --------------------------------------------------------------------- | ----------------- |
+| login       | The login of the user account used to authenticate on the server.     | Required          |
+| password    | The password of the user account used to authenticate on the server.  | Required          |
+| realm       | The realm.                                                            | Optional          |
 
 #### Example
 Defining a `basic-authentication` for a server.
