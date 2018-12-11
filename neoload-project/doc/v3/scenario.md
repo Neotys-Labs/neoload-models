@@ -3,7 +3,7 @@ Definition has several top-level keys.
 
 | Name      | Description        |
 | --------- | ------------------ |
-| Scenarios | List of scenarios. |
+| scenarios | List of scenarios. |
 
 You can find bellow an example on how to define your scenario when launching a test in command line using the `-project` parameter.
 

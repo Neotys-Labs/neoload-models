@@ -9,15 +9,15 @@ The Project definition can be declared with servers, variables, User Paths, Popu
 
 Definition has several top-level keys:
 
- Name                          | Description                                   | Required/Optional |
-| ---------------------------- | ----------------------------------------------| ----------------- |
-| name                         | The root key defining the name of the project | Required          |
-| description                  | The description of the project                | Optional          |
-| [servers](server.md)         | The servers list                              | Optional          |
-| [variables](variables.md)    | The variables list                            | Optional          |
-| [user_paths](user-paths.md)  | The virtual User Paths list                   | Optional          |
-| [populations](population.md) | The Populations list                          | Optional          |
-| [scenarios](scenario.md)     | The Scenario list                             | Optional          |
+ Name                          | Description                                   | Accept variable    | Required/Optional |
+| ---------------------------- | --------------------------------------------- | ------------------ | ----------------- |
+| name                         | The root key defining the name of the project | No                 | Required          | 
+| description                  | The description of the project                | No                 | Optional          |
+| [servers](server.md)         | The servers list                              | No                 | Optional          |
+| [variables](variables.md)    | The variables list                            | No                 | Optional          |
+| [user_paths](user-paths.md)  | The virtual User Paths list                   | No                 | Optional          |
+| [populations](population.md) | The Populations list                          | No                 | Optional          |
+| [scenarios](scenario.md)     | The Scenario list                             | No                 | Optional          |
 
 #### Example
 Here is an example of a NeoLoad project.

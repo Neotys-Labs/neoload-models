@@ -1,4 +1,5 @@
 # Available Steps 
+All below steps can be in a [transaction](transaction.md) or a [container](container.md).
 
 - [transaction](transaction.md)
 - [request](request.md)

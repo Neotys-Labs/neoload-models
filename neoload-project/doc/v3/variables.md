@@ -28,11 +28,11 @@ variables:
 ## Constant variable
 A string the value of which cannot be modified.
 
-| Name        | Description                   | Required/Optional |
-| ----------- | ----------------------------- | ----------------- |
-| name        | The variable name             | Required          |
-| description | The variable description      | Optional          |
-| value       | The variable value            | Required          |
+| Name        | Description                   | Accept variable     | Required/Optional |
+| ----------- | ----------------------------- | ------------------- | ----------------- |
+| name        | The variable name             | No                  | Required          |
+| description | The variable description      | No                  | Optional          |
+| value       | The variable value            | No                  | Required          |
 
 #### Example
 Defining a Constant variable.
@@ -46,19 +46,19 @@ constant:
 ## File variable
 A list or table of values loaded from a text file.
 
-| Name          | Description                                       | Required/Optional |
-| ------------- | ------------------------------------------------- | ----------------- |
-| name          | The variable name                                | Required          |
-| description   | The variable description                         | Optional          |
-| column_names  | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | Optional          |
-| is_first_line_column_names | If `true`, the first line of the file can be used as column headers name.<br>The value of this parameter is ignored if `column_names` parameter is specified.<br>The default value is `false`. | Optional          |
-| start_from_line | The default value is "1".  | Optional          |
-| delimiter     | The delimiter is used to separate data columns.</br>The default value is ",".| Optional          |
-| path          | The relative (compared to the NeoLoad project folder) or absolute path of the source file.| Required          |
-| change_policy | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | Optional          |
-| scope         | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | Optional          |
-| order         | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | Optional          |
-| out_of_value  | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | Optional          |
+| Name          | Description                                       | Accept variable   | Required/Optional |
+| ------------- | ------------------------------------------------- | ----------------- | ----------------- |
+| name          | The variable name                                 | No                | Required          |
+| description   | The variable description                          | No                | Optional          |
+| column_names  | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | No | Optional          |
+| is_first_line_column_names | If `true`, the first line of the file can be used as column headers name.<br>The value of this parameter is ignored if `column_names` parameter is specified.<br>The default value is `false`. | No |  Optional          |
+| start_from_line | The default value is "1".  | No |  Optional          |
+| delimiter     | The delimiter is used to separate data columns.</br>The default value is ",".| No |  Optional          |
+| path          | The relative (compared to the NeoLoad project folder) or absolute path of the source file.| No |  Required          |
+| change_policy | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | No |  Optional          |
+| scope         | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | No |  Optional          |
+| order         | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | No |  Optional          |
+| out_of_value  | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | No |  Optional          |
 
 #### Example
 Defining a File variable.
