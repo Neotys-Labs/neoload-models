@@ -2,15 +2,9 @@ package com.neotys.neoload.model.v3.util;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
 
@@ -28,7 +22,7 @@ public class RequestUtilsTest {
 						.host("www.neotys.com")
 						.port("80")
 						.build())
-				.rawPath("")
+				.path("")
 				.build();		
 		URL actualUrl = RequestUtils.parseUrl("http://www.neotys.com");
 		assertEquals(expectedUrl, actualUrl);
@@ -41,7 +35,7 @@ public class RequestUtilsTest {
 						.host("${host-neotys}")
 						.port("80")
 						.build())
-				.rawPath("")
+				.path("")
 				.build();		
 		actualUrl = RequestUtils.parseUrl("http://${host-neotys}");
 		assertEquals(expectedUrl, actualUrl);
@@ -54,7 +48,7 @@ public class RequestUtilsTest {
 						.host("www.neotys.com")
 						.port("8080")
 						.build())
-				.rawPath("")
+				.path("")
 				.build();		
 		actualUrl = RequestUtils.parseUrl("http://www.neotys.com:8080");
 		assertEquals(expectedUrl, actualUrl);
@@ -67,7 +61,7 @@ public class RequestUtilsTest {
 						.host("${host-neotys}")
 						.port("${port-neotys}")
 						.build())
-				.rawPath("")
+				.path("")
 				.build();		
 		actualUrl = RequestUtils.parseUrl("http://${host-neotys}:${port-neotys}");
 		assertEquals(expectedUrl, actualUrl);
@@ -80,7 +74,7 @@ public class RequestUtilsTest {
 						.host("www.neotys.com")
 						.port("8080")
 						.build())
-				.rawPath("/")
+				.path("/")
 				.build();		
 		actualUrl = RequestUtils.parseUrl("http://www.neotys.com:8080/");
 		assertEquals(expectedUrl, actualUrl);
@@ -93,7 +87,7 @@ public class RequestUtilsTest {
 						.host("${host-neotys}")
 						.port("${port-neotys}")
 						.build())
-				.rawPath("/")
+				.path("/")
 				.build();		
 		actualUrl = RequestUtils.parseUrl("http://${host-neotys}:${port-neotys}/");
 		assertEquals(expectedUrl, actualUrl);
@@ -106,19 +100,32 @@ public class RequestUtilsTest {
 						.host("www.neotys.com")
 						.port("80")
 						.build())
-				.rawPath("/select")
-				.rawQuery("name=neoload")
+				.path("/select")
+				.query("name=neoload")
 				.build();
 		actualUrl = RequestUtils.parseUrl("http://www.neotys.com:80/select?name=neoload");
 		assertEquals(expectedUrl, actualUrl);
 		
 		// /select?name=neoload
 		expectedUrl = URL.builder()
-				.rawPath("/select")
-				.rawQuery("name=neoload")
+				.path("/select")
+				.query("name=neoload")
 				.build();
 		actualUrl = RequestUtils.parseUrl("/select?name=neoload");
 		assertEquals(expectedUrl, actualUrl);
 
+		// http://petstore.swagger.io:80/v2/pet/${ExtractedVariable_id}
+		expectedUrl = URL.builder()
+				.server(Server.builder()
+						.name("petstore.swagger.io")
+						.scheme(Scheme.HTTP)
+						.host("petstore.swagger.io")
+						.port("80")
+						.build())
+				.path("/v2/pet/${ExtractedVariable_id}")
+				.build();
+		actualUrl = RequestUtils.parseUrl("http://petstore.swagger.io:80/v2/pet/${ExtractedVariable_id}");
+		assertEquals(expectedUrl, actualUrl);
+		
 	}
 }

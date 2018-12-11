@@ -5,8 +5,7 @@ import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTP_POR
 import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,14 +65,14 @@ public class RequestUtils {
 		final String file = matcher.group(URL_FILE_GROUP);
 			
 		// Retrieve path and query from file
-		String rawPath = null;
-		String rawQuery = null;
+		String path = null;
+		String query = null;
 		try {
-			final URI fakeUri = new URI(FAKE_SERVER_URL + file);
-			rawPath = fakeUri.getRawPath();
-			rawQuery = fakeUri.getRawQuery();
+			final java.net.URL fakeUrl = new java.net.URL(FAKE_SERVER_URL + file);
+			path = fakeUrl.getPath();
+			query = fakeUrl.getQuery();
 		}
-		catch (final URISyntaxException e) {
+		catch (final MalformedURLException e) {
 			throw new IllegalArgumentException("The url '" + url + "' does not match a valid URL: " + e.getMessage());
 		}
 		
@@ -89,8 +88,8 @@ public class RequestUtils {
 		
 		return URL.builder()
 				.server(Optional.ofNullable(server))
-				.rawPath(rawPath)
-				.rawQuery(Optional.ofNullable(rawQuery))
+				.path(path)
+				.query(Optional.ofNullable(query))
 				.build();
 	}
 		
