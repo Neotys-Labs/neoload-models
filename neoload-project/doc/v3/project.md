@@ -13,11 +13,11 @@ Definition has several top-level keys:
 | ---------------------------- | ----------------------------------------------| ----------------- |
 | name                         | The root key defining the name of the project | Required          |
 | description                  | The description of the project                | Optional          |
-| [servers](server.md)         | The servers list.                             | Optional          |
-| [variables](variables.md)    | The variables list.                           | Optional          |
-| [user_paths](user-paths.md)  | The virtual User Paths list.                  | Optional          |
-| [populations](population.md) | The Populations list.                         | Optional          |
-| [scenarios](scenario.md)     | The Scenario list.                            | Optional          |
+| [servers](server.md)         | The servers list                              | Optional          |
+| [variables](variables.md)    | The variables list                            | Optional          |
+| [user_paths](user-paths.md)  | The virtual User Paths list                   | Optional          |
+| [populations](population.md) | The Populations list                          | Optional          |
+| [scenarios](scenario.md)     | The Scenario list                             | Optional          |
 
 #### Example
 Here is an example of a NeoLoad project.
@@ -25,11 +25,11 @@ Here is an example of a NeoLoad project.
 ```yaml
 name: MyProject
 servers:
-- name: serverName
+- name: mypc
   host: mypc.intranet.company.com
 variables:
 - file:
-    name: products_file
+    name: products
     path: data/list_of_products.csv
 user_paths:
 - name: MyUserPath
@@ -39,8 +39,11 @@ user_paths:
         name: MyTransaction
         steps:
         - request:
-            url: http://www.company.com/select?name:product
+            url: http://www.company.com/select?name=${products.col_0}
         - think_time: 1s
+        - request:
+            server: mypc
+            url: /valide
 populations:
 - name: MyPopulation
   user_paths:
