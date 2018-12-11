@@ -2,7 +2,7 @@
 A population is a group of Virtual User types. Select an existing population to test and defines its load policy.
 The simulated load from a population is determined by a duration and a number of Virtual Users.
 
-#### Available settings are:
+#### Available settings
 
 | Name          | Description                                                  | Accept variable   | Required/Optional |
 | ------------- | ------------------------------------------------------------ | ----------------- | ----------------- |

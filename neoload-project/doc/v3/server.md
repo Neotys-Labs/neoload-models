@@ -1,7 +1,7 @@
 # Server
 The server settings are centralized, which means the target server for the test can be quickly changed. It is possible, for example, to quickly switch from the development to the pre-production server.
 
-#### Available settings are:
+#### Available settings
 
 | Name        | Description                                                  | Accept variable   | Required/Optional | 
 | ----------- | ------------------------------------------------------------ | ----------------- | ----------------- |

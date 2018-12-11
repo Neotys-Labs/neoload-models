@@ -1,6 +1,6 @@
 # User Paths
 
-#### Available settings are:
+#### Available settings
 
 | Name        | Description                                                     | Accept variable   | Required/Optional |
 | ----------- | --------------------------------------------------------------- | ----------------- | ----------------- |

@@ -2,7 +2,7 @@
 
 The Transaction action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics.
 
-#### Available settings are
+#### Available settings
 | Name                           | Description                  | Accept variable   | Required/Optional |
 | ------------------------------ | ---------------------------- | ----------------- | ----------------- |
 | name                           | The transaction name         | No                | Required          |

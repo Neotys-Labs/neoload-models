@@ -2,7 +2,7 @@
 
 A container only contains steps to be executed.
 
-#### Available settings are
+#### Available settings
 | Name                  | Description                           | Accept variable   | Required/Optional |
 | --------------------- | ------------------------------------- | ----------------- | ----------------- |
 | [steps](steps.md)     | The steps to be executed              | No                | Required          |

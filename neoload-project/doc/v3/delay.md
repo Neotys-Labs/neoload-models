@@ -2,7 +2,7 @@
 
 The Delay Action pauses the Virtual User for a specified duration.
 
-#### Available settings are
+#### Available settings
 | Name        | Description                         | Accept variable | Required/Optional |
 | ----------- | ----------------------------------- | ----------------- | ----------------- |
 | delay       | The delay duration                  | Yes               | Required          |

@@ -1,7 +1,7 @@
 # Scenario
 A scenario defines a test configuration. Select an existing SLA profile to verify and a list of existing populations to test from NeoLoad project. Define a load policy for each population.
 
-#### Available settings are:
+#### Available settings
 
 | Name        | Description                                                  | Accept variable   | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ----------------- | ----------------- |
