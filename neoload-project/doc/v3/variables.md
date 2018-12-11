@@ -48,8 +48,8 @@ A list or table of values loaded from a text file.
 
 | Name          | Description                                       | Required/Optional |
 | ------------- | ------------------------------------------------- | ----------------- |
-| name          | The variable name.                                | Required          |
-| description   | The variable description.                         | Optional          |
+| name          | The variable name                                | Required          |
+| description   | The variable description                         | Optional          |
 | column_names  | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | Optional          |
 | is_first_line_column_names | If `true`, the first line of the file can be used as column headers name.<br>The value of this parameter is ignored if `column_names` parameter is specified.<br>The default value is `false`. | Optional          |
 | start_from_line | The default value is "1".  | Optional          |
