@@ -5,10 +5,8 @@ import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTP_POR
 import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +37,10 @@ public class RequestUtils {
 
 	public final static String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
 	public final static String BINARY_CONTENT_TYPE = "application/octet-stream";
+	
+	private static final String FUNCTION_ENCODE_URL_START = "__encodeURL(";
+	private static final String FUNCTION_ENCODE_URL_END = ")";
+	
 	
 	static Logger logger = LoggerFactory.getLogger(RequestUtils.class);
 
@@ -102,11 +104,11 @@ public class RequestUtils {
 		if (Strings.isNullOrEmpty(query))
 			return urlParameters;
 		String decodedQuery = query; 
-		try {
-			decodedQuery = URLDecoder.decode(query, "UTF-8");
-		} catch (final UnsupportedEncodingException e) {
-			logger.warn("Request Parameters are not encode in UTF-8 : " + e);
-		}
+//		try {
+//			decodedQuery = URLDecoder.decode(query, "UTF-8");
+//		} catch (final UnsupportedEncodingException e) {
+//			logger.warn("Request Parameters are not encode in UTF-8 : " + e);
+//		}
 		for (String param : decodedQuery.split("&")) {
 			final Parameter.Builder parameterBuilder = Parameter.builder();
 			if (param.contains("=")) {
@@ -124,6 +126,20 @@ public class RequestUtils {
 		return urlParameters;
 	}
 	
+	public static String getEncodeUrlValue(final String syntax) {
+		if (syntax != null && syntax.startsWith(FUNCTION_ENCODE_URL_START) && syntax.endsWith(FUNCTION_ENCODE_URL_END)) {
+			return syntax.substring(FUNCTION_ENCODE_URL_START.length(), syntax.length() - FUNCTION_ENCODE_URL_END.length());
+		}
+		return syntax;
+	}
+
+	public static boolean isEncodeUrlSyntax(final String syntax) {
+		if (!Strings.isNullOrEmpty(syntax) && syntax.startsWith(FUNCTION_ENCODE_URL_START) && syntax.endsWith(FUNCTION_ENCODE_URL_END)) {
+			return true;
+		}
+		return false;
+	}	
+
 	/**
 	 * Check if this method is a GET like method.
 	 * @return
