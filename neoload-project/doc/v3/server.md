@@ -6,9 +6,9 @@ The server settings are centralized, which means the target server for the test 
 | Name        | Description                                                  | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ----------------- |
 | name        | The name of the server.                                      | Required          |
-| host        | The host of the server.                                      | Required          |
+| host        | The host of the server. The value can be a variable like: `${prod_host}`.                                     | Required          |
 | scheme      | The scheme of the server. The available values are "http" and "https". The default value is "http".    | Optional          |
-| port        | The port of the server. The default value is "80" (for http scheme) or "443" (for https scheme).                    | Optional          |
+| port        | The port of the server. The default value is "80" (for http scheme) or "443" (for https scheme). The value can be a variable like: `${prod_port}`.                    | Optional          |
 | [basic-authentication](#basic-authentication) | The Basic Authentication used to authenticate on the server.                    | Optional          |
 | [ntlm-authentication](#ntlm-authentication) | The NTLM Authentication used to authenticate on the server.                     | Optional          |
 | [negotiate-authentication](#negotiate-authentication) | The Negotiate Authentication used to authenticate on the server.           | Optional          |
@@ -18,9 +18,9 @@ Defining 2 servers: one with the host-name only, and an https one with a basic a
 ```yaml
 servers:
 - name: my-server
-  host: host-server
-- name: my-secure-server
-  host: host-secure-server
+  host: host.intranet.company.com
+- name: my-https-server
+  host: host-prod.company.com
   scheme: https
   port: 443
   basic-authentication:
