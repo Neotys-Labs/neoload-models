@@ -18,7 +18,7 @@ import com.neotys.neoload.model.v3.project.userpath.UserPath;
 public class IODelayTest extends AbstractIOElementsTest {
 
 	@Test
-	public void readServerOnlyRequired() throws IOException, URISyntaxException {
+	public void readServerOnlyRequired() throws IOException {
 		final Project expectedProject = buildProjectContainingDelay();
 		assertNotNull(expectedProject);
 
