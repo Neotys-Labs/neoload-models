@@ -6,7 +6,7 @@ The simulated load from a population is determined by a duration and a number of
 
 | Name          | Description                                                  | Accept variable   | Required/Optional |
 | ------------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-| name          | The name of the population from NeoLoad project.             | No                | Required          |
+| name          | The name of the population from NeoLoad project             | No                | Required          |
 | [constant_load](#constant-load-policy) | A load that generates a fixed number of Virtual Users.       | No                | Optional          |
 | [rampup_load](#ramp-up-load-policy)   | A load that generates a number of Virtual Users that increases throughout the test. Useful for checking the server behavior under an increasing load. | No                | optional          |
 | [peaks_load](#peaks-load-policy)    | A load that generates a fixed number of Virtual Users with periodic phases of high load. Useful for checking whether the server recovers its normal behavior after a load peak. | No                | optional          |
@@ -41,7 +41,7 @@ This load policy generates a load with a fixed number of Virtual Users.
 
 | Name     | Description                                                  | Accept variable   | Required/Optional |
 | -------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-| users    | The fixed number of Virtual Users.                           | No                | Required          |
+| users    | The fixed number of Virtual Users                           | No                | Required          |
 | duration | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | No                | Optional          |
 | start_after | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population. | No                | Optional          |
 | rampup      | Define how Virtual Users start: simultaneously or with a preset [delay](#human-readable-time-specifications). | No                | Optional          |
@@ -67,9 +67,9 @@ This load policy generates a load with a number of Virtual Users that increases 
 
 | Name            | Description                                                  | Accept variable   | Required/Optional |
 | --------------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-| min_users       | The initial number of Virtual Users.                         | No                | Required          |
-| max_users       | The maximum number of Virtual Users.                         | No                | Optional          |
-| increment_users | The number of Virtual Users to increment.                    | No                | Required          |
+| min_users       | The initial number of Virtual Users                         | No                | Required          |
+| max_users       | The maximum number of Virtual Users                         | No                | Optional          |
+| increment_users | The number of Virtual Users to increment                    | No                | Required          |
 | increment_every | The duration to increment: [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | No                | Required          |
 | duration        | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | No                | Optional          |
 | start_after      | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population. | No                | Optional          |
@@ -99,9 +99,9 @@ This load policy generates a load with a fixed number of Virtual Users with peri
 
 | Name     | Description                                                  | Accept variable   | Required/Optional |
 | -------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-| minimum  | The [phase](#available-settings-for-the-minimum-and-maximum-phases-are) of low load.       | No                | Required          |
-| maximum  | The [phase](#available-settings-for-the-minimum-and-maximum-phases-are) of high load.      | No                | Required          |
-| start    | Select the phase to start.                                  | No                | Required          |
+| minimum  | The [phase](#available-settings-for-the-minimum-and-maximum-phases-are) of low load       | No                | Required          |
+| maximum  | The [phase](#available-settings-for-the-minimum-and-maximum-phases-are) of high load      | No                | Required          |
+| start    | Select the phase to start                                  | No                | Required          |
 | duration | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | No                | Optional          |
 | start_after | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population. | No                | Optional          |
 | step_rampup | Define how Virtual Users start: simultaneously or with a preset [delay](#human-readable-time-specifications). This rule is used each time new Virtual Users are created, at each load peak for a peak load policy. | No                | Optional          |
@@ -111,7 +111,7 @@ This load policy generates a load with a fixed number of Virtual Users with peri
 
 | Name     | Description                                                  | Accept variable   | Required/Optional |
 | -------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-| users    | The fixed number of Virtual Users.                           | No                | Required          |
+| users    | The fixed number of Virtual Users                           | No                | Required          |
 | duration | The duration of the phase: [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | No                | Required          |
 
 #### Example

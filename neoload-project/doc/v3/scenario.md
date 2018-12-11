@@ -5,38 +5,26 @@ A scenario defines a test configuration. Select an existing SLA profile to verif
 
 | Name        | Description                                                  | Accept variable   | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-| name        | The name of the scenario.                                    | No                | Required          |
-| description | The description of the scenario.                             | No                | Optional          |
-| sla_profile | The SLA (Service Level Agreement) profile to verify in this scenario. | No                | Optional          |
-| populations | The list of existing populations from NeoLoad project.       | No                | Required          |
+| name        | The name of the scenario                                     | No                | Required          |
+| description | The description of the scenario                              | No                | Optional          |
+| sla_profile | The SLA (Service Level Agreement) profile to verify in this scenario | No                | Optional          |
+| [populations](population.md) | The list of existing populations from NeoLoad project       | No                | Required          |
 
 #### Example
 
-Define three scenarios: a test with a *constant* load, a test with a *ramp-up* load or a test with *peaks* load with the same population.
+Defining a scenario with 1 SLA profile and 1 population with a *ramp-up* load.
 
 ```yaml
 scenarios:
-- name: MyScenario1
-  populations:
-  - name: MyPopulation
-    constant_load:
-    users: 500
-- name: MyScenario2
+- name: MyScenario
+  description: My scenario with 1 SLA profile and 1 population
+  sla_profile: MySlaProfile
   populations:
   - name: MyPopulation
     rampup_load:
-    min_users: 10
-    increment_users: 10
-    increment_every: 5s
-- name: MyScenario3
-  populations:
-  - name: MyPopulation
-    peaks_load:
-      minimum:
-        users: 100
-        duration: 2m
-      maximum:
-        users: 500
-        duration: 2m
-      start: minimum
+      min_users: 10
+      max_users: 1500
+      increment_users: 10
+      increment_every: 5s
+      duration: 15m
 ```
