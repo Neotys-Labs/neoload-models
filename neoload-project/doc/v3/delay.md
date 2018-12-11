@@ -3,9 +3,9 @@
 The Delay Action pauses the Virtual User for a specified duration.
 
 #### Available settings are
-| Name        | Description                       | Required/Optional |
-| ----------- | --------------------------------- | ----------------- |
-| delay       | The delay duration                | Required          |
+| Name        | Description                         | Accept variable | Required/Optional |
+| ----------- | ----------------------------------- | ----------------- | ----------------- |
+| delay       | The delay duration                  | Yes               | Required          |
 
 #### Duration value
 The Delay duration format is the same as the Think time duration format.

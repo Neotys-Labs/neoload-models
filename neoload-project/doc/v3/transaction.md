@@ -6,13 +6,12 @@ The Transaction action is used to group together certain actions, namely those r
 | Name                           | Description                  | Required/Optional |
 | ------------------------------ | ---------------------------- | ----------------- |
 | name                           | The transaction name         | Required          |
-| description                    | The transaction description  | Required          |
-| [Transactions](transaction.md) | The transaction list.        | Optional          |
-| [Requests](request.md)         | The request list.            | Optional          |
-| [Delays](delay.md)             | The delays list.             | Optional          |
-| [ThinkTimes](think_time.md)    | The think time list.         | Optional          |
+| description                    | The transaction description  | Optional          |
+| [steps](steps.md)              | Steps of the transaction     | Required          |
 
 #### Example
+
+Defining MyTransaction that contains only 1 Delay.
 
 ```yaml
 - transaction:
