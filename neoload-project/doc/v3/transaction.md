@@ -2,17 +2,16 @@
 
 The Transaction action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics.
 
-#### Available settings are
-| Name                           | Description                  | Required/Optional |
-| ------------------------------ | ---------------------------- | ----------------- |
-| name                           | The transaction name         | Required          |
-| description                    | The transaction description  | Required          |
-| [Transactions](transaction.md) | The transaction list.        | Optional          |
-| [Requests](request.md)         | The request list.            | Optional          |
-| [Delays](delay.md)             | The delays list.             | Optional          |
-| [ThinkTimes](think_time.md)    | The think time list.         | Optional          |
+#### Available settings
+| Name                           | Description                  | Accept variable   | Required/Optional |
+| ------------------------------ | ---------------------------- | ----------------- | ----------------- |
+| name                           | The transaction name         | No                | Required          |
+| description                    | The transaction description  | No                | Optional          |
+| [steps](steps.md)              | Steps of the transaction     | No                | Required          |
 
 #### Example
+
+Defining MyTransaction that contains only 1 Delay.
 
 ```yaml
 - transaction:

@@ -3,10 +3,10 @@ Think time is the time the user normally takes to make a decision to do the next
 
 For example, it is the simulation of the time taken by a real user to read one page before clicking to the next one.
 
-#### Available settings are
-| Name        | Description                               | Required/Optional |
-| ----------- | ----------------------------------------  | ----------------- |
-| think_time  | The Think time duration                   | Required          |
+#### Available settings
+| Name        | Description                                 | Accept variable  | Required/Optional |
+| ----------- | ------------------------------------------- | ---------------- |------------------ |
+| think_time  | The Think time duration                     | Yes              | Required          |
 
 #### Duration value
 The Think time duration is expressed in hours, minutes, seconds, milliseconds.
