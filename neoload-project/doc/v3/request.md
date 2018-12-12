@@ -47,7 +47,7 @@ Defining a HTTP request with a relative URL.
 ```yaml
 request:
   url: /v2/pet/findByStatus?status=available
-  server: petstore.swagger.io
+  server: server_petstore
 ```
 
 #### Example 3
@@ -66,7 +66,7 @@ Defining a HTTP request with an absolute URL in encoding a variable.
 ```yaml
 request:
   url: /v2/pet/findByStatus?status=__encodeURL(${var_status})
-  server: petstore.swagger.io
+  server: server_petstore
 ```
 
 ## method
@@ -81,7 +81,7 @@ The available values are:
 * `DELETE`
 * `OPTIONS`
 * `TRACE`
-* <method name> for `CUSTOM` case
+* `{method-name}` for `CUSTOM` case
 
 The default value is "GET".
 
@@ -107,7 +107,7 @@ request:
 
 ## server
 
-Define the [server](#server) to use to HTTP request. The `server` field is required if a relative URL is defined in the `url` field.
+Define the [server](server.md) to use to HTTP request. The `server` field is required if a relative URL is defined in the `url` field.
 
 #### Example
 
@@ -116,7 +116,7 @@ Defining a HTTP request with a relative URL.
 ```yaml
 request:
   url: /v2/pet/findByStatus?status=available
-  server: petstore.swagger.io
+  server: server_petstore
 ```
 
 ## headers
