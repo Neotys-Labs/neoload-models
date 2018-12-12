@@ -14,6 +14,7 @@ import static org.junit.Assert.assertNotNull;
 public class IORequestTest extends AbstractIOElementsTest {
 
 	private static Project getRequestOnlyRequired() {
+
 		final UserPath userPath = UserPath.builder()
 				.name("MyUserPath")
 				.actions(Container.builder()
