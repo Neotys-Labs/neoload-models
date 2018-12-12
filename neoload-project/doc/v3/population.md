@@ -25,7 +25,7 @@ populations:
 | Name        | Description                                                  | Accept variable  | Required/Optional |
 | ----------- | ------------------------------------------------------------ | ---------------- | ----------------- |
 | name        | The name of the existing User Path                           | No               | Required          |
-| distribution| The percentage of the User Path in Population. The value is a percentage and can contain only 1 digit after the point.<br>If the distribution is not present, its value will be proportionally calculated.              | No               | Optional          |
+| distribution| The percentage of the User Path in Population. The value is a percentage and may be set within precision of 0.1%.<br>If the distribution is not present, its value will be proportionally calculated.              | No               | Optional          |
 
 #### Example 1
 
