@@ -1,13 +1,13 @@
 # Transaction 
 
-The Transaction action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics.
+The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics.
 
 #### Available settings
 | Name                           | Description                  | Accept variable   | Required/Optional |
 | ------------------------------ | ---------------------------- | ----------------- | ----------------- |
-| name                           | The transaction name         | No                | Required          |
-| description                    | The transaction description  | No                | Optional          |
-| [steps](steps.md)              | Steps of the transaction     | No                | Required          |
+| name                           | The Transaction name         | No                | Required          |
+| description                    | The Transaction description  | No                | Optional          |
+| [steps](steps.md)              | Steps of the Transaction     | No                | Required          |
 
 #### Example
 
