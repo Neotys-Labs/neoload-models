@@ -11,9 +11,9 @@ Definition has several top-level keys:
 
  Name                          | Description                                   | Accept variable    | Required/Optional |
 | ---------------------------- | --------------------------------------------- | ------------------ | ----------------- |
-| name                         | The root key defining the name of the project | No                 | Required          | 
+| name                         | The root key defining the name of the project | No                 | Required          |
+| [variables](variables.md)    | The variables list                            | No                 | Optional          | 
 | [servers](server.md)         | The servers list                              | No                 | Optional          |
-| [variables](variables.md)    | The variables list                            | No                 | Optional          |
 | [user_paths](user-paths.md)  | The virtual User Paths list                   | No                 | Optional          |
 | [populations](population.md) | The Populations list                          | No                 | Optional          |
 | [scenarios](scenario.md)     | The Scenario list                             | No                 | Optional          |
@@ -23,26 +23,23 @@ Here is an example of a NeoLoad project.
 
 ```yaml
 name: MyProject
-servers:
-- name: mypc
-  host: mypc.intranet.company.com
 variables:
 - file:
     name: products
     path: data/list_of_products.csv
+servers:
+- name: mypc
+  host: mypc.intranet.company.com
 user_paths:
 - name: MyUserPath
   actions:
     steps:
-    - transaction:
-        name: MyTransaction
-        steps:
-        - request:
-            url: http://www.company.com/select?name=${products.col_0}
-        - think_time: 1s
-        - request:
-            server: mypc
-            url: /valide
+    - request:
+        url: http://www.company.com/select?name=${products.col_0}
+    - think_time: 1s
+    - request:
+        server: mypc
+        url: /valide
 populations:
 - name: MyPopulation
   user_paths:
