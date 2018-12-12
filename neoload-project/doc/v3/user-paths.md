@@ -1,13 +1,13 @@
 # User Paths
 A User Path simulates the browsing activity of a real visitor.
 
-The User Path is a succession of web pages, which may contain logical actions such as Containers, loops or delays to create a more complex behavior.
+The User Path is a succession of web pages that may contain logical Actions such as Containers, Loops or Delays to create a more complex behavior.
 
 #### Available settings
 
 | Name        | Description                                                     | Accept variable   | Required/Optional |
 | ----------- | --------------------------------------------------------------- | ----------------- | ----------------- |
-| name        | The name of the User Path.                                      | No                | Required          |
+| name        | The name of the User Path                                      | No                | Required          |
 | description | The description of the User Path                                | No                | Optional          |
 | user_session  | The "user_session" value can be: <ul><li>`reset_on`</li><li>`reset_off`</li><li>`reset_auto`</li></ul></br>The default value is `reset_auto`. | No  | Optional |
 | init         | The init [container](container.md)                             | No                | Optional          |
@@ -15,7 +15,7 @@ The User Path is a succession of web pages, which may contain logical actions su
 | end          | The end [container](container.md)                              | No                | Optional          |
 
 #### Example
-Defining a User Path.
+Defining a User Path:
 ```yaml
 user_paths:
 - name: MyUserPath
