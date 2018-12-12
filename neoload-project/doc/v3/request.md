@@ -7,8 +7,8 @@ A request defines a plain HTTP request.
 | Name                                | Description                            | Accept variable   | Required/Optional |
 | ----------------------------------- | -------------------------------------- | ----------------- | ----------------- |
 | [url](#url)                         | The URL to hit                         | Yes               | Required          |
-| [server](#server)                   | The server name                        | No                | Optional          |
-| method                              | The request method. The available values are "GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS", "TRACE" and "CUSTOM". The default value is "GET". | No                  | Optional          |
+| [server](#server)                   | The server name to use                 | No                | Optional          |
+| [method](#method)                   | The request method                     | No                | Optional          |
 | [headers](#headers)                 | The request header list                | Yes               | Optional          |
 | [body](#body)                       | The request body                       | Yes               | Optional          |
 | [extractors](variable-extractor.md) | The extractor list                     | No                | Optional          |
@@ -26,7 +26,7 @@ request:
 
 Define the encoded url of the HTTP request. Use strings convention to define an URL: `http[s]://{host}[:{port}][/{path}][?{query}]`
 
-A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.<br/>;
+A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.<br/>
 The `host`, `port`, `path` and `query` parameters can use a variable.
 
 If the evaluation of a variable must be encoded from the `query` parameter, use string convention to encode: `__encodeURL(${my_variable})`.
@@ -69,10 +69,45 @@ request:
   server: petstore.swagger.io
 ```
 
+## method
+
+Define the request method to use to HTTP request.
+
+The available values are:
+* `GET`
+* `POST`
+* `HEAD`
+* `PUT`
+* `DELETE`
+* `OPTIONS`
+* `TRACE`
+* <method name> for `CUSTOM` case
+
+The default value is "GET".
+
+#### Example
+
+Defining a HTTP request with a GET method.
+
+```yaml
+request:
+  url: http://petstore.swagger.io:80/v2/pet/findByStatus?status=available
+  method: GET
+```
+
+#### Example
+
+Defining a HTTP request with a CUSTOM method.
+
+```yaml
+request:
+  url: http://www.compagny.com/select?name=product
+  method: MY_CUSTOM_METHOD
+```
+
 ## server
 
-Define the server to use to HTTP request. The server represent the base url (`http[s]://{host}[:{port}]`) of the HTTP request.<br/>;
-The `server` field is required if a relative URL is defined in the `url` parameter.
+Define the [server](#server) to use to HTTP request. The `server` field is required if a relative URL is defined in the `url` field.
 
 #### Example
 
@@ -120,13 +155,15 @@ request:
 
 ## body
 
-By default, the body is interpreted as a Text data.<br/>
-<br/>;
-The body can be interpreted as a Form data if the request header uses the content type `application/x-www-form-urlencoded`. In this case, the variable can be used in parameter name and value. If the evaluation of a variable must be encoded, use string convention to encode: `__encodeURL(${my_variable})`
+Define the request body to use to HTTP request. 
+
+The variables can be used in the request body. 
+
+If the request header uses the content type `application/x-www-form-urlencoded`, the variables can be also used in the parameter name and value of the request body. If the evaluation of a variable must be encoded, use string convention to encode: `__encodeURL(${my_variable})`
 
 #### Example 1
 
-Defining a HTTP request with a JSon body.
+Defining a HTTP request with a JSon body in using some variables.
 
 ```yaml
 request:
@@ -136,12 +173,12 @@ request:
   - accept: application/json
   - Content-Type: application/json
   body: |
-    {"id":0,"category":{"id":0,"name":"string"},"name":"doggie","photoUrls":["string"],"tags":[{"id": 0,"name":"string"}],"status": "available"}
+    {"id":${var_id},"category":{"id":${var_category_id},"name":${var_category_id}},"name":${var_name},"photoUrls":["string"],"tags":[{"id": 0,"name":"string"}],"status": "available"}
 ```
 
 #### Example 2
 
-Defining a HTTP request with a Form data.
+Defining a HTTP request with a Form body in using some variables.
 
 ```yaml
 request:
