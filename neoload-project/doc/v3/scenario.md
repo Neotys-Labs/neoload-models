@@ -12,7 +12,7 @@ A scenario defines a test configuration. Select an existing SLA profile to verif
 
 #### Example
 
-Defining a scenario with 1 SLA profile and 1 population.
+Defining a scenario with 1 SLA profile and 1 population:
 
 ```yaml
 scenarios:
