@@ -19,7 +19,7 @@ Definition has several top-level keys:
 | [scenarios](scenario.md)     | The Scenario list                             | No                 | Optional          |
 
 #### Example
-Here is an example of a NeoLoad project.
+Below is an example of a NeoLoad project:
 
 ```yaml
 name: MyProject
