@@ -94,11 +94,6 @@ public class RequestUtils {
 		final List<Parameter> urlParameters = new ArrayList<>();
 		if (Strings.isNullOrEmpty(query))
 			return urlParameters;
-//		try {
-//			decodedQuery = URLDecoder.decode(query, "UTF-8");
-//		} catch (final UnsupportedEncodingException e) {
-//			logger.warn("Request Parameters are not encode in UTF-8 : " + e);
-//		}
 		for (String param : query.split("&")) {
 			final Parameter.Builder parameterBuilder = Parameter.builder();
 			if (param.contains("=")) {
