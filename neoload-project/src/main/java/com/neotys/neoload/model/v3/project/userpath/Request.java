@@ -1,14 +1,5 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,6 +8,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import java.util.List;
+import java.util.Optional;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY})
@@ -87,6 +85,7 @@ public interface Request extends Step {
 	Optional<String> getBody();
 	
 	@JsonProperty(EXTRACTORS)
+	@Valid
 	List<VariableExtractor> getExtractors();
 	
 	class Builder extends ImmutableRequest.Builder {}
