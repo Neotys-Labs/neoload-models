@@ -1,4 +1,7 @@
 # User Paths
+A User Path simulates the browsing activity of a real visitor.
+
+The User Path is a succession of web pages, which may contain logical actions such as Containers, loops or delays to create a more complex behavior.
 
 #### Available settings
 
