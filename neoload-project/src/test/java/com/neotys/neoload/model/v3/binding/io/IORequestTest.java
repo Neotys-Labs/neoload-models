@@ -100,20 +100,4 @@ public class IORequestTest extends AbstractIOElementsTest {
 
 		read("test-request-required-and-optional", expectedProject);
 	}
-
-//	@Test
-//	public void writeUserPathsOnlyRequired() throws IOException, URISyntaxException {
-//		final Project expectedProject = getUserPathsOnlyRequired();
-//		assertNotNull(expectedProject);
-//		
-//		write("test-write-userpaths-only-required", expectedProject);
-//	}
-//
-//	@Test
-//	public void writeUserPathsRequiredAndOptional() throws IOException, URISyntaxException {
-//		final Project expectedProject = getUserPathsRequiredAndOptional();
-//		assertNotNull(expectedProject);
-//		
-//		write("test-read-write-userpaths-required-and-optional", expectedProject);
-//	}
 }
