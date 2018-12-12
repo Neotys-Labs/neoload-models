@@ -12,7 +12,6 @@ Definition has several top-level keys:
  Name                          | Description                                   | Accept variable    | Required/Optional |
 | ---------------------------- | --------------------------------------------- | ------------------ | ----------------- |
 | name                         | The root key defining the name of the project | No                 | Required          | 
-| description                  | The description of the project                | No                 | Optional          |
 | [servers](server.md)         | The servers list                              | No                 | Optional          |
 | [variables](variables.md)    | The variables list                            | No                 | Optional          |
 | [user_paths](user-paths.md)  | The virtual User Paths list                   | No                 | Optional          |
