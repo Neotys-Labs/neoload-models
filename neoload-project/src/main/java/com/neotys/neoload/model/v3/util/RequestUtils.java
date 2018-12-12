@@ -20,8 +20,6 @@ import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
 
-
-
 public class RequestUtils {
 	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)"); // <scheme>://<host>:<port><file> | <file>
 	private static final int URL_SERVER_GROUP = 1;
@@ -29,51 +27,51 @@ public class RequestUtils {
 	private static final int URL_HOST_GROUP = 3;
 	private static final int URL_PORT_GROUP = 6;
 	private static final int URL_FILE_GROUP = 9;
-	
+
 	private static final String FAKE_SERVER_URL = "http://host";
-	
-	
+
 	private static final String NL_VARIABLE_START = "${";
 	private static final String NL_VARIABLE_END = "}";
-	
+
 	static Logger logger = LoggerFactory.getLogger(RequestUtils.class);
 
-	private RequestUtils() {}
+	private RequestUtils() {
+	}
 
-	
+
 	public static String unquote(String param) {
 		if (param.startsWith("\"") && param.endsWith("\"")) {
 			return param.substring(1, param.length() - 1);
 		}
 		return param;
 	}
-	
+
 	public static String getVariableSyntax(final String variableName) {
 		if (variableName.startsWith(NL_VARIABLE_START) && variableName.endsWith(NL_VARIABLE_END)) {
 			return variableName;
 		}
 		return NL_VARIABLE_START + variableName + NL_VARIABLE_END;
 	}
-	
+
 	public static String getVariableName(final String variableSyntax) {
-		if (variableSyntax!=null && variableSyntax.startsWith(NL_VARIABLE_START) && variableSyntax.endsWith(NL_VARIABLE_END)) {
+		if (variableSyntax != null && variableSyntax.startsWith(NL_VARIABLE_START) && variableSyntax.endsWith(NL_VARIABLE_END)) {
 			return variableSyntax.substring(NL_VARIABLE_START.length(), variableSyntax.length() - NL_VARIABLE_END.length());
 		}
 		return variableSyntax;
 	}
-	
+
 	public static boolean isVariableSyntax(final String variableSyntax) {
 		if (!Strings.isNullOrEmpty(variableSyntax) && variableSyntax.startsWith(NL_VARIABLE_START) && variableSyntax.endsWith(NL_VARIABLE_END)) {
 			return true;
 		}
 		return false;
-	}	
+	}
 
 	public static String normalizeName(final String name) {
-		if(name == null){
+		if (name == null) {
 			return name;
 		}
-		return unquote(name.trim()).replaceAll("[^a-zA-Z_0-9 \\-_\\.]","_");
+		return unquote(name.trim()).replaceAll("[^a-zA-Z_0-9 \\-_\\.]", "_");
 	}
 
 //	/**
@@ -104,7 +102,7 @@ public class RequestUtils {
 		if (Strings.isNullOrEmpty(url)) {
 			throw new IllegalArgumentException("url must not be null or empty.");
 		}
-		
+
 		// Check if url matches the URL pattern
 		final Matcher matcher = URL_PATTERN.matcher(url);
 		if (!matcher.matches()) {
@@ -117,7 +115,7 @@ public class RequestUtils {
 		final String host = matcher.group(URL_HOST_GROUP);
 		final String port = matcher.group(URL_PORT_GROUP);
 		final String file = matcher.group(URL_FILE_GROUP);
-			
+
 		// Retrieve path and query from file
 		String rawPath = null;
 		String rawQuery = null;
@@ -125,11 +123,10 @@ public class RequestUtils {
 			final URI fakeUri = new URI(FAKE_SERVER_URL + file);
 			rawPath = fakeUri.getRawPath();
 			rawQuery = fakeUri.getRawQuery();
-		}
-		catch (final URISyntaxException e) {
+		} catch (final URISyntaxException e) {
 			throw new IllegalArgumentException("The url '" + url + "' does not match a valid URL: " + e.getMessage());
 		}
-		
+
 		Server server = null;
 		if (!Strings.isNullOrEmpty(serverUrl)) {
 			server = Server.builder()
@@ -139,18 +136,18 @@ public class RequestUtils {
 					.port((port != null) ? port : getPort(scheme))
 					.build();
 		}
-		
+
 		return URL.builder()
 				.server(Optional.ofNullable(server))
 				.rawPath(rawPath)
 				.rawQuery(Optional.ofNullable(rawQuery))
 				.build();
 	}
-	
-	
-	
+
+
 	/**
 	 * Gets the url parameters from URL query.
+	 *
 	 * @param query the part of the URL that contains all the parameters
 	 * @return list
 	 */
@@ -158,7 +155,7 @@ public class RequestUtils {
 		final List<Parameter> urlParameters = new ArrayList<>();
 		if (Strings.isNullOrEmpty(query))
 			return urlParameters;
-		String decodedQuery = query; 
+		String decodedQuery = query;
 		try {
 			decodedQuery = URLDecoder.decode(query, "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
@@ -180,7 +177,7 @@ public class RequestUtils {
 		}
 		return urlParameters;
 	}
-	
+
 	private static Scheme getScheme(final String scheme) {
 		return Scheme.valueOf(scheme.toUpperCase());
 	}

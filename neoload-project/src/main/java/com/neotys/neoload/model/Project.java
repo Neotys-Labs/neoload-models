@@ -28,7 +28,7 @@ import com.neotys.neoload.model.validation.groups.NeoLoad;
 @Value.Style(validationMethod = ValidationMethod.NONE)
 @Deprecated
 public interface Project {
-	public static final String DEFAULT_NAME = "MyProject";
+	String DEFAULT_NAME = "MyProject";
 	
 	@RequiredCheck(groups={NeoLoad.class})
 	@Value.Default
@@ -52,7 +52,7 @@ public interface Project {
 	Map<String,String> getProjectSettings();
 	
 	class Builder extends ImmutableProject.Builder {}
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 }
