@@ -1,5 +1,5 @@
 # Population
-A Population is a group of virtual users.
+A Population is a group of Virtual Users.
 
 #### Available settings are:
 
