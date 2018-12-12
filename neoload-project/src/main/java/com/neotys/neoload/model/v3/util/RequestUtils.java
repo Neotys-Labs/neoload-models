@@ -1,9 +1,10 @@
 package com.neotys.neoload.model.v3.util;
 
-import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTPS_PORT;
-import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTP_PORT;
-import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
-import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
+import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.project.server.Server;
+import com.neotys.neoload.model.v3.project.server.Server.Scheme;
+import com.neotys.neoload.model.v3.project.userpath.Header;
+import com.neotys.neoload.model.v3.project.userpath.Request.Method;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -12,14 +13,10 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Strings;
-import com.neotys.neoload.model.v3.project.server.Server;
-import com.neotys.neoload.model.v3.project.server.Server.Scheme;
-import com.neotys.neoload.model.v3.project.userpath.Header;
-import com.neotys.neoload.model.v3.project.userpath.Request.Method;
+import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTPS_PORT;
+import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTP_PORT;
+import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
+import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
 public class RequestUtils {
 	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)"); // <scheme>://<host>:<port><file> | <file>
@@ -28,21 +25,17 @@ public class RequestUtils {
 	private static final int URL_HOST_GROUP = 3;
 	private static final int URL_PORT_GROUP = 6;
 	private static final int URL_FILE_GROUP = 9;
-	
+
 	private static final String FAKE_SERVER_URL = "http://host";
-	
-	public static final String HEADER_CONTENT_TYPE = "Content-Type";
-
-	public final static String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
-	public final static String BINARY_CONTENT_TYPE = "application/octet-stream";
-
 	private static final String FUNCTION_ENCODE_URL_START = "__encodeURL(";
 	private static final String FUNCTION_ENCODE_URL_END = ")";
 
-	
-	static Logger logger = LoggerFactory.getLogger(RequestUtils.class);
+	public static final String HEADER_CONTENT_TYPE = "Content-Type";
+	public static final String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
+	public static final String BINARY_CONTENT_TYPE = "application/octet-stream";
 
-	private RequestUtils() {}
+	private RequestUtils() {
+	}
 
 	public static URL parseUrl(final String url) {
 		// Check if url is null or empty
@@ -64,14 +57,13 @@ public class RequestUtils {
 		final String file = matcher.group(URL_FILE_GROUP);
 
 		// Retrieve path and query from file
-		String path = null;
-		String query = null;
+		String path;
+		String query;
 		try {
 			final java.net.URL fakeUrl = new java.net.URL(FAKE_SERVER_URL + file);
 			path = fakeUrl.getPath();
 			query = fakeUrl.getQuery();
-		}
-		catch (final MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throw new IllegalArgumentException("The url '" + url + "' does not match a valid URL: " + e.getMessage());
 		}
 
@@ -94,6 +86,7 @@ public class RequestUtils {
 
 	/**
 	 * Gets the parameters from URL query (<name>=<value>&<name>=<value>).
+	 *
 	 * @param query the part of the URL that contains all the parameters
 	 * @return list
 	 */
@@ -101,13 +94,12 @@ public class RequestUtils {
 		final List<Parameter> urlParameters = new ArrayList<>();
 		if (Strings.isNullOrEmpty(query))
 			return urlParameters;
-		String decodedQuery = query; 
 //		try {
 //			decodedQuery = URLDecoder.decode(query, "UTF-8");
 //		} catch (final UnsupportedEncodingException e) {
 //			logger.warn("Request Parameters are not encode in UTF-8 : " + e);
 //		}
-		for (String param : decodedQuery.split("&")) {
+		for (String param : query.split("&")) {
 			final Parameter.Builder parameterBuilder = Parameter.builder();
 			if (param.contains("=")) {
 				final String[] pair = param.split("=");
@@ -132,14 +124,12 @@ public class RequestUtils {
 	}
 
 	public static boolean isEncodeUrlSyntax(final String syntax) {
-		if (!Strings.isNullOrEmpty(syntax) && syntax.startsWith(FUNCTION_ENCODE_URL_START) && syntax.endsWith(FUNCTION_ENCODE_URL_END)) {
-			return true;
-		}
-		return false;
+		return !Strings.isNullOrEmpty(syntax) && syntax.startsWith(FUNCTION_ENCODE_URL_START) && syntax.endsWith(FUNCTION_ENCODE_URL_END);
 	}
 
 	/**
 	 * Check if this method is a GET like method.
+	 *
 	 * @return
 	 */
 	public static boolean isGetLikeMethod(final Method method) {
@@ -159,6 +149,7 @@ public class RequestUtils {
 
 	/**
 	 * Check if this method is a POST like method.
+	 *
 	 * @return
 	 */
 	public static boolean isPostLikeMethod(final Method method) {
@@ -176,29 +167,26 @@ public class RequestUtils {
 		}
 	}
 
-    public static boolean containFormHeader(final List<Header> headers) {
-    	final Optional<Header> contentType = findHeader(headers, RequestUtils.HEADER_CONTENT_TYPE);
-    	if (contentType.isPresent()) {
-    		return isForm(contentType.get().getValue().orElse(null));
-    	}
-    	return false;
-    }
+	public static boolean containFormHeader(final List<Header> headers) {
+		final Optional<Header> contentType = findHeader(headers, RequestUtils.HEADER_CONTENT_TYPE);
+		return contentType.filter(header -> isForm(header.getValue().orElse(null))).isPresent();
+	}
 
-    public static Optional<Header> findHeader(final List<Header> headers, final String name) {
-    	return headers.stream()
-    			.filter(header -> name.equals(header.getName()))
-    			.findFirst();
-    }
+	public static Optional<Header> findHeader(final List<Header> headers, final String name) {
+		return headers.stream()
+				.filter(header -> name.equals(header.getName()))
+				.findFirst();
+	}
 
 	public static boolean isBinary(final String contentType) {
-		if (contentType==null) return false;
+		if (contentType == null) return false;
 
 		// use startsWith to handle the "; charset=" that may be there.
 		return contentType.toLowerCase().startsWith(BINARY_CONTENT_TYPE);
 	}
 
 	public static boolean isForm(final String contentType) {
-		if (contentType==null) return false;
+		if (contentType == null) return false;
 
 		// use startsWith to handle the "; charset=" that may be there.
 		return contentType.toLowerCase().startsWith(FORM_CONTENT_TYPE);

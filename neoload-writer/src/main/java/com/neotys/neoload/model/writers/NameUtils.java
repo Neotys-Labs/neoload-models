@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.writers;
 
 public class NameUtils {
-	private final static char[] forbiddenChars = { '£', '', '$', '\"', '[', ']', '<', '>', '|', '*', '¤', '?', '§',
+	private static final char[] forbiddenChars = { '£', '', '$', '\"', '[', ']', '<', '>', '|', '*', '¤', '?', '§',
 			'µ', '#', '`', '@', '^', '²', '°', '¨', '\\'};
 
 	private NameUtils() {}
