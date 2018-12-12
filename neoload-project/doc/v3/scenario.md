@@ -8,7 +8,7 @@ A scenario defines a test configuration. Select an existing SLA profile to verif
 | name        | The name of the scenario                                     | No                | Required          |
 | description | The description of the scenario                              | No                | Optional          |
 | sla_profile | The SLA (Service Level Agreement) profile to verify in this scenario | No        | Optional          |
-| [populations](population-policy.md) | The list of existing populations            | No                | Required          |
+| [populations](population-policy.md) | The list of name of the existing populations            | No                | Required          |
 
 #### Example
 
