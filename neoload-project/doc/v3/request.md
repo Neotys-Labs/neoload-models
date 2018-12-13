@@ -24,12 +24,9 @@ request:
 
 ## url
 
-Define the encoded url of the HTTP request. Use strings convention to define an URL: `http[s]://{host}[:{port}][/{path}][?{query}]`
+Define the url of the HTTP request. A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.
 
-A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.<br/>
-The `host`, `port`, `path` and `query` parameters can use a variable.
-
-If the evaluation of a variable must be encoded from the `query` parameter, use string convention to encode: `__encodeURL(${my_variable})`.
+Use convention to define an URL: `http[s]://{host}[:{port}][/{path}][?{query}]`. Variables can be used from the `host`, `port`, `path` parameters and from the name/value pairs of the `query` parameter. To encode the evaluation of a variable from the name/value pairs of the `query` parameter, use convention: `__encodeURL(${my_variable})`.
 
 #### Example 1
 
@@ -56,16 +53,16 @@ Defining a HTTP request with an absolute URL in using some variables.
 
 ```yaml
 request:
-  url: http://${var_host}:${var_port}/v2/pet/findByStatus?status=${var_status}
+  url: http://${var_host}:${var_port}/v2/pet/findByStatus?status=${var_status_value}
 ```
 
 #### Example 4
 
-Defining a HTTP request with an absolute URL in encoding a variable.
+Defining a HTTP request with an absolute URL in encoding the evaluation of a variable.
 
 ```yaml
 request:
-  url: /v2/pet/findByStatus?status=__encodeURL(${var_status})
+  url: /v2/pet/findByStatus?status=__encodeURL(${var_status_value})
   server: server_petstore
 ```
 
@@ -87,27 +84,39 @@ The default value is "GET".
 
 #### Example
 
-Defining a HTTP request with a GET method.
+Defining a HTTP request with a POST method.
 
 ```yaml
 request:
-  url: http://petstore.swagger.io:80/v2/pet/findByStatus?status=available
-  method: GET
-```
-
-#### Example
-
-Defining a HTTP request with a CUSTOM method.
-
-```yaml
-request:
-  url: http://www.compagny.com/select?name=product
-  method: MY_CUSTOM_METHOD
+  url: https://petstore.swagger.io/v2/pet
+  method: POST
+  headers:
+  - accept: application/json
+  - Content-Type: application/json
+  body: |
+    {
+      "id": 0,
+      "category": {
+        "id": 0,
+        "name": "string"
+      },
+      "name": "doggie",
+      "photoUrls": [
+        "string"
+      ],
+      "tags": [
+        {
+          "id": 0,
+          "name": "string"
+        }
+      ],
+      "status": "available"
+    }  
 ```
 
 ## server
 
-Define the [server](server.md) to use to HTTP request. The `server` field is required if a relative URL is defined in the `url` field.
+Define the name of the [server](server.md) to use for the HTTP request. The `server` field is required if a relative URL is defined in the `url` field.
 
 #### Example
 
@@ -121,7 +130,7 @@ request:
 
 ## headers
 
-Define the headers to attach to HTTP request. Use special strings convention to define the header list:
+Define the headers to attach to the HTTP request with the following format:
 
 ```yaml
 headers: 
@@ -129,9 +138,9 @@ headers:
 ```
 
 The `header-name` parameter represent the header name. This parameter is required.<br> 
-The `header-value` parameter represent the header value. This parameter can be optional and use a variable.
+The `header-value` parameter represent the header value. This parameter can be optional and can use a variable.
 
-#### Example 1
+#### Example
 
 Defining a HTTP request with a header.
 
@@ -140,26 +149,16 @@ request:
   url: http://petstore.swagger.io:80/v2/pet/findByStatus?status=available
   headers:
   - accept: application/json
-```
-
-#### Example 2
-
-Defining a HTTP request with a header in using a variable.
-
-```yaml
-request:
-  url: http://petstore.swagger.io:80/v2/pet/findByStatus?status=available
-  headers:
-  - accept: ${var_accept}
+  - Content-Type: ${var_content_type}
 ```
 
 ## body
 
-Define the request body to use to HTTP request. 
+Define the request body to use for the HTTP request. Variables can be used in the request body. 
 
-The variables can be used in the request body. 
+In using the `Content-Type` header with `application/x-www-form-urlencoded`, the variables can be used from the name/value pairs of the request body. To encode the evaluation of a variable from the name/value pairs, use convention: `__encodeURL(${my_variable})`.
 
-If the request header uses the content type `application/x-www-form-urlencoded`, the variables can be also used in the parameter name and value of the request body. If the evaluation of a variable must be encoded, use string convention to encode: `__encodeURL(${my_variable})`
+> The bodies containing a binary or multipart/form-data data are not yet supported. 
 
 #### Example 1
 
@@ -173,7 +172,24 @@ request:
   - accept: application/json
   - Content-Type: application/json
   body: |
-    {"id":${var_id},"category":{"id":${var_category_id},"name":${var_category_id}},"name":${var_name},"photoUrls":["string"],"tags":[{"id": 0,"name":"string"}],"status": "available"}
+    {
+      "id": 0,
+      "category": {
+        "id": ${var_category_id},
+        "name": "${var_category_name}"
+      },
+      "name": "doggie",
+      "photoUrls": [
+        "string"
+      ],
+      "tags": [
+        {
+          "id": 0,
+          "name": "string"
+        }
+      ],
+      "status": "${var_status}"
+    }  
 ```
 
 #### Example 2
@@ -182,10 +198,13 @@ Defining a HTTP request with a Form body in using some variables.
 
 ```yaml
 request:
-  url: https://www.compagny.com/select?name=dog
+  url: https://www.compagny.com/select?animal=dog
   method: POST
+  headers:
+  - Content-Type: application/x-www-form-urlencoded
   body: |
     name=__encodeURL(${var_dog_name})&breed=__encodeURL(${var_dog_breed})
 ```
+
 
 
