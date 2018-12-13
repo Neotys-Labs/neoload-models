@@ -15,7 +15,7 @@ A request defines a plain HTTP request.
 
 #### Example
 
-Defining a HTTP request with a GET method.
+Defining an HTTP request with a GET method.
 
 ```yaml
 request:
@@ -24,13 +24,13 @@ request:
 
 ## url
 
-Define the url of the HTTP request. A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.
+Define the URL of the HTTP request. A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.
 
 Use convention to define an URL: `http[s]://{host}[:{port}][/{path}][?{query}]`. Variables can be used from the `host`, `port`, `path` parameters and from the name/value pairs of the `query` parameter. To encode the evaluation of a variable from the name/value pairs of the `query` parameter, use convention: `__encodeURL(${my_variable})`.
 
 #### Example 1
 
-Defining a HTTP request with an absolute URL.
+Defining an HTTP request with an absolute URL.
 
 ```yaml
 request:
@@ -39,7 +39,7 @@ request:
 
 #### Example 2
 
-Defining a HTTP request with a relative URL.
+Defining an HTTP request with a relative URL.
 
 ```yaml
 request:
@@ -49,7 +49,7 @@ request:
 
 #### Example 3
 
-Defining a HTTP request with an absolute URL in using some variables.
+Defining an HTTP request with an absolute URL in using some variables.
 
 ```yaml
 request:
@@ -58,7 +58,7 @@ request:
 
 #### Example 4
 
-Defining a HTTP request with an absolute URL in encoding the evaluation of a variable.
+Defining an HTTP request with an absolute URL in encoding the evaluation of a variable.
 
 ```yaml
 request:
@@ -84,7 +84,7 @@ The default value is "GET".
 
 #### Example
 
-Defining a HTTP request with a POST method.
+Defining an HTTP request with a POST method.
 
 ```yaml
 request:
@@ -120,7 +120,7 @@ Define the name of the [server](server.md) to use for the HTTP request. The `ser
 
 #### Example
 
-Defining a HTTP request with a relative URL.
+Defining an HTTP request with a relative URL.
 
 ```yaml
 request:
@@ -137,12 +137,12 @@ headers:
   header-name: header-value
 ```
 
-The `header-name` parameter represent the header name. This parameter is required.<br> 
-The `header-value` parameter represent the header value. This parameter can be optional and can use a variable.
+The `header-name` parameter represents the header name. This parameter is required.<br> 
+The `header-value` parameter represents the header value. This parameter can be optional and can use a variable.
 
 #### Example
 
-Defining a HTTP request with a header.
+Defining an HTTP request with a header.
 
 ```yaml
 request:
@@ -162,7 +162,7 @@ In using the `Content-Type` header with `application/x-www-form-urlencoded`, the
 
 #### Example 1
 
-Defining a HTTP request with a JSon body in using some variables.
+Defining an HTTP request with a JSon body in using some variables.
 
 ```yaml
 request:
@@ -194,7 +194,7 @@ request:
 
 #### Example 2
 
-Defining a HTTP request with a Form body in using some variables.
+Defining an HTTP request with a Form body in using some variables.
 
 ```yaml
 request:
