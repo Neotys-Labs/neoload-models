@@ -1,31 +1,33 @@
 package com.neotys.neoload.model.v3.util;
 
-import com.google.common.base.Strings;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 
-public class VariableUtils {
-	private static final String NL_VARIABLE_START = "${";
-	private static final String NL_VARIABLE_END = "}";
+class VariableUtils {
+    private static final String VARIABLE_REGEX  = "^\\$\\{(.+)}$";
+    private static final Pattern PATTERN = Pattern.compile(VARIABLE_REGEX) ;
 
+    private VariableUtils() {
+    }
 
-	private VariableUtils() {
-	}
+    static boolean isVariableSyntax(final String syntax) {
+        if (isNullOrEmpty(syntax)) {
+            return false;
+        }
+        return PATTERN.matcher(syntax).matches();
+    }
 
-	public static String getVariableSyntax(final String name) {
-		if (name.startsWith(NL_VARIABLE_START) && name.endsWith(NL_VARIABLE_END)) {
-			return name;
-		}
-		return NL_VARIABLE_START + name + NL_VARIABLE_END;
-	}
+    static String getVariableName(final String syntax) {
+        if (syntax == null) {
+            return null;
+        }
 
-	public static String getVariableName(final String syntax) {
-		if (syntax != null && syntax.startsWith(NL_VARIABLE_START) && syntax.endsWith(NL_VARIABLE_END)) {
-			return syntax.substring(NL_VARIABLE_START.length(), syntax.length() - NL_VARIABLE_END.length());
-		}
-		return syntax;
-	}
-
-	public static boolean isVariableSyntax(final String syntax) {
-		return !Strings.isNullOrEmpty(syntax) && syntax.startsWith(NL_VARIABLE_START) && syntax.endsWith(NL_VARIABLE_END);
-	}
+        final Matcher matcher = PATTERN.matcher(syntax);
+        if (matcher.matches()) {
+            return matcher.group(1);
+        }
+        return syntax;
+    }
 }
