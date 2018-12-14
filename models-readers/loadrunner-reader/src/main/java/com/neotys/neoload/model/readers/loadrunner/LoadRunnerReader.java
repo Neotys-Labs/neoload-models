@@ -322,12 +322,9 @@ public class LoadRunnerReader extends Reader {
 		CPP14Lexer lexer = new CPP14Lexer(loadAndCorrectGrammarFromLR(stream, charset));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		CPP14Parser parser = new CPP14Parser(tokens);
-		ParseTree tree = parser.declaration();
-		if (tree instanceof CPP14Parser.DeclarationContext) {
-			final RecognitionException exception = ((CPP14Parser.DeclarationContext) tree).exception;
-			if (exception != null) {
-				throw exception;
-			}
+		final ParseTree tree = parseUntilFunctiondefinitionContext(parser);
+		if(tree == null){
+			return;
 		}
 		LoadRunnerVUVisitor visitor = new LoadRunnerVUVisitor(this, leftBrace, rightBrace, mutableContainer);
 		visitor.visit(tree);
@@ -336,6 +333,26 @@ public class LoadRunnerReader extends Reader {
 			final IContainer container = LoadRunnerVUVisitor.toContainer(visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1));
 			visitor.addInContainers(container);
 		}
+	}
+
+	private ParseTree parseUntilFunctiondefinitionContext(final CPP14Parser parser) {
+		final ParseTree tree = parser.declaration();
+		if (tree instanceof CPP14Parser.DeclarationContext) {
+			final RecognitionException exception = ((CPP14Parser.DeclarationContext) tree).exception;
+			if (exception != null) {
+				throw exception;
+			}
+		}
+		if(tree.getChildCount()==0){
+			// Cannot find any FunctiondefinitionContext
+			return null;
+		}
+		if(tree.getChild(0) instanceof CPP14Parser.FunctiondefinitionContext){
+			// Found FunctiondefinitionContext
+			return tree;
+		}
+		// Recursive call to keep parsing
+		return parseUntilFunctiondefinitionContext(parser);
 	}
 
 	@VisibleForTesting
