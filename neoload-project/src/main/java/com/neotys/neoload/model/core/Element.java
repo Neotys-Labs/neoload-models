@@ -3,8 +3,8 @@ package com.neotys.neoload.model.core;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
-import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.validation.groups.NeoLoad;
 
 @Deprecated
 public interface Element {
