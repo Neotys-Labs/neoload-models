@@ -1,33 +1,47 @@
 package com.neotys.neoload.model.v3.util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.google.common.base.Strings;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 
-class VariableUtils {
-    private static final String VARIABLE_REGEX  = "^\\$\\{(.+)}$";
-    private static final Pattern PATTERN = Pattern.compile(VARIABLE_REGEX) ;
+public class VariableUtils {
+	private static final String NL_VARIABLE_START = "${";
+	private static final String NL_VARIABLE_END = "}";
 
-    private VariableUtils() {
-    }
 
-    static boolean isVariableSyntax(final String syntax) {
-        if (isNullOrEmpty(syntax)) {
-            return false;
-        }
-        return PATTERN.matcher(syntax).matches();
-    }
+	private VariableUtils() {
+	}
 
-    static String getVariableName(final String syntax) {
-        if (syntax == null) {
-            return null;
-        }
+	public static String getVariableSyntax(final String name) {
+		if (Strings.isNullOrEmpty(name)) {
+			throw new IllegalArgumentException("The parameter 'name' must not be null or empty.");
+		}
+		final String cleanedName = name.trim();
+		if (cleanedName.isEmpty()) {
+			throw new IllegalArgumentException("The parameter 'name' must not be blank.");
+		}
+		
+		if (cleanedName.startsWith(NL_VARIABLE_START) && cleanedName.endsWith(NL_VARIABLE_END)) {
+			return cleanedName;
+		}
+		return NL_VARIABLE_START + cleanedName + NL_VARIABLE_END;
+	}
 
-        final Matcher matcher = PATTERN.matcher(syntax);
-        if (matcher.matches()) {
-            return matcher.group(1);
-        }
-        return syntax;
-    }
+	public static String getVariableName(final String syntax) {
+		if (isVariableSyntax(syntax)) {
+			final String cleanedSyntax = syntax.trim();
+			return cleanedSyntax.substring(NL_VARIABLE_START.length(), cleanedSyntax.length() - NL_VARIABLE_END.length()).trim();
+		}
+		return null;
+	}
+
+	public static boolean isVariableSyntax(final String syntax) {
+		if (Strings.isNullOrEmpty(syntax)) {
+			return false;
+		}
+		final String cleanedSyntax = syntax.trim();
+		if (cleanedSyntax.isEmpty()) {
+			return false;
+		}
+		return cleanedSyntax.startsWith(NL_VARIABLE_START) && cleanedSyntax.endsWith(NL_VARIABLE_END);
+	}
 }
