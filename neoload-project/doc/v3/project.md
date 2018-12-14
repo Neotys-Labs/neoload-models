@@ -9,7 +9,7 @@ The Project definition can be declared with servers, variables, User Paths, Popu
 
 Definition has several top-level keys:
 
- Name                          | Description                                   | Accept variable    | Required/Optional |
+| Name                          | Description                                   | Accept variable    | Required/Optional |
 | ---------------------------- | --------------------------------------------- | ------------------ | ----------------- |
 | name                         | The root key defining the name of the project | No                 | Required          |
 | [variables](variables.md)    | The variables list                            | No                 | Optional          | 

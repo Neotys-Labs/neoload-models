@@ -30,9 +30,9 @@ public class RequestUtils {
 	private static final String FUNCTION_ENCODE_URL_START = "__encodeURL(";
 	private static final String FUNCTION_ENCODE_URL_END = ")";
 
-	public static final String HEADER_CONTENT_TYPE = "Content-Type";
-	public static final String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
-	public static final String BINARY_CONTENT_TYPE = "application/octet-stream";
+	private static final String HEADER_CONTENT_TYPE = "Content-Type";
+	private static final String FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
+	private static final String BINARY_CONTENT_TYPE = "application/octet-stream";
 
 	private RequestUtils() {
 	}
@@ -188,7 +188,6 @@ public class RequestUtils {
 	public static Optional<Header> findHeader(final List<Header> headers, final String name) {
 		if ((headers == null) || (headers.isEmpty())) return Optional.empty();
 		if (Strings.isNullOrEmpty(name)) return Optional.empty();
-		
 		return headers.stream()
 				.filter(header -> name.trim().equals(header.getName()))
 				.findFirst();
@@ -201,7 +200,7 @@ public class RequestUtils {
 		return contentType.trim().toLowerCase().startsWith(BINARY_CONTENT_TYPE);
 	}
 
-	public static boolean isForm(final String contentType) {
+	protected static boolean isForm(final String contentType) {
 		if (contentType == null) return false;
 
 		// use startsWith to handle the "; charset=" that may be there.

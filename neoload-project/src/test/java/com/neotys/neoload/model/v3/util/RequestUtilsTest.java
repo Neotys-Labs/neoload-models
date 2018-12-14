@@ -1,6 +1,5 @@
 package com.neotys.neoload.model.v3.util;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -17,7 +16,6 @@ import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
 import com.neotys.neoload.model.v3.project.userpath.Header;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
-
 
 public class RequestUtilsTest {
 	@Test
@@ -170,6 +168,7 @@ public class RequestUtilsTest {
 		assertEquals(expectedUrl, actualUrl);
 	}
 	
+
 	@Test
 	public void getParameters() {
 		assertNotNull(RequestUtils.getParameters(null));
@@ -221,12 +220,19 @@ public class RequestUtilsTest {
 		
 		assertNull(RequestUtils.getEncodeUrlValue("var_name"));
 		assertNull(RequestUtils.getEncodeUrlValue("${var_name}"));
-				
+		
+		assertNull(RequestUtils.getEncodeUrlValue("__encodeURL(${var_name}"));
+		assertNull(RequestUtils.getEncodeUrlValue("${var_name})"));
+
+		assertNull(RequestUtils.getEncodeUrlValue("_encodeURL(${var_name})"));
+
+		assertEquals("var_name", RequestUtils.getEncodeUrlValue("__encodeURL(var_name)"));
+		assertEquals("var_name", RequestUtils.getEncodeUrlValue(" \t \r\n __encodeURL( \t \r\n var_name \t \r\n ) \t \r\n "));
+		
 		assertEquals("${var_name}", RequestUtils.getEncodeUrlValue("__encodeURL(${var_name})"));
 		assertEquals("${var_name}", RequestUtils.getEncodeUrlValue(" \t \r\n __encodeURL( \t \r\n ${var_name} \t \r\n ) \t \r\n "));
 	}
 
-	@Test
 	public void isEncodeUrlSyntax() {
 		assertFalse(RequestUtils.isEncodeUrlSyntax(null));
 		assertFalse(RequestUtils.isEncodeUrlSyntax(""));
@@ -237,7 +243,9 @@ public class RequestUtilsTest {
 		
 		assertFalse(RequestUtils.isEncodeUrlSyntax("__encodeURL(${var_name}"));
 		assertFalse(RequestUtils.isEncodeUrlSyntax("${var_name})"));
-		
+
+		assertFalse(RequestUtils.isEncodeUrlSyntax("_encodeURL(${var_name})"));
+
 		assertTrue(RequestUtils.isEncodeUrlSyntax("__encodeURL(${var_name})"));
 		assertTrue(RequestUtils.isEncodeUrlSyntax(" \t \r\n __encodeURL( \t \r\n ${var_name} \t \r\n ) \t \r\n "));
 	}
