@@ -9,8 +9,6 @@ import org.junit.Test;
 public class NegociateAuthenticationTest {
 	@Test
 	public void constants() {
-		assertEquals("login", NegotiateAuthentication.LOGIN);
-		assertEquals("password", NegotiateAuthentication.PASSWORD);
 		assertEquals("domain", NegotiateAuthentication.DOMAIN);
 	}
 }

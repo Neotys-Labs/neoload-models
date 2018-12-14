@@ -11,8 +11,6 @@ import com.neotys.neoload.model.v3.project.server.NtlmAuthentication;
 public class NtlmAuthenticationTest {
 	@Test
 	public void constants() {
-		assertEquals("login", NtlmAuthentication.LOGIN);
-		assertEquals("password", NtlmAuthentication.PASSWORD);
 		assertEquals("domain", NtlmAuthentication.DOMAIN);
 	}
 }
