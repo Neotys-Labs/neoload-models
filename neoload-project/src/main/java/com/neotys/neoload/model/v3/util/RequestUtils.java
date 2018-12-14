@@ -40,11 +40,16 @@ public class RequestUtils {
 	public static URL parseUrl(final String url) {
 		// Check if url is null or empty
 		if (Strings.isNullOrEmpty(url)) {
-			throw new IllegalArgumentException("url must not be null or empty.");
+			throw new IllegalArgumentException("The parameter 'url' must not be null or empty.");
+		}
+		// Check if url is blank
+		final String cleanedUrl = url.trim(); 
+		if (cleanedUrl.isEmpty()) {
+			throw new IllegalArgumentException("The parameter 'url' must not be blank.");
 		}
 
 		// Check if url matches the URL pattern
-		final Matcher matcher = URL_PATTERN.matcher(url);
+		final Matcher matcher = URL_PATTERN.matcher(url.trim());
 		if (!matcher.matches()) {
 			throw new IllegalArgumentException("The url '" + url + "' does not match the URL pattern: " + URL_PATTERN.pattern());
 		}
@@ -92,8 +97,13 @@ public class RequestUtils {
 	 */
 	public static List<Parameter> getParameters(final String query) {
 		final List<Parameter> urlParameters = new ArrayList<>();
-		if (Strings.isNullOrEmpty(query))
+		if (Strings.isNullOrEmpty(query)) {
 			return urlParameters;
+		}
+		final String cleanedQuery = query.trim();
+		if (cleanedQuery.isEmpty()) {
+			return urlParameters;
+		}		
 		for (String param : query.split("&")) {
 			final Parameter.Builder parameterBuilder = Parameter.builder();
 			if (param.contains("=")) {
@@ -112,14 +122,22 @@ public class RequestUtils {
 	}
 
 	public static String getEncodeUrlValue(final String syntax) {
-		if (syntax != null && syntax.startsWith(FUNCTION_ENCODE_URL_START) && syntax.endsWith(FUNCTION_ENCODE_URL_END)) {
-			return syntax.substring(FUNCTION_ENCODE_URL_START.length(), syntax.length() - FUNCTION_ENCODE_URL_END.length());
+		if (isEncodeUrlSyntax(syntax)) {
+			final String cleanedSyntax = syntax.trim();
+			return cleanedSyntax.substring(FUNCTION_ENCODE_URL_START.length(), cleanedSyntax.length() - FUNCTION_ENCODE_URL_END.length()).trim();
 		}
-		return syntax;
+		return null;
 	}
 
 	public static boolean isEncodeUrlSyntax(final String syntax) {
-		return !Strings.isNullOrEmpty(syntax) && syntax.startsWith(FUNCTION_ENCODE_URL_START) && syntax.endsWith(FUNCTION_ENCODE_URL_END);
+		if (Strings.isNullOrEmpty(syntax)) {
+			return false;
+		}
+		final String cleanedSyntax = syntax.trim();
+		if (cleanedSyntax.isEmpty()) {
+			return false;
+		}
+		return cleanedSyntax.startsWith(FUNCTION_ENCODE_URL_START) && cleanedSyntax.endsWith(FUNCTION_ENCODE_URL_END);
 	}
 
 	/**
@@ -168,8 +186,11 @@ public class RequestUtils {
 	}
 
 	public static Optional<Header> findHeader(final List<Header> headers, final String name) {
+		if ((headers == null) || (headers.isEmpty())) return Optional.empty();
+		if (Strings.isNullOrEmpty(name)) return Optional.empty();
+		
 		return headers.stream()
-				.filter(header -> name.equals(header.getName()))
+				.filter(header -> name.trim().equals(header.getName()))
 				.findFirst();
 	}
 
@@ -177,14 +198,14 @@ public class RequestUtils {
 		if (contentType == null) return false;
 
 		// use startsWith to handle the "; charset=" that may be there.
-		return contentType.toLowerCase().startsWith(BINARY_CONTENT_TYPE);
+		return contentType.trim().toLowerCase().startsWith(BINARY_CONTENT_TYPE);
 	}
 
 	public static boolean isForm(final String contentType) {
 		if (contentType == null) return false;
 
 		// use startsWith to handle the "; charset=" that may be there.
-		return contentType.toLowerCase().startsWith(FORM_CONTENT_TYPE);
+		return contentType.trim().toLowerCase().startsWith(FORM_CONTENT_TYPE);
 	}
 
 	private static Scheme getScheme(final String scheme) {
