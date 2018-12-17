@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.util.StdConverter;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.scenario.StartAfter;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Deprecated
 public final class StringToStartAfterConverter extends StdConverter<String, StartAfter> {
 	private static final StartAfter ERROR_VALUE = StartAfter.builder().build();

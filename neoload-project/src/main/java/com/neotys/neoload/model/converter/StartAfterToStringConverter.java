@@ -3,6 +3,9 @@ package com.neotys.neoload.model.converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.neotys.neoload.model.scenario.StartAfter;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Deprecated
 public final class StartAfterToStringConverter extends StdConverter<StartAfter, String> {
 	@Override

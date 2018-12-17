@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.util.StdConverter;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.scenario.StopAfter;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Deprecated
 public final class StringToStopAfterConverter extends StdConverter<String, StopAfter> {
 	private static final StopAfter ERROR_VALUE = StopAfter.builder().build();
