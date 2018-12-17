@@ -14,6 +14,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.validation.groups.NeoLoad;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({PeaksLoadPolicy.MINIMUM, PeaksLoadPolicy.MAXIMUM, PeaksLoadPolicy.START, DurationPolicy.DURATION, StartStopPolicy.START_AFTER, PeaksLoadPolicy.STEP_RAMPUP, StartStopPolicy.STOP_AFTER})
 @JsonDeserialize(as = ImmutablePeaksLoadPolicy.class)

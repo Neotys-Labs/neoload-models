@@ -12,6 +12,9 @@ import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
 import javax.validation.constraints.Positive;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Positive
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)

@@ -12,6 +12,9 @@ import javax.validation.Payload;
 
 import com.neotys.neoload.model.validation.constraintvalidators.UniqueElementNameValidator;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)
 @Constraint(validatedBy = UniqueElementNameValidator.class)

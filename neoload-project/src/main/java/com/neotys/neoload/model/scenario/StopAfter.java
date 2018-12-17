@@ -11,6 +11,9 @@ import com.neotys.neoload.model.core.Composite;
 import com.neotys.neoload.model.validation.constraints.CompositeCheck;
 import com.neotys.neoload.model.validation.groups.NeoLoad;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @CompositeCheck(groups={NeoLoad.class}, message="{com.neotys.neoload.model.validation.constraints.CompositeCheck.stopafter.message}")
 @JsonSerialize(converter=StopAfterToStringConverter.class)
 @JsonDeserialize(converter=StringToStopAfterConverter.class)

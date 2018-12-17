@@ -6,6 +6,9 @@ import java.util.stream.Stream;
 import com.neotys.neoload.model.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.validation.groups.NeoLoad;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Deprecated
 public interface Element {
 	String NAME = "name";

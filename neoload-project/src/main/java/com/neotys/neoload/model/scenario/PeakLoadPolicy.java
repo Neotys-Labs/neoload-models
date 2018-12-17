@@ -12,6 +12,9 @@ import com.neotys.neoload.model.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.validation.groups.NeoLoad;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutablePeakLoadPolicy.class)
 @Value.Immutable

@@ -12,6 +12,9 @@ import javax.validation.Path.Node;
 import javax.validation.ValidatorFactory;
 import java.util.*;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Deprecated
 public final class Validator {
 	private static final String PROPERTY_PATH_SEPARATOR = ".";

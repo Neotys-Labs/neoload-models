@@ -5,6 +5,9 @@ import java.util.Locale;
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
 import org.hibernate.validator.resourceloading.PlatformResourceBundleLocator;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Deprecated
 final class ResourceBundleMessageInEnglishInterpolator extends ResourceBundleMessageInterpolator {
 	private static final String DEFAULT_VALIDATION_MESSAGES = "com.neotys.neoload.model.validation.ValidationMessages";

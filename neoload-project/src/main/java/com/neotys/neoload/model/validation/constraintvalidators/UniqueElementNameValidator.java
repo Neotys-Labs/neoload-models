@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Deprecated
 public final class UniqueElementNameValidator extends AbstractConstraintValidator<UniqueElementNameCheck, List<? extends Element>> {
 	@Override

@@ -14,6 +14,9 @@ import com.neotys.neoload.model.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.validation.groups.NeoLoad;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({RampupLoadPolicy.MIN_USERS, RampupLoadPolicy.MAX_USERS, RampupLoadPolicy.INCREMENT_USERS, RampupLoadPolicy.INCREMENT_EVERY, DurationPolicy.DURATION, StartStopPolicy.START_AFTER, RampupLoadPolicy.INCREMENT_RAMPUP, StartStopPolicy.STOP_AFTER})
 @JsonDeserialize(as = ImmutableRampupLoadPolicy.class)

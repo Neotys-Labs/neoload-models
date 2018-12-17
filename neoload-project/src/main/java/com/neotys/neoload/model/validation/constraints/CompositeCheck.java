@@ -13,6 +13,9 @@ import com.neotys.neoload.model.validation.constraintvalidators.DurationValidato
 import com.neotys.neoload.model.validation.constraintvalidators.StartAfterValidator;
 import com.neotys.neoload.model.validation.constraintvalidators.StopAfterValidator;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Target( { TYPE })
 @Retention(RUNTIME)
 @Constraint(validatedBy = {DurationValidator.class, StartAfterValidator.class, StopAfterValidator.class})

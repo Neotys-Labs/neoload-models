@@ -2,6 +2,9 @@ package com.neotys.neoload.model.validation.naming;
 
 import javax.validation.Path.Node;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Deprecated
 public final class SnakeCaseStrategy implements PropertyNamingStrategy {
     public SnakeCaseStrategy() {

@@ -10,6 +10,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.validation.groups.NeoLoad;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({ConstantLoadPolicy.USERS, DurationPolicy.DURATION, StartStopPolicy.START_AFTER, ConstantLoadPolicy.RAMPUP, StartStopPolicy.STOP_AFTER})
 @JsonDeserialize(as = ImmutableConstantLoadPolicy.class)

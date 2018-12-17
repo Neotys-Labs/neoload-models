@@ -13,6 +13,9 @@ import javax.validation.ReportAsSingleViolation;
 
 import com.neotys.neoload.model.validation.constraintvalidators.RequiredValidator;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)
 @Constraint(validatedBy = RequiredValidator.class)
