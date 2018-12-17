@@ -14,8 +14,8 @@ import com.neotys.neoload.model.v3.validation.constraints.DigitsCheck;
 public final class DigitsValidator extends AbstractConstraintValidator<DigitsCheck, Object> {
 	private static final Log LOG = LoggerFactory.make( MethodHandles.lookup() );
 
-	private int maxIntegerLength;
-	private int maxFractionLength;
+	protected int maxIntegerLength;
+	protected int maxFractionLength;
 
 	@Override
 	public void initialize(DigitsCheck constraintAnnotation) {
