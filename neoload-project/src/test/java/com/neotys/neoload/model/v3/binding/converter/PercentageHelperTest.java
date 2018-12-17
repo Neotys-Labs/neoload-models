@@ -49,6 +49,9 @@ public class PercentageHelperTest {
 	
 	@Test
 	public void convertToDouble() {
+		// Input: NULL - Output: NULL
+		assertEquals(null, PercentageHelper.convertToDouble(null));
+		
 		convertToDouble("");
 		convertToDouble("%");
 	}
