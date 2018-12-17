@@ -23,6 +23,8 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
 
 	private static final String TRANSACTION = "transaction";
 	private static final String REQUEST = "request";
+	private static final String DELAY = "delay";
+	private static final String THINK_TIME = "think_time";
 
 	public ElementsDeserializer() {
 		super(List.class);
@@ -46,12 +48,12 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
 			} else if (actionNode.has(REQUEST)) {
 				final JsonNode requestNode = actionNode.get(REQUEST);
 				action = codec.treeToValue(requestNode, Request.class);
-			} else if (actionNode.has(Delay.DELAY)) {
-				final String delayValue = actionNode.get(Delay.DELAY).asText();
+			} else if (actionNode.has(DELAY)) {
+				final String delayValue = actionNode.get(DELAY).asText();
 				final String delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
 				action = Delay.builder().value(String.valueOf(delay)).build();
-			} else if (actionNode.has(ThinkTime.THINK_TIME)) {
-				final String thinkTimeValue = actionNode.get(ThinkTime.THINK_TIME).asText();
+			} else if (actionNode.has(THINK_TIME)) {
+				final String thinkTimeValue = actionNode.get(THINK_TIME).asText();
 				final String thinkTime = STRING_TO_TIME_DURATION_WITH_MS.convert(thinkTimeValue);
 				action = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
 			}
