@@ -2,7 +2,6 @@ package com.neotys.neoload.model.v3.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -56,19 +55,22 @@ public class VariableUtilsTest {
 	
 	@Test
 	public void getVariableName() {
-		assertNull(VariableUtils.getVariableName(null));
-		assertNull(VariableUtils.getVariableName(""));
-		assertNull(VariableUtils.getVariableName(" \t \r\n "));
+		assertFalse(VariableUtils.getVariableName(null).isPresent());
+		assertFalse(VariableUtils.getVariableName("").isPresent());
+		assertFalse(VariableUtils.getVariableName(" \t \r\n ").isPresent());
 		
-		assertNull(VariableUtils.getVariableName("var_name"));
+		assertFalse(VariableUtils.getVariableName("var_name").isPresent());
 		
-		assertNull(VariableUtils.getVariableName("${var_name"));
-		assertNull(VariableUtils.getVariableName("var_name}"));
+		assertFalse(VariableUtils.getVariableName("${var_name").isPresent());
+		assertFalse(VariableUtils.getVariableName("var_name}").isPresent());
 				
-		assertEquals("var_name", VariableUtils.getVariableName("${var_name}"));
-		assertEquals("var_name", VariableUtils.getVariableName(" \t \r\n ${ \t \r\n var_name \t \r\n } \t \r\n "));
+		assertFalse(RequestUtils.getEncodeUrlValue("${}").isPresent());
+		assertFalse(RequestUtils.getEncodeUrlValue("${ \t \r\n }").isPresent());
 		
-		assertEquals("var_name{abc}", VariableUtils.getVariableName("${var_name{abc}}"));
+		assertEquals("var_name", VariableUtils.getVariableName("${var_name}").get());
+		assertEquals("var_name", VariableUtils.getVariableName(" \t \r\n ${ \t \r\n var_name \t \r\n } \t \r\n ").get());
+		
+		assertEquals("var_name{abc}", VariableUtils.getVariableName("${var_name{abc}}").get());
 	}
 
 	@Test

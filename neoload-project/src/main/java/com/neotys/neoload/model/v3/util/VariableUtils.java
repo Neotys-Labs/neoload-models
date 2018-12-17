@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.v3.util;
 
+import java.util.Optional;
+
 import com.google.common.base.Strings;
 
 
@@ -26,12 +28,12 @@ public class VariableUtils {
 		return NL_VARIABLE_START + cleanedName + NL_VARIABLE_END;
 	}
 
-	public static String getVariableName(final String syntax) {
+	public static Optional<String> getVariableName(final String syntax) {
 		if (isVariableSyntax(syntax)) {
 			final String cleanedSyntax = syntax.trim();
-			return cleanedSyntax.substring(NL_VARIABLE_START.length(), cleanedSyntax.length() - NL_VARIABLE_END.length()).trim();
+			return Optional.ofNullable(cleanedSyntax.substring(NL_VARIABLE_START.length(), cleanedSyntax.length() - NL_VARIABLE_END.length()).trim());
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public static boolean isVariableSyntax(final String syntax) {

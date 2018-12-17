@@ -3,7 +3,6 @@ package com.neotys.neoload.model.v3.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -214,23 +213,26 @@ public class RequestUtilsTest {
 	
 	@Test
 	public void getEncodeUrlValue() {
-		assertNull(RequestUtils.getEncodeUrlValue(null));
-		assertNull(RequestUtils.getEncodeUrlValue(""));
-		assertNull(RequestUtils.getEncodeUrlValue(" \t \r\n "));
+		assertFalse(RequestUtils.getEncodeUrlValue(null).isPresent());
+		assertFalse(RequestUtils.getEncodeUrlValue("").isPresent());
+		assertFalse(RequestUtils.getEncodeUrlValue(" \t \r\n ").isPresent());
 		
-		assertNull(RequestUtils.getEncodeUrlValue("var_name"));
-		assertNull(RequestUtils.getEncodeUrlValue("${var_name}"));
+		assertFalse(RequestUtils.getEncodeUrlValue("var_name").isPresent());
+		assertFalse(RequestUtils.getEncodeUrlValue("${var_name}").isPresent());
 		
-		assertNull(RequestUtils.getEncodeUrlValue("__encodeURL(${var_name}"));
-		assertNull(RequestUtils.getEncodeUrlValue("${var_name})"));
+		assertFalse(RequestUtils.getEncodeUrlValue("__encodeURL(${var_name}").isPresent());
+		assertFalse(RequestUtils.getEncodeUrlValue("${var_name})").isPresent());
 
-		assertNull(RequestUtils.getEncodeUrlValue("_encodeURL(${var_name})"));
-
-		assertEquals("var_name", RequestUtils.getEncodeUrlValue("__encodeURL(var_name)"));
-		assertEquals("var_name", RequestUtils.getEncodeUrlValue(" \t \r\n __encodeURL( \t \r\n var_name \t \r\n ) \t \r\n "));
+		assertFalse(RequestUtils.getEncodeUrlValue("_encodeURL(${var_name})").isPresent());
 		
-		assertEquals("${var_name}", RequestUtils.getEncodeUrlValue("__encodeURL(${var_name})"));
-		assertEquals("${var_name}", RequestUtils.getEncodeUrlValue(" \t \r\n __encodeURL( \t \r\n ${var_name} \t \r\n ) \t \r\n "));
+		assertFalse(RequestUtils.getEncodeUrlValue("_encodeURL()").isPresent());
+		assertFalse(RequestUtils.getEncodeUrlValue("_encodeURL( \t \r\n )").isPresent());
+
+		assertEquals("var_name", RequestUtils.getEncodeUrlValue("__encodeURL(var_name)").get());
+		assertEquals("var_name", RequestUtils.getEncodeUrlValue(" \t \r\n __encodeURL( \t \r\n var_name \t \r\n ) \t \r\n ").get());
+		
+		assertEquals("${var_name}", RequestUtils.getEncodeUrlValue("__encodeURL(${var_name})").get());
+		assertEquals("${var_name}", RequestUtils.getEncodeUrlValue(" \t \r\n __encodeURL( \t \r\n ${var_name} \t \r\n ) \t \r\n ").get());
 	}
 
 	public void isEncodeUrlSyntax() {

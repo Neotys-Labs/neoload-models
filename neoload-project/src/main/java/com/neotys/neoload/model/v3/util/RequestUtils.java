@@ -75,7 +75,7 @@ public class RequestUtils {
 		Server server = null;
 		if (!Strings.isNullOrEmpty(serverUrl)) {
 			server = Server.builder()
-					.name(isVariableSyntax(host) ? getVariableName(host) : host)
+					.name(isVariableSyntax(host) ? getVariableName(host).get() : host)
 					.scheme(getScheme(scheme))
 					.host(host)
 					.port((port != null) ? port : getPort(scheme))
@@ -121,12 +121,12 @@ public class RequestUtils {
 		return urlParameters;
 	}
 
-	public static String getEncodeUrlValue(final String syntax) {
+	public static Optional<String> getEncodeUrlValue(final String syntax) {
 		if (isEncodeUrlSyntax(syntax)) {
 			final String cleanedSyntax = syntax.trim();
-			return cleanedSyntax.substring(FUNCTION_ENCODE_URL_START.length(), cleanedSyntax.length() - FUNCTION_ENCODE_URL_END.length()).trim();
+			return Optional.ofNullable(cleanedSyntax.substring(FUNCTION_ENCODE_URL_START.length(), cleanedSyntax.length() - FUNCTION_ENCODE_URL_END.length()).trim());
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public static boolean isEncodeUrlSyntax(final String syntax) {
