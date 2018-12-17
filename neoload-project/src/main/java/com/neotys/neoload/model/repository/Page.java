@@ -8,8 +8,9 @@ import java.util.stream.Stream;
 
 /**
  * A Page is a container containing only Page or Request.
+ * 
+ * @deprecated As of v3, replaced by an associated class from v3 version.
  */
-
 @Value.Immutable
 @Deprecated
 public interface Page extends PageElement {

@@ -2,6 +2,9 @@ package com.neotys.neoload.model.repository;
 
 import java.util.Optional;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Deprecated
 public interface Variable {
 	

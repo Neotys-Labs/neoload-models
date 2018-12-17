@@ -6,6 +6,9 @@ import org.immutables.value.Value;
 
 import java.util.stream.Stream;
 
+/**
+ * @deprecated As of v3, replaced by an associated class from v3 version.
+ */
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUserPath.class)
 @Deprecated
