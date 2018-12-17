@@ -119,11 +119,6 @@
 			</dependency>
 			<dependency>
 				<groupId>com.neotys.neoload</groupId>
-				<artifactId>neoload-project</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.neotys.neoload</groupId>
 				<artifactId>common-reader</artifactId>
 				<version>${project.version}</version>
 			</dependency>
