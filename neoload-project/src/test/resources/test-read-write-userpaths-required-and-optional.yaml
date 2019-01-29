@@ -3,8 +3,10 @@ user_paths:
 - name: MyUserPath1
   description: My User Path 1
   user_session: reset_on
+  sla_profile: MyUserPathSlaProfile1
   init:
     description: My Init Container from My User Path 1
+    sla_profile: MyInitSlaProfile1
     steps:
     - transaction:
         name: MyTransaction
@@ -12,6 +14,7 @@ user_paths:
         - delay: 1s
   actions:
     description: My Actions Container from My User Path 1
+    sla_profile: MyActionsSlaProfile1
     steps:
     - transaction:
         name: MyTransaction
@@ -19,6 +22,7 @@ user_paths:
         - delay: 1s
   end:
     description: My End Container from My User Path 1
+    sla_profile: MyEndSlaProfile1
     steps:
     - transaction:
         name: MyTransaction
@@ -27,8 +31,10 @@ user_paths:
 - name: MyUserPath2
   description: My User Path 2
   user_session: reset_off
+  sla_profile: MyUserPathSlaProfile2
   init:
     description: My Init Container from My User Path 2
+    sla_profile: MyInitSlaProfile2
     steps:
     - transaction:
         name: MyTransaction
@@ -36,6 +42,7 @@ user_paths:
         - delay: 1s
   actions:
     description: My Actions Container from My User Path 2
+    sla_profile: MyActionsSlaProfile2
     steps:
     - transaction:
         name: MyTransaction
@@ -43,6 +50,7 @@ user_paths:
         - delay: 1s
   end:
     description: My End Container from My User Path 2
+    sla_profile: MyEndSlaProfile2
     steps:
     - transaction:
         name: MyTransaction
@@ -51,8 +59,10 @@ user_paths:
 - name: MyUserPath3
   description: My User Path 3
   user_session: reset_auto
+  sla_profile: MyUserPathSlaProfile3
   init:
     description: My Init Container from My User Path 3
+    sla_profile: MyInitSlaProfile3
     steps:
     - transaction:
         name: MyTransaction
@@ -60,6 +70,7 @@ user_paths:
         - delay: 1s
   actions:
     description: My Actions Container from My User Path 3
+    sla_profile: MyActionsSlaProfile3
     steps:
     - transaction:
         name: MyTransaction
@@ -67,6 +78,7 @@ user_paths:
         - delay: 1s
   end:
     description: My End Container from My User Path 3
+    sla_profile: MyEndSlaProfile3
     steps:
     - transaction:
         name: MyTransaction

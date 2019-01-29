@@ -4,22 +4,33 @@ A request defines a plain HTTP request.
 
 #### Available settings are
 
-| Name                                | Description                            | Accept variable   | Required/Optional |
-| ----------------------------------- | -------------------------------------- | ----------------- | ----------------- |
-| [url](#url)                         | The URL to hit                         | Yes               | Required          |
-| [server](#server)                   | The server name to use                 | No                | Optional          |
-| [method](#method)                   | The request method                     | No                | Optional          |
-| [headers](#headers)                 | The request header list                | Yes               | Optional          |
-| [body](#body)                       | The request body                       | Yes               | Optional          |
-| [extractors](variable-extractor.md) | The extractor list                     | No                | Optional          |
+| Name                                | Description                                                                | Accept variable | Required/Optional |
+| ----------------------------------- | -------------------------------------------------------------------------- | --------------- | ----------------- |
+| [url](#url)                         | The URL to hit                                                             | Yes             | Required          |
+| [server](#server)                   | The server name to use                                                     | No              | Optional          |
+| [method](#method)                   | The request method                                                         | No              | Optional          |
+| [headers](#headers)                 | The request header list                                                    | Yes             | Optional          |
+| [body](#body)                       | The request body                                                           | Yes             | Optional          |
+| [extractors](variable-extractor.md) | The extractor list                                                         | No              | Optional          |
+| sla_profile                         | The SLA (Service Level Agreement) profile applied to the 'Request' element | No              | Optional          |
 
-#### Example
+#### Example 1
 
 Defining an HTTP request with a GET method.
 
 ```yaml
 request:
   url: http://petstore.swagger.io:80/v2/pet/findByStatus?status=available
+```
+
+#### Example 2
+
+Defining an HTTP request with a GET method and a SLA profile.
+
+```yaml
+request:
+  url: http://petstore.swagger.io:80/v2/pet/findByStatus?status=available
+  sla_profile: MySlaProfileForRequest
 ```
 
 ## url

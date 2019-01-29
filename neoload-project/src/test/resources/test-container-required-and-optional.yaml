@@ -1,0 +1,11 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - transaction:
+        name: MyTransaction
+        description: My Transaction
+        sla_profile: MySlaProfile
+        steps:
+        - delay: 1s

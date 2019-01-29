@@ -24,7 +24,8 @@
                   "name": "MyVariable1",
                   "jsonpath": "MyJsonPath"
                 }
-              ]
+              ],
+              "sla_profile": "MySlaProfile"
             }
           },
           {
@@ -46,7 +47,8 @@
                   "name": "MyVariable1",
                   "jsonpath": "MyJsonPath"
                 }
-              ]
+              ],
+              "sla_profile": "MySlaProfile"
             }
           }
         ]

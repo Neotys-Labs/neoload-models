@@ -41,9 +41,11 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.name("MyUserPath1")
 				.description("My User Path 1")
 				.userSession(UserSession.RESET_ON)
+				.slaProfile("MyUserPathSlaProfile1")
 				.init(Container.builder()
 						.name("init")
 						.description("My Init Container from My User Path 1")
+						.slaProfile("MyInitSlaProfile1")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
@@ -53,6 +55,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.actions(Container.builder()
 						.name("actions")
 						.description("My Actions Container from My User Path 1")
+						.slaProfile("MyActionsSlaProfile1")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
@@ -62,6 +65,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.end(Container.builder()
 						.name("end")
 						.description("My End Container from My User Path 1")
+						.slaProfile("MyEndSlaProfile1")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
@@ -74,9 +78,11 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.name("MyUserPath2")
 				.description("My User Path 2")
 				.userSession(UserSession.RESET_OFF)
+				.slaProfile("MyUserPathSlaProfile2")
 				.init(Container.builder()
 						.name("init")
 						.description("My Init Container from My User Path 2")
+						.slaProfile("MyInitSlaProfile2")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
@@ -86,6 +92,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.actions(Container.builder()
 						.name("actions")
 						.description("My Actions Container from My User Path 2")
+						.slaProfile("MyActionsSlaProfile2")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
@@ -95,6 +102,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.end(Container.builder()
 						.name("end")
 						.description("My End Container from My User Path 2")
+						.slaProfile("MyEndSlaProfile2")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
@@ -107,9 +115,11 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.name("MyUserPath3")
 				.description("My User Path 3")
 				.userSession(UserSession.RESET_AUTO)
+				.slaProfile("MyUserPathSlaProfile3")
 				.init(Container.builder()
 						.name("init")
 						.description("My Init Container from My User Path 3")
+						.slaProfile("MyInitSlaProfile3")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
@@ -119,6 +129,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.actions(Container.builder()
 						.name("actions")
 						.description("My Actions Container from My User Path 3")
+						.slaProfile("MyActionsSlaProfile3")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
@@ -128,6 +139,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.end(Container.builder()
 						.name("end")
 						.description("My End Container from My User Path 3")
+						.slaProfile("MyEndSlaProfile3")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
@@ -161,20 +173,4 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 
 		read("test-read-write-userpaths-required-and-optional", expectedProject);
 	}
-
-//	@Test
-//	public void writeUserPathsOnlyRequired() throws IOException, URISyntaxException {
-//		final Project expectedProject = getUserPathsOnlyRequired();
-//		assertNotNull(expectedProject);
-//		
-//		write("test-write-userpaths-only-required", expectedProject);
-//	}
-//
-//	@Test
-//	public void writeUserPathsRequiredAndOptional() throws IOException, URISyntaxException {
-//		final Project expectedProject = getUserPathsRequiredAndOptional();
-//		assertNotNull(expectedProject);
-//		
-//		write("test-read-write-userpaths-required-and-optional", expectedProject);
-//	}
 }

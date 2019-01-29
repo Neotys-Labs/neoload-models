@@ -17,6 +17,7 @@ user_paths:
         extractors:
         - name: MyVariable1
           jsonpath: MyJsonPath
+        sla_profile: MySlaProfile
     - request:
         url: /select?name=neoload
         server: neotys
@@ -31,3 +32,4 @@ user_paths:
         extractors:
         - name: MyVariable1
           jsonpath: MyJsonPath
+        sla_profile: MySlaProfile

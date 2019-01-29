@@ -55,6 +55,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.name("MyVariable1")
 										.jsonPath("MyJsonPath")
 										.build())
+								.slaProfile("MySlaProfile")
 								.build())
 						.addSteps(Request.builder()
 								.url("/select?name=neoload")
@@ -73,6 +74,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.name("MyVariable1")
 										.jsonPath("MyJsonPath")
 										.build())
+								.slaProfile("MySlaProfile")
 								.build())
 						.build())
 				.build();

@@ -4,6 +4,7 @@ import static com.neotys.neoload.model.v3.binding.serializer.DeserializerHelper.
 import static com.neotys.neoload.model.v3.binding.serializer.DeserializerHelper.asText;
 import static com.neotys.neoload.model.v3.project.Element.DESCRIPTION;
 import static com.neotys.neoload.model.v3.project.Element.NAME;
+import static com.neotys.neoload.model.v3.project.SlaElement.SLA_PROFILE;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.ACTIONS;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.END;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.INIT;
@@ -57,6 +58,7 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		final String name = asText(node, NAME);
 		final String description = asText(node, DESCRIPTION);
 		final UserPath.UserSession userSession = asUserSession(codec, node);
+		final String slaProfile = asText(node, SLA_PROFILE);
 		final Container init = asContainer(codec, node, INIT);
 		final Container actions = asContainer(codec, node, ACTIONS);
 		final Container end = asContainer(codec, node, END);
@@ -65,6 +67,7 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 				.name(name)
 				.description(Optional.ofNullable(description))
 				.userSession(userSession)
+				.slaProfile(Optional.ofNullable(slaProfile))
 				.init(Optional.ofNullable(init))
 				.actions(actions)
 				.end(Optional.ofNullable(end))

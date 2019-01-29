@@ -11,19 +11,18 @@ import org.immutables.value.Value.Style.ValidationMethod;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.binding.serializer.UserPathDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
+import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, UserPath.USER_SESSION, UserPath.INIT, UserPath.ACTIONS, UserPath.END})
 @JsonDeserialize(using = UserPathDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface UserPath extends Element {
+public interface UserPath extends Element, SlaElement {
 	String USER_SESSION = "user_session";
 	String RESET_ON = "reset_on";
 	String RESET_OFF = "reset_off";
@@ -44,22 +43,18 @@ public interface UserPath extends Element {
 		RESET_AUTO;
 	}
 	
-	@JsonProperty(USER_SESSION)
 	@Value.Default
 	default UserSession getUserSession() {
 		return DEFAULT_USER_SESSION;
 	}
 	
-	@JsonProperty(INIT)
 	@Valid
 	Optional<Container> getInit();
 	
-	@JsonProperty(ACTIONS)
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid	
 	Container getActions();
 	
-	@JsonProperty(END)
 	@Valid	
 	Optional<Container> getEnd();
 
