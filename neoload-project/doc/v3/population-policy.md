@@ -4,12 +4,12 @@ The simulated load from a population is determined by a duration and a number of
 
 #### Available settings
 
-| Name          | Description                                                  | Accept variable   | Required/Optional |
-| ------------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-| name          | The name of the population from NeoLoad project             | No                | Required          |
-| [constant_load](#constant-load-policy) | A load that generates a fixed number of Virtual Users.       | No                | Optional          |
-| [rampup_load](#ramp-up-load-policy)   | A load that generates a number of Virtual Users that increases throughout the test. Useful for checking the server behavior under an increasing load. | No                | optional          |
-| [peaks_load](#peaks-load-policy)    | A load that generates a fixed number of Virtual Users with periodic phases of high load. Useful for checking whether the server recovers its normal behavior after a load peak. | No                | optional          |
+| Name          | Description                                                  | Accept variable   | Required | Since |
+|:------------- |:------------------------------------------------------------ |:-----------------:|:--------:|:-----:|
+| name          | The name of the population from NeoLoad project              | -                 | &#x2713; |       |
+| [constant_load](#constant-load-policy) | A load that generates a fixed number of Virtual Users.                                                                                                                          | - | - |  |
+| [rampup_load](#ramp-up-load-policy)    | A load that generates a number of Virtual Users that increases throughout the test. Useful for checking the server behavior under an increasing load.                           | - | - |  |
+| [peaks_load](#peaks-load-policy)       | A load that generates a fixed number of Virtual Users with periodic phases of high load. Useful for checking whether the server recovers its normal behavior after a load peak. | - | - |  |
 
 > A population must contain only one load policy among the constant, ramp-up and peaks load.
 

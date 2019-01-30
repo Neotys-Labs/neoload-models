@@ -3,15 +3,15 @@ The server settings are centralized, which means the target server for the test 
 
 #### Available settings
 
-| Name        | Description                                                  | Accept variable   | Required/Optional | 
-| ----------- | ------------------------------------------------------------ | ----------------- | ----------------- |
-| name        | The name of the server                                      | No                | Required          |
-| host        | The host of the server                                      | Yes               | Required          |
-| scheme      | The scheme of the server. The available values are "http" and "https". The default value is "http".  | No | Optional          |
-| port        | The port of the server. The default value is "80" (for http scheme) or "443" (for https scheme).              | Yes    | Optional          |
-| [basic_authentication](#basic_authentication) | The Basic Authentication used to authenticate on the server.                  | No | Optional          |
-| [ntlm_authentication](#ntlm_authentication) | The NTLM Authentication used to authenticate on the server.                     | No | Optional          |
-| [negotiate_authentication](#negotiate_authentication) | The Negotiate Authentication used to authenticate on the server.         | No | Optional          |
+| Name                                                  | Description                                                                                         | Accept variable | Required | Since |
+|:----------------------------------------------------- |:--------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name                                                  | The name of the server                                                                              | -               | &#x2713; |       |
+| host                                                  | The host of the server                                                                              | &#x2713;        | &#x2713; |       |
+| scheme                                                | The scheme of the server. The available values are "http" and "https". The default value is "http". | -               | -        |       |
+| port                                                  | The port of the server. The default value is "80" (for http scheme) or "443" (for https scheme).    | &#x2713;        | -        |       |
+| [basic_authentication](#basic_authentication)         | The Basic Authentication used to authenticate on the server.                                        | -               | -        |       |
+| [ntlm_authentication](#ntlm_authentication)           | The NTLM Authentication used to authenticate on the server.                                         | -               | -        |       |
+| [negotiate_authentication](#negotiate_authentication) | The Negotiate Authentication used to authenticate on the server.                                    | -               | -        |       |
 
 #### Example
 Defining 2 servers: one with the host name only, and an https one with a basic authentication.
@@ -30,11 +30,11 @@ servers:
 ```
 
 ## basic_authentication
-| Name        | Description                                                             | Accept variable   | Required/Optional |
-| ----------- | ----------------------------------------------------------------------- | ----------------- | ----------------- |
-| login       | The login of the user account used to authenticate on the server       | Yes               | Required          |
-| password    | The password of the user account used to authenticate on the server    | Yes               | Required          |
-| realm       | The realm                                                              | No                | Optional          |
+| Name        | Description                                                         | Accept variable | Required | Since |
+|:----------- |:------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| login       | The login of the user account used to authenticate on the server    | &#x2713;        | &#x2713; |       |
+| password    | The password of the user account used to authenticate on the server | &#x2713;        | &#x2713; |       |
+| realm       | The realm                                                           | -               | -        |       |
 
 #### Example
 Defining a `basic_authentication` for a server.
@@ -46,11 +46,11 @@ basic_authentication:
 ```
 
 ## ntlm_authentication
-| Name        | Description                                                             | Accept variable   | Required/Optional |
-| ----------- | ----------------------------------------------------------------------- | ----------------- | ----------------- |
-| login       | The login of the user account used to authenticate on the server       | Yes               | Required          |
-| password    | The password of the user account used to authenticate on the server    | Yes               | Required          |
-| domain      | The domain                                                             | No                | Optional          |
+| Name        | Description                                                         | Accept variable | Required | Since |
+|:----------- |:------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| login       | The login of the user account used to authenticate on the server    | &#x2713;        | &#x2713; |       |
+| password    | The password of the user account used to authenticate on the server | &#x2713;        | &#x2713; |       |
+| domain      | The domain                                                          | -               | -        |       |
 
 #### Example
 Defining a `ntlm_authentication` for a server.
@@ -62,11 +62,11 @@ ntlm_authentication:
 ```
 
 ## negotiate_authentication
-| Name        | Description                                                             | Accept variable   | Required/Optional |
-| ----------- | ----------------------------------------------------------------------- | ----------------- | ----------------- |
-| login       | The login of the user account used to authenticate on the server       | Yes               | Required          |
-| password    | The password of the user account used to authenticate on the server    | Yes               | Required          |
-| domain | The domain                                                                  | No                | Optional          |
+| Name        | Description                                                         | Accept variable | Required | Since |
+|:----------- |:------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| login       | The login of the user account used to authenticate on the server    | &#x2713;        | &#x2713; |       |
+| password    | The password of the user account used to authenticate on the server | &#x2713;        | &#x2713; |       |
+| domain | The domain                                                               | -               | -        |       |
 
 #### Example
 Defining a `negotiate_authentication` for a server.

@@ -3,12 +3,12 @@
 The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics.
 
 #### Available settings
-| Name                           | Description                                                                    | Accept variable | Required/Optional |
-| ------------------------------ | ------------------------------------------------------------------------------ | --------------- | ----------------- |
-| name                           | The Transaction name                                                           | No              | Required          |
-| description                    | The Transaction description                                                    | No              | Optional          |
-| sla_profile                    | The SLA (Service Level Agreement) profile applied to the 'Transaction' element | No              | Optional          |
-| [steps](steps.md)              | Steps of the Transaction                                                       | No              | Required          |
+| Name              | Description                                                                               | Accept variable | Required | Since |
+|:----------------- |:----------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name              | The Transaction name                                                                      | -               | &#x2713; |       |
+| description       | The Transaction description                                                               | -               | -        |       |
+| sla_profile       | The name of the SLA profile to apply to the Transaction (will not be applied to children) | -               | -        | 6.9.0 |
+| [steps](steps.md) | Steps of the Transaction                                                                  | -               | &#x2713; |       |
 
 #### Example
 
@@ -18,7 +18,7 @@ Defining MyTransaction that contains only 1 Delay.
 - transaction:
     name: MyTransaction
     description: My First transaction
-    sla_profile: MySlaProfileForTransaction
+    sla_profile: MySlaProfile
     steps:
     - delay: 3s
 ```

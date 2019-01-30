@@ -5,22 +5,22 @@ The User Path is a succession of web pages that may contain logical Actions such
 
 #### Available settings
 
-| Name         | Description                                                                  | Accept variable | Required/Optional |
-| ------------ | ---------------------------------------------------------------------------- | --------------- | ----------------- |
-| name         | The name of the User Path                                                    | No              | Required          |
-| description  | The description of the User Path                                             | No              | Optional          |
-| user_session | The "user_session" value can be: <ul><li>`reset_on`</li><li>`reset_off`</li><li>`reset_auto`</li></ul></br>The default value is `reset_auto`. | No  | Optional |
-| sla_profile  | The SLA (Service Level Agreement) profile applied to the 'User Path' element | No              | Optional          |
-| init         | The init [container](container.md)                                           | No              | Optional          |
-| actions      | The actions [container](container.md)                                        | No              | Required          |
-| end          | The end [container](container.md)                                            | No              | Optional          |
+| Name         | Description                                                                                                                                                | Accept variable | Required           | Since |
+|:------------ |:---------------------------------------------------------------------------------------------------------------------------------------------------------- |:---------------:|:------------------:|:-----:|
+| name         | The name of the User Path                                                                                                                                  | -               | &#x2713;           |       |
+| description  | The description of the User Path                                                                                                                           | -               | -                  |       |
+| user_session | The "user_session" value can be: <ul><li>`reset_on`</li><li>`reset_off`</li><li>`reset_auto`</li></ul></br>The default value is `reset_auto`. | -               | -                  |       |
+| sla_profile  | The name of the SLA profile to apply to the User Path (will not be applied to children)                                                                    | -               | -                  | 6.9.0 |
+| init         | The init [container](container.md)                                                                                                                         | -               | -                  |       |
+| actions      | The actions [container](container.md)                                                                                                                      | -               | &#x2713;           |       |
+| end          | The end [container](container.md)                                                                                                                          | -               | -                  |       |
 
 #### Example
 Defining a User Path:
 ```yaml
 user_paths:
 - name: MyUserPath
-  sla_profile: MySlaProfileForUserPath
+  sla_profile: MySlaProfile
   actions:
     steps:
     - request:

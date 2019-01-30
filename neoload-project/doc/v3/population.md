@@ -3,11 +3,11 @@ A Population is a group of Virtual Users.
 
 #### Available settings are:
 
-| Name        | Description                                                  | Accept variable  | Required/Optional |
-| ----------- | ------------------------------------------------------------ | ---------------- | ----------------- |
-| name        | The name of the Population                                   | No               | Required          |
-| description | The description of the Population                            | No               | Optional          |
-| [user_paths](#user-path-distribution)  | The list of User Path distributions                              | No               | Required          |
+| Name                                  | Description                          | Accept variable  | Required | Since |
+|:------------------------------------- |:------------------------------------ |:----------------:|:--------:|:-----:|
+| name                                  | The name of the Population           | -                | &#x2713; |       |
+| description                           | The description of the Population    | -                | -        |       |
+| [user_paths](#user-path-distribution) | The list of User Path distributions  | -                | &#x2713; |       |
 
 #### Example
 
@@ -22,10 +22,10 @@ populations:
   
 ## User Path distribution
 
-| Name        | Description                                                  | Accept variable  | Required/Optional |
-| ----------- | ------------------------------------------------------------ | ---------------- | ----------------- |
-| name        | The name of the existing User Path                           | No               | Required          |
-| distribution| The percentage of the User Path in Population. The value is a percentage and may be set within precision of 0.1%.<br>If the distribution is not present, its value will be proportionally calculated.              | No               | Optional          |
+| Name         | Description                                                  | Accept variable  | Required | Since |
+|:------------ |:------------------------------------------------------------ |:----------------:|:--------:|:-----:|
+| name         | The name of the existing User Path                           | -                | &#x2713; |       |
+| distribution | The percentage of the User Path in Population. The value is a percentage and may be set within precision of 0.1%.<br>If the distribution is not present, its value will be proportionally calculated. | - | - |  |
 
 #### Example 1
 
