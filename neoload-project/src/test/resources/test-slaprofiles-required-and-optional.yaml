@@ -1,0 +1,8 @@
+name: MyProject
+sla_profiles:
+- name: MySlaProfile
+  description: My Sla Profiles
+  thresholds:
+  - avg-request-resp-time warn >= 150 ms fail >= 1.25 s on test
+  - perc-transaction-resp-time (p50) warn == 0.15 fail == 1.25 on test
+  - avg-resp-time warn <= 150 ms fail <= 1250 ms on interval

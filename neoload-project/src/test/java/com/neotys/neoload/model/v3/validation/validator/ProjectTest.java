@@ -13,6 +13,12 @@ import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
+import com.neotys.neoload.model.v3.project.sla.SlaProfile;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
+import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
+import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Severity;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
@@ -30,6 +36,14 @@ public class ProjectTest {
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_PROJECT_NAME = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_PROJECT_SLA_PROFILES_NAMES;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'sla_profiles': must contain only unique names.").append(LINE_SEPARATOR);
+		CONSTRAINTS_PROJECT_SLA_PROFILES_NAMES = sb.toString();
 	}
 
 	private static final String CONSTRAINTS_PROJECT_USER_PATHS_NAMES;
@@ -81,6 +95,56 @@ public class ProjectTest {
 		assertFalse(validation.getMessage().isPresent());	
 	}	
 	
+	@Test
+	public void validateSlaProfilesNames() {
+		final Validator validator = new Validator();
+		
+		Project project = Project.builder()
+				.addSlaProfiles(SlaProfile.builder()
+						.name("MySlaProfile")
+						.addThresholds(SlaThreshold.builder()
+								.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+								.addConditions(SlaThresholdCondition.builder()
+										.severity(Severity.WARN)
+										.operator(Operator.GREATER_THAN)
+										.value(1.0)
+										.build())
+								.build())
+						.build())
+				.build();
+        Validation validation = validator.validate(project, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());	
+		
+		project = Project.builder()
+				.addSlaProfiles(SlaProfile.builder()
+						.name("MySlaProfile")
+						.addThresholds(SlaThreshold.builder()
+								.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+								.addConditions(SlaThresholdCondition.builder()
+										.severity(Severity.WARN)
+										.operator(Operator.GREATER_THAN)
+										.value(1.0)
+										.build())
+								.build())
+						.build())
+				.addSlaProfiles(SlaProfile.builder()
+						.name("MySlaProfile")
+						.addThresholds(SlaThreshold.builder()
+								.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+								.addConditions(SlaThresholdCondition.builder()
+										.severity(Severity.WARN)
+										.operator(Operator.GREATER_THAN)
+										.value(1.0)
+										.build())
+								.build())
+						.build())
+				.build();
+		validation = validator.validate(project, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_PROJECT_SLA_PROFILES_NAMES, validation.getMessage().get());	
+	}
+
 	@Test
 	public void validateUserPathsNames() {
 		final Validator validator = new Validator();

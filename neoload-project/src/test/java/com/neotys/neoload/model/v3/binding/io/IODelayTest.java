@@ -4,14 +4,13 @@ package com.neotys.neoload.model.v3.binding.io;
 import static junit.framework.TestCase.assertNotNull;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
-import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
 import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 
 
