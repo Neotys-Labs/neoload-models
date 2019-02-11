@@ -4,15 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
-import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
-import com.neotys.neoload.model.v3.binding.serializer.sla.SlaThresholdBaseVisitor;
 import com.neotys.neoload.model.v3.binding.serializer.sla.SlaThresholdParser.KpiContext;
 import com.neotys.neoload.model.v3.binding.serializer.sla.SlaThresholdParser.PercentileContext;
 import com.neotys.neoload.model.v3.binding.serializer.sla.SlaThresholdParser.ScopeContext;
 import com.neotys.neoload.model.v3.binding.serializer.sla.SlaThresholdParser.ThresholdContext;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
+import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
 
 final class DefaultSlaThresholdVisitor extends SlaThresholdBaseVisitor<SlaThreshold> {
 
@@ -40,12 +39,11 @@ final class DefaultSlaThresholdVisitor extends SlaThresholdBaseVisitor<SlaThresh
 		final ScopeContext scopeContext = ctx.scope();
 		final Scope scope = (scopeContext != null) ? Scope.of(scopeContext.getText()) : SlaThreshold.DEFAULT_SCOPE;
 		
-		final SlaThreshold threshold = SlaThreshold.builder()
+		return SlaThreshold.builder()
 				.keyPerformanceIndicator(kpi)
 				.percent(Optional.ofNullable(percent))
 				.conditions(conditions)
 				.scope(scope)
 				.build();		
-		return threshold; 
 	}
 }

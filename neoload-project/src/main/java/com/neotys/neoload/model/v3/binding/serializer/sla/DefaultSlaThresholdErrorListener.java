@@ -6,7 +6,6 @@ import java.util.List;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 final class DefaultSlaThresholdErrorListener extends BaseErrorListener {
 	private final List<String> errors = new ArrayList<>();
@@ -16,7 +15,7 @@ final class DefaultSlaThresholdErrorListener extends BaseErrorListener {
 	}
    	
    	@Override
-   	public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) throws ParseCancellationException {
+   	public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
    		final StringBuilder error = new StringBuilder();
    		error.append("Position");
    		error.append(' ');

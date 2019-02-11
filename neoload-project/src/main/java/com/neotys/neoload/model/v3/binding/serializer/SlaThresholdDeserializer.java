@@ -23,10 +23,10 @@ public final class SlaThresholdDeserializer extends StdDeserializer<SlaThreshold
 		final ObjectCodec codec = parser.getCodec();
 		final JsonNode node = codec.readTree(parser);
 
-		return asThreshold(codec, node);
+		return asThreshold(node);
 	}
 
-	protected static SlaThreshold asThreshold(final ObjectCodec codec, final JsonNode node) throws IOException {
+	protected static SlaThreshold asThreshold(final JsonNode node) throws IOException {
 		return SlaThresholdHelper.convertToThreshold(node.asText());
 	}
 }

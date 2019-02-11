@@ -30,13 +30,11 @@ public final class SlaThresholdValidator extends AbstractConstraintValidator<Sla
 			return true;
 		}
 
-		switch (usage) {
-			case CHECK_RELATIONSHIP_KPI_AND_SCOPE: {
-				return checkRelationShipKpiAndScope(threshold);
-			}
-			case CHECK_UNIQUE_CONDITION_SEVERITY: {
-				return checkUniqueConditionSeverity(threshold);
-			}
+		if (usage == SlaThresholdCheck.UsageType.CHECK_RELATIONSHIP_KPI_AND_SCOPE) {
+			return checkRelationShipKpiAndScope(threshold);
+		}
+		if (usage == SlaThresholdCheck.UsageType.CHECK_UNIQUE_CONDITION_SEVERITY) {
+			return checkUniqueConditionSeverity(threshold);
 		}
 		return false;
 	}

@@ -7,7 +7,6 @@ import java.util.Set;
 import javax.validation.ConstraintValidatorContext;
 
 import com.neotys.neoload.model.v3.project.Element;
-import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
 import com.neotys.neoload.model.v3.validation.constraints.SlaThresholdsCheck;
@@ -31,13 +30,11 @@ public final class SlaThresholdsValidator extends AbstractConstraintValidator<Sl
 			return true;
 		}
 
-		switch (usage) {
-			case CHECK_UNIQUE_KPI_AND_SCOPE: {
-				return checkUniqueKpiAndScope(thresholds);
-			}
-			case CHECK_LIST_OF_KPIS_FROM_ELEMENT: {
-				return checkListOfKpisFromElement(thresholds, from);
-			}
+		if (usage == SlaThresholdsCheck.UsageType.CHECK_UNIQUE_KPI_AND_SCOPE) {
+			return checkUniqueKpiAndScope(thresholds);
+		}
+		if (usage == SlaThresholdsCheck.UsageType.CHECK_LIST_OF_KPIS_FROM_ELEMENT) {
+			return checkListOfKpisFromElement(thresholds, from);
 		}
 		return false;
 	}
@@ -62,9 +59,6 @@ public final class SlaThresholdsValidator extends AbstractConstraintValidator<Sl
 	}
 
 	private static boolean checkListOfKpisFromElement(final List<SlaThreshold> thresholds, final Class<? extends Element> from) {
-		if (SlaProfile.class.isAssignableFrom(from)) {
-			return true;
-		}
-		return false;
+		return true;
 	}
 }

@@ -27,11 +27,8 @@ public interface SlaProfile extends Element {
 	String THRESHOLDS = "thresholds";
 
 	@RequiredCheck(groups = {NeoLoad.class})
-	@SlaThresholdsCheck.List({
-		@SlaThresholdsCheck(usage = UsageType.CHECK_UNIQUE_KPI_AND_SCOPE, from = SlaProfile.class, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdsCheck.UniqueKpiAndScope.message}", groups = {NeoLoad.class}),
-		@SlaThresholdsCheck(usage = UsageType.CHECK_LIST_OF_KPIS_FROM_ELEMENT, from = SlaProfile.class, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdsCheck.ListOfKpisFromSlaProfile.message}", groups = {NeoLoad.class})
-	})
-
+	@SlaThresholdsCheck(usage = UsageType.CHECK_UNIQUE_KPI_AND_SCOPE, from = SlaProfile.class, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdsCheck.UniqueKpiAndScope.message}", groups = {NeoLoad.class})
+	@SlaThresholdsCheck(usage = UsageType.CHECK_LIST_OF_KPIS_FROM_ELEMENT, from = SlaProfile.class, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdsCheck.ListOfKpisFromSlaProfile.message}", groups = {NeoLoad.class})
 	@Valid
 	List<SlaThreshold> getThresholds();
 

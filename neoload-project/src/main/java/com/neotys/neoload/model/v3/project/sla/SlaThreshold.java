@@ -28,10 +28,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(using = SlaThresholdDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-@SlaThresholdCheck.List({
-		@SlaThresholdCheck(usage = UsageType.CHECK_RELATIONSHIP_KPI_AND_SCOPE, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck.RelationshipKpiAndScope.message}", groups = {NeoLoad.class}),
-		@SlaThresholdCheck(usage = UsageType.CHECK_UNIQUE_CONDITION_SEVERITY, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck.UniqueConditionSeverity.message}", groups = {NeoLoad.class})
-})
+@SlaThresholdCheck(usage = UsageType.CHECK_RELATIONSHIP_KPI_AND_SCOPE, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck.RelationshipKpiAndScope.message}", groups = {NeoLoad.class})
+@SlaThresholdCheck(usage = UsageType.CHECK_UNIQUE_CONDITION_SEVERITY, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck.UniqueConditionSeverity.message}", groups = {NeoLoad.class})
 public interface SlaThreshold  {
 	enum KeyPerformanceIndicator {
 		AVG_ELT_PER_SEC ("/s"),                 // "avg-elt-per-sec"  -> "Average Elements per Second"
@@ -67,8 +65,8 @@ public interface SlaThreshold  {
 				return Double.valueOf(value);
 			}
 			if (acceptedUnits.contains(unit)) {
-				double convertedValue = Double.valueOf(value);
-				if (unit.equals("ms")) {
+				double convertedValue = Double.parseDouble(value);
+				if ("ms".equals(unit)) {
 					convertedValue = convertedValue / 1000;
 				}
 				return convertedValue;

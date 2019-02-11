@@ -24,11 +24,10 @@ final class DefaultSlaThresholdConditionVisitor extends SlaThresholdBaseVisitor<
 		final UnitContext unitCtx = ctx.unit();
 		final String unit = unitCtx != null ? unitCtx.getText() : null;
 		
-		final SlaThresholdCondition condition = SlaThresholdCondition.builder()
+		return SlaThresholdCondition.builder()
 				.severity(severity)
 				.operator(operator)
 				.value(kpi.toValue(value, unit))
 				.build();
-		return condition;
 	}		
 }
