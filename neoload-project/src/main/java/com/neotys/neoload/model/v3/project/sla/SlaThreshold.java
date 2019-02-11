@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.neotys.neoload.model.v3.binding.serializer.SlaThresholdDeserializer;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
 import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck;
@@ -83,7 +84,7 @@ public interface SlaThreshold  {
 				return KeyPerformanceIndicator.valueOf(name.toUpperCase().replace('-', '_'));
 			}
 			catch (final IllegalArgumentException iae) {
-				throw new IllegalArgumentException("The parameter 'name' must be: " + KeyPerformanceIndicator.values() +".");	
+				throw new IllegalArgumentException("The parameter 'name' must be: " + Arrays.asList(KeyPerformanceIndicator.values()).toString() +".");	
 			}    		
 		}
 	}

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import org.junit.Test;
@@ -45,6 +46,18 @@ public class SlaThresholdTest {
 		if (!throwException) {
 			fail("The parameter 'name' must not be null or empty.");
 		}
+		
+		throwException = false;
+		try {
+			KeyPerformanceIndicator.of("test");
+		}
+		catch (final IllegalArgumentException e) {
+			assertTrue(e.getMessage().contains("The parameter 'name' must be: " + Arrays.asList(KeyPerformanceIndicator.values()).toString() +"."));
+			throwException = true;
+		}
+		if (!throwException) {
+			fail("The parameter 'name' must be: " + Arrays.asList(KeyPerformanceIndicator.values()).toString() +".");
+		}		
 
 		assertEquals(KeyPerformanceIndicator.AVG_ELT_PER_SEC, KeyPerformanceIndicator.of("avg-elt-per-sec"));
 		assertEquals(KeyPerformanceIndicator.AVG_PAGE_RESP_TIME, KeyPerformanceIndicator.of("avg-page-resp-time"));
@@ -102,6 +115,18 @@ public class SlaThresholdTest {
 		}
 		if (!throwException) {
 			fail("The parameter 'name' must not be null or empty.");
+		}
+
+		throwException = false;
+		try {
+			Scope.of("test");
+		}
+		catch (final IllegalArgumentException e) {
+			assertTrue(e.getMessage().contains("The parameter 'name' must be: 'on test' or 'on interval'."));
+			throwException = true;
+		}
+		if (!throwException) {
+			fail("The parameter 'name' must be: 'on test' or 'on interval'.");
 		}
 
 		assertEquals(Scope.ON_TEST, Scope.of("on test"));
