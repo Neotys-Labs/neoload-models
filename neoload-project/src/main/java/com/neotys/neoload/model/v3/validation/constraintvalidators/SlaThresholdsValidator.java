@@ -42,17 +42,14 @@ public final class SlaThresholdsValidator extends AbstractConstraintValidator<Sl
 	private static boolean checkUniqueKpiAndScope(final List<SlaThreshold> thresholds) {
 		final Set<String> uniqueKpisAndScopes = new HashSet<>();
 		int nullCount = 0;
-		int total = 0;
-		if ((thresholds != null) && (!thresholds.isEmpty())) {
-			total = thresholds.size();
-			for (final SlaThreshold threshold: thresholds) {
-				final KeyPerformanceIndicator kpi = threshold.getKeyPerformanceIndicator();
-				if (kpi != null) {
-					uniqueKpisAndScopes.add(kpi.name() + ' ' + threshold.getScope());
-				}
-				else {
-					nullCount = nullCount + 1;
-				}
+		int total = thresholds.size();
+		for (final SlaThreshold threshold: thresholds) {
+			final KeyPerformanceIndicator kpi = threshold.getKeyPerformanceIndicator();
+			if (kpi != null) {
+				uniqueKpisAndScopes.add(kpi.name() + ' ' + threshold.getScope());
+			}
+			else {
+				nullCount = nullCount + 1;
 			}
 		}
 		return ((uniqueKpisAndScopes.size() + nullCount) == total);
