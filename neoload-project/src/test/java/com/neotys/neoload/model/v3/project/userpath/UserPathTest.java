@@ -1,10 +1,13 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
 
-import static org.junit.Assert.assertEquals;
-
+import com.neotys.neoload.model.v3.project.Element;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class UserPathTest {
@@ -32,5 +35,17 @@ public class UserPathTest {
 		
 		final UserPath userPath4 = UserPath.builder().userSession(UserPath.UserSession.RESET_AUTO).build();
 		assertEquals(UserPath.UserSession.RESET_AUTO, userPath4.getUserSession());
+	}
+
+	@Test
+	public void flattened() {
+		final UserPath userPath = UserPath.builder().actions(Container.builder()
+				.addSteps(Request.builder().build())
+				.addSteps(Delay.builder().build())
+				.build())
+				.build();
+
+		final List<Element> elements = userPath.flattened().collect(Collectors.toList());
+		assertEquals(3, elements.size()); // actions, request, delay
 	}
 }

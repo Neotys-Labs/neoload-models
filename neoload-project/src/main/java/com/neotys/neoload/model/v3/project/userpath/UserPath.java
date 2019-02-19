@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -60,7 +61,9 @@ public interface UserPath extends Element, SlaElement {
 
 	@Override
 	default Stream<Element> flattened() {
-		return Stream.of(getInit().orElse(null), getActions(), getEnd().orElse(null)).flatMap(Container::flattened);
+		return Stream.of(getInit().orElse(null), getActions(), getEnd().orElse(null))
+				.filter(Objects::nonNull)
+				.flatMap(Container::flattened);
 	}
 
 	class Builder extends ImmutableUserPath.Builder {}
