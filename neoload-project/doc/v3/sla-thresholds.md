@@ -53,6 +53,7 @@ The Key Performance Indicators have restrictions on the elements to which they a
 The table below details the restriction of each Key Performance Indicator.
 
 [Scope](#scope): `on test`
+
 | Key Performance Indicator      | User Path Init\|Actions\|End container | Transaction | Page     | Request  | Scenario |
 |:------------------------------ |:--------------------------------------:|:-----------:|:--------:|:--------:|:--------:|
 | avg-request-resp-time          | -                                      | -           | -        | &#x2713; | &#x2713; |
@@ -67,6 +68,7 @@ The table below details the restriction of each Key Performance Indicator.
 | error-rate                     | &#x2713;                               | &#x2713;    | &#x2713; | &#x2713; | &#x2713; |
 
 [Scope](#scope): `on interval`
+
 | Key Performance Indicator      | User Path Init\|Actions\|End container | Transaction | Page     | Request  | Scenario |
 |:------------------------------ |:--------------------------------------:|:-----------:|:--------:|:--------:|:--------:|
 | avg-resp-time                  | &#x2713;                               | &#x2713;    | &#x2713; | &#x2713; | -        |
