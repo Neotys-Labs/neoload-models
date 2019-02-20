@@ -7,7 +7,7 @@ The Transaction Action is used to group together certain actions, namely those r
 |:----------------- |:----------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | name              | The Transaction name                                                                      | -               | &#x2713; |       |
 | description       | The Transaction description                                                               | -               | -        |       |
-| sla_profile       | The name of the SLA profile to apply to the Transaction (will not be applied to children) | -               | -        | 6.9.0 |
+| sla_profile       | The name of the SLA profile to apply to the Transaction (will not be applied to children) | -               | -        | 6.9   |
 | [steps](steps.md) | Steps of the Transaction                                                                  | -               | &#x2713; |       |
 
 #### Example

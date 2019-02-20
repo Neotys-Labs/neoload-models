@@ -9,20 +9,28 @@ The Project definition can be declared with servers, variables, User Paths, Popu
 
 Definition has several top-level keys:
 
-| Name                         | Description                                   | Accept variable | Required | Since |
-|:---------------------------- |:--------------------------------------------- |:---------------:|:--------:|:-----:|
-| name                         | The root key defining the name of the project | -               | &#x2713; |       |
-| [variables](variables.md)    | The variables list                            | -               | -        |       | 
-| [servers](server.md)         | The servers list                              | -               | -        |       |
-| [user_paths](user-paths.md)  | The virtual User Paths list                   | -               | -        |       |
-| [populations](population.md) | The Populations list                          | -               | -        |       |
-| [scenarios](scenario.md)     | The Scenario list                             | -               | -        |       |
+| Name                           | Description                                   | Accept variable | Required | Since |
+|:------------------------------ |:--------------------------------------------- |:---------------:|:--------:|:-----:|
+| name                           | The root key defining the name of the project | -               | &#x2713; |       |
+| [sla_profiles](sla-profile.md) | The definition of SLA profiles                | -               | -        | 6.9   |
+| [variables](variables.md)      | The definition of variables                   | -               | -        |       |
+| [servers](server.md)           | The definition of servers                     | -               | -        |       |
+| [user_paths](user-paths.md)    | The definition of virtual User Paths          | -               | -        |       |
+| [populations](population.md)   | The definition of Populations                 | -               | -        |       |
+| [scenarios](scenario.md)       | The definition of Scenarios                   | -               | -        |       |
 
 #### Example
 Below is an example of a NeoLoad project:
 
 ```yaml
 name: MyProject
+sla_profiles:
+- name: MySlaProfile
+  thresholds:
+  - avg-request-resp-time warn >= 200 ms fail >= 500 ms on test
+  - perc-transaction-resp-time (p90) warn >= 1 s fail >= 2 s on test
+  - error-rate warn >= 5 % on test
+  - error-rate warn >= 1 % fail >= 2 % on interval
 variables:
 - file:
     name: products
@@ -47,6 +55,7 @@ populations:
     distribution: 100%
 scenarios:
 - name: MyScenario
+  sla_profile: MySlaProfile
   populations:
   - name: MyPopulation
     constant_load:

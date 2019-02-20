@@ -5,7 +5,7 @@ A container only contains steps to be executed.
 #### Available settings
 | Name                  | Description                                                                             | Accept variable | Required | Since |
 |:--------------------- |:--------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
-| sla_profile           | The name of the SLA profile to apply to the Container (will not be applied to children) | -               | -        | 6.9.0 |
+| sla_profile           | The name of the SLA profile to apply to the Container (will not be applied to children) | -               | -        | 6.9   |
 | [steps](steps.md)     | The steps to be executed                                                                | -               | &#x2713; |       |
 
 #### Example
