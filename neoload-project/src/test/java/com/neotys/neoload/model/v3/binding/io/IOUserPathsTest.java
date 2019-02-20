@@ -41,7 +41,6 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.name("MyUserPath1")
 				.description("My User Path 1")
 				.userSession(UserSession.RESET_ON)
-				.slaProfile("MyUserPathSlaProfile1")
 				.init(Container.builder()
 						.name("init")
 						.description("My Init Container from My User Path 1")
@@ -78,7 +77,6 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.name("MyUserPath2")
 				.description("My User Path 2")
 				.userSession(UserSession.RESET_OFF)
-				.slaProfile("MyUserPathSlaProfile2")
 				.init(Container.builder()
 						.name("init")
 						.description("My Init Container from My User Path 2")
@@ -115,7 +113,6 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 				.name("MyUserPath3")
 				.description("My User Path 3")
 				.userSession(UserSession.RESET_AUTO)
-				.slaProfile("MyUserPathSlaProfile3")
 				.init(Container.builder()
 						.name("init")
 						.description("My Init Container from My User Path 3")
@@ -163,7 +160,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 		final Project expectedProject = getUserPathsOnlyRequired();
 		assertNotNull(expectedProject);
 
-		read("test-read-userpaths-only-required", expectedProject);
+		read("test-userpaths-only-required", expectedProject);
 	}
 
 	@Test
@@ -171,6 +168,6 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 		final Project expectedProject = getUserPathsRequiredAndOptional();
 		assertNotNull(expectedProject);
 
-		read("test-read-write-userpaths-required-and-optional", expectedProject);
+		read("test-userpaths-required-and-optional", expectedProject);
 	}
 }

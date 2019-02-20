@@ -5,7 +5,6 @@
       "name": "MyUserPath1",
       "description": "My User Path 1",
       "user_session": "reset_on",
-      "sla_profile": "MyUserPathSlaProfile1",
       "init": {
         "description": "My Init Container from My User Path 1",
         "sla_profile": "MyInitSlaProfile1",
@@ -59,7 +58,6 @@
       "name": "MyUserPath2",
       "description": "My User Path 2",
       "user_session": "reset_off",
-      "sla_profile": "MyUserPathSlaProfile2",
       "init": {
         "description": "My Init Container from My User Path 2",
         "sla_profile": "MyInitSlaProfile2",
@@ -113,7 +111,6 @@
       "name": "MyUserPath3",
       "description": "My User Path 3",
       "user_session": "reset_auto",
-      "sla_profile": "MyUserPathSlaProfile3",
       "init": {
         "description": "My Init Container from My User Path 3",
         "sla_profile": "MyInitSlaProfile3",
