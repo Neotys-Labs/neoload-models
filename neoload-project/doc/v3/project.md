@@ -29,7 +29,7 @@ sla_profiles:
   thresholds:
   - avg-request-resp-time warn >= 200ms fail >= 500ms on test
   - perc-transaction-resp-time (p90) warn >= 1s fail >= 2s on test
-  - error-rate warn >= 1% fail >= 2% on test
+  - error-rate warn >= 2% fail >= 5% on test
   - error-rate warn >= 5% on interval
 variables:
 - file:
