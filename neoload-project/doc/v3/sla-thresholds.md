@@ -19,6 +19,7 @@ thresholds:
 Select the Key Performance Indicator from a [scope](#scope) to apply a rule on.
 
 [Scope](#scope): `on test`
+
 | Key Performance Indicator      | Description                                  | Accepted units  |
 |:------------------------------ |:-------------------------------------------- |:---------------:|
 | avg-request-resp-time          | Average request response time                | s or ms         |
@@ -34,6 +35,7 @@ Select the Key Performance Indicator from a [scope](#scope) to apply a rule on.
 
 
 [Scope](#scope): `on interval`
+
 | Key Performance Indicator      | Description                                  | Accepted units  |
 |:------------------------------ |:-------------------------------------------- |:---------------:|
 | avg-resp-time                  | Average response time                        | s or ms         |
