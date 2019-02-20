@@ -8,10 +8,10 @@ Use the following syntax to define a KPI threshold: [`kpi`](#kpi) [`conditions`]
 Defining a list of KPI thresholds:
 ```yaml
 thresholds:
-- avg-request-resp-time warn >= 200 ms fail >= 500 ms on test
-- perc-transaction-resp-time (p90) warn >= 1 s fail >= 2 s on test
-- error-rate warn >= 5 % on test
-- error-rate warn >= 1 % fail >= 2 % on interval
+- avg-request-resp-time warn >= 200ms fail >= 500ms on test
+- perc-transaction-resp-time (p90) warn >= 1s fail >= 2s on test
+- error-rate warn >= 2% fail >= 5% on test
+- error-rate warn >= 5% on interval
 ```
 
 ## KPI
