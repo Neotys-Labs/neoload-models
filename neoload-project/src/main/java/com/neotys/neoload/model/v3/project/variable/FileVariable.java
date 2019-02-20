@@ -1,5 +1,14 @@
 package com.neotys.neoload.model.v3.project.variable;
 
+import static com.neotys.neoload.model.v3.project.variable.FileVariable.DELIMITER;
+import static com.neotys.neoload.model.v3.project.variable.FileVariable.PATH;
+
+import java.util.List;
+
+import javax.validation.constraints.Size;
+
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -8,21 +17,11 @@ import com.neotys.neoload.model.v3.validation.constraints.FileVariableCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.immutables.value.Value;
-
-import javax.validation.constraints.Size;
-import java.util.List;
-
-import static com.neotys.neoload.model.v3.project.variable.FileVariable.COLUMN_NAMES;
-import static com.neotys.neoload.model.v3.project.variable.FileVariable.DELIMITER;
-import static com.neotys.neoload.model.v3.project.variable.FileVariable.IS_FIRST_LINE_COLUMN_NAMES;
-import static com.neotys.neoload.model.v3.project.variable.FileVariable.PATH;
-import static com.neotys.neoload.model.v3.project.variable.FileVariable.START_FROM_LINE;
 
 @FileVariableCheck(groups={NeoLoad.class})
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutableFileVariable.class)
-@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, COLUMN_NAMES, IS_FIRST_LINE_COLUMN_NAMES, START_FROM_LINE,
+@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, FileVariable.COLUMN_NAMES, FileVariable.IS_FIRST_LINE_COLUMN_NAMES, FileVariable.START_FROM_LINE,
 		DELIMITER, PATH, Variable.CHANGE_POLICY, Variable.SCOPE, Variable.ORDER, Variable.OUT_OF_VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
