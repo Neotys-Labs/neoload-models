@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
@@ -49,7 +49,7 @@ public class SlaProfileTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'thresholds': must contain only unique key performance indicators/scopes.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'thresholds': invalid KPI thresholds usage (must contain only unique KPI/scopes).").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_PROFILE_THRESHOLDS_UNIQUE_KPI_AND_SCOPE = sb.toString();
 	}
 
@@ -59,7 +59,7 @@ public class SlaProfileTest {
 		sb.append("Data Model is invalid. Violation Number: 3.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'sla_profiles[0].name': missing value.").append(LINE_SEPARATOR);
 		sb.append("Violation 2 - Incorrect value for 'sla_profiles[0].thresholds[0].conditions[0].severity': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'sla_profiles[0].thresholds[0].key_performance_indicator': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value for 'sla_profiles[0].thresholds[0].kpi': missing value.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_PROFILE = sb.toString();
 	}
 
@@ -69,7 +69,7 @@ public class SlaProfileTest {
 		
 		SlaProfile profile = SlaProfile.builder()
 				.addThresholds(SlaThreshold.builder()
-						.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
 						.addConditions(SlaThresholdCondition.builder()
 								.severity(Severity.WARN)
 								.operator(Operator.GREATER_THAN)
@@ -84,7 +84,7 @@ public class SlaProfileTest {
 		profile = SlaProfile.builder()
 				.name("")
 				.addThresholds(SlaThreshold.builder()
-						.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
 						.addConditions(SlaThresholdCondition.builder()
 								.severity(Severity.WARN)
 								.operator(Operator.GREATER_THAN)
@@ -99,7 +99,7 @@ public class SlaProfileTest {
 		profile = SlaProfile.builder()
 				.name(" 	\r\t\n")
 				.addThresholds(SlaThreshold.builder()
-						.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
 						.addConditions(SlaThresholdCondition.builder()
 								.severity(Severity.WARN)
 								.operator(Operator.GREATER_THAN)
@@ -114,7 +114,7 @@ public class SlaProfileTest {
 		profile = SlaProfile.builder()
 				.name("MySlaProfile")
 				.addThresholds(SlaThreshold.builder()
-						.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
 						.addConditions(SlaThresholdCondition.builder()
 								.severity(Severity.WARN)
 								.operator(Operator.GREATER_THAN)
@@ -141,7 +141,7 @@ public class SlaProfileTest {
 		profile = SlaProfile.builder()
 				.name("MySlaProfile")
 				.addThresholds(SlaThreshold.builder()
-						.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
 						.addConditions(SlaThresholdCondition.builder()
 								.severity(Severity.WARN)
 								.operator(Operator.GREATER_THAN)
@@ -149,7 +149,7 @@ public class SlaProfileTest {
 								.build())
 						.build())
 				.addThresholds(SlaThreshold.builder()
-						.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
 						.addConditions(SlaThresholdCondition.builder()
 								.severity(Severity.FAIL)
 								.operator(Operator.GREATER_THAN)
@@ -164,7 +164,7 @@ public class SlaProfileTest {
 		profile = SlaProfile.builder()
 				.name("MySlaProfile")
 				.addThresholds(SlaThreshold.builder()
-						.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
 						.addConditions(SlaThresholdCondition.builder()
 								.severity(Severity.WARN)
 								.operator(Operator.GREATER_THAN)
@@ -187,7 +187,7 @@ public class SlaProfileTest {
 								.operator(Operator.GREATER_THAN)
 								.value(1.0)
 								.build())
-						.scope(Scope.ON_INTERVAL)
+						.scope(Scope.PER_INTERVAL)
 						.build())
 				.build();
         

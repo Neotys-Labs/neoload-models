@@ -16,7 +16,7 @@ import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Severity;
 import com.neotys.neoload.model.v3.project.userpath.Container;
@@ -103,7 +103,7 @@ public class ProjectTest {
 				.addSlaProfiles(SlaProfile.builder()
 						.name("MySlaProfile")
 						.addThresholds(SlaThreshold.builder()
-								.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+								.kpi(KPI.AVG_REQUEST_RESP_TIME)
 								.addConditions(SlaThresholdCondition.builder()
 										.severity(Severity.WARN)
 										.operator(Operator.GREATER_THAN)
@@ -120,7 +120,7 @@ public class ProjectTest {
 				.addSlaProfiles(SlaProfile.builder()
 						.name("MySlaProfile")
 						.addThresholds(SlaThreshold.builder()
-								.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+								.kpi(KPI.AVG_REQUEST_RESP_TIME)
 								.addConditions(SlaThresholdCondition.builder()
 										.severity(Severity.WARN)
 										.operator(Operator.GREATER_THAN)
@@ -131,7 +131,7 @@ public class ProjectTest {
 				.addSlaProfiles(SlaProfile.builder()
 						.name("MySlaProfile")
 						.addThresholds(SlaThreshold.builder()
-								.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+								.kpi(KPI.AVG_REQUEST_RESP_TIME)
 								.addConditions(SlaThresholdCondition.builder()
 										.severity(Severity.WARN)
 										.operator(Operator.GREATER_THAN)

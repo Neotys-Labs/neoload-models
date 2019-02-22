@@ -1,16 +1,16 @@
 package com.neotys.neoload.model.v3.binding.serializer.sla;
 
 import com.neotys.neoload.model.v3.binding.serializer.sla.SlaThresholdParser.UnitContext;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Severity;
 
 final class DefaultSlaThresholdConditionVisitor extends SlaThresholdBaseVisitor<SlaThresholdCondition> {
 	
-	private final KeyPerformanceIndicator kpi;
+	private final KPI kpi;
 	
-	protected DefaultSlaThresholdConditionVisitor(final KeyPerformanceIndicator kpi) {
+	protected DefaultSlaThresholdConditionVisitor(final KPI kpi) {
 		super();
 		
 		this.kpi = kpi;

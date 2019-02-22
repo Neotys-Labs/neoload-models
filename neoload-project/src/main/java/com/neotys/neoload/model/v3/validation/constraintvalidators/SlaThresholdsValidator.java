@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.validation.constraints.SlaThresholdsCheck;
 
 
@@ -44,7 +44,7 @@ public final class SlaThresholdsValidator extends AbstractConstraintValidator<Sl
 		int nullCount = 0;
 		int total = thresholds.size();
 		for (final SlaThreshold threshold: thresholds) {
-			final KeyPerformanceIndicator kpi = threshold.getKeyPerformanceIndicator();
+			final KPI kpi = threshold.getKpi();
 			if (kpi != null) {
 				uniqueKpisAndScopes.add(kpi.name() + ' ' + threshold.getScope());
 			}

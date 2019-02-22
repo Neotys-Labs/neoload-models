@@ -7,7 +7,7 @@ import java.util.Set;
 import javax.validation.ConstraintValidatorContext;
 
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Severity;
@@ -41,11 +41,11 @@ public final class SlaThresholdValidator extends AbstractConstraintValidator<Sla
 	
 	private static boolean checkRelationShipKpiAndScope(final SlaThreshold threshold) {
 		final Scope scope = threshold.getScope();
-		final KeyPerformanceIndicator kpi = threshold.getKeyPerformanceIndicator();
+		final KPI kpi = threshold.getKpi();
 		if (kpi == null) { // null value is valid
 			return true;
 		}
-		return scope.getKeyPerformanceIndicators().contains(kpi);
+		return scope.getKpis().contains(kpi);
 	}
 	
 	private static boolean checkUniqueConditionSeverity(final SlaThreshold threshold) {

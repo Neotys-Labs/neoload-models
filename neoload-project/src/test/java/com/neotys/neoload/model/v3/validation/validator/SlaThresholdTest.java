@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
@@ -20,12 +20,12 @@ public class SlaThresholdTest {
 	private static final String LINE_SEPARATOR = System.lineSeparator();
 	
 
-	private static final String CONSTRAINTS_SLA_THRESHOLD_KEY_PERFORMANCE_INDICATOR_NULL;
+	private static final String CONSTRAINTS_SLA_THRESHOLD_KPI_NULL;
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'key_performance_indicator': missing value.").append(LINE_SEPARATOR);
-		CONSTRAINTS_SLA_THRESHOLD_KEY_PERFORMANCE_INDICATOR_NULL = sb.toString();
+		sb.append("Violation 1 - Incorrect value for 'kpi': missing value.").append(LINE_SEPARATOR);
+		CONSTRAINTS_SLA_THRESHOLD_KPI_NULL = sb.toString();
 	}
 	
 	private static final String CONSTRAINTS_SLA_THRESHOLD_CONDITIONS_NULL;
@@ -40,7 +40,7 @@ public class SlaThresholdTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for '': invalid key performance indicator usage (AVG_REQUEST_RESP_TIME can not be used with the scope ON_INTERVAL).").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for '': invalid KPI threshold usage (AVG_REQUEST_RESP_TIME can not be used with the scope: PER_INTERVAL).").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_THRESHOLD_RELATIONSHIP_KPI_AND_SCOPE = sb.toString();
 	}
 
@@ -48,12 +48,12 @@ public class SlaThresholdTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for '': must contain only unique severities.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for '': invalid KPI threshold usage (must contain only unique severities).").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_THRESHOLD_UNIQUE_CONDITION_SEVERITY = sb.toString();
 	}
 
 	@Test
-	public void validateKeyPerformanceIndicator() {
+	public void validateKpi() {
 		final Validator validator = new Validator();
 		
 		SlaThreshold threshold = SlaThreshold.builder()
@@ -65,23 +65,23 @@ public class SlaThresholdTest {
 				.build();
 		Validation validation = validator.validate(threshold, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_SLA_THRESHOLD_KEY_PERFORMANCE_INDICATOR_NULL, validation.getMessage().get());	
+		assertEquals(CONSTRAINTS_SLA_THRESHOLD_KPI_NULL, validation.getMessage().get());	
 
 		threshold = SlaThreshold.builder()
-				.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+				.kpi(KPI.AVG_REQUEST_RESP_TIME)
 				.addConditions(SlaThresholdCondition.builder()
 						.severity(Severity.WARN)
 						.operator(Operator.GREATER_THAN)
 						.value(1.0)
 						.build())
-				.scope(Scope.ON_INTERVAL)
+				.scope(Scope.PER_INTERVAL)
 				.build();
 		validation = validator.validate(threshold, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_SLA_THRESHOLD_RELATIONSHIP_KPI_AND_SCOPE, validation.getMessage().get());	
 
 		threshold = SlaThreshold.builder()
-				.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+				.kpi(KPI.AVG_REQUEST_RESP_TIME)
 				.addConditions(SlaThresholdCondition.builder()
 						.severity(Severity.WARN)
 						.operator(Operator.GREATER_THAN)
@@ -98,14 +98,14 @@ public class SlaThresholdTest {
 		final Validator validator = new Validator();
 		
 		SlaThreshold threshold = SlaThreshold.builder()
-				.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+				.kpi(KPI.AVG_REQUEST_RESP_TIME)
 				.build();
 		Validation validation = validator.validate(threshold, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_SLA_THRESHOLD_CONDITIONS_NULL, validation.getMessage().get());	
 
 		threshold = SlaThreshold.builder()
-				.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+				.kpi(KPI.AVG_REQUEST_RESP_TIME)
 				.addConditions(SlaThresholdCondition.builder()
 						.severity(Severity.WARN)
 						.operator(Operator.GREATER_THAN)
@@ -122,7 +122,7 @@ public class SlaThresholdTest {
 		assertEquals(CONSTRAINTS_SLA_THRESHOLD_UNIQUE_CONDITION_SEVERITY, validation.getMessage().get());	
 
 		threshold = SlaThreshold.builder()
-				.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+				.kpi(KPI.AVG_REQUEST_RESP_TIME)
 				.addConditions(SlaThresholdCondition.builder()
 						.severity(Severity.FAIL)
 						.operator(Operator.GREATER_THAN)
@@ -139,7 +139,7 @@ public class SlaThresholdTest {
 		assertEquals(CONSTRAINTS_SLA_THRESHOLD_UNIQUE_CONDITION_SEVERITY, validation.getMessage().get());	
 
 		threshold = SlaThreshold.builder()
-				.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+				.kpi(KPI.AVG_REQUEST_RESP_TIME)
 				.addConditions(SlaThresholdCondition.builder()
 						.severity(Severity.WARN)
 						.operator(Operator.GREATER_THAN)

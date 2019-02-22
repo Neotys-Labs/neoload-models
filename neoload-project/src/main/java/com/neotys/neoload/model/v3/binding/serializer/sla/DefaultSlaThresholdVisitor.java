@@ -9,7 +9,7 @@ import com.neotys.neoload.model.v3.binding.serializer.sla.SlaThresholdParser.Per
 import com.neotys.neoload.model.v3.binding.serializer.sla.SlaThresholdParser.ScopeContext;
 import com.neotys.neoload.model.v3.binding.serializer.sla.SlaThresholdParser.ThresholdContext;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
 
@@ -22,10 +22,10 @@ final class DefaultSlaThresholdVisitor extends SlaThresholdBaseVisitor<SlaThresh
 	@Override 
 	public SlaThreshold visitThreshold(final ThresholdContext ctx) { 
 		final KpiContext pkiContext = ctx.kpi();
-		final KeyPerformanceIndicator kpi = KeyPerformanceIndicator.of(pkiContext.getText());
+		final KPI kpi = KPI.of(pkiContext.getText());
 				
 		Integer percent = null;
-		if (kpi == KeyPerformanceIndicator.PERC_TRANSACTION_RESP_TIME) {
+		if (kpi == KPI.PERC_TRANSACTION_RESP_TIME) {
 			final PercentileContext percentileContext = ctx.percentile();
 			percent = (percentileContext != null) ? Integer.valueOf(percentileContext.INTEGER().getText()) : SlaThreshold.DEFAULT_PERCENT;
 		}
@@ -40,7 +40,7 @@ final class DefaultSlaThresholdVisitor extends SlaThresholdBaseVisitor<SlaThresh
 		final Scope scope = (scopeContext != null) ? Scope.of(scopeContext.getText()) : SlaThreshold.DEFAULT_SCOPE;
 		
 		return SlaThreshold.builder()
-				.keyPerformanceIndicator(kpi)
+				.kpi(kpi)
 				.percent(Optional.ofNullable(percent))
 				.conditions(conditions)
 				.scope(scope)

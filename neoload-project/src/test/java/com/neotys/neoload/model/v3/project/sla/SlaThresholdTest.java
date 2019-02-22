@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
 
 
@@ -18,14 +18,14 @@ public class SlaThresholdTest {
 	@Test
 	public void constants() {
 		assertEquals(Integer.valueOf(90), SlaThreshold.DEFAULT_PERCENT);
-		assertEquals(Scope.ON_TEST, SlaThreshold.DEFAULT_SCOPE);
+		assertEquals(Scope.PER_TEST, SlaThreshold.DEFAULT_SCOPE);
 	}
 	
 	@Test
 	public void keyPerformanceIndicatorOf() {
 		boolean throwException = false;
 		try {
-			KeyPerformanceIndicator.of(null);
+			KPI.of(null);
 		}
 		catch (final IllegalArgumentException e) {
 			assertTrue(e.getMessage().contains("The parameter 'name' must not be null or empty."));
@@ -37,7 +37,7 @@ public class SlaThresholdTest {
 		
 		throwException = false;
 		try {
-			KeyPerformanceIndicator.of("");
+			KPI.of("");
 		}
 		catch (final IllegalArgumentException e) {
 			assertTrue(e.getMessage().contains("The parameter 'name' must not be null or empty."));
@@ -49,46 +49,46 @@ public class SlaThresholdTest {
 		
 		throwException = false;
 		try {
-			KeyPerformanceIndicator.of("test");
+			KPI.of("test");
 		}
 		catch (final IllegalArgumentException e) {
-			assertTrue(e.getMessage().contains("The parameter 'name' must be: " + Arrays.asList(KeyPerformanceIndicator.values()).toString() +"."));
+			assertTrue(e.getMessage().contains("The parameter 'name' must be: " + Arrays.asList(KPI.values()).toString() +"."));
 			throwException = true;
 		}
 		if (!throwException) {
-			fail("The parameter 'name' must be: " + Arrays.asList(KeyPerformanceIndicator.values()).toString() +".");
+			fail("The parameter 'name' must be: " + Arrays.asList(KPI.values()).toString() +".");
 		}		
 
-		assertEquals(KeyPerformanceIndicator.AVG_ELT_PER_SEC, KeyPerformanceIndicator.of("avg-elt-per-sec"));
-		assertEquals(KeyPerformanceIndicator.AVG_PAGE_RESP_TIME, KeyPerformanceIndicator.of("avg-page-resp-time"));
-		assertEquals(KeyPerformanceIndicator.AVG_REQUEST_PER_SEC, KeyPerformanceIndicator.of("avg-request-per-sec"));
-		assertEquals(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME, KeyPerformanceIndicator.of("avg-request-resp-time"));
-		assertEquals(KeyPerformanceIndicator.AVG_RESP_TIME, KeyPerformanceIndicator.of("avg-resp-time"));
-		assertEquals(KeyPerformanceIndicator.AVG_THROUGHPUT_PER_SEC, KeyPerformanceIndicator.of("avg-throughput-per-sec"));
-		assertEquals(KeyPerformanceIndicator.AVG_TRANSACTION_RESP_TIME, KeyPerformanceIndicator.of("avg-transaction-resp-time"));
-		assertEquals(KeyPerformanceIndicator.COUNT, KeyPerformanceIndicator.of("count"));
-		assertEquals(KeyPerformanceIndicator.ERROR_RATE, KeyPerformanceIndicator.of("error-rate"));
-		assertEquals(KeyPerformanceIndicator.ERRORS_PER_SEC, KeyPerformanceIndicator.of("errors-per-sec"));
-		assertEquals(KeyPerformanceIndicator.ERRORS_COUNT, KeyPerformanceIndicator.of("errors-count"));
-		assertEquals(KeyPerformanceIndicator.PERC_TRANSACTION_RESP_TIME, KeyPerformanceIndicator.of("perc-transaction-resp-time"));
-		assertEquals(KeyPerformanceIndicator.THROUGHPUT, KeyPerformanceIndicator.of("throughput"));
+		assertEquals(KPI.AVG_ELT_PER_SEC, KPI.of("avg-elt-per-sec"));
+		assertEquals(KPI.AVG_PAGE_RESP_TIME, KPI.of("avg-page-resp-time"));
+		assertEquals(KPI.AVG_REQUEST_PER_SEC, KPI.of("avg-request-per-sec"));
+		assertEquals(KPI.AVG_REQUEST_RESP_TIME, KPI.of("avg-request-resp-time"));
+		assertEquals(KPI.AVG_RESP_TIME, KPI.of("avg-resp-time"));
+		assertEquals(KPI.AVG_THROUGHPUT_PER_SEC, KPI.of("avg-throughput-per-sec"));
+		assertEquals(KPI.AVG_TRANSACTION_RESP_TIME, KPI.of("avg-transaction-resp-time"));
+		assertEquals(KPI.COUNT, KPI.of("count"));
+		assertEquals(KPI.ERROR_RATE, KPI.of("error-rate"));
+		assertEquals(KPI.ERRORS_PER_SEC, KPI.of("errors-per-sec"));
+		assertEquals(KPI.ERRORS_COUNT, KPI.of("errors-count"));
+		assertEquals(KPI.PERC_TRANSACTION_RESP_TIME, KPI.of("perc-transaction-resp-time"));
+		assertEquals(KPI.THROUGHPUT, KPI.of("throughput"));
 	}
 
 	@Test
 	public void keyPerformanceIndicatorFriendlyName() {
-		assertEquals("avg-elt-per-sec", KeyPerformanceIndicator.AVG_ELT_PER_SEC.friendlyName());
-		assertEquals("avg-page-resp-time", KeyPerformanceIndicator.AVG_PAGE_RESP_TIME.friendlyName());
-		assertEquals("avg-request-per-sec", KeyPerformanceIndicator.AVG_REQUEST_PER_SEC.friendlyName());
-		assertEquals("avg-request-resp-time", KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME.friendlyName());
-		assertEquals("avg-resp-time", KeyPerformanceIndicator.AVG_RESP_TIME.friendlyName());
-		assertEquals("avg-throughput-per-sec", KeyPerformanceIndicator.AVG_THROUGHPUT_PER_SEC.friendlyName());
-		assertEquals("avg-transaction-resp-time", KeyPerformanceIndicator.AVG_TRANSACTION_RESP_TIME.friendlyName());
-		assertEquals("count", KeyPerformanceIndicator.COUNT.friendlyName());
-		assertEquals("error-rate", KeyPerformanceIndicator.ERROR_RATE.friendlyName());
-		assertEquals("errors-per-sec", KeyPerformanceIndicator.ERRORS_PER_SEC.friendlyName());
-		assertEquals("errors-count", KeyPerformanceIndicator.ERRORS_COUNT.friendlyName());
-		assertEquals("perc-transaction-resp-time", KeyPerformanceIndicator.PERC_TRANSACTION_RESP_TIME.friendlyName());
-		assertEquals("throughput", KeyPerformanceIndicator.THROUGHPUT.friendlyName());
+		assertEquals("avg-elt-per-sec", KPI.AVG_ELT_PER_SEC.friendlyName());
+		assertEquals("avg-page-resp-time", KPI.AVG_PAGE_RESP_TIME.friendlyName());
+		assertEquals("avg-request-per-sec", KPI.AVG_REQUEST_PER_SEC.friendlyName());
+		assertEquals("avg-request-resp-time", KPI.AVG_REQUEST_RESP_TIME.friendlyName());
+		assertEquals("avg-resp-time", KPI.AVG_RESP_TIME.friendlyName());
+		assertEquals("avg-throughput-per-sec", KPI.AVG_THROUGHPUT_PER_SEC.friendlyName());
+		assertEquals("avg-transaction-resp-time", KPI.AVG_TRANSACTION_RESP_TIME.friendlyName());
+		assertEquals("count", KPI.COUNT.friendlyName());
+		assertEquals("error-rate", KPI.ERROR_RATE.friendlyName());
+		assertEquals("errors-per-sec", KPI.ERRORS_PER_SEC.friendlyName());
+		assertEquals("errors-count", KPI.ERRORS_COUNT.friendlyName());
+		assertEquals("perc-transaction-resp-time", KPI.PERC_TRANSACTION_RESP_TIME.friendlyName());
+		assertEquals("throughput", KPI.THROUGHPUT.friendlyName());
 	}
 
 	@Test
@@ -122,51 +122,51 @@ public class SlaThresholdTest {
 			Scope.of("test");
 		}
 		catch (final IllegalArgumentException e) {
-			assertTrue(e.getMessage().contains("The parameter 'name' must be: 'on test' or 'on interval'."));
+			assertTrue(e.getMessage().contains("The parameter 'name' must be: 'per test' or 'per interval'."));
 			throwException = true;
 		}
 		if (!throwException) {
-			fail("The parameter 'name' must be: 'on test' or 'on interval'.");
+			fail("The parameter 'name' must be: 'per test' or 'per interval'.");
 		}
 
-		assertEquals(Scope.ON_TEST, Scope.of("on test"));
-		assertEquals(Scope.ON_TEST, Scope.of("on_test"));
-		assertEquals(Scope.ON_TEST, Scope.of("ON TEST"));
-		assertEquals(Scope.ON_TEST, Scope.of("ON_TEST"));
+		assertEquals(Scope.PER_TEST, Scope.of("per test"));
+		assertEquals(Scope.PER_TEST, Scope.of("per_test"));
+		assertEquals(Scope.PER_TEST, Scope.of("PER TEST"));
+		assertEquals(Scope.PER_TEST, Scope.of("PER_TEST"));
 		
-		assertEquals(Scope.ON_INTERVAL, Scope.of("on interval"));
-		assertEquals(Scope.ON_INTERVAL, Scope.of("on_interval"));
-		assertEquals(Scope.ON_INTERVAL, Scope.of("ON INTERVAL"));
-		assertEquals(Scope.ON_INTERVAL, Scope.of("ON_INTERVAL"));
+		assertEquals(Scope.PER_INTERVAL, Scope.of("per interval"));
+		assertEquals(Scope.PER_INTERVAL, Scope.of("per_interval"));
+		assertEquals(Scope.PER_INTERVAL, Scope.of("PER INTERVAL"));
+		assertEquals(Scope.PER_INTERVAL, Scope.of("PER_INTERVAL"));
 	}
 
 	@Test
 	public void scopeFriendlyName() {
-		assertEquals("on test", Scope.ON_TEST.friendlyName());
-		assertEquals("on interval", Scope.ON_INTERVAL.friendlyName());
+		assertEquals("per test", Scope.PER_TEST.friendlyName());
+		assertEquals("per interval", Scope.PER_INTERVAL.friendlyName());
 	}
 
 	@Test
 	public void scopeGetKeyPerformanceIndicators() {
-		Set<KeyPerformanceIndicator> pkis = Scope.ON_TEST.getKeyPerformanceIndicators();
+		Set<KPI> pkis = Scope.PER_TEST.getKpis();
 		assertEquals(10, pkis.size());
-		assertTrue(pkis.contains(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.AVG_PAGE_RESP_TIME));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.AVG_TRANSACTION_RESP_TIME));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.PERC_TRANSACTION_RESP_TIME));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.AVG_REQUEST_PER_SEC));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.AVG_THROUGHPUT_PER_SEC));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.THROUGHPUT));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.COUNT));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.ERRORS_COUNT));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.ERROR_RATE));
+		assertTrue(pkis.contains(KPI.AVG_REQUEST_RESP_TIME));
+		assertTrue(pkis.contains(KPI.AVG_PAGE_RESP_TIME));
+		assertTrue(pkis.contains(KPI.AVG_TRANSACTION_RESP_TIME));
+		assertTrue(pkis.contains(KPI.PERC_TRANSACTION_RESP_TIME));
+		assertTrue(pkis.contains(KPI.AVG_REQUEST_PER_SEC));
+		assertTrue(pkis.contains(KPI.AVG_THROUGHPUT_PER_SEC));
+		assertTrue(pkis.contains(KPI.THROUGHPUT));
+		assertTrue(pkis.contains(KPI.COUNT));
+		assertTrue(pkis.contains(KPI.ERRORS_COUNT));
+		assertTrue(pkis.contains(KPI.ERROR_RATE));
 		
-		pkis = Scope.ON_INTERVAL.getKeyPerformanceIndicators();
+		pkis = Scope.PER_INTERVAL.getKpis();
 		assertEquals(5, pkis.size());
-		assertTrue(pkis.contains(KeyPerformanceIndicator.AVG_RESP_TIME));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.AVG_ELT_PER_SEC));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.AVG_THROUGHPUT_PER_SEC));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.ERRORS_PER_SEC));
-		assertTrue(pkis.contains(KeyPerformanceIndicator.ERROR_RATE));
+		assertTrue(pkis.contains(KPI.AVG_RESP_TIME));
+		assertTrue(pkis.contains(KPI.AVG_ELT_PER_SEC));
+		assertTrue(pkis.contains(KPI.AVG_THROUGHPUT_PER_SEC));
+		assertTrue(pkis.contains(KPI.ERRORS_PER_SEC));
+		assertTrue(pkis.contains(KPI.ERROR_RATE));
 	}	
 }

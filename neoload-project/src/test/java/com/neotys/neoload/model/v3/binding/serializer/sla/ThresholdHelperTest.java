@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
@@ -29,8 +29,8 @@ public class ThresholdHelperTest {
 			expectedMessage.append(" is not a valid threshold: ");
 			expectedMessage.append(System.lineSeparator());
 			expectedMessage.append("Position 0 mismatched input '<EOF>' expecting {");
-			for (int i = 0, ilength = KeyPerformanceIndicator.values().length; i < ilength; i++) {
-				final KeyPerformanceIndicator kpi = KeyPerformanceIndicator.values()[i];
+			for (int i = 0, ilength = KPI.values().length; i < ilength; i++) {
+				final KPI kpi = KPI.values()[i];
 				expectedMessage.append("'").append(kpi.friendlyName()).append("'");
 				if (i != (ilength -1)) {
 					expectedMessage.append(", ");
@@ -53,8 +53,8 @@ public class ThresholdHelperTest {
 			expectedMessage.append(" is not a valid threshold: ");
 			expectedMessage.append(System.lineSeparator());
 			expectedMessage.append("Position 0 mismatched input '<EOF>' expecting {");
-			for (int i = 0, ilength = KeyPerformanceIndicator.values().length; i < ilength; i++) {
-				final KeyPerformanceIndicator kpi = KeyPerformanceIndicator.values()[i];
+			for (int i = 0, ilength = KPI.values().length; i < ilength; i++) {
+				final KPI kpi = KPI.values()[i];
 				expectedMessage.append("'").append(kpi.friendlyName()).append("'");
 				if (i != (ilength -1)) {
 					expectedMessage.append(", ");
@@ -159,13 +159,13 @@ public class ThresholdHelperTest {
 	
 		throwException = false;
 		try {
-			SlaThresholdHelper.convertToThreshold("avg-request-resp-time warn >= 1.0 fail >= 2.0 ontest");
+			SlaThresholdHelper.convertToThreshold("avg-request-resp-time warn >= 1.0 fail >= 2.0 pertest");
 		}
 		catch (final Exception e) {
 			final StringBuilder expectedMessage = new StringBuilder();
-			expectedMessage.append("avg-request-resp-time warn >= 1.0 fail >= 2.0 ontest is not a valid threshold: ");
+			expectedMessage.append("avg-request-resp-time warn >= 1.0 fail >= 2.0 pertest is not a valid threshold: ");
 			expectedMessage.append(System.lineSeparator());
-			expectedMessage.append("String index out of range: 53");
+			expectedMessage.append("String index out of range: 54");
 			assertEquals(expectedMessage.toString(), e.getMessage());
 			throwException = true;
 		}
@@ -175,7 +175,7 @@ public class ThresholdHelperTest {
 
 		throwException = false;
 		try {
-			SlaThresholdHelper.convertToThreshold("avg-request-resp-time warn >= 1.0 MB fail >= 2.0 Mbps on test");
+			SlaThresholdHelper.convertToThreshold("avg-request-resp-time warn >= 1.0 MB fail >= 2.0 Mbps per test");
 		}
 		catch (final Exception e) {
 			final StringBuilder expectedMessage = new StringBuilder();
@@ -188,7 +188,7 @@ public class ThresholdHelperTest {
 		}
 
 		assertEquals(SlaThreshold.builder()
-				.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+				.kpi(KPI.AVG_REQUEST_RESP_TIME)
 				.addConditions(SlaThresholdCondition.builder()
 						.severity(Severity.WARN)
 						.operator(Operator.GREATER_THAN)
@@ -199,7 +199,7 @@ public class ThresholdHelperTest {
 			SlaThresholdHelper.convertToThreshold("avg-request-resp-time warn >= 1"));
 		
 		assertEquals(SlaThreshold.builder()
-				.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+				.kpi(KPI.AVG_REQUEST_RESP_TIME)
 				.addConditions(SlaThresholdCondition.builder()
 						.severity(Severity.WARN)
 						.operator(Operator.GREATER_THAN)
@@ -215,7 +215,7 @@ public class ThresholdHelperTest {
 			SlaThresholdHelper.convertToThreshold("avg-request-resp-time warn >= 1.0 fail >= 2.0"));
 
 		assertEquals(SlaThreshold.builder()
-				.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+				.kpi(KPI.AVG_REQUEST_RESP_TIME)
 				.addConditions(SlaThresholdCondition.builder()
 						.severity(Severity.WARN)
 						.operator(Operator.LESS_THAN)
@@ -226,9 +226,9 @@ public class ThresholdHelperTest {
 						.operator(Operator.LESS_THAN)
 						.value(2.0)
 						.build())
-				.scope(Scope.ON_INTERVAL)
+				.scope(Scope.PER_INTERVAL)
 				.build()
 			, 
-			SlaThresholdHelper.convertToThreshold("avg-request-resp-time warn <= 1.0 fail <= 2.0 on interval"));
+			SlaThresholdHelper.convertToThreshold("avg-request-resp-time warn <= 1.0 fail <= 2.0 per interval"));
 	}
 }

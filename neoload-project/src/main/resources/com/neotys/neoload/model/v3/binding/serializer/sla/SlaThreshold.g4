@@ -69,8 +69,8 @@ unit
 // Threshold Scope
 scope
 :
-	'on test'
-	| 'on interval'
+	'per test'
+	| 'per interval'
 ;
 
 INTEGER

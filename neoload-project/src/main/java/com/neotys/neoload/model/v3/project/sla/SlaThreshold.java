@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.neotys.neoload.model.v3.binding.serializer.SlaThresholdDeserializer;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
 import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck;
@@ -32,7 +31,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @SlaThresholdCheck(usage = UsageType.CHECK_RELATIONSHIP_KPI_AND_SCOPE, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck.RelationshipKpiAndScope.message}", groups = {NeoLoad.class})
 @SlaThresholdCheck(usage = UsageType.CHECK_UNIQUE_CONDITION_SEVERITY, message = "{com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck.UniqueConditionSeverity.message}", groups = {NeoLoad.class})
 public interface SlaThreshold  {
-	enum KeyPerformanceIndicator {
+	// Key Performance Indicator
+	enum KPI {
 		AVG_ELT_PER_SEC ("/s"),                 // "avg-elt-per-sec"  -> "Average Elements per Second"
 		AVG_PAGE_RESP_TIME ("ms", "s"),         // "avg-page-resp-time"  -> "Average Page Response time"
 		AVG_REQUEST_PER_SEC ("/s"),             // "avg-request-per-sec" ->"Average Requests per Second" for requests. 
@@ -53,7 +53,7 @@ public interface SlaThreshold  {
 		
 		private final Set<String> acceptedUnits = new HashSet<>();
 				
-		private KeyPerformanceIndicator(final String... units) {
+		private KPI(final String... units) {
 			acceptedUnits.addAll(Arrays.asList(units));
 		}
 		
@@ -75,52 +75,52 @@ public interface SlaThreshold  {
 			throw new IllegalArgumentException(friendlyName() + " does not accept this unit: " + unit + ". Possible units: " + acceptedUnits + ".");
 		}
 		
-		public static KeyPerformanceIndicator of(final String name) {
+		public static KPI of(final String name) {
 			if (Strings.isNullOrEmpty(name)) {
 				throw new IllegalArgumentException("The parameter 'name' must not be null or empty.");
 			}
 			
 			try {
-				return KeyPerformanceIndicator.valueOf(name.toUpperCase().replace('-', '_'));
+				return KPI.valueOf(name.toUpperCase().replace('-', '_'));
 			}
 			catch (final IllegalArgumentException iae) {
-				throw new IllegalArgumentException("The parameter 'name' must be: " + Arrays.asList(KeyPerformanceIndicator.values()).toString() +".");	
+				throw new IllegalArgumentException("The parameter 'name' must be: " + Arrays.asList(KPI.values()).toString() +".");	
 			}    		
 		}
 	}
 	
 	enum Scope {
-		ON_TEST {
+		PER_TEST {
 			@Override
-			public Set<KeyPerformanceIndicator> getKeyPerformanceIndicators() {
+			public Set<KPI> getKpis() {
 				return Sets.newHashSet(
-					KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME,
-					KeyPerformanceIndicator.AVG_PAGE_RESP_TIME,
-					KeyPerformanceIndicator.AVG_TRANSACTION_RESP_TIME,
-					KeyPerformanceIndicator.PERC_TRANSACTION_RESP_TIME,
-					KeyPerformanceIndicator.AVG_REQUEST_PER_SEC,
-					KeyPerformanceIndicator.AVG_THROUGHPUT_PER_SEC,
-					KeyPerformanceIndicator.THROUGHPUT,
-					KeyPerformanceIndicator.COUNT,
-					KeyPerformanceIndicator.ERRORS_COUNT,
-					KeyPerformanceIndicator.ERROR_RATE
+					KPI.AVG_REQUEST_RESP_TIME,
+					KPI.AVG_PAGE_RESP_TIME,
+					KPI.AVG_TRANSACTION_RESP_TIME,
+					KPI.PERC_TRANSACTION_RESP_TIME,
+					KPI.AVG_REQUEST_PER_SEC,
+					KPI.AVG_THROUGHPUT_PER_SEC,
+					KPI.THROUGHPUT,
+					KPI.COUNT,
+					KPI.ERRORS_COUNT,
+					KPI.ERROR_RATE
 				);
 			}
 		},
-		ON_INTERVAL {
+		PER_INTERVAL {
 			@Override
-			public Set<KeyPerformanceIndicator> getKeyPerformanceIndicators() {
+			public Set<KPI> getKpis() {
 				return Sets.newHashSet(
-					KeyPerformanceIndicator.AVG_RESP_TIME,
-					KeyPerformanceIndicator.AVG_ELT_PER_SEC,
-					KeyPerformanceIndicator.AVG_THROUGHPUT_PER_SEC,
-					KeyPerformanceIndicator.ERRORS_PER_SEC,
-					KeyPerformanceIndicator.ERROR_RATE
+					KPI.AVG_RESP_TIME,
+					KPI.AVG_ELT_PER_SEC,
+					KPI.AVG_THROUGHPUT_PER_SEC,
+					KPI.ERRORS_PER_SEC,
+					KPI.ERROR_RATE
 				);
 			}
 		};
 		
-		public abstract Set<KeyPerformanceIndicator> getKeyPerformanceIndicators();
+		public abstract Set<KPI> getKpis();
 		
 		public static Scope of(final String name) {
 			if (Strings.isNullOrEmpty(name)) {
@@ -131,7 +131,7 @@ public interface SlaThreshold  {
 				return Scope.valueOf(name.toUpperCase().replace(' ', '_'));
 			}
 			catch (final IllegalArgumentException iae) {
-				throw new IllegalArgumentException("The parameter 'name' must be: 'on test' or 'on interval'.");	
+				throw new IllegalArgumentException("The parameter 'name' must be: 'per test' or 'per interval'.");	
 			}    		
 		}
 		
@@ -140,11 +140,11 @@ public interface SlaThreshold  {
 		}
 	}
 	
-	Scope DEFAULT_SCOPE = Scope.ON_TEST;
+	Scope DEFAULT_SCOPE = Scope.PER_TEST;
 	Integer DEFAULT_PERCENT = 90;
 		
 	@RequiredCheck(groups = {NeoLoad.class})
-	KeyPerformanceIndicator getKeyPerformanceIndicator();
+	KPI getKpi();
 
 	@RangeCheck(min = 0, max = 100, groups = {NeoLoad.class})
 	Optional<Integer> getPercent();

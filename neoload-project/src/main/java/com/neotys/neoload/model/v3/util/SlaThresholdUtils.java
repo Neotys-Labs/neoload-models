@@ -1,6 +1,6 @@
 package com.neotys.neoload.model.v3.util;
 
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
 
 
@@ -8,7 +8,7 @@ public class SlaThresholdUtils {
 	private SlaThresholdUtils() {
 	}
 
-	public static String toIdentifier(final KeyPerformanceIndicator pki) {
+	public static String toIdentifier(final KPI pki) {
 		switch (pki) {
 			case AVG_REQUEST_RESP_TIME:
 				return "AVERAGE_REQUEST_RESPONSE_TIME";
@@ -42,9 +42,9 @@ public class SlaThresholdUtils {
 	
 	public static String toFamily(final Scope scope) {
 		switch (scope) {
-			case ON_TEST:
+			case PER_TEST:
 				return "PER_RUN";
-			case ON_INTERVAL:
+			case PER_INTERVAL:
 				return "PER_TIME_INTERVAL";
 			default:
 				throw new IllegalArgumentException("The scope '" + scope + "' is unknown.");

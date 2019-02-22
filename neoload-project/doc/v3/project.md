@@ -27,10 +27,10 @@ name: MyProject
 sla_profiles:
 - name: MySlaProfile
   thresholds:
-  - avg-request-resp-time warn >= 200ms fail >= 500ms on test
-  - perc-transaction-resp-time (p90) warn >= 1s fail >= 2s on test
-  - error-rate warn >= 2% fail >= 5% on test
-  - error-rate warn >= 5% on interval
+  - avg-request-resp-time warn >= 200ms fail >= 500ms per test
+  - perc-transaction-resp-time (p90) warn >= 1s fail >= 2s per test
+  - error-rate warn >= 2% fail >= 5% per test
+  - error-rate warn >= 5% per interval
 variables:
 - file:
     name: products

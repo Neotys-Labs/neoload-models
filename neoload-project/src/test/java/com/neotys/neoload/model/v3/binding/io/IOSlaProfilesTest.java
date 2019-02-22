@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold;
-import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KeyPerformanceIndicator;
+import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
@@ -25,7 +25,7 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 				.name("MySlaProfile")
 				.thresholds(Arrays.asList(
 						SlaThreshold.builder()
-							.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+							.kpi(KPI.AVG_REQUEST_RESP_TIME)
 							.addConditions(SlaThresholdCondition.builder()
 									.severity(Severity.WARN)
 									.operator(Operator.GREATER_THAN)
@@ -34,7 +34,7 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 							.build()
 						,
 						SlaThreshold.builder()
-						.keyPerformanceIndicator(KeyPerformanceIndicator.PERC_TRANSACTION_RESP_TIME)
+						.kpi(KPI.PERC_TRANSACTION_RESP_TIME)
 						.percent(90)
 						.addConditions(SlaThresholdCondition.builder()
 								.severity(Severity.WARN)
@@ -58,7 +58,7 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 				.description("My Sla Profiles")
 				.thresholds(Arrays.asList(
 						SlaThreshold.builder()
-							.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_REQUEST_RESP_TIME)
+							.kpi(KPI.AVG_REQUEST_RESP_TIME)
 							.addConditions(SlaThresholdCondition.builder()
 									.severity(Severity.WARN)
 									.operator(Operator.GREATER_THAN)
@@ -69,11 +69,11 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 									.operator(Operator.GREATER_THAN)
 									.value(1.25)
 									.build())
-							.scope(Scope.ON_TEST)
+							.scope(Scope.PER_TEST)
 							.build()
 						,
 						SlaThreshold.builder()
-							.keyPerformanceIndicator(KeyPerformanceIndicator.PERC_TRANSACTION_RESP_TIME)
+							.kpi(KPI.PERC_TRANSACTION_RESP_TIME)
 							.percent(50)
 							.addConditions(SlaThresholdCondition.builder()
 									.severity(Severity.WARN)
@@ -85,11 +85,11 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 									.operator(Operator.EQUALS)
 									.value(1.25)
 									.build())
-							.scope(Scope.ON_TEST)
+							.scope(Scope.PER_TEST)
 							.build()
 						,
 						SlaThreshold.builder()
-							.keyPerformanceIndicator(KeyPerformanceIndicator.AVG_RESP_TIME)
+							.kpi(KPI.AVG_RESP_TIME)
 							.addConditions(SlaThresholdCondition.builder()
 									.severity(Severity.WARN)
 									.operator(Operator.LESS_THAN)
@@ -100,7 +100,7 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 									.operator(Operator.LESS_THAN)
 									.value(1.25)
 									.build())
-							.scope(Scope.ON_INTERVAL)
+							.scope(Scope.PER_INTERVAL)
 							.build()
 						))
 				.build();
