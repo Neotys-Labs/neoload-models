@@ -25,7 +25,7 @@ Select the Key Performance Indicator from a [scope](#scope) to apply a rule on.
 | avg-request-resp-time          | Average request response time                | s or ms         |
 | avg-page-resp-time             | Average page response time                   | s or ms         |
 | avg-transaction-resp-time      | Average Transaction response time            | s or ms         |
-| perc-transaction-resp-time     | Percentile Transaction response time.<br><br>The percentile can be defined in using this syntax: (p`percentile`).<br>The default value is (p`90`).<br><br>Example:<br>perc-transaction-resp-time (p95) warn >= 1 s per test | s or ms         |
+| perc-transaction-resp-time     | Percentile Transaction response time <br><br>The percentile can be defined in using this syntax: (p`percentile`).<br>The default value is (p`90`).<br><br>Example:<br>perc-transaction-resp-time (p95) warn >= 1 s per test | s or ms         |
 | avg-request-per-sec            | Average requests per second                  | /s              |
 | avg-throughput-per-sec         | Average throughput per second                | Mbps            |
 | errors-count                   | Total errors                                 | -               |
