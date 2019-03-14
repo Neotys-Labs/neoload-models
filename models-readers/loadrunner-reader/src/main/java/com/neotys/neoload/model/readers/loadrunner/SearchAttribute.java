@@ -11,15 +11,15 @@ public enum SearchAttribute {
 	ALL(ExtractType.BOTH); // search body , headers, and resources 
 
 	private final ExtractType extractType;
-	
-	private SearchAttribute(final ExtractType extractType){
+
+	SearchAttribute(final ExtractType extractType){
 		this.extractType = extractType;
 	}
 
 	public ExtractType getExtractType() {
 		return extractType;
 	}
-	
+
 	public static SearchAttribute from(final String value){		 
 		for(final SearchAttribute searchAttribute: SearchAttribute.values()){
 			if(searchAttribute.toString().equalsIgnoreCase(value)){
