@@ -2,9 +2,7 @@ package com.neotys.neoload.model.v3.binding.io;
 
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.variable.ConstantVariable;
-import com.neotys.neoload.model.v3.project.variable.FileVariable;
-import com.neotys.neoload.model.v3.project.variable.Variable;
+import com.neotys.neoload.model.v3.project.variable.*;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -57,9 +55,27 @@ public class IOVariableTest extends AbstractIOElementsTest {
 				.outOfValue(FileVariable.OutOfValue.NO_VALUE)
 				.build();
 
+		final Variable counterVariable = CounterVariable.builder()
+				.name("My Counter")
+				.start(0)
+				.end(1)
+				.increment(10)
+				.changePolicy(Variable.ChangePolicy.EACH_ITERATION)
+				.scope(Variable.Scope.LOCAL)
+				.outOfValue(Variable.OutOfValue.CYCLE)
+				.build();
+
+		final Variable randomNumberVariable = RandomNumberVariable.builder()
+				.name("MyRandomNumber")
+				.min(9999)
+				.max(-1)
+				.isPredictable(false)
+				.changePolicy(Variable.ChangePolicy.EACH_REQUEST)
+				.build();
+
 		return Project.builder()
 				.name("MyProject")
-				.addVariables(constantVariable, fileVariable, fileVariable2)
+				.addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable)
 				.build();
 	}
 }
