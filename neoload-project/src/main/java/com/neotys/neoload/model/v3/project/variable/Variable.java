@@ -9,7 +9,9 @@ import org.immutables.value.Value;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 @JsonSubTypes(value = {
 		@JsonSubTypes.Type(value = ConstantVariable.class, name = "constant"),
-		@JsonSubTypes.Type(value = FileVariable.class, name = "file")
+		@JsonSubTypes.Type(value = FileVariable.class, name = "file"),
+		@JsonSubTypes.Type(value = CounterVariable.class, name = "counter"),
+		@JsonSubTypes.Type(value = RandomNumberVariable.class, name = "random_number")
 })
 public interface Variable extends Element {
 
