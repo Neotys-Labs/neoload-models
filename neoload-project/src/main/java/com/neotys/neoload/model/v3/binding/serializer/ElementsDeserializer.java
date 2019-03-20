@@ -12,11 +12,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.neotys.neoload.model.v3.project.userpath.Step;
-import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.project.userpath.Request;
-import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
+import com.neotys.neoload.model.v3.project.userpath.*;
 
 public class ElementsDeserializer extends StdDeserializer<List<Step>> {
 	private static final long serialVersionUID = -5696608939252369276L;
@@ -25,6 +21,7 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
 	private static final String REQUEST = "request";
 	private static final String DELAY = "delay";
 	private static final String THINK_TIME = "think_time";
+	private static final String JAVASCRIPT = "javascript";
 
 	public ElementsDeserializer() {
 		super(List.class);
@@ -56,6 +53,9 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
 				final String thinkTimeValue = actionNode.get(THINK_TIME).asText();
 				final String thinkTime = STRING_TO_TIME_DURATION_WITH_MS.convert(thinkTimeValue);
 				action = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
+			} else if (actionNode.has(JAVASCRIPT)) {
+				final JsonNode javascriptNode = actionNode.get(JAVASCRIPT);
+				action = codec.treeToValue(javascriptNode, Javascript.class);
 			}
 
 			if (action != null) {
