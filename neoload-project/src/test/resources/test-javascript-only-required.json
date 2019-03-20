@@ -1,0 +1,19 @@
+{
+  "name": "MyProject",
+  "user_paths": [
+    {
+      "name": "MyUserPath",
+      "actions": {
+        "steps": [
+          {
+            "javascript": {
+              "name": "My Javascript",
+              "description": "My description",
+              "script": "// Get variable value from VariableManager\nvar myVar = context.variableManager.getValue(\"CounterVariable_1\");\nlogger.debug(\"ComputedValue=\"+myVar);"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
