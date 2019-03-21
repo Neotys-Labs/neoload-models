@@ -1,18 +1,18 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
-import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.neotys.neoload.model.v3.project.userpath.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
 
 public class ElementsDeserializer extends StdDeserializer<List<Step>> {
 	private static final long serialVersionUID = -5696608939252369276L;
@@ -22,6 +22,7 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
 	private static final String DELAY = "delay";
 	private static final String THINK_TIME = "think_time";
 	private static final String JAVASCRIPT = "javascript";
+	private static final String IF = "if";
 
 	public ElementsDeserializer() {
 		super(List.class);
@@ -56,6 +57,9 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
 			} else if (actionNode.has(JAVASCRIPT)) {
 				final JsonNode javascriptNode = actionNode.get(JAVASCRIPT);
 				action = codec.treeToValue(javascriptNode, Javascript.class);
+			} else if (actionNode.has(IF)) {
+				final JsonNode ifNode = actionNode.get(IF);
+				action = codec.treeToValue(ifNode, If.class);
 			}
 
 			if (action != null) {
