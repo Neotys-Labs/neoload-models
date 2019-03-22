@@ -32,7 +32,6 @@ public class ConditionTest {
 		assertEquals(Condition.Operator.LESS_EQUAL, Condition.Operator.of("<="));
 		assertEquals(Condition.Operator.EXISTS, Condition.Operator.of("exists"));
 		assertEquals(Condition.Operator.NOT_EXISTS, Condition.Operator.of("not_exists"));
-		assertEquals(Condition.Operator.FIND_REGEXP, Condition.Operator.of("find_regexp"));
 	}
 
 	@Test

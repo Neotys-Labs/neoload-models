@@ -92,8 +92,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 				getCondition("operand1", Condition.Operator.LESS_EQUAL, "operand2"),
 				getCondition("operand1", Condition.Operator.LESS_EQUAL, "operand2"),
 				getCondition("operand1", Condition.Operator.EXISTS, "operand2"),
-				getCondition("operand1", Condition.Operator.NOT_EXISTS, "operand2"),
-				getCondition("operand1", Condition.Operator.FIND_REGEXP, "operand2")
+				getCondition("operand1", Condition.Operator.NOT_EXISTS, "operand2")
 		);
 	}
 

@@ -35,8 +35,7 @@ public interface Condition {
 		LESS(Arrays.asList("less", "<")),
 		LESS_EQUAL(Arrays.asList("less_equal", "<=")),
 		EXISTS(Arrays.asList("exists")),
-		NOT_EXISTS(Arrays.asList("not_exists")),
-		FIND_REGEXP(Arrays.asList("find_regexp"));
+		NOT_EXISTS(Arrays.asList("not_exists"));
 
 		private final List<String> names;
 
