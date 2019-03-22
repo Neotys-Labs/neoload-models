@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.binding.serializer.IfDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.MatchDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
@@ -20,7 +21,7 @@ import java.util.stream.Stream;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, If.CONDITIONS, If.MATCH, If.THEN, If.ELSE})
-@JsonDeserialize(as = ImmutableIf.class)
+@JsonDeserialize(using = IfDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface If extends Step {
@@ -56,16 +57,12 @@ public interface If extends Step {
 	@Value.Default
 	default Match getMatch() { return Match.ANY; }
 
-	@JsonProperty(THEN)
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	Container getThen();
 
-	@JsonProperty(ELSE)
-	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	Optional<Container> getElse();
-
 
 	@Override
 	default Stream<Element> flattened() {
