@@ -25,7 +25,13 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Container extends Step, SlaElement {
+	String DEFAULT_NAME = "container";
 	String STEPS = "steps";
+
+	@Value.Default
+	default String getName() {
+		return DEFAULT_NAME;
+	}
 
 	@JsonProperty(STEPS)
 	@RequiredCheck(groups={NeoLoad.class})

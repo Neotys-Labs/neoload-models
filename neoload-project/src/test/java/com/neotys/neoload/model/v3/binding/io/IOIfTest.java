@@ -27,6 +27,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 										.operand2("operand2")
 										.build()))
 								.then(Container.builder()
+										.name("container")
 										.addSteps(Delay
 												.builder()
 												.value(String.valueOf(3*60*1000+200)) // "3m 200ms"
@@ -105,6 +106,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 
 	private static Container getThen() {
 		return Container.builder()
+				.name("container")
 				.description("My then description")
 				.slaProfile("MySLAProfile")
 				.addSteps(Request
@@ -116,6 +118,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 
 	private static Container getElse() {
 		return Container.builder()
+				.name("container")
 				.description("My else description")
 				.slaProfile("MySLAProfile")
 				.addSteps(Delay
