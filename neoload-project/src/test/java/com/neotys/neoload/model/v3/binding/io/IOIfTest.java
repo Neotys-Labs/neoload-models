@@ -126,7 +126,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readUserPathsOnlyRequired() throws IOException {
+	public void readIfOnlyRequired() throws IOException {
 		final Project expectedProject = getIfOnlyRequired();
 		assertNotNull(expectedProject);
 
@@ -134,7 +134,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readUserPathsRequiredAndOptional() throws IOException {
+	public void readIfRequiredAndOptional() throws IOException {
 		final Project expectedProject = getIfRequiredAndOptional();
 		assertNotNull(expectedProject);
 

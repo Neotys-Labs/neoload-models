@@ -2,6 +2,10 @@ package com.neotys.neoload.model.v3.binding.io;
 
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.validation.validator.Validation;
+import com.neotys.neoload.model.v3.validation.validator.Validator;
+import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,11 +13,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 
 abstract class AbstractIOElementsTest {
+
+	private static final Validator VALIDATOR = new Validator();
+
 	protected void read(final String fileName, final Project expectedProject) throws IOException {
 		assertNotNull(expectedProject);
 		
@@ -27,10 +33,18 @@ abstract class AbstractIOElementsTest {
 		
 		final IO mapper1 = new IO();
 		final Project actualProject1 = mapper1.read(file, Project.class);
+		final Validation validation1 = VALIDATOR.validate(actualProject1, NeoLoad.class);
+		if (!validation1.isValid()) {
+			fail(validation1.getMessage().get());
+		}
 		assertEquals(expectedProject, actualProject1);
 		
 		final IO mapper2 = new IO();
 		final Project actualProject2 = mapper2.read(new String(Files.readAllBytes(Paths.get(file.toURI()))), Project.class);
+		final Validation validation2 = VALIDATOR.validate(actualProject2, NeoLoad.class);
+		if (!validation2.isValid()) {
+			fail(validation2.getMessage().get());
+		}
 		assertEquals(expectedProject, actualProject2);
 	}
 	
