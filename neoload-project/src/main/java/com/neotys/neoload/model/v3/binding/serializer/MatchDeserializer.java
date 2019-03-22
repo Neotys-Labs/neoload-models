@@ -5,8 +5,6 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.neotys.neoload.model.v3.binding.serializer.ifthenelse.ConditionHelper;
-import com.neotys.neoload.model.v3.project.userpath.Condition;
 import com.neotys.neoload.model.v3.project.userpath.If;
 
 import java.io.IOException;
