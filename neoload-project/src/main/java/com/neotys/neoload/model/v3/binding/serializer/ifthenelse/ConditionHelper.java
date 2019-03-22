@@ -2,6 +2,7 @@ package com.neotys.neoload.model.v3.binding.serializer.ifthenelse;
 
 import com.neotys.neoload.model.v3.binding.serializer.ConditionLexer;
 import com.neotys.neoload.model.v3.binding.serializer.ConditionParser;
+import com.neotys.neoload.model.v3.binding.serializer.DefaultErrorListener;
 import com.neotys.neoload.model.v3.project.userpath.Condition;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -21,16 +22,17 @@ public final class ConditionHelper {
 		final String conditionAsText = (input != null) ? input : "";
 		
 		// Manages the errors
-		final DefaultConditionErrorListener conditionErrorListener = new DefaultConditionErrorListener();
+		final DefaultErrorListener errorListener = new DefaultErrorListener();
 		
 		// Lexer
 		final ConditionLexer lexer = new ConditionLexer(CharStreams.fromString(conditionAsText));
+		lexer.removeErrorListeners();
 	    // Tokens
 	    final CommonTokenStream tokens = new CommonTokenStream(lexer);
 	    // Parser
 	    final ConditionParser parser = new ConditionParser(tokens);
 	    parser.removeErrorListeners();
-	    parser.addErrorListener(conditionErrorListener);
+	    parser.addErrorListener(errorListener);
 	    // Context
 	    final ConditionParser.ConditionContext context;
 	    try {
@@ -41,7 +43,7 @@ public final class ConditionHelper {
 		}
 	    
 	    // Throw the errors if necessary
-	    final List<String> errors = conditionErrorListener.getErrors();
+	    final List<String> errors = errorListener.getErrors();
 	    if (!errors.isEmpty()) {
 	    	throw newIOException(conditionAsText, errors);
 	    }

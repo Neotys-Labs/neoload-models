@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.neotys.neoload.model.v3.binding.serializer.DefaultErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -21,7 +22,7 @@ public final class SlaThresholdHelper {
 		final String thresholdAsText = (input != null) ? input : "";
 		
 		// Manages the errors
-		final DefaultSlaThresholdErrorListener thresholdErrorListener = new DefaultSlaThresholdErrorListener();
+		final DefaultErrorListener thresholdErrorListener = new DefaultErrorListener();
 		
 		// Lexer
 		final SlaThresholdLexer lexer = new SlaThresholdLexer(CharStreams.fromString(thresholdAsText));

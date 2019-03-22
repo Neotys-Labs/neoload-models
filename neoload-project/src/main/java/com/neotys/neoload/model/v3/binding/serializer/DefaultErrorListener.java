@@ -1,4 +1,4 @@
-package com.neotys.neoload.model.v3.binding.serializer.sla;
+package com.neotys.neoload.model.v3.binding.serializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,10 @@ import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
-final class DefaultSlaThresholdErrorListener extends BaseErrorListener {
+public final class DefaultErrorListener extends BaseErrorListener {
 	private final List<String> errors = new ArrayList<>();
 	
-	protected DefaultSlaThresholdErrorListener() {
+	public DefaultErrorListener() {
 		super();
 	}
    	
@@ -25,7 +25,7 @@ final class DefaultSlaThresholdErrorListener extends BaseErrorListener {
    		errors.add(error.toString());
    	}
    	
-   	protected List<String> getErrors() {
+   	public List<String> getErrors() {
    		return errors;
    	}
 }
