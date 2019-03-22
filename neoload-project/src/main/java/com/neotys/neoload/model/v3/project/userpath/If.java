@@ -26,6 +26,12 @@ import java.util.stream.Stream;
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface If extends Step {
 
+	String DEFAULT_NAME = "if";
+	String CONDITIONS = "conditions";
+	String MATCH = "match";
+	String THEN = "then";
+	String ELSE = "else";
+
 	enum Match {
 		ANY, ALL;
 
@@ -41,10 +47,11 @@ public interface If extends Step {
 		}
 	}
 
-	String CONDITIONS = "conditions";
-	String MATCH = "match";
-	String THEN = "then";
-	String ELSE = "else";
+	@RequiredCheck(groups={NeoLoad.class})
+	@Value.Default
+	default String getName() {
+		return DEFAULT_NAME;
+	}
 
 	@JsonProperty(CONDITIONS)
 	@RequiredCheck(groups={NeoLoad.class})
