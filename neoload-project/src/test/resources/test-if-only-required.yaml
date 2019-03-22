@@ -1,11 +1,10 @@
 name: MyProject
 user_paths:
-- name: MyUserPath
-  actions:
-    steps:
-      - if:
-          conditions:
-          - operand1 == operand2
-          then:
-            steps:
-              - delay: 3m 200ms
+  - name: MyUserPath
+    actions:
+      steps:
+        - if:
+            conditions: ["'operand1' equals 'operand2'"]
+            then:
+              steps:
+                - delay: 3m 200ms
