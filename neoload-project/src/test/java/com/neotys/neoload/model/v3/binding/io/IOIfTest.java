@@ -74,9 +74,9 @@ public class IOIfTest extends AbstractIOElementsTest {
 				getCondition("0", Condition.Operator.EQUALS, "operand2"),
 				getCondition("operand1", Condition.Operator.NOT_EQUALS, "${parameter}"),
 				getCondition("${parameter}", Condition.Operator.NOT_EQUALS, "10"),
-				getCondition("\"${parameter}\"", Condition.Operator.CONTAINS, "\"contains\""),
-				getCondition("\"operand1\"", Condition.Operator.NOT_CONTAINS, "\"operand2\""),
-				getCondition("operand1", Condition.Operator.STARTS_WITH, "\"==\""),
+				getCondition("${parameter}", Condition.Operator.CONTAINS, "contains"),
+				getCondition("operand1", Condition.Operator.NOT_CONTAINS, "operand2"),
+				getCondition("operand1", Condition.Operator.STARTS_WITH, "=="),
 				getCondition("operand1", Condition.Operator.NOT_STARTS_WITH, "operand2"),
 				getCondition("operand1", Condition.Operator.ENDS_WITH, "operand2"),
 				getCondition("operand1", Condition.Operator.NOT_ENDS_WITH, "operand2"),
@@ -120,7 +120,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 				.slaProfile("MySLAProfile")
 				.addSteps(Delay
 						.builder()
-						.value("3m 200ms")
+						.value(String.valueOf(3*60*1000+200)) // "3m 200ms"
 						.build()
 				).build();
 	}
@@ -138,6 +138,6 @@ public class IOIfTest extends AbstractIOElementsTest {
 		final Project expectedProject = getIfRequiredAndOptional();
 		assertNotNull(expectedProject);
 
-		//read("test-if-required-and-optional", expectedProject);
+		read("test-if-required-and-optional", expectedProject);
 	}
 }

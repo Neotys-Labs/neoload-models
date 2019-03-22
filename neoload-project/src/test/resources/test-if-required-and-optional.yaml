@@ -6,30 +6,31 @@ user_paths:
         - if:
             name: My If-Then-Else
             description: My description
-            conditions:
-              - operand1 equals operand2
-              - 0 == operand2
-              - operand1 not_equals ${parameter}
-              - ${parameter} != 10
-              - \"${parameter}\" contains \"contains\"
-              - \"operand1\" not_contains \"operand2\"
-              - operand1 starts_with \"==\"
-              - operand1 not_starts_with operand2
-              - operand1 ends_with operand2
-              - operand1 not_ends_with operand2
-              - operand1 match_regexp operand2
-              - operand1 not_match_regexp operand2
-              - operand1 greater operand2
-              - operand1 > operand2
-              - operand1 greater_equal operand2
-              - operand1 >= operand2
-              - operand1 less operand2
-              - operand1 < operand2
-              - operand1 less_equal operand2
-              - operand1 <= operand2
-              - operand1 exists operand2
-              - operand1 not_exists operand2
-              - operand1 find_regexp operand2
+            conditions: [
+              "'operand1' equals 'operand2'",
+              "'0' == 'operand2'",
+              "'operand1' not_equals '${parameter}'",
+              "'${parameter}' != '10'",
+              "'${parameter}' contains 'contains'",
+              "'operand1' not_contains 'operand2'",
+              "'operand1' starts_with '=='",
+              "'operand1' not_starts_with 'operand2'",
+              "'operand1' ends_with 'operand2'",
+              "'operand1' not_ends_with 'operand2'",
+              "'operand1' match_regexp 'operand2'",
+              "'operand1' not_match_regexp 'operand2'",
+              "'operand1' greater 'operand2'",
+              "'operand1' > 'operand2'",
+              "'operand1' greater_equal 'operand2'",
+              "'operand1' >= 'operand2'",
+              "'operand1' less 'operand2'",
+              "'operand1' < 'operand2'",
+              "'operand1' less_equal 'operand2'",
+              "'operand1' <= 'operand2'",
+              "'operand1' exists 'operand2'",
+              "'operand1' not_exists 'operand2'",
+              "'operand1' find_regexp 'operand2'"
+            ]
             match: any
             then:
               description: My then description
