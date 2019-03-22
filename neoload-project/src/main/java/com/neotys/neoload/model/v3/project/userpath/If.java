@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.binding.serializer.MatchDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -51,6 +52,7 @@ public interface If extends Step {
 
 	@JsonProperty(MATCH)
 	@RequiredCheck(groups={NeoLoad.class})
+	@JsonDeserialize(using = MatchDeserializer.class)
 	@Value.Default
 	default Match getMatch() { return Match.ANY; }
 
