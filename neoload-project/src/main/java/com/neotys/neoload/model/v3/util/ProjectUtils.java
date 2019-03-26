@@ -11,6 +11,10 @@ import static com.neotys.neoload.model.v3.project.Project.DEFAULT_NAME;
 
 public class ProjectUtils {
 
+	private ProjectUtils() {
+		throw new IllegalStateException("Utility class");
+	}
+
 	@VisibleForTesting
 	public static String checkUniqueName(final List<Project> projects) {
 		final Set<String> asCodeProjectNames = Sets.newHashSet();
