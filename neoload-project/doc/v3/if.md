@@ -8,7 +8,7 @@ A conditional structure "If - Then - Else". If the conditions are true, the Then
 | name         | The name of the If                                                                                 | -               | -                  |       |
 | description  | The description of the If                                                                          | -               | -                  |       |
 | conditions   | The list of conditions to evaluate                                                                 | -               | &#x2713;           |       |
-| match        | The "match" value can be: <ul><li>`any`</li><li>`all`</li></ul>The default value is `any`.    | -               | -                  |       |
+| match        | The "match" value can be: <ul><li>`any`</li><li>`all`</li></ul>The default value is `any`.         | -               | -                  |       |
 | then         | The Then [container](container.md)                                                                 | -               | &#x2713;           |       |
 | else         | The Else [container](container.md)                                                                 | -               | -                  |       |
 
@@ -19,7 +19,7 @@ Use the following syntax to define condition: `"'operand1 (operator) (operand2)?
 Operator value can be: <ul><li>`equals`</li><li>`==`</li><li>`not_equals`</li><li>`!=`</li><li>`contains`</li><li>`not_contains`</li><li>`starts_with`</li><li>`not_starts_with`</li><li>`ends_with`</li><li>`not_ends_with`</li><li>`match_regexp`</li><li>`not_match_regexp`</li><li>`greater`</li><li>`>`</li><li>`greater_equal`</li><li>`>=`</li><li>`less`</li><li>`<`</li><li>`less_equal`</li><li>`<=`</li><li>`exists`</li><li>`not_exists`</li></ul>
 
 #### Example
-Defining an "actions" container with 2 steps: 1 request and 1 Delay.
+If at least one condition of the three listed evaluate to true, then execute a request, else execute a delay.
 ```yaml
 actions:
   steps:
