@@ -7,7 +7,7 @@ scenarios:
       users: 500
   - name: MyPopulation12
     rampup_load:
-      min_users: 0
+      min_users: 1
       increment_users: 10
       increment_every: 5s
   - name: MyPopulation13

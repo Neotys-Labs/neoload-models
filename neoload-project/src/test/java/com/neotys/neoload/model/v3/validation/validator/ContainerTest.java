@@ -14,22 +14,6 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 public class ContainerTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-	
-	private static final String CONSTRAINTS_CONTAINER_NAME_BLANK_AND_NULL;
-	static {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
-		CONSTRAINTS_CONTAINER_NAME_BLANK_AND_NULL = sb.toString();
-	}
-
-	private static final String CONSTRAINTS_CONTAINER_NAME_BLANK;
-	static {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
-		CONSTRAINTS_CONTAINER_NAME_BLANK = sb.toString();
-	}
 
 	private static final String CONSTRAINTS_CONTAINER_ELEMENTS;
 	static {
@@ -49,8 +33,7 @@ public class ContainerTest {
 						.build())
 				.build();
 		Validation validation = validator.validate(container, NeoLoad.class);
-		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_CONTAINER_NAME_BLANK_AND_NULL, validation.getMessage().get());	
+		assertTrue(validation.isValid());
 
 		container = Container.builder()
 				.name("")
@@ -60,7 +43,6 @@ public class ContainerTest {
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_CONTAINER_NAME_BLANK, validation.getMessage().get());	
 
 		container = Container.builder()
 				.name(" 	\r\t\n")
@@ -70,7 +52,6 @@ public class ContainerTest {
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_CONTAINER_NAME_BLANK, validation.getMessage().get());	
 
 		container = Container.builder()
 				.name("container")
