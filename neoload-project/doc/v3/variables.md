@@ -64,7 +64,7 @@ A list or table of values loaded from a text file.
 |:-------------------------- |:-------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | name                       | The variable name                                                                                  | -               | &#x2713; |       |
 | description                | The variable description                                                                           | -               | -        |       |
-| column_names               | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | -               | -        | If is_first_line_column_names is false |
+| column_names               | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | -               | If is_first_line_column_names is false        |  |
 | is_first_line_column_names | If `true`, the first line of the file can be used as column headers name.<br>The value of this parameter is ignored if `column_names` parameter is specified.<br>The default value is `false`. | -               | If column_names is not present        |       |
 | start_from_line            | The default value is "1". | -               | -        |       |
 | delimiter                  | The delimiter is used to separate data columns.</br>The default value is ",". | -               | -        |       |
