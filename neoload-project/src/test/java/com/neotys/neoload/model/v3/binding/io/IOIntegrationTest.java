@@ -52,6 +52,7 @@ public class IOIntegrationTest extends AbstractIOElementsTest {
 		return FileVariable.builder()
 				.name("products_file")
 				.path("data/list_of_products.csv")
+				.isFirstLineColumnNames(true)
 				.build();
 	}
 

@@ -6,6 +6,7 @@ variables:
 - file:
     name: products_file
     path: data/list_of_products.csv
+    is_first_line_column_names: true
 user_paths:
 - name: MyUserPath
   actions:
