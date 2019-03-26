@@ -30,8 +30,8 @@
                 "'operand1' < 'operand2'",
                 "'operand1' less_equal 'operand2'",
                 "'operand1' <= 'operand2'",
-                "'operand1' exists 'operand2'",
-                "'operand1' not_exists 'operand2'"
+                "'operand1' exists",
+                "'operand1' not_exists"
               ],
               "match": "any",
               "then": {

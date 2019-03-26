@@ -18,14 +18,15 @@ final class DefaultConditionVisitor extends ConditionBaseVisitor<Condition> {
 		final ConditionParser.OperatorContext operatorContext = ctx.operator();
 		final Condition.Operator operator = Condition.Operator.of(operatorContext.getText());
 
-		final ConditionParser.Operand2Context operand2Context = ctx.operand2();
-		final String operand2 = operand2Context.getText();
-
-		return Condition.builder()
+		final Condition.Builder builder = Condition.builder()
 				.operand1(unescape(operand1))
-				.operator(operator)
-				.operand2(unescape(operand2))
-				.build();		
+				.operator(operator);
+
+		final ConditionParser.Operand2Context operand2Context = ctx.operand2();
+		if(operand2Context != null){
+			builder.operand2(unescape(operand2Context.getText()));
+		}
+		return builder.build();
 	}
 
 	private static final String SIMPLE_QUOTE = "'";

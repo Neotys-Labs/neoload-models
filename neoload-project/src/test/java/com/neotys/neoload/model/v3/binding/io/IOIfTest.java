@@ -91,15 +91,25 @@ public class IOIfTest extends AbstractIOElementsTest {
 				getCondition("operand1", Condition.Operator.LESS, "operand2"),
 				getCondition("operand1", Condition.Operator.LESS_EQUAL, "operand2"),
 				getCondition("operand1", Condition.Operator.LESS_EQUAL, "operand2"),
-				getCondition("operand1", Condition.Operator.EXISTS, "operand2"),
-				getCondition("operand1", Condition.Operator.NOT_EXISTS, "operand2")
+				getCondition("operand1", Condition.Operator.EXISTS),
+				getCondition("operand1", Condition.Operator.NOT_EXISTS)
 		);
+	}
+
+	private static final Condition getCondition(final String operand1, final Condition.Operator operator){
+		return Condition
+				.builder()
+				.operand1(operand1)
+				.operator(operator)
+				.build();
 	}
 
 	private static final Condition getCondition(final String operand1, final Condition.Operator operator, final String operand2){
 		return Condition
 				.builder()
-				.operand1(operand1).operator(operator).operand2(operand2)
+				.operand1(operand1)
+				.operator(operator)
+				.operand2(operand2)
 				.build();
 	}
 
