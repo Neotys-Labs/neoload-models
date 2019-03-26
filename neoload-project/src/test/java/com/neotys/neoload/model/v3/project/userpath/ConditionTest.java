@@ -36,7 +36,7 @@ public class ConditionTest {
 
 	@Test
 	public void testExceptionMessage() {
-		final String operatorMustBe = "The operator must be: [==, <=, not_match_regexp, less, starts_with, greater_equal, not_equals, not_exists, contains, ends_with, not_contains, not_ends_with, equals, match_regexp, exists, !=, <, find_regexp, greater, >, less_equal, not_starts_with, >=].";
+		final String operatorMustBe = "The operator must be: [==, <=, not_match_regexp, less, starts_with, greater_equal, not_equals, not_exists, contains, ends_with, not_contains, not_ends_with, equals, match_regexp, exists, !=, <, greater, >, less_equal, not_starts_with, >=].";
 		final String operatorNotNullOrEmpty = "The operator must not be null or empty.";
 
 		try{
