@@ -23,7 +23,9 @@ final class DefaultConditionVisitor extends ConditionBaseVisitor<Condition> {
 				.operator(operator);
 
 		final ConditionParser.Operand2Context operand2Context = ctx.operand2();
-		if(operand2Context != null){
+		if(operand2Context == null) {
+			builder.operand2("");
+		} else {
 			builder.operand2(unescape(operand2Context.getText()));
 		}
 		return builder.build();
