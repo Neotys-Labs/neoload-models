@@ -38,9 +38,9 @@ STRING :
 ;
 
 SINGLE_QUOTE_STRING:
-    '\'' ~('\'')+ '\''
+    '\'' ~('\'')* '\''
 ;
 
 DOUBLE_QUOTE_STRING:
-    '"' ~('"')+ '"'
+    '"' ~('"')* '"'
 ;
