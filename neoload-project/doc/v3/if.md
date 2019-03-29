@@ -27,9 +27,14 @@ actions:
         name: My If-Then-Else
         description: My description
         conditions: [
-          "'operand1' equals '${myVariable1}'",
+          "'${myVariable1}' equals 'value'",
+          "'${myVariable1}' == 'value'",
           "'${myVariable1}' != '5'",
           "'${myVariable2}' not_exist"
+          "'${myVariable3}' exist",
+          "'${myVariable4}' == ''",
+          "'${myVariable6}' equals \"value'with'simple'quote\"",
+          "'${myVariable7}' equals 'value\"with\"double\"quote'"
         ]
         match: any
         then:
