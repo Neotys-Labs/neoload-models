@@ -4,7 +4,7 @@ user_paths:
     actions:
       steps:
         - if:
-            conditions: ["'operand1' equals 'operand2'"]
+            conditions: ["'operand1' equals \"l'arbre\""]
             then:
               steps:
                 - delay: 3m 200ms

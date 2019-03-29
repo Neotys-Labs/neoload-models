@@ -8,7 +8,7 @@
           {
             "if": {
               "conditions": [
-                "'operand1' equals 'operand2'"
+                "'operand1' equals \"l'arbre\""
               ],
               "then": {
                 "steps": [

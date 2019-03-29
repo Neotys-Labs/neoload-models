@@ -31,7 +31,15 @@
                 "'operand1' less_equal 'operand2'",
                 "'operand1' <= 'operand2'",
                 "'operand1' exists",
-                "'operand1' not_exists"
+                "'operand1' not_exists",
+                "'${myVariable1}' equals 'value'",
+                "'${myVariable1}' == 'value'",
+                "'${myVariable1}' != '5'",
+                "'${myVariable2}' not_exists",
+                "'${myVariable3}' exists",
+                "'${myVariable4}' == ''",
+                "'${myVariable6}' equals \"value'with'simple'quote\"",
+                "'${myVariable7}' equals 'value\"with\"double\"quote'"
               ],
               "match": "any",
               "then": {

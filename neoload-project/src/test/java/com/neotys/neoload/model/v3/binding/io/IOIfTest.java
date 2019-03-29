@@ -24,7 +24,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 										.builder()
 										.operand1("operand1")
 										.operator(Condition.Operator.EQUALS)
-										.operand2("operand2")
+										.operand2("l'arbre")
 										.build()))
 								.then(Container.builder()
 										.name("container")
@@ -91,17 +91,17 @@ public class IOIfTest extends AbstractIOElementsTest {
 				getCondition("operand1", Condition.Operator.LESS, "operand2"),
 				getCondition("operand1", Condition.Operator.LESS_EQUAL, "operand2"),
 				getCondition("operand1", Condition.Operator.LESS_EQUAL, "operand2"),
-				getCondition("operand1", Condition.Operator.EXISTS),
-				getCondition("operand1", Condition.Operator.NOT_EXISTS)
+				getCondition("operand1", Condition.Operator.EXISTS, ""),
+				getCondition("operand1", Condition.Operator.NOT_EXISTS, ""),
+				getCondition("${myVariable1}", Condition.Operator.EQUALS, "value"),
+				getCondition("${myVariable1}", Condition.Operator.EQUALS, "value"),
+				getCondition("${myVariable1}", Condition.Operator.NOT_EQUALS, "5"),
+				getCondition("${myVariable2}", Condition.Operator.NOT_EXISTS, ""),
+				getCondition("${myVariable3}", Condition.Operator.EXISTS, ""),
+				getCondition("${myVariable4}", Condition.Operator.EQUALS, ""),
+				getCondition("${myVariable6}", Condition.Operator.EQUALS, "value'with'simple'quote"),
+				getCondition("${myVariable7}", Condition.Operator.EQUALS, "value\"with\"double\"quote")
 		);
-	}
-
-	private static final Condition getCondition(final String operand1, final Condition.Operator operator){
-		return Condition
-				.builder()
-				.operand1(operand1)
-				.operator(operator)
-				.build();
 	}
 
 	private static final Condition getCondition(final String operand1, final Condition.Operator operator, final String operand2){
