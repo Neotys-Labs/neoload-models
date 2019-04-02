@@ -1,11 +1,6 @@
 package com.neotys.neoload.model.v3.binding.serializer.ifthenelse;
 
-import com.neotys.neoload.model.v3.binding.serializer.ConditionLexer;
-import com.neotys.neoload.model.v3.binding.serializer.ConditionParser;
-import com.neotys.neoload.model.v3.binding.serializer.DefaultErrorListener;
 import com.neotys.neoload.model.v3.project.userpath.Condition;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
 
 import java.io.IOException;
