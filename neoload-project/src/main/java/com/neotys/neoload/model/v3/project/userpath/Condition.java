@@ -39,7 +39,7 @@ public interface Condition {
 
 		private final List<String> names;
 
-		private Operator(final List<String> names) {
+		Operator(final List<String> names) {
 			this.names = names;
 		}
 

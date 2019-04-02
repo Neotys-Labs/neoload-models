@@ -54,7 +54,7 @@ public class ConditionHelperTest {
 
 	@Test
 	public void convertToCondition1Operand() throws IOException {
-		assertEquals(getCondition("operand1", Condition.Operator.EXISTS, ""),
+		assertEquals(getCondition("operand1", Condition.Operator.EXISTS),
 				ConditionHelper.convertToCondition("'operand1' exists"));
 	}
 
@@ -84,8 +84,8 @@ public class ConditionHelperTest {
 
 	@Test
 	public void convertToConditionOperandEscapeMixQuote() throws IOException {
-		assertEquals(getCondition("operand1", Condition.Operator.EQUALS, "oper\\'an\"d1"),
-				ConditionHelper.convertToCondition("'operand1' equals 'oper\\'an\"d1'"));
+		assertEquals(getCondition("ope\"rand1", Condition.Operator.EQUALS, "oper'an\"d1"),
+				ConditionHelper.convertToCondition("\"ope\\\"rand1\" equals 'oper\\'an\"d1'"));
 	}
 
 	private static final Condition getCondition(final String operand1, final Condition.Operator operator,
@@ -95,6 +95,13 @@ public class ConditionHelperTest {
 				.operand1(operand1)
 				.operator(operator)
 				.operand2(operand2)
+				.build();
+	}
+	private static final Condition getCondition(final String operand1, final Condition.Operator operator) {
+		return Condition
+				.builder()
+				.operand1(operand1)
+				.operator(operator)
 				.build();
 	}
 }

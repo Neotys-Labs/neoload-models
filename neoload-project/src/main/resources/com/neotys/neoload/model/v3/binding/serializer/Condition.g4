@@ -39,10 +39,14 @@ STRING :
     | DOUBLE_QUOTE_STRING
 ;
 
+ESC_CHAR:
+    '\\' .
+;
+
 SINGLE_QUOTE_STRING:
-    '\'' ('\\\''|~['\\])* '\''
+    '\'' (ESC_CHAR|~['\\])* '\''
 ;
 
 DOUBLE_QUOTE_STRING:
-    '"' ('\\"'|~["\\])* '"'
+    '"' (ESC_CHAR|~["\\])* '"'
 ;

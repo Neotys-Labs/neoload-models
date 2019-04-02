@@ -23,17 +23,21 @@ final class DefaultConditionVisitor extends ConditionBaseVisitor<Condition> {
 				.operator(operator);
 
 		final ConditionParser.Operand2Context operand2Context = ctx.operand2();
-		if(operand2Context == null) {
-			builder.operand2("");
-		} else {
+		if(operand2Context != null) {
 			builder.operand2(unescape(operand2Context.getText()));
 		}
 		return builder.build();
 	}
 
+	private String unescape(final String text) {
+		return removeBorder(text).replaceAll("\\\\","");
+	}
+
+
+
 	private static final String SIMPLE_QUOTE = "'";
 	private static final String DOUBLE_QUOTE = "\"";
-	private static final String unescape(final String value){
+	private static final String removeBorder(final String value){
 		if(value == null || value.length() < 2){
 			return value;
 		}
