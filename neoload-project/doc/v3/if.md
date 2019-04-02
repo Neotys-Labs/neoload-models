@@ -34,7 +34,8 @@ actions:
           "'${myVariable3}' exist",
           "'${myVariable4}' == ''",
           "'${myVariable6}' equals \"value'with'simple'quote\"",
-          "'${myVariable7}' equals 'value\"with\"double\"quote'"
+          "'${myVariable7}' equals 'value\"with\"double\"quote'",
+          "'${myVariable7}' equals 'value\'with"simple\'and"double\'quote'"
         ]
         match: any
         then:
