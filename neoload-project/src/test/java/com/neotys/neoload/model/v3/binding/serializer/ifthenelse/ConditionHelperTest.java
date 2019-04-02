@@ -1,6 +1,11 @@
 package com.neotys.neoload.model.v3.binding.serializer.ifthenelse;
 
+import com.neotys.neoload.model.v3.binding.serializer.ConditionLexer;
+import com.neotys.neoload.model.v3.binding.serializer.ConditionParser;
+import com.neotys.neoload.model.v3.binding.serializer.DefaultErrorListener;
 import com.neotys.neoload.model.v3.project.userpath.Condition;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -10,14 +15,15 @@ import static org.junit.Assert.fail;
 
 
 public class ConditionHelperTest {
-	
+	public final String LINE_SEPARATOR = System.getProperty("line.separator");
+
 	@Test
 	public void convertToConditionNull() {
 		try {
 			ConditionHelper.convertToCondition(null);
 			fail("The value is not a valid condition.");
 		} catch (final IOException e) {
-			assertEquals(" is not a valid condition: \r\n" +
+			assertEquals(" is not a valid condition: " + LINE_SEPARATOR +
 					"Position 0 mismatched input '<EOF>' expecting STRING", e.getMessage());
 		}
 	}
@@ -28,7 +34,7 @@ public class ConditionHelperTest {
 			ConditionHelper.convertToCondition("");
 			fail("The value is not a valid condition.");
 		} catch (final IOException e) {
-			assertEquals(" is not a valid condition: \r\n" +
+			assertEquals(" is not a valid condition: " + LINE_SEPARATOR +
 					"Position 0 mismatched input '<EOF>' expecting STRING", e.getMessage());
 		}
 	}
@@ -39,7 +45,7 @@ public class ConditionHelperTest {
 			ConditionHelper.convertToCondition("xxxxxxxx");
 			fail("The value is not a valid condition.");
 		} catch (final IOException e) {
-			assertEquals("xxxxxxxx is not a valid condition: \r\n" +
+			assertEquals("xxxxxxxx is not a valid condition: " + LINE_SEPARATOR +
 					"Position 8 mismatched input '<EOF>' expecting STRING", e.getMessage());
 		}
 	}
@@ -61,7 +67,10 @@ public class ConditionHelperTest {
 	public void convertToConditionEmptyOperand() throws IOException {
 		assertEquals(getCondition("operand1", Condition.Operator.EQUALS, ""),
 				ConditionHelper.convertToCondition("'operand1' equals ''"));
+	}
 
+	@Test
+	public void convertToConditionEmptyOperand2() throws IOException {
 		assertEquals(getCondition("", Condition.Operator.EQUALS, "operand1"),
 				ConditionHelper.convertToCondition("'' == 'operand1'"));
 	}
@@ -78,7 +87,14 @@ public class ConditionHelperTest {
 				ConditionHelper.convertToCondition("'operand1' equals 'oper\"and1'"));
 	}
 
-	private static final Condition getCondition(final String operand1, final Condition.Operator operator, final String operand2){
+	@Test
+	public void convertToConditionOperandEscapeMixQuote() throws IOException {
+		assertEquals(getCondition("operand1", Condition.Operator.EQUALS, "oper\\'an\"d1"),
+				ConditionHelper.convertToCondition("'operand1' equals 'oper\\'an\"d1'"));
+	}
+
+	private static final Condition getCondition(final String operand1, final Condition.Operator operator,
+	                                            final String operand2) {
 		return Condition
 				.builder()
 				.operand1(operand1)

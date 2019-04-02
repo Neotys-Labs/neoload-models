@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class ConditionHelper {
@@ -39,7 +39,7 @@ public final class ConditionHelper {
 	    	context = parser.condition();
 	    }
 	    catch (final Exception e) {
-	    	throw newIOException(conditionAsText, Arrays.asList(e.getMessage()));
+	    	throw newIOException(conditionAsText, Collections.singletonList(e.getMessage()));
 		}
 	    
 	    // Throw the errors if necessary

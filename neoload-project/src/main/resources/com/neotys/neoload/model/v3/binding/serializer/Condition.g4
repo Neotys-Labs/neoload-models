@@ -32,15 +32,17 @@ operand1: STRING;
 
 operand2: STRING;
 
+WHITE_SPACE: ' ' -> skip;
+
 STRING :
     SINGLE_QUOTE_STRING
     | DOUBLE_QUOTE_STRING
 ;
 
 SINGLE_QUOTE_STRING:
-    '\'' ~('\'')* '\''
+    '\'' ('\\\''|~['\\])* '\''
 ;
 
 DOUBLE_QUOTE_STRING:
-    '"' ~('"')* '"'
+    '"' ('\\"'|~["\\])* '"'
 ;
