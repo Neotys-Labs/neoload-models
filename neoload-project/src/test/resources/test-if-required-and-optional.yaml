@@ -36,7 +36,9 @@ user_paths:
               "'${myVariable3}' exists",
               "'${myVariable4}' == ''",
               "'${myVariable6}' equals \"value'with'simple'quote\"",
-              "'${myVariable7}' equals 'value\"with\"double\"quote'"]
+              "'${myVariable7}' equals 'value\"with\"double\"quote'",
+              "'' == ''"
+            ]
             match: any
             then:
               description: My then description

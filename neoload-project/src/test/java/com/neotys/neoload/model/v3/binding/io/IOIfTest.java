@@ -100,7 +100,8 @@ public class IOIfTest extends AbstractIOElementsTest {
 				getCondition("${myVariable3}", Condition.Operator.EXISTS),
 				getCondition("${myVariable4}", Condition.Operator.EQUALS, ""),
 				getCondition("${myVariable6}", Condition.Operator.EQUALS, "value'with'simple'quote"),
-				getCondition("${myVariable7}", Condition.Operator.EQUALS, "value\"with\"double\"quote")
+				getCondition("${myVariable7}", Condition.Operator.EQUALS, "value\"with\"double\"quote"),
+				getCondition("", Condition.Operator.EQUALS, "")
 		);
 	}
 

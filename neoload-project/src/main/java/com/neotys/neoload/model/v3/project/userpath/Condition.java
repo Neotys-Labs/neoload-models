@@ -65,7 +65,6 @@ public interface Condition {
 		}
 	}
 
-	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	String getOperand1();
 
@@ -73,7 +72,6 @@ public interface Condition {
 	@Valid
 	Operator getOperator();
 
-	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	Optional<String> getOperand2();
 
