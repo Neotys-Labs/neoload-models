@@ -15,7 +15,7 @@ public class VariableExtractorTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'name': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_VARIABLE_EXTRACTOR_NAME_BLANK_AND_NULL = sb.toString();
 	}
 
@@ -23,7 +23,7 @@ public class VariableExtractorTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'name': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_VARIABLE_EXTRACTOR_NAME_BLANK = sb.toString();
 	}
 

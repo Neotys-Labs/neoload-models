@@ -24,7 +24,7 @@ public class SlaThresholdTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'kpi': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'kpi': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_THRESHOLD_KPI_NULL = sb.toString();
 	}
 	
@@ -32,7 +32,7 @@ public class SlaThresholdTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'conditions': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'conditions': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_THRESHOLD_CONDITIONS_NULL = sb.toString();
 	}
 

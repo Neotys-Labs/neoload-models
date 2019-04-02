@@ -22,7 +22,7 @@ public class PeaksLoadPolicyTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'minimum': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'minimum': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_MINIMUM = sb.toString();
 	}
 
@@ -30,7 +30,7 @@ public class PeaksLoadPolicyTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'maximum': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'maximum': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_MAXIMUM = sb.toString();
 	}
 
@@ -38,7 +38,7 @@ public class PeaksLoadPolicyTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'start': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'start': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_START = sb.toString();
 	}
 

@@ -23,7 +23,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].name': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_NAME_BLANK = sb.toString();
 	}
 
@@ -31,7 +31,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].url': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].url': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK_AND_NULL = sb.toString();
 	}
 
@@ -39,7 +39,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].url': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].url': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_URL_BLANK = sb.toString();
 	}
 
@@ -47,7 +47,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].url': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].url': missing value or value is empty.").append(LINE_SEPARATOR);
 		sb.append("Violation 2 - Incorrect value for 'actions.steps[0].url': must match \"^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)\"").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_URL_PATTERN = sb.toString();
 	}
@@ -56,7 +56,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].method': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].method': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_METHOD_BLANK = sb.toString();
 	}
 
@@ -64,9 +64,9 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 3.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions.steps[0].method': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'user_paths[0].actions.steps[0].name': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'user_paths[0].actions.steps[0].url': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions.steps[0].method': missing value or value is empty.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'user_paths[0].actions.steps[0].name': missing value or value is empty.").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value for 'user_paths[0].actions.steps[0].url': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_COMPLETE_VERSION = sb.toString();
 	}
 

@@ -19,7 +19,7 @@ public class ContainerTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'steps': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'steps': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_CONTAINER_ELEMENTS = sb.toString();
 	}
 

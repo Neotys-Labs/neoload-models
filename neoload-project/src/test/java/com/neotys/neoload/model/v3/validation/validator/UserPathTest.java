@@ -21,7 +21,7 @@ public class UserPathTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'name': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_NAME_BLANK_AND_NULL = sb.toString();
 	}
 
@@ -29,7 +29,7 @@ public class UserPathTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'name': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_NAME_BLANK = sb.toString();
 	}
 
@@ -37,7 +37,7 @@ public class UserPathTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_ACTIONS = sb.toString();
 	}
 
@@ -45,10 +45,10 @@ public class UserPathTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 4.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'user_paths[0].name': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'user_paths[1].actions.steps': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 4 - Incorrect value for 'user_paths[1].name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions': missing value or value is empty.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'user_paths[0].name': missing value or value is empty.").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value for 'user_paths[1].actions.steps': missing value or value is empty.").append(LINE_SEPARATOR);
+		sb.append("Violation 4 - Incorrect value for 'user_paths[1].name': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_COMPLETE_VERSION = sb.toString();
 	}
 

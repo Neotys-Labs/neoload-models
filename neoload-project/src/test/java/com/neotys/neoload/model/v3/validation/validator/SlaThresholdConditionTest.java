@@ -21,7 +21,7 @@ public class SlaThresholdConditionTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'severity': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'severity': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_THRESHOLD_CONDITION_SEVERITY_NULL = sb.toString();
 	}
 	
@@ -29,7 +29,7 @@ public class SlaThresholdConditionTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'operator': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'operator': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_THRESHOLD_CONDITION_OPERATOR_NULL = sb.toString();
 	}
 
@@ -37,7 +37,7 @@ public class SlaThresholdConditionTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'value': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'value': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_THRESHOLD_CONDITION_VALUE_NULL = sb.toString();
 	}
 	

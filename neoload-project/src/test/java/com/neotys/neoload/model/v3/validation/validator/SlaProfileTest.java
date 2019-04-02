@@ -25,7 +25,7 @@ public class SlaProfileTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'name': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_PROFILE_NAME_BLANK_AND_NULL = sb.toString();
 	}
 
@@ -33,7 +33,7 @@ public class SlaProfileTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'name': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'name': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_PROFILE_NAME_BLANK = sb.toString();
 	}
 
@@ -41,7 +41,7 @@ public class SlaProfileTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'thresholds': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'thresholds': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_PROFILE_THRESHOLDS = sb.toString();
 	}
 	
@@ -57,9 +57,9 @@ public class SlaProfileTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 3.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'sla_profiles[0].name': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'sla_profiles[0].thresholds[0].conditions[0].severity': missing value.").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'sla_profiles[0].thresholds[0].kpi': missing value.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'sla_profiles[0].name': missing value or value is empty.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'sla_profiles[0].thresholds[0].conditions[0].severity': missing value or value is empty.").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value for 'sla_profiles[0].thresholds[0].kpi': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_PROFILE = sb.toString();
 	}
 

@@ -29,21 +29,16 @@ final class DefaultConditionVisitor extends ConditionBaseVisitor<Condition> {
 		return builder.build();
 	}
 
-	private String unescape(final String text) {
-		return removeBorder(text).replaceAll("\\\\","");
-	}
-
-
-
 	private static final String SIMPLE_QUOTE = "'";
 	private static final String DOUBLE_QUOTE = "\"";
-	private static final String removeBorder(final String value){
+	private static String unescape(final String value){
 		if(value == null || value.length() < 2){
 			return value;
 		}
 		if((value.startsWith(SIMPLE_QUOTE) && value.endsWith(SIMPLE_QUOTE))
 				|| (value.startsWith(DOUBLE_QUOTE) && value.endsWith(DOUBLE_QUOTE))){
-			return value.substring(1,value.length()-1);
+			final String unbordered = value.substring(1, value.length() - 1);
+			return unbordered.replaceAll("\\\\", "");
 		}
 		return value;
 	}
