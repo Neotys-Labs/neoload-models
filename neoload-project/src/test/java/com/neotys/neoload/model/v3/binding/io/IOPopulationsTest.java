@@ -71,22 +71,4 @@ public class IOPopulationsTest extends AbstractIOElementsTest {
 		read("test-populations-required-and-optional", expectedProject);
 		read("test-populations-required-and-optional", expectedProject);
 	}
-
-	@Test
-	public void writePopulationsOnlyRequired() throws IOException {
-		final Project expectedProject = getPopulationsOnlyRequired();
-		assertNotNull(expectedProject);
-
-		write("test-populations-only-required", expectedProject);
-		write("test-populations-only-required", expectedProject);
-	}
-
-	@Test
-	public void writePopulationsRequiredAndOptional() throws IOException {
-		final Project expectedProject = getPopulationsRequiredAndOptional();
-		assertNotNull(expectedProject);
-
-		write("test-populations-required-and-optional", expectedProject);
-		write("test-populations-required-and-optional", expectedProject);
-	}
 }

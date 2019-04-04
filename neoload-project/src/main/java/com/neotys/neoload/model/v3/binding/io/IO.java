@@ -8,7 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -21,6 +22,18 @@ import com.google.common.base.Strings;
 
 
 public final class IO {
+	private static final Set<String> YAML_EXTENSIONS;
+	static {
+		YAML_EXTENSIONS = new HashSet<>();
+		YAML_EXTENSIONS.add("yaml");
+		YAML_EXTENSIONS.add("yml");
+	}
+	private static final Set<String> JSON_EXTENSIONS;
+	static {
+		JSON_EXTENSIONS = new HashSet<>();
+		JSON_EXTENSIONS.add("json");
+	}
+	
 	private static final String YAML_STARTS_WITH = "---";
 	private static final String JSON_STARTS_WITH = "{";
 	private static final String JSON_ENDS_WITH = "}";
@@ -29,7 +42,7 @@ public final class IO {
 	
 	public enum Format {
 		YAML,
-		JSON
+		JSON;
 	}
 	
 	private ObjectMapper yamlMapper = null;
@@ -39,12 +52,12 @@ public final class IO {
 		super();
 	}
 	
-	public <T> T read(final File file, final Class<T> type) throws IOException {
-		return read(new String(Files.readAllBytes(Paths.get(file.toURI()))), getFormat(file), type);
+	public ProjectDescriptor read(final File file) throws IOException {
+		return read(new String(Files.readAllBytes(Paths.get(file.toURI()))), getFormat(file), ProjectDescriptor.class);
 	}
 	
-	public <T> T read(final String content, final Class<T> type) throws IOException {
-		return read(content, getFormat(content), type);
+	public ProjectDescriptor read(final String content) throws IOException {
+		return read(content, getFormat(content), ProjectDescriptor.class);
 	}
 	
 	private <T> T read(final String content, final Format format, final Class<T> type) throws IOException {
@@ -54,41 +67,29 @@ public final class IO {
 		return mapper.readValue(content, type);
 	}
 
-	public <T> void write(final File file, final T object) throws IOException {
-		// Retrieve the format (Yaml or Json) of the file
-		final Format format = getFormat(file);
-		// Convert
-		final String content = write(object, format);
-		// Write the file
-		Files.write(Paths.get(file.toURI()), content.getBytes(), StandardOpenOption.CREATE);
-	}
-	
-	public <T> String write(final T object, final Format format) throws IOException {
-		// Gets the mapper from the format
-		final ObjectMapper mapper = getMapper(format);
-		// Serialize 
-		return mapper.writeValueAsString(object);
-	}
-
 	protected Format getFormat(final File file) {
 		if (file == null) return null;
 		
 		// Gets the extension from the specified file
 		final String extension = FilenameUtils.getExtension(file.getAbsolutePath());
 		if (Strings.isNullOrEmpty(extension)) {
-			throw new IllegalArgumentException("The extension of the file must be 'yaml' or 'json'");
+			throw new IllegalArgumentException("The extension of the file must be 'yaml', 'yml' or 'json'");
 		}
+		
 		// Convert extension to format
-		try {
-			return Format.valueOf(extension.toUpperCase());
+		if (YAML_EXTENSIONS.contains(extension.toLowerCase())) {
+			return Format.YAML;
 		}
-		catch (final IllegalArgumentException iae) {
-			throw new IllegalArgumentException("The extension of the file must be 'yaml' or 'json'");
+		if (JSON_EXTENSIONS.contains(extension.toLowerCase())) {
+			return Format.JSON;
 		}
+		
+		// Format is unknown
+		throw new IllegalArgumentException("The extension of the file must be 'yaml', 'yml' or 'json'");
 	}
 
 	protected Format getFormat(final String content) {
-		if ((content == null) || (content.isEmpty())) return null;
+		if (Strings.isNullOrEmpty(content)) return null;
 		
 		final String tmp = content.trim();
 		if (tmp.isEmpty()) return null;
@@ -148,6 +149,8 @@ public final class IO {
 	
 	private static void registerModules(final ObjectMapper objectMapper) {
 		objectMapper.registerModule(new GuavaModule());
-        objectMapper.registerModule(new Jdk8Module());
+		final Jdk8Module jdk8Module = new Jdk8Module();
+		jdk8Module.configureAbsentsAsNulls(true);
+        objectMapper.registerModule(jdk8Module);
 	}
 }

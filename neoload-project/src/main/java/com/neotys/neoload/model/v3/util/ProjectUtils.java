@@ -1,13 +1,11 @@
 package com.neotys.neoload.model.v3.util;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Sets;
-import com.neotys.neoload.model.v3.project.Project;
-
 import java.util.List;
 import java.util.Set;
 
-import static com.neotys.neoload.model.v3.project.Project.DEFAULT_NAME;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Sets;
+import com.neotys.neoload.model.v3.project.Project;
 
 public class ProjectUtils {
 
@@ -19,9 +17,7 @@ public class ProjectUtils {
 	public static String checkUniqueName(final List<Project> projects) {
 		final Set<String> asCodeProjectNames = Sets.newHashSet();
 		projects.forEach(project -> {
-			if (!DEFAULT_NAME.equals(project.getName())) {
-				asCodeProjectNames.add(project.getName());
-			}
+			project.getName().ifPresent(name -> asCodeProjectNames.add(name));			
 		});
 
 		if (asCodeProjectNames.size() > 1) {

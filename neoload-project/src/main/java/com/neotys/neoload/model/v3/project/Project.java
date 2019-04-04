@@ -2,6 +2,7 @@ package com.neotys.neoload.model.v3.project;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -40,14 +41,8 @@ public interface Project {
 	String POPULATIONS = "populations";
 	String SCENARIOS = "scenarios";	
 
-	String DEFAULT_NAME = "MyProject";
-	
 	@JsonProperty(NAME)
-	@RequiredCheck(groups={NeoLoad.class})
-	@Value.Default
-	default String getName() {
-		return DEFAULT_NAME;
-	}
+	Optional<String> getName();
 
 	@JsonIgnore
 	List<Container> getSharedElements();

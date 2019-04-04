@@ -30,14 +30,6 @@ import com.neotys.neoload.model.v3.validation.validator.Validator;
 public class ProjectTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
-	private static final String CONSTRAINTS_PROJECT_NAME;
-	static {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'name': missing value or value is empty.").append(LINE_SEPARATOR);
-		CONSTRAINTS_PROJECT_NAME = sb.toString();
-	}
-
 	private static final String CONSTRAINTS_PROJECT_SLA_PROFILES_NAMES;
 	static {
 		final StringBuilder sb = new StringBuilder();
@@ -79,16 +71,6 @@ public class ProjectTest {
 		assertTrue(validation.isValid());
 		assertFalse(validation.getMessage().isPresent());	
 		
-		project = Project.builder().name("").build();
-		validation = validator.validate(project, NeoLoad.class);
-		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_PROJECT_NAME, validation.getMessage().get());	
-
-		project = Project.builder().name(" 	\r\t\n").build();
-		validation = validator.validate(project, NeoLoad.class);
-		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_PROJECT_NAME, validation.getMessage().get());	
-
 		project = Project.builder().name("My Project").build();
 		validation = validator.validate(project, NeoLoad.class);
 		assertTrue(validation.isValid());

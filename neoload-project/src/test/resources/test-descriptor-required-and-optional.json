@@ -1,0 +1,20 @@
+{
+  "name": "MyProject",
+  "includes": [
+    "C:\\work\\as-codes\\servers.yaml",
+    "/as-codes/variables.yaml"
+  ],
+  "scenarios": [
+    {
+      "name": "MyScenario",
+      "populations": [
+        {
+          "name": "MyPopulation",
+          "constant_load": {
+            "users": 500
+          }
+        }
+      ]
+    }
+  ]
+}

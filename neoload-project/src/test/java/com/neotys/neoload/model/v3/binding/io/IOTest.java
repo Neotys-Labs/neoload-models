@@ -23,21 +23,22 @@ public class IOTest {
 		
 		try {
 			mapper.getFormat(new File("./project"));
-			fail("The extension of the file must be 'yaml' or 'json'");
+			fail("The extension of the file must be 'yaml', 'yml' or 'json'");
 		}
 		catch (final IllegalArgumentException iae) {
-			assertEquals("The extension of the file must be 'yaml' or 'json'", iae.getMessage());
+			assertEquals("The extension of the file must be 'yaml', 'yml' or 'json'", iae.getMessage());
 		}
 
 		try {
-			mapper.getFormat(new File("./project.yml"));
-			fail("The extension of the file must be 'yaml' or 'json'");
+			mapper.getFormat(new File("./project.txt"));
+			fail("The extension of the file must be 'yaml', 'yml' or 'json'");
 		}
 		catch (final IllegalArgumentException iae) {
-			assertEquals("The extension of the file must be 'yaml' or 'json'", iae.getMessage());
+			assertEquals("The extension of the file must be 'yaml', 'yml' or 'json'", iae.getMessage());
 		}
-		
+
 		assertEquals(Format.YAML, mapper.getFormat(new File("./project.yaml")));
+		assertEquals(Format.YAML, mapper.getFormat(new File("./project.yml")));
 		assertEquals(Format.JSON, mapper.getFormat(new File("./project.json")));
 	}
 

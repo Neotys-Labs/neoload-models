@@ -183,22 +183,4 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 		read("test-scenarios-required-and-optional", expectedProject);
 		read("test-scenarios-required-and-optional", expectedProject);
 	}
-
-	@Test
-	public void writeScenariosOnlyRequired() throws IOException {
-		final Project expectedProject = getScenariosOnlyRequired();
-		assertNotNull(expectedProject);
-
-		write("test-scenarios-only-required", expectedProject);
-		write("test-scenarios-only-required", expectedProject);
-	}
-
-	@Test
-	public void writeScenariosRequiredAndOptional() throws IOException {
-		final Project expectedProject = getScenariosRequiredAndOptional();
-		assertNotNull(expectedProject);
-
-		write("test-scenarios-required-and-optional", expectedProject);
-		write("test-scenarios-required-and-optional", expectedProject);
-	}
 }
