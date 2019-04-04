@@ -16,9 +16,7 @@ public class ProjectUtils {
 	@VisibleForTesting
 	public static String checkUniqueName(final List<Project> projects) {
 		final Set<String> asCodeProjectNames = Sets.newHashSet();
-		projects.forEach(project -> {
-			project.getName().ifPresent(name -> asCodeProjectNames.add(name));			
-		});
+		projects.forEach(project -> project.getName().ifPresent(name -> asCodeProjectNames.add(name)));
 
 		if (asCodeProjectNames.size() > 1) {
 			throw new IllegalArgumentException("Several project names have been defined, only one is allowed");
