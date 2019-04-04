@@ -1,14 +1,14 @@
 package com.neotys.neoload.model.v3.util;
 
-import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.v3.project.ImmutableProject;
-import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.scenario.Scenario;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.v3.project.ImmutableProject;
+import com.neotys.neoload.model.v3.project.Project;
 
 public class ProjectUtilsTest {
 
@@ -16,7 +16,6 @@ public class ProjectUtilsTest {
 	public void asCodeProjectUniqueName() {
 		final ImmutableProject project = Project.builder()
 				.name("ascode-_Project")
-				.scenarios(Arrays.asList(Scenario.builder().name("nlweb_scenario").slaProfile("nlweb_scenario_sla_profile").build()))
 				.build();
 		assertEquals("ascode-_Project", ProjectUtils.checkUniqueName(Arrays.asList(project)));
 	}
@@ -25,11 +24,9 @@ public class ProjectUtilsTest {
 	public void asCodeProjectSeveralSameName() {
 		final ImmutableProject project = Project.builder()
 				.name("ascode-_Project")
-				.scenarios(Arrays.asList(Scenario.builder().name("nlweb_scenario").slaProfile("nlweb_scenario_sla_profile").build()))
 				.build();
 		final ImmutableProject project2 = Project.builder()
 				.name("ascode-_Project")
-				.scenarios(Arrays.asList(Scenario.builder().name("nlweb_scenario").slaProfile("nlweb_scenario_sla_profile").build()))
 				.build();
 
 		assertEquals("ascode-_Project", ProjectUtils.checkUniqueName(ImmutableList.of(project, project2)));
@@ -38,7 +35,6 @@ public class ProjectUtilsTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void asCodeProjectDefaultName() {
 		final ImmutableProject project = Project.builder()
-				.scenarios(Arrays.asList(Scenario.builder().slaProfile("nlweb_scenario_sla_profile").build()))
 				.build();
 
 		ProjectUtils.checkUniqueName(ImmutableList.of(project));
@@ -48,7 +44,6 @@ public class ProjectUtilsTest {
 	public void asCodeProjectNameFailsBecauseNameNotUnique() {
 		final ImmutableProject project = Project.builder()
 				.name("ascode-_Project")
-				.scenarios(Arrays.asList(Scenario.builder().name("nlweb_scenario").slaProfile("nlweb_scenario_sla_profile").build()))
 				.build();
 		final ImmutableProject project2 = Project.builder()
 				.name("failure")

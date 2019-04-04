@@ -1,16 +1,16 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
+import static junit.framework.TestCase.assertNotNull;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Javascript;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static junit.framework.TestCase.assertNotNull;
 
 public class IOJavascriptTest extends AbstractIOElementsTest {
 

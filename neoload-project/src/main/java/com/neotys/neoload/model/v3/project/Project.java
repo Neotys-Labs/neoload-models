@@ -15,14 +15,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.Variable;
-import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
@@ -43,9 +41,6 @@ public interface Project {
 
 	@JsonProperty(NAME)
 	Optional<String> getName();
-
-	@JsonIgnore
-	List<Container> getSharedElements();
 
 	@JsonProperty(SLA_PROFILES)
 	@UniqueElementNameCheck(groups={NeoLoad.class})

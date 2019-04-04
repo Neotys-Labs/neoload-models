@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.KPI;
 import com.neotys.neoload.model.v3.project.sla.SlaThreshold.Scope;
-import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
-import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Severity;
 
 public class SlaThresholdUtilsTest {
 	@Test
