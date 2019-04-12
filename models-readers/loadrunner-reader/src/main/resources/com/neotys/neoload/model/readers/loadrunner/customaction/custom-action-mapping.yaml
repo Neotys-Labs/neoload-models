@@ -725,6 +725,28 @@ sapgui_toolbar_select_menu_item:
     menuItem:
       type: TEXT
       value: ¤¤¤arg2¤¤¤
+sapgui_toolbar_select_context_menu_item:
+  type: SapClick
+  isHit: true
+  name: toolbarSelectContextMenuItem (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    contextMenuItem:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
+sapgui_toolbar_select_context_menu_item_by_text:
+  type: SapClick
+  isHit: true
+  name: toolbarSelectContextMenuItemByText (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    contextMenuItemText:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
 sapgui_tree_double_click_item:
   type: SapDoubleClick
   isHit: true
