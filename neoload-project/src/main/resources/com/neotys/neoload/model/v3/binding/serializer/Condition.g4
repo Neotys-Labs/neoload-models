@@ -37,7 +37,10 @@ WHITE_SPACE: ' ' -> skip;
 STRING :
     SINGLE_QUOTE_STRING
     | DOUBLE_QUOTE_STRING
+    | WORD
 ;
+
+WORD    : [a-zA-Z0-9]+ ;
 
 ESC_CHAR:
     '\\' .

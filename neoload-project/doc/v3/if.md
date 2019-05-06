@@ -27,6 +27,7 @@ actions:
         name: My If-Then-Else
         description: My description
         conditions:
+        - operand1 equals operand2
         - "'${myVariable1}' equals 'value'"
         - "'${myVariable1}' == 'value'"
         - "'${myVariable1}' != '5'"
