@@ -5,12 +5,12 @@ A conditional structure "If - Then - Else". If the conditions are true, the Then
 #### Available settings
 | Name         | Description                                                                                        | Accept variable | Required           | Since |
 |:------------ |:-------------------------------------------------------------------------------------------------- |:---------------:|:------------------:|:-----:|
-| name         | The name of the If                                                                                 | -               | -                  |       |
-| description  | The description of the If                                                                          | -               | -                  |       |
-| conditions   | The list of conditions to evaluate                                                                 | -               | &#x2713;           |       |
-| match        | The "match" value can be: <ul><li>`any`</li><li>`all`</li></ul>The default value is `any`.         | -               | -                  |       |
-| then         | The Then [container](container.md)                                                                 | -               | &#x2713;           |       |
-| else         | The Else [container](container.md)                                                                 | -               | -                  |       |
+| name         | The name of the If                                                                                 | -               | -                  |6.10|
+| description  | The description of the If                                                                          | -               | -                  |6.10|
+| conditions   | The list of conditions to evaluate                                                                 | -               | &#x2713;           |6.10|
+| match        | The "match" value can be: <ul><li>`any`</li><li>`all`</li></ul>The default value is `any`.         | -               | -                  |6.10|
+| then         | The Then [container](container.md)                                                                 | -               | &#x2713;           |6.10|
+| else         | The Else [container](container.md)                                                                 | -               | -                  |6.10|
 
 Use the following syntax to define conditions: `[(condition)(, condition)*]`
 
@@ -26,18 +26,18 @@ actions:
     - if:
         name: My If-Then-Else
         description: My description
-        conditions: [
-          "'${myVariable1}' equals 'value'",
-          "'${myVariable1}' == 'value'",
-          "'${myVariable1}' != '5'",
-          "'${myVariable2}' not_exist"
-          "'${myVariable3}' exist",
-          "'${myVariable4}' == ''",
-          "'${myVariable6}' equals \"value'with'simple'quote\"",
-          "'${myVariable7}' equals 'value\"with\"double\"quote'",
-          "'${myVariable7}' equals 'value\\'with"simple\\'and"double\\'quote'",
-          "'' == ''
-        ]
+        conditions:
+        - operand1 equals operand2
+        - "'${myVariable1}' equals 'value'"
+        - "'${myVariable1}' == 'value'"
+        - "'${myVariable1}' != '5'"
+        - "'${myVariable2}' not_exist"
+        - "'${myVariable3}' exist"
+        - "'${myVariable4}' == ''"
+        - "'${myVariable6}' equals \"value'with'simple'quote\""
+        - "'${myVariable7}' equals 'value\"with\"double\"quote'"
+        - "'${myVariable7}' equals 'value\\'with"simple\\'and"double\\'quote'"
+        - "'' == ''"
         match: any
         then:
           description: My then description

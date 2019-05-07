@@ -24,7 +24,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 										.builder()
 										.operand1("operand1")
 										.operator(Condition.Operator.EQUALS)
-										.operand2("l'arbre")
+										.operand2("operand2")
 										.build()))
 								.then(Container.builder()
 										.name("container")

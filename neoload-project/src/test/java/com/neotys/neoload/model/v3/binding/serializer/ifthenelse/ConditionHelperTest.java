@@ -41,7 +41,7 @@ public class ConditionHelperTest {
 			fail("The value is not a valid condition.");
 		} catch (final IOException e) {
 			assertEquals("xxxxxxxx is not a valid condition: " + LINE_SEPARATOR +
-					"Position 8 mismatched input '<EOF>' expecting STRING", e.getMessage());
+					"Position 8 missing {'equals', '==', 'not_equals', '!=', 'contains', 'not_contains', 'starts_with', 'not_starts_with', 'ends_with', 'not_ends_with', 'match_regexp', 'not_match_regexp', 'greater', '>', 'greater_equal', '>=', 'less', '<', 'less_equal', '<=', 'exists', 'not_exists', 'find_regexp'} at '<EOF>'", e.getMessage());
 		}
 	}
 

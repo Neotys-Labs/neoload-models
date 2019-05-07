@@ -96,14 +96,14 @@ A numerical variable having a start value, an end value and an incremental value
 
 | Name         | Description                   | Accept variable | Required | Since |
 |:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
-| name         | The variable name             | -               | &#x2713; |       |
-| description  | The variable description      | -               | -        |       |
-| start        | The variable start value      | -               | &#x2713; |       |
-| end          | The variable end value        | -               | &#x2713; |       |
-| increment    | The variable increment value  | -               | &#x2713; |       |
-| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |       |
-| scope        | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        |       |
-| out_of_value | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | -               | -        |       |
+| name         | The variable name             | -               | &#x2713; |6.10|
+| description  | The variable description      | -               | -        |6.10|
+| start        | The variable start value      | -               | &#x2713; |6.10|
+| end          | The variable end value        | -               | &#x2713; |6.10|
+| increment    | The variable increment value  | -               | &#x2713; |6.10|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |6.10|
+| scope        | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        |6.10|
+| out_of_value | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | -               | -        |6.10|
 
 
 #### Example
@@ -125,12 +125,12 @@ A random numerical value within a value range.
 
 | Name         | Description                   | Accept variable | Required | Since |
 |:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
-| name         | The variable name             | -               | &#x2713; |       |
-| description  | The variable description      | -               | -        |       |
-| min          | The variable min value        | -               | &#x2713; |       |
-| max          | The variable max value        | -               | &#x2713; |       |
-| predictable  | When true, randomly generated values will have comparable values for two identical tests.e            | -               | &#x2713; |       |
-| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |       |
+| name         | The variable name             | -               | &#x2713; |6.10|
+| description  | The variable description      | -               | -        |6.10|
+| min          | The variable min value        | -               | &#x2713; |6.10|
+| max          | The variable max value        | -               | &#x2713; |6.10|
+| predictable  | When true, randomly generated values will have comparable values for two identical tests.e            | -               | - |6.10|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |6.10|
 
 #### Example
 Defining a Random Number variable.
