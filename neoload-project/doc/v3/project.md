@@ -9,15 +9,16 @@ The Project definition can be declared with servers, variables, User Paths, Popu
 
 Definition has several top-level keys:
 
-| Name                           | Description                                   | Accept variable | Required | Since |
-|:------------------------------ |:--------------------------------------------- |:---------------:|:--------:|:-----:|
-| name                           | The root key defining the name of the project | -               | &#x2713; |       |
-| [sla_profiles](sla-profile.md) | The definition of SLA profiles                | -               | -        | 6.9   |
-| [variables](variables.md)      | The definition of variables                   | -               | -        |       |
-| [servers](server.md)           | The definition of servers                     | -               | -        |       |
-| [user_paths](user-paths.md)    | The definition of virtual User Paths          | -               | -        |       |
-| [populations](population.md)   | The definition of Populations                 | -               | -        |       |
-| [scenarios](scenario.md)       | The definition of Scenarios                   | -               | -        |       |
+| Name                           | Description                                    | Accept variable | Required | Since |
+|:------------------------------ |:---------------------------------------------- |:---------------:|:--------:|:-----:|
+| name                           | The root key defining the name of the project  | -               | &#x2713; |       |
+| [includes](include.md)         | The definition of as code files to be included | -               | -        | 6.10  |
+| [sla_profiles](sla-profile.md) | The definition of SLA profiles                 | -               | -        | 6.9   |
+| [variables](variables.md)      | The definition of variables                    | -               | -        |       |
+| [servers](server.md)           | The definition of servers                      | -               | -        |       |
+| [user_paths](user-paths.md)    | The definition of virtual User Paths           | -               | -        |       |
+| [populations](population.md)   | The definition of Populations                  | -               | -        |       |
+| [scenarios](scenario.md)       | The definition of Scenarios                    | -               | -        |       |
 
 #### Example
 Below is an example of a NeoLoad project:
