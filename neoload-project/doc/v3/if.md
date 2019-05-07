@@ -28,6 +28,7 @@ actions:
         description: My description
         conditions:
         - operand1 equals operand2
+        - "${variable} equals 2"
         - "'${myVariable1}' equals 'value'"
         - "'${myVariable1}' == 'value'"
         - "'${myVariable1}' != '5'"

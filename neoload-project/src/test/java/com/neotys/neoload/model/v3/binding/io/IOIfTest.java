@@ -22,6 +22,11 @@ public class IOIfTest extends AbstractIOElementsTest {
 						.addSteps(If.builder()
 								.conditions(Arrays.asList(Condition
 										.builder()
+										.operand1("${variable}")
+										.operator(Condition.Operator.EQUALS)
+										.operand2("2")
+										.build(),Condition
+										.builder()
 										.operand1("operand1")
 										.operator(Condition.Operator.EQUALS)
 										.operand2("operand2")

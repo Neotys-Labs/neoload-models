@@ -8,7 +8,8 @@
           {
             "if": {
               "conditions": [
-                "'operand1' equals 'operand2'"
+                "${variable} equals 2",
+                "operand1 == operand2"
               ],
               "then": {
                 "steps": [

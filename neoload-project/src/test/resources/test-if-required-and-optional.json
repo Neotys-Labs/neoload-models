@@ -13,7 +13,7 @@
                 "'operand1' equals 'operand2'",
                 "'0' == 'operand2'",
                 "'operand1' not_equals '${parameter}'",
-                "'${parameter}' != '10'",
+                "${parameter} != 10",
                 "'${parameter}' contains 'contains'",
                 "'operand1' not_contains 'operand2'",
                 "'operand1' starts_with '=='",

@@ -40,7 +40,7 @@ STRING :
     | WORD
 ;
 
-WORD    : [a-zA-Z0-9]+ ;
+WORD    : [a-zA-Z0-9${}_]+ ;
 
 ESC_CHAR:
     '\\' .
