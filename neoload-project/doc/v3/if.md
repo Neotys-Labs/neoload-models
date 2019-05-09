@@ -27,17 +27,16 @@ actions:
         name: My If-Then-Else
         description: My description
         conditions:
-        - operand1 equals operand2
-        - "${variable} equals 2"
-        - "'${myVariable1}' equals 'value'"
-        - "'${myVariable1}' == 'value'"
-        - "'${myVariable1}' != '5'"
-        - "'${myVariable2}' not_exist"
-        - "'${myVariable3}' exist"
-        - "'${myVariable4}' == ''"
-        - "'${myVariable6}' equals \"value'with'simple'quote\""
-        - "'${myVariable7}' equals 'value\"with\"double\"quote'"
-        - "'${myVariable7}' equals 'value\\'with"simple\\'and"double\\'quote'"
+        - "'${variable1}' equals 'value'"
+        - "'${variable2}' equals '2'"
+        - "'${variable3}' == 'string with space'"
+        - "'${variable4}' != stringwithoutspace"
+        - "'${variable5}' not_exist"
+        - "'${variable6}' exist"
+        - "'${variable7}' == ''"
+        - "'${variable8}' equals \"value'with'simple'quote\""
+        - "'${variable9}' equals 'value\"with\"double\"quote'"
+        - "'${variable10}' equals 'value\\'with"simple\\'and"double\\'quote'"
         - "'' == ''"
         match: any
         then:
