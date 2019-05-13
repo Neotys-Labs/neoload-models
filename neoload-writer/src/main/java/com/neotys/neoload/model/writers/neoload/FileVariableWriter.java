@@ -95,9 +95,8 @@ public class FileVariableWriter	extends VariableWriter {
 	}
 
 	static List<String> getColumsFromFirstLine(Optional<String> firstLine, String columnsDelimiter) {
-		if(!firstLine.isPresent()) return ImmutableList.of();
-		return Arrays.stream(firstLine.get().split(RegExpUtils.escape(columnsDelimiter))).map(String::trim).collect(Collectors.toList());
-	}
+        return firstLine.map(s -> Arrays.stream(s.split(RegExpUtils.escape(columnsDelimiter))).map(String::trim).collect(Collectors.toList())).orElseGet(ImmutableList::of);
+    }
 	
 	
 	//generate the file

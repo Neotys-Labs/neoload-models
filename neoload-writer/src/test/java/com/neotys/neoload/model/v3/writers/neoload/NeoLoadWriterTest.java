@@ -1,0 +1,81 @@
+package com.neotys.neoload.model.v3.writers.neoload;
+
+import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Optional;
+
+public class NeoLoadWriterTest {
+
+    private UserPath userPath = UserPath.builder()
+            .name("my User")
+            .actions(Container.builder()
+                    .addSteps(Delay.builder().value("3000").build())
+                    .build())
+            .build();
+
+
+    private Project project = Project.builder()
+            .name("my Project")
+            .addUserPaths(userPath)
+            .build();
+
+    @Test
+    public void writeTestZip() {
+
+        File tmpDir = Files.createTempDir();
+
+        NeoLoadWriter writer = new NeoLoadWriter(project, tmpDir.getAbsolutePath(), null);
+        writer.write(true);
+
+        System.out.println(tmpDir.getAbsolutePath());
+        Assertions.assertThat(Paths.get(tmpDir.getAbsolutePath(), "config.zip").toFile()).exists();
+        Assertions.assertThat(Paths.get(tmpDir.getAbsolutePath(), "my Project.nlp").toFile()).exists();
+    }
+
+    @Test
+    public void writeTestFolder() {
+
+        File tmpDir = Files.createTempDir();
+
+        NeoLoadWriter writer = new NeoLoadWriter(project, tmpDir.getAbsolutePath(), null);
+        writer.write(false);
+
+        System.out.println(tmpDir.getAbsolutePath());
+        Assertions.assertThat(Paths.get(tmpDir.getAbsolutePath(), "config", "repository.xml").toFile()).exists();
+        Assertions.assertThat(Paths.get(tmpDir.getAbsolutePath(), "config", "scenario.xml").toFile()).exists();
+        Assertions.assertThat(Paths.get(tmpDir.getAbsolutePath(), "config", "settings.xml").toFile()).exists();
+        Assertions.assertThat(Paths.get(tmpDir.getAbsolutePath(), "my Project.nlp").toFile()).exists();
+    }
+
+    @Test
+    public void writeTestWithoutName() {
+
+        File tmpDir = Files.createTempDir();
+
+        Project project = Project.builder()
+                .name(Optional.empty())
+                .addUserPaths(userPath)
+                .build();
+        NeoLoadWriter writer = new NeoLoadWriter(project, tmpDir.getAbsolutePath(), null);
+        writer.write(true);
+
+        Assertions.assertThat(Arrays.stream(tmpDir.listFiles()).filter(file -> file.getPath().endsWith(".nlp")).findFirst()).isEmpty();
+    }
+
+    @Test
+    public void normalizeCollaborativeFileNameTest() {
+        Assertions.assertThat(NeoLoadWriter.normalizeCollaborativeFileName("onlylowercase.xml")).isEqualTo("onlylowercase.xml");
+        Assertions.assertThat(NeoLoadWriter.normalizeCollaborativeFileName("oneUppercase.xml")).isEqualTo("one@uppercase.xml");
+        Assertions.assertThat(NeoLoadWriter.normalizeCollaborativeFileName("StartWithUpper.xml")).isEqualTo("@start@with@upper.xml");
+    }
+
+}

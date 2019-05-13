@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 
 import org.junit.Test;
 

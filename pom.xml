@@ -4,7 +4,7 @@
 
 	<groupId>com.neotys.neoload</groupId>
 	<artifactId>neoload-models</artifactId>
-	<version>3.1.9-SNAPSHOT</version>
+	<version>3.2.0-SNAPSHOT</version>
 	<modules>
 		<module>neoload-project</module>
 		<module>neoload-writer</module>
@@ -93,10 +93,10 @@
 		<commons-lang3.version>3.4</commons-lang3.version>
 		<jsr305.version>3.0.1</jsr305.version>
 		<guava.version>24.0-jre</guava.version>
-		<jackson.databind.version>2.9.6</jackson.databind.version>
-		<jackson.dataformat.yaml.version>2.9.6</jackson.dataformat.yaml.version>
-		<jackson.datatype.guava.version>2.9.6</jackson.datatype.guava.version>
-		<jackson.datatype.jdk8.version>2.9.6</jackson.datatype.jdk8.version>
+		<jackson.databind.version>2.9.8</jackson.databind.version>
+		<jackson.dataformat.yaml.version>2.9.8</jackson.dataformat.yaml.version>
+		<jackson.datatype.guava.version>2.9.8</jackson.datatype.guava.version>
+		<jackson.datatype.jdk8.version>2.9.8</jackson.datatype.jdk8.version>
 		<antlr.version>4.7</antlr.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.classic.version>1.2.3</logback.classic.version>

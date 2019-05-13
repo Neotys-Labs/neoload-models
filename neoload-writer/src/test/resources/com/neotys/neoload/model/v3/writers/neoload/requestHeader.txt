@@ -1,0 +1,13 @@
+GET sampledemo.neotys.com/ HTTP/1.1
+Accept: */*
+Accept-Language: fr
+Referer: http://sampledemo.neotys.com/
+Content-Type: application/json; charset=utf-8
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0
+Host:sampledemo.neotys.com
+Content-Length: 100
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: SessionId=78675387387123
+

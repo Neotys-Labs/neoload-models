@@ -4,12 +4,8 @@ package com.neotys.neoload.model.validation.naming;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.hibernate.validator.internal.engine.path.NodeImpl;
 import org.junit.Test;
 
-import com.neotys.neoload.model.scenario.ConstantLoadPolicy;
-import com.neotys.neoload.model.scenario.PeaksLoadPolicy;
-import com.neotys.neoload.model.scenario.RampupLoadPolicy;
 import com.neotys.neoload.model.validation.naming.SnakeCaseStrategy;
 
 

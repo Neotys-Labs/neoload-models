@@ -3,7 +3,6 @@ package com.neotys.neoload.model.writers.neoload;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.repository.FileVariable;
 import com.neotys.neoload.model.repository.ImmutableFileVariable;
-import org.apache.log4j.lf5.util.ResourceUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;

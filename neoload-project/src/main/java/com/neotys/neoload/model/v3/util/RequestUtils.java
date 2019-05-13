@@ -90,9 +90,9 @@ public class RequestUtils {
 	}
 
 	/**
-	 * Gets the parameters from URL query (<name>=<value>&<name>=<value>).
+	 * Gets the parameters from URL query or form body (<name>=<value>&<name>=<value>).
 	 *
-	 * @param query the part of the URL that contains all the parameters
+	 * @param query the part of the URL or the form body that contains all the parameters
 	 * @return list
 	 */
 	public static List<Parameter> getParameters(final String query) {

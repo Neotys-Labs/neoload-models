@@ -12,12 +12,10 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.apache.commons.io.FilenameUtils;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.google.common.base.Strings;
 import com.neotys.neoload.model.Project;
 import com.neotys.neoload.model.io.IO.Format;
 import com.neotys.neoload.model.scenario.ConstantLoadPolicy;
