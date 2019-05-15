@@ -54,7 +54,7 @@ public class RequestWriter extends ElementWriter {
 		xmlRequest.setAttribute(XML_ATTR_METHOD, theRequest.getMethod());
 		getContentType(theRequest).ifPresent(c -> xmlRequest.setAttribute(XML_ATTR_CONTENT_TYPE, c));
 		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server));
-		xmlRequest.setAttribute(XML_ATTR_ACTION_TYPE, String.valueOf(getActionType(theRequest)));
+		xmlRequest.setAttribute(XML_ATTR_ACTION_TYPE, String.valueOf(getActionType()));
 		URL url = RequestUtils.parseUrl(Optional.ofNullable(theRequest.getUrl()).orElse("/"));
 		xmlRequest.setAttribute(XML_ATTR_PATH, url.getPath());
 		theRequest.getExtractors().forEach(extractElem -> VariableExtractorWriter.of(extractElem).writeXML(document, xmlRequest));
@@ -113,7 +113,7 @@ public class RequestWriter extends ElementWriter {
 				.findFirst();
 	}
 
-	protected int getActionType(Request request) {
+	protected int getActionType() {
 		// GET / POST = 1
 		// FOLLOW_LINK = 3
 		// SUBMIT FORM = 4

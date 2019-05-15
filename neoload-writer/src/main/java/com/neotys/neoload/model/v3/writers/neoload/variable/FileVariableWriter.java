@@ -63,7 +63,7 @@ public class FileVariableWriter extends VariableWriter {
 			try {
 				cols = getColumnsFromFile(theFileVariable.getPath(), theFileVariable.getDelimiter());
 			}catch(IOException e) {
-				LOGGER.warn("Cannot read columns in file variable "+theFileVariable.getPath());
+				LOGGER.warn("Cannot read columns in file variable "+theFileVariable.getPath(), e);
 			}
 		}
 		int counter = 0;

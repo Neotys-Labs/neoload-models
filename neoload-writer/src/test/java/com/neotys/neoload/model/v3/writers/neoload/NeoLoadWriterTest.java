@@ -109,4 +109,16 @@ public class NeoLoadWriterTest {
         Assertions.assertThat(NeoLoadWriter.normalizeCollaborativeFileName("StartWithUpper.xml")).isEqualTo("@start@with@upper.xml");
     }
 
+    @Test
+    public void validateVersionTest() {
+        Assertions.assertThat(NeoLoadWriter.validateVersion(null, 3)).isNull();
+        Assertions.assertThat(NeoLoadWriter.validateVersion("", 3)).isNull();
+        Assertions.assertThat(NeoLoadWriter.validateVersion("2.3", 2)).isEqualTo("2.3");
+        Assertions.assertThat(NeoLoadWriter.validateVersion("2.3.1", 3)).isEqualTo("2.3.1");
+        Assertions.assertThat(NeoLoadWriter.validateVersion("2.3", 3)).isNull();
+        Assertions.assertThat(NeoLoadWriter.validateVersion("a.3", 2)).isNull();
+        Assertions.assertThat(NeoLoadWriter.validateVersion("2.a.1", 3)).isNull();
+        Assertions.assertThat(NeoLoadWriter.validateVersion("2.3.a", 3)).isNull();
+    }
+
 }
