@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload;
 
 import com.neotys.neoload.model.v3.project.SlaElement;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class SlaElementWriter {

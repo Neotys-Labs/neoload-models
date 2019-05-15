@@ -35,20 +35,16 @@ public class RegExpUtils {
             char c=sentence.charAt(i);
             if (c=='\n') {
                 result.append("\\n");
-                continue;
-            }
-            if (c=='\r') {
+            } else if (c=='\r') {
                 result.append("\\r");
-                continue;
-            }
-            if (c=='\t') {
+            } else if (c=='\t') {
                 result.append("\\t");
-                continue;
-            }
-            if (isReservedCar(c)) {
+            } else if (isReservedCar(c)) {
                 result.append('\\');
+                result.append(c);
+            } else {
+                result.append(c);
             }
-            result.append(c);
         }
 
         return result.toString();

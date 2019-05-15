@@ -97,7 +97,7 @@ public class NeoLoadWriter {
 				Files.createDirectories(Paths.get(nlProjectFolder));
 			} else if (f.isFile()) {
 				logger.error("The destination is not a directory, migration aborted.");
-				return;
+				throw new IllegalArgumentException("Cannot write the project, The destination is not a directory.");
 			}
 			writeXML(zipConfig);
 

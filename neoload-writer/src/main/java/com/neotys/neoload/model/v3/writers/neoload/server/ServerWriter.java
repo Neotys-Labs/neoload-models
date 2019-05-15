@@ -27,7 +27,7 @@ public class ServerWriter {
         xmlServer.setAttribute(XML_ATTRIBUTE_NAME, server.getName());
         xmlServer.setAttribute(XML_ATTRIBUTE_HOST, server.getHost());
         xmlServer.setAttribute(XML_ATTRIBUTE_PORT, server.getPort());
-        xmlServer.setAttribute(XML_ATTRIBUTE_SSL, String.valueOf("https".equals(server.getScheme())));
+        xmlServer.setAttribute(XML_ATTRIBUTE_SSL, String.valueOf(server.getScheme().equals(Server.Scheme.HTTPS)));
         xmlServer.setAttribute(XML_ATTRIBUTE_UID, server.getName());
         currentElement.appendChild(xmlServer);
     }

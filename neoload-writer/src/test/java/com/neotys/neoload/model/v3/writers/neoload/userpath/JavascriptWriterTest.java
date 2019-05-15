@@ -45,8 +45,9 @@ public class JavascriptWriterTest {
         Assertions.assertThat(generatedResult).startsWith(expectedStart);
         // There is a timestamp in the middle
         Assertions.assertThat(generatedResult).endsWith(expectedEnd);
-        Assertions.assertThat(java.nio.file.Files.exists(Paths.get(tmpDirPath+"/scripts/jsAction"+WriterUtils.getElementUid(javascript)+".js")));
-        List<String> lines = Files.readLines(new File(tmpDirPath+"/scripts/jsAction_"+WriterUtils.getElementUid(javascript)+".js"), Charset.defaultCharset());
+        File scriptFile = new File(tmpDirPath+"/scripts/jsAction_"+WriterUtils.getElementUid(javascript)+".js");
+        Assertions.assertThat(scriptFile.exists()).isTrue();
+        List<String> lines = Files.readLines(scriptFile, Charset.defaultCharset());
         Assertions.assertThat(lines.size()).isEqualTo(11);
         Assertions.assertThat(lines.get(6)).isEqualTo("var computedValue = myLibraryFunction(myVar);");
     }

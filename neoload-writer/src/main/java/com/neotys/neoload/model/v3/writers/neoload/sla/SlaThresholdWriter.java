@@ -6,7 +6,6 @@ import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 

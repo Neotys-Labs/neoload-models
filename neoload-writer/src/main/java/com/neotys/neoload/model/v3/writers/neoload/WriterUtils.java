@@ -17,7 +17,6 @@ public class WriterUtils {
 	public static final String WEIGHTED_ACTION_XML_TAG_NAME = "weighted-embedded-action";
 	public static final String EMBEDDED_ACTION_XML_TAG_NAME = "embedded-action";	
 	public static final String IMMUTABLE = "Immutable";
-	private static final String MUTABLE_CONTAINER = "MutableContainer";
 	public static final String NL_VARIABLE_START = "${";
 	public static final String NL_VARIABLE_END = "}";
 		

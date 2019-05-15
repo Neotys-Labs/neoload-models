@@ -20,5 +20,7 @@ public class RegExpUtilsTest {
         Assertions.assertThat(RegExpUtils.escapeExcludingVariables("variables should not be escaped ${myVar}")).isEqualTo("variables should not be escaped ${myVar}");
         Assertions.assertThat(RegExpUtils.escapeExcludingVariables("Not variables should be escaped ${myVar")).isEqualTo("Not variables should be escaped \\$\\{myVar");
         Assertions.assertThat(RegExpUtils.escapeExcludingVariables("Not variables should be escaped $${myVar}")).isEqualTo("Not variables should be escaped \\$${myVar}");
+
+        Assertions.assertThat(RegExpUtils.escape("Some \t special \n characters \r")).isEqualTo("Some \\t special \\n characters \\r");
     }
 }

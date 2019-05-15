@@ -39,7 +39,6 @@ public class ProjectWriter {
     public void writeXML(final Document repositoryDocument, final Document scenarioDocument, final String outputFolder) {
         final Element repositoryElement = repositoryDocument.createElement(XML_REPOSITORY_TAG_NAME);
         repositoryDocument.appendChild(repositoryElement);
-        //project.getSharedElements().forEach(container -> SharedContainerWriter.of(container).writeXML(repositoryDocument, repositoryElement, outputFolder));
         project.getUserPaths().forEach(userPath -> UserPathWriter.of(userPath).writeXML(repositoryDocument, repositoryElement, outputFolder));
         project.getServers().forEach(serv -> ServerWriter.of(serv).writeXML(repositoryDocument, repositoryElement));
         project.getVariables().forEach(var -> WriterUtils.<VariableWriter>getWriterFor(var).writeXML(repositoryDocument, repositoryElement, outputFolder));

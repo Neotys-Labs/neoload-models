@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
@@ -69,6 +70,36 @@ public class NeoLoadWriterTest {
         writer.write(true);
 
         Assertions.assertThat(Arrays.stream(tmpDir.listFiles()).filter(file -> file.getPath().endsWith(".nlp")).findFirst()).isEmpty();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void writeProjectOnFileShouldFail() throws IOException {
+
+        File tmpFile = new File(Files.createTempDir().getAbsoluteFile()+File.separator+"tmpfile");
+        tmpFile.createNewFile();
+        Project project = Project.builder()
+                .name("MyTest")
+                .addUserPaths(userPath)
+                .build();
+        NeoLoadWriter writer = new NeoLoadWriter(project, tmpFile.getAbsolutePath(), null);
+        writer.write(true);
+    }
+
+    @Test
+    public void writeProjectFolderDoesNotExist() {
+
+        File tmpDir = Files.createTempDir();
+        File destDir = new File(tmpDir.getAbsoluteFile()+File.separator+"notexist");
+
+        Project project = Project.builder()
+                .name("MyTest")
+                .addUserPaths(userPath)
+                .build();
+        NeoLoadWriter writer = new NeoLoadWriter(project, destDir.getAbsolutePath(), null);
+        writer.write(true);
+
+        Assertions.assertThat(Arrays.stream(destDir.listFiles()).filter(file -> file.getPath().endsWith(".nlp")).findFirst()).isNotEmpty();
+        Assertions.assertThat(Arrays.stream(destDir.listFiles()).filter(file -> file.getPath().endsWith(".zip")).findFirst()).isNotEmpty();
     }
 
     @Test
