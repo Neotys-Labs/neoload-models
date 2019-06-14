@@ -104,8 +104,8 @@ public class ParameterFileReader extends IniFileReader {
 		Variable.VariablePolicy pol = getPolicy(MethodUtils.normalizeString(leftBrace, rightBrace, paramSection.get("GenerateNewVal")), paramName);
 
 		RandomNumberVariable variable = ImmutableRandomNumberVariable.builder().name(paramName).minValue(
-				Integer.parseInt(MethodUtils.normalizeString(leftBrace, rightBrace, paramSection.get("MinValue")))).maxValue(
-						Integer.parseInt(MethodUtils.normalizeString(leftBrace, rightBrace, paramSection.get("MaxValue")))).scope(
+				Long.parseLong(MethodUtils.normalizeString(leftBrace, rightBrace, paramSection.get("MinValue")))).maxValue(
+						Long.parseLong(MethodUtils.normalizeString(leftBrace, rightBrace, paramSection.get("MaxValue")))).scope(
 								VariableScope.LOCAL).policy(pol).build();
 		variables.put(paramName, variable);
 	}

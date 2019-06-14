@@ -45,8 +45,16 @@ public class NumberVariableWritterTest {
 			.minValue(1)
 			.scope(Variable.VariableScope.LOCAL)
 			.policy(Variable.VariablePolicy.EACH_USE)
-			.build(); 
-	
+			.build();
+
+	public static final RandomNumberVariable RANDOM_LONG = ImmutableRandomNumberVariable.builder()
+			.name("NumberRandomVariable_1")
+			.maxValue(4294967295l)
+			.minValue(1)
+			.scope(Variable.VariableScope.LOCAL)
+			.policy(Variable.VariablePolicy.EACH_USE)
+			.build();
+
 	@Test
 	public void writeXmlRandomTest() throws ParserConfigurationException, TransformerException{
     	Document doc = WrittingTestUtils.generateEmptyDocument();
@@ -60,5 +68,20 @@ public class NumberVariableWritterTest {
     	
     	String generatedResult = WrittingTestUtils.getXmlString(doc);
     	assertEquals(expectedResult, generatedResult);
+	}
+
+	@Test
+	public void writeXmlRandomLongTest() throws ParserConfigurationException, TransformerException{
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><variable-random-number max-value=\"4294967295\" min-value=\"1\" "
+				+ "name=\"NumberRandomVariable_1\" policy=\"1\" "
+				+ "range=\"2\"/></test-root>";
+
+		(new RandomNumberVariableWriter(RANDOM_LONG)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		String generatedResult = WrittingTestUtils.getXmlString(doc);
+		assertEquals(expectedResult, generatedResult);
 	}
 }

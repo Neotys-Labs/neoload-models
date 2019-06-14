@@ -19,8 +19,8 @@ public class RandomNumberVariableWriter extends VariableWriter{
 		super.writeXML(xmlVariable) ;
 		
 		RandomNumberVariable theVariable = (RandomNumberVariable) variable;
-		xmlVariable.setAttribute(XML_ATTR_MIN_VAL,	Integer.toString(theVariable.getMinValue()));
-		xmlVariable.setAttribute(XML_ATTR_MAX_VAL,	Integer.toString(theVariable.getMaxValue()));
+		xmlVariable.setAttribute(XML_ATTR_MIN_VAL,	Long.toString(theVariable.getMinValue()));
+		xmlVariable.setAttribute(XML_ATTR_MAX_VAL,	Long.toString(theVariable.getMaxValue()));
 		
 		currentElement.appendChild(xmlVariable);
 	}
