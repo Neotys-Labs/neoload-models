@@ -21,7 +21,7 @@ public class LrToNlTest {
 		String expectedXml = "<delay-action duration=\"1000\" isThinkTime=\"true\" name=\"delay\" uid=\"" + uid + "\"/>"; 
 		Assert.assertEquals(expectedXml, actualXml);
 
-		model = LrReaderUtil.read("lr_think_time(lr_eval_string(\"{think_time}0\"))");
+		model = LrReaderUtil.read("lr_think_time(lr_eval_string(\"{think_time}0\"));");
 		actualXml = NlWriterUtil.write(model);
 		uid = WriterUtils.getElementUid(model.getChilds().get(0));
 		expectedXml = "<delay-action duration=\"${think_time}0000\" isThinkTime=\"true\" name=\"delay\" uid=\"" + uid + "\"/>"; 
@@ -36,9 +36,9 @@ public class LrToNlTest {
 	
 	@Test
 	public void test_lr_eval_string() throws Exception{		
-		Assert.assertEquals("", NlWriterUtil.write(LrReaderUtil.read("lr_eval_string(\"a\")")));
-		Assert.assertEquals("", NlWriterUtil.write(LrReaderUtil.read("lr_eval_string(\"{a}\")")));
-		Assert.assertEquals("", NlWriterUtil.write(LrReaderUtil.read("lr_eval_string(lr_eval_string(\"${a}\"))")));
+		Assert.assertEquals("", NlWriterUtil.write(LrReaderUtil.read("lr_eval_string(\"a\");")));
+		Assert.assertEquals("", NlWriterUtil.write(LrReaderUtil.read("lr_eval_string(\"{a}\");")));
+		Assert.assertEquals("", NlWriterUtil.write(LrReaderUtil.read("lr_eval_string(lr_eval_string(\"${a}\"));")));
 	}	
 	
 	private static final AtomicInteger ATOI_COUNTER = new AtomicInteger(0);
