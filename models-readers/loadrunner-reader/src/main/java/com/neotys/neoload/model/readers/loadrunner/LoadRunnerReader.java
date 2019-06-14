@@ -322,12 +322,9 @@ public class LoadRunnerReader extends Reader {
 		CPP14Lexer lexer = new CPP14Lexer(loadAndCorrectGrammarFromLR(stream, charset));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		CPP14Parser parser = new CPP14Parser(tokens);
-		ParseTree tree = parser.declaration();
-		if (tree instanceof CPP14Parser.DeclarationContext) {
-			final RecognitionException exception = ((CPP14Parser.DeclarationContext) tree).exception;
-			if (exception != null) {
-				throw exception;
-			}
+        final ParseTree tree = parseUntilFunctiondefinitionContext(parser);
+        if(tree == null){
+            return;
 		}
 		LoadRunnerVUVisitor visitor = new LoadRunnerVUVisitor(this, leftBrace, rightBrace, mutableContainer);
 		visitor.visit(tree);
@@ -338,7 +335,28 @@ public class LoadRunnerReader extends Reader {
 		}
 	}
 
-	@VisibleForTesting
+    private ParseTree parseUntilFunctiondefinitionContext(final CPP14Parser parser) {
+        final ParseTree tree = parser.declaration();
+        if (tree instanceof CPP14Parser.DeclarationContext) {
+            final RecognitionException exception = ((CPP14Parser.DeclarationContext) tree).exception;
+            if (exception != null) {
+                throw exception;
+            }
+        }
+        if(tree.getChildCount()==0){
+            // Cannot find any FunctiondefinitionContext
+            return null;
+        }
+        if(tree.getChild(0) instanceof CPP14Parser.FunctiondefinitionContext){
+            // Found FunctiondefinitionContext
+            return tree;
+        }
+        // Recursive call to keep parsing
+        return parseUntilFunctiondefinitionContext(parser);
+    }
+
+
+    @VisibleForTesting
 	protected static CharStream loadAndCorrectGrammarFromLR(final InputStream stream, final Charset charset) throws IOException {		
 		StringWriter writer = new StringWriter();		
 		IOUtils.copy(stream, writer, charset);
