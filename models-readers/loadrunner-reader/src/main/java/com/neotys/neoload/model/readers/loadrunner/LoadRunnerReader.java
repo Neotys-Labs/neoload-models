@@ -330,8 +330,7 @@ public class LoadRunnerReader extends Reader {
 		visitor.visit(tree);
 		// end unended container
 		while (visitor.getCurrentContainers().size() > 1) {
-			final IContainer container = LoadRunnerVUVisitor.toContainer(visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1));
-			visitor.addInContainers(container);
+			visitor.closeContainer();
 		}
 	}
 

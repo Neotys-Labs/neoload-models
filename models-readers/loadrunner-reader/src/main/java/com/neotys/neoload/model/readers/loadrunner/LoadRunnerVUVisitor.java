@@ -154,6 +154,11 @@ public class LoadRunnerVUVisitor extends CPP14BaseVisitor<List<Element>> {
 		return childs.stream().noneMatch(element1 -> element1.getName().equals(element.getName()));
 	}
 
+	public void closeContainer() {
+		final IContainer container = LoadRunnerVUVisitor.toContainer(currentContainers.remove(currentContainers.size() - 1));
+		addInContainers(container);
+	}
+
 	private class ParametersVisitor extends CPP14BaseVisitor<List<String>> {
 
 		@Override
