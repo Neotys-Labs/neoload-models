@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.neotys.neoload.model.repository.*;
 import org.junit.Test;
 
 import com.google.common.base.Charsets;
@@ -14,10 +15,8 @@ import com.neotys.neoload.model.core.Element;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerReader;
 import com.neotys.neoload.model.readers.loadrunner.MutableContainer;
-import com.neotys.neoload.model.repository.Condition;
 import com.neotys.neoload.model.repository.Conditions.MatchType;
-import com.neotys.neoload.model.repository.ContainerForMulti;
-import com.neotys.neoload.model.repository.IfThenElse;
+
 @SuppressWarnings("squid:S2699")
 public class SelectionStatementVisitorTest {
 
@@ -87,4 +86,91 @@ public class SelectionStatementVisitorTest {
             fail("Error reading test stream", e);
         }
 	}
+
+    @Test
+    public void testIfThenElseWithStartAndEndTransaction(){
+        final String folder = new File(this.getClass().getResource("ifThenElseWithStartAndEndTransaction.c").getFile()).getParent();
+        final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
+        try(InputStream targetStream = this.getClass().getResourceAsStream("ifThenElseWithStartAndEndTransaction.c")) {
+            final MutableContainer container = new MutableContainer("name");
+            reader.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
+            assertThat(container).isNotNull();
+            assertThat(container.getChilds().size()).isEqualTo(1);
+            final IfThenElse ifThenElse = (IfThenElse) container.getChilds().get(0);
+            assertThat(ifThenElse.getName()).isEqualTo("condition");
+            assertThat(ifThenElse.getConditions().getMatchType()).isEqualTo(MatchType.ANY);
+            assertThat(ifThenElse.getConditions().getConditions().size()).isEqualTo(1);
+            final ContainerForMulti thenContainer = ifThenElse.getThen();
+            assertThat(thenContainer.getName()).isEqualTo("Then");
+            assertThat(thenContainer.getChilds().size()).isEqualTo(1);
+            final IContainer myTransaction = (IContainer)thenContainer.getChilds().get(0);
+            assertThat(myTransaction.getName()).isEqualTo("myTransaction");
+            assertThat(myTransaction.getChilds().size()).isEqualTo(1);
+            final Delay delay = (Delay)myTransaction.getChilds().get(0);
+            assertThat(delay.getName()).isEqualTo("delay");
+            final ContainerForMulti elseContainer = ifThenElse.getElse();
+            assertThat(elseContainer.getName()).isEqualTo("Else");
+            assertThat(elseContainer.getChilds().size()).isEqualTo(0);
+
+        }catch(IOException e) {
+            fail("Error reading test stream", e);
+        }
+    }
+
+    @Test
+    public void testIfThenElseWithStartTransactionOnly(){
+        final String folder = new File(this.getClass().getResource("ifThenElseWithStartTransactionOnly.c").getFile()).getParent();
+        final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
+        try(InputStream targetStream = this.getClass().getResourceAsStream("ifThenElseWithStartTransactionOnly.c")) {
+            final MutableContainer container = new MutableContainer("name");
+            reader.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
+            assertThat(container).isNotNull();
+            assertThat(container.getChilds().size()).isEqualTo(1);
+            final IfThenElse ifThenElse = (IfThenElse) container.getChilds().get(0);
+            assertThat(ifThenElse.getName()).isEqualTo("condition");
+            assertThat(ifThenElse.getConditions().getMatchType()).isEqualTo(MatchType.ANY);
+            assertThat(ifThenElse.getConditions().getConditions().size()).isEqualTo(1);
+            final ContainerForMulti thenContainer = ifThenElse.getThen();
+            assertThat(thenContainer.getName()).isEqualTo("Then");
+            assertThat(thenContainer.getChilds().size()).isEqualTo(1);
+            final IContainer myTransaction = (IContainer)thenContainer.getChilds().get(0);
+            assertThat(myTransaction.getName()).isEqualTo("myTransaction");
+            assertThat(myTransaction.getChilds().size()).isEqualTo(1);
+            final Delay delay = (Delay)myTransaction.getChilds().get(0);
+            assertThat(delay.getName()).isEqualTo("delay");
+            final ContainerForMulti elseContainer = ifThenElse.getElse();
+            assertThat(elseContainer.getName()).isEqualTo("Else");
+            assertThat(elseContainer.getChilds().size()).isEqualTo(0);
+
+        }catch(IOException e) {
+            fail("Error reading test stream", e);
+        }
+    }
+
+    @Test
+    public void testIfThenElseWithEndtTransactionOnly(){
+        final String folder = new File(this.getClass().getResource("ifThenElseWithEndTransactionOnly.c").getFile()).getParent();
+        final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
+        try(InputStream targetStream = this.getClass().getResourceAsStream("ifThenElseWithEndTransactionOnly.c")) {
+            final MutableContainer container = new MutableContainer("name");
+            reader.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
+            assertThat(container).isNotNull();
+            assertThat(container.getChilds().size()).isEqualTo(1);
+            final IfThenElse ifThenElse = (IfThenElse) container.getChilds().get(0);
+            assertThat(ifThenElse.getName()).isEqualTo("condition");
+            assertThat(ifThenElse.getConditions().getMatchType()).isEqualTo(MatchType.ANY);
+            assertThat(ifThenElse.getConditions().getConditions().size()).isEqualTo(1);
+            final ContainerForMulti thenContainer = ifThenElse.getThen();
+            assertThat(thenContainer.getName()).isEqualTo("Then");
+            assertThat(thenContainer.getChilds().size()).isEqualTo(1);
+            final Delay delay = (Delay)thenContainer.getChilds().get(0);
+            assertThat(delay.getName()).isEqualTo("delay");
+            final ContainerForMulti elseContainer = ifThenElse.getElse();
+            assertThat(elseContainer.getName()).isEqualTo("Else");
+            assertThat(elseContainer.getChilds().size()).isEqualTo(0);
+
+        }catch(IOException e) {
+            fail("Error reading test stream", e);
+        }
+    }
 }
