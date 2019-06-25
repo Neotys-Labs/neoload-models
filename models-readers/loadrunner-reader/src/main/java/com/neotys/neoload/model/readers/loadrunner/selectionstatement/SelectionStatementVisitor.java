@@ -117,9 +117,9 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 			unclosedTransactions.add(container.getName());
 
 		}
-		if(unclosedTransactions.size() > 0){
+		if(!unclosedTransactions.isEmpty()){
 			final String warning = "Reach end of Then statement with unended transaction:  " + unclosedTransactions.toString();
-			visitor.readSupportedFunctionWithWarn(unclosedTransactions.get(0).toString(), selectionstatementContext, warning);
+			visitor.readSupportedFunctionWithWarn(unclosedTransactions.get(0), selectionstatementContext, warning);
 		}
 		visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1);
 		return builder.build();
@@ -140,9 +140,9 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 			final IContainer container = visitor.closeContainer();
 			unclosedTransactions.add(container.getName());
 		}
-		if(unclosedTransactions.size() > 0){
+		if(!unclosedTransactions.isEmpty()){
 			final String warning = "Reach end of Else statement with unended transaction:  " + unclosedTransactions.toString();
-			visitor.readSupportedFunctionWithWarn(unclosedTransactions.get(0).toString(), selectionstatementContext, warning);
+			visitor.readSupportedFunctionWithWarn(unclosedTransactions.get(0), selectionstatementContext, warning);
 		}
 		visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1);
 		return builder.build();
