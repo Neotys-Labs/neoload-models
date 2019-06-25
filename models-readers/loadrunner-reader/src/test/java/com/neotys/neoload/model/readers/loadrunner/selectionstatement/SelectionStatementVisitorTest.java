@@ -89,9 +89,9 @@ public class SelectionStatementVisitorTest {
 
     @Test
     public void testIfThenElseWithStartAndEndTransaction(){
-        final String folder = new File(this.getClass().getResource("ifThenElseWithStartAndEndTransaction.c").getFile()).getParent();
+        final String folder = new File(this.getClass().getResource("IfThenElseWithStartAndEndTransaction.c").getFile()).getParent();
         final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
-        try(InputStream targetStream = this.getClass().getResourceAsStream("ifThenElseWithStartAndEndTransaction.c")) {
+        try(InputStream targetStream = this.getClass().getResourceAsStream("IfThenElseWithStartAndEndTransaction.c")) {
             final MutableContainer container = new MutableContainer("name");
             reader.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
             assertThat(container).isNotNull();
@@ -119,9 +119,9 @@ public class SelectionStatementVisitorTest {
 
     @Test
     public void testIfThenElseWithStartTransactionOnly(){
-        final String folder = new File(this.getClass().getResource("ifThenElseWithStartTransactionOnly.c").getFile()).getParent();
+        final String folder = new File(this.getClass().getResource("IfThenElseWithStartTransactionOnly.c").getFile()).getParent();
         final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
-        try(InputStream targetStream = this.getClass().getResourceAsStream("ifThenElseWithStartTransactionOnly.c")) {
+        try(InputStream targetStream = this.getClass().getResourceAsStream("IfThenElseWithStartTransactionOnly.c")) {
             final MutableContainer container = new MutableContainer("name");
             reader.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
             assertThat(container).isNotNull();
@@ -149,9 +149,9 @@ public class SelectionStatementVisitorTest {
 
     @Test
     public void testIfThenElseWithEndtTransactionOnly(){
-        final String folder = new File(this.getClass().getResource("ifThenElseWithEndTransactionOnly.c").getFile()).getParent();
+        final String folder = new File(this.getClass().getResource("IfThenElseWithEndTransactionOnly.c").getFile()).getParent();
         final LoadRunnerReader reader = new LoadRunnerReader(new TestEventListener(), folder, "", "");
-        try(InputStream targetStream = this.getClass().getResourceAsStream("ifThenElseWithEndTransactionOnly.c")) {
+        try(InputStream targetStream = this.getClass().getResourceAsStream("IfThenElseWithEndTransactionOnly.c")) {
             final MutableContainer container = new MutableContainer("name");
             reader.parseCppFile(container, "{", "}", targetStream, Charsets.UTF_8);
             assertThat(container).isNotNull();
