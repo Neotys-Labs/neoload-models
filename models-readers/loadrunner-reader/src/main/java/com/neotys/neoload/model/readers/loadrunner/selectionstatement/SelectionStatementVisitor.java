@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.neotys.neoload.model.repository.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import com.neotys.neoload.model.core.Element;
@@ -11,16 +12,6 @@ import com.neotys.neoload.model.parsers.CPP14BaseVisitor;
 import com.neotys.neoload.model.parsers.CPP14Parser.SelectionstatementContext;
 import com.neotys.neoload.model.readers.loadrunner.LoadRunnerVUVisitor;
 import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
-import com.neotys.neoload.model.repository.Condition;
-import com.neotys.neoload.model.repository.Conditions;
-import com.neotys.neoload.model.repository.ContainerForMulti;
-import com.neotys.neoload.model.repository.CustomAction;
-import com.neotys.neoload.model.repository.CustomActionParameter;
-import com.neotys.neoload.model.repository.IfThenElse;
-import com.neotys.neoload.model.repository.ImmutableCondition;
-import com.neotys.neoload.model.repository.ImmutableConditions;
-import com.neotys.neoload.model.repository.ImmutableContainerForMulti;
-import com.neotys.neoload.model.repository.ImmutableIfThenElse;
 
 public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 
@@ -120,8 +111,15 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 		// End of a statement
 		// We need to close all transactions currently opened
 		// because NL does not support starting transaction in statement, and closing it outside of statement.
+		final List<String> unclosedTransactions = new ArrayList<>();
 		while(visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1) != builder){
-			visitor.closeContainer();
+			final IContainer container = visitor.closeContainer();
+			unclosedTransactions.add(container.getName());
+
+		}
+		if(unclosedTransactions.size() > 0){
+			final String warning = "Reach end of Then statement with unended transaction:  " + unclosedTransactions.toString();
+			visitor.readSupportedFunctionWithWarn(unclosedTransactions.get(0).toString(), selectionstatementContext, warning);
 		}
 		visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1);
 		return builder.build();
@@ -137,8 +135,14 @@ public class SelectionStatementVisitor extends CPP14BaseVisitor<Element> {
 		// End of a statement
 		// We need to close all transactions currently opened
 		// because NL does not support starting transaction in statement, and closing it outside of statement.
+		final List<String> unclosedTransactions = new ArrayList<>();
 		while(visitor.getCurrentContainers().get(visitor.getCurrentContainers().size() - 1) != builder){
-			visitor.closeContainer();
+			final IContainer container = visitor.closeContainer();
+			unclosedTransactions.add(container.getName());
+		}
+		if(unclosedTransactions.size() > 0){
+			final String warning = "Reach end of Else statement with unended transaction:  " + unclosedTransactions.toString();
+			visitor.readSupportedFunctionWithWarn(unclosedTransactions.get(0).toString(), selectionstatementContext, warning);
 		}
 		visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1);
 		return builder.build();
