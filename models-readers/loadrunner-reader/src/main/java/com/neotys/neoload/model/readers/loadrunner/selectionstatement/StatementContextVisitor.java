@@ -30,17 +30,15 @@ public class StatementContextVisitor extends CPP14BaseVisitor<List<Element>> {
 
 	@Override
 	public List<Element> visitMethodcall(MethodcallContext ctx) {
-		visitor.getCurrentContainers().add(builder);
 		visitor.visitMethodcall(ctx);
-		visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1);
 		return Collections.emptyList();
 	}
-	
+
 	@Override
 	public List<Element> visitSelectionstatement(final SelectionstatementContext selectionstatementContext) {
 		visitor.getCurrentContainers().add(builder);
 		visitor.visitSelectionstatement(selectionstatementContext);
 		visitor.getCurrentContainers().remove(visitor.getCurrentContainers().size() - 1);
-		return Collections.emptyList();		
+		return Collections.emptyList();
 	}
 }
