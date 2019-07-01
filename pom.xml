@@ -106,6 +106,8 @@
     	<validation-api.version>2.0.1.Final</validation-api.version>
     	<hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
     	<glassfish.javax.el.version>3.0.1-b10</glassfish.javax.el.version>
+		<jmeter.version>5.1.1</jmeter.version>
+
 	</properties>
 
 	<dependencyManagement>
@@ -225,6 +227,77 @@
                 <artifactId>juniversalchardet</artifactId>
                 <version>1.0.3</version>
             </dependency>
+
+
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_core</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+				</exclusions>
+				<version>${jmeter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_http</artifactId>
+
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+				</exclusions>
+				<version>${jmeter.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_components</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+
+				</exclusions>
+				<version>${jmeter.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_java</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+				</exclusions>
+				<version>${jmeter.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_jdbc</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
+				<version>${jmeter.version}</version>
+			</dependency>
+
 
 			<!-- Test -->
 			<dependency>
