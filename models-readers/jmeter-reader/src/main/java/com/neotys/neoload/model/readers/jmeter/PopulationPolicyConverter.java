@@ -3,35 +3,21 @@ package com.neotys.neoload.model.readers.jmeter;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.apache.jmeter.threads.ThreadGroup;
 
-import javax.annotation.Nullable;
 
-class ConvertPopulationpolicy {
+class PopulationPolicyConverter {
 
-    private ConvertPopulationpolicy() {
+    private PopulationPolicyConverter() {
         throw new IllegalAccessError();
     }
 
-    static PopulationPolicy popPolicyAnalyse(ThreadGroup threadGroup) {
+    static PopulationPolicy convert(ThreadGroup threadGroup) {
         int nbUser = threadGroup.getNumThreads();
         int rampUp = threadGroup.getRampUp();
         int loop = Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops"));
         boolean planifier = threadGroup.getScheduler();
-
-        LoadDuration loadDuration = null; //Loop infinite si reste comme ça
-        final LoadPolicy loadPolicy;
-        if (planifier) {
-            loadDuration = LoadDuration.builder()
-                    .type(LoadDuration.Type.TIME)
-                    .value((int) threadGroup.getDuration())
-                    .build();
-        } else if (loop != -1) {
-            loadDuration = LoadDuration.builder()
-                    .type(LoadDuration.Type.ITERATION)
-                    .value(loop)
-                    .build();
-        }
-        loadPolicy = getLoadPolicy(threadGroup, nbUser, rampUp, loadDuration);
-
+        //Loop infinite si reste comme ça
+        final LoadDuration loadDuration = getIterationLoadDuration(threadGroup, loop, planifier);
+        final LoadPolicy loadPolicy = getLoadPolicy(threadGroup, nbUser, rampUp, loadDuration);
         return PopulationPolicy.builder()
                 .loadPolicy(loadPolicy)
                 .name(threadGroup.getName())
@@ -39,18 +25,43 @@ class ConvertPopulationpolicy {
                 .build();
     }
 
-    private static LoadPolicy getLoadPolicy(ThreadGroup threadGroup, int nbUser, int rampUp, @Nullable LoadDuration loadDuration) {
+    private static LoadDuration getIterationLoadDuration(ThreadGroup threadGroup, int loop, boolean planifier) {
+        if (planifier) {
+            return getTimeLoadDuration(threadGroup);
+        } else if (loop != -1) {
+            return getIterationLoadDuration(loop);
+        }
+        return null;
+    }
+
+    private static LoadDuration getIterationLoadDuration(int loop) {
+        return LoadDuration.builder()
+                .type(LoadDuration.Type.ITERATION)
+                .value(loop)
+                .build();
+    }
+
+
+    private static LoadDuration getTimeLoadDuration(ThreadGroup threadGroup) {
+        return LoadDuration.builder()
+                .type(LoadDuration.Type.TIME)
+                .value((int) threadGroup.getDuration())
+                .build();
+    }
+
+    private static LoadPolicy getLoadPolicy(ThreadGroup threadGroup, int nbUser, int rampUp, LoadDuration loadDuration) {
         final LoadPolicy loadPolicy;
         //Sans planification
         if (rampUp == 0) {
-            loadPolicy = getConstantLoadPolicy(threadGroup.getDelay(), nbUser, loadDuration);
+            loadPolicy = getConstantLoadPolicy((int) threadGroup.getDelay(), nbUser, loadDuration);
         } else {
-            loadPolicy = getRampupLoadPolicy(threadGroup.getDelay(), nbUser, rampUp, loadDuration);
+            loadPolicy = getRampupLoadPolicy((int) threadGroup.getDelay(), nbUser, rampUp, loadDuration);
         }
         return loadPolicy;
     }
 
-    private static LoadPolicy getRampupLoadPolicy(long delay, int nbUser, int rampUp, @Nullable LoadDuration loadDuration) {
+    @SuppressWarnings("ConstantConditions")
+    private static LoadPolicy getRampupLoadPolicy(Integer delay, int nbUser, int rampUp, LoadDuration loadDuration) {
         return RampupLoadPolicy.builder()
                 .minUsers(1)
                 .maxUsers(nbUser)
@@ -64,7 +75,8 @@ class ConvertPopulationpolicy {
                 .build();
     }
 
-    private static LoadPolicy getConstantLoadPolicy(long delay, int nbUser, @Nullable LoadDuration loadDuration) {
+    @SuppressWarnings("ConstantConditions")
+    private static LoadPolicy  getConstantLoadPolicy(Integer delay, int nbUser, LoadDuration loadDuration) {
         return ConstantLoadPolicy.builder()
                 .users(nbUser)
                 .duration(loadDuration)

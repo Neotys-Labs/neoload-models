@@ -9,54 +9,63 @@ import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apache.jorphan.collections.HashTree;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import static com.neotys.convertisseur.converters.Servers.addServer;
 
-public class HTTPSamplerProxyConverter extends JMeterConverter implements BiFunction<HTTPSamplerProxy, HashTree, List<Step>> {
+public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, HashTree, List<Step>> {
 
-    public HTTPSamplerProxyConverter(EventListener eventListener) {
-        super(eventListener);
+    private final EventListener eventListener;
+    private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
+
+
+    HTTPSamplerProxyConverter(EventListener eventListener) {
+        this.eventListener = eventListener;
+
     }
+
 
     @Override
     public List<Step> apply(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree) {
-        System.out.println("Converting HTTPSamplerProxy");
-        getEventListener().readSupportedAction("HTTPSampler");
+        eventListener.readSupportedAction("HTTPSampler");
         Optional<String> domain = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getDomain()));
         Optional<String> path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath()));
         Optional<String> protocol = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getProtocol()));
 
         int port = httpSamplerProxy.getPort();
-        Request.Builder req = Request.builder()
+        final Request.Builder req = Request.builder()
                 .method(httpSamplerProxy.getMethod())
                 .description(httpSamplerProxy.getComment())
                 ;
 
-        //TODO partie Parameters
-        String parametre="";
-        System.out.println("Putting Parameters");
+
+        StringBuilder parametre = new StringBuilder();
         CollectionProperty collectionParameter = httpSamplerProxy.getArguments().getArguments();
         for (JMeterProperty Valeurparametre : collectionParameter) {
-            parametre = parametre + Valeurparametre.getStringValue() + "&";
+            parametre.append(Valeurparametre.getStringValue());
+            parametre.append("&");
         }
 
-        req.body(parametre);
-        //TODO partie des header
-        System.out.println("Putting headers");
-        HTTPHeaderConverter header = new HTTPHeaderConverter(httpSamplerProxy, req, hashTree);
-        getEventListener().readSupportedAction("HTTPHeaderManager");
-        req = header.Create_Header();
+        req.body(parametre.toString());
 
-        //TODO server
+
+        eventListener.readSupportedAction("HTTPHeaderManager");
+        LOGGER.info("HTTPHeader correctly converted");
+        HTTPHeaderConverter.createHeader(httpSamplerProxy, req, hashTree);
+
         Servers.addServer(domain.orElse("host"), httpSamplerProxy.getPort(), httpSamplerProxy.getProtocol());
         String url = protocol.orElse("http") + "://" + domain.orElse("host") + ":" + port + path.orElse("/");
         req.url(url);
         req.server(domain.orElse("host"));
         path.ifPresent(req::name);
+        eventListener.readSupportedAction("HTTPSampler");
+        LOGGER.info("HTTPSampler correctly converted");
+
+
 
         return ImmutableList.of(req.build());
     }

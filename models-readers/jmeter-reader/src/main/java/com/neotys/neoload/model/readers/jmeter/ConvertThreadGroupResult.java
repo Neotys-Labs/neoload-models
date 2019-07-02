@@ -6,11 +6,11 @@ import com.neotys.neoload.model.v3.project.userpath.UserPath;
 
 public class ConvertThreadGroupResult {
 
-    UserPath userPath;
-    Population population;
-    PopulationPolicy populationPolicy;
+    private UserPath userPath;
+    private Population population;
+    private PopulationPolicy populationPolicy;
 
-    public ConvertThreadGroupResult(UserPath userPath, Population population, PopulationPolicy populationPolicy) {
+    ConvertThreadGroupResult(UserPath userPath, Population population, PopulationPolicy populationPolicy) {
         this.userPath = userPath;
         this.population = population;
         this.populationPolicy = populationPolicy;
@@ -24,13 +24,14 @@ public class ConvertThreadGroupResult {
                 '}';
     }
 
-    public Population getPopulation() {
+    Population getPopulation() {
         return population;
     }
 
-    public UserPath getUserPath() {
+    UserPath getUserPath() {
         return userPath;
     }
-    public PopulationPolicy getPopulationPolicy() {
+
+    PopulationPolicy getPopulationPolicy() {
         return populationPolicy;}
 }

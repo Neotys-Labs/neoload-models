@@ -8,39 +8,41 @@ import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apache.jmeter.testelement.property.TestElementProperty;
 import org.apache.jorphan.collections.HashTree;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class HTTPHeaderConverter {
-    private final HTTPSamplerProxy HttpRequest;
-    private Request.Builder request;
-    private final HashTree branche;
+class HTTPHeaderConverter {
 
-    public HTTPHeaderConverter(HTTPSamplerProxy httpSamplerProxy, Request.Builder req, HashTree hashTree) {
-       this.HttpRequest = httpSamplerProxy;
-       this.request = req;
-       this.branche = hashTree;
+    private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
+
+
+     private HTTPHeaderConverter() {
+        throw new IllegalAccessError();
     }
 
-    public Request.Builder Create_Header(){
-        HashTree samplerChildren =  branche.get(HttpRequest);
+    static void createHeader(HTTPSamplerProxy httpRequest, Request.Builder request, HashTree branche){
+        HashTree samplerChildren =  branche.get(httpRequest);
         for (Object o : samplerChildren.list()) {
             if (o instanceof HeaderManager) {
                 HeaderManager head = (HeaderManager) o;
                 CollectionProperty headers = head.getHeaders();
-                for (JMeterProperty headerProperty : headers) {
-                    if(headerProperty instanceof TestElementProperty) {
-                        TestElementProperty tep = (TestElementProperty) headerProperty;
-                        Object objectHeader = tep.getObjectValue();
-                        if(objectHeader instanceof Header) {
-                            Header header = (Header) objectHeader;
-                            request.addHeaders(com.neotys.neoload.model.v3.project.userpath.Header.builder().name(header.getName()).value(header.getValue()).build());
-//
-                        }
-                    }
-                }
+                changeHttpHeader(request, headers);
 
             }
         }
+        LOGGER.info("Header on the HTTP Request is a success");
+    }
 
-        return request;
+    private static void changeHttpHeader(Request.Builder request, CollectionProperty headers) {
+        for (JMeterProperty headerProperty : headers) {
+            if(headerProperty instanceof TestElementProperty) {
+                TestElementProperty tep = (TestElementProperty) headerProperty;
+                Object objectHeader = tep.getObjectValue();
+                if(objectHeader instanceof Header) {
+                    Header header = (Header) objectHeader;
+                    request.addHeaders(com.neotys.neoload.model.v3.project.userpath.Header.builder().name(header.getName()).value(header.getValue()).build());
+                }
+            }
+        }
     }
 }

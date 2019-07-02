@@ -1,20 +1,24 @@
 package com.neotys.neoload.model.readers.jmeter;
 
 import com.neotys.neoload.model.v3.project.server.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashSet;
 import java.util.Set;
 
-public final class Servers {
+final class Servers {
+
+    private static final Set<Server> SERVER_LIST = new HashSet<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
     private Servers() {
+        throw new IllegalAccessError();
     }
 
-    private static final Set<Server> SERVERS = new HashSet<>();
-
-    public static void addServer(final String host, final int port, final String protocol) {
-        //TODO
+    static void addServer(final String host, final int port, final String protocol) {
         Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
-        System.out.println("creation Server");
+        LOGGER.info("Creation of a new Server");
 
         Server serve = Server.builder()
                 .name(host)
@@ -22,12 +26,12 @@ public final class Servers {
                 .host(host)
                 .scheme(scheme)
                 .build();
-        SERVERS.add(serve);
-        //build server and put in set
+        SERVER_LIST.add(serve);
+
     }
 
-    public static Set<Server> getServers() {
-        return SERVERS;
+    static Set<Server> getServers() {
+        return SERVER_LIST;
     }
 
 }

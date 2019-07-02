@@ -13,25 +13,36 @@ import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
 import java.util.ArrayList;
+import com.neotys.neoload.model.listener.EventListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public final class Converters {
+final class Converters {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Converters.class);
+    private final Map<Class, BiFunction<?, HashTree, List<Step>>> convertersMap;
+    private final EventListener eventListener;
 
-   private static Map<Class, BiFunction<?, HashTree, List<Step>>> CONVERTERS = ImmutableMap.of(
-            TransactionController.class, new TransactionControllerConverter(),
-            HTTPSamplerProxy.class, new HTTPSamplerProxyConverter(null),
-            ConstantTimer.class, new ConstantTimerConverter()
-
-    );
 
     @SuppressWarnings("unchecked")
-    private static <T> BiFunction<Object, HashTree, List<Step>> getConverters(Class<T> clazz) {
-        return (BiFunction<Object, HashTree, List<Step>>) CONVERTERS.get(clazz);
+    private <T> BiFunction<Object, HashTree, List<Step>> getConverters(Class<T> clazz) {
+        return (BiFunction<Object, HashTree, List<Step>>) convertersMap.get(clazz);
     }
 
-    public static ConvertThreadGroupResult convertThreadGroup(ThreadGroup threadGroup, HashTree subTree) {
+    Converters(final EventListener eventListener){
+
+        this.eventListener = eventListener;
+        convertersMap = ImmutableMap.of(
+                TransactionController.class, new TransactionControllerConverter(this,eventListener),
+                HTTPSamplerProxy.class, new HTTPSamplerProxyConverter(eventListener),
+                ConstantTimer.class, new ConstantTimerConverter(eventListener));
+
+    }
+
+     ConvertThreadGroupResult convertThreadGroup(ThreadGroup threadGroup, HashTree subTree) {
         //Create User Path
         UserPath.Builder upBuilder = UserPath.builder();
             upBuilder.name(threadGroup.getName());
@@ -40,32 +51,42 @@ public final class Converters {
         //process subtree
         final List<Step> steps = convertStep(subTree);
 
-        Container containerBuilder = Container.builder()
-                .addAllSteps(steps)
-                .build();
+         Container containerBuilder = getContainer(steps);
 
-        upBuilder.actions(containerBuilder);
+         upBuilder.actions(containerBuilder);
 
-        UserPathPolicy userpolicy = UserPathPolicy
-                .builder()
-                .name(threadGroup.getName())
-                .description(threadGroup.getComment())
-                .build()
-                ;
-        //Create population
-        Population populationBuilder = Population
-                .builder()
-                .addUserPaths(userpolicy)
-                .name(threadGroup.getName())
-                .build();
+         UserPathPolicy userpolicy = getUserPathPolicy(threadGroup);
 
+         Population populationBuilder = getPopulation(threadGroup, userpolicy);
 
-        PopulationPolicy populationPolicy = new ConvertPopulationpolicy().popPolicyAnalyse(threadGroup);
+         PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
 
         return new ConvertThreadGroupResult(upBuilder.build(), populationBuilder, populationPolicy);
     }
 
-    public static List<Step> convertStep(HashTree subTree) {
+    static Container getContainer(List<Step> steps) {
+        return Container.builder()
+                    .addAllSteps(steps)
+                    .build();
+    }
+
+    static UserPathPolicy getUserPathPolicy(ThreadGroup threadGroup) {
+        return UserPathPolicy
+                    .builder()
+                    .name(threadGroup.getName())
+                    .description(threadGroup.getComment())
+                    .build();
+    }
+
+    private Population getPopulation(ThreadGroup threadGroup, UserPathPolicy userpolicy) {
+        return Population
+                    .builder()
+                    .addUserPaths(userpolicy)
+                    .name(threadGroup.getName())
+                    .build();
+    }
+
+    List<Step> convertStep(HashTree subTree) {
         //walk sub tree and convert each step
         ArrayList<Step> list = new ArrayList<>();
 
@@ -75,7 +96,10 @@ public final class Converters {
                 list.addAll(converter.apply(o, subTree));
                 continue;
             }
-            System.err.println("UNKNOWN TYPE " + o.getClass()+"\n");
+            LOGGER.error("UNKNOWN TYPE ");
+            eventListener.readUnsupportedAction(o.getClass()+"\n");
+
+
         }
 
         return list;
