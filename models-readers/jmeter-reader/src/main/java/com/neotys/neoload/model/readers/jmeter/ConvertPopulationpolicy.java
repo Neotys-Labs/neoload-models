@@ -1,4 +1,4 @@
-package com.neotys.convertisseur.converters;
+package com.neotys.neoload.model.readers.jmeter;
 
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.apache.jmeter.threads.ThreadGroup;

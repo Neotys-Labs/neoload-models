@@ -1,4 +1,4 @@
-package com.neotys.convertisseur;
+package com.neotys.neoload.model.readers;
 
 import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;

@@ -1,4 +1,4 @@
-package com.neotys.convertisseur.converters;
+package com.neotys.neoload.model.readers.jmeter;
 
 import com.neotys.neoload.model.listener.EventListener;
 

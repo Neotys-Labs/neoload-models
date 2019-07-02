@@ -1,4 +1,4 @@
-package com.neotys.convertisseur.converters;
+package com.neotys.neoload.model.readers.jmeter;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.Delay;

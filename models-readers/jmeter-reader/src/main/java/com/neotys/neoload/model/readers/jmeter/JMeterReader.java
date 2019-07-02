@@ -1,4 +1,4 @@
-package com.neotys.convertisseur.converters;
+package com.neotys.neoload.model.readers.jmeter;
 
 
 import com.google.common.collect.Iterables;
@@ -7,13 +7,11 @@ import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
-
 import com.neotys.neoload.model.v3.readers.Reader;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
 import org.apache.jmeter.engine.StandardJMeterEngine;
-import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.tree.JMeterTreeModel;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
 import org.apache.jmeter.save.SaveService;
@@ -25,43 +23,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.neotys.convertisseur.converters.Converters.convertThreadGroup;
 
 public class JMeterReader extends Reader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(com.neotys.convertisseur.converters.JMeterReader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(com.neotys.neoload.model.readers.jmeter.JMeterReader.class);
     private final EventListener eventListener;
     private final String projectName;
+    private final String jmeterpath;
 
     public JMeterReader(final EventListener eventListener, final String pathFile, final String projectName, final String jmeterPath) {
         super(pathFile);
         this.eventListener = eventListener;
         this.projectName = projectName;
-    }
-
-
-    private List<File> getProjectFolders() {
-        final List<File> projectFolders = new ArrayList<>();
-        //TODO pour gérer un ensemble de fichier
-
-        return projectFolders;
+        this.jmeterpath = jmeterPath;
     }
 
     private ImmutableProject readScript(final Project.Builder projet, final File fichier) throws Exception {
         try {
             eventListener.startScript(fichier.getName());
             StandardJMeterEngine jmeter = new StandardJMeterEngine();
-            JMeterUtils.setJMeterHome("C:" + File.separator + "Users" + File.separator + "tmartinez" + File.separator + "Downloads" + File.separator + "jmeter" +
-                    File.separator + "apache-jmeter-5.1.1");
-            JMeterUtils.loadJMeterProperties("C:" + File.separator + "Users" + File.separator + "tmartinez" + File.separator + "Downloads" + File.separator + "jmeter" +
-                    File.separator + "apache-jmeter-5.1.1" + File.separator + "bin" + File.separator + "jmeter.properties");
+            JMeterUtils.setJMeterHome(jmeterpath);
+            JMeterUtils.loadJMeterProperties(jmeterpath + File.separator + "bin" + File.separator + "jmeter.properties");
 
             JMeterUtils.initLogging();
             JMeterUtils.initLocale();
@@ -97,7 +84,7 @@ public class JMeterReader extends Reader {
                 Collection<Object> firstLevelNodes = hashTree.list();
                 for (Object o : firstLevelNodes) {
                     if (o instanceof ThreadGroup) {
-                        ConvertThreadGroupResult result = convertThreadGroup((ThreadGroup) o, hashTree.get(o));
+                        ConvertThreadGroupResult result = Converters.convertThreadGroup((ThreadGroup) o, hashTree.get(o));
                         LOG.info("Successfully parsed ThreadGroup {}", result);
                         projet.addUserPaths(result.getUserPath());
                         projet.addPopulations(result.getPopulation());

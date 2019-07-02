@@ -1,16 +1,13 @@
-package com.neotys.convertisseur.converters;
+package com.neotys.neoload.model.readers.jmeter;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
-import org.apache.jmeter.protocol.http.control.Header;
-import org.apache.jmeter.protocol.http.control.HeaderManager;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
-import org.apache.jmeter.testelement.property.TestElementProperty;
 import org.apache.jorphan.collections.HashTree;
 
 import java.util.List;
@@ -46,45 +43,20 @@ public class HTTPSamplerProxyConverter extends JMeterConverter implements BiFunc
         for (JMeterProperty Valeurparametre : collectionParameter) {
             parametre = parametre + Valeurparametre.getStringValue() + "&";
         }
+
         req.body(parametre);
         //TODO partie des header
         System.out.println("Putting headers");
-        HashTree samplerChildren =  hashTree.get(httpSamplerProxy);
-        for (Object o : samplerChildren.list()) {
-            if (o instanceof HeaderManager) {
-                HeaderManager head = (HeaderManager) o;
-                CollectionProperty headers = head.getHeaders();
-                for (JMeterProperty headerProperty : headers) {
-                    if(headerProperty instanceof TestElementProperty) {
-                        TestElementProperty tep = (TestElementProperty) headerProperty;
-                        Object objectHeader = tep.getObjectValue();
-                        if(objectHeader instanceof Header) {
-                            Header header = (Header) objectHeader;
-                            req.addHeaders(com.neotys.neoload.model.v3.project.userpath.Header.builder().name(header.getName()).value(header.getValue()).build());
-//
-                        }
-                    }
-                }
-
-            }
-        }
-
-
+        HTTPHeaderConverter header = new HTTPHeaderConverter(httpSamplerProxy, req, hashTree);
+        getEventListener().readSupportedAction("HTTPHeaderManager");
+        req = header.Create_Header();
 
         //TODO server
-        //faire en sorte d'avoir un nom par défaut
-        // gérer http dans le domaine
-        //rajouter le port le http dans le serve
-        //name_serve.orElse("host")
-        addServer(domain.orElse("host"), httpSamplerProxy.getPort(), httpSamplerProxy.getProtocol());
-
+        Servers.addServer(domain.orElse("host"), httpSamplerProxy.getPort(), httpSamplerProxy.getProtocol());
         String url = protocol.orElse("http") + "://" + domain.orElse("host") + ":" + port + path.orElse("/");
         req.url(url);
-
-//        path.ifPresent(req::url);
         req.server(domain.orElse("host"));
         path.ifPresent(req::name);
-
 
         return ImmutableList.of(req.build());
     }
