@@ -43,7 +43,8 @@ public class JMeterReader extends Reader {
         this.converters = new Converters(eventListener);
     }
 
-     ImmutableProject readScript(final Project.Builder projet, final File fichier) {
+
+    ImmutableProject readScript(final Project.Builder projet, final File fichier) {
         Preconditions.checkNotNull(fichier, "");
         try {
             eventListener.startScript(fichier.getName());
