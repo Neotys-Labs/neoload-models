@@ -33,8 +33,6 @@ final class Servers {
                 .scheme(scheme)
                 .build();
         SERVER_LIST.add(serve);
-        System.out.println("ADD");
-
     }
 
     static Set<Server> getServers() {
@@ -42,7 +40,6 @@ final class Servers {
     }
 
     static void clear() {
-        System.out.println("CLEAR");
         SERVER_LIST.clear();
     }
 
