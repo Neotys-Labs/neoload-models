@@ -27,11 +27,6 @@ final class Converters {
     private final EventListener eventListener;
 
 
-    @SuppressWarnings("unchecked")
-    private <T> BiFunction<Object, HashTree, List<Step>> getConverters(Class<T> clazz) {
-        return (BiFunction<Object, HashTree, List<Step>>) convertersMap.get(clazz);
-    }
-
     Converters(final EventListener eventListener){
 
         this.eventListener = eventListener;
@@ -42,26 +37,38 @@ final class Converters {
 
     }
 
+    @SuppressWarnings("unchecked")
+    private <T> BiFunction<Object, HashTree, List<Step>> getConverters(Class<T> clazz) {
+        return (BiFunction<Object, HashTree, List<Step>>) convertersMap.get(clazz);
+    }
+
+
+
      ConvertThreadGroupResult convertThreadGroup(ThreadGroup threadGroup, HashTree subTree) {
-        //Create User Path
-        UserPath.Builder upBuilder = UserPath.builder();
-            upBuilder.name(threadGroup.getName());
-            upBuilder.description(threadGroup.getComment());
+        if (!subTree.isEmpty()) {
+            //Create User Path
+            UserPath.Builder upBuilder = UserPath.builder()
+                    .name(threadGroup.getName())
+                    .description(threadGroup.getComment());
 
-        //process subtree
-        final List<Step> steps = convertStep(subTree);
+            //process subtree
+            final List<Step> steps = convertStep(subTree);
 
-         Container containerBuilder = getContainer(steps);
+            Container containerBuilder = getContainer(steps);
 
-         upBuilder.actions(containerBuilder);
+            upBuilder.actions(containerBuilder);
 
-         UserPathPolicy userpolicy = getUserPathPolicy(threadGroup);
+            UserPathPolicy userpolicy = getUserPathPolicy(threadGroup);
 
-         Population populationBuilder = getPopulation(threadGroup, userpolicy);
+            Population populationBuilder = getPopulation(threadGroup, userpolicy);
 
-         PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
+            PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
 
-        return new ConvertThreadGroupResult(upBuilder.build(), populationBuilder, populationPolicy);
+            return new ConvertThreadGroupResult(upBuilder.build(), populationBuilder, populationPolicy);
+        }
+        else{
+            return null;
+        }
     }
 
     static Container getContainer(List<Step> steps) {
@@ -78,7 +85,7 @@ final class Converters {
                     .build();
     }
 
-    private Population getPopulation(ThreadGroup threadGroup, UserPathPolicy userpolicy) {
+    static Population getPopulation(ThreadGroup threadGroup, UserPathPolicy userpolicy) {
         return Population
                     .builder()
                     .addUserPaths(userpolicy)
@@ -96,7 +103,7 @@ final class Converters {
                 list.addAll(converter.apply(o, subTree));
                 continue;
             }
-            LOGGER.error("UNKNOWN TYPE ");
+            LOGGER.error("Type not Tolerate at This high level ");
             eventListener.readUnsupportedAction(o.getClass()+"\n");
 
 

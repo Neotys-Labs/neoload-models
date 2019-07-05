@@ -18,11 +18,17 @@ final class Servers {
 
     static void addServer(final String host, final int port, final String protocol) {
         Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
-        LOGGER.info("Creation of a new Server");
+        final int serverPort;
+        if(port <= 0) {
+            serverPort = scheme == Server.Scheme.HTTP ? 80 : 443;
+        } else {
+            serverPort = port;
+        }
+        LOGGER.info("Creation of a new Server is a success");
 
         Server serve = Server.builder()
                 .name(host)
-                .port(Integer.toString(port))
+                .port(Integer.toString(serverPort))
                 .host(host)
                 .scheme(scheme)
                 .build();
@@ -32,6 +38,10 @@ final class Servers {
 
     static Set<Server> getServers() {
         return SERVER_LIST;
+    }
+
+    static void clear() {
+        SERVER_LIST.clear();
     }
 
 }
