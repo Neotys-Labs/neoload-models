@@ -11,8 +11,8 @@ import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ public class JMeterReaderTest {
         threadGroup.setSamplerController(loopController);
         HashTree hashTree = new HashTree();
         TestPlan testPlan = new TestPlan();
+
         hashTree.add(testPlan);
         hashTree.get(testPlan).add(threadGroup);
 
@@ -45,8 +46,8 @@ public class JMeterReaderTest {
         objectList.add(constantTimer);
         hashTree.get(testPlan).get(threadGroup).add(objectList);
 
-        File file = mock(File.class);
-        doReturn(hashTree).when(jMeterReader).readJMeterProject(file);
+
+        doReturn(hashTree).when(jMeterReader).readJMeterProject(Mockito.any());
 
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
 
@@ -106,6 +107,28 @@ public class JMeterReaderTest {
         assertEquals(result, project.build());
 
 
+    }
+    @Test (expected = IllegalArgumentException.class)
+    public void testReadScriptError(){
+        JMeterReader jMeterReader = spy(new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter"));
+        ThreadGroup threadGroup = new ThreadGroup();
+        threadGroup.setName("Test Thread");
+        threadGroup.setScheduler(false);
+        threadGroup.setRampUp(25);
+        threadGroup.setNumThreads(10);
+        LoopController loopController = new LoopController();
+        loopController.setLoops(0);
+        threadGroup.setSamplerController(loopController);
+        HashTree hashTree = new HashTree();
+        TestPlan testPlan = new TestPlan();
+        ConstantTimer constantTimer = new ConstantTimer();
+        hashTree.add(constantTimer);
+        doReturn(hashTree).when(jMeterReader).readJMeterProject(Mockito.any());
+
+        File file = mock(File.class);
+        doReturn(hashTree).when(jMeterReader).readJMeterProject(file);
+
+        ImmutableProject result = jMeterReader.readScript(mock (Project.Builder.class), file);
     }
 
     @Test
