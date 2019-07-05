@@ -5,11 +5,14 @@ import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
+import com.neotys.neoload.model.v3.project.server.Server;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.testelement.TestPlan;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -22,6 +25,16 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class JMeterReaderTest {
+
+    @Before
+    public void before() {
+        Servers.clear();
+    }
+
+    @After
+    public void after() {
+        Servers.clear();
+    }
 
     @Test
     public void testRead() throws IOException {

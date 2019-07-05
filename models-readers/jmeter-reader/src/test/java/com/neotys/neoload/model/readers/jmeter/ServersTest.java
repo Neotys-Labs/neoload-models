@@ -3,6 +3,7 @@ package com.neotys.neoload.model.readers.jmeter;
 import com.google.common.collect.Iterables;
 import com.neotys.neoload.model.v3.project.server.Server;
 import org.assertj.core.api.Assertions;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,5 +66,9 @@ public class ServersTest {
         Assertions.assertThat(newServer.getHost()).isEqualTo("blazedemo");
         Assertions.assertThat(newServer.getScheme()).isEqualTo(Server.Scheme.HTTPS);
     }
+
+    @After
+    public void after(){Servers.clear();}
+
 
 }
