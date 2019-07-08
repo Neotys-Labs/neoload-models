@@ -8,6 +8,8 @@ import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
+import com.neotys.neoload.model.v3.project.variable.ConstantVariable;
+import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.readers.Reader;
 import org.apache.jmeter.save.SaveService;
 import org.apache.jmeter.testelement.TestPlan;
@@ -19,10 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class JMeterReader extends Reader {
 
@@ -46,10 +45,13 @@ public class JMeterReader extends Reader {
         try {
             eventListener.startScript(fichier.getName());
 
-            HashTree testPlanTree = readJMeterProject(fichier);
+            HashTree testPlanTree = null;
+            try {
+                testPlanTree = readJMeterProject(fichier);
+            } catch (IOException e) {
+                LOG.error("Problem to Load HashTree",e);
+            }
             List<PopulationPolicy> popPolicy = new ArrayList<>();
-            String nameTest;
-            String commentTest;
             Objects.requireNonNull(testPlanTree, "testPlanTree must not be null.");
             Object test = Iterables.getFirst(testPlanTree.list(), null);
 
@@ -59,8 +61,11 @@ public class JMeterReader extends Reader {
             }
 
             TestPlan testPlan = (TestPlan) test;
-            nameTest = testPlan.getName();
-            commentTest = testPlan.getComment();
+            String nameTest = testPlan.getName();
+            String commentTest = testPlan.getComment();
+
+            getVariable(projet, testPlan);
+
             Collection<HashTree> testPlanSubTree = testPlanTree.values();
             Objects.requireNonNull(testPlanSubTree, "There is nothing in your Script");
 
@@ -79,24 +84,38 @@ public class JMeterReader extends Reader {
         }
     }
 
-    HashTree readJMeterProject(final File fichier) {
+    private void getVariable(Project.Builder projet, TestPlan testPlan) {
+        Map<String, String> variableList = testPlan.getUserDefinedVariables();
+        for (Map.Entry<String, String> entry : variableList.entrySet()) {
+            String value = entry.getValue();
+            if((entry.getValue().contains("${"))){
+                String[] stringList = entry.getValue().split(",,");
+                value = stringList[1];
+                 value = value.replace(")","");
+                 value = value.replace("}","");
+            }
+            Variable variable = ConstantVariable.builder()
+                    .name(entry.getKey())
+                    .value(value.toString())
+                    .build();
+            projet.addVariables(variable);
+        }
+    }
+
+    HashTree readJMeterProject(final File fichier) throws IOException {
         JMeterUtils.setJMeterHome(jmeterPath);
         JMeterUtils.loadJMeterProperties(jmeterPath + File.separator + "bin" + File.separator + "jmeter.properties");
 
         JMeterUtils.initLocale();
 
-        try {
-            SaveService.loadProperties();
-        } catch (IOException e) {
-            LOG.error("Problem to find SaveProperties",e);
-        }
 
-        HashTree testPlanTree = null;
-        try {
-            testPlanTree = SaveService.loadTree(fichier);
-        } catch (IOException e) {
-            LOG.error("Error to charge the HashTree",e);
-        }
+        SaveService.loadProperties();
+
+
+        HashTree testPlanTree ;
+
+        testPlanTree = SaveService.loadTree(fichier);
+
         return testPlanTree;
     }
 
