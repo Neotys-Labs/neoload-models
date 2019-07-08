@@ -108,10 +108,6 @@ public class JMeterReader extends Reader {
         projet.addAllServers(Servers.getServers());
         projet.name(projectName);
 
-//        ImmutableProject project = projet.build();
-//        Validator validator = new Validator();
-//        Validation validation = validator.validate(project, NeoLoad.class);
-//        validation.getMessage();
     }
 
      Scenario getScenario(List<PopulationPolicy> popPolicy, String nameTest, String commentTest) {

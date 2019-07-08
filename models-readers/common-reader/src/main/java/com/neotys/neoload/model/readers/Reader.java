@@ -15,7 +15,6 @@ public abstract class Reader {
 		this.folder = folder;
 	}
 
-	//TODO pour la généricité
 	public abstract Map<String, List<File>> getFileToCopy();
 
 	public abstract Project read();

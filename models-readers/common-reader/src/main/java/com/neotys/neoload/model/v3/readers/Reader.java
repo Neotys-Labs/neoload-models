@@ -18,7 +18,6 @@ public abstract class Reader {
 		this.folder = folder;
 	}
 
-	//TODO pour la généricité
 	public Map<String, List<File>> getFileToCopy() {
 		Map<String, List<File>> returnedMap = new HashMap<>();
 		returnedMap.put("variables", dataFilesToCopy);
