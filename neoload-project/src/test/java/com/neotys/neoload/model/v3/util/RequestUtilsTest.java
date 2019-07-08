@@ -165,6 +165,32 @@ public class RequestUtilsTest {
 				.build();
 		actualUrl = RequestUtils.parseUrl("http://petstore.swagger.io:80/v2/pet/${ExtractedVariable_id}");
 		assertEquals(expectedUrl, actualUrl);
+
+		// http://petstore.swagger.io:80${pathVariable}
+		expectedUrl = URL.builder()
+				.server(Server.builder()
+						.name("petstore.swagger.io")
+						.scheme(Scheme.HTTP)
+						.host("petstore.swagger.io")
+						.port("80")
+						.build())
+				.path("${pathVariable}")
+				.build();
+		actualUrl = RequestUtils.parseUrl("http://petstore.swagger.io:80${pathVariable}");
+		assertEquals(expectedUrl, actualUrl);
+
+		// http://petstore.swagger.io:80${pathVariable}/v2/pet/
+		expectedUrl = URL.builder()
+				.server(Server.builder()
+						.name("petstore.swagger.io")
+						.scheme(Scheme.HTTP)
+						.host("petstore.swagger.io")
+						.port("80")
+						.build())
+				.path("${pathVariable}/v2/pet/")
+				.build();
+		actualUrl = RequestUtils.parseUrl("http://petstore.swagger.io:80${pathVariable}/v2/pet/");
+		assertEquals(expectedUrl, actualUrl);
 	}
 	
 

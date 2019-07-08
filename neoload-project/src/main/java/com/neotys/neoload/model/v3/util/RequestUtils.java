@@ -19,7 +19,7 @@ import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
 public class RequestUtils {
-	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)"); // <scheme>://<host>:<port><file> | <file>
+	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?):\\/\\/(([^:\\/\\[\\]]+)|(\\[[^\\/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?(((\\$\\{.+\\})|\\/.*$)*)"); // <scheme>://<host>:<port><file> | <file>
 	private static final int URL_SERVER_GROUP = 1;
 	private static final int URL_SCHEME_GROUP = 2;
 	private static final int URL_HOST_GROUP = 3;
@@ -65,8 +65,11 @@ public class RequestUtils {
 		String path;
 		String query;
 		try {
-			final java.net.URL fakeUrl = new java.net.URL(FAKE_SERVER_URL + file);
+			String pathSep = "";
+			if(file!=null && !file.isEmpty() && !file.startsWith("/")) pathSep = "/";
+			final java.net.URL fakeUrl = new java.net.URL(FAKE_SERVER_URL + pathSep + file);
 			path = fakeUrl.getPath();
+			if(!pathSep.isEmpty() && path.startsWith(pathSep)) path = path.substring(1);
 			query = fakeUrl.getQuery();
 		} catch (final MalformedURLException e) {
 			throw new IllegalArgumentException("The url '" + url + "' does not match a valid URL: " + e.getMessage());
