@@ -6,14 +6,11 @@ import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.threads.ThreadGroup;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class ConvertThreadGroupResultTest {
-
     @Test
     public void testGetters(){
         ThreadGroup threadGroup = new ThreadGroup();
@@ -46,15 +43,12 @@ public class ConvertThreadGroupResultTest {
         PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
 
 
-        ConvertThreadGroupResult convertThreadGroupResult = new ConvertThreadGroupResult(userPath.build(),population.build(),populationPolicy);
+        ConvertThreadGroupResult convertThreadGroupResult = new ConvertThreadGroupResult(userPath.build(),population.build(),populationPolicy,null);
 
         assertEquals(convertThreadGroupResult.getPopulationPolicy(),populationPolicy);
         assertEquals(convertThreadGroupResult.getPopulation(),population.build());
         assertEquals(convertThreadGroupResult.getUserPath(),userPath.build());
 
     }
-
-
-
 
 }

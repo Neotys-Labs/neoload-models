@@ -5,12 +5,12 @@ import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
-import com.neotys.neoload.model.v3.project.server.Server;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.testelement.TestPlan;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
+import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,8 +64,9 @@ public class JMeterReaderTest {
 
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
 
-        ConvertThreadGroupResult convert = new Converters(mock(EventListener.class)).convertThreadGroup(threadGroup, hashTree.get(testPlan).get(threadGroup));
-
+        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
+        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup),variableConverters).convert();
         Project.Builder project = Project.builder();
         Project result = jMeterReader.read();
         project.name("test");
@@ -103,8 +104,9 @@ public class JMeterReaderTest {
         objectList.add(constantTimer);
         hashTree.get(testPlan).get(threadGroup).add(objectList);
 
-        ConvertThreadGroupResult convert = new Converters(mock(EventListener.class)).convertThreadGroup(threadGroup, hashTree.get(testPlan).get(threadGroup));
-
+        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
+        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup),variableConverters).convert();
         File file = mock(File.class);
         doReturn(hashTree).when(jMeterReader).readJMeterProject(file);
 
@@ -121,8 +123,9 @@ public class JMeterReaderTest {
 
 
     }
-    @Test (expected = IllegalArgumentException.class)
-    public void testReadScriptError(){
+
+    @Test
+    public void testReadScriptError() throws IOException {
         JMeterReader jMeterReader = spy(new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter"));
         ThreadGroup threadGroup = new ThreadGroup();
         threadGroup.setName("Test Thread");
@@ -133,7 +136,6 @@ public class JMeterReaderTest {
         loopController.setLoops(0);
         threadGroup.setSamplerController(loopController);
         HashTree hashTree = new HashTree();
-        TestPlan testPlan = new TestPlan();
         ConstantTimer constantTimer = new ConstantTimer();
         hashTree.add(constantTimer);
         doReturn(hashTree).when(jMeterReader).readJMeterProject(Mockito.any());
@@ -141,7 +143,11 @@ public class JMeterReaderTest {
         File file = mock(File.class);
         doReturn(hashTree).when(jMeterReader).readJMeterProject(file);
 
-        ImmutableProject result = jMeterReader.readScript(mock (Project.Builder.class), file);
+        Assertions.assertThatThrownBy(()  -> jMeterReader.readScript(mock(Project.Builder.class),file))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Not a functionnal Script");
+        verify(jMeterReader, times(1)).readJMeterProject(file);
+
     }
 
     @Test
@@ -167,11 +173,10 @@ public class JMeterReaderTest {
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
         List<PopulationPolicy> populationPolicyListResult = new ArrayList<>();
 
-        HashTree hashtree = null;
         Project.Builder result = Project.builder();
         Project.Builder project = Project.builder();
 
-        jMeterReader.convertThreadGroupElement(result, populationPolicyList, hashtree, new ArrayList());
+        jMeterReader.convertThreadGroupElement(result, populationPolicyList, null, new ArrayList());
         assertEquals(result.build(), project.build());
         assertEquals(populationPolicyList, populationPolicyListResult);
 
@@ -200,8 +205,9 @@ public class JMeterReaderTest {
         objectList.add(constantTimer);
         hashTree.get(threadGroup).add(objectList);
 
-        ConvertThreadGroupResult convert = new Converters(mock(EventListener.class)).convertThreadGroup(threadGroup, hashTree.get(threadGroup));
-
+        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
+        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(threadGroup),variableConverters).convert();
         Project.Builder result = Project.builder();
         Project.Builder project = Project.builder();
         project.addUserPaths(convert.getUserPath());

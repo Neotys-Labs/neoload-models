@@ -3,35 +3,39 @@ package com.neotys.neoload.model.readers.jmeter;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.variable.Variable;
 
-public class ConvertThreadGroupResult {
+import java.util.List;
 
-    private UserPath userPath;
-    private Population population;
-    private PopulationPolicy populationPolicy;
+class ConvertThreadGroupResult {
+        private UserPath userPath;
+        private Population population;
+        private PopulationPolicy populationPolicy;
 
-    ConvertThreadGroupResult(UserPath userPath, Population population, PopulationPolicy populationPolicy) {
+
+
+    private List<Variable> variableList;
+
+    ConvertThreadGroupResult(UserPath userPath, Population population, PopulationPolicy populationPolicy, List<Variable> variableList) {
         this.userPath = userPath;
         this.population = population;
         this.populationPolicy = populationPolicy;
-    }
-
-    @Override
-    public String toString() {
-        return "ConvertThreadGroupResult{" +
-                "userPath=" + userPath +
-                ", population=" + population +
-                '}';
-    }
-
-    Population getPopulation() {
-        return population;
+        this.variableList = variableList;
     }
 
     UserPath getUserPath() {
         return userPath;
     }
 
+    Population getPopulation() {
+        return population;
+    }
+
     PopulationPolicy getPopulationPolicy() {
-        return populationPolicy;}
+        return populationPolicy;
+    }
+
+    List<Variable> getVariableList() {
+        return variableList;
+    }
 }

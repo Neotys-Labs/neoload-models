@@ -11,8 +11,12 @@ import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.variable.ConstantVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.readers.Reader;
+import org.apache.jmeter.engine.PreCompiler;
+import org.apache.jmeter.engine.StandardJMeterEngine;
+import org.apache.jmeter.engine.TurnElementsOn;
 import org.apache.jmeter.save.SaveService;
 import org.apache.jmeter.testelement.TestPlan;
+import org.apache.jmeter.threads.TestCompiler;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
@@ -29,14 +33,16 @@ public class JMeterReader extends Reader {
     private final EventListener eventListener;
     private final String projectName;
     private final String jmeterPath;
-    private final Converters converters;
+    private final StepConverters stepConverters;
+    private final VariableConverters variableConverters;
 
     public JMeterReader(final EventListener eventListener, final String pathFile, final String projectName, final String jmeterPath) {
         super(Objects.requireNonNull(pathFile));
         this.eventListener = Objects.requireNonNull(eventListener);
         this.projectName = Objects.requireNonNull(projectName);
         this.jmeterPath = Objects.requireNonNull(jmeterPath);
-        this.converters = new Converters(eventListener);
+        this.stepConverters = new StepConverters(eventListener);
+        this.variableConverters = new VariableConverters(eventListener);
     }
 
 
@@ -59,7 +65,6 @@ public class JMeterReader extends Reader {
                 LOG.error("There is not TestPlan at the Highest Level. It's not a functional Script!");
                 throw new IllegalArgumentException("Not a functionnal Script");
             }
-
             TestPlan testPlan = (TestPlan) test;
             String nameTest = testPlan.getName();
             String commentTest = testPlan.getComment();
@@ -77,7 +82,6 @@ public class JMeterReader extends Reader {
             }
             Scenario scenarioBuilder = getScenario(popPolicy, nameTest, commentTest);
             buildProject(projet, scenarioBuilder);
-
             return projet.build();
         } finally {
             eventListener.endScript();
@@ -96,7 +100,7 @@ public class JMeterReader extends Reader {
             }
             Variable variable = ConstantVariable.builder()
                     .name(entry.getKey())
-                    .value(value.toString())
+                    .value(value)
                     .build();
             projet.addVariables(variable);
         }
@@ -105,17 +109,10 @@ public class JMeterReader extends Reader {
     HashTree readJMeterProject(final File fichier) throws IOException {
         JMeterUtils.setJMeterHome(jmeterPath);
         JMeterUtils.loadJMeterProperties(jmeterPath + File.separator + "bin" + File.separator + "jmeter.properties");
-
         JMeterUtils.initLocale();
-
-
         SaveService.loadProperties();
-
-
         HashTree testPlanTree ;
-
         testPlanTree = SaveService.loadTree(fichier);
-
         return testPlanTree;
     }
 
@@ -136,11 +133,12 @@ public class JMeterReader extends Reader {
 
      void convertThreadGroupElement(Project.Builder projet, List<PopulationPolicy> popPolicy, HashTree hashTree, Object o) {
         if (o instanceof ThreadGroup) {
-            ConvertThreadGroupResult result = converters.convertThreadGroup((ThreadGroup) o, hashTree.get(o));
+            ConvertThreadGroupResult result = new ThreadGroupConverter(stepConverters, (ThreadGroup) o, hashTree.get(o),variableConverters).convert();
             LOG.info("Successfully parsed ThreadGroup {}", result);
             projet.addUserPaths(result.getUserPath());
             projet.addPopulations(result.getPopulation());
             popPolicy.add(result.getPopulationPolicy());
+            projet.addAllVariables(result.getVariableList());
         } else {
             LOG.warn("Unsupported first level node with type {}", o.getClass());
             eventListener.readUnsupportedAction(o.getClass() + "\n");

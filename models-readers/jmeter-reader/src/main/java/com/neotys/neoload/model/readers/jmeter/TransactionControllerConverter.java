@@ -14,20 +14,20 @@ import java.util.function.BiFunction;
 
 public class TransactionControllerConverter implements BiFunction<TransactionController, HashTree, List<Step>> {
 
-    private final Converters converter;
+    private final StepConverters converter;
     private final EventListener eventListener;
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionControllerConverter.class);
 
-    TransactionControllerConverter(Converters converters, EventListener eventListener) {
+    TransactionControllerConverter(StepConverters converters, EventListener eventListener) {
         this.converter = converters;
         this.eventListener = eventListener;
     }
 
     @Override
     public List<Step> apply(TransactionController transactionController, HashTree hashTree) {
-        LOGGER.info("ThreadGroup corretly converted");
-        eventListener.readSupportedAction("ThreadGroup");
-        Container.Builder builder = Container.builder().name(transactionController.getName());
+        LOGGER.info("TransactionController corretly converted");
+        eventListener.readSupportedAction("TransactionController");
+        Container.Builder builder = Container.builder().description(transactionController.getComment()).name(transactionController.getName());
         builder.addAllSteps(converter.convertStep(hashTree.get(transactionController)));
         return ImmutableList.of(builder.build());
     }

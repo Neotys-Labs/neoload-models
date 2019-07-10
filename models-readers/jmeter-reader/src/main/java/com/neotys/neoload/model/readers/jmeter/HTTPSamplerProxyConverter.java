@@ -76,6 +76,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
     private void createServer(HTTPSamplerProxy httpSamplerProxy, Optional<String> domain, Optional<String> path, Optional<String> protocol, int port, Request.Builder req) {
         Servers.addServer(domain.orElse("host"), httpSamplerProxy.getPort(), httpSamplerProxy.getProtocol());
         String url = protocol.orElse("http") + "://" + domain.orElse("host") + ":" + port + path.orElse("/");
+        //Gérer aussi avec l'intégration de variable dans le path
         req.url(url);
         req.server(domain.orElse("host"));
         path.ifPresent(req::name);

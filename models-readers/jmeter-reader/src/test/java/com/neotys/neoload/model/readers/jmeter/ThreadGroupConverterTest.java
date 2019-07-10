@@ -9,7 +9,6 @@ import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import org.apache.jmeter.control.LoopController;
-import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
@@ -21,14 +20,12 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-public class ConvertersTest {
-
+public class ThreadGroupConverterTest {
     @Test
     public void testGetContainer() {
         List<Step> steps = new ArrayList<>();
-        Container result = Converters.getContainer(steps);
+        Container result = ThreadGroupConverter.getContainer(steps);
         assertEquals(steps, result.getSteps());
         assertEquals("container", result.getName());
     }
@@ -38,10 +35,8 @@ public class ConvertersTest {
         ThreadGroup threadGroup = Mockito.mock(ThreadGroup.class);
         Mockito.when(threadGroup.getName()).thenReturn("my thread group");
         Mockito.when(threadGroup.getComment()).thenReturn("My comment");
-        UserPathPolicy result = Converters.getUserPathPolicy(threadGroup);
+        UserPathPolicy result = ThreadGroupConverter.getUserPathPolicy(threadGroup);
         assertEquals(threadGroup.getName(),result.getName());
-        System.out.println(Converters.getUserPathPolicy(threadGroup));
-
     }
 
     @Test
@@ -49,33 +44,10 @@ public class ConvertersTest {
         ThreadGroup threadGroup = Mockito.mock(ThreadGroup.class);
         Mockito.when(threadGroup.getName()).thenReturn("my thread group");
         Mockito.when(threadGroup.getComment()).thenReturn("My comment");
-        UserPathPolicy testpolicy = Converters.getUserPathPolicy(threadGroup);
-        Population testpop = Converters.getPopulation(threadGroup,testpolicy);
+        UserPathPolicy testpolicy = ThreadGroupConverter.getUserPathPolicy(threadGroup);
+        Population testpop = ThreadGroupConverter.getPopulation(threadGroup,testpolicy);
         assertEquals(threadGroup.getName(), testpop.getName());
         assertEquals(testpop.getUserPaths().get(0),testpolicy ); // vérifier que celui qu'on a ajouté en premier est bon
-    }
-
-    @Test
-    //TODO
-    public void testConvertStepWithoutObject() {
-        HashTree hashTree = Mockito.mock(HashTree.class);
-        List<Object> stringList = new ArrayList<>();
-        stringList.add("lololol");
-        when(hashTree.list()).thenReturn(stringList);
-        List<Step> convert = new Converters(mock(EventListener.class)).convertStep(hashTree);
-        assertTrue(convert.isEmpty());
-
-    }
-
-    @Test
-    public void testConvertStepWithObject() {
-        HashTree hashTree = new HashTree();
-        List<Object> objectList = new ArrayList<>();
-        objectList.add(new ConstantTimer());
-        objectList.add(new TransactionController());
-        hashTree.add(objectList);
-        List<Step> convert = new Converters(mock(EventListener.class)).convertStep(hashTree);
-        assertFalse(convert.isEmpty());
     }
 
     @Test
@@ -99,28 +71,22 @@ public class ConvertersTest {
         constantTimer.setDelay("25");
         objectList.add(constantTimer);
 
-
         hashTree.add(objectList);
-
-        ConvertThreadGroupResult convert = new Converters(mock(EventListener.class)).convertThreadGroup(threadGroup,hashTree);
-
+        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
+        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree,variableConverters).convert();
         UserPath.Builder userPath = UserPath
                 .builder()
                 .name(threadGroup.getName())
                 .description(threadGroup.getComment());
-
-
         Container container = Container.builder()
                 .addSteps(Delay.builder()
                         .name(constantTimer.getName())
                         .value(constantTimer.getDelay())
-                                .build())
+                        .build())
                 .build();
         userPath.actions(container);
-
         assertEquals(convert.getUserPath(),userPath.build());
-
-        System.out.println(convert);
     }
 
 
@@ -148,8 +114,9 @@ public class ConvertersTest {
 
         hashTree.add(objectList);
 
-        ConvertThreadGroupResult convert = new Converters(mock(EventListener.class)).convertThreadGroup(threadGroup,hashTree);
-
+        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
+        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree,variableConverters).convert();
         UserPathPolicy.Builder userPath = UserPathPolicy
                 .builder()
                 .name(threadGroup.getName())
@@ -188,9 +155,13 @@ public class ConvertersTest {
 
         hashTree.add(objectList);
 
-        ConvertThreadGroupResult convert = new Converters(mock(EventListener.class)).convertThreadGroup(threadGroup,hashTree);
-
+        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
+        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree,variableConverters).convert();
         PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
         assertEquals(convert.getPopulationPolicy(),populationPolicy);
     }
+
+
+
 }

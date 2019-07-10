@@ -1,41 +1,41 @@
 package com.neotys.neoload.model.readers.jmeter;
 
-import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.listener.CmdEventListener;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TransactionConverterTest {
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+
+public class SimpleControllerConverterTest {
 
     @Test
     public void testApplyNoSteps() {
         CmdEventListener eventListener = new CmdEventListener("", "", "");
-        TransactionControllerConverter testcontrol = new TransactionControllerConverter(new StepConverters(eventListener)
+        SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters(eventListener)
                 , eventListener);
 
-        TransactionController transactionController = Mockito.mock(TransactionController.class);
-        when(transactionController.getName()).thenReturn("my thread group");
-        when(transactionController.getComment()).thenReturn("My comment");
+        GenericController simpleController = Mockito.mock(GenericController.class);
+        when(simpleController.getName()).thenReturn("my thread group");
+        when(simpleController.getComment()).thenReturn("My comment");
         HashTree hashTree = Mockito.mock(HashTree.class);
 
         HashTree subTree = Mockito.mock(HashTree.class);
         when(subTree.list()).thenReturn(Collections.emptyList());
-        when(hashTree.get(eq(transactionController))).thenReturn(subTree);
-        List<Step> teststep = testcontrol.apply(transactionController, hashTree);
+        when(hashTree.get(eq(simpleController))).thenReturn(subTree);
+        List<Step> teststep = testcontrol.apply(simpleController,hashTree);
         assertEquals(teststep.size(), 1);
         assertEquals(teststep.get(0).getName(), "my thread group");
     }
@@ -43,9 +43,9 @@ public class TransactionConverterTest {
     @Test
     public void testAApplySteps() {
         CmdEventListener eventListener = new CmdEventListener("", "", "");
-        TransactionControllerConverter testcontrol = new TransactionControllerConverter(new StepConverters(eventListener)
+        SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters(eventListener)
                 , eventListener);
-        TransactionController transactionController = Mockito.mock(TransactionController.class);
+        GenericController transactionController = Mockito.mock(TransactionController.class);
         when(transactionController.getName()).thenReturn("my thread group");
         when(transactionController.getComment()).thenReturn("My comment");
         HashTree hashTree = Mockito.mock(HashTree.class);
@@ -57,7 +57,6 @@ public class TransactionConverterTest {
         when(subTree.list()).thenReturn(collections);
         when(hashTree.get(eq(transactionController))).thenReturn(subTree);
         List<Step> teststep = testcontrol.apply(transactionController, hashTree);
-        List<Step> steps = ImmutableList.<Step>builder().addAll(teststep).addAll(teststep).addAll(teststep).build();
         assertEquals(teststep.size(), 1);
         assertEquals(teststep.get(0).getName(), "my thread group");
         int result = (int) teststep.stream().flatMap(Element::flattened)
@@ -66,8 +65,9 @@ public class TransactionConverterTest {
         assertEquals(result, collections.size());
         teststep.stream()
                 .filter(s -> s instanceof Container)
-                .flatMap(c -> ((Container) c).getSteps().stream())
-                .forEach((System.out::println));
+                .flatMap(c -> ((Container) c).getSteps().stream());
+
 
     }
+
 }
