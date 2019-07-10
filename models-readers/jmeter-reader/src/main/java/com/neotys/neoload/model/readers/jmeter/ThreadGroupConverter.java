@@ -13,9 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Objects;
 
-public class ThreadGroupConverter {
+class ThreadGroupConverter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreadGroupConverter.class);
     private final StepConverters stepConverters;
@@ -72,5 +71,5 @@ public class ThreadGroupConverter {
                 .build();
     }
 
-    
+
 }

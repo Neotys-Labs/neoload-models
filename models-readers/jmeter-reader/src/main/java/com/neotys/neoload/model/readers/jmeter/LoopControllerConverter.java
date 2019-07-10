@@ -18,7 +18,7 @@ public class LoopControllerConverter implements BiFunction<LoopController, HashT
     private final EventListener eventListener;
     private static final Logger LOGGER = LoggerFactory.getLogger(LoopControllerConverter.class);
 
-    public LoopControllerConverter(StepConverters converters, EventListener eventListener) {
+    LoopControllerConverter(StepConverters converters, EventListener eventListener) {
         this.converter = converters;
         this.eventListener = eventListener;
     }

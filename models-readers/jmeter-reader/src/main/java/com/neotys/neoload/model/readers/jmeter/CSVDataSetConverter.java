@@ -30,7 +30,6 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
     public List<Variable> apply(CSVDataSet csvDataSet,HashTree hashTree) {
 
         final PropertyIterator propertyIterator = csvDataSet.propertyIterator();
-        boolean recycle = false;
         ImmutableCSVDataSetModel.Builder csvModelbuilder = CSVDataSetModel.builder()
                 .eventListener(eventListener);
         while (propertyIterator.hasNext()) {
@@ -58,7 +57,11 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
                     break;
                 case "stopThread":
                     csvModelbuilder.stopThread(jMeterProperty.getBooleanValue());
+                    break;
+                default:
+                    LOGGER.error("CSVDataSet has not be created with success");
             }
+
         }
         CSVDataSetModel csvDataSetModel = csvModelbuilder.build();
         final FileVariable.Builder data = FileVariable.builder()
