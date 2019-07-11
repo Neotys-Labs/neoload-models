@@ -24,8 +24,8 @@ public class SimpleControllerConverterTest {
     @Test
     public void testApplyNoSteps() {
         CmdEventListener eventListener = new CmdEventListener("", "", "");
-        SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters(eventListener)
-                , eventListener);
+        SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters()
+        );
 
         GenericController simpleController = Mockito.mock(GenericController.class);
         when(simpleController.getName()).thenReturn("my thread group");
@@ -43,8 +43,8 @@ public class SimpleControllerConverterTest {
     @Test
     public void testAApplySteps() {
         CmdEventListener eventListener = new CmdEventListener("", "", "");
-        SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters(eventListener)
-                , eventListener);
+        SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters()
+        );
         GenericController transactionController = Mockito.mock(TransactionController.class);
         when(transactionController.getName()).thenReturn("my thread group");
         when(transactionController.getComment()).thenReturn("My comment");

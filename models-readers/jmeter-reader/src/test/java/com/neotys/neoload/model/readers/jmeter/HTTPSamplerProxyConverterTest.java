@@ -28,7 +28,9 @@ public class HTTPSamplerProxyConverterTest {
 
     @Test
     public void testApplyWithoutHeaderURLEncoded() {
-        HTTPSamplerProxyConverter httpconverter = new HTTPSamplerProxyConverter(new CmdEventListener(null, null, null));
+        CmdEventListener eventListener = new CmdEventListener(null, null, null);
+        EventListenerUtils.setEventListener(eventListener);
+        HTTPSamplerProxyConverter httpconverter = new HTTPSamplerProxyConverter();
         HTTPSamplerProxy request = new HTTPSamplerProxy();
         HashTree hashtree = Mockito.mock(HashTree.class);
         when(hashtree.get(request)).thenReturn(null);
@@ -70,7 +72,9 @@ public class HTTPSamplerProxyConverterTest {
 
     @Test
     public void testApplyWithHeader() {
-        HTTPSamplerProxyConverter httpconverter = new HTTPSamplerProxyConverter(new CmdEventListener(null, null, null));
+        CmdEventListener eventListener = new CmdEventListener(null, null, null);
+        EventListenerUtils.setEventListener(eventListener);
+        HTTPSamplerProxyConverter httpconverter = new HTTPSamplerProxyConverter();
         // HTTP Sampler
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         httpSamplerProxy.setDomain("localhost");

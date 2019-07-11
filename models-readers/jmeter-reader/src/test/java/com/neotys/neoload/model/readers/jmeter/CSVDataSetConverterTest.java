@@ -1,11 +1,11 @@
 package com.neotys.neoload.model.readers.jmeter;
 
-import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.config.CSVDataSet;
 import org.apache.jorphan.collections.HashTree;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -16,9 +16,17 @@ import static org.mockito.Mockito.*;
 
 public class CSVDataSetConverterTest {
 
+    private TestEventListener spy;
+
+    @Before
+    public void before()   {
+        spy = spy(new TestEventListener());
+        EventListenerUtils.setEventListener(spy);
+    }
+
     @Test
     public void testApplyWhithShareAllAndOutofValueCycle() {
-        CSVDataSetConverter csvDataSetConverter = new CSVDataSetConverter(mock(EventListener.class));
+        CSVDataSetConverter csvDataSetConverter = new CSVDataSetConverter();
         CSVDataSet csvDataSet = new CSVDataSet();
         csvDataSet.setProperty("delimiter", ";");
         csvDataSet.setProperty("filename", "ThomasBestInternShip");
@@ -45,7 +53,7 @@ public class CSVDataSetConverterTest {
 
     @Test
     public void testApplyWhithShareGroupAndOutofValueStop() {
-        CSVDataSetConverter csvDataSetConverter = new CSVDataSetConverter(mock(EventListener.class));
+        CSVDataSetConverter csvDataSetConverter = new CSVDataSetConverter();
         CSVDataSet csvDataSet = new CSVDataSet();
         csvDataSet.setProperty("delimiter", ";");
         csvDataSet.setProperty("filename", "ThomasBestInternShip");
@@ -71,7 +79,7 @@ public class CSVDataSetConverterTest {
 
     @Test
     public void testApplyWhithShareThreadAndOutofValueCycle(){
-        CSVDataSetConverter csvDataSetConverter = new CSVDataSetConverter(mock(EventListener.class));
+        CSVDataSetConverter csvDataSetConverter = new CSVDataSetConverter();
         CSVDataSet csvDataSet = new CSVDataSet();
         csvDataSet.setProperty("delimiter",";");
         csvDataSet.setProperty("filename","ThomasBestInternShip");
@@ -98,8 +106,7 @@ public class CSVDataSetConverterTest {
 
     @Test
     public void testApplyUnsupportedParameter(){
-        EventListener spy = spy(new TestEventListener());
-        CSVDataSetConverter csvDataSetConverter = new CSVDataSetConverter(spy);
+        CSVDataSetConverter csvDataSetConverter = new CSVDataSetConverter();
         CSVDataSet csvDataSet = new CSVDataSet();
         csvDataSet.setProperty("delimiter",";");
         csvDataSet.setProperty("filename","ThomasBestInternShip");

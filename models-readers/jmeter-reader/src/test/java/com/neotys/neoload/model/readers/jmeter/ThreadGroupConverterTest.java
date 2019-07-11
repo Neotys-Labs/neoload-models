@@ -1,6 +1,5 @@
 package com.neotys.neoload.model.readers.jmeter;
 
-import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
@@ -72,8 +71,8 @@ public class ThreadGroupConverterTest {
         objectList.add(constantTimer);
 
         hashTree.add(objectList);
-        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
-        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        StepConverters stepConverters = new StepConverters();
+        VariableConverters variableConverters = new VariableConverters();
         ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree,variableConverters).convert();
         UserPath.Builder userPath = UserPath
                 .builder()
@@ -114,8 +113,8 @@ public class ThreadGroupConverterTest {
 
         hashTree.add(objectList);
 
-        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
-        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        StepConverters stepConverters = new StepConverters();
+        VariableConverters variableConverters = new VariableConverters();
         ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree,variableConverters).convert();
         UserPathPolicy.Builder userPath = UserPathPolicy
                 .builder()
@@ -155,8 +154,8 @@ public class ThreadGroupConverterTest {
 
         hashTree.add(objectList);
 
-        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
-        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        StepConverters stepConverters = new StepConverters();
+        VariableConverters variableConverters = new VariableConverters();
         ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree,variableConverters).convert();
         PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
         assertEquals(convert.getPopulationPolicy(),populationPolicy);

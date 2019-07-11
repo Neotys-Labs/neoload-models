@@ -2,7 +2,6 @@ package com.neotys.neoload.model.readers.jmeter;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
@@ -21,16 +20,15 @@ import java.util.function.BiFunction;
 
 public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, HashTree, List<Step>> {
 
-    private final EventListener eventListener;
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
-    HTTPSamplerProxyConverter(EventListener eventListener) {
-        this.eventListener = eventListener;
+    HTTPSamplerProxyConverter() {
+
     }
 
     @Override
     public List<Step> apply(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree) {
-        eventListener.readSupportedAction("HTTPSampler");
+        EventListenerUtils.readSupportedAction("HTTPSampler");
         Optional<String> domain = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getDomain()));
         Optional<String> path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath()));
         Optional<String> protocol = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getProtocol()));
@@ -40,14 +38,13 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
                 .description(httpSamplerProxy.getComment());
         createParameters(httpSamplerProxy, req);
 
-        if(hashTree.get(httpSamplerProxy)!=null){
+        if (hashTree.get(httpSamplerProxy) != null) {
             HTTPHeaderConverter.createHeader(req, hashTree.get(httpSamplerProxy));
-            RegularExtractorConverter regularExtractorConverter = new RegularExtractorConverter(eventListener);
-            RegularExtractorConverter.extract(req,hashTree.get(httpSamplerProxy));
-            eventListener.readSupportedAction("HTTPHeaderManager");
-        } else{
+            RegularExtractorConverter.extract(req, hashTree.get(httpSamplerProxy));
+            EventListenerUtils.readSupportedAction("HTTPHeaderManager");
+        } else {
             LOGGER.warn("There is not HeaderManager so HTTPRequest do not have Header");
-            eventListener.readSupportedFunctionWithWarn("", "HttpRequest", null,"Don't have Header Manager");
+            EventListenerUtils.readSupportedFunctionWithWarn("", "HttpRequest", null, "Don't have Header Manager");
         }
         createServer(httpSamplerProxy, domain, path, protocol, port, req);
         return ImmutableList.of(req.build());
@@ -66,13 +63,13 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
                 parameter.append("&");
             }
         }
-        if(!parameter.toString().isEmpty()){
-            parameter.deleteCharAt(parameter.length()-1);
+        if (!parameter.toString().isEmpty()) {
+            parameter.deleteCharAt(parameter.length() - 1);
         }
         req.body(parameter.toString());
         LOGGER.info("Convert Parameters is a success");
         LOGGER.warn("If the Parameter in Neoload are strange, Please check that you have encoded the parameters in JMeter");
-        eventListener.readSupportedAction("Put parameters into HttpRequest");
+        EventListenerUtils.readSupportedAction("Put parameters into HttpRequest");
     }
 
     private void createServer(HTTPSamplerProxy httpSamplerProxy, Optional<String> domain, Optional<String> path, Optional<String> protocol, int port, Request.Builder req) {
@@ -82,6 +79,6 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         req.url(url);
         req.server(domain.orElse("host"));
         path.ifPresent(req::name);
-        eventListener.readSupportedAction("HTTPSampler");
+        EventListenerUtils.readSupportedAction("HTTPSampler");
     }
 }

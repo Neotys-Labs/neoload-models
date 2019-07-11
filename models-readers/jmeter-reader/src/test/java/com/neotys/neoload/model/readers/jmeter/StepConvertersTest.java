@@ -1,16 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter;
 
-import com.neotys.neoload.model.listener.EventListener;
-import com.neotys.neoload.model.v3.project.population.Population;
-import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
-import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.Step;
-import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.control.TransactionController;
-import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Test;
@@ -33,7 +24,7 @@ public class StepConvertersTest {
         List<Object> stringList = new ArrayList<>();
         stringList.add("lololol");
         when(hashTree.list()).thenReturn(stringList);
-        List<Step> convert = new StepConverters(mock(EventListener.class)).convertStep(hashTree);
+        List<Step> convert = new StepConverters().convertStep(hashTree);
         assertTrue(convert.isEmpty());
 
     }
@@ -45,7 +36,7 @@ public class StepConvertersTest {
         objectList.add(new ConstantTimer());
         objectList.add(new TransactionController());
         hashTree.add(objectList);
-        List<Step> convert = new StepConverters(mock(EventListener.class)).convertStep(hashTree);
+        List<Step> convert = new StepConverters().convertStep(hashTree);
         assertFalse(convert.isEmpty());
     }
 

@@ -12,8 +12,6 @@ class ConvertThreadGroupResult {
         private Population population;
         private PopulationPolicy populationPolicy;
 
-
-
     private List<Variable> variableList;
 
     ConvertThreadGroupResult(UserPath userPath, Population population, PopulationPolicy populationPolicy, List<Variable> variableList) {

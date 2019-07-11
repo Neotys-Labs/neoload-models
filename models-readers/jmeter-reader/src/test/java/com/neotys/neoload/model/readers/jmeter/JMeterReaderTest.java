@@ -5,6 +5,8 @@ import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
+import com.neotys.neoload.model.v3.project.variable.ConstantVariable;
+import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.testelement.TestPlan;
 import org.apache.jmeter.threads.ThreadGroup;
@@ -19,9 +21,12 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 public class JMeterReaderTest {
@@ -64,8 +69,8 @@ public class JMeterReaderTest {
 
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
 
-        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
-        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        StepConverters stepConverters = new StepConverters();
+        VariableConverters variableConverters = new VariableConverters();
         ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup),variableConverters).convert();
         Project.Builder project = Project.builder();
         Project result = jMeterReader.read();
@@ -104,8 +109,8 @@ public class JMeterReaderTest {
         objectList.add(constantTimer);
         hashTree.get(testPlan).get(threadGroup).add(objectList);
 
-        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
-        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        StepConverters stepConverters = new StepConverters();
+        VariableConverters variableConverters = new VariableConverters();
         ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup),variableConverters).convert();
         File file = mock(File.class);
         doReturn(hashTree).when(jMeterReader).readJMeterProject(file);
@@ -205,8 +210,8 @@ public class JMeterReaderTest {
         objectList.add(constantTimer);
         hashTree.get(threadGroup).add(objectList);
 
-        StepConverters stepConverters = new StepConverters(mock(EventListener.class));
-        VariableConverters variableConverters = new VariableConverters((mock(EventListener.class)));
+        StepConverters stepConverters = new StepConverters();
+        VariableConverters variableConverters = new VariableConverters();
         ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(threadGroup),variableConverters).convert();
         Project.Builder result = Project.builder();
         Project.Builder project = Project.builder();
@@ -242,6 +247,47 @@ public class JMeterReaderTest {
         Project.Builder result = Project.builder();
         jMeterReader.buildProject(result, scenario);
         assertEquals(project, result.build());
+    }
+
+    @Test
+    public void testGetVariableSimple(){
+        JMeterReader jMeterReader = new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter");
+        TestPlan testPlan = mock(TestPlan.class);
+        Map<String, String> variableList = new HashMap<>();
+        variableList.put("host","localhost");
+        when(testPlan.getUserDefinedVariables()).thenReturn(variableList);
+
+        Project.Builder result = Project.builder();
+        jMeterReader.getVariable(result,testPlan);
+
+        Variable variable = ConstantVariable.builder()
+                .name("host")
+                .value("localhost")
+                .build();
+        Project expected = Project.builder().addVariables(variable).build();
+
+        assertEquals(result.build(),expected);
+    }
+
+    @Test
+    public void testGetVariableComplexe(){
+        JMeterReader jMeterReader = new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter");
+        TestPlan testPlan = mock(TestPlan.class);
+        Map<String, String> variableList = new HashMap<>();
+        variableList.put("host","${__property(http.server,,localhost)}");
+        when(testPlan.getUserDefinedVariables()).thenReturn(variableList);
+
+        Project.Builder result = Project.builder();
+        jMeterReader.getVariable(result,testPlan);
+
+        Variable variable = ConstantVariable.builder()
+                .name("host")
+                .value("localhost")
+                .build();
+        Project expected = Project.builder().addVariables(variable).build();
+
+        assertEquals(result.build(),expected);
+
     }
 
 }

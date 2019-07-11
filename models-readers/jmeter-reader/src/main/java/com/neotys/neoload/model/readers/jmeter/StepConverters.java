@@ -1,10 +1,8 @@
 package com.neotys.neoload.model.readers.jmeter;
 
 import com.google.common.collect.ImmutableMap;
-import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.control.GenericController;
-import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.timers.ConstantTimer;
@@ -20,18 +18,15 @@ import java.util.function.BiFunction;
 final class StepConverters {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepConverters.class);
     private final Map<Class, BiFunction<?, HashTree, List<Step>>> convertersMap;
-    private final EventListener eventListener;
 
 
-    StepConverters(final EventListener eventListener){
+    StepConverters(){
 
-        this.eventListener = eventListener;
         convertersMap = ImmutableMap.of(
-                TransactionController.class, new TransactionControllerConverter(this,eventListener),
-                HTTPSamplerProxy.class, new HTTPSamplerProxyConverter(eventListener),
-                ConstantTimer.class, new ConstantTimerConverter(eventListener),
-                GenericController.class, new SimpleControllerConverter(this,eventListener),
-                LoopController.class, new LoopControllerConverter(this,eventListener));
+                TransactionController.class, new TransactionControllerConverter(this),
+                HTTPSamplerProxy.class, new HTTPSamplerProxyConverter(),
+                ConstantTimer.class, new ConstantTimerConverter(),
+                GenericController.class, new SimpleControllerConverter(this));
     }
 
     @SuppressWarnings("unchecked")
@@ -49,7 +44,7 @@ final class StepConverters {
                 continue;
             }
             LOGGER.error("Type not Tolerate for converted in Step ");
-            eventListener.readUnsupportedAction(o.getClass()+"\n");
+            EventListenerUtils.readUnsupportedAction(o.getClass()+"\n");
         }
         return list;
     }

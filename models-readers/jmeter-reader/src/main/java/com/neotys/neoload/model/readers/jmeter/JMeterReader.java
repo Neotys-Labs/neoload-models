@@ -26,7 +26,6 @@ import java.util.*;
 public class JMeterReader extends Reader {
 
     private static final Logger LOG = LoggerFactory.getLogger(com.neotys.neoload.model.readers.jmeter.JMeterReader.class);
-    private final EventListener eventListener;
     private final String projectName;
     private final String jmeterPath;
     private final StepConverters stepConverters;
@@ -34,18 +33,18 @@ public class JMeterReader extends Reader {
 
     public JMeterReader(final EventListener eventListener, final String pathFile, final String projectName, final String jmeterPath) {
         super(Objects.requireNonNull(pathFile));
-        this.eventListener = Objects.requireNonNull(eventListener);
+        EventListenerUtils.setEventListener(Objects.requireNonNull(eventListener));
         this.projectName = Objects.requireNonNull(projectName);
         this.jmeterPath = Objects.requireNonNull(jmeterPath);
-        this.stepConverters = new StepConverters(eventListener);
-        this.variableConverters = new VariableConverters(eventListener);
+        this.stepConverters = new StepConverters();
+        this.variableConverters = new VariableConverters();
     }
 
 
     ImmutableProject readScript(final Project.Builder projet, final File fichier) {
         Preconditions.checkNotNull(fichier, "");
         try {
-            eventListener.startScript(fichier.getName());
+            EventListenerUtils.startScript(fichier.getName());
 
             HashTree testPlanTree = null;
             try {
@@ -80,11 +79,11 @@ public class JMeterReader extends Reader {
             buildProject(projet, scenarioBuilder);
             return projet.build();
         } finally {
-            eventListener.endScript();
+            EventListenerUtils.endScript();
         }
     }
 
-    private void getVariable(Project.Builder projet, TestPlan testPlan) {
+     void getVariable(Project.Builder projet, TestPlan testPlan) {
         Map<String, String> variableList = testPlan.getUserDefinedVariables();
         for (Map.Entry<String, String> entry : variableList.entrySet()) {
             String value = entry.getValue();
@@ -137,7 +136,7 @@ public class JMeterReader extends Reader {
             projet.addAllVariables(result.getVariableList());
         } else {
             LOG.warn("Unsupported first level node with type {}", o.getClass());
-            eventListener.readUnsupportedAction(o.getClass() + "\n");
+            EventListenerUtils.readUnsupportedAction(o.getClass() + "\n");
         }
     }
 
@@ -146,10 +145,10 @@ public class JMeterReader extends Reader {
         try {
             File fichier = new File(folder);
             Project.Builder projectBuilder = Project.builder();
-            eventListener.startReadingScripts(1);
+            EventListenerUtils.startReadingScripts(1);
             return readScript(projectBuilder, fichier);
         } finally {
-            eventListener.endReadingScripts();
+            EventListenerUtils.endReadingScripts();
         }
     }
 }
