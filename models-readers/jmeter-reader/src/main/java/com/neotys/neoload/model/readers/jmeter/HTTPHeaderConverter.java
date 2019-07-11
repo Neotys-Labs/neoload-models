@@ -20,14 +20,12 @@ class HTTPHeaderConverter {
         throw new IllegalAccessError();
     }
 
-    static void createHeader(HTTPSamplerProxy httpRequest, Request.Builder request, HashTree branche){
-        HashTree samplerChildren =  branche.get(httpRequest);
-        for (Object o : samplerChildren.list()) {
+    static void createHeader( Request.Builder request, HashTree subTree){
+        for (Object o : subTree.list()) {
             if (o instanceof HeaderManager) {
                 HeaderManager head = (HeaderManager) o;
                 CollectionProperty headers = head.getHeaders();
                 changeHttpHeader(request, headers);
-
             }
         }
         LOGGER.info("Header on the HTTP Request is a success");

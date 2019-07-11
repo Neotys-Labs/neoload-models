@@ -40,8 +40,10 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
                 .description(httpSamplerProxy.getComment());
         createParameters(httpSamplerProxy, req);
 
-        if(hashTree.get(httpSamplerProxy)!=null) {
-            HTTPHeaderConverter.createHeader(httpSamplerProxy, req, hashTree);
+        if(hashTree.get(httpSamplerProxy)!=null){
+            HTTPHeaderConverter.createHeader(req, hashTree.get(httpSamplerProxy));
+            RegularExtractorConverter regularExtractorConverter = new RegularExtractorConverter(eventListener);
+            RegularExtractorConverter.extract(req,hashTree.get(httpSamplerProxy));
             eventListener.readSupportedAction("HTTPHeaderManager");
         } else{
             LOGGER.warn("There is not HeaderManager so HTTPRequest do not have Header");
