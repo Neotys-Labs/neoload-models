@@ -18,7 +18,6 @@ public class ConstantTimerConverterTest {
         ConstantTimerConverter constantTimerConverter = new ConstantTimerConverter();
         List<Step> teststep = constantTimerConverter.apply(constantTimer, null);
         assertEquals(teststep.size(),1);
-        System.out.println(teststep);
 
     }
 
