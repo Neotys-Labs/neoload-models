@@ -18,7 +18,7 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataSetConverter.class);
 
-    CSVDataSetConverter() { throw new IllegalAccessError();}
+    CSVDataSetConverter() {}
 
     public List<Variable> apply(CSVDataSet csvDataSet, HashTree hashTree) {
         final PropertyIterator propertyIterator = csvDataSet.propertyIterator();

@@ -15,7 +15,7 @@ public class ConstantTimerConverter implements BiFunction<ConstantTimer, HashTre
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConstantTimerConverter.class);
 
-    ConstantTimerConverter() {throw new IllegalAccessError();}
+    ConstantTimerConverter() {}
 
     @Override
     public List<Step> apply(ConstantTimer constantTimer, HashTree hashtree) {
