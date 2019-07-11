@@ -18,6 +18,7 @@ class PopulationPolicyConverter {
         //Loop infinite si reste comme ça
         final LoadDuration loadDuration = getIterationLoadDuration(threadGroup, loop, planifier);
         final LoadPolicy loadPolicy = getLoadPolicy(threadGroup, nbUser, rampUp, loadDuration);
+        EventListenerUtils.readSupportedAction("PopulationPolicy");
         return PopulationPolicy.builder()
                 .loadPolicy(loadPolicy)
                 .name(threadGroup.getName())
@@ -26,6 +27,7 @@ class PopulationPolicyConverter {
     }
 
     private static LoadDuration getIterationLoadDuration(ThreadGroup threadGroup, int loop, boolean planifier) {
+        EventListenerUtils.readSupportedAction("LoadDuration");
         if (planifier) {
             return getTimeLoadDuration(threadGroup);
         } else if (loop != -1) {
@@ -35,6 +37,7 @@ class PopulationPolicyConverter {
     }
 
     private static LoadDuration getIterationLoadDuration(int loop) {
+        EventListenerUtils.readSupportedAction("IterationDuration");
         return LoadDuration.builder()
                 .type(LoadDuration.Type.ITERATION)
                 .value(loop)
@@ -43,6 +46,7 @@ class PopulationPolicyConverter {
 
 
     private static LoadDuration getTimeLoadDuration(ThreadGroup threadGroup) {
+        EventListenerUtils.readSupportedAction("TimeDuration");
         return LoadDuration.builder()
                 .type(LoadDuration.Type.TIME)
                 .value((int) threadGroup.getDuration())
@@ -62,6 +66,7 @@ class PopulationPolicyConverter {
 
     @SuppressWarnings("ConstantConditions")
     private static LoadPolicy getRampupLoadPolicy(Integer delay, int nbUser, int rampUp, LoadDuration loadDuration) {
+        EventListenerUtils.readSupportedAction("RampUpPolicy");
         return RampupLoadPolicy.builder()
                 .minUsers(1)
                 .maxUsers(nbUser)
@@ -77,6 +82,7 @@ class PopulationPolicyConverter {
 
     @SuppressWarnings("ConstantConditions")
     private static LoadPolicy  getConstantLoadPolicy(Integer delay, int nbUser, LoadDuration loadDuration) {
+        EventListenerUtils.readSupportedAction("ConstantPolicy");
         return ConstantLoadPolicy.builder()
                 .users(nbUser)
                 .duration(loadDuration)

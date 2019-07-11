@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter;
 
 import com.neotys.neoload.model.listener.CmdEventListener;
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.config.Argument;
@@ -14,6 +15,7 @@ import org.apache.jmeter.protocol.http.util.HTTPArgument;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -21,15 +23,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class HTTPSamplerProxyConverterTest {
 
+    private TestEventListener spy;
+
+    @Before
+    public void before()   {
+        spy = spy(new TestEventListener());
+        EventListenerUtils.setEventListener(spy);
+    }
+
 
     @Test
     public void testApplyWithoutHeaderURLEncoded() {
-        CmdEventListener eventListener = new CmdEventListener(null, null, null);
-        EventListenerUtils.setEventListener(eventListener);
+
+        EventListenerUtils.setEventListener(spy);
         HTTPSamplerProxyConverter httpconverter = new HTTPSamplerProxyConverter();
         HTTPSamplerProxy request = new HTTPSamplerProxy();
         HashTree hashtree = Mockito.mock(HashTree.class);
@@ -72,8 +83,7 @@ public class HTTPSamplerProxyConverterTest {
 
     @Test
     public void testApplyWithHeader() {
-        CmdEventListener eventListener = new CmdEventListener(null, null, null);
-        EventListenerUtils.setEventListener(eventListener);
+        EventListenerUtils.setEventListener(spy);
         HTTPSamplerProxyConverter httpconverter = new HTTPSamplerProxyConverter();
         // HTTP Sampler
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();

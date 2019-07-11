@@ -9,7 +9,6 @@ import org.apache.jmeter.testelement.property.PropertyIterator;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.rmi.runtime.Log;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -19,8 +18,7 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataSetConverter.class);
 
-    CSVDataSetConverter() {
-    }
+    CSVDataSetConverter() { throw new IllegalAccessError();}
 
     public List<Variable> apply(CSVDataSet csvDataSet, HashTree hashTree) {
         final PropertyIterator propertyIterator = csvDataSet.propertyIterator();
@@ -51,6 +49,7 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
                     break;
                 default:
                     LOGGER.error("CSVDataSet has not be created with success");
+                    EventListenerUtils.readUnsupportedAction("Not Right CSVDataSet");
             }
         }
         CSVDataSetModel csvDataSetModel = csvModelbuilder.build();
@@ -62,6 +61,9 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
                 .outOfValue(csvDataSetModel.computeOutOfValue());
 
         csvDataSetModel.computeScope().ifPresent(data::scope);
+        LOGGER.info("CSVDataSet : Convertion success");
+        EventListenerUtils.readSupportedAction("CSVDataSet");
+
         return ImmutableList.of(data.build());
     }
 

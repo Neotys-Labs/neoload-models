@@ -6,6 +6,7 @@ import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import org.apache.jmeter.extractor.RegexExtractor;
 import org.apache.jorphan.collections.HashTree;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -16,10 +17,17 @@ import static org.mockito.Mockito.*;
 
 public class RegularExtractorConverterTest {
 
+    private TestEventListener spy;
+
+    @Before
+    public void before()   {
+        spy = spy(new TestEventListener());
+        EventListenerUtils.setEventListener(spy);
+    }
+
     @Test
     public void testCheckApplyForChildrenAndCode() {
-        EventListener spy = spy(new TestEventListener());
-        EventListenerUtils.setEventListener(spy);
+
         RegexExtractor regexExtractor = new RegexExtractor();
         regexExtractor.setTemplate("$1$");
         regexExtractor.setRegex("http=");
@@ -52,8 +60,7 @@ public class RegularExtractorConverterTest {
 
     @Test
     public void testCheckApplyForAllAndMessage() {
-        EventListener spy = spy(new TestEventListener());
-        EventListenerUtils.setEventListener(spy);
+
         RegexExtractor regexExtractor = new RegexExtractor();
         regexExtractor.setTemplate("$2$");
         regexExtractor.setRegex("http=");
@@ -86,8 +93,7 @@ public class RegularExtractorConverterTest {
 
     @Test
     public void testCheckApplyForParentAndUrl() {
-        EventListener spy = spy(new TestEventListener());
-        EventListenerUtils.setEventListener(spy);
+
         RegexExtractor regexExtractor = new RegexExtractor();
         regexExtractor.setTemplate("$1$");
         regexExtractor.setRegex("http=");
@@ -119,8 +125,7 @@ public class RegularExtractorConverterTest {
 
     @Test
     public void testCheckApplyForParentAndHeader() {
-        EventListener spy = spy(new TestEventListener());
-        EventListenerUtils.setEventListener(spy);
+
         RegexExtractor regexExtractor = new RegexExtractor();
         regexExtractor.setTemplate("$1$");
         regexExtractor.setRegex("http=");
@@ -151,8 +156,7 @@ public class RegularExtractorConverterTest {
 
     @Test
     public void testCheckApplyForParentAndBody() {
-        EventListener spy = spy(new TestEventListener());
-        EventListenerUtils.setEventListener(spy);
+
         RegexExtractor regexExtractor = new RegexExtractor();
         regexExtractor.setTemplate("$1$");
         regexExtractor.setRegex("http=");
@@ -184,8 +188,7 @@ public class RegularExtractorConverterTest {
 
     @Test
     public void testCheckApplyForParentAndBodyUnescaped() {
-        EventListener spy = spy(new TestEventListener());
-        EventListenerUtils.setEventListener(spy);
+
         RegexExtractor regexExtractor = new RegexExtractor();
         regexExtractor.setTemplate("$1$");
         regexExtractor.setRegex("http=");

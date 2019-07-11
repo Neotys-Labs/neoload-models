@@ -29,7 +29,7 @@ import java.util.function.BiFunction;
 
         List<Variable> convertVariable(HashTree subTree) {
             //walk sub tree and convert each step
-            ArrayList<Variable> list = new ArrayList<>();
+            List<Variable> list = new ArrayList<>();
             for (Object o : subTree.list()) {
                 BiFunction<Object, HashTree, List<Variable>> converter = getConverters(o.getClass());
                 if(converter!=null) {

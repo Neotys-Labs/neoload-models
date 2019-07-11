@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.readers.jmeter;
 
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
@@ -11,6 +12,7 @@ import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -19,8 +21,15 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 public class ThreadGroupConverterTest {
+
+    @Before
+    public void before()   {
+        TestEventListener spy = spy(new TestEventListener());
+        EventListenerUtils.setEventListener(spy);
+    }
     @Test
     public void testGetContainer() {
         List<Step> steps = new ArrayList<>();

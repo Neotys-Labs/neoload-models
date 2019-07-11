@@ -28,6 +28,7 @@ class HTTPHeaderConverter {
             }
         }
         LOGGER.info("Header on the HTTP Request is a success");
+        EventListenerUtils.readSupportedAction("HTTP Header Manager");
     }
 
     private static void changeHttpHeader(Request.Builder request, CollectionProperty headers) {

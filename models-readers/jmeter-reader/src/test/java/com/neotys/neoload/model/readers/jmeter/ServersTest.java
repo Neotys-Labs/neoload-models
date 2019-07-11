@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter;
 
 import com.google.common.collect.Iterables;
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.v3.project.server.Server;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
@@ -9,10 +10,14 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.Set;
 
+import static org.mockito.Mockito.spy;
+
 public class ServersTest {
 
     @Before
-    public void before() {
+    public void before()   {
+        TestEventListener spy = spy(new TestEventListener());
+        EventListenerUtils.setEventListener(spy);
         Servers.clear();
     }
 

@@ -1,13 +1,22 @@
 package com.neotys.neoload.model.readers.jmeter;
 
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.threads.ThreadGroup;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.spy;
 
 public class PopulationPolicyConverterTest {
+
+    @Before
+    public void before()   {
+        TestEventListener spy = spy(new TestEventListener());
+        EventListenerUtils.setEventListener(spy);
+    }
 
     @Test
     public void testConvertLoadIterationWithConstant(){

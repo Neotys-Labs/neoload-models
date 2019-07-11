@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter;
 
 import com.neotys.neoload.model.listener.EventListener;
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
@@ -26,14 +27,19 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 public class JMeterReaderTest {
 
+    private TestEventListener spy;
+
+
     @Before
     public void before() {
         Servers.clear();
+        spy = spy(new TestEventListener());
+        EventListenerUtils.setEventListener(spy);
+
     }
 
     @After
@@ -157,7 +163,7 @@ public class JMeterReaderTest {
 
     @Test
     public void testGetScenario() {
-        JMeterReader jMeterReader = new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter");
+        JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         PopulationPolicy populationPolicy = mock(PopulationPolicy.class);
         Scenario scenario = Scenario.builder()
                 .addPopulations(populationPolicy)
@@ -174,7 +180,7 @@ public class JMeterReaderTest {
 
     @Test
     public void testThreadGroupElementWithoutThreadGroup() {
-        JMeterReader jMeterReader = new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter");
+        JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
         List<PopulationPolicy> populationPolicyListResult = new ArrayList<>();
 
@@ -189,7 +195,7 @@ public class JMeterReaderTest {
 
     @Test
     public void testThreadGroupElementWithThreadGroup() {
-        JMeterReader jMeterReader = new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter");
+        JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
         List<PopulationPolicy> populationPolicyListResult = new ArrayList<>();
 
@@ -228,7 +234,7 @@ public class JMeterReaderTest {
 
     @Test
     public void testBuildProject() {
-        JMeterReader jMeterReader = new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter");
+        JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         PopulationPolicy populationPolicy = mock(PopulationPolicy.class);
         Servers.addServer("blazedemo", 8080, "HTTP");
 
@@ -251,7 +257,7 @@ public class JMeterReaderTest {
 
     @Test
     public void testGetVariableSimple(){
-        JMeterReader jMeterReader = new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter");
+        JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         TestPlan testPlan = mock(TestPlan.class);
         Map<String, String> variableList = new HashMap<>();
         variableList.put("host","localhost");
@@ -271,7 +277,7 @@ public class JMeterReaderTest {
 
     @Test
     public void testGetVariableComplexe(){
-        JMeterReader jMeterReader = new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter");
+        JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         TestPlan testPlan = mock(TestPlan.class);
         Map<String, String> variableList = new HashMap<>();
         variableList.put("host","${__property(http.server,,localhost)}");

@@ -24,7 +24,7 @@ final class Servers {
         } else {
             serverPort = port;
         }
-        LOGGER.info("Creation of a new Server is a success");
+
 
         Server serve = Server.builder()
                 .name(host)
@@ -33,6 +33,9 @@ final class Servers {
                 .scheme(scheme)
                 .build();
         SERVER_LIST.add(serve);
+
+        LOGGER.info("Creation of a new Server is a success");
+        EventListenerUtils.readSupportedAction("Server");
     }
 
     static Set<Server> getServers() {
