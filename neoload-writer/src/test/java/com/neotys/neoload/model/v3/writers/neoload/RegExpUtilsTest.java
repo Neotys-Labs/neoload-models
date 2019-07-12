@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload;
 
+import com.neotys.neoload.model.v3.util.RegExpUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

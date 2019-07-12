@@ -1,4 +1,4 @@
-package com.neotys.neoload.model.v3.writers.neoload;
+package com.neotys.neoload.model.v3.util;
 
 
 /**

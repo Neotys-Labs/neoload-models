@@ -53,6 +53,7 @@ public class TestEventListener implements EventListener {
 
 	@Override
 	public void readSupportedParameter(String scriptName,final String parameterType, final String parameterName) {
+		System.out.println("eeeeeeeeeeeeeeeeeee");
 		// Empty. For test purpose only.
 	}
 

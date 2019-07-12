@@ -2,7 +2,7 @@ package com.neotys.neoload.model.v3.writers.neoload.variable;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
-import com.neotys.neoload.model.v3.writers.neoload.RegExpUtils;
+import com.neotys.neoload.model.v3.util.RegExpUtils;
 import com.opencsv.CSVWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

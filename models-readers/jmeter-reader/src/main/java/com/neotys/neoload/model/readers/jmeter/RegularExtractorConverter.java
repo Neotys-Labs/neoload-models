@@ -1,40 +1,41 @@
 package com.neotys.neoload.model.readers.jmeter;
 
-import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
+import org.apache.jmeter.extractor.BoundaryExtractor;
 import org.apache.jmeter.extractor.RegexExtractor;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class RegularExtractorConverter {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
+
+final class RegularExtractorConverter implements BiFunction<RegexExtractor, HashTree, List<VariableExtractor>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegularExtractorConverter.class);
     private static final String REGEX_EXTRACTOR = "RegexExtractor";
 
-    private RegularExtractorConverter() {
-        throw new IllegalAccessError();
+    RegularExtractorConverter() {
     }
 
-    static void extract(Request.Builder req, HashTree subTree) {
-
-        for (Object o : subTree.list()) {
-            if (o instanceof RegexExtractor) {
-                VariableExtractor.Builder variableExtractor = VariableExtractor.builder();
-                RegexExtractor regexExtractor = (RegexExtractor) o;
-                variableExtractor.description(regexExtractor.getComment());
-                variableExtractor.name(regexExtractor.getRefName());
-                variableExtractor.template(regexExtractor.getTemplate());
-                variableExtractor.matchNumber(regexExtractor.getMatchNumber());
-                variableExtractor.regexp(regexExtractor.getRegex());
-                checkApplyTo(regexExtractor);
-                variableExtractor = convertBody(regexExtractor, variableExtractor);
-                req.addExtractors(variableExtractor.build());
-            }
-        }
+    @SuppressWarnings("Duplicates")
+    public List<VariableExtractor> apply(RegexExtractor regexExtractor, HashTree subTree) {
+        List<VariableExtractor> extractorList = new ArrayList<>();
+        VariableExtractor.Builder variableExtractor = VariableExtractor.builder();
+        variableExtractor.description(regexExtractor.getComment());
+        variableExtractor.name(regexExtractor.getRefName());
+        variableExtractor.template(regexExtractor.getTemplate());
+        variableExtractor.matchNumber(regexExtractor.getMatchNumber());
+        variableExtractor.regexp(regexExtractor.getRegex());
+        checkApplyTo(regexExtractor);
+        variableExtractor = convertBody(regexExtractor, variableExtractor);
         LOGGER.info("Header on the RegexExtractor is a success");
         EventListenerUtils.readSupportedAction("RegexExtractorConverter");
+        extractorList.add(variableExtractor.build());
+        return extractorList;
     }
 
+    @SuppressWarnings("Duplicates")
     private static VariableExtractor.Builder convertBody(RegexExtractor regexExtractor, VariableExtractor.Builder variableExtractor) {
         if (regexExtractor.useBody() || regexExtractor.useBodyAsDocument() || regexExtractor.useUnescapedBody()) {
             variableExtractor.from(VariableExtractor.From.BODY);
@@ -59,6 +60,7 @@ final class RegularExtractorConverter {
         return variableExtractor;
     }
 
+    @SuppressWarnings("Duplicates")
     private static void checkApplyTo(RegexExtractor regexExtractor) {
         if ("all".equals(regexExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
