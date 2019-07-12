@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 import java.util.Arrays;
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.server.Server;
