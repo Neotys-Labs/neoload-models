@@ -3,14 +3,11 @@ package com.neotys.neoload.model.readers.jmeter;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Step;
-import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import org.apache.jmeter.control.TransactionController;
-import org.apache.jmeter.extractor.RegexExtractor;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 

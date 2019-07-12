@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter;
 
 import com.google.common.collect.ImmutableMap;
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import org.apache.jmeter.extractor.BoundaryExtractor;
 import org.apache.jmeter.extractor.RegexExtractor;
@@ -24,6 +25,7 @@ import java.util.function.BiFunction;
                     BoundaryExtractor.class, new BoundaryExtractorConverter());
 
         }
+
 
         @SuppressWarnings("unchecked")
         private <T> BiFunction<Object, HashTree, List<VariableExtractor>> getConverters(Class<T> clazz) {

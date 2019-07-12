@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.readers.jmeter;
 
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
-import org.apache.jmeter.extractor.BoundaryExtractor;
 import org.apache.jmeter.extractor.RegexExtractor;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
