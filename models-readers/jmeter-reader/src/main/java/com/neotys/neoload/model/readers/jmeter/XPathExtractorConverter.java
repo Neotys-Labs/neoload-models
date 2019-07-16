@@ -31,7 +31,7 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
     }
 
     @SuppressWarnings("Duplicates")
-    private static void checkApplyTo(XPathExtractor xPathExtractor) {
+     static void checkApplyTo(XPathExtractor xPathExtractor) {
         if ("all".equals(xPathExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
             EventListenerUtils.readSupportedParameterWithWarn(XPath_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");
@@ -41,7 +41,7 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
         }
     }
 
-    private void checkUnsupported(XPathExtractor xPathExtractor) {
+     static void checkUnsupported(XPathExtractor xPathExtractor) {
         if(!xPathExtractor.isQuiet() || !xPathExtractor.showWarnings()|| !xPathExtractor.reportErrors()){
             LOGGER.warn("We Use Tidy with isQuiet, ShowWarning and Reports Errors activate ");
             EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Tidy Parameter", " All Options");
