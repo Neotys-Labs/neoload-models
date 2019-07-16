@@ -31,7 +31,7 @@ class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, 
     }
 
     @SuppressWarnings("Duplicates")
-    private static void checkApplyTo(XPath2Extractor xPathExtractor) {
+     static void checkApplyTo(XPath2Extractor xPathExtractor) {
         if ("all".equals(xPathExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
             EventListenerUtils.readSupportedParameterWithWarn(XPath_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");
@@ -41,12 +41,12 @@ class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, 
         }
     }
 
-    private void checkUnsupported(XPath2Extractor xPathExtractor) {
+     static void checkUnsupported(XPath2Extractor xPathExtractor) {
         if(xPathExtractor.getFragment()){
             LOGGER.warn("We already use the fragment in own Extractor");
             EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Fragment Xpath", " textContent");
         }
-        else if (xPathExtractor.getNamespaces().isEmpty()){
+        else if (!xPathExtractor.getNamespaces().isEmpty()){
             LOGGER.warn("We don't manage the namespaces");
             EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Namespace Xpath", " textContent");
         }
