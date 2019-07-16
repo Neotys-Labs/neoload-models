@@ -6,6 +6,7 @@ import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.timers.ConstantTimer;
+import org.apache.jmeter.timers.UniformRandomTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,8 @@ final class StepConverters {
                 TransactionController.class, new TransactionControllerConverter(this),
                 HTTPSamplerProxy.class, new HTTPSamplerProxyConverter(),
                 ConstantTimer.class, new ConstantTimerConverter(),
-                GenericController.class, new SimpleControllerConverter(this));
+                GenericController.class, new SimpleControllerConverter(this),
+                UniformRandomTimer.class, new UniformerRandomTimerConverter());
     }
 
     @SuppressWarnings("unchecked")
