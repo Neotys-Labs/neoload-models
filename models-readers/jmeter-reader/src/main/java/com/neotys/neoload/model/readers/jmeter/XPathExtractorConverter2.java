@@ -12,7 +12,7 @@ import java.util.function.BiFunction;
 
 class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, List<VariableExtractor>> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(XPathExtractorConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XPathExtractorConverter2.class);
     private static final String XPath_EXTRACTOR = "XPathExtractor";
 
     XPathExtractorConverter2() {}

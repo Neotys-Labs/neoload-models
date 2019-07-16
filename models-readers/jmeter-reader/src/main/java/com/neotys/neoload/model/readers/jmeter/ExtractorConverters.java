@@ -6,6 +6,7 @@ import org.apache.jmeter.extractor.BoundaryExtractor;
 import org.apache.jmeter.extractor.RegexExtractor;
 import org.apache.jmeter.extractor.XPath2Extractor;
 import org.apache.jmeter.extractor.XPathExtractor;
+import org.apache.jmeter.extractor.json.jsonpath.JSONPostProcessor;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,8 @@ import java.util.function.BiFunction;
                     RegexExtractor.class, new RegularExtractorConverter(),
                     BoundaryExtractor.class, new BoundaryExtractorConverter(),
                     XPathExtractor.class, new XPathExtractorConverter(),
-                    XPath2Extractor.class,new XPathExtractorConverter2());
+                    XPath2Extractor.class,new XPathExtractorConverter2(),
+                    JSONPostProcessor.class, new JSONExtractorConverter());
         }
 
         @SuppressWarnings("unchecked")
