@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import org.apache.jmeter.extractor.BoundaryExtractor;
 import org.apache.jmeter.extractor.RegexExtractor;
+import org.apache.jmeter.extractor.XPath2Extractor;
 import org.apache.jmeter.extractor.XPathExtractor;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +24,9 @@ import java.util.function.BiFunction;
             convertersMap = ImmutableMap.of(
                     RegexExtractor.class, new RegularExtractorConverter(),
                     BoundaryExtractor.class, new BoundaryExtractorConverter(),
-                    XPathExtractor.class, new XPathExtractorConverter());
-
+                    XPathExtractor.class, new XPathExtractorConverter(),
+                    XPath2Extractor.class,new XPathExtractorConverter2());
         }
-
 
         @SuppressWarnings("unchecked")
         private <T> BiFunction<Object, HashTree, List<VariableExtractor>> getConverters(Class<T> clazz) {

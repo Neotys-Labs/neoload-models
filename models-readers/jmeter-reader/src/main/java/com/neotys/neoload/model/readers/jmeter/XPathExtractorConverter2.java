@@ -2,7 +2,7 @@ package com.neotys.neoload.model.readers.jmeter;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
-import org.apache.jmeter.extractor.XPathExtractor;
+import org.apache.jmeter.extractor.XPath2Extractor;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,15 +10,15 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
-class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, List<VariableExtractor>> {
+class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, List<VariableExtractor>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XPathExtractorConverter.class);
     private static final String XPath_EXTRACTOR = "XPathExtractor";
 
-    XPathExtractorConverter() {}
+    XPathExtractorConverter2() {}
 
-    @Override
-    public List<VariableExtractor> apply(XPathExtractor xPathExtractor, HashTree hashTree) {
+
+    public List<VariableExtractor> apply(XPath2Extractor xPathExtractor, HashTree hashTree) {
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder()
                 .description(xPathExtractor.getComment())
                 .name(xPathExtractor.getRefName())
@@ -31,7 +31,7 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
     }
 
     @SuppressWarnings("Duplicates")
-    private static void checkApplyTo(XPathExtractor xPathExtractor) {
+    private static void checkApplyTo(XPath2Extractor xPathExtractor) {
         if ("all".equals(xPathExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
             EventListenerUtils.readSupportedParameterWithWarn(XPath_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");
@@ -41,19 +41,14 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
         }
     }
 
-    private void checkUnsupported(XPathExtractor xPathExtractor) {
-        if(!xPathExtractor.isQuiet() || !xPathExtractor.showWarnings()|| !xPathExtractor.reportErrors()){
-            LOGGER.warn("We Use Tidy with isQuiet, ShowWarning and Reports Errors activate ");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Tidy Parameter", " All Options");
-        }
-        else if(xPathExtractor.useNameSpace() || xPathExtractor.isWhitespace() || xPathExtractor.isValidating() || xPathExtractor.isDownloadDTDs()){
-            LOGGER.warn("We support only Tidy Parameter ");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"OtherParameters", " All Options");
-        }
-
+    private void checkUnsupported(XPath2Extractor xPathExtractor) {
         if(xPathExtractor.getFragment()){
             LOGGER.warn("We already use the fragment in own Extractor");
             EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Fragment Xpath", " textContent");
+        }
+        else if (xPathExtractor.getNamespaces().isEmpty()){
+            LOGGER.warn("We don't manage the namespaces");
+            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Namespace Xpath", " textContent");
         }
     }
 }
