@@ -236,7 +236,7 @@ public class JMeterReaderTest {
     public void testBuildProject() {
         JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         PopulationPolicy populationPolicy = mock(PopulationPolicy.class);
-        Servers.addServer("toto","blazedemo", 8080, "HTTP",new HashTree(),"");
+        Servers.addServer("toto","blazedemo", 8080, "HTTP",new HashTree());
 
         Scenario scenario = Scenario.builder()
                 .addPopulations(populationPolicy)

@@ -2,6 +2,7 @@ package com.neotys.neoload.model.readers.jmeter;
 
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.protocol.http.control.CookieManager;

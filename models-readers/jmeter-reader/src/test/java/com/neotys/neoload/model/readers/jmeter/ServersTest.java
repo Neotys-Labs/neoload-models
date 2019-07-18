@@ -24,7 +24,7 @@ public class ServersTest {
 
     @Test
     public void testAddServers(){
-        Servers.addServer("toto","blazedemo",8080,"HTTP",new HashTree(),"");
+        Servers.addServer("toto","blazedemo",8080,"HTTP",new HashTree());
         Set<Server> server = Servers.getServers();
         Assert.assertEquals(server.iterator().next().getPort(),"8080");
         Assert.assertEquals(server.iterator().next().getHost(),"blazedemo");
@@ -33,7 +33,7 @@ public class ServersTest {
 
     @Test
     public void testAddServersWithoutProtocol(){
-        Servers.addServer("toto","host",8080,null,new HashTree(),"");
+        Servers.addServer("toto","host",8080,null,new HashTree());
         Set<Server> server = Servers.getServers();
         Assert.assertEquals(server.iterator().next().getPort(),"8080");
         Assert.assertEquals(server.iterator().next().getHost(), "host");
@@ -42,7 +42,7 @@ public class ServersTest {
 
     @Test
     public void testAddServersWithoutHost(){
-        Servers.addServer("toto",null,8080,"HTTP",new HashTree(),"");
+        Servers.addServer("toto",null,8080,"HTTP",new HashTree());
         Set<Server> server = Servers.getServers();
         Assert.assertEquals(server.iterator().next().getPort(),"8080");
         Assert.assertNull(server.iterator().next().getHost());
@@ -51,24 +51,24 @@ public class ServersTest {
 
     @Test
     public void testAddServerWithoutPort() {
-        Servers.addServer("toto","blazedemo",0,"HTTP",new HashTree(),"");
+        Servers.addServer("toto","blazedemo",0,"HTTP",new HashTree());
         Set<Server> servers = Servers.getServers();
         Assertions.assertThat(servers).hasSize(1);
         Server newServer = Iterables.getFirst(servers, null);
 
-        Assertions.assertThat(newServer.getPort()).isEqualTo("80");
+        Assertions.assertThat(newServer.getPort()).isEqualTo("0");
         Assertions.assertThat(newServer.getHost()).isEqualTo("blazedemo");
         Assertions.assertThat(newServer.getScheme()).isEqualTo(Server.Scheme.HTTP);
     }
 
     @Test
     public void testAddServerWithoutPortAndHttps() {
-        Servers.addServer("toto","blazedemo",0,"HTTPS",new HashTree(),"");
+        Servers.addServer("toto","blazedemo",0,"HTTPS",new HashTree());
         Set<Server> servers = Servers.getServers();
         Assertions.assertThat(servers).hasSize(1);
         Server newServer = Iterables.getFirst(servers, null);
 
-        Assertions.assertThat(newServer.getPort()).isEqualTo("443");
+        Assertions.assertThat(newServer.getPort()).isEqualTo("0");
         Assertions.assertThat(newServer.getHost()).isEqualTo("blazedemo");
         Assertions.assertThat(newServer.getScheme()).isEqualTo(Server.Scheme.HTTPS);
     }

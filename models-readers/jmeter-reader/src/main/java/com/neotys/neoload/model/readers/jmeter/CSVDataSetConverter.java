@@ -18,7 +18,8 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataSetConverter.class);
 
-    CSVDataSetConverter() {}
+    CSVDataSetConverter() {
+    }
 
     public List<Variable> apply(CSVDataSet csvDataSet, HashTree hashTree) {
         final PropertyIterator propertyIterator = csvDataSet.propertyIterator();
@@ -48,8 +49,7 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
                     csvModelbuilder.stopThread(jMeterProperty.getBooleanValue());
                     break;
                 default:
-                    LOGGER.error("CSVDataSet has not be created with success");
-                    EventListenerUtils.readUnsupportedAction("Not Right CSVDataSet");
+                    break;
             }
         }
         CSVDataSetModel csvDataSetModel = csvModelbuilder.build();

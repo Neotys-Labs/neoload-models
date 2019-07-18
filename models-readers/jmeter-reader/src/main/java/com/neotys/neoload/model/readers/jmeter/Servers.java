@@ -23,32 +23,42 @@ final class Servers {
         throw new IllegalAccessError();
     }
 
-    static void addServer(final String name, final String host, final int port, final String protocol, final HashTree hashTree, final String url) {
+    static String addServer(final String name, final String host, final int port, final String protocol, final HashTree hashTree) {
+        String url = protocol + "://" + host+ ":" + port;
         Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
-        final int serverPort;
-        if (port <= 0) {
-            serverPort = scheme == Server.Scheme.HTTP ? 80 : 443;
-        } else {
-            serverPort = port;
-        }
 
         Server.Builder serve = Server.builder()
                 .name(name)
-                .port(Integer.toString(serverPort))
+                .port(Integer.toString(port))
                 .host(host)
                 .scheme(scheme);
         for (Object o : hashTree.list()) {
             if (o instanceof AuthManager) {
-                checkAuthentification(serve, hashTree, url, o);
+                checkAuthentification(serve, url, o);
             }
         }
-
-        SERVER_LIST.add(new ServerWrapper(serve.build()));
         LOGGER.info("Creation of a new Server is a success");
         EventListenerUtils.readSupportedAction("Server");
+
+        if (SERVER_LIST.add(new ServerWrapper(serve.build()))){
+            return serve.build().getName();
+        }
+        else{
+            return checkServer(serve.build());
+        }
     }
 
-    static void checkAuthentification(Server.Builder serve, HashTree hashTree, String url, Object o) {
+    private static String checkServer(ImmutableServer build) {
+        String serverName= "";
+        for(Server s : Servers.getServers()){
+            if (s.getPort().equals(build.getPort()) && s.getScheme().equals(build.getScheme()) && s.getHost().equals(build.getHost())){
+                serverName = s.getName();
+            }
+        }
+        return serverName;
+    }
+
+    static void checkAuthentification(Server.Builder serve, String url, Object o) {
         AuthManager authManager = (AuthManager) o;
         try {
             checkTypeAuthentification(authManager, serve, url);

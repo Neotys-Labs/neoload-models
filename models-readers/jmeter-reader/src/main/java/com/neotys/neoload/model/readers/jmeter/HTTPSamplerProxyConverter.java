@@ -1,21 +1,20 @@
 package com.neotys.neoload.model.readers.jmeter;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.protocol.http.util.HTTPArgument;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
+import org.apache.jmeter.testelement.property.PropertyIterator;
 import org.apache.jmeter.testelement.property.TestElementProperty;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 
@@ -24,42 +23,11 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
     HTTPSamplerProxyConverter() {
-
-    }
-
-    @Override
-    public List<Step> apply(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree) {
-        EventListenerUtils.readSupportedAction("HTTPSampler");
-        Optional<String> domain = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getDomain()));
-        Optional<String> path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath()));
-        Optional<String> protocol = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getProtocol().toLowerCase()));
-        int port = httpSamplerProxy.getPort();
-        final Request.Builder req = Request.builder()
-                .method(httpSamplerProxy.getMethod())
-                .description(httpSamplerProxy.getComment());
-        createParameters(httpSamplerProxy, req);
-
-        if (hashTree.get(httpSamplerProxy) != null) {
-            HTTPHeaderConverter.createHeader(req, hashTree.get(httpSamplerProxy));
-            req.addAllExtractors(new ExtractorConverters().convertParameter(hashTree.get(httpSamplerProxy)));
-            EventListenerUtils.readSupportedAction("HTTPHeaderManager");
-        } else {
-            LOGGER.warn("There is not HeaderManager so HTTPRequest do not have Header");
-            EventListenerUtils.readSupportedFunctionWithWarn("", "HttpRequest", null, "Don't have Header Manager");
-        }
-        String url = protocol.orElse("http") + "://" + domain.orElse("host") + ":" + port + path.orElse("/");
-        createServer(httpSamplerProxy, domain, path, protocol, port, req,hashTree, url);
-        Step javascript = CookieManagerConverter.createCookie(hashTree);
-        if(javascript!= null){
-            return ImmutableList.of(req.build(), javascript);
-        }
-        return ImmutableList.of(req.build());
     }
 
     private void createParameters(HTTPSamplerProxy httpSamplerProxy, Request.Builder req) {
         StringBuilder parameter = new StringBuilder();
         CollectionProperty collectionParameter = httpSamplerProxy.getArguments().getArguments();
-
         for (JMeterProperty ValueParameter : collectionParameter) {
             if (ValueParameter instanceof TestElementProperty) {
                 HTTPArgument httpArgument = (HTTPArgument) ValueParameter.getObjectValue();
@@ -78,24 +46,84 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         EventListenerUtils.readSupportedAction("Put parameters into HttpRequest");
     }
 
-    private void createServer(HTTPSamplerProxy httpSamplerProxy, Optional<String> domain, Optional<String> path, Optional<String> protocol, int port, Request.Builder req, HashTree hashTree, String url) {
-        Servers.addServer(httpSamplerProxy.getName(),domain.orElse("host"), httpSamplerProxy.getPort(), httpSamplerProxy.getProtocol(),hashTree, url);
-        //Gérer aussi avec l'intégration de variable dans le path
-        req.url(url);
-        req.server(checkServer(domain, protocol,port));
-        path.ifPresent(req::name);
-        EventListenerUtils.readSupportedAction("HTTPSampler");
+    public List<Step> apply(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree) {
+        String domain = httpSamplerProxy.getDomain();
+        String path = httpSamplerProxy.getPath();
+        String protocol = httpSamplerProxy.getProtocol().toLowerCase();
+        int port = httpSamplerProxy.getPort();
+
+        final Request.Builder req = Request.builder()
+                .name(httpSamplerProxy.getName())
+                .method(httpSamplerProxy.getMethod())
+                .description(httpSamplerProxy.getComment());
+
+        if (domain.isEmpty()) {
+            checkDefaultServer(httpSamplerProxy, hashTree,req);
+        } else {
+            req.server(Servers.addServer(httpSamplerProxy.getName(), domain, httpSamplerProxy.getPort(), httpSamplerProxy.getProtocol(), hashTree));
+            String url = protocol + "://" + domain + ":" + port + path;
+            //Gérer aussi avec l'intégration de variable dans le path
+            req.url(url);
+            EventListenerUtils.readSupportedAction("HTTPSampler");
+        }
+        createParameters(httpSamplerProxy, req);
+        if (hashTree.get(httpSamplerProxy) != null) {
+            HTTPHeaderConverter.createHeader(req, hashTree.get(httpSamplerProxy));
+            req.addAllExtractors(new ExtractorConverters().convertParameter(hashTree.get(httpSamplerProxy)));
+            EventListenerUtils.readSupportedAction("HTTPHeaderManager");
+        } else {
+            LOGGER.warn("There is not HeaderManager so HTTPRequest do not have Header");
+            EventListenerUtils.readSupportedFunctionWithWarn("", "HttpRequest", null, "Don't have Header Manager");
+        }
+        Step javascript = CookieManagerConverter.createCookie(hashTree);
+
+        if (javascript != null) {
+            return ImmutableList.of(req.build(), javascript);
+        }
+        return ImmutableList.of(req.build());
     }
 
-    private String checkServer(Optional<String> domain, Optional<String> protocol, int port) {
-        String serverName = "";
-        for (Server server : Servers.getServers()) {
-            if (server.getHost().equals(domain.get())
-                    && server.getPort().equals(String.valueOf(port))
-                    && server.getScheme().equals(protocol.get().equals("http")? Server.Scheme.HTTP: Server.Scheme.HTTPS)) {
-                serverName = server.getName();
+    private void checkDefaultServer(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree, Request.Builder req) {
+        boolean find = false;
+        for (Object o : hashTree.list()) {
+            if (o instanceof ConfigTestElement) {
+                find = true;
+                ConfigTestElement configTestElement = (ConfigTestElement) o;
+                HTTPDefaultSetModel httpDefaultSetModel = buildHttpDefault(configTestElement);
+                req.server(Servers.addServer(httpDefaultSetModel.getName(), httpDefaultSetModel.checkDomain(), httpDefaultSetModel.checkPort(), httpDefaultSetModel.checkProtocol(), hashTree));
+                req.url(httpDefaultSetModel.checkProtocol() + "://" + httpDefaultSetModel.checkDomain() + ":" + httpDefaultSetModel.getPort() + httpDefaultSetModel.checkPath());
             }
         }
-        return serverName;
+        if(find){
+            LOGGER.warn("This HTTP Request don't have any Server, we create a new  local server");
+            req.server(Servers.addServer("localhost", "localhost", 80, "http", new HashTree()));
+            req.url("http://localhost:80/");
+        }
+    }
+
+    private ImmutableHTTPDefaultSetModel buildHttpDefault(ConfigTestElement configTestElement) {
+        ImmutableHTTPDefaultSetModel.Builder httpDefaultSetModel = ImmutableHTTPDefaultSetModel.builder()
+                .name(configTestElement.getName());
+        final PropertyIterator propertyIterator = configTestElement.propertyIterator();
+        while (propertyIterator.hasNext()) {
+            JMeterProperty jMeterProperty = propertyIterator.next();
+            switch (jMeterProperty.getName()) {
+                case "HTTPSampler.domain":
+                    httpDefaultSetModel.domain(jMeterProperty.getStringValue());
+                    break;
+                case "HTTPSampler.port":
+                    httpDefaultSetModel.port(jMeterProperty.getStringValue());
+                    break;
+                case "HTTPSampler.protocol":
+                    httpDefaultSetModel.protocol(jMeterProperty.getStringValue());
+                    break;
+                case "HTTPSampler.path":
+                    httpDefaultSetModel.path(jMeterProperty.getStringValue());
+                    break;
+                default:
+                    break;
+            }
+        }
+        return httpDefaultSetModel.build();
     }
 }
