@@ -1,14 +1,10 @@
 package com.neotys.neoload.model.readers.jmeter;
 
 import org.immutables.value.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 abstract class HTTPDefaultSetModel {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
     abstract String getName();
 
@@ -53,7 +49,7 @@ abstract class HTTPDefaultSetModel {
 
     int checkPort(){
         if(getPort().isEmpty()){
-            return checkProtocol().equals("http")? 80:443;
+            return "http".equals(checkProtocol()) ? 80:443;
         }
         else{
             return Integer.parseInt(getPort());

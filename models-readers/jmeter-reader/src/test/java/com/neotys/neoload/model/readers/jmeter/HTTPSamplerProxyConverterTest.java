@@ -6,6 +6,8 @@ import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.config.Argument;
 import org.apache.jmeter.config.Arguments;
+import org.apache.jmeter.config.ConfigTestElement;
+import org.apache.jmeter.protocol.http.config.gui.HttpDefaultsGui;
 import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
 import org.apache.jmeter.protocol.http.control.gui.HttpTestSampleGui;
@@ -23,8 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class HTTPSamplerProxyConverterTest {
 
@@ -62,7 +63,6 @@ public class HTTPSamplerProxyConverterTest {
         request.setPort(8080);
         request.setProtocol("https");
         request.setMethod("POST");
-        request.setName("/login");
         request.addTestElement(httpArgument);
         request.setArguments(arguments);
 
@@ -72,9 +72,9 @@ public class HTTPSamplerProxyConverterTest {
                 .body("Allez%21%21=L%27OL")
                 .url("https://host:8080/login")
                 .method("POST")
-                .server("HTTP Request")
+                .server("")
                 .description("")
-                .name("/login")
+                .name("")
                 .build();
 
         assertEquals(neoloadRequest, result.get(0));
@@ -132,4 +132,59 @@ public class HTTPSamplerProxyConverterTest {
         }
 
     }
+
+    @Test
+    public void testBuildHttpDefault(){
+        ConfigTestElement configTestElement = new ConfigTestElement();
+        configTestElement.setProperty("HTTPSampler.domain","localhost");
+        configTestElement.setProperty("HTTPSampler.port","80");
+        configTestElement.setProperty("HTTPSampler.protocol","http");
+        configTestElement.setProperty("HTTPSampler.path","/");
+        configTestElement.setName("Test");
+
+        ImmutableHTTPDefaultSetModel expected = ImmutableHTTPDefaultSetModel.builder()
+                .name("Test")
+                .path("/")
+                .protocol("http")
+                .domain("localhost")
+                .port("80")
+                .build();
+
+        HTTPDefaultSetModel result = HTTPSamplerProxyConverter.buildHttpDefault(configTestElement);
+        assertEquals(result,expected);
+    }
+
+    @Test
+    public void testCheckDefaultServerwithHttpDefaults(){
+        HashTree hashTree = new HashTree();
+        ConfigTestElement configTestElement = new ConfigTestElement();
+        configTestElement.setProperty("HTTPSampler.domain","localhost");
+        configTestElement.setProperty("HTTPSampler.port","80");
+        configTestElement.setProperty("HTTPSampler.protocol","http");
+        configTestElement.setProperty("HTTPSampler.path","/");
+        configTestElement.setName("Test");
+        configTestElement.setProperty(TestElement.GUI_CLASS, HttpDefaultsGui.class.getName());
+        hashTree.add(configTestElement);
+
+        Request.Builder result = Request.builder();
+        Request.Builder expected = Request.builder();
+
+        HTTPSamplerProxyConverter.checkDefaultServer(hashTree,result);
+        expected.server(Servers.addServer("Test","localhost",80,"http",hashTree));
+        expected.url("http://localhost:80/");
+        assertEquals(result.build(),expected.build());
+    }
+
+    @Test
+    public void testCheckDefaultServerwithoutHTTPDefaults(){
+        HashTree hashTree = new HashTree();
+        Request.Builder result = Request.builder();
+        Request.Builder expected = Request.builder();
+        HTTPSamplerProxyConverter.checkDefaultServer(hashTree,result);
+        expected.server(Servers.addServer("localhost","localhost",80,"http",hashTree));
+        expected.url("http://localhost:80/");
+        assertEquals(result.build(),expected.build());
+    }
+
+
 }

@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.config.ConfigTestElement;
+import org.apache.jmeter.protocol.http.config.gui.HttpDefaultsGui;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.protocol.http.util.HTTPArgument;
+import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apache.jmeter.testelement.property.PropertyIterator;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 
@@ -48,8 +51,8 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
 
     public List<Step> apply(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree) {
         String domain = httpSamplerProxy.getDomain();
-        String path = httpSamplerProxy.getPath();
-        String protocol = httpSamplerProxy.getProtocol().toLowerCase();
+        String path = Optional.ofNullable(httpSamplerProxy.getPath()).orElse("/") ;
+        String protocol = Optional.ofNullable(httpSamplerProxy.getProtocol().toLowerCase()).orElse("http");
         int port = httpSamplerProxy.getPort();
 
         final Request.Builder req = Request.builder()
@@ -58,9 +61,9 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
                 .description(httpSamplerProxy.getComment());
 
         if (domain.isEmpty()) {
-            checkDefaultServer(httpSamplerProxy, hashTree,req);
+            checkDefaultServer( hashTree,req);
         } else {
-            req.server(Servers.addServer(httpSamplerProxy.getName(), domain, httpSamplerProxy.getPort(), httpSamplerProxy.getProtocol(), hashTree));
+            req.server(Servers.addServer(httpSamplerProxy.getName(), domain, port, protocol, hashTree));
             String url = protocol + "://" + domain + ":" + port + path;
             //Gérer aussi avec l'intégration de variable dans le path
             req.url(url);
@@ -83,10 +86,10 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         return ImmutableList.of(req.build());
     }
 
-    private void checkDefaultServer(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree, Request.Builder req) {
+    static void checkDefaultServer( HashTree hashTree, Request.Builder req) {
         boolean find = false;
         for (Object o : hashTree.list()) {
-            if (o instanceof ConfigTestElement) {
+            if (o instanceof ConfigTestElement && HttpDefaultsGui.class.getName().equals(((ConfigTestElement) o).getPropertyAsString(TestElement.GUI_CLASS))) {
                 find = true;
                 ConfigTestElement configTestElement = (ConfigTestElement) o;
                 HTTPDefaultSetModel httpDefaultSetModel = buildHttpDefault(configTestElement);
@@ -94,14 +97,14 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
                 req.url(httpDefaultSetModel.checkProtocol() + "://" + httpDefaultSetModel.checkDomain() + ":" + httpDefaultSetModel.getPort() + httpDefaultSetModel.checkPath());
             }
         }
-        if(find){
+        if(!find){
             LOGGER.warn("This HTTP Request don't have any Server, we create a new  local server");
             req.server(Servers.addServer("localhost", "localhost", 80, "http", new HashTree()));
             req.url("http://localhost:80/");
         }
     }
 
-    private ImmutableHTTPDefaultSetModel buildHttpDefault(ConfigTestElement configTestElement) {
+    static ImmutableHTTPDefaultSetModel buildHttpDefault(ConfigTestElement configTestElement) {
         ImmutableHTTPDefaultSetModel.Builder httpDefaultSetModel = ImmutableHTTPDefaultSetModel.builder()
                 .name(configTestElement.getName());
         final PropertyIterator propertyIterator = configTestElement.propertyIterator();

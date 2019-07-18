@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 final class Servers {
 
     private static final Set<ServerWrapper> SERVER_LIST = new HashSet<>();
@@ -24,9 +23,8 @@ final class Servers {
     }
 
     static String addServer(final String name, final String host, final int port, final String protocol, final HashTree hashTree) {
-        String url = protocol + "://" + host+ ":" + port;
+        String url = protocol + "://" + host+ ":" + port + "/";
         Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
-
         Server.Builder serve = Server.builder()
                 .name(name)
                 .port(Integer.toString(port))
@@ -48,7 +46,7 @@ final class Servers {
         }
     }
 
-    private static String checkServer(ImmutableServer build) {
+     static String checkServer(ImmutableServer build) {
         String serverName= "";
         for(Server s : Servers.getServers()){
             if (s.getPort().equals(build.getPort()) && s.getScheme().equals(build.getScheme()) && s.getHost().equals(build.getHost())){
@@ -71,10 +69,6 @@ final class Servers {
 
         Authorization authorization = authManager.getAuthForURL(new URL(url));
         if (authorization != null) {
-            if (authorization.expectsModification()) {
-                LOGGER.warn("We can't manage the clear auth for each iteration");
-                EventListenerUtils.readUnsupportedParameter("Authorization Manager", "Options", "Clear for each iteration");
-            }
             if (authorization.getMechanism().equals(AuthManager.Mechanism.BASIC) || authorization.getMechanism().equals(AuthManager.Mechanism.BASIC_DIGEST)) {
                 serve.authentication(BasicAuthentication.builder()
                         .login(authorization.getUser())
