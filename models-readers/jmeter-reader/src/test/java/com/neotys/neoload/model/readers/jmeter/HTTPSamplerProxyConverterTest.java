@@ -17,6 +17,7 @@ import org.apache.jmeter.protocol.http.util.HTTPArgument;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -35,6 +36,7 @@ public class HTTPSamplerProxyConverterTest {
     public void before()   {
         spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
+        Servers.clear();
     }
 
 
@@ -186,5 +188,8 @@ public class HTTPSamplerProxyConverterTest {
         assertEquals(result.build(),expected.build());
     }
 
-
+    @After
+    public void after(){
+        Servers.clear();
+    }
 }
