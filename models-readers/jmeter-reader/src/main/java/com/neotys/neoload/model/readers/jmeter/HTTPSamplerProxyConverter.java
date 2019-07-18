@@ -2,6 +2,7 @@ package com.neotys.neoload.model.readers.jmeter;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
@@ -31,7 +32,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         EventListenerUtils.readSupportedAction("HTTPSampler");
         Optional<String> domain = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getDomain()));
         Optional<String> path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath()));
-        Optional<String> protocol = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getProtocol()));
+        Optional<String> protocol = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getProtocol().toLowerCase()));
         int port = httpSamplerProxy.getPort();
         final Request.Builder req = Request.builder()
                 .method(httpSamplerProxy.getMethod())
@@ -46,7 +47,12 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
             LOGGER.warn("There is not HeaderManager so HTTPRequest do not have Header");
             EventListenerUtils.readSupportedFunctionWithWarn("", "HttpRequest", null, "Don't have Header Manager");
         }
-        createServer(httpSamplerProxy, domain, path, protocol, port, req);
+        String url = protocol.orElse("http") + "://" + domain.orElse("host") + ":" + port + path.orElse("/");
+        createServer(httpSamplerProxy, domain, path, protocol, port, req,hashTree, url);
+        Step javascript = CookieManagerConverter.createCookie(hashTree);
+        if(javascript!= null){
+            return ImmutableList.of(req.build(), javascript);
+        }
         return ImmutableList.of(req.build());
     }
 
@@ -72,13 +78,24 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         EventListenerUtils.readSupportedAction("Put parameters into HttpRequest");
     }
 
-    private void createServer(HTTPSamplerProxy httpSamplerProxy, Optional<String> domain, Optional<String> path, Optional<String> protocol, int port, Request.Builder req) {
-        Servers.addServer(domain.orElse("host"), httpSamplerProxy.getPort(), httpSamplerProxy.getProtocol());
-        String url = protocol.orElse("http") + "://" + domain.orElse("host") + ":" + port + path.orElse("/");
+    private void createServer(HTTPSamplerProxy httpSamplerProxy, Optional<String> domain, Optional<String> path, Optional<String> protocol, int port, Request.Builder req, HashTree hashTree, String url) {
+        Servers.addServer(httpSamplerProxy.getName(),domain.orElse("host"), httpSamplerProxy.getPort(), httpSamplerProxy.getProtocol(),hashTree, url);
         //Gérer aussi avec l'intégration de variable dans le path
         req.url(url);
-        req.server(domain.orElse("host"));
+        req.server(checkServer(domain, protocol,port));
         path.ifPresent(req::name);
         EventListenerUtils.readSupportedAction("HTTPSampler");
+    }
+
+    private String checkServer(Optional<String> domain, Optional<String> protocol, int port) {
+        String serverName = "";
+        for (Server server : Servers.getServers()) {
+            if (server.getHost().equals(domain.get())
+                    && server.getPort().equals(String.valueOf(port))
+                    && server.getScheme().equals(protocol.get().equals("http")? Server.Scheme.HTTP: Server.Scheme.HTTPS)) {
+                serverName = server.getName();
+            }
+        }
+        return serverName;
     }
 }

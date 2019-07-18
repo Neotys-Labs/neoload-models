@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.control.TransactionController;
+import org.apache.jmeter.protocol.http.control.CookieManager;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jmeter.timers.UniformRandomTimer;
@@ -21,14 +22,15 @@ final class StepConverters {
     private final Map<Class, BiFunction<?, HashTree, List<Step>>> convertersMap;
 
 
-    StepConverters(){
+    StepConverters() {
 
-        convertersMap = ImmutableMap.of(
-                TransactionController.class, new TransactionControllerConverter(this),
-                HTTPSamplerProxy.class, new HTTPSamplerProxyConverter(),
-                ConstantTimer.class, new ConstantTimerConverter(),
-                GenericController.class, new SimpleControllerConverter(this),
-                UniformRandomTimer.class, new UniformerRandomTimerConverter());
+        convertersMap = ImmutableMap.<Class, BiFunction<?, HashTree, List<Step>>>builder()
+                .put(TransactionController.class, new TransactionControllerConverter(this))
+                .put(HTTPSamplerProxy.class, new HTTPSamplerProxyConverter())
+                .put(ConstantTimer.class, new ConstantTimerConverter())
+                .put(GenericController.class, new SimpleControllerConverter(this))
+                .put(UniformRandomTimer.class, new UniformerRandomTimerConverter())
+                .build();
     }
 
     @SuppressWarnings("unchecked")
@@ -41,12 +43,12 @@ final class StepConverters {
         ArrayList<Step> list = new ArrayList<>();
         for (Object o : subTree.list()) {
             BiFunction<Object, HashTree, List<Step>> converter = getConverters(o.getClass());
-            if(converter!=null) {
+            if (converter != null) {
                 list.addAll(converter.apply(o, subTree));
                 continue;
             }
             LOGGER.error("Type not Tolerate for converted in Step ");
-            EventListenerUtils.readUnsupportedAction(o.getClass()+"\n");
+            EventListenerUtils.readUnsupportedAction(o.getClass() + "\n");
         }
         return list;
     }

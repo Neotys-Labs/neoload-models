@@ -72,7 +72,7 @@ public class HTTPSamplerProxyConverterTest {
                 .body("Allez%21%21=L%27OL")
                 .url("https://host:8080/login")
                 .method("POST")
-                .server("host")
+                .server("HTTP Request")
                 .description("")
                 .name("/login")
                 .build();

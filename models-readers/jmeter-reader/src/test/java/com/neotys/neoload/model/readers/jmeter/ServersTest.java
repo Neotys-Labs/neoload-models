@@ -3,6 +3,7 @@ package com.neotys.neoload.model.readers.jmeter;
 import com.google.common.collect.Iterables;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.v3.project.server.Server;
+import org.apache.jorphan.collections.HashTree;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Assert;
@@ -23,7 +24,7 @@ public class ServersTest {
 
     @Test
     public void testAddServers(){
-        Servers.addServer("blazedemo",8080,"HTTP");
+        Servers.addServer("toto","blazedemo",8080,"HTTP",new HashTree(),"");
         Set<Server> server = Servers.getServers();
         Assert.assertEquals(server.iterator().next().getPort(),"8080");
         Assert.assertEquals(server.iterator().next().getHost(),"blazedemo");
@@ -32,7 +33,7 @@ public class ServersTest {
 
     @Test
     public void testAddServersWithoutProtocol(){
-        Servers.addServer("host",8080,null);
+        Servers.addServer("toto","host",8080,null,new HashTree(),"");
         Set<Server> server = Servers.getServers();
         Assert.assertEquals(server.iterator().next().getPort(),"8080");
         Assert.assertEquals(server.iterator().next().getHost(), "host");
@@ -41,7 +42,7 @@ public class ServersTest {
 
     @Test
     public void testAddServersWithoutHost(){
-        Servers.addServer(null,8080,"HTTP");
+        Servers.addServer("toto",null,8080,"HTTP",new HashTree(),"");
         Set<Server> server = Servers.getServers();
         Assert.assertEquals(server.iterator().next().getPort(),"8080");
         Assert.assertNull(server.iterator().next().getHost());
@@ -50,7 +51,7 @@ public class ServersTest {
 
     @Test
     public void testAddServerWithoutPort() {
-        Servers.addServer("blazedemo",0,"HTTP");
+        Servers.addServer("toto","blazedemo",0,"HTTP",new HashTree(),"");
         Set<Server> servers = Servers.getServers();
         Assertions.assertThat(servers).hasSize(1);
         Server newServer = Iterables.getFirst(servers, null);
@@ -62,7 +63,7 @@ public class ServersTest {
 
     @Test
     public void testAddServerWithoutPortAndHttps() {
-        Servers.addServer("blazedemo",0,"HTTPS");
+        Servers.addServer("toto","blazedemo",0,"HTTPS",new HashTree(),"");
         Set<Server> servers = Servers.getServers();
         Assertions.assertThat(servers).hasSize(1);
         Server newServer = Iterables.getFirst(servers, null);

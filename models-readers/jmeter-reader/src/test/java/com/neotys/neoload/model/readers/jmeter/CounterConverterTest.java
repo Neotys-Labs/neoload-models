@@ -11,18 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
 public class CounterConverterTest {
+    private TestEventListener spy;
 
     @Before
     public void before()   {
-        TestEventListener spy = spy(new TestEventListener());
+         spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
     }
 
     @Test
-    public void testApplyLocalAndCycle(){
+    public void testApplyLocalAndWarn(){
         CounterConfig counterConfig = new CounterConfig();
         counterConfig.setIsPerUser(true);
         counterConfig.setResetOnThreadGroupIteration(true);
@@ -33,6 +34,8 @@ public class CounterConverterTest {
 
         List<Variable> result = new CounterConverter().apply(counterConfig,null);
         List<Variable> expected = new ArrayList<>();
+
+        verify(spy, times(1)).readUnsupportedParameter("Counter", "Reset on each Thread Group Iteration", "not supported");
 
         CounterVariable.Builder counterBuilder = CounterVariable.builder()
                 .name(counterConfig.getVarName())
@@ -47,7 +50,7 @@ public class CounterConverterTest {
     }
 
     @Test
-    public void testApplyGlobalAndStop(){
+    public void testApplyGlobal(){
     CounterConfig counterConfig = new CounterConfig();
         counterConfig.setIsPerUser(false);
         counterConfig.setResetOnThreadGroupIteration(false);
@@ -66,7 +69,7 @@ public class CounterConverterTest {
             .end(Integer.parseInt(counterConfig.getEndAsString()))
             .start(Integer.parseInt(counterConfig.getStartAsString()))
             .scope(Variable.Scope.GLOBAL)
-            .outOfValue(Variable.OutOfValue.STOP);
+            .outOfValue(Variable.OutOfValue.CYCLE);
     expected.add(counterBuilder.build());
     assertEquals(result, expected);
     }

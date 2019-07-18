@@ -24,13 +24,13 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
                 .increment(Integer.parseInt(counterConfig.getIncrementAsString()))
                 .end(Integer.parseInt(counterConfig.getEndAsString()))
                 .start(Integer.parseInt(counterConfig.getStartAsString()));
-        checkOutofValue(counterConfig,counterBuilder);
+        checkOutofValue(counterConfig);
         checkScope(counterConfig,counterBuilder);
         LOGGER.info("Counter data have been cconverted");
         return ImmutableList.of(counterBuilder.build());
     }
 
-     void checkScope(CounterConfig counterConfig, CounterVariable.Builder counterBuilder) {
+     private void checkScope(CounterConfig counterConfig, CounterVariable.Builder counterBuilder) {
         if (counterConfig.isPerUser()){
             counterBuilder.scope(Variable.Scope.LOCAL);
         } else{
@@ -38,11 +38,10 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
         }
     }
 
-     void checkOutofValue(CounterConfig counterConfig, CounterVariable.Builder counterBuilder) {
-        if (counterConfig.isResetOnThreadGroupIteration()){
-            counterBuilder.outOfValue(Variable.OutOfValue.CYCLE);
-        }else {
-            counterBuilder.outOfValue(Variable.OutOfValue.STOP);
-        }
-    }
+     private void checkOutofValue(CounterConfig counterConfig) {
+         if (counterConfig.isResetOnThreadGroupIteration()) {
+             LOGGER.warn("We can't converted this parameter");
+             EventListenerUtils.readUnsupportedParameter("Counter", "Reset on each Thread Group Iteration", "not supported");
+         }
+     }
 }
