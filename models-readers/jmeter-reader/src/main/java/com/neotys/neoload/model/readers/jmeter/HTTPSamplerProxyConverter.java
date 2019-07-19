@@ -54,6 +54,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         String domain = httpSamplerProxy.getDomain();
         String path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath())).orElse("/") ;
         String protocol = Optional.ofNullable(httpSamplerProxy.getProtocol().toLowerCase()).orElse("http");
+
         int port = httpSamplerProxy.getPort();
 
         final Request.Builder req = Request.builder()
@@ -62,8 +63,9 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
                 .description(httpSamplerProxy.getComment());
 
         if (domain.isEmpty()) {
-            checkDefaultServer( hashTree,req);
+            checkDefaultServer( hashTree,req, httpSamplerProxy);
         } else {
+            httpSamplerProxy.setProtocol(protocol);httpSamplerProxy.setPath(path);
             req.server(Servers.addServer(httpSamplerProxy.getName(), domain, port, protocol, hashTree));
             String url = protocol + "://" + domain + ":" + port + path;
             //Gérer aussi avec l'intégration de variable dans le path
@@ -79,21 +81,27 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
             LOGGER.warn("There is not HeaderManager so HTTPRequest do not have Header");
             EventListenerUtils.readSupportedFunctionWithWarn("", "HttpRequest", null, "Don't have Header Manager");
         }
-        Step javascript = CookieManagerConverter.createCookie(hashTree);
+
+        Request request = req.build();
+        Step javascript = CookieManagerConverter.createCookie(hashTree,httpSamplerProxy);
+
 
         if (javascript != null) {
-            return ImmutableList.of(req.build(), javascript);
+            return ImmutableList.of( javascript,request);
         }
-        return ImmutableList.of(req.build());
+        return ImmutableList.of(request);
     }
 
-    static void checkDefaultServer( HashTree hashTree, Request.Builder req) {
+    static void checkDefaultServer( HashTree hashTree, Request.Builder req, HTTPSamplerProxy httpSamplerProxy) {
         boolean find = false;
         for (Object o : hashTree.list()) {
             if (o instanceof ConfigTestElement && HttpDefaultsGui.class.getName().equals(((ConfigTestElement) o).getPropertyAsString(TestElement.GUI_CLASS))) {
                 find = true;
                 ConfigTestElement configTestElement = (ConfigTestElement) o;
                 HTTPDefaultSetModel httpDefaultSetModel = buildHttpDefault(configTestElement);
+                httpSamplerProxy.setDomain(httpDefaultSetModel.checkDomain());
+                httpSamplerProxy.setPath(httpDefaultSetModel.checkPath());
+
                 req.server(Servers.addServer(httpDefaultSetModel.getName(), httpDefaultSetModel.checkDomain(), httpDefaultSetModel.checkPort(), httpDefaultSetModel.checkProtocol(), hashTree));
                 req.url(httpDefaultSetModel.checkProtocol() + "://" + httpDefaultSetModel.checkDomain() + ":" + httpDefaultSetModel.getPort() + httpDefaultSetModel.checkPath());
             }
@@ -101,6 +109,9 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         if(!find){
             LOGGER.warn("This HTTP Request don't have any Server, we create a new  local server");
             req.server(Servers.addServer("localhost", "localhost", 80, "http", new HashTree()));
+            httpSamplerProxy.setDomain("localhost");
+            httpSamplerProxy.setPath("/");
+
             req.url("http://localhost:80/");
         }
     }

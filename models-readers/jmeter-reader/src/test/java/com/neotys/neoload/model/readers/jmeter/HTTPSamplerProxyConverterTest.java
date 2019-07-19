@@ -159,6 +159,7 @@ public class HTTPSamplerProxyConverterTest {
     @Test
     public void testCheckDefaultServerwithHttpDefaults(){
         HashTree hashTree = new HashTree();
+        HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         ConfigTestElement configTestElement = new ConfigTestElement();
         configTestElement.setProperty("HTTPSampler.domain","localhost");
         configTestElement.setProperty("HTTPSampler.port","80");
@@ -171,7 +172,7 @@ public class HTTPSamplerProxyConverterTest {
         Request.Builder result = Request.builder();
         Request.Builder expected = Request.builder();
 
-        HTTPSamplerProxyConverter.checkDefaultServer(hashTree,result);
+        HTTPSamplerProxyConverter.checkDefaultServer(hashTree,result,httpSamplerProxy);
         expected.server(Servers.addServer("Test","localhost",80,"http",hashTree));
         expected.url("http://localhost:80/");
         assertEquals(result.build(),expected.build());
@@ -180,9 +181,11 @@ public class HTTPSamplerProxyConverterTest {
     @Test
     public void testCheckDefaultServerwithoutHTTPDefaults(){
         HashTree hashTree = new HashTree();
+        HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
+
         Request.Builder result = Request.builder();
         Request.Builder expected = Request.builder();
-        HTTPSamplerProxyConverter.checkDefaultServer(hashTree,result);
+        HTTPSamplerProxyConverter.checkDefaultServer(hashTree,result,httpSamplerProxy);
         expected.server(Servers.addServer("localhost","localhost",80,"http",hashTree));
         expected.url("http://localhost:80/");
         assertEquals(result.build(),expected.build());
