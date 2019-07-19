@@ -36,18 +36,19 @@ class CookieManagerConverter {
                 .description(cookieManager.getComment());
 
         for(int i =0 ; i<cookieManager.getCookieCount();i++){
-            script.append("/* Creation of the cookie number: " + i + "*/\n");
+            script.append("/* Creation of the cookie number: ").append(i).append("*/\n");
             script.append("context.currentVU.setCookieForServer(\"");
-            script.append(cookieManager.get(i).getDomain() + "\",\"");
-            script.append(cookieManager.get(i).getName() + "=");
-            script.append(cookieManager.get(i).getValue() +  "; path=");
-            script.append(cookieManager.get(i).getPath() + "\")");
+            script.append(cookieManager.get(i).getDomain()).append("\",\"");
+            script.append(cookieManager.get(i).getName()).append("=");
+            script.append(cookieManager.get(i).getValue()).append("; path=");
+            script.append(cookieManager.get(i).getPath()).append("\")");
             script.append(("\n"));
         }
+        if(cookieManager.getClearEachIteration()){
+            script.append("context.currentVU.clearCache()\n");
+        }
         LOGGER.warn("We don't convert the Cookie Policy");
-        LOGGER.warn("We don't convert the option clean for each iteration");
         EventListenerUtils.readUnsupportedParameter(COOKIE_MANAGER,"CookiePolicy","Type of policy");
-        EventListenerUtils.readUnsupportedParameter(COOKIE_MANAGER, "Option","Clean for each iteration");
         javascriptBuilder.script(script.toString());
         return javascriptBuilder.build();
     }

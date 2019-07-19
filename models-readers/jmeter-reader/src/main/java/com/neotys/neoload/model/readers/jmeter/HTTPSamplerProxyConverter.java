@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.readers.jmeter;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
@@ -51,7 +52,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
 
     public List<Step> apply(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree) {
         String domain = httpSamplerProxy.getDomain();
-        String path = Optional.ofNullable(httpSamplerProxy.getPath()).orElse("/") ;
+        String path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath())).orElse("/") ;
         String protocol = Optional.ofNullable(httpSamplerProxy.getProtocol().toLowerCase()).orElse("http");
         int port = httpSamplerProxy.getPort();
 

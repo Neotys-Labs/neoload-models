@@ -59,7 +59,41 @@ public class CookieManagerConverterTest {
                 .build();
         assertEquals(result,expected);
         verify(spy,times(1)).readUnsupportedParameter("CookieManager","CookiePolicy","Type of policy");
-        verify(spy,times(1)).readUnsupportedParameter("CookieManager","Option","Clean for each iteration");
+
+    }
+
+    @Test
+    public void testCreateCookieClear(){
+        HashTree hashTree = new HashTree();
+        Cookie cookie = new Cookie();
+        cookie.setDomain("kaldrogo.intranet.neotys.com");
+        cookie.setPath("/");
+        cookie.setValue("fd");
+        cookie.setName("HTTP Cookie Manager");
+
+        Cookie cookie2 = new Cookie();
+        cookie2.setDomain("kaldrogo.intranet.neotys.com");
+        cookie2.setPath("/auth");
+        cookie2.setValue("d");
+        cookie2.setName("HTTP Cookie Manager");
+
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setClearEachIteration(true);
+        cookieManager.add(cookie);cookieManager.add(cookie2);
+
+        hashTree.add(cookieManager);
+        Step result = CookieManagerConverter.createCookie(hashTree);
+        Step expected = Javascript.builder()
+                .script("/* Creation of the cookie number: 0*/\n" +
+                        "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=fd; path=/\")\n" +
+                        "/* Creation of the cookie number: 1*/\n" +
+                        "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=d; path=/auth\")\n"
+                    +   "context.currentVU.clearCache()\n")
+                .name("")
+                .description("")
+                .build();
+        assertEquals(result,expected);
+        verify(spy,times(1)).readUnsupportedParameter("CookieManager","CookiePolicy","Type of policy");
 
     }
 }
