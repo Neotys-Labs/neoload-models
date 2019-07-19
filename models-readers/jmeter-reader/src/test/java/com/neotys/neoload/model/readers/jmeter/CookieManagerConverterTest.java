@@ -53,12 +53,11 @@ public class CookieManagerConverterTest {
         hashTree.add(cookieManager);
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         httpSamplerProxy.setDomain("kaldrogo.intranet.neotys.com");
+        httpSamplerProxy.setPath("/");
         Step result = CookieManagerConverter.createCookie(hashTree, httpSamplerProxy);
         Step expected = Javascript.builder()
                 .script("/* Creation of the cookie number: 0*/\n" +
-                        "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=fd; path=/\")\n" +
-                        "/* Creation of the cookie number: 1*/\n" +
-                        "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=d; path=/auth\")\n")
+                        "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=fd; path=/\")\n" )
                 .name("")
                 .description("")
                 .build();
@@ -69,7 +68,7 @@ public class CookieManagerConverterTest {
     }
 
     @Test
-    public void testCreateCookieClear(){
+    public void testCreateCookie2(){
         HashTree hashTree = new HashTree();
         Cookie cookie = new Cookie();
         cookie.setDomain("kaldrogo.intranet.neotys.com");
@@ -90,11 +89,10 @@ public class CookieManagerConverterTest {
         hashTree.add(cookieManager);
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         httpSamplerProxy.setDomain("kaldrogo.intranet.neotys.com");
+        httpSamplerProxy.setPath("/auth");
         Step result = CookieManagerConverter.createCookie(hashTree, httpSamplerProxy);
         Step expected = Javascript.builder()
-                .script("/* Creation of the cookie number: 0*/\n" +
-                        "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=fd; path=/\")\n" +
-                        "/* Creation of the cookie number: 1*/\n" +
+                .script("/* Creation of the cookie number: 1*/\n" +
                         "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=d; path=/auth\")\n")
                 .name("")
                 .description("")
