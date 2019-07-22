@@ -1,8 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload.server;
 
-import com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication;
 import com.neotys.neoload.model.v3.project.server.Server;
-import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import org.w3c.dom.Document;
 

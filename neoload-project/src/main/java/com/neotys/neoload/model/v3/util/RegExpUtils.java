@@ -8,17 +8,17 @@ package com.neotys.neoload.model.v3.util;
 public class RegExpUtils {
 
     // the states used for parsing
-    public static final int CONTINUE = 1;
-    public static final int ON_DOLLAR = 2;
-    public static final int EDIT_VAR = 3;
+    private static final int CONTINUE = 1;
+    private static final int ON_DOLLAR = 2;
+    private static final int EDIT_VAR = 3;
 
     private static char[] reservedCars = new char[] { '.', '\\', '+', '*', '?', '(', ')', '{' , '}' ,'[', ']', '$', '^', '|' };
 
     private RegExpUtils() {}
 
     private static boolean isReservedCar(char c) {
-        for (int i=0; i<reservedCars.length; i++) {
-            if (reservedCars[i]==c) return true;
+        for (char reservedCar : reservedCars) {
+            if (reservedCar == c) return true;
         }
         return false;
     }
@@ -50,14 +50,15 @@ public class RegExpUtils {
         return result.toString();
     }
 
-    public static String escape(char c) {
+    static String escape(char c) {
         if (isReservedCar(c)) {
             return "\\"+c;
         }
         return String.valueOf(c);
     }
 
-    public static String escapeExcludingVariables(String sentence) {
+    @SuppressWarnings("Duplicates")
+    static String escapeExcludingVariables(String sentence) {
         if (sentence==null) return null;
 
         int firstDollarsIndex=sentence.indexOf('$');

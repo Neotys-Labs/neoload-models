@@ -1,8 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload.server;
 
-import com.neotys.neoload.model.v3.project.server.BasicAuthentication;
 import com.neotys.neoload.model.v3.project.server.NegotiateAuthentication;
-import com.neotys.neoload.model.v3.project.server.NtlmAuthentication;
 import org.w3c.dom.Document;
 
 public class NegotiateAuthenticationWriter extends LoginPasswordAuthenticationWriter {
