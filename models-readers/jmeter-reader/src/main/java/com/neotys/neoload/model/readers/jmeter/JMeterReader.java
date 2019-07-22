@@ -4,6 +4,11 @@ package com.neotys.neoload.model.readers.jmeter;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.neotys.neoload.model.listener.EventListener;
+import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
+import com.neotys.neoload.model.readers.jmeter.step.httpRequest.Servers;
+import com.neotys.neoload.model.readers.jmeter.step.thread.ConvertThreadGroupResult;
+import com.neotys.neoload.model.readers.jmeter.step.thread.ThreadGroupConverter;
+import com.neotys.neoload.model.readers.jmeter.variable.VariableConverters;
 import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
@@ -25,7 +30,7 @@ import java.util.*;
 
 public class JMeterReader extends Reader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(com.neotys.neoload.model.readers.jmeter.JMeterReader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JMeterReader.class);
     private final String projectName;
     private final String jmeterPath;
     private final StepConverters stepConverters;
