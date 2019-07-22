@@ -83,7 +83,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         }
 
         Request request = req.build();
-        Step javascript = CookieManagerConverter.createCookie(hashTree,httpSamplerProxy);
+        Step javascript = JavascriptConverter.createJavascript(hashTree,httpSamplerProxy);
 
 
         if (javascript != null) {

@@ -3,6 +3,7 @@ package com.neotys.neoload.model.readers.jmeter;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.v3.project.userpath.Javascript;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import org.apache.jmeter.protocol.http.control.CacheManager;
 import org.apache.jmeter.protocol.http.control.Cookie;
 import org.apache.jmeter.protocol.http.control.CookieManager;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
-public class CookieManagerConverterTest {
+public class JavascriptConverterTest {
 
     private TestEventListener spy;
 
@@ -29,7 +30,8 @@ public class CookieManagerConverterTest {
         HashTree hashTree = new HashTree();
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         httpSamplerProxy.setDomain("kaldrogo.intranet.neotys.com");
-        assertNull(CookieManagerConverter.createCookie(hashTree, httpSamplerProxy));
+        Step step = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
+        assertNull(step);
     }
 
     @Test
@@ -54,7 +56,7 @@ public class CookieManagerConverterTest {
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         httpSamplerProxy.setDomain("kaldrogo.intranet.neotys.com");
         httpSamplerProxy.setPath("/");
-        Step result = CookieManagerConverter.createCookie(hashTree, httpSamplerProxy);
+        Step result = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
         Step expected = Javascript.builder()
                 .script("/* Creation of the cookie number: 0*/\n" +
                         "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=fd; path=/\")\n" )
@@ -90,7 +92,7 @@ public class CookieManagerConverterTest {
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         httpSamplerProxy.setDomain("kaldrogo.intranet.neotys.com");
         httpSamplerProxy.setPath("/auth");
-        Step result = CookieManagerConverter.createCookie(hashTree, httpSamplerProxy);
+        Step result = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
         Step expected = Javascript.builder()
                 .script("/* Creation of the cookie number: 1*/\n" +
                         "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=d; path=/auth\")\n")
@@ -100,6 +102,25 @@ public class CookieManagerConverterTest {
         assertEquals(result,expected);
         verify(spy,times(1)).readUnsupportedParameter("CookieManager","CookiePolicy","Type of policy");
         verify(spy,times(1)).readUnsupportedParameter("CookieManager","Option","Clean for each iteration");
+    }
 
+    @Test
+    public void testClearCache(){
+        HashTree hashTree = new HashTree();
+        CacheManager cacheManager = new CacheManager();
+        cacheManager.setClearEachIteration(true);
+
+
+        hashTree.add(cacheManager);
+        HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
+
+        Step result = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
+        Step expected = Javascript.builder()
+                .script("context.currentVU.clearCache()\n")
+                .name("")
+                .description("")
+                .build();
+        assertEquals(result,expected);
+        verify(spy,times(1)).readSupportedAction("CacheManager");
     }
 }
