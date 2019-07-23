@@ -68,7 +68,6 @@ public class IfControllerConverterTest {
         hashTree.get(ifController).add(ifChildren);
 
         List<Step> result = new IfControllerConverter(new StepConverters()).apply(ifController,hashTree);
-        List<Step> expected = new ArrayList<>();
 
         If.Builder ifBuilder = If.builder()
                 .name("children " + constantTimer.getClass().getSimpleName())
@@ -76,7 +75,6 @@ public class IfControllerConverterTest {
                 .then(Container.builder()
                         .addAllSteps(new StepConverters().getConverters(constantTimer.getClass()).apply(constantTimer,null))
                         .build());
-        expected.add(ifBuilder.build());
 
         If.Builder ifBuilder2 = If.builder()
                 .name("children " + uniformRandomTimer.getClass().getSimpleName())
@@ -84,8 +82,9 @@ public class IfControllerConverterTest {
                 .then(Container.builder()
                         .addAllSteps(new StepConverters().getConverters(uniformRandomTimer.getClass()).apply(uniformRandomTimer,null))
                         .build());
-        expected.add(ifBuilder2.build());
-        assertEquals(result,expected);
+
+        assertThat(result)
+            .containsExactlyInAnyOrder(ifBuilder.build(), ifBuilder2.build());
         verify(spy,times(1)).readSupportedFunctionWithWarn("IfController","Options",0, "Variable Expression");
 
     }
