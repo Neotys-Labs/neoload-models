@@ -85,7 +85,7 @@ public class IfControllerConverterTest {
                         .addAllSteps(new StepConverters().getConverters(uniformRandomTimer.getClass()).apply(uniformRandomTimer,null))
                         .build());
         expected.add(ifBuilder2.build());
-        assertThat(result).isEqualTo(expected);
+        assertEquals(result,expected);
         verify(spy,times(1)).readSupportedFunctionWithWarn("IfController","Options",0, "Variable Expression");
 
     }
