@@ -122,6 +122,6 @@ public class JavascriptConverterTest {
                 .description("")
                 .build();
         assertEquals(result,expected);
-        verify(spy,times(1)).readSupportedAction("CacheManager");
+        verify(spy,times(1)).readSupportedFunction("CacheManager", "Javascript CacheManager",0);
     }
 }

@@ -17,6 +17,7 @@ import static org.mockito.Mockito.*;
 public class BoundaryExtractorConverterTest {
 
     private TestEventListener spy;
+    private static final String BOUNDARY_EXTRACTOR = "BoundaryExtractor";
 
     @Before
     public void before()   {
@@ -52,7 +53,7 @@ public class BoundaryExtractorConverterTest {
         expected.add(variableExtractor);
 
         assertEquals(expected, result);
-        verify(spy,times(1)).readSupportedAction("BoundaryExtractorConverter");
+        verify(spy,times(1)).readSupportedFunction(BOUNDARY_EXTRACTOR,"BoundaryExtractorConverter",0);
     }
 
     @Test
@@ -85,7 +86,7 @@ public class BoundaryExtractorConverterTest {
 
         expected.add(variableExtractor);
         assertEquals(expected, result);
-        verify(spy,times(1)).readSupportedAction("BoundaryExtractorConverter");
+        verify(spy,times(1)).readSupportedFunction(BOUNDARY_EXTRACTOR,"BoundaryExtractorConverter",0);
     }
 
     @Test
@@ -117,7 +118,7 @@ public class BoundaryExtractorConverterTest {
         expected.add(variableExtractor);
         assertEquals(expected, result);
 
-        verify(spy,times(1)).readSupportedAction("BoundaryExtractorConverter");
+        verify(spy,times(1)).readSupportedFunction(BOUNDARY_EXTRACTOR,"BoundaryExtractorConverter",0);
     }
 
     @Test
@@ -150,7 +151,7 @@ public class BoundaryExtractorConverterTest {
         expected.add(variableExtractor);
 
         assertEquals(expected, result);
-        verify(spy,times(1)).readSupportedAction("BoundaryExtractorConverter");
+        verify(spy,times(1)).readSupportedFunction(BOUNDARY_EXTRACTOR,"BoundaryExtractorConverter",0);
     }
 
     @Test
@@ -184,7 +185,7 @@ public class BoundaryExtractorConverterTest {
         expected.add(variableExtractor);
         assertEquals(expected, result);
 
-        verify(spy,times(1)).readSupportedAction("BoundaryExtractorConverter");
+        verify(spy,times(1)).readSupportedFunction(BOUNDARY_EXTRACTOR,"BoundaryExtractorConverter",0);
     }
 
     @Test
@@ -216,7 +217,7 @@ public class BoundaryExtractorConverterTest {
 
         expected.add(variableExtractor);
         assertEquals(expected, result);
-        verify(spy,times(1)).readSupportedAction("BoundaryExtractorConverter");
+        verify(spy,times(1)).readSupportedFunction(BOUNDARY_EXTRACTOR,"BoundaryExtractorConverter",0);
     }
 
 
