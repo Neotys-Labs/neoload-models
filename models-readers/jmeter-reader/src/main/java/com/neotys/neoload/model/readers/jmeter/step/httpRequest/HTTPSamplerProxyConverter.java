@@ -82,7 +82,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
             EventListenerUtils.readSupportedAction("HTTPHeaderManager");
         } else {
             LOGGER.warn("There is not HeaderManager so HTTPRequest do not have Header");
-            EventListenerUtils.readSupportedFunctionWithWarn("", "HttpRequest", null, "Don't have Header Manager");
+            EventListenerUtils.readSupportedFunctionWithWarn("", "HttpRequest",  "Don't have Header Manager");
         }
 
         Request request = req.build();

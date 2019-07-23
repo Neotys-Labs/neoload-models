@@ -24,8 +24,8 @@ public class SimpleControllerConverter implements BiFunction<GenericController, 
 
 
         public List<Step> apply(GenericController simpleController, HashTree hashTree) {
-            LOGGER.info("SimpleController corretly converted");
-            EventListenerUtils.readSupportedAction("SimpleController");
+            LOGGER.info("IfController corretly converted");
+            EventListenerUtils.readSupportedAction("IfController");
             Container.Builder builder = Container.builder().description(simpleController.getComment()).name(simpleController.getName());
             builder.addAllSteps(converter.convertStep(hashTree.get(simpleController)));
             return ImmutableList.of(builder.build());

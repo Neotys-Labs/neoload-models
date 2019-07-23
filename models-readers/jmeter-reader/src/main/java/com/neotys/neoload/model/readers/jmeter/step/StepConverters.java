@@ -2,6 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.step;
 
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.readers.jmeter.step.controller.IfControllerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.controller.SimpleControllerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.controller.TransactionControllerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.httpRequest.HTTPSamplerProxyConverter;
@@ -9,6 +10,7 @@ import com.neotys.neoload.model.readers.jmeter.step.timer.ConstantTimerConverter
 import com.neotys.neoload.model.readers.jmeter.step.timer.UniformerRandomTimerConverter;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.control.GenericController;
+import org.apache.jmeter.control.IfController;
 import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.timers.ConstantTimer;
@@ -35,11 +37,12 @@ public final class StepConverters {
                 .put(ConstantTimer.class, new ConstantTimerConverter())
                 .put(GenericController.class, new SimpleControllerConverter(this))
                 .put(UniformRandomTimer.class, new UniformerRandomTimerConverter())
+                .put(IfController.class, new IfControllerConverter(this))
                 .build();
     }
 
     @SuppressWarnings("unchecked")
-    private <T> BiFunction<Object, HashTree, List<Step>> getConverters(Class<T> clazz) {
+    public <T> BiFunction<Object, HashTree, List<Step>> getConverters(Class<T> clazz) {
         return (BiFunction<Object, HashTree, List<Step>>) convertersMap.get(clazz);
     }
 

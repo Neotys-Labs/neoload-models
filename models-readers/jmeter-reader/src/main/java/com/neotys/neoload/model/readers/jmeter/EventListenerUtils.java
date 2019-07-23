@@ -23,16 +23,20 @@ public final class EventListenerUtils {
         getEventListener().readSupportedAction(actionName);
     }
 
-    public static void readSupportedParameterWithWarn(String fileVariable, String scope, String shareMode, String s) {
-        getEventListener().readSupportedParameterWithWarn(fileVariable, scope, shareMode, s);
+    public static void readSupportedParameterWithWarn(String scriptName, String parameterType, String parameterName, String warning) {
+        getEventListener().readSupportedParameterWithWarn(scriptName, parameterType, parameterName, warning);
     }
 
-    public static void readUnsupportedParameter(String csvDataSet, String string, String shareModeParameter) {
-        getEventListener().readUnsupportedParameter(csvDataSet,string,shareModeParameter);
+    public static void readUnsupportedParameter(String scriptName, String parameterType, String parameterName) {
+        getEventListener().readUnsupportedParameter(scriptName,parameterType,parameterName);
     }
 
-    public static void readSupportedFunctionWithWarn(String s, String httpRequest, Integer i, String s1) {
-        getEventListener().readSupportedFunctionWithWarn(s,httpRequest,i,s1);
+    public static void readSupportedFunction(final String scriptName, final String functionName) {
+        getEventListener().readSupportedFunction(scriptName,functionName,0);
+    }
+
+    public static void readSupportedFunctionWithWarn(String scriptName, String functionName, String warning) {
+        getEventListener().readSupportedFunctionWithWarn(scriptName,functionName,0,warning);
     }
 
     public static void readUnsupportedAction(String s) {
