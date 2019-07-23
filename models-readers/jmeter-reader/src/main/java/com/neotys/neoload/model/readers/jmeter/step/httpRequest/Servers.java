@@ -37,7 +37,7 @@ public final class Servers {
             }
         }
         LOGGER.info("Creation of a new Server is a success");
-        EventListenerUtils.readSupportedAction("Server");
+        EventListenerUtils.readSupportedFunction("Add Server to a HttpRequest","Server");
 
         if (SERVER_LIST.add(new ServerWrapper(serve.build()))){
             return serve.build().getName();

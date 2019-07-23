@@ -30,7 +30,7 @@ class BoundaryExtractorConverter implements BiFunction<BoundaryExtractor, HashTr
         checkApplyTo(boundaryExtractor);
         variableExtractor = convertBody(boundaryExtractor, variableExtractor);
         LOGGER.info("Header on the BoundaryExtractor is a success");
-        EventListenerUtils.readSupportedAction("BoundaryExtractorConverter");
+        EventListenerUtils.readSupportedFunction(BOUNDARY_EXTRACTOR,"BoundaryExtractorConverter");
         extractorList.add(variableExtractor.build());
         return extractorList;
     }

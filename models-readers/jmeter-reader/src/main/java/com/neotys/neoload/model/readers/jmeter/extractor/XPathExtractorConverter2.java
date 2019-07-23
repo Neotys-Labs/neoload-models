@@ -28,6 +28,8 @@ class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, 
                 .getDefault(xPathExtractor.getDefaultValue());
         checkUnsupported(xPathExtractor);
         checkApplyTo(xPathExtractor);
+        LOGGER.info("Convertion of Xpath2Extractor");
+        EventListenerUtils.readSupportedFunction(XPath_EXTRACTOR, "Xpath2 Extractor Converter");
         return ImmutableList.of(variableExtractor.build());
     }
 

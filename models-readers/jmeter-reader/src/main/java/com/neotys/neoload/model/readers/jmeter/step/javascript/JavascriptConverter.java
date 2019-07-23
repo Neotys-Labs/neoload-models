@@ -48,7 +48,7 @@ public class JavascriptConverter {
         if (cacheManager.getClearEachIteration()) {
             script.append("context.currentVU.clearCache()\n");
             LOGGER.info("Clear cache option converted");
-            EventListenerUtils.readSupportedAction("CacheManager");
+            EventListenerUtils.readSupportedFunction("CacheManager", "Javascript CacheManager");
         }
         return script;
     }
@@ -67,7 +67,7 @@ public class JavascriptConverter {
                 script.append(cookieManager.get(i).getPath()).append("\")");
                 script.append(("\n"));
                 LOGGER.info("Cookie Converted");
-                EventListenerUtils.readSupportedAction("CookieManager");
+                EventListenerUtils.readSupportedFunction("CookieManager", "Javascript CookieManager");
             }
         }
 

@@ -3,9 +3,12 @@ package com.neotys.neoload.model.readers.jmeter.step.thread;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.apache.jmeter.threads.ThreadGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 class PopulationPolicyConverter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PopulationPolicyConverter.class);
 
     private PopulationPolicyConverter() {
         throw new IllegalAccessError();
@@ -19,7 +22,8 @@ class PopulationPolicyConverter {
         //Loop infinite si reste comme ça
         final LoadDuration loadDuration = getIterationLoadDuration(threadGroup, loop, planifier);
         final LoadPolicy loadPolicy = getLoadPolicy(threadGroup, nbUser, rampUp, loadDuration);
-        EventListenerUtils.readSupportedAction("PopulationPolicy");
+        EventListenerUtils.readSupportedFunction("ThreadGroup Parameters","PopulationPolicy");
+        LOGGER.info("Convertion of Population Policy");
         return PopulationPolicy.builder()
                 .loadPolicy(loadPolicy)
                 .name(threadGroup.getName())

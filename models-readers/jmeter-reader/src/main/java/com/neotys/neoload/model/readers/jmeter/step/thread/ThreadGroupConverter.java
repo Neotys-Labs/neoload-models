@@ -51,14 +51,14 @@ public class ThreadGroupConverter {
 
     static Container getContainer(List<Step> steps) {
         LOGGER.info("Step added");
-        EventListenerUtils.readSupportedAction("Container");
+        EventListenerUtils.readSupportedFunction("Steps in ThreadGroup","Container");
         return Container.builder()
                 .addAllSteps(steps)
                 .build();
     }
 
     static UserPathPolicy getUserPathPolicy(ThreadGroup threadGroup) {
-        EventListenerUtils.readSupportedAction("UserPathPolicy");
+        EventListenerUtils.readSupportedFunction("Parameters UserPath Thread","UserPathPolicy");
         LOGGER.info("UserPath converted");
         return UserPathPolicy
                 .builder()
@@ -69,7 +69,7 @@ public class ThreadGroupConverter {
 
     static Population getPopulation(ThreadGroup threadGroup, UserPathPolicy userpolicy) {
         LOGGER.info("Population converted");
-        EventListenerUtils.readSupportedAction("Population");
+        EventListenerUtils.readSupportedFunction("Parameters Population Thread","Population");
         return Population
                 .builder()
                 .addUserPaths(userpolicy)

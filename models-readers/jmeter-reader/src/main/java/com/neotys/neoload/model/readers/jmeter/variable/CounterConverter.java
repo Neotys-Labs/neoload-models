@@ -28,6 +28,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
         checkOutofValue(counterConfig);
         checkScope(counterConfig,counterBuilder);
         LOGGER.info("Counter data have been cconverted");
+        EventListenerUtils.readSupportedFunction("CounterData","Counter Variable");
         return ImmutableList.of(counterBuilder.build());
     }
 

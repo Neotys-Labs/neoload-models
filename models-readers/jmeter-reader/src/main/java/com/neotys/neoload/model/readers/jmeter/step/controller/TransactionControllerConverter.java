@@ -24,10 +24,10 @@ public class TransactionControllerConverter implements BiFunction<TransactionCon
 
     @Override
     public List<Step> apply(TransactionController transactionController, HashTree hashTree) {
-        LOGGER.info("TransactionController corretly converted");
-        EventListenerUtils.readSupportedAction("TransactionController");
         Container.Builder builder = Container.builder().description(transactionController.getComment()).name(transactionController.getName());
         builder.addAllSteps(converter.convertStep(hashTree.get(transactionController)));
+        LOGGER.info("TransactionController corretly converted");
+        EventListenerUtils.readSupportedFunction("Transaction Controller","TransactionController");
         return ImmutableList.of(builder.build());
     }
 

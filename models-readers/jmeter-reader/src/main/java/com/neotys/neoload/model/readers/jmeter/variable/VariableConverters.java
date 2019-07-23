@@ -40,7 +40,7 @@ import java.util.function.BiFunction;
                     continue;
                 }
                 LOGGER.error("Type not Tolerate for converted in Variable ");
-                EventListenerUtils.readUnsupportedAction(o.getClass()+" in variable converter\n");
+                EventListenerUtils.readUnsupportedFunction("Variable Extractor",o.getClass()+" in variable converter\n");
             }
             return list;
         }

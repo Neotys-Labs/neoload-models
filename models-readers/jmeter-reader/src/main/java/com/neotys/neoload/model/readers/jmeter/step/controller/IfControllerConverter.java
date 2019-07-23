@@ -24,10 +24,10 @@ public class IfControllerConverter implements BiFunction<IfController, HashTree,
     }
 
     public List<Step> apply(IfController ifController, HashTree hashTree) {
-        LOGGER.info("IfController corretly converted");
-        EventListenerUtils.readSupportedAction("IfController");
         List<Step> containerList = new ArrayList<>();
         convertIfController(containerList, ifController, hashTree);
+        LOGGER.info("IfController corretly converted");
+        EventListenerUtils.readSupportedAction("IfController");
         return containerList;
     }
 

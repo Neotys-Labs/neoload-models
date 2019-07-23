@@ -35,6 +35,10 @@ public final class EventListenerUtils {
         getEventListener().readSupportedFunction(scriptName,functionName,0);
     }
 
+    public static void readUnsupportedFunction(final String scriptName, final String functionName){
+        getEventListener().readUnsupportedFunction(scriptName,functionName,1);
+    }
+
     public static void readSupportedFunctionWithWarn(String scriptName, String functionName, String warning) {
         getEventListener().readSupportedFunctionWithWarn(scriptName,functionName,0,warning);
     }

@@ -29,6 +29,8 @@ public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, Has
                 .getDefault(jsonPostProcessor.getDefaultValues());
         checkApplyTo(jsonPostProcessor);
         checkConcatenation(jsonPostProcessor);
+        LOGGER.info("Convertion of JSOnExtractor");
+        EventListenerUtils.readSupportedFunction(JSON_EXTRACTOR, "JSON Extractor Converter");
         return ImmutableList.of(variableExtractor.build());
 
     }

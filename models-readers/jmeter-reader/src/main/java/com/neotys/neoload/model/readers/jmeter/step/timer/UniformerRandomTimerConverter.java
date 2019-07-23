@@ -22,13 +22,13 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
 
     @Override
     public List<Step> apply(UniformRandomTimer uniformRandomTimer, HashTree hashTree) {
-        LOGGER.info("Constant timer Correctly converted");
-        EventListenerUtils.readSupportedAction("ConstantTimer");
         Delay delay = Delay.builder()
                 .name(uniformRandomTimer.getName())
                 .description(uniformRandomTimer.getComment())
                 .value(checkDelay(uniformRandomTimer))
                 .build();
+        LOGGER.info("Uniform Random Timer Correctly converted");
+        EventListenerUtils.readSupportedFunction("UniformRandomTimer","Uniform Random Timer");
         return ImmutableList.of(delay);
     }
 

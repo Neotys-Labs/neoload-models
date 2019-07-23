@@ -24,10 +24,10 @@ public class SimpleControllerConverter implements BiFunction<GenericController, 
 
 
         public List<Step> apply(GenericController simpleController, HashTree hashTree) {
-            LOGGER.info("IfController corretly converted");
-            EventListenerUtils.readSupportedAction("IfController");
             Container.Builder builder = Container.builder().description(simpleController.getComment()).name(simpleController.getName());
             builder.addAllSteps(converter.convertStep(hashTree.get(simpleController)));
+            LOGGER.info("SimpleController corretly converted");
+            EventListenerUtils.readSupportedFunction("GenericController","SimpleController");
             return ImmutableList.of(builder.build());
         }
 }

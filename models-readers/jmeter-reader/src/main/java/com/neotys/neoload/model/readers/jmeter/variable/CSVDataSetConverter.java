@@ -63,8 +63,7 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
 
         csvDataSetModel.computeScope().ifPresent(data::scope);
         LOGGER.info("CSVDataSet : Convertion success");
-        EventListenerUtils.readSupportedAction("CSVDataSet");
-
+        EventListenerUtils.readSupportedFunction("CsvData","CSVData Variable");
         return ImmutableList.of(data.build());
     }
 

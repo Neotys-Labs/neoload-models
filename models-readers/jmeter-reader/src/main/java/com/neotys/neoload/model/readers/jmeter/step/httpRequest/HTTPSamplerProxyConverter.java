@@ -50,7 +50,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         req.body(parameter.toString());
         LOGGER.info("Convert Parameters is a success");
         LOGGER.warn("If the Parameter in Neoload are strange, Please check that you have encoded the parameters in JMeter");
-        EventListenerUtils.readSupportedAction("Put parameters into HttpRequest");
+        EventListenerUtils.readSupportedFunction("Http Parameters","Put parameters into HttpRequest");
     }
 
     public List<Step> apply(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree) {
@@ -73,7 +73,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
             String url = protocol + "://" + domain + ":" + port + path;
             //Gérer aussi avec l'intégration de variable dans le path
             req.url(url);
-            EventListenerUtils.readSupportedAction("HTTPSampler");
+            EventListenerUtils.readSupportedFunction("HTTPSamplerProxy","HTTPRequest");
         }
         createParameters(httpSamplerProxy, req);
         if (hashTree.get(httpSamplerProxy) != null) {
@@ -82,7 +82,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
             EventListenerUtils.readSupportedAction("HTTPHeaderManager");
         } else {
             LOGGER.warn("There is not HeaderManager so HTTPRequest do not have Header");
-            EventListenerUtils.readSupportedFunctionWithWarn("", "HttpRequest",  "Don't have Header Manager");
+            EventListenerUtils.readSupportedFunctionWithWarn("HeaderManager", "HttpRequest",  "Don't have Header Manager");
         }
 
         Request request = req.build();
@@ -107,6 +107,8 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
 
                 req.server(Servers.addServer(httpDefaultSetModel.getName(), httpDefaultSetModel.checkDomain(), httpDefaultSetModel.checkPort(), httpDefaultSetModel.checkProtocol(), hashTree));
                 req.url(httpDefaultSetModel.checkProtocol() + "://" + httpDefaultSetModel.checkDomain() + ":" + httpDefaultSetModel.getPort() + httpDefaultSetModel.checkPath());
+                LOGGER.info("Conversion of HttpRequest Default");
+                EventListenerUtils.readSupportedFunction("HttpRequestDefault", "Http Request Default Server");
             }
         }
         if(!find){
@@ -114,7 +116,6 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
             req.server(Servers.addServer("localhost", "localhost", 80, "http", new HashTree()));
             httpSamplerProxy.setDomain("localhost");
             httpSamplerProxy.setPath("/");
-
             req.url("http://localhost:80/");
         }
     }
