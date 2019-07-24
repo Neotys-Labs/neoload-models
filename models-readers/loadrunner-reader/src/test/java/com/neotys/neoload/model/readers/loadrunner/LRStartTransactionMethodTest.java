@@ -21,11 +21,11 @@ public class LRStartTransactionMethodTest {
             assertThat(container).isNotNull();
             assertThat(container.getChilds().size()).isEqualTo(2);
             assertThat(container.getChilds().get(0).getName()).isEqualTo("level_1");
-            assertThat(container.getChilds().get(1).getName()).isEqualTo("page#3");
+            assertThat(container.getChilds().get(1).getName()).isEqualTo("page_3");
             assertThat(((Container)container.getChilds().get(0)).getChilds().size()).isEqualTo(2);
             assertThat(((Container)container.getChilds().get(0)).getChilds().get(0).getName()).isEqualTo("level_2");
-            assertThat(((Container)container.getChilds().get(0)).getChilds().get(1).getName()).isEqualTo("page#2");
-            assertThat(((Container)((Container)container.getChilds().get(0)).getChilds().get(0)).getChilds().get(0).getName()).isEqualTo("page#1");
+            assertThat(((Container)container.getChilds().get(0)).getChilds().get(1).getName()).isEqualTo("page_2");
+            assertThat(((Container)((Container)container.getChilds().get(0)).getChilds().get(0)).getChilds().get(0).getName()).isEqualTo("page_1");
         }catch(IOException e) {
             fail("Error reading test stream", e);
         }

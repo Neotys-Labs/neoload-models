@@ -30,7 +30,7 @@ public class LRStartSubTransactionMethodTest {
 			final Page page2 = (Page) level1.getChilds().get(1);
 			final Container level2b = (Container) level1.getChilds().get(2);
 			assertThat(level2.getName()).isEqualTo("level_2a");
-			assertThat(page2.getName()).isEqualTo("page#2");
+			assertThat(page2.getName()).isEqualTo("page_2");
 			assertThat(level2b.getName()).isEqualTo("level_2b");
 
 		} catch (IOException e) {

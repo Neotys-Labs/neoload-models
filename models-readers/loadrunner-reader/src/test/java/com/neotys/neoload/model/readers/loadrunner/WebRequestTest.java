@@ -201,20 +201,7 @@ public class WebRequestTest {
 		Request.HttpMethod generatedMethod = WebRequest.getMethod("{", "}", WEB_SUBMIT_DATA_INVALID_METHOD);
 		assertEquals(Request.HttpMethod.GET, generatedMethod);
 	}
-	
-	@Test
-	public void getUrlFromMethodParametersTestError1(){
-		MethodCall input = ImmutableMethodCall.builder().addAllParameters(ImmutableList.of(
-				"\"URL=:/this is an invalid URL\"",
-				"\"Referer=https://www.google.fr/\"",
-				"ENDITEM",
-				"\"URL=https://server-test.com/path2/photo2.png\"",
-				"\"Referer=https://www.google.fr/\"",
-				"ENDITEM"
-		)).name("methodname").build();
-		assertEquals(null, WebRequest.getUrlFromMethodParameters("{", "}", input, "Url"));
-	}
-	
+
 	@Test
 	public void getUrlFromMethodParametersTestError2(){
 		MethodCall input = ImmutableMethodCall.builder().addAllParameters(ImmutableList.of(
