@@ -93,7 +93,7 @@ public abstract class WebRequest {
 			return new URL(urlStr);
 		}catch(MalformedURLException e) {
 			LOGGER.warn("Invalid URL in LR project:" + urlStr + "\nThe error is : " + e);
-			if(e.getMessage().startsWith("no protocol") && urlParam.contains(leftBrace) && urlParam.contains(rightBrace)) {
+			if(e.getMessage().startsWith("no protocol")) {
 				// the protocol is in a variable like {BaseUrl}/index.html, try to do something
 				return getUrlFromParameterString(leftBrace, rightBrace, "http://" + urlParam);
 			}
@@ -148,7 +148,7 @@ public abstract class WebRequest {
 
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
-
+		visitor.getCurrentValidators().clear();
 		requestBuilder.addAllHeaders(recordedHeaders);
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
@@ -180,7 +180,7 @@ public abstract class WebRequest {
 		getContentType(snapshotProperties).ifPresent(requestBuilder::contentType);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
-
+		visitor.getCurrentValidators().clear();
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
@@ -228,7 +228,7 @@ public abstract class WebRequest {
 		getContentType(snapshotProperties).ifPresent(requestBuilder::contentType);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
-
+		visitor.getCurrentValidators().clear();
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());
@@ -257,7 +257,7 @@ public abstract class WebRequest {
 		getContentType(snapshotProperties).ifPresent(requestBuilder::contentType);
     	requestBuilder.addAllExtractors(visitor.getCurrentExtractors());
     	requestBuilder.addAllValidators(visitor.getCurrentValidators());
-
+		visitor.getCurrentValidators().clear();
     	requestBuilder.addAllHeaders(visitor.getCurrentHeaders());
     	visitor.getCurrentHeaders().clear();
     	requestBuilder.addAllHeaders(visitor.getGlobalHeaders());

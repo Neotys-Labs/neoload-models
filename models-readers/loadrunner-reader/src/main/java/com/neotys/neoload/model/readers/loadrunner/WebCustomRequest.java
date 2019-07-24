@@ -78,6 +78,7 @@ public class WebCustomRequest extends WebRequest {
 					.addAllHeaders(recordedHeaders)
 					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
                     .recordedFiles(recordedFiles);
+			visitor.getCurrentValidators().clear();
 			visitor.getCurrentHeaders().clear();
 			return builder.build();
 		}
@@ -96,6 +97,7 @@ public class WebCustomRequest extends WebRequest {
 					.addAllHeaders(recordedHeaders)
 					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
 					.recordedFiles(recordedFiles);
+				visitor.getCurrentValidators().clear();
 				visitor.getCurrentHeaders().clear();
 				return builder.build();
 		}   	
