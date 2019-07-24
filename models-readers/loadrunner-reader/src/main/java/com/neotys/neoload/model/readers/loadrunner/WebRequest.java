@@ -92,8 +92,8 @@ public abstract class WebRequest {
 			urlStr = MethodUtils.normalizeString(leftBrace, rightBrace, urlParam);
 			return new URL(urlStr);
 		}catch(MalformedURLException e) {
-			LOGGER.error("Invalid URL in LR project:" + urlStr + "\nThe error is : " + e);
-			if(e.getMessage().startsWith("no protocol") && urlParam.startsWith(leftBrace)) {
+			LOGGER.warn("Invalid URL in LR project:" + urlStr + "\nThe error is : " + e);
+			if(e.getMessage().startsWith("no protocol") && urlParam.contains(leftBrace) && urlParam.contains(rightBrace)) {
 				// the protocol is in a variable like {BaseUrl}/index.html, try to do something
 				return getUrlFromParameterString(leftBrace, rightBrace, "http://" + urlParam);
 			}
