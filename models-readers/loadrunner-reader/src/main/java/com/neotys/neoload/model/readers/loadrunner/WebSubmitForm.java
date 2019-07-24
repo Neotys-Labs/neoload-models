@@ -14,7 +14,11 @@ public class WebSubmitForm extends WebRequest {
 		Preconditions.checkNotNull(method);
 		final ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 		visitor.readSupportedFunction(method.getName(), ctx);
-		final String name = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0));
+		final String name = MethodUtils.normalizeName(MethodUtils.normalizeString(
+				visitor.getLeftBrace(),
+				visitor.getRightBrace(),
+				method.getParameters().get(0)
+		));
 		pageBuilder.addChilds(buildPostSubmitFormRequest(visitor, method, name)).isDynamic(true);
 		return pageBuilder.name(name).thinkTime(0).build();
 	}

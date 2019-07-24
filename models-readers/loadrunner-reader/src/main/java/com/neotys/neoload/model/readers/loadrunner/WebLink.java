@@ -23,8 +23,12 @@ public class WebLink extends WebRequest {
         	visitor.readSupportedFunctionWithWarn(method.getName(), ctx, LoadRunnerMethod.METHOD + method.getName() + " should have a parameter " + TEXT_PARAM);
 			return null;
         }
-        visitor.readSupportedFunction(method.getName(), ctx);        
-        final String name = MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0));
+        visitor.readSupportedFunction(method.getName(), ctx);
+        final String name = MethodUtils.normalizeName(MethodUtils.normalizeString(
+                visitor.getLeftBrace(),
+                visitor.getRightBrace(),
+                method.getParameters().get(0)
+        ));
         pageBuilder.addChilds(buildGetFollowLinkRequest(visitor, method, name, text.get())).isDynamic(true);
         return pageBuilder.name(name).thinkTime(0).build();
     }

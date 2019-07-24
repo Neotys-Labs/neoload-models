@@ -27,8 +27,12 @@ public class WebUrl extends WebRequest {
 
         MethodUtils.extractItemListAsStringList(visitor, method.getParameters(), EXTRARES, Optional.of(pageBuilder)).ifPresent(stringList ->
                 pageBuilder.addAllChilds(getUrlList(stringList, mainUrl).stream().map(url -> WebRequest.buildGetRequestFromURL(visitor, url, Optional.empty(), recordedHeaders)).collect(Collectors.toList())));
-        
-        return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
+        final String name = MethodUtils.normalizeName(MethodUtils.normalizeString(
+                visitor.getLeftBrace(),
+                visitor.getRightBrace(),
+                method.getParameters().get(0)
+        ));
+        return pageBuilder.name(name)
                 .thinkTime(0)
                 .build();
     }
