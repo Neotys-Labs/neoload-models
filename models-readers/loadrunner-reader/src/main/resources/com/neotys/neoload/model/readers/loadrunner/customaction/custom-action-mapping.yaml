@@ -997,3 +997,14 @@ sapgui_htmlviewer_send_event:
     url:
       type: TEXT
       value: ¤¤¤arg3¤¤¤
+sapgui_table_fill_data:
+  type: SapSetText
+  isHit: false
+  name: Table fill data (¤¤¤arg0¤¤¤)
+  parameters:
+    objectId:
+      type: TEXT
+      value: ${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/¤¤¤arg1¤¤¤
+    value:
+      type: TEXT
+      value: ¤¤¤arg2¤¤¤
