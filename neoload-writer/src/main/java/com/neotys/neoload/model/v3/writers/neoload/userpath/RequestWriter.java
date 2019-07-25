@@ -58,7 +58,8 @@ public class RequestWriter extends ElementWriter {
 		URL url = RequestUtils.parseUrl(Optional.ofNullable(theRequest.getUrl()).orElse("/"));
 		xmlRequest.setAttribute(XML_ATTR_PATH, url.getPath());
 		theRequest.getExtractors().forEach(extractElem -> VariableExtractorWriter.of(extractElem).writeXML(document, xmlRequest));
-		if("post".equalsIgnoreCase(theRequest.getMethod())) {
+		boolean isPostKind = "post".equalsIgnoreCase(theRequest.getMethod()) || "put".equalsIgnoreCase(theRequest.getMethod());
+		if(isPostKind) {
 			int postType = getPostType(theRequest);
 			xmlRequest.setAttribute(XML_ATTR_POST_TYPE, String.valueOf(postType));
 			theRequest.getBody().ifPresent(s -> {
@@ -67,7 +68,7 @@ public class RequestWriter extends ElementWriter {
 				if(postType==RAW_CONTENT) writePostRawBody(s, document, xmlRequest);
 			});
 		}
-		final Optional<String> parameterTag = "post".equalsIgnoreCase(theRequest.getMethod()) ? Optional.of(XML_URL_PARAMETER_TAG_NAME) : Optional.empty();
+		final Optional<String> parameterTag = isPostKind ? Optional.of(XML_URL_PARAMETER_TAG_NAME) : Optional.empty();
 		url.getQuery().ifPresent(s -> writeParameters(RequestUtils.getParameters(s), parameterTag, document, xmlRequest));
 		theRequest.getHeaders().forEach(header -> HeaderWriter.writeXML(document, xmlRequest, header));
 	}

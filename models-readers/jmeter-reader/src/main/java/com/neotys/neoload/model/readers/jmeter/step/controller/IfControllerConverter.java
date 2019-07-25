@@ -5,7 +5,9 @@ import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.If;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.control.IfController;
+import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,21 +34,23 @@ public class IfControllerConverter implements BiFunction<IfController, HashTree,
     }
 
     private void convertIfController(List<Step> containerList, IfController ifController, HashTree hashTree) {
-        int i= 0;
         If.Builder ifBuilder = If.builder()
                 .name(ifController.getName())
                 .description(ifController.getCondition());
         HashTree subTree = hashTree.get(ifController);
-        if(!ifController.isEvaluateAll()){
+        if(ifController.isEvaluateAll()){
             for (Object o : subTree.list()){
-                HashTree children = new HashTree();
-                children.add(o);
-                children.get(o).add(subTree.getTree(o));
-                ifBuilder.name(ifController.getName() +" children " + o.getClass().getSimpleName()+ (i++))
-                        .then(Container.builder()
-                                .addAllSteps(converter.convertStep(children))
-                                .build());
-                containerList.add(ifBuilder.build());
+                if( o instanceof AbstractTestElement) {
+                    AbstractTestElement abstractTestElement = (AbstractTestElement) o;
+                    HashTree children = new HashTree();
+                    children.add(o);
+                    children.get(o).add(subTree.getTree(o));
+                    ifBuilder.name(ifController.getName() + " Children: " + abstractTestElement.getName())
+                            .then(Container.builder()
+                                    .addAllSteps(converter.convertStep(children))
+                                    .build());
+                    containerList.add(ifBuilder.build());
+                }
             }
         }else{
             ifBuilder

@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -34,7 +35,9 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         String path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath())).orElse("/");
         String protocol = Optional.ofNullable(httpSamplerProxy.getProtocol().toLowerCase()).orElse("http");
         int port = httpSamplerProxy.getPort();
-        httpSamplerProxy.setPath(path);httpSamplerProxy.setPort(port);httpSamplerProxy.setProtocol(protocol);
+        httpSamplerProxy.setPath(path);
+        httpSamplerProxy.setPort(port);
+        httpSamplerProxy.setProtocol(protocol);
 
         final Request.Builder req = Request.builder()
                 .name(httpSamplerProxy.getName())
@@ -45,12 +48,13 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
             checkDefaultServer(httpSamplerProxy, req);
         } else {
             req.server(Servers.addServer(httpSamplerProxy.getName(), domain, port, protocol, hashTree));
-            String url = protocol + "://" + domain + ":" + port + path;
             //Gérer aussi avec l'intégration de variable dans le path
-            req.url(url);
+            req.url(buildURL(httpSamplerProxy));
             EventListenerUtils.readSupportedFunction("HTTPSamplerProxy", "HTTPRequest");
         }
-        createParameters(httpSamplerProxy, req);
+        if (!"GET".equals(httpSamplerProxy.getMethod())) {
+            createParameters(httpSamplerProxy, req);
+        }
         if (hashTree.get(httpSamplerProxy) != null) {
             HTTPHeaderConverter.createHeader(req, hashTree.get(httpSamplerProxy));
             req.addAllExtractors(new ExtractorConverters().convertParameter(hashTree.get(httpSamplerProxy)));
@@ -72,13 +76,14 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
 
     static void checkDefaultServer(HTTPSamplerProxy httpSamplerProxy, Request.Builder req) {
         Server defaultServer = Servers.getDefaultServer();
-        if(defaultServer!=null){
+        if (defaultServer != null) {
             req.server(defaultServer.getName());
             req.method(httpSamplerProxy.getMethod());
-            req.url(defaultServer.getScheme().name().toLowerCase() + "://" + defaultServer.getHost()+ ":" + defaultServer.getPort()+ httpSamplerProxy.getPath());
-        }else{
+            httpSamplerProxy.setDomain(defaultServer.getHost());
+            req.url(buildURL(httpSamplerProxy));
+        } else {
             LOGGER.warn("This HTTP Request don't have any Server:\n"
-                       + httpSamplerProxy.getName());
+                    + httpSamplerProxy.getName());
             EventListenerUtils.readUnsupportedAction("Can't affect a server to the HTTP Request" +
                     "because there isn't a HTTP Default Request attached");
         }
@@ -112,6 +117,28 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         LOGGER.info("Convert Parameters is a success");
         LOGGER.warn("If the Parameter in Neoload are strange, Please check that you have encoded the parameters in JMeter");
         EventListenerUtils.readSupportedFunction("Http Parameters", "Put parameters into HttpRequest");
+    }
+
+    static String buildURL(HTTPSamplerProxy httpSamplerProxy){
+        StringBuilder url = new StringBuilder();
+        url.append(httpSamplerProxy.getProtocol().toLowerCase());
+        url.append("://");
+        url.append(httpSamplerProxy.getDomain());
+        url.append(":");
+        url.append(httpSamplerProxy.getPort());
+        url.append(httpSamplerProxy.getPath());
+        Map<String, String> parametersMap = httpSamplerProxy.getArguments().getArgumentsAsMap();
+        if("GET".equals(httpSamplerProxy.getMethod())){
+            url.append("?");
+            parametersMap.keySet().forEach(key -> {
+                url.append(key);
+                url.append("=");
+                url.append(parametersMap.get(key));
+                url.append("&");
+            });
+            url.deleteCharAt(url.length() - 1);
+        }
+        return url.toString();
     }
 
 }

@@ -44,7 +44,7 @@ public class IfControllerConverterTest {
         List<Step> result = new IfControllerConverter(new StepConverters()).apply(ifController,hashTree);
         List<Step> expected = new ArrayList<>();
         If.Builder ifBuilder = If.builder()
-                .name("")
+                .name(" Children: ")
                 .description("")
                 .then(Container.builder()
                         .addAllSteps(new StepConverters().convertStep(hashTree.get(ifController)))
