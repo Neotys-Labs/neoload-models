@@ -3,6 +3,7 @@ package com.neotys.neoload.model.readers.jmeter.variable;
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.variable.Variable;
+import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.config.CSVDataSet;
 import org.apache.jmeter.modifiers.CounterConfig;
 import org.apache.jorphan.collections.HashTree;
@@ -22,7 +23,8 @@ import java.util.function.BiFunction;
         public VariableConverters(){
             convertersMap = ImmutableMap.of(
                     CSVDataSet.class, new CSVDataSetConverter(),
-                    CounterConfig.class, new CounterConverter());
+                    CounterConfig.class, new CounterConverter(),
+                    Arguments.class, new UserDefineVariableConverter());
         }
 
         @SuppressWarnings("unchecked")

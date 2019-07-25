@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class HTTPSamplerProxyConverterTest {
 
@@ -153,7 +152,7 @@ public class HTTPSamplerProxyConverterTest {
                 .port("80")
                 .build();
 
-        HTTPDefaultSetModel result = HTTPSamplerProxyConverter.buildHttpDefault(configTestElement);
+        HTTPDefaultSetModel result = HttpDefaultRequestConverter.buildHttpDefault(configTestElement);
         assertEquals(result,expected);
     }
 
@@ -161,6 +160,7 @@ public class HTTPSamplerProxyConverterTest {
     public void testCheckDefaultServerwithHttpDefaults(){
         HashTree hashTree = new HashTree();
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
+        httpSamplerProxy.setMethod("GET");
         ConfigTestElement configTestElement = new ConfigTestElement();
         configTestElement.setProperty("HTTPSampler.domain","localhost");
         configTestElement.setProperty("HTTPSampler.port","80");
@@ -172,10 +172,11 @@ public class HTTPSamplerProxyConverterTest {
 
         Request.Builder result = Request.builder();
         Request.Builder expected = Request.builder();
+        new HttpDefaultRequestConverter().apply(configTestElement,hashTree);
 
-        HTTPSamplerProxyConverter.checkDefaultServer(hashTree,result,httpSamplerProxy);
+        HTTPSamplerProxyConverter.checkDefaultServer(httpSamplerProxy,result);
         expected.server(Servers.addServer("Test","localhost",80,"http",hashTree));
-        expected.url("http://localhost:80/");
+        expected.url("http://localhost:80");
         assertEquals(result.build(),expected.build());
     }
 
@@ -186,10 +187,10 @@ public class HTTPSamplerProxyConverterTest {
 
         Request.Builder result = Request.builder();
         Request.Builder expected = Request.builder();
-        HTTPSamplerProxyConverter.checkDefaultServer(hashTree,result,httpSamplerProxy);
-        expected.server(Servers.addServer("localhost","localhost",80,"http",hashTree));
-        expected.url("http://localhost:80/");
+        HTTPSamplerProxyConverter.checkDefaultServer(httpSamplerProxy,result);
         assertEquals(result.build(),expected.build());
+        verify(spy,times(1)).readUnsupportedAction("Can't affect a server to the HTTP Request" +
+                "because there isn't a HTTP Default Request attached");
     }
 
     @After

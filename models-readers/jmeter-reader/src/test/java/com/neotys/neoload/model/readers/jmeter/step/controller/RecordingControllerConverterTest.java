@@ -2,13 +2,11 @@ package com.neotys.neoload.model.readers.jmeter.step.controller;
 
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.step.controller.SimpleControllerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Step;
-import org.apache.jmeter.control.GenericController;
-import org.apache.jmeter.control.TransactionController;
+import org.apache.jmeter.protocol.http.control.RecordingController;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Before;
@@ -24,8 +22,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-public class SimpleControllerConverterTest {
-
+public class RecordingControllerConverterTest {
     private TestEventListener spy;
 
     @Before
@@ -39,15 +36,15 @@ public class SimpleControllerConverterTest {
 
         SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters());
 
-        GenericController simpleController = Mockito.mock(GenericController.class);
-        when(simpleController.getName()).thenReturn("my thread group");
-        when(simpleController.getComment()).thenReturn("My comment");
+        RecordingController recordingController = Mockito.mock(RecordingController.class);
+        when(recordingController.getName()).thenReturn("my thread group");
+        when(recordingController.getComment()).thenReturn("My comment");
         HashTree hashTree = Mockito.mock(HashTree.class);
 
         HashTree subTree = Mockito.mock(HashTree.class);
         when(subTree.list()).thenReturn(Collections.emptyList());
-        when(hashTree.get(eq(simpleController))).thenReturn(subTree);
-        List<Step> teststep = testcontrol.apply(simpleController,hashTree);
+        when(hashTree.get(eq(recordingController))).thenReturn(subTree);
+        List<Step> teststep = testcontrol.apply(recordingController,hashTree);
         assertEquals(teststep.size(), 1);
         assertEquals(teststep.get(0).getName(), "my thread group");
     }
@@ -55,10 +52,10 @@ public class SimpleControllerConverterTest {
     @Test
     public void testAApplySteps() {
 
-        SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters());
-        GenericController transactionController = Mockito.mock(GenericController.class);
-        when(transactionController.getName()).thenReturn("my thread group");
-        when(transactionController.getComment()).thenReturn("My comment");
+        RecordingControllerConverter testcontrol = new RecordingControllerConverter(new StepConverters());
+        RecordingController recordingController = Mockito.mock(RecordingController.class);
+        when(recordingController.getName()).thenReturn("my thread group");
+        when(recordingController.getComment()).thenReturn("My comment");
         HashTree hashTree = Mockito.mock(HashTree.class);
         ConstantTimer constantTimer = new ConstantTimer();
         List collections = new ArrayList();
@@ -66,8 +63,8 @@ public class SimpleControllerConverterTest {
         collections.add(constantTimer);
         HashTree subTree = Mockito.mock(HashTree.class);
         when(subTree.list()).thenReturn(collections);
-        when(hashTree.get(eq(transactionController))).thenReturn(subTree);
-        List<Step> teststep = testcontrol.apply(transactionController, hashTree);
+        when(hashTree.get(eq(recordingController))).thenReturn(subTree);
+        List<Step> teststep = testcontrol.apply(recordingController, hashTree);
         assertEquals(teststep.size(), 1);
         assertEquals(teststep.get(0).getName(), "my thread group");
         int result = (int) teststep.stream().flatMap(Element::flattened)

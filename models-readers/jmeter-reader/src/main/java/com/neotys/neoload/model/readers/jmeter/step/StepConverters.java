@@ -3,15 +3,19 @@ package com.neotys.neoload.model.readers.jmeter.step;
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.controller.IfControllerConverter;
+import com.neotys.neoload.model.readers.jmeter.step.controller.RecordingControllerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.controller.SimpleControllerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.controller.TransactionControllerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.httpRequest.HTTPSamplerProxyConverter;
+import com.neotys.neoload.model.readers.jmeter.step.httpRequest.HttpDefaultRequestConverter;
 import com.neotys.neoload.model.readers.jmeter.step.timer.ConstantTimerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.timer.UniformerRandomTimerConverter;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.control.IfController;
 import org.apache.jmeter.control.TransactionController;
+import org.apache.jmeter.protocol.http.control.RecordingController;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jmeter.timers.UniformRandomTimer;
@@ -38,6 +42,8 @@ public final class StepConverters {
                 .put(GenericController.class, new SimpleControllerConverter(this))
                 .put(UniformRandomTimer.class, new UniformerRandomTimerConverter())
                 .put(IfController.class, new IfControllerConverter(this))
+                .put(RecordingController.class, new RecordingControllerConverter(this))
+                .put(ConfigTestElement.class, new HttpDefaultRequestConverter())
                 .build();
     }
 
@@ -52,11 +58,14 @@ public final class StepConverters {
         for (Object o : subTree.list()) {
             BiFunction<Object, HashTree, List<Step>> converter = getConverters(o.getClass());
             if (converter != null) {
-                list.addAll(converter.apply(o, subTree));
-                continue;
+                List<Step> stepList = converter.apply(o, subTree);
+                if (stepList != null) {
+                    list.addAll(converter.apply(o, subTree));
+                    continue;
+                }
             }
             LOGGER.error("Type not Tolerate for converted in Step ");
-            EventListenerUtils.readUnsupportedFunction("StepConverters",o.getClass() + " in step converter\n");
+            EventListenerUtils.readUnsupportedFunction("StepConverters", o.getClass() + " in step converter\n");
         }
         return list;
     }

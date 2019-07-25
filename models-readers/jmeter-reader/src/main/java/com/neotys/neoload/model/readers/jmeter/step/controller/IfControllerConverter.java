@@ -32,20 +32,26 @@ public class IfControllerConverter implements BiFunction<IfController, HashTree,
     }
 
     private void convertIfController(List<Step> containerList, IfController ifController, HashTree hashTree) {
+        int i= 0;
         If.Builder ifBuilder = If.builder()
                 .name(ifController.getName())
                 .description(ifController.getCondition());
+        HashTree subTree = hashTree.get(ifController);
         if(!ifController.isEvaluateAll()){
-            for (Object o : hashTree.get(ifController).list()){
-                ifBuilder.name("children " + o.getClass().getSimpleName())
+            for (Object o : subTree.list()){
+                HashTree children = new HashTree();
+                children.add(o);
+                children.get(o).add(subTree.getTree(o));
+                ifBuilder.name(ifController.getName() +" children " + o.getClass().getSimpleName()+ (i++))
                         .then(Container.builder()
-                                .addAllSteps(new StepConverters().getConverters(o.getClass()).apply(o,null))
+                                .addAllSteps(converter.convertStep(children))
                                 .build());
                 containerList.add(ifBuilder.build());
             }
         }else{
-            ifBuilder.then(Container.builder()
-                    .addAllSteps(converter.convertStep(hashTree.get(ifController)))
+            ifBuilder
+                    .then(Container.builder()
+                    .addAllSteps(converter.convertStep(subTree))
                     .build());
             containerList.add(ifBuilder.build());
         }

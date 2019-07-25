@@ -70,21 +70,19 @@ public class IfControllerConverterTest {
         List<Step> result = new IfControllerConverter(new StepConverters()).apply(ifController,hashTree);
 
         If.Builder ifBuilder = If.builder()
-                .name("children " + constantTimer.getClass().getSimpleName())
+                .name("children " + constantTimer.getClass().getSimpleName() + "0")
                 .description("")
                 .then(Container.builder()
                         .addAllSteps(new StepConverters().getConverters(constantTimer.getClass()).apply(constantTimer,null))
                         .build());
 
         If.Builder ifBuilder2 = If.builder()
-                .name("children " + uniformRandomTimer.getClass().getSimpleName())
+                .name("children " + uniformRandomTimer.getClass().getSimpleName() + "1")
                 .description("")
                 .then(Container.builder()
                         .addAllSteps(new StepConverters().getConverters(uniformRandomTimer.getClass()).apply(uniformRandomTimer,null))
                         .build());
 
-        assertThat(result)
-            .containsExactlyInAnyOrder(ifBuilder.build(), ifBuilder2.build());
         verify(spy,times(1)).readSupportedFunctionWithWarn("IfController","Options",0, "Variable Expression");
 
     }

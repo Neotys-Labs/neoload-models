@@ -17,12 +17,14 @@ import java.util.stream.Collectors;
 public final class Servers {
 
     private static final Set<ServerWrapper> SERVER_LIST = new HashSet<>();
+    private static  Server SERVER_Default_LIST = null;
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
     private Servers() {
         throw new IllegalAccessError();
     }
 
+    @SuppressWarnings("Duplicates")
     public static String addServer(final String name, final String host, final int port, final String protocol, final HashTree hashTree) {
         String url = protocol + "://" + host+ ":" + port + "/";
         Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
@@ -47,6 +49,27 @@ public final class Servers {
         }
     }
 
+    @SuppressWarnings("Duplicates")
+    public static String addDefaultServer(final String name, final String host, final int port, final String protocol, final HashTree hashTree) {
+        String url = protocol + "://" + host+ ":" + port + "/";
+        Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
+        Server.Builder serve = Server.builder()
+                .name(name)
+                .port(Integer.toString(port))
+                .host(host)
+                .scheme(scheme);
+        for (Object o : hashTree.list()) {
+            if (o instanceof AuthManager) {
+                checkAuthentification(serve, url, o);
+            }
+        }
+        LOGGER.info("Creation of a new Default Server is a success");
+        EventListenerUtils.readSupportedFunction("Add Default Server to a HttpRequest","Server");
+        SERVER_Default_LIST = serve.build();
+        SERVER_LIST.add(new ServerWrapper(serve.build()));
+        return name;
+    }
+
      static String checkServer(ImmutableServer build) {
         String serverName= "";
         for(Server s : Servers.getServers()){
@@ -62,7 +85,7 @@ public final class Servers {
         try {
             checkTypeAuthentification(authManager, serve, url);
         } catch (MalformedURLException e) {
-            LOGGER.error("Problem to get the url of the AUthorization Manager", e);
+            LOGGER.error("Problem to get the url of the Authorization Manager", e);
         }
     }
 
@@ -94,6 +117,10 @@ public final class Servers {
 
     public static Set<Server> getServers() {
         return SERVER_LIST.stream().map(ServerWrapper::getServer).collect(Collectors.toSet());
+    }
+
+    public static Server getDefaultServer() {
+        return SERVER_Default_LIST;
     }
 
     public static void clear() {

@@ -22,7 +22,6 @@ public class SimpleControllerConverter implements BiFunction<GenericController, 
             this.converter = converters;
         }
 
-
         public List<Step> apply(GenericController simpleController, HashTree hashTree) {
             Container.Builder builder = Container.builder().description(simpleController.getComment()).name(simpleController.getName());
             builder.addAllSteps(converter.convertStep(hashTree.get(simpleController)));
