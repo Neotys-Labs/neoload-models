@@ -3,7 +3,6 @@ package com.neotys.neoload.model.v3.writers.neoload.userpath;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,7 +10,6 @@ import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 public class RequestWriterTest {
 	
@@ -66,7 +64,26 @@ public class RequestWriterTest {
 
         XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
     }
-	
+
+	@Test
+	public void writePutRequestTest() throws ParserConfigurationException {
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><http-action actionType=\"1\" contentType=\"application/x-www-form-urlencoded\" "
+				+ "method=\"PUT\" name=\"request_test\" "
+				+ "path=\"/test_path\" postType=\"1\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
+				+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST3_PUT_METHOD)+ "\">"
+				+ "<parameter name=\"post param_name\" separator=\"=\" value=\"post_param Value\"/>"
+				+ "<urlPostParameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
+				+ "<header name=\"Content-Type\" value=\"application/x-www-form-urlencoded\"/>"
+				+ "</http-action></test-root>";
+
+		(new RequestWriter(WrittingTestUtils.REQUEST_TEST3_PUT_METHOD)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
+
 	@Test
     public void writePostRequestTextDataTest() throws ParserConfigurationException {
     	Document doc = WrittingTestUtils.generateEmptyDocument();
@@ -86,7 +103,28 @@ public class RequestWriterTest {
 
         XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
     }
-		
+
+	@Test
+	public void writePutRequestTextDataTest() throws ParserConfigurationException {
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><http-action actionType=\"1\" contentType=\"text/plain\" "
+				+ "method=\"PUT\" name=\"request_test\" "
+				+ "path=\"/test_path\" postType=\"4\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
+				+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST4_PUT_METHOD)+ "\">"
+				+ "<textPostContent><![CDATA[texte a convertir en binaire]]></textPostContent>"
+				+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
+				+ "<urlPostParameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
+				+ "<header name=\"Content-Type\" value=\"text/plain\"/>"
+				+ "</http-action></test-root>";
+
+		(new RequestWriter(WrittingTestUtils.REQUEST_TEST4_PUT_METHOD)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
+
+
 	@Test
     public void writePostRequestBinaryDataTest() throws ParserConfigurationException {
     	Document doc = WrittingTestUtils.generateEmptyDocument();

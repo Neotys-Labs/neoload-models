@@ -72,7 +72,9 @@ public class WrittingTestUtils {
             .body("post param_name=post_param Value")
 			.addHeaders(Header.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
             .build();
-	
+
+	public static final Request REQUEST_TEST3_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST3).withMethod("PUT");
+
 	public static final Request REQUEST_TEST4 = Request.builder()
             .name("request_test")
             .url("/test_path?param_name=param_value")
@@ -81,6 +83,9 @@ public class WrittingTestUtils {
             .body("texte a convertir en binaire")
 			.addHeaders(Header.builder().name("Content-Type").value("text/plain").build())
             .build();
+
+	public static final Request REQUEST_TEST4_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST4).withMethod("PUT");
+
 
 	public static final byte[] BINARY_DATA_TEST = {116, 101, 120, 116, 101, 32, 97, 32, 99, 111, 110, 118, 101, 114, 116, 105, 114, 32, 101, 110, 32, 98, 105, 110, 97, 105, 114, 101};
 	
