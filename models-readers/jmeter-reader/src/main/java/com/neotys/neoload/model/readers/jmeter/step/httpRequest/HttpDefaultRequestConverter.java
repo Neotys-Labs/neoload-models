@@ -1,6 +1,5 @@
 package com.neotys.neoload.model.readers.jmeter.step.httpRequest;
 
-import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.config.ConfigTestElement;

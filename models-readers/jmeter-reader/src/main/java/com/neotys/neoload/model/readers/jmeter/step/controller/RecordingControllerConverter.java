@@ -5,8 +5,6 @@ import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Step;
-import oracle.jrockit.jfr.Recording;
-import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.protocol.http.control.RecordingController;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
