@@ -44,7 +44,7 @@ public class SapguilogonMethodTest {
 		assertEquals("GuiTextField", username.getParameters().get(2).getValue());
 		assertEquals("value", username.getParameters().get(3).getName());
 		assertEquals(Type.TEXT, username.getParameters().get(3).getType());
-		assertEquals("{username}", username.getParameters().get(3).getValue());		
+		assertEquals("${username}", username.getParameters().get(3).getValue());
 		
 		final CustomAction password = (CustomAction) customAcions.get(1);
 		assertEquals("SetText GuiTextField (password)", password.getName());
@@ -62,7 +62,7 @@ public class SapguilogonMethodTest {
 		assertEquals("GuiTextField", password.getParameters().get(2).getValue());
 		assertEquals("value", password.getParameters().get(3).getName());
 		assertEquals(Type.PASSWORD, password.getParameters().get(3).getType());
-		assertEquals("{password}", password.getParameters().get(3).getValue());	
+		assertEquals("${password}", password.getParameters().get(3).getValue());
 
 		final CustomAction clientnum = (CustomAction) customAcions.get(2);
 		assertEquals("SetText GuiTextField (clientnum)", clientnum.getName());
@@ -80,7 +80,7 @@ public class SapguilogonMethodTest {
 		assertEquals("GuiTextField", clientnum.getParameters().get(2).getValue());
 		assertEquals("value", clientnum.getParameters().get(3).getName());
 		assertEquals(Type.TEXT, clientnum.getParameters().get(3).getType());
-		assertEquals("{client}", clientnum.getParameters().get(3).getValue());		
+		assertEquals("${client}", clientnum.getParameters().get(3).getValue());
 		
 		final CustomAction language = (CustomAction) customAcions.get(3);
 		assertEquals("SetText GuiTextField (language)", language.getName());
