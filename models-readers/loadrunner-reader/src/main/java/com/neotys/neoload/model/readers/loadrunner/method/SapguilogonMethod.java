@@ -30,53 +30,53 @@ public class SapguilogonMethod implements LoadRunnerMethod {
 		} 		
 		visitor.readSupportedFunction(method.getName(), ctx);
 		return ImmutableList.of(
-				createUsername(method), 
-				createPassword(method), 
-				createClientNum(method), 		
-				createLanguage(method), 
+				createUsername(visitor, method),
+				createPassword(visitor, method),
+				createClientNum(visitor, method),
+				createLanguage(visitor, method),
 				createPressEnter());				
 	}
 
-	private static ImmutableCustomAction createUsername(final MethodCall method) {
+	private static ImmutableCustomAction createUsername(final LoadRunnerVUVisitor visitor, final MethodCall method) {
 		return createSetTextCustomAction(
 				"username", 
 				"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/usr/txtRSYST-BNAME", 
 				"RSYST-BNAME", 
-				GUI_TEXT_FIELD, 
-				method.getParameters().get(0), 
+				GUI_TEXT_FIELD,
+				MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(),method.getParameters().get(0)),
 				Type.TEXT
 			);		
 	}
 	
-	private static ImmutableCustomAction createPassword(final MethodCall method) {
+	private static ImmutableCustomAction createPassword(final LoadRunnerVUVisitor visitor, final MethodCall method) {
 		return createSetTextCustomAction(
 				"password", 
 				"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/usr/pwdRSYST-BCODE", 
 				"RSYST-BCODE", 
-				GUI_TEXT_FIELD, 
-				method.getParameters().get(1), 
+				GUI_TEXT_FIELD,
+				MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(),method.getParameters().get(1)),
 				Type.PASSWORD
 			);		
 	}
 	
-	private static ImmutableCustomAction createClientNum(final MethodCall method) {
+	private static ImmutableCustomAction createClientNum(final LoadRunnerVUVisitor visitor, final MethodCall method) {
 		return createSetTextCustomAction(
 				"clientnum", 
 				"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/usr/txtRSYST-MANDT", 
 				"RSYST-MANDT", 
-				GUI_TEXT_FIELD, 
-				method.getParameters().get(2), 
+				GUI_TEXT_FIELD,
+				MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(),method.getParameters().get(2)),
 				Type.TEXT
 			);		
 	}
 		
-	private static ImmutableCustomAction createLanguage(final MethodCall method) {
+	private static ImmutableCustomAction createLanguage(final LoadRunnerVUVisitor visitor, final MethodCall method) {
 		return createSetTextCustomAction(
 				"language", 
 				"${SAP_ACTIVE_SESSION}/${SAP_ACTIVE_WINDOW}/usr/txtRSYST-LANGU", 
 				"RSYST-LANGU", 
-				GUI_TEXT_FIELD, 
-				method.getParameters().get(3), 
+				GUI_TEXT_FIELD,
+				MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(),method.getParameters().get(3)),
 				Type.TEXT
 			);		
 	}
