@@ -51,8 +51,8 @@ public class ThreadGroupConverter {
                 .name(threadGroup.getName())
                 .description(threadGroup.getComment());
         //process subtree
-        final List<Step> steps = stepConverters.convertStep(subTree); //For convert the step
         final List<Variable> variables = variableConverters.convertVariable(subTree); // for convert the variable
+        final List<Step> steps = stepConverters.convertStep(subTree); //For convert the step
         Container containerBuilder = getContainer(steps);
         userPathBuilder.actions(containerBuilder);
         UserPathPolicy userpolicy = getUserPathPolicy(threadGroup);

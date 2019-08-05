@@ -23,7 +23,18 @@ class PopulationPolicyConverter {
     static PopulationPolicy convert(ThreadGroup threadGroup) {
         int nbUser = threadGroup.getNumThreads();
         int rampUp = threadGroup.getRampUp();
-        int loop = Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops"));
+        if(nbUser == 0 || rampUp == 0 || threadGroup.getDuration() == 0){
+            LOGGER.warn("There is a problem with the PopulationPolicy\n"
+            + "Please check that you have fill correctly this form and don't use Variable");
+        }
+        int loop;
+        try{
+            loop = Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops"));
+        }catch(Exception e){
+            LOGGER.warn("We can't manage the variable into the Loop Number. "
+                    + "So We put 0 in value of Loop Number",e);
+            loop = 0;
+        }
         boolean planifier = threadGroup.getScheduler();
         //Infinite Loop if LoadDuration is null
         final LoadDuration loadDuration = getIterationLoadDuration(threadGroup, loop, planifier);
@@ -54,7 +65,6 @@ class PopulationPolicyConverter {
                 .value(loop)
                 .build();
     }
-
 
     private static LoadDuration getTimeLoadDuration(ThreadGroup threadGroup) {
         EventListenerUtils.readSupportedAction("TimeDuration");

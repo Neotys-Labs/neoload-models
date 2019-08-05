@@ -32,8 +32,14 @@ public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, Has
                 .description(jsonPostProcessor.getComment())
                 .name(jsonPostProcessor.getRefNames())
                 .jsonPath(jsonPostProcessor.getJsonPathExpressions())
-                .matchNumber(Integer.parseInt(jsonPostProcessor.getMatchNumbers()))
                 .getDefault(jsonPostProcessor.getDefaultValues());
+        try{
+            variableExtractor.matchNumber(Integer.parseInt(jsonPostProcessor.getMatchNumbers()));
+        }catch(Exception e){
+            LOGGER.warn("We can't manage the variable into the Match Number \n"
+                    + "So We put 0 in value of Match Number",e);
+            variableExtractor.matchNumber(0);
+        }
         checkApplyTo(jsonPostProcessor);
         checkConcatenation(jsonPostProcessor);
         LOGGER.info("Convertion of JSOnExtractor");

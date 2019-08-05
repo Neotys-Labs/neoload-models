@@ -190,7 +190,7 @@ public class HTTPSamplerProxyConverterTest {
         HTTPSamplerProxyConverter.checkDefaultServer(httpSamplerProxy,result);
         assertEquals(result.build(),expected.build());
         verify(spy,times(1)).readUnsupportedAction("Can't affect a server to the HTTP Request" +
-                "because there isn't a HTTP Default Request attached");
+                " because there isn't a HTTP Default Request attached");
     }
 
     @After

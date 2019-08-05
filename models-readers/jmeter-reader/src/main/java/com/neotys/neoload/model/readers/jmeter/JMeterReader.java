@@ -16,6 +16,8 @@ import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.variable.ConstantVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.readers.Reader;
+import org.apache.jmeter.config.Arguments;
+import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.save.SaveService;
 import org.apache.jmeter.testelement.TestPlan;
 import org.apache.jmeter.threads.ThreadGroup;
@@ -36,6 +38,7 @@ public class JMeterReader extends Reader {
     private final String jmeterPath;
     private final StepConverters stepConverters;
     private final VariableConverters variableConverters;
+    private final VariablesUtils variablesUtils;
 
     //Constructor
     public JMeterReader(final EventListener eventListener, final String pathFile, final String projectName, final String jmeterPath) {
@@ -45,9 +48,11 @@ public class JMeterReader extends Reader {
         this.jmeterPath = Objects.requireNonNull(jmeterPath);
         this.stepConverters = new StepConverters();
         this.variableConverters = new VariableConverters();
+        this.variablesUtils = new VariablesUtils();
     }
 
     //Methods
+
     /**
      * In this method, we load the JMX's HashTree into testPlan variable
      *
@@ -155,6 +160,16 @@ public class JMeterReader extends Reader {
             projet.addPopulations(result.getPopulation());
             popPolicy.add(result.getPopulationPolicy());
             projet.addAllVariables(result.getVariableList());
+        } else if (o instanceof Arguments) {
+            HashTree subtree = new HashTree();
+            subtree.add(o);
+            subtree.getTree(o).add(hashTree.getTree(o));
+            projet.addAllVariables(variableConverters.convertVariable(subtree));
+        } else if (o instanceof ConfigTestElement) {
+            HashTree subtree = new HashTree();
+            subtree.add(o);
+            subtree.getTree(o).add(hashTree.getTree(o));
+            stepConverters.convertStep(subtree);
         } else {
             LOG.warn("Unsupported first level node with type {}", o.getClass());
             EventListenerUtils.readUnsupportedAction(o.getClass() + "\n");

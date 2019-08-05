@@ -97,7 +97,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         } else {
             LOGGER.warn("This HTTP Request don't have any Server:\n"
                     + httpSamplerProxy.getName());
-            EventListenerUtils.readUnsupportedAction("Can't affect a server to the HTTP Request" +
+            EventListenerUtils.readUnsupportedAction("Can't affect a server to the HTTP Request " +
                     "because there isn't a HTTP Default Request attached");
         }
     }

@@ -29,10 +29,32 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
     public List<Variable> apply(CounterConfig counterConfig, HashTree hashTree) {
         final CounterVariable.Builder counterBuilder = CounterVariable.builder()
                 .name(counterConfig.getVarName())
-                .description(counterConfig.getComment())
-                .increment(Integer.parseInt(counterConfig.getIncrementAsString()))
-                .end(Integer.parseInt(counterConfig.getEndAsString()))
-                .start(Integer.parseInt(counterConfig.getStartAsString()));
+                .description(counterConfig.getComment());
+        try{
+            counterBuilder.increment(Integer.parseInt(counterConfig.getIncrementAsString()));
+        }catch(Exception e){
+            LOGGER.warn("We can't manage the variable into the Increment Number \n"
+                    + "So we put 0 in value of Port Number",e);
+            counterBuilder.increment(0);
+        }
+
+        try{
+            counterBuilder.end(Integer.parseInt(counterConfig.getEndAsString()));
+
+        }catch(Exception e){
+            LOGGER.warn("We can't manage the variable into the End Number \n"
+                    + "So we put 0 in value of End Number",e);
+            counterBuilder.end(0);
+        }
+
+        try{
+            counterBuilder.start(Integer.parseInt(counterConfig.getStartAsString()));
+        }catch(Exception e){
+            LOGGER.warn("We can't manage the variable into the Start Number \n"
+                    + "So we put 0 in value of Start Number",e);
+            counterBuilder.start(0);
+        }
+
         checkOutofValue(counterConfig);
         checkScope(counterConfig, counterBuilder);
         LOGGER.info("Counter data have been cconverted");
