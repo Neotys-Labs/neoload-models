@@ -2,6 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.step;
 
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.readers.jmeter.extractor.ExtractorConverters;
 import com.neotys.neoload.model.readers.jmeter.step.controller.IfControllerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.controller.RecordingControllerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.controller.SimpleControllerConverter;
@@ -10,6 +11,7 @@ import com.neotys.neoload.model.readers.jmeter.step.httpRequest.HTTPSamplerProxy
 import com.neotys.neoload.model.readers.jmeter.step.httpRequest.HttpDefaultRequestConverter;
 import com.neotys.neoload.model.readers.jmeter.step.timer.ConstantTimerConverter;
 import com.neotys.neoload.model.readers.jmeter.step.timer.UniformerRandomTimerConverter;
+import com.neotys.neoload.model.readers.jmeter.variable.VariableConverters;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.control.GenericController;
@@ -24,15 +26,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+/**
+ * This class store all the Converters Class for Step Element in JMeter
+ */
 public final class StepConverters {
+
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(StepConverters.class);
+
     private final Map<Class, BiFunction<?, HashTree, List<Step>>> convertersMap;
 
-
+    //Constructor
     public StepConverters() {
 
         convertersMap = ImmutableMap.<Class, BiFunction<?, HashTree, List<Step>>>builder()
@@ -47,6 +56,7 @@ public final class StepConverters {
                 .build();
     }
 
+    //Methods
     @SuppressWarnings("unchecked")
     public <T> BiFunction<Object, HashTree, List<Step>> getConverters(Class<T> clazz) {
         return (BiFunction<Object, HashTree, List<Step>>) convertersMap.get(clazz);
@@ -64,10 +74,17 @@ public final class StepConverters {
                     continue;
                 }
             }
-            LOGGER.error("Type not Tolerate for converted in Step ");
-            EventListenerUtils.readUnsupportedFunction("StepConverters", o.getClass() + " in step converter\n");
+            if (!new VariableConverters().getConvertersMap().containsKey(o.getClass()) && !new ExtractorConverters().getConvertersMap().containsKey(o.getClass())) {
+                LOGGER.error("Type not Tolerate for converted in Step ");
+                EventListenerUtils.readUnsupportedFunction("StepConverters", o.getClass() + " in step converter\n");
+            }
         }
         return list;
+    }
+
+
+    public Map<Class, BiFunction<?, HashTree, List<Step>>> getConvertersMap() {
+        return convertersMap;
     }
 
 }

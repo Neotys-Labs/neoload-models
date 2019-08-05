@@ -11,13 +11,21 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This class convert XpathExtractor of JMeter into a Variable Extractor of Neoload
+ */
 class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, List<VariableExtractor>> {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(XPathExtractorConverter.class);
+
     private static final String XPath_EXTRACTOR = "XPathExtractor";
 
-    XPathExtractorConverter() {}
+    //Constructor
+    XPathExtractorConverter() {
+    }
 
+    //Methods
     @Override
     public List<VariableExtractor> apply(XPathExtractor xPathExtractor, HashTree hashTree) {
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder()
@@ -33,8 +41,15 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
         return ImmutableList.of(variableExtractor.build());
     }
 
+    /**
+     * For JMeterExtractor, we can only manage the main sample option, we can apply this element in the same branch
+     * This is why me only manage main sample
+     * If you want sub sample, you have to manage the subtree too
+     *
+     * @param xPathExtractor
+     */
     @SuppressWarnings("Duplicates")
-     static void checkApplyTo(XPathExtractor xPathExtractor) {
+    static void checkApplyTo(XPathExtractor xPathExtractor) {
         if ("all".equals(xPathExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
             EventListenerUtils.readSupportedParameterWithWarn(XPath_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");
@@ -44,19 +59,18 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
         }
     }
 
-     static void checkUnsupported(XPathExtractor xPathExtractor) {
-        if(!xPathExtractor.isQuiet() || !xPathExtractor.showWarnings()|| !xPathExtractor.reportErrors()){
+    static void checkUnsupported(XPathExtractor xPathExtractor) {
+        if (!xPathExtractor.isQuiet() || !xPathExtractor.showWarnings() || !xPathExtractor.reportErrors()) {
             LOGGER.warn("We Use Tidy with isQuiet, ShowWarning and Reports Errors activate ");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Tidy Parameter", " All Options");
-        }
-        else if(xPathExtractor.useNameSpace() || xPathExtractor.isWhitespace() || xPathExtractor.isValidating() || xPathExtractor.isDownloadDTDs()){
+            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "Tidy Parameter", " All Options");
+        } else if (xPathExtractor.useNameSpace() || xPathExtractor.isWhitespace() || xPathExtractor.isValidating() || xPathExtractor.isDownloadDTDs()) {
             LOGGER.warn("We support only Tidy Parameter ");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"OtherParameters", " All Options");
+            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "OtherParameters", " All Options");
         }
 
-        if(xPathExtractor.getFragment()){
+        if (xPathExtractor.getFragment()) {
             LOGGER.warn("We already use the fragment in own extractor");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Fragment Xpath", " textContent");
+            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "Fragment Xpath", " textContent");
         }
     }
 }

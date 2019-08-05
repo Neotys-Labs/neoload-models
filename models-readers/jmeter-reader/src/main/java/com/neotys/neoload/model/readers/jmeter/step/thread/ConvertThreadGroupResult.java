@@ -7,13 +7,20 @@ import com.neotys.neoload.model.v3.project.variable.Variable;
 
 import java.util.List;
 
+/**
+ * This class store the UserPath, Population, PopulationPolicy and variableList converted,
+ * It's more easily to use them into the ThreadGroup Converter.
+ */
 public class ConvertThreadGroupResult {
-        private UserPath userPath;
-        private Population population;
-        private PopulationPolicy populationPolicy;
+
+    //Attributs
+    private UserPath userPath;
+    private Population population;
+    private PopulationPolicy populationPolicy;
 
     private List<Variable> variableList;
 
+    //Constructor
     ConvertThreadGroupResult(UserPath userPath, Population population, PopulationPolicy populationPolicy, List<Variable> variableList) {
         this.userPath = userPath;
         this.population = population;
@@ -21,6 +28,7 @@ public class ConvertThreadGroupResult {
         this.variableList = variableList;
     }
 
+    //Methods
     public UserPath getUserPath() {
         return userPath;
     }

@@ -15,22 +15,39 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+/**
+ * This class convert UserSefinedVariable of JMter into Variables of neoload
+ */
 public class UserDefineVariableConverter implements BiFunction<Arguments, HashTree, List<Variable>> {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDefineVariableConverter.class);
 
-    @Override
+    //Constructor
+    UserDefineVariableConverter() {
+    }
+
+    //Methods
+    /**
+     * In this method, there is not UserDefinedVariable Element in the HashTree of JMeter
+     * It's a config element, so it's very too general and we have to check is the name of the gui_class is UserDefinedVariable
+     * and after that, we use the same solution, to browse the properties like in CSVDataSet
+     *
+     * @param jMeterProperties
+     * @param hashTree
+     * @return
+     */
     public List<Variable> apply(Arguments jMeterProperties, HashTree hashTree) {
         List<Variable> variableList = new ArrayList<>();
-            if(ArgumentsPanel.class.getName().equals(jMeterProperties.getPropertyAsString(Arguments.GUI_CLASS))){
-                Map<String, String> variableMap = jMeterProperties.getArgumentsAsMap();
-                variableList = variableMap.keySet().stream().map(key -> ConstantVariable.builder()
-                        .name(key)
-                        .value(variableMap.get(key))
-                        .build()).collect(Collectors.toList());
-            }
-            LOGGER.info("The conversion of User Defined Variable is a Success");
+        if (ArgumentsPanel.class.getName().equals(jMeterProperties.getPropertyAsString(Arguments.GUI_CLASS))) {
+            Map<String, String> variableMap = jMeterProperties.getArgumentsAsMap();
+            variableList = variableMap.keySet().stream().map(key -> ConstantVariable.builder()
+                    .name(key)
+                    .value(variableMap.get(key))
+                    .build()).collect(Collectors.toList());
+        }
+        LOGGER.info("The conversion of User Defined Variable is a Success");
         EventListenerUtils.readSupportedFunction("UserDefinedVariable", "Constant String variable");
-            return variableList;
+        return variableList;
     }
 }

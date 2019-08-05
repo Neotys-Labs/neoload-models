@@ -6,20 +6,26 @@ import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * This class convert the ThreadGroup of JMeter into a PopulationPolicy of Neoload
+ */
 class PopulationPolicyConverter {
+
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(PopulationPolicyConverter.class);
 
+    //Constructor
     private PopulationPolicyConverter() {
         throw new IllegalAccessError();
     }
 
+    ///Methods
     static PopulationPolicy convert(ThreadGroup threadGroup) {
         int nbUser = threadGroup.getNumThreads();
         int rampUp = threadGroup.getRampUp();
         int loop = Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops"));
         boolean planifier = threadGroup.getScheduler();
-        //Loop infinite si reste comme ça
+        //Infinite Loop if LoadDuration is null
         final LoadDuration loadDuration = getIterationLoadDuration(threadGroup, loop, planifier);
         final LoadPolicy loadPolicy = getLoadPolicy(threadGroup, nbUser, rampUp, loadDuration);
         EventListenerUtils.readSupportedFunction("ThreadGroup Parameters","PopulationPolicy");

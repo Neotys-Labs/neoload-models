@@ -11,15 +11,20 @@ import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class convert the HTTPHeaderManager of JMeter into the Header of the HTTPRequest attached
+ */
 class HTTPHeaderConverter {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
-
+    //Constructor
      private HTTPHeaderConverter() {
         throw new IllegalAccessError();
     }
 
+    //Methods
     static void createHeader( Request.Builder request, HashTree subTree){
         for (Object o : subTree.list()) {
             if (o instanceof HeaderManager) {

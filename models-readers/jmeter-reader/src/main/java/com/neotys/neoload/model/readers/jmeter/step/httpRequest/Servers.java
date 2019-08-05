@@ -14,15 +14,23 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+/**
+ * This class create and join the server to the HTTPRequest
+ */
 public final class Servers {
 
+    //Attributs
     private static final Set<ServerWrapper> SERVER_LIST = new HashSet<>();
     private static  Server SERVER_Default_LIST = null;
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
+    //Constructor
     private Servers() {
         throw new IllegalAccessError();
     }
+
+    //Methods
 
     @SuppressWarnings("Duplicates")
     public static String addServer(final String name, final String host, final int port, final String protocol, final HashTree hashTree) {
@@ -40,7 +48,9 @@ public final class Servers {
         }
         LOGGER.info("Creation of a new Server is a success");
         EventListenerUtils.readSupportedFunction("Add Server to a HttpRequest","Server");
-
+        /*
+        We use the Wrapper to compare servers with own criteria
+         */
         if (SERVER_LIST.add(new ServerWrapper(serve.build()))){
             return serve.build().getName();
         }
@@ -127,6 +137,10 @@ public final class Servers {
         SERVER_LIST.clear();
     }
 
+    /**
+     * This class be used for compare the servers and add them into the Server_List
+     * If they are not equals with our criteria
+     */
     private static class ServerWrapper {
         private final Server server;
 
@@ -139,6 +153,12 @@ public final class Servers {
         }
 
         @Override
+        /**
+         * With our criteria are:
+         * They don't have to have the same host
+         * And they don't have to have the same port
+         * And they don't have to have the same Protocol
+         */
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;

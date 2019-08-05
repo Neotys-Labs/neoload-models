@@ -11,13 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This class convert the RegularExtractor of JMeter into VariableExtractor of Neoload
+ */
 final class RegularExtractorConverter implements BiFunction<RegexExtractor, HashTree, List<VariableExtractor>> {
+
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(RegularExtractorConverter.class);
+
     private static final String REGEX_EXTRACTOR = "RegexExtractor";
 
+    //Constructor
     RegularExtractorConverter() {
     }
 
+    //Methods
     @SuppressWarnings("Duplicates")
     public List<VariableExtractor> apply(RegexExtractor regexExtractor, HashTree subTree) {
         List<VariableExtractor> extractorList = new ArrayList<>();
@@ -35,6 +43,15 @@ final class RegularExtractorConverter implements BiFunction<RegexExtractor, Hash
         return extractorList;
     }
 
+    /**
+     * This Method convert the source of the Jmeter Elecment
+     * If the source is the message or just OK we have to change the variableExtractor.Builder
+     * Because we know all the parameters for the message or OK
+     *
+     * @param regexExtractor
+     * @param variableExtractor
+     * @return
+     */
     @SuppressWarnings("Duplicates")
     private static VariableExtractor.Builder convertBody(RegexExtractor regexExtractor, VariableExtractor.Builder variableExtractor) {
         if (regexExtractor.useBody() || regexExtractor.useBodyAsDocument() || regexExtractor.useUnescapedBody()) {
@@ -60,6 +77,13 @@ final class RegularExtractorConverter implements BiFunction<RegexExtractor, Hash
         return variableExtractor;
     }
 
+    /**
+     * This Method convert the source of the Jmeter Elecment
+     * If the source is the message or just OK we have to change the variableExtractor.Builder
+     * Because we know all the parameters for the message or OK
+     *
+     * @param regexExtractor
+     */
     @SuppressWarnings("Duplicates")
     private static void checkApplyTo(RegexExtractor regexExtractor) {
         if ("all".equals(regexExtractor.fetchScope())) {

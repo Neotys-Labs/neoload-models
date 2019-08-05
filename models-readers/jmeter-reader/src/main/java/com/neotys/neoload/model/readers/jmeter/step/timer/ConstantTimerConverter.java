@@ -12,12 +12,18 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This class convert the ConstantTimer of Jmeter into Delay Step of Neoload
+ */
 public class ConstantTimerConverter implements BiFunction<ConstantTimer, HashTree, List<Step>> {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(ConstantTimerConverter.class);
 
+    //Constructor
     public ConstantTimerConverter() {}
 
+    //Methods
     @Override
     public List<Step> apply(ConstantTimer constantTimer, HashTree hashtree) {
         LOGGER.info("Constant timer Correctly converted");

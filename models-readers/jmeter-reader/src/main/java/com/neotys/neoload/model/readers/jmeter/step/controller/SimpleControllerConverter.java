@@ -13,20 +13,26 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This class convert the SimpleController of JMeter into Step of Neoload
+ */
 public class SimpleControllerConverter implements BiFunction<GenericController, HashTree, List<Step>> {
 
-        private final StepConverters converter;
+    //Attributs
+    private final StepConverters converter;
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleControllerConverter.class);
 
-        public SimpleControllerConverter(StepConverters converters) {
-            this.converter = converters;
-        }
+    //Constructor
+    public SimpleControllerConverter(StepConverters converters) {
+        this.converter = converters;
+    }
 
-        public List<Step> apply(GenericController simpleController, HashTree hashTree) {
-            Container.Builder builder = Container.builder().description(simpleController.getComment()).name(simpleController.getName());
-            builder.addAllSteps(converter.convertStep(hashTree.get(simpleController)));
-            LOGGER.info("SimpleController corretly converted");
-            EventListenerUtils.readSupportedFunction("GenericController","SimpleController");
-            return ImmutableList.of(builder.build());
-        }
+    //Methods
+    public List<Step> apply(GenericController simpleController, HashTree hashTree) {
+        Container.Builder builder = Container.builder().description(simpleController.getComment()).name(simpleController.getName());
+        builder.addAllSteps(converter.convertStep(hashTree.get(simpleController)));
+        LOGGER.info("SimpleController correctly converted");
+        EventListenerUtils.readSupportedFunction("GenericController", "SimpleController");
+        return ImmutableList.of(builder.build());
+    }
 }

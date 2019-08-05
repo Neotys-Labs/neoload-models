@@ -11,14 +11,21 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This class convert XpathExtractor of JMeter into a Variable Extractor of Neoload
+ */
 class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, List<VariableExtractor>> {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(XPathExtractorConverter2.class);
+
     private static final String XPath_EXTRACTOR = "XPathExtractor";
 
-    XPathExtractorConverter2() {}
+    //Constructor
+    XPathExtractorConverter2() {
+    }
 
-
+    //Methods
     public List<VariableExtractor> apply(XPath2Extractor xPathExtractor, HashTree hashTree) {
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder()
                 .description(xPathExtractor.getComment())
@@ -33,8 +40,15 @@ class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, 
         return ImmutableList.of(variableExtractor.build());
     }
 
+    /**
+     * For JMeterExtractor, we can only manage the main sample option, we can apply this element in the same branch
+     * This is why me only manage main sample
+     * If you want sub sample, you have to manage the subtree too
+     *
+     * @param xPathExtractor
+     */
     @SuppressWarnings("Duplicates")
-     static void checkApplyTo(XPath2Extractor xPathExtractor) {
+    static void checkApplyTo(XPath2Extractor xPathExtractor) {
         if ("all".equals(xPathExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
             EventListenerUtils.readSupportedParameterWithWarn(XPath_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");
@@ -44,14 +58,13 @@ class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, 
         }
     }
 
-     static void checkUnsupported(XPath2Extractor xPathExtractor) {
-        if(xPathExtractor.getFragment()){
+    static void checkUnsupported(XPath2Extractor xPathExtractor) {
+        if (xPathExtractor.getFragment()) {
             LOGGER.warn("We already use the fragment in own extractor");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Fragment Xpath", " textContent");
-        }
-        else if (!xPathExtractor.getNamespaces().isEmpty()){
+            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "Fragment Xpath", " textContent");
+        } else if (!xPathExtractor.getNamespaces().isEmpty()) {
             LOGGER.warn("We don't manage the namespaces");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR,"Namespace Xpath", " textContent");
+            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "Namespace Xpath", " textContent");
         }
     }
 }

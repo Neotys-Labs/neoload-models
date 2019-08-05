@@ -4,13 +4,20 @@ import com.neotys.neoload.model.listener.EventListener;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/*
+We use this class to create a global EventListener, like this, we create one in the JMeter Reader and we an call it
+In the others class to infomr the client of the problem or good convertion of the elements
+ */
 public final class EventListenerUtils {
 
+    //Attributs
     private static EventListener listener;
 
+    //Constructor
     private EventListenerUtils() {
     }
 
+    //Methods
     private static EventListener getEventListener() {
         return checkNotNull(listener, "Event listener has not been initialized.");
     }

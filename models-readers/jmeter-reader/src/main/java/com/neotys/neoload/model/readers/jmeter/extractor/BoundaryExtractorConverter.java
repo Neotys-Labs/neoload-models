@@ -12,12 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This Class convert the BoundaryExtractor of JMeter into a Variable Extractor of Neoload
+ */
 class BoundaryExtractorConverter implements BiFunction<BoundaryExtractor, HashTree, List<VariableExtractor>> {
+
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(BoundaryExtractorConverter.class);
+
     private static final String BOUNDARY_EXTRACTOR = "BoundaryExtractor";
 
-    BoundaryExtractorConverter() {}
+    //Constructor
+    BoundaryExtractorConverter() {
+    }
 
+    //Methods
     @SuppressWarnings("Duplicates")
     public List<VariableExtractor> apply(BoundaryExtractor boundaryExtractor, HashTree subTree) {
         List<VariableExtractor> extractorList = new ArrayList<>();
@@ -30,11 +39,17 @@ class BoundaryExtractorConverter implements BiFunction<BoundaryExtractor, HashTr
         checkApplyTo(boundaryExtractor);
         variableExtractor = convertBody(boundaryExtractor, variableExtractor);
         LOGGER.info("Header on the BoundaryExtractor is a success");
-        EventListenerUtils.readSupportedFunction(BOUNDARY_EXTRACTOR,"BoundaryExtractorConverter");
+        EventListenerUtils.readSupportedFunction(BOUNDARY_EXTRACTOR, "BoundaryExtractorConverter");
         extractorList.add(variableExtractor.build());
         return extractorList;
     }
 
+    /**
+     * This method convert the right and left value into a regular expression for the variable extractor
+     *
+     * @param variableExtractor
+     * @param boundaryExtractor
+     */
     @SuppressWarnings("Duplicates")
     private void regexConverter(VariableExtractor.Builder variableExtractor, BoundaryExtractor boundaryExtractor) {
 
@@ -42,19 +57,27 @@ class BoundaryExtractorConverter implements BiFunction<BoundaryExtractor, HashTr
         String right = boundaryExtractor.getRightBoundary();
         StringBuilder regex = new StringBuilder();
 
-        if(left != null) {
+        if (left != null) {
             regex.append(RegExpUtils.escape(left));
         }
-        if (right == null || "".equals(right)){
+        if (right == null || "".equals(right)) {
             regex.append("(.*)");
-        }
-        else{
+        } else {
             regex.append("(.?*)");
             regex.append(RegExpUtils.escape(right));
         }
         variableExtractor.regexp(regex.toString());
     }
 
+    /**
+     * This method convert the source of the Jmeter Elecment
+     * If the source is the message or just OK we have to change the variableExtractor.Builder
+     * Because we know all the parameters for the message or OK
+     *
+     * @param boundaryExtractor
+     * @param variableExtractor
+     * @return
+     */
     @SuppressWarnings("Duplicates")
     private static VariableExtractor.Builder convertBody(BoundaryExtractor boundaryExtractor, VariableExtractor.Builder variableExtractor) {
         if (boundaryExtractor.useBody() || boundaryExtractor.useBodyAsDocument() || boundaryExtractor.useUnescapedBody()) {
@@ -80,6 +103,13 @@ class BoundaryExtractorConverter implements BiFunction<BoundaryExtractor, HashTr
         return variableExtractor;
     }
 
+    /**
+     * For JMeterExtractor, we can only manage the main sample option, we can apply this element in the same branch
+     * This is why me only manage main sample
+     * If you want sub sample, you have to manage the subtree too
+     * 
+     * @param boundaryExtractor
+     */
     @SuppressWarnings("Duplicates")
     private static void checkApplyTo(BoundaryExtractor boundaryExtractor) {
         if ("all".equals(boundaryExtractor.fetchScope())) {

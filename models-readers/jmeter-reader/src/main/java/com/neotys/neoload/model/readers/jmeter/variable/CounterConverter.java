@@ -12,11 +12,19 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This class convert CounterElement of JMeter into Counter Variable of Neoload
+ */
 public class CounterConverter implements BiFunction<CounterConfig, HashTree, List<Variable>> {
+
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(CounterConverter.class);
 
-    CounterConverter() { }
+    //Constructor
+    CounterConverter() {
+    }
 
+    //Methods
     @Override
     public List<Variable> apply(CounterConfig counterConfig, HashTree hashTree) {
         final CounterVariable.Builder counterBuilder = CounterVariable.builder()
@@ -26,24 +34,24 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
                 .end(Integer.parseInt(counterConfig.getEndAsString()))
                 .start(Integer.parseInt(counterConfig.getStartAsString()));
         checkOutofValue(counterConfig);
-        checkScope(counterConfig,counterBuilder);
+        checkScope(counterConfig, counterBuilder);
         LOGGER.info("Counter data have been cconverted");
-        EventListenerUtils.readSupportedFunction("CounterData","Counter Variable");
+        EventListenerUtils.readSupportedFunction("CounterData", "Counter Variable");
         return ImmutableList.of(counterBuilder.build());
     }
 
-     private void checkScope(CounterConfig counterConfig, CounterVariable.Builder counterBuilder) {
-        if (counterConfig.isPerUser()){
+    private void checkScope(CounterConfig counterConfig, CounterVariable.Builder counterBuilder) {
+        if (counterConfig.isPerUser()) {
             counterBuilder.scope(Variable.Scope.LOCAL);
-        } else{
+        } else {
             counterBuilder.scope(Variable.Scope.GLOBAL);
         }
     }
 
-     private void checkOutofValue(CounterConfig counterConfig) {
-         if (counterConfig.isResetOnThreadGroupIteration()) {
-             LOGGER.warn("We can't converted this parameter");
-             EventListenerUtils.readUnsupportedParameter("Counter", "Reset on each Thread Group Iteration", "not supported");
-         }
-     }
+    private void checkOutofValue(CounterConfig counterConfig) {
+        if (counterConfig.isResetOnThreadGroupIteration()) {
+            LOGGER.warn("We can't converted this parameter");
+            EventListenerUtils.readUnsupportedParameter("Counter", "Reset on each Thread Group Iteration", "not supported");
+        }
+    }
 }

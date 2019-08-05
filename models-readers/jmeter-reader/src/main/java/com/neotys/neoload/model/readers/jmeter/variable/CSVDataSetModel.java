@@ -16,6 +16,7 @@ import static java.util.Optional.of;
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 abstract class CSVDataSetModel {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataSetConverter.class);
 
     abstract boolean getRecycle();
@@ -34,6 +35,7 @@ abstract class CSVDataSetModel {
 
     abstract String getName();
 
+    //Methods
     static Builder builder() {
         return ImmutableCSVDataSetModel.builder();
     }

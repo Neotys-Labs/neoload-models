@@ -30,12 +30,14 @@ import java.util.*;
 
 public class JMeterReader extends Reader {
 
+    //Attributs
     private static final Logger LOG = LoggerFactory.getLogger(JMeterReader.class);
     private final String projectName;
     private final String jmeterPath;
     private final StepConverters stepConverters;
     private final VariableConverters variableConverters;
 
+    //Constructor
     public JMeterReader(final EventListener eventListener, final String pathFile, final String projectName, final String jmeterPath) {
         super(Objects.requireNonNull(pathFile));
         EventListenerUtils.setEventListener(Objects.requireNonNull(eventListener));
@@ -45,7 +47,14 @@ public class JMeterReader extends Reader {
         this.variableConverters = new VariableConverters();
     }
 
-
+    //Methods
+    /**
+     * In this method, we load the JMX's HashTree into testPlan variable
+     *
+     * @param projet
+     * @param fichier
+     * @return
+     */
     ImmutableProject readScript(final Project.Builder projet, final File fichier) {
         Preconditions.checkNotNull(fichier, "");
         try {
@@ -55,7 +64,7 @@ public class JMeterReader extends Reader {
             try {
                 testPlanTree = readJMeterProject(fichier);
             } catch (IOException e) {
-                LOG.error("Problem to Load HashTree",e);
+                LOG.error("Problem to Load HashTree", e);
             }
             List<PopulationPolicy> popPolicy = new ArrayList<>();
             Objects.requireNonNull(testPlanTree, "testPlanTree must not be null.");
@@ -88,15 +97,15 @@ public class JMeterReader extends Reader {
         }
     }
 
-     void getVariable(Project.Builder projet, TestPlan testPlan) {
+    void getVariable(Project.Builder projet, TestPlan testPlan) {
         Map<String, String> variableList = testPlan.getUserDefinedVariables();
         for (Map.Entry<String, String> entry : variableList.entrySet()) {
             String value = entry.getValue();
-            if((entry.getValue().contains("${"))){
+            if ((entry.getValue().contains("${"))) {
                 String[] stringList = entry.getValue().split(",,");
                 value = stringList[1];
-                 value = value.replace(")","");
-                 value = value.replace("}","");
+                value = value.replace(")", "");
+                value = value.replace("}", "");
             }
             Variable variable = ConstantVariable.builder()
                     .name(entry.getKey())
@@ -106,12 +115,19 @@ public class JMeterReader extends Reader {
         }
     }
 
+    /**
+     * Here, we load the JMeter properties to know the version of Jmeter to use and how does the element works
+     *
+     * @param fichier
+     * @return
+     * @throws IOException
+     */
     HashTree readJMeterProject(final File fichier) throws IOException {
         JMeterUtils.setJMeterHome(jmeterPath);
         JMeterUtils.loadJMeterProperties(jmeterPath + File.separator + "bin" + File.separator + "jmeter.properties");
         JMeterUtils.initLocale();
         SaveService.loadProperties();
-        HashTree testPlanTree ;
+        HashTree testPlanTree;
         testPlanTree = SaveService.loadTree(fichier);
         return testPlanTree;
     }
@@ -123,17 +139,17 @@ public class JMeterReader extends Reader {
 
     }
 
-     Scenario getScenario(List<PopulationPolicy> popPolicy, String nameTest, String commentTest) {
+    Scenario getScenario(List<PopulationPolicy> popPolicy, String nameTest, String commentTest) {
         return Scenario.builder()
-                        .addAllPopulations(popPolicy)
-                        .name(nameTest)
-                        .description(commentTest)
-                        .build();
+                .addAllPopulations(popPolicy)
+                .name(nameTest)
+                .description(commentTest)
+                .build();
     }
 
-     void convertThreadGroupElement(Project.Builder projet, List<PopulationPolicy> popPolicy, HashTree hashTree, Object o) {
+    void convertThreadGroupElement(Project.Builder projet, List<PopulationPolicy> popPolicy, HashTree hashTree, Object o) {
         if (o instanceof ThreadGroup) {
-            ConvertThreadGroupResult result = new ThreadGroupConverter(stepConverters, (ThreadGroup) o, hashTree.get(o),variableConverters).convert();
+            ConvertThreadGroupResult result = new ThreadGroupConverter(stepConverters, (ThreadGroup) o, hashTree.get(o), variableConverters).convert();
             LOG.info("Successfully parsed ThreadGroup {}", result);
             projet.addUserPaths(result.getUserPath());
             projet.addPopulations(result.getPopulation());

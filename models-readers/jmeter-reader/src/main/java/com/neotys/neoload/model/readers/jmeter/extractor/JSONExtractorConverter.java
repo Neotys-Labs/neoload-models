@@ -11,14 +11,21 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This Class convert JSONExtractor of JMeter into a Varaible Extractor of Neoload
+ */
 public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, HashTree, List<VariableExtractor>> {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(XPathExtractorConverter2.class);
+
     private static final String JSON_EXTRACTOR = "JsonExtractor";
 
-    JSONExtractorConverter(){}
+    //Constructor
+    JSONExtractorConverter() {
+    }
 
-
+    //Methods
     @Override
     public List<VariableExtractor> apply(JSONPostProcessor jsonPostProcessor, HashTree hashTree) {
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder()
@@ -35,14 +42,21 @@ public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, Has
 
     }
 
-     static void checkConcatenation(JSONPostProcessor jsonPostProcessor) {
-         if (jsonPostProcessor.getComputeConcatenation()) {
-             LOGGER.warn("We can't manage the concatenation, we send only one result");
-             EventListenerUtils.readSupportedParameterWithWarn(JSON_EXTRACTOR, "Concatenation", "send result", "Can't send multiple results");
-         }
+    static void checkConcatenation(JSONPostProcessor jsonPostProcessor) {
+        if (jsonPostProcessor.getComputeConcatenation()) {
+            LOGGER.warn("We can't manage the concatenation, we send only one result");
+            EventListenerUtils.readSupportedParameterWithWarn(JSON_EXTRACTOR, "Concatenation", "send result", "Can't send multiple results");
+        }
 
     }
 
+    /**
+     * For JMeterExtractor, we can only manage the main sample option, we can apply this element in the same branch
+     * This is why me only manage main sample
+     * If you want sub sample, you have to manage the subtree too
+     * 
+     * @param jsonPostProcessor
+     */
     @SuppressWarnings("Duplicates")
     static void checkApplyTo(JSONPostProcessor jsonPostProcessor) {
         if ("all".equals(jsonPostProcessor.fetchScope())) {

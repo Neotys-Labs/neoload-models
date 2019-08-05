@@ -6,6 +6,7 @@ import org.immutables.value.Value;
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 abstract class HTTPDefaultSetModel {
 
+    //Attributs
     abstract String getName();
 
     abstract String getDomain();
@@ -16,10 +17,12 @@ abstract class HTTPDefaultSetModel {
 
     abstract String getProtocol();
 
+    //Constructor
     static ImmutableHTTPDefaultSetModel.Builder builder() {
         return ImmutableHTTPDefaultSetModel.builder();
     }
 
+    //Methods
     String checkPath(){
         if (getPath().isEmpty()){
             return "/";

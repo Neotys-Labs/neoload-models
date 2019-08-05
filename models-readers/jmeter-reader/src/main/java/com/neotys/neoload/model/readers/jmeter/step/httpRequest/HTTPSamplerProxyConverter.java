@@ -22,14 +22,28 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-
+/**
+ * This class convert the HTTPSamplerProxy of JMeter into a HTTPRequest Step of Neoload
+ */
 public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, HashTree, List<Step>> {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
+    //Constructor
     public HTTPSamplerProxyConverter() {
     }
 
+    //Methods
+    /**
+     * Here we create the httpRequest of Neoload
+     * First we get the values back,
+     * Then we check if the domain is null, if it's null, we check if a default server exist to attached it
+     * Then we put the parameters into the body and check the header
+     * @param httpSamplerProxy
+     * @param hashTree
+     * @return
+     */
     public List<Step> apply(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree) {
         String domain = httpSamplerProxy.getDomain();
         String path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath())).orElse("/");
@@ -48,7 +62,6 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
             checkDefaultServer(httpSamplerProxy, req);
         } else {
             req.server(Servers.addServer(httpSamplerProxy.getName(), domain, port, protocol, hashTree));
-            //Gérer aussi avec l'intégration de variable dans le path
             req.url(buildURL(httpSamplerProxy));
             EventListenerUtils.readSupportedFunction("HTTPSamplerProxy", "HTTPRequest");
         }

@@ -17,14 +17,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * this class convert the ThreadGroup into a UserPath but in Population too
+ */
 public class ThreadGroupConverter {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreadGroupConverter.class);
     private final StepConverters stepConverters;
     private final VariableConverters variableConverters;
     private final ThreadGroup threadGroup;
     private final HashTree subTree;
 
+    //Constructor
     public ThreadGroupConverter(StepConverters converters, ThreadGroup threadGroup, HashTree subTree, VariableConverters variableConverters) {
         this.stepConverters = converters;
         this.threadGroup = threadGroup;
@@ -32,14 +37,22 @@ public class ThreadGroupConverter {
         this.variableConverters = variableConverters;
     }
 
+    //Methods
+
+    /**
+     * We can optimize the walk of the HashTree because here we walk the Hashtree twice
+     * So maybe create a mother class for the converter and this mother class
+     * manage which converter have to be use for this element
+     * @return
+     */
     public ConvertThreadGroupResult convert() {
         //Create User Path
         UserPath.Builder userPathBuilder = UserPath.builder()
                 .name(threadGroup.getName())
                 .description(threadGroup.getComment());
         //process subtree
-        final List<Step> steps = stepConverters.convertStep(subTree);
-        final List<Variable> variables = variableConverters.convertVariable(subTree);
+        final List<Step> steps = stepConverters.convertStep(subTree); //For convert the step
+        final List<Variable> variables = variableConverters.convertVariable(subTree); // for convert the variable
         Container containerBuilder = getContainer(steps);
         userPathBuilder.actions(containerBuilder);
         UserPathPolicy userpolicy = getUserPathPolicy(threadGroup);

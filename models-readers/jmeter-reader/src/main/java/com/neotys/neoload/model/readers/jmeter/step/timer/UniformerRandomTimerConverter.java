@@ -14,12 +14,18 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This function convert the UniforRandomTimer of JMeter into Delay Step of Neoload
+ */
 public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTimer, HashTree, List<Step>> {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(UniformerRandomTimerConverter.class);
 
+    //Constructor
     public UniformerRandomTimerConverter() { }
 
+    //Methods
     @Override
     public List<Step> apply(UniformRandomTimer uniformRandomTimer, HashTree hashTree) {
         Delay delay = Delay.builder()
@@ -32,6 +38,13 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
         return ImmutableList.of(delay);
     }
 
+    /**
+     * This Timer have the same problem that CSVData
+     * We have to get the value of the base delay back
+     * And add a random value between 1 and the Timer's Random Value
+     * @param uniformRandomTimer
+     * @return
+     */
     static String checkDelay(UniformRandomTimer uniformRandomTimer) {
         double baseDelay = 0.0;
         double randomDelay = 0.0;

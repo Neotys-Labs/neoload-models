@@ -10,14 +10,20 @@ import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class manage all the different javascript to write
+ */
 public class JavascriptConverter {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(JavascriptConverter.class);
     private static String cookieManager = "CookieManager";
 
+    //Constructor
     JavascriptConverter() {
     }
 
+    //Methods
     public static Step createJavascript(HashTree hashTree, HTTPSamplerProxy httpSamplerProxy) {
         Javascript.Builder javascript = Javascript.builder();
         StringBuilder script = new StringBuilder();

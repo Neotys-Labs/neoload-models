@@ -14,14 +14,29 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
-
+/**
+ * this class convert the CSVData of JMeter into File Variable in Neoload
+ */
 final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List<Variable>> {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataSetConverter.class);
 
+    //Constructor
     CSVDataSetConverter() {
     }
 
+    //Methods
+    /**
+     * We can't access to the Attributs of CSVData directly like others element,
+     * so we have to browse is properties and take the element we need
+     * We use this method because there is a problem with the apache element in java
+     * This method is dangerous because if JMeter change the propoerties name, everything change
+     * But I don't find another solution
+     * @param csvDataSet
+     * @param hashTree
+     * @return
+     */
     public List<Variable> apply(CSVDataSet csvDataSet, HashTree hashTree) {
         final PropertyIterator propertyIterator = csvDataSet.propertyIterator();
         ImmutableCSVDataSetModel.Builder csvModelbuilder = CSVDataSetModel.builder();
@@ -53,6 +68,7 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
                     break;
             }
         }
+        //We create a CSVData Immutable for get the differents values back more easily
         CSVDataSetModel csvDataSetModel = csvModelbuilder.build();
         final FileVariable.Builder data = FileVariable.builder()
                 .name(csvDataSetModel.getName())
@@ -63,7 +79,7 @@ final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List
 
         csvDataSetModel.computeScope().ifPresent(data::scope);
         LOGGER.info("CSVDataSet : Convertion success");
-        EventListenerUtils.readSupportedFunction("CsvData","CSVData Variable");
+        EventListenerUtils.readSupportedFunction("CsvData", "CSVData Variable");
         return ImmutableList.of(data.build());
     }
 

@@ -13,20 +13,33 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This class convert the RecordingController of JMeter into Step of Neoload
+ */
 public class RecordingControllerConverter implements BiFunction<RecordingController, HashTree, List<Step>> {
 
+    //Attributs
     private final StepConverters converter;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RecordingControllerConverter.class);
 
+    //Constructor
     public RecordingControllerConverter(StepConverters stepConverters) {
         this.converter = stepConverters;
     }
 
+    //Methods
+    /**
+     * We convert the RecordingController like it was a SimpleController
+     *
+     * @param recordingController
+     * @param hashTree
+     * @return
+     */
     public List<Step> apply(RecordingController recordingController, HashTree hashTree) {
         Container.Builder builder = Container.builder().description(recordingController.getComment()).name(recordingController.getName());
         builder.addAllSteps(converter.convertStep(hashTree.get(recordingController)));
-        LOGGER.info("RecordingController corretly converted");
+        LOGGER.info("RecordingController correctly converted");
         EventListenerUtils.readSupportedFunction("RecordingController","RecordingController");
         return ImmutableList.of(builder.build());
     }

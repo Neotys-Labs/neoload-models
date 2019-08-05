@@ -14,13 +14,20 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * This class convert The HTTPDefaultRequest of JMeter into a DefaultServer in our programm
+ * If we find a HttpRequest without values, we attached the Default_Server to this HttpRequest
+ */
 public class HttpDefaultRequestConverter implements BiFunction<ConfigTestElement, HashTree, List<Step>> {
 
+    //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpDefaultRequestConverter.class);
 
+    //Constructor
     public HttpDefaultRequestConverter() {
     }
 
+    //Methods
     @Override
     public List<Step> apply(ConfigTestElement configTestElement, HashTree hashTree) {
         if ((HttpDefaultsGui.class.getName().equals((configTestElement).getPropertyAsString(TestElement.GUI_CLASS)))) {
@@ -34,6 +41,11 @@ public class HttpDefaultRequestConverter implements BiFunction<ConfigTestElement
         return stepList;
     }
 
+    /**
+     * Like for CSVData, we have to browse the properties of this element
+     * @param configTestElement
+     * @return
+     */
     @SuppressWarnings("Duplicates")
     static HTTPDefaultSetModel buildHttpDefault(ConfigTestElement configTestElement) {
         ImmutableHTTPDefaultSetModel.Builder httpDefaultSetModel = ImmutableHTTPDefaultSetModel.builder()
