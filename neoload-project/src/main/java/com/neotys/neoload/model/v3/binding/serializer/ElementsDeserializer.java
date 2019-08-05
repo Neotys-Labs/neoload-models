@@ -15,58 +15,62 @@ import java.util.List;
 import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
 
 public class ElementsDeserializer extends StdDeserializer<List<Step>> {
-	private static final long serialVersionUID = -5696608939252369276L;
+    private static final long serialVersionUID = -5696608939252369276L;
 
-	private static final String TRANSACTION = "transaction";
-	private static final String REQUEST = "request";
-	private static final String DELAY = "delay";
-	private static final String THINK_TIME = "think_time";
-	private static final String JAVASCRIPT = "javascript";
-	private static final String IF = "if";
+    private static final String TRANSACTION = "transaction";
+    private static final String REQUEST = "request";
+    private static final String DELAY = "delay";
+    private static final String THINK_TIME = "think_time";
+    private static final String JAVASCRIPT = "javascript";
+    private static final String IF = "if";
+    private static final String LOOP = "loop";
 
-	public ElementsDeserializer() {
-		super(List.class);
-	}
+    public ElementsDeserializer() {
+        super(List.class);
+    }
 
-	@Override
-	public List<Step> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
-		final List<Step> actions = new ArrayList<>();
+    @Override
+    public List<Step> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
+        final List<Step> actions = new ArrayList<>();
 
-		final ObjectCodec codec = jsonParser.getCodec();
-		final JsonNode jsonNode = codec.readTree(jsonParser);
+        final ObjectCodec codec = jsonParser.getCodec();
+        final JsonNode jsonNode = codec.readTree(jsonParser);
 
-		final Iterator<JsonNode> iterator = jsonNode.elements();
-		while (iterator.hasNext()) {
-			final JsonNode actionNode = iterator.next();
+        final Iterator<JsonNode> iterator = jsonNode.elements();
+        while (iterator.hasNext()) {
+            final JsonNode actionNode = iterator.next();
 
-			Step action = null;
-			if (actionNode.has(TRANSACTION)) {
-				final JsonNode transactionNode = actionNode.get(TRANSACTION);
-				action = codec.treeToValue(transactionNode, Container.class);
-			} else if (actionNode.has(REQUEST)) {
-				final JsonNode requestNode = actionNode.get(REQUEST);
-				action = codec.treeToValue(requestNode, Request.class);
-			} else if (actionNode.has(DELAY)) {
-				final String delayValue = actionNode.get(DELAY).asText();
-				final String delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
-				action = Delay.builder().value(String.valueOf(delay)).build();
-			} else if (actionNode.has(THINK_TIME)) {
-				final String thinkTimeValue = actionNode.get(THINK_TIME).asText();
-				final String thinkTime = STRING_TO_TIME_DURATION_WITH_MS.convert(thinkTimeValue);
-				action = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
-			} else if (actionNode.has(JAVASCRIPT)) {
-				final JsonNode javascriptNode = actionNode.get(JAVASCRIPT);
-				action = codec.treeToValue(javascriptNode, Javascript.class);
-			} else if (actionNode.has(IF)) {
-				final JsonNode ifNode = actionNode.get(IF);
-				action = codec.treeToValue(ifNode, If.class);
-			}
+            Step action = null;
+            if (actionNode.has(TRANSACTION)) {
+                final JsonNode transactionNode = actionNode.get(TRANSACTION);
+                action = codec.treeToValue(transactionNode, Container.class);
+            } else if (actionNode.has(REQUEST)) {
+                final JsonNode requestNode = actionNode.get(REQUEST);
+                action = codec.treeToValue(requestNode, Request.class);
+            } else if (actionNode.has(DELAY)) {
+                final String delayValue = actionNode.get(DELAY).asText();
+                final String delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
+                action = Delay.builder().value(String.valueOf(delay)).build();
+            } else if (actionNode.has(THINK_TIME)) {
+                final String thinkTimeValue = actionNode.get(THINK_TIME).asText();
+                final String thinkTime = STRING_TO_TIME_DURATION_WITH_MS.convert(thinkTimeValue);
+                action = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
+            } else if (actionNode.has(JAVASCRIPT)) {
+                final JsonNode javascriptNode = actionNode.get(JAVASCRIPT);
+                action = codec.treeToValue(javascriptNode, Javascript.class);
+            } else if (actionNode.has(IF)) {
+                final JsonNode ifNode = actionNode.get(IF);
+                action = codec.treeToValue(ifNode, If.class);
+            } else if (actionNode.has(LOOP)) {
+                final JsonNode loopNode = actionNode.get(LOOP);
+                action = codec.treeToValue(loopNode, Loop.class);
+            }
 
-			if (action != null) {
-				actions.add(action);
-			}
-		}
+            if (action != null) {
+                actions.add(action);
+            }
+        }
 
-		return actions;
-	}
+        return actions;
+    }
 }
