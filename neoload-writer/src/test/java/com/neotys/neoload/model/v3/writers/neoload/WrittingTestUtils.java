@@ -203,10 +203,10 @@ public class WrittingTestUtils {
             .name("Container_name")
             .build();
 
-	public static final Delay DELAY_TEST = Delay.builder()
-			.name("Delay_name")
-			.value("200")
-			.build();
+    public static final Delay DELAY_TEST = Delay.builder()
+            .name("Delay_name")
+            .value("200")
+            .build();
 
     public static final Container SHARED_CONTAINER_TEST = Container.builder()
             // TODO
@@ -227,6 +227,18 @@ public class WrittingTestUtils {
             .description("a simple loop")
             .times("20")
             .addSteps(CONTAINER_TEST)
+            .addSteps(DELAY_TEST)
+            .build();
+
+    public static final While WHILE_TEST = While.builder()
+            .name("while")
+            .match(Match.ANY)
+            .addConditions(Condition.builder()
+                    .operand1("1")
+                    .operand2("2")
+                    .operator(Condition.Operator.GREATER)
+                    .build()
+            )
             .addSteps(DELAY_TEST)
             .build();
 
@@ -259,7 +271,7 @@ public class WrittingTestUtils {
                     .operator(Condition.Operator.EQUALS)
                     .operand2("true")
                     .build())
-            .match(If.Match.ANY)
+            .match(Match.ANY)
             .then(Container.builder()
                     .name("Then")
                     .addSteps(SET_OK_CODE_CUSTOM_ACTION)
@@ -276,7 +288,7 @@ public class WrittingTestUtils {
                     .operator(Condition.Operator.EQUALS)
                     .operand2("true")
                     .build())
-            .match(If.Match.ANY)
+            .match(Match.ANY)
             .then(Container.builder()
                     .name("Then")
                     .addSteps(SET_OK_CODE_CUSTOM_ACTION)

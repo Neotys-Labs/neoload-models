@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.binding.serializer.MatchDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
@@ -19,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.DESCRIPTION, If.CONDITIONS, If.MATCH, If.THEN, If.ELSE})
+@JsonPropertyOrder({Element.DESCRIPTION, If.CONDITIONS, Match.MATCH, If.THEN, If.ELSE})
 @JsonDeserialize(as = ImmutableIf.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
@@ -27,24 +26,8 @@ public interface If extends Step {
 
 	String DEFAULT_NAME = "if";
 	String CONDITIONS = "conditions";
-	String MATCH = "match";
 	String THEN = "then";
 	String ELSE = "else";
-
-	enum Match {
-		ANY, ALL;
-
-		public static Match of(final String name) {
-			if (!Strings.isNullOrEmpty(name)) {
-				try {return Match.valueOf(name.toUpperCase());}catch (final IllegalArgumentException iae) {}
-			}
-			throw new IllegalArgumentException("The Match must be: 'any' or 'all'.");
-		}
-
-		public String getName() {
-			return name().toLowerCase();
-		}
-	}
 
 	@Value.Default
 	default String getName() {
@@ -55,7 +38,7 @@ public interface If extends Step {
 	@Valid
 	List<Condition> getConditions();
 
-	@JsonProperty(MATCH)
+	@JsonProperty(Match.MATCH)
 	@RequiredCheck(groups={NeoLoad.class})
 	@JsonDeserialize(using = MatchDeserializer.class)
 	@Value.Default

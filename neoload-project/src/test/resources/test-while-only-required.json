@@ -1,0 +1,59 @@
+{
+  "name": "MyProject",
+  "user_paths": [
+    {
+      "name": "MyUserPath",
+      "actions": {
+        "steps": [
+          {
+            "while": {
+              "name": "My While",
+              "description": "My description",
+              "conditions": [
+                "'operand1' equals 'operand2'",
+                "'0' == 'operand2'",
+                "'operand1' not_equals '${parameter}'",
+                "${parameter} != 10",
+                "'${parameter}' contains 'contains'",
+                "'operand1' not_contains 'operand2'",
+                "'operand1' starts_with '=='",
+                "'operand1' not_starts_with 'operand2'",
+                "'operand1' ends_with 'operand2'",
+                "'operand1' not_ends_with 'operand2'",
+                "'operand1' match_regexp 'operand2'",
+                "'operand1' not_match_regexp 'operand2'",
+                "'operand1' greater 'operand2'",
+                "'operand1' > 'operand2'",
+                "'operand1' greater_equal 'operand2'",
+                "'operand1' >= 'operand2'",
+                "'operand1' less 'operand2'",
+                "'operand1' < 'operand2'",
+                "'operand1' less_equal 'operand2'",
+                "'operand1' <= 'operand2'",
+                "'operand1' exists",
+                "'operand1' not_exists",
+                "'${myVariable1}' equals 'value'",
+                "'${myVariable1}' == 'value'",
+                "'${myVariable1}' != '5'",
+                "'${myVariable2}' not_exists",
+                "'${myVariable3}' exists",
+                "'${myVariable4}' == ''",
+                "'${myVariable6}' equals \"value'with'simple'quote\"",
+                "'${myVariable7}' equals 'value\"with\"double\"quote'",
+                "'' == ''"
+              ],
+              "match": "any",
+              "steps": [
+                {
+                  "request": {
+                    "url": "http://www.neotys.com/select"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
