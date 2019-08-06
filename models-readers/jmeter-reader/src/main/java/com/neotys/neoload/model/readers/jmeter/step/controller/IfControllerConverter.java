@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * This class convert the ifController of JMeter into Step of Neoload
+ * This class convert the ifController of JMeter into If of Neoload
  */
 public class IfControllerConverter implements BiFunction<IfController, HashTree, List<Step>> {
 

@@ -21,27 +21,8 @@ public final class VariablesUtils {
 
     }
 
-    public static String checkValue(String key) {
-        if (variablesList.containsKey(key)) {
-            StringBuilder value = new StringBuilder();
-            int i = 0;
-            try {
-                Integer.parseInt(variablesList.get(key));
-                return variablesList.get(key);
-            } catch (Exception e) {
-                String brutValue = variablesList.get(key).split(",")[1];
-                while (brutValue.charAt(i) != ')') {
-                    value.append(brutValue.charAt(i));
-                    i++;
-                }
-                return value.toString();
-            }
-        }else return null;
-    }
 
-//    public static int getValue(String key){
-//        String value = checkValue(key);
-//        if (value != null){
-//        }
-//    }
+    public static String getValue(String key) {
+        return variablesList.get(key);
+    }
 }
