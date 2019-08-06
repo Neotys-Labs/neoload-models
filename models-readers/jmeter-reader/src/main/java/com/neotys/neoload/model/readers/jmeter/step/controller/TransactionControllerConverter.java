@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * This class convert the TransactionController of JMeter into Step of Neoload
+ * This class convert the TransactionController of JMeter into Transaction of Neoload
  */
 public class TransactionControllerConverter implements BiFunction<TransactionController, HashTree, List<Step>> {
 

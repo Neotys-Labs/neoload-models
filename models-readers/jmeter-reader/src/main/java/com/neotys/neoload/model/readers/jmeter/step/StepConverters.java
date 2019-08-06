@@ -1,12 +1,10 @@
 package com.neotys.neoload.model.readers.jmeter.step;
 
 import com.google.common.collect.ImmutableMap;
+
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.extractor.ExtractorConverters;
-import com.neotys.neoload.model.readers.jmeter.step.controller.IfControllerConverter;
-import com.neotys.neoload.model.readers.jmeter.step.controller.RecordingControllerConverter;
-import com.neotys.neoload.model.readers.jmeter.step.controller.SimpleControllerConverter;
-import com.neotys.neoload.model.readers.jmeter.step.controller.TransactionControllerConverter;
+import com.neotys.neoload.model.readers.jmeter.step.controller.*;
 import com.neotys.neoload.model.readers.jmeter.step.httpRequest.HTTPSamplerProxyConverter;
 import com.neotys.neoload.model.readers.jmeter.step.httpRequest.HttpDefaultRequestConverter;
 import com.neotys.neoload.model.readers.jmeter.step.timer.ConstantTimerConverter;
@@ -16,6 +14,7 @@ import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.control.IfController;
+import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.protocol.http.control.RecordingController;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
@@ -52,6 +51,7 @@ public final class StepConverters {
                 .put(IfController.class, new IfControllerConverter(this))
                 .put(RecordingController.class, new RecordingControllerConverter(this))
                 .put(ConfigTestElement.class, new HttpDefaultRequestConverter())
+                .put(LoopController.class, new LoopControllerConverter(this))
                 .build();
     }
 

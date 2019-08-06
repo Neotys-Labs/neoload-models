@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * This class convert the RecordingController of JMeter into Step of Neoload
+ * This class convert the RecordingController of JMeter into Transaction of Neoload
  */
 public class RecordingControllerConverter implements BiFunction<RecordingController, HashTree, List<Step>> {
 

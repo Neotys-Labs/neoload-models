@@ -14,7 +14,6 @@ public final class ConverterManager {
         this.variableConverters = new VariableConverters();
     }
 
-
     public void convertElement(Object o, HashTree hahsTree){
 
     }
