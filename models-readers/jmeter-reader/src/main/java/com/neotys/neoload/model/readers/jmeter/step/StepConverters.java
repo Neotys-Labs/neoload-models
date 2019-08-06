@@ -12,10 +12,7 @@ import com.neotys.neoload.model.readers.jmeter.step.timer.UniformerRandomTimerCo
 import com.neotys.neoload.model.readers.jmeter.variable.VariableConverters;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.config.ConfigTestElement;
-import org.apache.jmeter.control.GenericController;
-import org.apache.jmeter.control.IfController;
-import org.apache.jmeter.control.LoopController;
-import org.apache.jmeter.control.TransactionController;
+import org.apache.jmeter.control.*;
 import org.apache.jmeter.protocol.http.control.RecordingController;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.timers.ConstantTimer;
@@ -52,6 +49,7 @@ public final class StepConverters {
                 .put(RecordingController.class, new RecordingControllerConverter(this))
                 .put(ConfigTestElement.class, new HttpDefaultRequestConverter())
                 .put(LoopController.class, new LoopControllerConverter(this))
+                .put(WhileController.class, new WhileControllerConverter(this))
                 .build();
     }
 

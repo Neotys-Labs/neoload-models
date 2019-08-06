@@ -2,6 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.extractor;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import org.apache.jmeter.extractor.json.jsonpath.JSONPostProcessor;
 import org.apache.jorphan.collections.HashTree;
@@ -28,17 +29,30 @@ public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, Has
     //Methods
     @Override
     public List<VariableExtractor> apply(JSONPostProcessor jsonPostProcessor, HashTree hashTree) {
+
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder()
                 .description(jsonPostProcessor.getComment())
                 .name(jsonPostProcessor.getRefNames())
                 .jsonPath(jsonPostProcessor.getJsonPathExpressions())
                 .getDefault(jsonPostProcessor.getDefaultValues());
+        /*
+        First, we try to take the value of the matchNumber,
+        If there is an error, we try to check the variables and take the good one
+        Finally, if there is an error again,
+        Maybe the user put a variable with a function or fill the form with a wrong value
+         */
         try{
             variableExtractor.matchNumber(Integer.parseInt(jsonPostProcessor.getMatchNumbers()));
         }catch(Exception e){
-            LOGGER.warn("We can't manage the variable into the Match Number \n"
-                    + "So We put 0 in value of Match Number",e);
-            variableExtractor.matchNumber(0);
+            try{
+                variableExtractor.matchNumber(Integer.parseInt(VariablesUtils.getValue(jsonPostProcessor.getMatchNumbers())));
+            }catch (Exception e1){
+                LOGGER.warn("We can't manage the variable into the Match Number \n"
+                        + "So We put 0 in value of Match Number", e1);
+
+                EventListenerUtils.readUnsupportedParameter(JSON_EXTRACTOR, "Variable String","MatchNumber");
+                variableExtractor.matchNumber(0);
+            }
         }
         checkApplyTo(jsonPostProcessor);
         checkConcatenation(jsonPostProcessor);

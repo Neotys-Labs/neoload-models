@@ -23,6 +23,12 @@ public final class VariablesUtils {
 
 
     public static String getValue(String key) {
+        key = key.split("\\{")[1];
+        key = key.split("\\}")[0];
         return variablesList.get(key);
+    }
+
+    public static Map<String, String> getVariableList(){
+        return variablesList;
     }
 }

@@ -18,7 +18,7 @@ import java.util.function.BiFunction;
  */
 public class LoopControllerConverter implements BiFunction<LoopController, HashTree, List<Step>> {
 
-    //Attributs
+    //Attributes
     private final StepConverters converter;
     private static final Logger LOGGER = LoggerFactory.getLogger(LoopControllerConverter.class);
 

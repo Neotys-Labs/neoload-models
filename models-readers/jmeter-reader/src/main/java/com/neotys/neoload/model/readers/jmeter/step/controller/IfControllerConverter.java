@@ -42,9 +42,9 @@ public class IfControllerConverter implements BiFunction<IfController, HashTree,
      * This method have an option to check the conditions for each element in the IfController,
      * If this option is not check we create a simple If in Neoload with all elements
      * Else we have to create an If for each Element in IfController
-     * @param containerList
-     * @param ifController
-     * @param hashTree
+     * @param containerList which contains the steps
+     * @param ifController the JMeter element
+     * @param hashTree HashTree of JMeter at the position of the IfController
      */
     private void convertIfController(List<Step> containerList, IfController ifController, HashTree hashTree) {
         If.Builder ifBuilder = If.builder()

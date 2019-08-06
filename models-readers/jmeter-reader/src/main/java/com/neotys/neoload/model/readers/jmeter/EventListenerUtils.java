@@ -4,9 +4,9 @@ import com.neotys.neoload.model.listener.EventListener;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/*
-We use this class to create a global EventListener, like this, we create one in the JMeter Reader and we an call it
-In the others class to infomr the client of the problem or good convertion of the elements
+/**
+ * We use this class to create a global EventListener, like this, we create one in the JMeter Reader and we an call it
+ * In the others class to infomr the client of the problem or good convertion of the elements
  */
 public final class EventListenerUtils {
 
@@ -35,19 +35,19 @@ public final class EventListenerUtils {
     }
 
     public static void readUnsupportedParameter(String scriptName, String parameterType, String parameterName) {
-        getEventListener().readUnsupportedParameter(scriptName,parameterType,parameterName);
+        getEventListener().readUnsupportedParameter(scriptName, parameterType, parameterName);
     }
 
     public static void readSupportedFunction(final String scriptName, final String functionName) {
-        getEventListener().readSupportedFunction(scriptName,functionName,0);
+        getEventListener().readSupportedFunction(scriptName, functionName, 0);
     }
 
-    public static void readUnsupportedFunction(final String scriptName, final String functionName){
-        getEventListener().readUnsupportedFunction(scriptName,functionName,1);
+    public static void readUnsupportedFunction(final String scriptName, final String functionName) {
+        getEventListener().readUnsupportedFunction(scriptName, functionName, 1);
     }
 
     public static void readSupportedFunctionWithWarn(String scriptName, String functionName, String warning) {
-        getEventListener().readSupportedFunctionWithWarn(scriptName,functionName,0,warning);
+        getEventListener().readSupportedFunctionWithWarn(scriptName, functionName, 0, warning);
     }
 
     public static void readUnsupportedAction(String s) {

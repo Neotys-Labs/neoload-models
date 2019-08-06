@@ -7,6 +7,7 @@ import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.config.CSVDataSet;
+import org.apache.jmeter.config.RandomVariableConfig;
 import org.apache.jmeter.modifiers.CounterConfig;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
@@ -32,7 +33,8 @@ public final class VariableConverters {
         convertersMap = ImmutableMap.of(
                 CSVDataSet.class, new CSVDataSetConverter(),
                 CounterConfig.class, new CounterConverter(),
-                Arguments.class, new UserDefineVariableConverter());
+                Arguments.class, new UserDefineVariableConverter(),
+                RandomVariableConfig.class, new RandomVariableConverter());
     }
 
     //Methods

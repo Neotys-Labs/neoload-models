@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter.step.thread;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
@@ -23,23 +24,42 @@ class PopulationPolicyConverter {
     static PopulationPolicy convert(ThreadGroup threadGroup) {
         int nbUser = threadGroup.getNumThreads();
         int rampUp = threadGroup.getRampUp();
-        if(nbUser == 0 || rampUp == 0 || threadGroup.getDuration() == 0){
-            LOGGER.warn("There is a problem with the PopulationPolicy\n"
-            + "Please check that you have fill correctly this form and don't use Variable");
+
+        final String populationPolicy = "PopulationPolicy";
+        if(nbUser == 0){
+            LOGGER.warn("There is a problem with the NumberUser of PopulationPolicy "
+            + "Please check that you have fill correctly this form and don't use Variable "
+            + " for NumberUser or Rampup or The TimeDuration");
+            EventListenerUtils.readUnsupportedParameter(populationPolicy, "Variable String","NbUser");
+
         }
+
         int loop;
+
+        /*
+        First, we try to take the value of the Loop,
+        If there is an error, we try to check the variables and take the good one
+        Finally, if there is an error again,
+        Maybe the user put a variable with a function or fill the form with a wrong value
+         */
         try{
             loop = Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops"));
         }catch(Exception e){
-            LOGGER.warn("We can't manage the variable into the Loop Number. "
-                    + "So We put 0 in value of Loop Number",e);
-            loop = 0;
+            try{
+                loop = Integer.parseInt(VariablesUtils.getValue(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")));
+            } catch (Exception e1) {
+                LOGGER.warn("We can't manage the variable into the Loop Number. "
+                        + "So We put 0 in value of Loop Number", e1);
+                EventListenerUtils.readUnsupportedParameter(populationPolicy, "Variable String","Loop");
+
+                loop = 0;
+            }
         }
         boolean planifier = threadGroup.getScheduler();
         //Infinite Loop if LoadDuration is null
         final LoadDuration loadDuration = getIterationLoadDuration(threadGroup, loop, planifier);
         final LoadPolicy loadPolicy = getLoadPolicy(threadGroup, nbUser, rampUp, loadDuration);
-        EventListenerUtils.readSupportedFunction("ThreadGroup Parameters","PopulationPolicy");
+        EventListenerUtils.readSupportedFunction("ThreadGroup Parameters", populationPolicy);
         LOGGER.info("Convertion of Population Policy");
         return PopulationPolicy.builder()
                 .loadPolicy(loadPolicy)

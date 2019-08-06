@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 /**
  * This class convert UserSefinedVariable of JMter into Variables of neoload
