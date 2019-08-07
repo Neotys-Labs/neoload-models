@@ -6,6 +6,7 @@ import com.neotys.neoload.model.readers.jmeter.step.controller.SimpleControllerC
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.control.TransactionController;
@@ -29,54 +30,33 @@ public class SimpleControllerConverterTest {
     private TestEventListener spy;
 
     @Before
-    public void before()   {
+    public void before() {
         spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
     }
 
-    @Test
-    public void testApplyNoSteps() {
-
-        SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters());
-
-        GenericController simpleController = Mockito.mock(GenericController.class);
-        when(simpleController.getName()).thenReturn("my thread group");
-        when(simpleController.getComment()).thenReturn("My comment");
-        HashTree hashTree = Mockito.mock(HashTree.class);
-
-        HashTree subTree = Mockito.mock(HashTree.class);
-        when(subTree.list()).thenReturn(Collections.emptyList());
-        when(hashTree.get(eq(simpleController))).thenReturn(subTree);
-        List<Step> teststep = testcontrol.apply(simpleController,hashTree);
-        assertEquals(teststep.size(), 1);
-        assertEquals(teststep.get(0).getName(), "my thread group");
-    }
 
     @Test
     public void testAApplySteps() {
 
         SimpleControllerConverter testcontrol = new SimpleControllerConverter(new StepConverters());
-        GenericController transactionController = Mockito.mock(GenericController.class);
-        when(transactionController.getName()).thenReturn("my thread group");
-        when(transactionController.getComment()).thenReturn("My comment");
+        GenericController genericController = Mockito.mock(GenericController.class);
+        when(genericController.getName()).thenReturn("my thread group");
+        when(genericController.getComment()).thenReturn("My comment");
         HashTree hashTree = Mockito.mock(HashTree.class);
         ConstantTimer constantTimer = new ConstantTimer();
         List collections = new ArrayList();
         collections.add(constantTimer);
-        collections.add(constantTimer);
         HashTree subTree = Mockito.mock(HashTree.class);
         when(subTree.list()).thenReturn(collections);
-        when(hashTree.get(eq(transactionController))).thenReturn(subTree);
-        List<Step> teststep = testcontrol.apply(transactionController, hashTree);
-        assertEquals(teststep.size(), 1);
-        assertEquals(teststep.get(0).getName(), "my thread group");
-        int result = (int) teststep.stream().flatMap(Element::flattened)
-                .filter(s -> !(s instanceof Container))
-                .count();
-        assertEquals(result, collections.size());
-        teststep.stream()
-                .filter(s -> s instanceof Container)
-                .flatMap(c -> ((Container) c).getSteps().stream());
+        when(hashTree.get(eq(genericController))).thenReturn(subTree);
+        List<Step> result = testcontrol.apply(genericController, hashTree);
+        List<Step> expected = new ArrayList<>();
+        expected.add(Container.builder()
+                .addSteps(Delay.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build())
+                .name("my thread group")
+                .description("My comment")
+                .build());
+        assertEquals(result, expected);
     }
-
 }
