@@ -65,9 +65,9 @@ public class RandomVariableConverter implements BiFunction<RandomVariableConfig,
                 randomNumberVariable.max(Integer.parseInt(VariablesUtils.getValue(randomVariableConfig.getMaximumValue())));
             }catch (Exception e1){
                 LOGGER.warn("We can't manage the variable into the Max Number \n"
-                        + "So we put 0 in value of Max Number", e1);
+                        + "So we put 1 in value of Max Number", e1);
                 EventListenerUtils.readUnsupportedParameter(randomVariable, "Variable String","Max");
-                randomNumberVariable.max(0);
+                randomNumberVariable.max(1);
             }
         }
 
