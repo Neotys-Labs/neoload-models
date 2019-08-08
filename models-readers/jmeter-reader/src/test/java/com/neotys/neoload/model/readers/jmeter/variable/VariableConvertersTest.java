@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter.variable;
 
 import com.neotys.neoload.model.listener.TestEventListener;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.config.CSVDataSet;
@@ -21,10 +22,13 @@ public class VariableConvertersTest {
     public void before()   {
         TestEventListener spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
+        new VariableConverters();
+        new ContainerUtils();
     }
 
     @Test
     public void testConvertVariable(){
+
         HashTree hashTree = new HashTree();
         CSVDataSetConverter csvDataSetConverter = new CSVDataSetConverter();
         CSVDataSet csvDataSet = new CSVDataSet();
@@ -38,8 +42,8 @@ public class VariableConvertersTest {
         List<CSVDataSet> list = new ArrayList<>();
         list.add(csvDataSet);
         hashTree.add(list);
-
-        List<Variable> result = new VariableConverters().convertVariable(hashTree);
+        VariableConverters.convertVariable(hashTree,csvDataSet);
+        List<Variable> result = ContainerUtils.getVariableContainer();
         List<Variable> expected = csvDataSetConverter.apply(csvDataSet, mock(HashTree.class));
         Assert.assertEquals(result,expected);
 

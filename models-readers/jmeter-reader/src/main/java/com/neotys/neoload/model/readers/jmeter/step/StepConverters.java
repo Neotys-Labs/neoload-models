@@ -68,17 +68,16 @@ public final class StepConverters {
                 List<Step> stepList = converter.apply(o, subTree);
                 if (stepList != null) {
                     list.addAll(converter.apply(o, subTree));
-                    continue;
                 }
-            }
-            if (!new VariableConverters().getConvertersMap().containsKey(o.getClass()) && !new ExtractorConverters().getConvertersMap().containsKey(o.getClass())) {
+            } else if( VariableConverters.getConvertersMap().containsKey(o.getClass())){
+                VariableConverters.convertVariable(subTree,o);
+            }else if (!new ExtractorConverters().getConvertersMap().containsKey(o.getClass())) {
                 LOGGER.error("Type not Tolerate for converted in Step ");
                 EventListenerUtils.readUnsupportedFunction("StepConverters", o.getClass() + " in step converter\n");
             }
         }
         return list;
     }
-
 
     public Map<Class, BiFunction<?, HashTree, List<Step>>> getConvertersMap() {
         return convertersMap;

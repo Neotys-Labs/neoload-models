@@ -2,7 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.variable;
 
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.v3.project.variable.RandomNumberVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.config.RandomVariableConfig;
@@ -47,8 +47,9 @@ public class RandomVariableConverterTest {
 
     @Test
     public void testWithGoodVariable(){
-        new VariablesUtils();
-        VariablesUtils.addList("max","26");VariablesUtils.addList("min","8");
+        new ContainerUtils();
+        ContainerUtils.addKeyValue("max","26");
+        ContainerUtils.addKeyValue("min","8");
         RandomVariableConverter randomVariableConverter = new RandomVariableConverter();
         RandomVariableConfig randomVariableConfig = new RandomVariableConfig();
         randomVariableConfig.setVariableName("test"); randomVariableConfig.setComment("best internship");
@@ -70,8 +71,9 @@ public class RandomVariableConverterTest {
     @Test
     public void testWithProblems(){
         final String  randomVariable = "RandomVariable";
-        new VariablesUtils();
-        VariablesUtils.addList("max","26");VariablesUtils.addList("min","8");
+        new ContainerUtils();
+        ContainerUtils.addKeyValue("max","26");
+        ContainerUtils.addKeyValue("min","8");
         RandomVariableConverter randomVariableConverter = new RandomVariableConverter();
         RandomVariableConfig randomVariableConfig = new RandomVariableConfig();
         randomVariableConfig.setVariableName("test"); randomVariableConfig.setComment("best internship");

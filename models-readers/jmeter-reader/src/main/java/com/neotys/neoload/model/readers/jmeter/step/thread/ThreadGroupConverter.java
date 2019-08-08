@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.readers.jmeter.step.thread;
 
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
 import com.neotys.neoload.model.readers.jmeter.variable.VariableConverters;
@@ -25,16 +26,14 @@ public class ThreadGroupConverter {
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreadGroupConverter.class);
     private final StepConverters stepConverters;
-    private final VariableConverters variableConverters;
     private final ThreadGroup threadGroup;
     private final HashTree subTree;
 
     //Constructor
-    public ThreadGroupConverter(StepConverters converters, ThreadGroup threadGroup, HashTree subTree, VariableConverters variableConverters) {
+    public ThreadGroupConverter(StepConverters converters, ThreadGroup threadGroup, HashTree subTree) {
         this.stepConverters = converters;
         this.threadGroup = threadGroup;
         this.subTree = subTree;
-        this.variableConverters = variableConverters;
     }
 
     //Methods
@@ -51,8 +50,9 @@ public class ThreadGroupConverter {
                 .name(threadGroup.getName())
                 .description(threadGroup.getComment());
         //process subtree
-        final List<Variable> variables = variableConverters.convertVariable(subTree); // for convert the variable
+        //final List<Variable> variables = variableConverters.convertVariable(subTree); // for convert the variable
         final List<Step> steps = stepConverters.convertStep(subTree); //For convert the step
+        final List<Variable> variables = ContainerUtils.getVariableContainer();
         Container containerBuilder = getContainer(steps);
         userPathBuilder.actions(containerBuilder);
         UserPathPolicy userpolicy = getUserPathPolicy(threadGroup);

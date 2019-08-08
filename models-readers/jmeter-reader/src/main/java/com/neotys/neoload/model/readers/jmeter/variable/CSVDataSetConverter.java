@@ -17,13 +17,13 @@ import java.util.function.BiFunction;
 /**
  * this class convert the CSVData of JMeter into File Variable in Neoload
  */
-final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List<Variable>> {
+public final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTree, List<Variable>> {
 
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataSetConverter.class);
 
     //Constructor
-    CSVDataSetConverter() {
+     CSVDataSetConverter() {
     }
 
     //Methods

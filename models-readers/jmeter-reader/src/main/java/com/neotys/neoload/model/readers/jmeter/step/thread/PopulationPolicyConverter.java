@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter.step.thread;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ class PopulationPolicyConverter {
             loop = Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops"));
         }catch(Exception e){
             try{
-                loop = Integer.parseInt(VariablesUtils.getValue(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")));
+                loop = Integer.parseInt(ContainerUtils.getValue(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")));
             } catch (Exception e1) {
                 LOGGER.warn("We can't manage the variable into the Loop Number. "
                         + "So We put 0 in value of Loop Number", e1);

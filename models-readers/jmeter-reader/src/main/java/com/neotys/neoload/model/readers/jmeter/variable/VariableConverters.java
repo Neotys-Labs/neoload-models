@@ -1,9 +1,9 @@
 package com.neotys.neoload.model.readers.jmeter.variable;
 
 import com.google.common.collect.ImmutableMap;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.extractor.ExtractorConverters;
-import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.config.CSVDataSet;
@@ -26,7 +26,7 @@ public final class VariableConverters {
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(VariableConverters.class);
 
-    private final Map<Class, BiFunction<?, HashTree, List<Variable>>> convertersMap;
+    private static Map<Class, BiFunction<?, HashTree, List<Variable>>> convertersMap = null;
 
     //Constructor
     public VariableConverters() {
@@ -39,29 +39,26 @@ public final class VariableConverters {
 
     //Methods
     @SuppressWarnings("unchecked")
-    private <T> BiFunction<Object, HashTree, List<Variable>> getConverters(Class<T> clazz) {
+    private static <T> BiFunction<Object, HashTree, List<Variable>> getConverters(Class<T> clazz) {
         return (BiFunction<Object, HashTree, List<Variable>>) convertersMap.get(clazz);
     }
 
-    public List<Variable> convertVariable(HashTree subTree) {
+    public static void convertVariable(HashTree subTree, Object o) {
         //walk sub tree and convert each step
         ArrayList<Variable> list = new ArrayList<>();
-        for (Object o : subTree.list()) {
-            BiFunction<Object, HashTree, List<Variable>> converter = getConverters(o.getClass());
-            if (converter != null) {
-                list.addAll(converter.apply(o, subTree));
-                continue;
-            }
+        BiFunction<Object, HashTree, List<Variable>> converter = getConverters(o.getClass());
+        if (converter != null) {
+            list.addAll(converter.apply(o, subTree));
             //Check if the Jmeter element is not convert in other Converters Class
-            if (!new StepConverters().getConvertersMap().containsKey(o.getClass()) && new ExtractorConverters().getConvertersMap().containsKey(o.getClass())) {
+            if (new ExtractorConverters().getConvertersMap().containsKey(o.getClass())) {
                 LOGGER.error("Type not Tolerate for converted in Step ");
                 EventListenerUtils.readUnsupportedFunction("StepConverters", o.getClass() + " in variable converter\n");
             }
         }
-        return list;
+        ContainerUtils.addVariable(list);
     }
 
-    public Map<Class, BiFunction<?, HashTree, List<Variable>>> getConvertersMap() {
+    public static Map<Class, BiFunction<?, HashTree, List<Variable>>> getConvertersMap() {
         return convertersMap;
     }
 }

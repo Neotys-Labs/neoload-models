@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter.step.httpRequest;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +76,7 @@ abstract class HTTPDefaultSetModel {
                 return Integer.parseInt(getPort());
             }catch(Exception e){
                 try{
-                    return Integer.parseInt(VariablesUtils.getValue(getPort()));
+                    return Integer.parseInt(ContainerUtils.getValue(getPort()));
                 }catch (Exception e1) {
                     LOGGER.warn("We can't manage the variable into the Port Number \n"
                             + "So We put 0 in value of Port Number", e1);

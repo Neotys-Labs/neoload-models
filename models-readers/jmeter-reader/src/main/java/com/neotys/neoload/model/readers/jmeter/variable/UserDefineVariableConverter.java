@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter.variable;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.v3.project.variable.ConstantVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.config.Arguments;
@@ -44,7 +44,7 @@ public class UserDefineVariableConverter implements BiFunction<Arguments, HashTr
             for(String key : variableMap.keySet()) {
                 String value = variableMap.get(key);
                 variableList.add(ConstantVariable.builder().name(key).value(value).build());
-                VariablesUtils.addList(key, value);
+                ContainerUtils.addKeyValue(key, value);
             }
         }
         LOGGER.info("The conversion of User Defined Variable is a Success");

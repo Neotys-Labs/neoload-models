@@ -37,8 +37,7 @@ public class JMeterReader extends Reader {
     private final String projectName;
     private final String jmeterPath;
     private final StepConverters stepConverters;
-    private final VariableConverters variableConverters;
-    private final VariablesUtils variablesUtils;
+
 
     //Constructor
     public JMeterReader(final EventListener eventListener, final String pathFile, final String projectName, final String jmeterPath) {
@@ -47,8 +46,8 @@ public class JMeterReader extends Reader {
         this.projectName = Objects.requireNonNull(projectName);
         this.jmeterPath = Objects.requireNonNull(jmeterPath);
         this.stepConverters = new StepConverters();
-        this.variableConverters = new VariableConverters();
-        this.variablesUtils = new VariablesUtils();
+        new VariableConverters();
+        new ContainerUtils();
     }
 
     //Methods
@@ -154,35 +153,36 @@ public class JMeterReader extends Reader {
 
     void convertThreadGroupElement(Project.Builder projet, List<PopulationPolicy> popPolicy, HashTree hashTree, Object o) {
         if (o instanceof ThreadGroup) {
-            ConvertThreadGroupResult result = new ThreadGroupConverter(stepConverters, (ThreadGroup) o, hashTree.get(o), variableConverters).convert();
+            ConvertThreadGroupResult result = new ThreadGroupConverter(stepConverters, (ThreadGroup) o, hashTree.get(o)).convert();
             LOG.info("Successfully parsed ThreadGroup {}", result);
             projet.addUserPaths(result.getUserPath());
             projet.addPopulations(result.getPopulation());
             popPolicy.add(result.getPopulationPolicy());
             projet.addAllVariables(result.getVariableList());
-        } else if (o instanceof Arguments) {
-            HashTree subtree = new HashTree();
-            subtree.add(o);
-            subtree.getTree(o).add(hashTree.getTree(o));
-            projet.addAllVariables(variableConverters.convertVariable(subtree));
-        } else if (o instanceof ConfigTestElement) {
+        } else if (stepConverters.getConvertersMap().containsKey(o.getClass())) {
             HashTree subtree = new HashTree();
             subtree.add(o);
             subtree.getTree(o).add(hashTree.getTree(o));
             stepConverters.convertStep(subtree);
+        } else if (VariableConverters.getConvertersMap().containsKey(o.getClass())) {
+            HashTree subtree = new HashTree();
+            subtree.add(o);
+            subtree.getTree(o).add(hashTree.getTree(o));
+            VariableConverters.convertVariable(null, o);
         } else {
             LOG.warn("Unsupported first level node with type {}", o.getClass());
             EventListenerUtils.readUnsupportedAction(o.getClass() + "\n");
         }
+
     }
 
     @Override
     public Project read() {
         try {
-            File fichier = new File(folder);
+            File file = new File(folder);
             Project.Builder projectBuilder = Project.builder();
             EventListenerUtils.startReadingScripts(1);
-            return readScript(projectBuilder, fichier);
+            return readScript(projectBuilder, file);
         } finally {
             EventListenerUtils.endReadingScripts();
         }
