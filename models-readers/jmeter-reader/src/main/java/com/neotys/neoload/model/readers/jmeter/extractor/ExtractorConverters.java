@@ -55,7 +55,7 @@ public class ExtractorConverters {
                 continue;
             }
             //Check if the Jmeter element is not convert in other Converters Class
-            if (!new StepConverters().getConvertersMap().containsKey(o.getClass()) && new VariableConverters().getConvertersMap().containsKey(o.getClass())) {
+            if (!new StepConverters().getConvertersMap().containsKey(o.getClass()) &&  VariableConverters.getConvertersMap().containsKey(o.getClass())) {
                 LOGGER.error("Type not Tolerate for converted in Variable ");
                 EventListenerUtils.readUnsupportedFunction("Extractor Converter", o.getClass() + " in variable extractor\n");
             }
