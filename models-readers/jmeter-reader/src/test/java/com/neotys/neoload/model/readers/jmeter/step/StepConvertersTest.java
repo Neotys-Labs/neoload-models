@@ -35,6 +35,7 @@ public class StepConvertersTest {
         TestEventListener spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
         new ContainerUtils();
+        new VariableConverters();
     }
 
     @Test
