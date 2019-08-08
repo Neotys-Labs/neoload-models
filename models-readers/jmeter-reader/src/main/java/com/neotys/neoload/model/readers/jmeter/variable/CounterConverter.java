@@ -27,7 +27,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
 
     //Methods
     @Override
-    public List<Variable> apply(CounterConfig counterConfig, HashTree hashTree) {
+    public List<Variable> apply(final CounterConfig counterConfig, final  HashTree hashTree) {
         final CounterVariable.Builder counterBuilder = CounterVariable.builder()
                 .name(counterConfig.getVarName())
                 .description(counterConfig.getComment());
@@ -88,7 +88,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
         return ImmutableList.of(counterBuilder.build());
     }
 
-    private void checkScope(CounterConfig counterConfig, CounterVariable.Builder counterBuilder) {
+    private void checkScope(final CounterConfig counterConfig, final CounterVariable.Builder counterBuilder) {
         if (counterConfig.isPerUser()) {
             counterBuilder.scope(Variable.Scope.LOCAL);
         } else {
@@ -96,7 +96,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
         }
     }
 
-    private void checkOutofValue(CounterConfig counterConfig) {
+    private void checkOutofValue(final CounterConfig counterConfig) {
         if (counterConfig.isResetOnThreadGroupIteration()) {
             LOGGER.warn("We can't converted this parameter");
             EventListenerUtils.readUnsupportedParameter("Counter", "Reset on each Thread Group Iteration", "not supported");

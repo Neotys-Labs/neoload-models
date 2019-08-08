@@ -41,11 +41,11 @@ public class ExtractorConverters {
 
     //Methods
     @SuppressWarnings("unchecked")
-    private <T> BiFunction<Object, HashTree, List<VariableExtractor>> getConverters(Class<T> clazz) {
+    private <T> BiFunction<Object, HashTree, List<VariableExtractor>> getConverters(final Class<T> clazz) {
         return (BiFunction<Object, HashTree, List<VariableExtractor>>) convertersMap.get(clazz);
     }
 
-    public List<VariableExtractor> convertParameter(HashTree subTree) {
+    public List<VariableExtractor> convertParameter(final HashTree subTree) {
         //walk sub tree and convert each step
         List<VariableExtractor> list = new ArrayList<>();
         for (Object o : subTree.list()) {

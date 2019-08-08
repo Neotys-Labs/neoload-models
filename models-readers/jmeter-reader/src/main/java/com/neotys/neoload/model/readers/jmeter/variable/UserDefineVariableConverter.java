@@ -37,8 +37,8 @@ public class UserDefineVariableConverter implements BiFunction<Arguments, HashTr
      * @param hashTree
      * @return
      */
-    public List<Variable> apply(Arguments jMeterProperties, HashTree hashTree) {
-        List<Variable> variableList = new ArrayList<>();
+    public List<Variable> apply(final Arguments jMeterProperties, final HashTree hashTree) {
+        final List<Variable> variableList = new ArrayList<>();
         if (ArgumentsPanel.class.getName().equals(jMeterProperties.getPropertyAsString(Arguments.GUI_CLASS))) {
             Map<String, String> variableMap = jMeterProperties.getArgumentsAsMap();
             for(String key : variableMap.keySet()) {

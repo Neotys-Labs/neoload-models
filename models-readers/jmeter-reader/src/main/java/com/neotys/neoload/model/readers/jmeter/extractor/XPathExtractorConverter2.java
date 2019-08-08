@@ -19,14 +19,14 @@ class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, 
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(XPathExtractorConverter2.class);
 
-    private static final String XPath_EXTRACTOR = "XPathExtractor";
+    private static final String XPathEXTRACTOR = "XPathExtractor";
 
     //Constructor
     XPathExtractorConverter2() {
     }
 
     //Methods
-    public List<VariableExtractor> apply(XPath2Extractor xPathExtractor, HashTree hashTree) {
+    public List<VariableExtractor> apply(final XPath2Extractor xPathExtractor, final HashTree hashTree) {
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder()
                 .description(xPathExtractor.getComment())
                 .name(xPathExtractor.getRefName())
@@ -36,7 +36,7 @@ class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, 
         checkUnsupported(xPathExtractor);
         checkApplyTo(xPathExtractor);
         LOGGER.info("Convertion of Xpath2Extractor");
-        EventListenerUtils.readSupportedFunction(XPath_EXTRACTOR, "Xpath2 Extractor Converter");
+        EventListenerUtils.readSupportedFunction(XPathEXTRACTOR, "Xpath2 Extractor Converter");
         return ImmutableList.of(variableExtractor.build());
     }
 
@@ -48,23 +48,23 @@ class XPathExtractorConverter2 implements BiFunction<XPath2Extractor, HashTree, 
      * @param xPathExtractor
      */
     @SuppressWarnings("Duplicates")
-    static void checkApplyTo(XPath2Extractor xPathExtractor) {
+    static void checkApplyTo(final XPath2Extractor xPathExtractor) {
         if ("all".equals(xPathExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
-            EventListenerUtils.readSupportedParameterWithWarn(XPath_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");
+            EventListenerUtils.readSupportedParameterWithWarn(XPathEXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");
         } else if ("children".equals(xPathExtractor.fetchScope()) || "variable".equals(xPathExtractor.fetchScope())) {
             LOGGER.error("We can't manage the sub-sample and Jmeter Variable Use, so we convert like main sample only");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "ApplyTo", "Sub-Sample or Jmeter Variable");
+            EventListenerUtils.readUnsupportedParameter(XPathEXTRACTOR, "ApplyTo", "Sub-Sample or Jmeter Variable");
         }
     }
 
-    static void checkUnsupported(XPath2Extractor xPathExtractor) {
+    static void checkUnsupported(final XPath2Extractor xPathExtractor) {
         if (xPathExtractor.getFragment()) {
             LOGGER.warn("We already use the fragment in own extractor");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "Fragment Xpath", " textContent");
+            EventListenerUtils.readUnsupportedParameter(XPathEXTRACTOR, "Fragment Xpath", " textContent");
         } else if (!xPathExtractor.getNamespaces().isEmpty()) {
             LOGGER.warn("We don't manage the namespaces");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "Namespace Xpath", " textContent");
+            EventListenerUtils.readUnsupportedParameter(XPathEXTRACTOR, "Namespace Xpath", " textContent");
         }
     }
 }

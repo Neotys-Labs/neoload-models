@@ -68,7 +68,7 @@ public class JMeterReader extends Reader {
             } catch (IOException e) {
                 LOG.error("Problem to Load HashTree", e);
             }
-            List<PopulationPolicy> popPolicy = new ArrayList<>();
+            final List<PopulationPolicy> popPolicy = new ArrayList<>();
             Objects.requireNonNull(testPlanTree, "testPlanTree must not be null.");
             Object test = Iterables.getFirst(testPlanTree.list(), null);
 
@@ -77,21 +77,21 @@ public class JMeterReader extends Reader {
                 throw new IllegalArgumentException("Not a functionnal Script");
             }
             TestPlan testPlan = (TestPlan) test;
-            String nameTest = testPlan.getName();
-            String commentTest = testPlan.getComment();
+            final String nameTest = testPlan.getName();
+            final String commentTest = testPlan.getComment();
 
             getVariable(projet, testPlan);
 
-            Collection<HashTree> testPlanSubTree = testPlanTree.values();
+            final Collection<HashTree> testPlanSubTree = testPlanTree.values();
             Objects.requireNonNull(testPlanSubTree, "There is nothing in your Script");
 
             for (HashTree hashTree : testPlanSubTree) {
-                Collection<Object> firstLevelNodes = hashTree.list();
+                final Collection<Object> firstLevelNodes = hashTree.list();
                 for (Object o : firstLevelNodes) {
                     convertThreadGroupElement(projet, popPolicy, hashTree, o);
                 }
             }
-            Scenario scenarioBuilder = getScenario(popPolicy, nameTest, commentTest);
+            final Scenario scenarioBuilder = getScenario(popPolicy, nameTest, commentTest);
             buildProject(projet, scenarioBuilder);
             return projet.build();
         } finally {
@@ -99,8 +99,8 @@ public class JMeterReader extends Reader {
         }
     }
 
-    void getVariable(Project.Builder projet, TestPlan testPlan) {
-        Map<String, String> variableList = testPlan.getUserDefinedVariables();
+    void getVariable(final Project.Builder projet, final TestPlan testPlan) {
+        final Map<String, String> variableList = testPlan.getUserDefinedVariables();
         for (Map.Entry<String, String> entry : variableList.entrySet()) {
             String value = entry.getValue();
             if ((entry.getValue().contains("${"))) {
@@ -109,7 +109,7 @@ public class JMeterReader extends Reader {
                 value = value.replace(")", "");
                 value = value.replace("}", "");
             }
-            Variable variable = ConstantVariable.builder()
+            final Variable variable = ConstantVariable.builder()
                     .name(entry.getKey())
                     .value(value)
                     .build();
@@ -134,14 +134,14 @@ public class JMeterReader extends Reader {
         return testPlanTree;
     }
 
-    void buildProject(Project.Builder projet, Scenario scenarioBuilder) {
+    void buildProject(final Project.Builder projet, final Scenario scenarioBuilder) {
         projet.addScenarios(scenarioBuilder);
         projet.addAllServers(Servers.getServers());
         projet.name(projectName);
 
     }
 
-    Scenario getScenario(List<PopulationPolicy> popPolicy, String nameTest, String commentTest) {
+    Scenario getScenario(final List<PopulationPolicy> popPolicy, final String nameTest, final String commentTest) {
         return Scenario.builder()
                 .addAllPopulations(popPolicy)
                 .name(nameTest)
@@ -149,21 +149,21 @@ public class JMeterReader extends Reader {
                 .build();
     }
 
-    void convertThreadGroupElement(Project.Builder projet, List<PopulationPolicy> popPolicy, HashTree hashTree, Object o) {
+    void convertThreadGroupElement(final Project.Builder projet, final List<PopulationPolicy> popPolicy, final HashTree hashTree, final Object o) {
         if (o instanceof ThreadGroup) {
-            ConvertThreadGroupResult result = new ThreadGroupConverter(stepConverters, (ThreadGroup) o, hashTree.get(o)).convert();
+            final ConvertThreadGroupResult result = new ThreadGroupConverter(stepConverters, (ThreadGroup) o, hashTree.get(o)).convert();
             LOG.info("Successfully parsed ThreadGroup {}", result);
             projet.addUserPaths(result.getUserPath());
             projet.addPopulations(result.getPopulation());
             popPolicy.add(result.getPopulationPolicy());
             projet.addAllVariables(result.getVariableList());
         } else if (stepConverters.getConvertersMap().containsKey(o.getClass())) {
-            HashTree subtree = new HashTree();
+            final HashTree subtree = new HashTree();
             subtree.add(o);
             subtree.getTree(o).add(hashTree.getTree(o));
             stepConverters.convertStep(subtree);
         } else if (VariableConverters.getConvertersMap().containsKey(o.getClass())) {
-            HashTree subtree = new HashTree();
+            final HashTree subtree = new HashTree();
             subtree.add(o);
             subtree.getTree(o).add(hashTree.getTree(o));
             VariableConverters.convertVariable(null, o);
@@ -177,8 +177,8 @@ public class JMeterReader extends Reader {
     @Override
     public Project read() {
         try {
-            File file = new File(folder);
-            Project.Builder projectBuilder = Project.builder();
+            final File file = new File(folder);
+            final Project.Builder projectBuilder = Project.builder();
             EventListenerUtils.startReadingScripts(1);
             return readScript(projectBuilder, file);
         } finally {

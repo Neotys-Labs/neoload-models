@@ -13,9 +13,9 @@ import java.util.Map;
 public final class ContainerUtils {
 
     //Attributs
-    private static Map<String, String> variablesList;
+    private  static Map<String, String> variablesList ;
 
-    private static List<Variable> variableContainer;
+    private  static List<Variable> variableContainer;
 
     ///Constructor
     public ContainerUtils() {
@@ -25,7 +25,7 @@ public final class ContainerUtils {
     }
     
     //Methods
-    public static void addKeyValue(String key, String value) {
+    public static void addKeyValue(final String key, final String value) {
         variablesList.put(key, value);
     }
 
@@ -42,7 +42,7 @@ public final class ContainerUtils {
         return variablesList.get(key);
     }
 
-    public static void addVariable(List<Variable> variable){ variableContainer.addAll(variable);}
+    public static void addVariable(final List<Variable> variable){ variableContainer.addAll(variable);}
 
     public static List<Variable> getVariableContainer(){return variableContainer;}
 

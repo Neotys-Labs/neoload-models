@@ -39,11 +39,11 @@ public final class VariableConverters {
 
     //Methods
     @SuppressWarnings("unchecked")
-    private static <T> BiFunction<Object, HashTree, List<Variable>> getConverters(Class<T> clazz) {
+    private static <T> BiFunction<Object, HashTree, List<Variable>> getConverters(final Class<T> clazz) {
         return (BiFunction<Object, HashTree, List<Variable>>) convertersMap.get(clazz);
     }
 
-    public static void convertVariable(HashTree subTree, Object o) {
+    public static void convertVariable(final HashTree subTree, final Object o) {
         //walk sub tree and convert each step
         ArrayList<Variable> list = new ArrayList<>();
         BiFunction<Object, HashTree, List<Variable>> converter = getConverters(o.getClass());

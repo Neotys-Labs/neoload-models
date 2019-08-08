@@ -23,14 +23,14 @@ public class TransactionControllerConverter implements BiFunction<TransactionCon
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionControllerConverter.class);
 
     //Constructor
-    public TransactionControllerConverter(StepConverters converters) {
+    public TransactionControllerConverter(final StepConverters converters) {
         this.converter = converters;
     }
 
     //Methods
     @Override
-    public List<Step> apply(TransactionController transactionController, HashTree hashTree) {
-        Container.Builder builder = Container.builder().description(transactionController.getComment()).name(transactionController.getName());
+    public List<Step> apply(final TransactionController transactionController, HashTree hashTree) {
+        final Container.Builder builder = Container.builder().description(transactionController.getComment()).name(transactionController.getName());
         builder.addAllSteps(converter.convertStep(hashTree.get(transactionController)));
         LOGGER.info("TransactionController correctly converted");
         EventListenerUtils.readSupportedFunction("Transaction Controller","TransactionController");

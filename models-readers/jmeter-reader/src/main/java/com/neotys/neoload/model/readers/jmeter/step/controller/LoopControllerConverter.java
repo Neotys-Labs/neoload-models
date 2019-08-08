@@ -23,14 +23,14 @@ public class LoopControllerConverter implements BiFunction<LoopController, HashT
     private static final Logger LOGGER = LoggerFactory.getLogger(LoopControllerConverter.class);
 
     //Constructor
-    public LoopControllerConverter(StepConverters converters) {
+    public LoopControllerConverter(final StepConverters converters) {
         this.converter = converters;
     }
 
     //Methods
     @Override
-    public List<Step> apply(LoopController loopController, HashTree hashTree) {
-        Loop.Builder loopBuilder = Loop.builder()
+    public List<Step> apply(final LoopController loopController, final HashTree hashTree) {
+        final Loop.Builder loopBuilder = Loop.builder()
                 .description(loopController.getComment())
                 .name(loopController.getName())
                 .times(loopController.getLoopString());

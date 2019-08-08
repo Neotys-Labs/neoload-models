@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter.step.timer;
 
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.Step;
@@ -27,8 +28,8 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
 
     //Methods
     @Override
-    public List<Step> apply(UniformRandomTimer uniformRandomTimer, HashTree hashTree) {
-        Delay delay = Delay.builder()
+    public List<Step> apply(final UniformRandomTimer uniformRandomTimer, final HashTree hashTree) {
+        final Delay delay = Delay.builder()
                 .name(uniformRandomTimer.getName())
                 .description(uniformRandomTimer.getComment())
                 .value(checkDelay(uniformRandomTimer))
@@ -45,7 +46,7 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
      * @param uniformRandomTimer
      * @return
      */
-    static String checkDelay(UniformRandomTimer uniformRandomTimer) {
+    static String checkDelay(final UniformRandomTimer uniformRandomTimer) {
         double baseDelay = 0.0;
         double randomDelay = 0.0;
         String delay = "";
@@ -54,11 +55,13 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
             JMeterProperty jMeterProperty = propertyIterator.next();
             switch (jMeterProperty.getName()) {
                 case "ConstantTimer.delay":
-                    baseDelay = Double.parseDouble(jMeterProperty.getStringValue());
+                    baseDelay = getBaseDelay(jMeterProperty);
                     break;
+
                 case "RandomTimer.range":
-                    randomDelay = Double.parseDouble(jMeterProperty.getStringValue());
+                    randomDelay = getRandomDelay(jMeterProperty);
                     break;
+
                 default:
                     LOGGER.error("UniformRandomTimer has not be created with success");
                     EventListenerUtils.readUnsupportedAction("Not Right UniformRandomTimer");
@@ -66,5 +69,41 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
         }
         delay = String.valueOf(Math.round(baseDelay + (Math.random()*randomDelay)));
         return delay;
+    }
+
+    private static double getRandomDelay(final JMeterProperty jMeterProperty) {
+        double randomDelay;
+        try {
+            randomDelay = Double.parseDouble(jMeterProperty.getStringValue());
+        } catch (Exception e) {
+            try {
+                randomDelay = Double.parseDouble(ContainerUtils.getValue(jMeterProperty.getStringValue()));
+            } catch (Exception e1) {
+                LOGGER.warn("We can't manage the variable into the Random Number \n"
+                        + "So we put 0 in value of Random Number", e1);
+                EventListenerUtils.readUnsupportedParameter("UniformRandom", "Double", "Random");
+
+                randomDelay = 0;
+            }
+        }
+        return randomDelay;
+    }
+
+    private static double getBaseDelay(JMeterProperty jMeterProperty) {
+        double baseDelay;
+        try{
+            baseDelay = Double.parseDouble(jMeterProperty.getStringValue());
+        }catch(Exception e){
+            try{
+                baseDelay = Double.parseDouble(ContainerUtils.getValue(jMeterProperty.getStringValue()));
+            } catch (Exception e1){
+                LOGGER.warn("We can't manage the variable into the basedelay Number \n"
+                        + "So we put 0 in value of Base Delay Number", e1);
+                EventListenerUtils.readUnsupportedParameter("UniformRandom", "Double","Base Delay");
+
+                baseDelay=0;
+            }
+        }
+        return baseDelay;
     }
 }

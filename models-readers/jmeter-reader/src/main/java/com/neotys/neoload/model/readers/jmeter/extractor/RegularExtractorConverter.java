@@ -27,7 +27,7 @@ final class RegularExtractorConverter implements BiFunction<RegexExtractor, Hash
 
     //Methods
     @SuppressWarnings("Duplicates")
-    public List<VariableExtractor> apply(RegexExtractor regexExtractor, HashTree subTree) {
+    public List<VariableExtractor> apply(final RegexExtractor regexExtractor, final HashTree subTree) {
         List<VariableExtractor> extractorList = new ArrayList<>();
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder();
         variableExtractor.description(regexExtractor.getComment());
@@ -53,7 +53,7 @@ final class RegularExtractorConverter implements BiFunction<RegexExtractor, Hash
      * @return
      */
     @SuppressWarnings("Duplicates")
-    private static VariableExtractor.Builder convertBody(RegexExtractor regexExtractor, VariableExtractor.Builder variableExtractor) {
+    private static VariableExtractor.Builder convertBody(final RegexExtractor regexExtractor, final VariableExtractor.Builder variableExtractor) {
         if (regexExtractor.useBody() || regexExtractor.useBodyAsDocument() || regexExtractor.useUnescapedBody()) {
             variableExtractor.from(VariableExtractor.From.BODY);
         } else if (regexExtractor.useHeaders()) {
@@ -85,7 +85,7 @@ final class RegularExtractorConverter implements BiFunction<RegexExtractor, Hash
      * @param regexExtractor
      */
     @SuppressWarnings("Duplicates")
-    private static void checkApplyTo(RegexExtractor regexExtractor) {
+    private static void checkApplyTo(final RegexExtractor regexExtractor) {
         if ("all".equals(regexExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
             EventListenerUtils.readSupportedParameterWithWarn(REGEX_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");

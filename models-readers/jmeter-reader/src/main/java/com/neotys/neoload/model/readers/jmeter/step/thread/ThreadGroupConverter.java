@@ -29,7 +29,7 @@ public class ThreadGroupConverter {
     private final HashTree subTree;
 
     //Constructor
-    public ThreadGroupConverter(StepConverters converters, ThreadGroup threadGroup, HashTree subTree) {
+    public ThreadGroupConverter(final StepConverters converters, final ThreadGroup threadGroup, final HashTree subTree) {
         this.stepConverters = converters;
         this.threadGroup = threadGroup;
         this.subTree = subTree;
@@ -45,23 +45,23 @@ public class ThreadGroupConverter {
      */
     public ConvertThreadGroupResult convert() {
         //Create User Path
-        UserPath.Builder userPathBuilder = UserPath.builder()
+        final UserPath.Builder userPathBuilder = UserPath.builder()
                 .name(threadGroup.getName())
                 .description(threadGroup.getComment());
         //process subtree
         //final List<Variable> variables = variableConverters.convertVariable(subTree); // for convert the variable
         final List<Step> steps = stepConverters.convertStep(subTree); //For convert the step
         final List<Variable> variables = ContainerUtils.getVariableContainer();
-        Container containerBuilder = getContainer(steps);
+        final Container containerBuilder = getContainer(steps);
         userPathBuilder.actions(containerBuilder);
-        UserPathPolicy userpolicy = getUserPathPolicy(threadGroup);
-        Population population = getPopulation(threadGroup, userpolicy);
-        PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
+        final UserPathPolicy userpolicy = getUserPathPolicy(threadGroup);
+        final Population population = getPopulation(threadGroup, userpolicy);
+        final PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
         return new ConvertThreadGroupResult(userPathBuilder.build(), population, populationPolicy,variables);
     }
 
 
-    static Container getContainer(List<Step> steps) {
+    static Container getContainer(final List<Step> steps) {
         LOGGER.info("Step added");
         EventListenerUtils.readSupportedFunction("Steps in ThreadGroup","Container");
         return Container.builder()
@@ -69,7 +69,7 @@ public class ThreadGroupConverter {
                 .build();
     }
 
-    static UserPathPolicy getUserPathPolicy(ThreadGroup threadGroup) {
+    static UserPathPolicy getUserPathPolicy(final ThreadGroup threadGroup) {
         EventListenerUtils.readSupportedFunction("Parameters UserPath Thread","UserPathPolicy");
         LOGGER.info("UserPath converted");
         return UserPathPolicy
@@ -79,7 +79,7 @@ public class ThreadGroupConverter {
                 .build();
     }
 
-    static Population getPopulation(ThreadGroup threadGroup, UserPathPolicy userpolicy) {
+    static Population getPopulation(final ThreadGroup threadGroup, final UserPathPolicy userpolicy) {
         LOGGER.info("Population converted");
         EventListenerUtils.readSupportedFunction("Parameters Population Thread","Population");
         return Population

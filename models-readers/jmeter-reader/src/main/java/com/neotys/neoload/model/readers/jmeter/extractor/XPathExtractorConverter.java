@@ -19,7 +19,7 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(XPathExtractorConverter.class);
 
-    private static final String XPath_EXTRACTOR = "XPathExtractor";
+    private static final String XPathEXTRACTOR = "XPathExtractor";
 
     //Constructor
     XPathExtractorConverter() {
@@ -27,7 +27,7 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
 
     //Methods
     @Override
-    public List<VariableExtractor> apply(XPathExtractor xPathExtractor, HashTree hashTree) {
+    public List<VariableExtractor> apply(final XPathExtractor xPathExtractor, final HashTree hashTree) {
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder()
                 .description(xPathExtractor.getComment())
                 .name(xPathExtractor.getRefName())
@@ -37,7 +37,7 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
         checkUnsupported(xPathExtractor);
         checkApplyTo(xPathExtractor);
         LOGGER.info("Convertion of XpathExtractor");
-        EventListenerUtils.readSupportedFunction(XPath_EXTRACTOR, "Xpath Extractor Converter");
+        EventListenerUtils.readSupportedFunction(XPathEXTRACTOR, "Xpath Extractor Converter");
         return ImmutableList.of(variableExtractor.build());
     }
 
@@ -49,28 +49,28 @@ class XPathExtractorConverter implements BiFunction<XPathExtractor, HashTree, Li
      * @param xPathExtractor
      */
     @SuppressWarnings("Duplicates")
-    static void checkApplyTo(XPathExtractor xPathExtractor) {
+    static void checkApplyTo(final XPathExtractor xPathExtractor) {
         if ("all".equals(xPathExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
-            EventListenerUtils.readSupportedParameterWithWarn(XPath_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");
+            EventListenerUtils.readSupportedParameterWithWarn(XPathEXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");
         } else if ("children".equals(xPathExtractor.fetchScope()) || "variable".equals(xPathExtractor.fetchScope())) {
             LOGGER.error("We can't manage the sub-sample and Jmeter Variable Use, so we convert like main sample only");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "ApplyTo", "Sub-Sample or Jmeter Variable");
+            EventListenerUtils.readUnsupportedParameter(XPathEXTRACTOR, "ApplyTo", "Sub-Sample or Jmeter Variable");
         }
     }
 
-    static void checkUnsupported(XPathExtractor xPathExtractor) {
+    static void checkUnsupported(final XPathExtractor xPathExtractor) {
         if (!xPathExtractor.isQuiet() || !xPathExtractor.showWarnings() || !xPathExtractor.reportErrors()) {
             LOGGER.warn("We Use Tidy with isQuiet, ShowWarning and Reports Errors activate ");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "Tidy Parameter", " All Options");
+            EventListenerUtils.readUnsupportedParameter(XPathEXTRACTOR, "Tidy Parameter", " All Options");
         } else if (xPathExtractor.useNameSpace() || xPathExtractor.isWhitespace() || xPathExtractor.isValidating() || xPathExtractor.isDownloadDTDs()) {
             LOGGER.warn("We support only Tidy Parameter ");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "OtherParameters", " All Options");
+            EventListenerUtils.readUnsupportedParameter(XPathEXTRACTOR, "OtherParameters", " All Options");
         }
 
         if (xPathExtractor.getFragment()) {
             LOGGER.warn("We already use the fragment in own extractor");
-            EventListenerUtils.readUnsupportedParameter(XPath_EXTRACTOR, "Fragment Xpath", " textContent");
+            EventListenerUtils.readUnsupportedParameter(XPathEXTRACTOR, "Fragment Xpath", " textContent");
         }
     }
 }

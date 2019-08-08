@@ -27,7 +27,7 @@ public class RandomVariableConverter implements BiFunction<RandomVariableConfig,
 
     //Methods
     @Override
-    public List<Variable> apply(RandomVariableConfig randomVariableConfig, HashTree hashTree) {
+    public List<Variable> apply(final RandomVariableConfig randomVariableConfig, final  HashTree hashTree) {
         RandomNumberVariable.Builder randomNumberVariable = RandomNumberVariable.builder()
                 .name(randomVariableConfig.getVariableName())
                 .description(randomVariableConfig.getComment());

@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.readers.jmeter.step.httpRequest;
 
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.config.ConfigTestElement;
@@ -29,15 +30,14 @@ public class HttpDefaultRequestConverter implements BiFunction<ConfigTestElement
 
     //Methods
     @Override
-    public List<Step> apply(ConfigTestElement configTestElement, HashTree hashTree) {
+    public List<Step> apply(final ConfigTestElement configTestElement, final HashTree hashTree) {
         if ((HttpDefaultsGui.class.getName().equals((configTestElement).getPropertyAsString(TestElement.GUI_CLASS)))) {
-            HTTPDefaultSetModel httpDefaultSetModel = buildHttpDefault(configTestElement);
+            final HTTPDefaultSetModel httpDefaultSetModel = buildHttpDefault(configTestElement);
             Servers.addDefaultServer(httpDefaultSetModel.getName(), httpDefaultSetModel.checkDomain(), httpDefaultSetModel.checkPort(), httpDefaultSetModel.checkProtocol(), hashTree);
             LOGGER.info("Conversion of HttpRequest Default");
             EventListenerUtils.readSupportedFunction("HttpRequestDefault", "Http Request Default Server");
         }
-        List<Step> stepList;
-        stepList = null;
+        final List<Step> stepList = null;
         return stepList;
     }
 
@@ -47,8 +47,8 @@ public class HttpDefaultRequestConverter implements BiFunction<ConfigTestElement
      * @return
      */
     @SuppressWarnings("Duplicates")
-    static HTTPDefaultSetModel buildHttpDefault(ConfigTestElement configTestElement) {
-        ImmutableHTTPDefaultSetModel.Builder httpDefaultSetModel = ImmutableHTTPDefaultSetModel.builder()
+    static HTTPDefaultSetModel buildHttpDefault(final ConfigTestElement configTestElement) {
+        final ImmutableHTTPDefaultSetModel.Builder httpDefaultSetModel = ImmutableHTTPDefaultSetModel.builder()
                 .name(configTestElement.getName());
         final PropertyIterator propertyIterator = configTestElement.propertyIterator();
         while (propertyIterator.hasNext()) {

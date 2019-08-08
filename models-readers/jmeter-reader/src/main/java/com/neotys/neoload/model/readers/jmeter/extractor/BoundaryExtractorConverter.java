@@ -28,8 +28,8 @@ class BoundaryExtractorConverter implements BiFunction<BoundaryExtractor, HashTr
 
     //Methods
     @SuppressWarnings("Duplicates")
-    public List<VariableExtractor> apply(BoundaryExtractor boundaryExtractor, HashTree subTree) {
-        List<VariableExtractor> extractorList = new ArrayList<>();
+    public List<VariableExtractor> apply(final BoundaryExtractor boundaryExtractor, final HashTree subTree) {
+        final List<VariableExtractor> extractorList = new ArrayList<>();
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder();
         variableExtractor.description(boundaryExtractor.getComment());
         variableExtractor.name(boundaryExtractor.getRefName());
@@ -51,11 +51,11 @@ class BoundaryExtractorConverter implements BiFunction<BoundaryExtractor, HashTr
      * @param boundaryExtractor
      */
     @SuppressWarnings("Duplicates")
-    private void regexConverter(VariableExtractor.Builder variableExtractor, BoundaryExtractor boundaryExtractor) {
+    private void regexConverter(final VariableExtractor.Builder variableExtractor, final BoundaryExtractor boundaryExtractor) {
 
-        String left = boundaryExtractor.getLeftBoundary();
-        String right = boundaryExtractor.getRightBoundary();
-        StringBuilder regex = new StringBuilder();
+        final String left = boundaryExtractor.getLeftBoundary();
+        final String right = boundaryExtractor.getRightBoundary();
+        final StringBuilder regex = new StringBuilder();
 
         if (left != null) {
             regex.append(RegExpUtils.escape(left));
@@ -79,7 +79,7 @@ class BoundaryExtractorConverter implements BiFunction<BoundaryExtractor, HashTr
      * @return
      */
     @SuppressWarnings("Duplicates")
-    private static VariableExtractor.Builder convertBody(BoundaryExtractor boundaryExtractor, VariableExtractor.Builder variableExtractor) {
+    private static VariableExtractor.Builder convertBody(final BoundaryExtractor boundaryExtractor, final VariableExtractor.Builder variableExtractor) {
         if (boundaryExtractor.useBody() || boundaryExtractor.useBodyAsDocument() || boundaryExtractor.useUnescapedBody()) {
             variableExtractor.from(VariableExtractor.From.BODY);
         } else if (boundaryExtractor.useHeaders()) {
@@ -111,7 +111,7 @@ class BoundaryExtractorConverter implements BiFunction<BoundaryExtractor, HashTr
      * @param boundaryExtractor
      */
     @SuppressWarnings("Duplicates")
-    private static void checkApplyTo(BoundaryExtractor boundaryExtractor) {
+    private static void checkApplyTo(final BoundaryExtractor boundaryExtractor) {
         if ("all".equals(boundaryExtractor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
             EventListenerUtils.readSupportedParameterWithWarn(BOUNDARY_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");

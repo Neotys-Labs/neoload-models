@@ -25,11 +25,11 @@ class HTTPHeaderConverter {
     }
 
     //Methods
-    static void createHeader( Request.Builder request, HashTree subTree){
+    static void createHeader( final Request.Builder request, final HashTree subTree){
         for (Object o : subTree.list()) {
             if (o instanceof HeaderManager) {
-                HeaderManager head = (HeaderManager) o;
-                CollectionProperty headers = head.getHeaders();
+                final HeaderManager head = (HeaderManager) o;
+                final CollectionProperty headers = head.getHeaders();
                 changeHttpHeader(request, headers);
             }
         }
@@ -37,13 +37,13 @@ class HTTPHeaderConverter {
         EventListenerUtils.readSupportedFunction("HTTPHeaderManager","HTTP Header ");
     }
 
-    private static void changeHttpHeader(Request.Builder request, CollectionProperty headers) {
+    private static void changeHttpHeader(final Request.Builder request, final CollectionProperty headers) {
         for (JMeterProperty headerProperty : headers) {
             if(headerProperty instanceof TestElementProperty) {
-                TestElementProperty tep = (TestElementProperty) headerProperty;
-                Object objectHeader = tep.getObjectValue();
+                final TestElementProperty tep = (TestElementProperty) headerProperty;
+                final Object objectHeader = tep.getObjectValue();
                 if(objectHeader instanceof Header) {
-                    Header header = (Header) objectHeader;
+                    final Header header = (Header) objectHeader;
                     request.addHeaders(com.neotys.neoload.model.v3.project.userpath.Header.builder().name(header.getName()).value(header.getValue()).build());
                 }
             }

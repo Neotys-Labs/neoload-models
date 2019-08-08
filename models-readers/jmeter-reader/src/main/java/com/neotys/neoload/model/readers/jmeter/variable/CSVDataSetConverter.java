@@ -37,7 +37,7 @@ public final class CSVDataSetConverter implements BiFunction<CSVDataSet, HashTre
      * @param hashTree
      * @return
      */
-    public List<Variable> apply(CSVDataSet csvDataSet, HashTree hashTree) {
+    public List<Variable> apply(final CSVDataSet csvDataSet, final  HashTree hashTree) {
         final PropertyIterator propertyIterator = csvDataSet.propertyIterator();
         ImmutableCSVDataSetModel.Builder csvModelbuilder = CSVDataSetModel.builder();
         while (propertyIterator.hasNext()) {
