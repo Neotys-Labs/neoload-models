@@ -50,6 +50,7 @@ public final class StepConverters {
                 .put(ConfigTestElement.class, new HttpDefaultRequestConverter())
                 .put(LoopController.class, new LoopControllerConverter(this))
                 .put(WhileController.class, new WhileControllerConverter(this))
+                .put(SwitchController.class, new SwitchControllerConverter(this))
                 .build();
     }
 

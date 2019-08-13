@@ -25,6 +25,8 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
     private static final String IF = "if";
     private static final String LOOP = "loop";
     private static final String WHILE = "while";
+    private static final String SWITCH = "switch";
+
 
     public ElementsDeserializer() {
         super(List.class);
@@ -68,6 +70,9 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
             } else if (actionNode.has(WHILE)) {
                 final JsonNode whileNode = actionNode.get(WHILE);
                 action = codec.treeToValue(whileNode, While.class);
+            } else if (actionNode.has(SWITCH)){
+                final JsonNode switchNode = actionNode.get(SWITCH);
+                action = codec.treeToValue(switchNode,Switch.class);
             }
 
             if (action != null) {

@@ -13,6 +13,7 @@ import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.config.CSVDataSet;
+import org.apache.jmeter.control.SwitchController;
 import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.modifiers.CounterConfig;
 import org.apache.jmeter.timers.ConstantTimer;

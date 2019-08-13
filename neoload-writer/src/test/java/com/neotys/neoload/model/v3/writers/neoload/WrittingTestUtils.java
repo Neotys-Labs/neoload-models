@@ -299,6 +299,47 @@ public class WrittingTestUtils {
                     .build())
             .build();
 
+    public static final Delay DELAY_SWITCH_TEST_CASE = Delay.builder().name("delayB").value("0").build();
+
+    public static final Delay DELAY_SWITCH_TEST_DEFAULT = Delay.builder().name("delayB").value("0").build();
+
+    public static final Container CONTAINER_IN_DEFAULT_SWITCH =
+            Container.builder()
+                    .name("b")
+                    .build();
+
+    public static final Container CONTAINER_DEFAULT_SWITCH =
+            Container.builder() //
+            .name("Default")
+            .description("Elements executed by default when no Case equals the Switch value.")
+            .addSteps(DELAY_SWITCH_TEST_DEFAULT)
+            .addSteps(CONTAINER_IN_DEFAULT_SWITCH)
+            .build();
+
+
+
+    public static final Container CONTAINER_IN_CASE_SWITCH =
+            Container.builder()
+                    .name("b")
+                    .build();
+
+    public static final Case CASE_SWITCH =
+            Case.builder()
+                    .value("qsd")
+                    .isBreak(true)
+                    .description("Elements executed when the Case equals the Switch valueB.")
+                    .addSteps(DELAY_SWITCH_TEST_CASE)
+                    .addSteps(CONTAINER_IN_CASE_SWITCH)
+                    .build();
+
+    public static final Switch SWITCH_TEST = Switch.builder()
+            .name("switcher or Witcher")
+            .description("a simple hunter")
+            .value("sqdf")
+            .addCases(CASE_SWITCH)
+            .getDefault(CONTAINER_DEFAULT_SWITCH)
+            .build();
+
     private static final List<String> COLUMNS;
 
     static {
