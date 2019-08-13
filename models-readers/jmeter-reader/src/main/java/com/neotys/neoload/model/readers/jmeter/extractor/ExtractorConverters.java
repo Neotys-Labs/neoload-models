@@ -41,11 +41,11 @@ public class ExtractorConverters {
 
     //Methods
     @SuppressWarnings("unchecked")
-    private <T> BiFunction<Object, HashTree, List<VariableExtractor>> getConverters(Class<T> clazz) {
+    private <T> BiFunction<Object, HashTree, List<VariableExtractor>> getConverters(final Class<T> clazz) {
         return (BiFunction<Object, HashTree, List<VariableExtractor>>) convertersMap.get(clazz);
     }
 
-    public List<VariableExtractor> convertParameter(HashTree subTree) {
+    public List<VariableExtractor> convertParameter(final HashTree subTree) {
         //walk sub tree and convert each step
         List<VariableExtractor> list = new ArrayList<>();
         for (Object o : subTree.list()) {
@@ -55,7 +55,7 @@ public class ExtractorConverters {
                 continue;
             }
             //Check if the Jmeter element is not convert in other Converters Class
-            if (!new StepConverters().getConvertersMap().containsKey(o.getClass()) && new VariableConverters().getConvertersMap().containsKey(o.getClass())) {
+            if (!new StepConverters().getConvertersMap().containsKey(o.getClass()) &&  VariableConverters.getConvertersMap().containsKey(o.getClass())) {
                 LOGGER.error("Type not Tolerate for converted in Variable ");
                 EventListenerUtils.readUnsupportedFunction("Extractor Converter", o.getClass() + " in variable extractor\n");
             }

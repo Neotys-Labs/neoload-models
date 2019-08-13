@@ -29,8 +29,8 @@ public class WhileControllerConverter implements BiFunction<WhileController, Has
 
     //Methods
     @Override
-    public List<Step> apply(WhileController whileController, HashTree hashTree) {
-        While.Builder builder = While.builder()
+    public List<Step> apply(final WhileController whileController, HashTree hashTree) {
+        final While.Builder builder = While.builder()
                 .addAllSteps(converter.convertStep(hashTree.get(whileController)))
                 .name(whileController.getName())
                 .description(whileController.getCondition());

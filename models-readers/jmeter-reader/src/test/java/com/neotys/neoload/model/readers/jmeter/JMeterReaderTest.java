@@ -81,8 +81,7 @@ public class JMeterReaderTest {
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
 
         StepConverters stepConverters = new StepConverters();
-        VariableConverters variableConverters = new VariableConverters();
-        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup),variableConverters).convert();
+       ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup)).convert();
         Project.Builder project = Project.builder();
         Project result = jMeterReader.read();
         project.name("test");
@@ -121,8 +120,7 @@ public class JMeterReaderTest {
         hashTree.get(testPlan).get(threadGroup).add(objectList);
 
         StepConverters stepConverters = new StepConverters();
-        VariableConverters variableConverters = new VariableConverters();
-        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup),variableConverters).convert();
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup)).convert();
         File file = mock(File.class);
         doReturn(hashTree).when(jMeterReader).readJMeterProject(file);
 
@@ -130,8 +128,8 @@ public class JMeterReaderTest {
         Project.Builder projResult = Project.builder();
         ImmutableProject result = jMeterReader.readScript(projResult, file);
         project.name("test");
-        project.addUserPaths(convert.getUserPath());
         project.addPopulations(convert.getPopulation());
+        project.addUserPaths(convert.getUserPath());
         populationPolicyList.add(convert.getPopulationPolicy());
         project.addScenarios(jMeterReader.getScenario(populationPolicyList,"",""));
 
@@ -222,8 +220,7 @@ public class JMeterReaderTest {
         hashTree.get(threadGroup).add(objectList);
 
         StepConverters stepConverters = new StepConverters();
-        VariableConverters variableConverters = new VariableConverters();
-        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(threadGroup),variableConverters).convert();
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(threadGroup)).convert();
         Project.Builder result = Project.builder();
         Project.Builder project = Project.builder();
         project.addUserPaths(convert.getUserPath());

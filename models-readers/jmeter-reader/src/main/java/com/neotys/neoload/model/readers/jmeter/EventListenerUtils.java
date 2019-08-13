@@ -11,7 +11,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public final class EventListenerUtils {
 
     //Attributs
-    private static EventListener listener;
+    private  static EventListener listener;
 
     //Constructor
     private EventListenerUtils() {
@@ -22,7 +22,7 @@ public final class EventListenerUtils {
         return checkNotNull(listener, "Event listener has not been initialized.");
     }
 
-    public static void setEventListener(EventListener listener) {
+    public static void setEventListener(final EventListener listener) {
         EventListenerUtils.listener = listener;
     }
 
@@ -30,11 +30,11 @@ public final class EventListenerUtils {
         getEventListener().readSupportedAction(actionName);
     }
 
-    public static void readSupportedParameterWithWarn(String scriptName, String parameterType, String parameterName, String warning) {
+    public static void readSupportedParameterWithWarn(final String scriptName, final String parameterType, final String parameterName, final String warning) {
         getEventListener().readSupportedParameterWithWarn(scriptName, parameterType, parameterName, warning);
     }
 
-    public static void readUnsupportedParameter(String scriptName, String parameterType, String parameterName) {
+    public static void readUnsupportedParameter(final String scriptName, final String parameterType, final String parameterName) {
         getEventListener().readUnsupportedParameter(scriptName, parameterType, parameterName);
     }
 
@@ -46,7 +46,7 @@ public final class EventListenerUtils {
         getEventListener().readUnsupportedFunction(scriptName, functionName, 1);
     }
 
-    public static void readSupportedFunctionWithWarn(String scriptName, String functionName, String warning) {
+    public static void readSupportedFunctionWithWarn(final String scriptName, final String functionName, final String warning) {
         getEventListener().readSupportedFunctionWithWarn(scriptName, functionName, 0, warning);
     }
 
@@ -58,7 +58,7 @@ public final class EventListenerUtils {
         getEventListener().endReadingScripts();
     }
 
-    static void startReadingScripts(int ligne) {
+    static void startReadingScripts(final int ligne) {
         getEventListener().startReadingScripts(ligne);
     }
 

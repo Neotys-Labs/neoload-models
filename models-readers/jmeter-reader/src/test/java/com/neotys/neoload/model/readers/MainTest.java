@@ -6,6 +6,8 @@ import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
+import org.apache.jmeter.control.SwitchController;
+import org.apache.jmeter.timers.ConstantTimer;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -74,5 +76,4 @@ public class MainTest {
                 .description("test")
                 .build();
     }
-
 }

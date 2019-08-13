@@ -22,7 +22,7 @@ public final class Servers {
 
     //Attributs
     private static final Set<ServerWrapper> SERVER_LIST = new HashSet<>();
-    private static  Server SERVER_Default_LIST = null;
+    private static Server SERVER_Default_LIST = null;
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
     //Constructor
@@ -34,9 +34,9 @@ public final class Servers {
 
     @SuppressWarnings("Duplicates")
     public static String addServer(final String name, final String host, final int port, final String protocol, final HashTree hashTree) {
-        String url = protocol + "://" + host+ ":" + port + "/";
-        Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
-        Server.Builder serve = Server.builder()
+        final String url = protocol + "://" + host+ ":" + port + "/";
+        final Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
+        final Server.Builder serve = Server.builder()
                 .name(name)
                 .port(Integer.toString(port))
                 .host(host)
@@ -61,9 +61,9 @@ public final class Servers {
 
     @SuppressWarnings("Duplicates")
     public static String addDefaultServer(final String name, final String host, final int port, final String protocol, final HashTree hashTree) {
-        String url = protocol + "://" + host+ ":" + port + "/";
-        Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
-        Server.Builder serve = Server.builder()
+        final String url = protocol + "://" + host+ ":" + port + "/";
+        final Server.Scheme scheme = "https".equalsIgnoreCase(protocol) ? Server.Scheme.HTTPS : Server.Scheme.HTTP;
+        final Server.Builder serve = Server.builder()
                 .name(name)
                 .port(Integer.toString(port))
                 .host(host)
@@ -80,7 +80,7 @@ public final class Servers {
         return name;
     }
 
-     static String checkServer(ImmutableServer build) {
+     static String checkServer(final ImmutableServer build) {
         String serverName= "";
         for(Server s : Servers.getServers()){
             if (s.getPort().equals(build.getPort()) && s.getScheme().equals(build.getScheme()) && s.getHost().equals(build.getHost())){
@@ -90,8 +90,8 @@ public final class Servers {
         return serverName;
     }
 
-    static void checkAuthentification(Server.Builder serve, String url, Object o) {
-        AuthManager authManager = (AuthManager) o;
+    static void checkAuthentification(final Server.Builder serve, final String url, final Object o) {
+        final AuthManager authManager = (AuthManager) o;
         try {
             checkTypeAuthentification(authManager, serve, url);
         } catch (MalformedURLException e) {
@@ -99,9 +99,9 @@ public final class Servers {
         }
     }
 
-    static void checkTypeAuthentification(AuthManager authManager, Server.Builder serve, String url) throws MalformedURLException {
+    static void checkTypeAuthentification(final AuthManager authManager, final Server.Builder serve, final String url) throws MalformedURLException {
 
-        Authorization authorization = authManager.getAuthForURL(new URL(url));
+        final Authorization authorization = authManager.getAuthForURL(new URL(url));
         if (authorization != null) {
             if (authorization.getMechanism().equals(AuthManager.Mechanism.BASIC) || authorization.getMechanism().equals(AuthManager.Mechanism.BASIC_DIGEST)) {
                 serve.authentication(BasicAuthentication.builder()
@@ -159,10 +159,10 @@ public final class Servers {
          * And they don't have to have the same port
          * And they don't have to have the same Protocol
          */
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            ServerWrapper that = (ServerWrapper) o;
+            final ServerWrapper that = (ServerWrapper) o;
             return server.getHost().equals(that.server.getHost()) &&
                     server.getPort().equals(that.server.getPort()) &&
                     server.getScheme().equals(that.server.getScheme());

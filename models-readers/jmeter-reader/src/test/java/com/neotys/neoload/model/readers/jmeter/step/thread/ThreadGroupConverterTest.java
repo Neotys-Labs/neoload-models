@@ -84,8 +84,7 @@ public class ThreadGroupConverterTest {
 
         hashTree.add(objectList);
         StepConverters stepConverters = new StepConverters();
-        VariableConverters variableConverters = new VariableConverters();
-        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree,variableConverters).convert();
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree).convert();
         UserPath.Builder userPath = UserPath
                 .builder()
                 .name(threadGroup.getName())
@@ -126,8 +125,7 @@ public class ThreadGroupConverterTest {
         hashTree.add(objectList);
 
         StepConverters stepConverters = new StepConverters();
-        VariableConverters variableConverters = new VariableConverters();
-        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree,variableConverters).convert();
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree).convert();
         UserPathPolicy.Builder userPath = UserPathPolicy
                 .builder()
                 .name(threadGroup.getName())
@@ -167,8 +165,7 @@ public class ThreadGroupConverterTest {
         hashTree.add(objectList);
 
         StepConverters stepConverters = new StepConverters();
-        VariableConverters variableConverters = new VariableConverters();
-        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree,variableConverters).convert();
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree).convert();
         PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
         assertEquals(convert.getPopulationPolicy(),populationPolicy);
     }

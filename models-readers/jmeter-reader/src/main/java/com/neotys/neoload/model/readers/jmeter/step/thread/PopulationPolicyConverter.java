@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter.step.thread;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
@@ -21,9 +21,9 @@ class PopulationPolicyConverter {
     }
 
     ///Methods
-    static PopulationPolicy convert(ThreadGroup threadGroup) {
-        int nbUser = threadGroup.getNumThreads();
-        int rampUp = threadGroup.getRampUp();
+    static PopulationPolicy convert(final ThreadGroup threadGroup) {
+        final int nbUser = threadGroup.getNumThreads();
+        final int rampUp = threadGroup.getRampUp();
 
         final String populationPolicy = "PopulationPolicy";
         if(nbUser == 0){
@@ -46,7 +46,7 @@ class PopulationPolicyConverter {
             loop = Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops"));
         }catch(Exception e){
             try{
-                loop = Integer.parseInt(VariablesUtils.getValue(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")));
+                loop = Integer.parseInt(ContainerUtils.getValue(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")));
             } catch (Exception e1) {
                 LOGGER.warn("We can't manage the variable into the Loop Number. "
                         + "So We put 0 in value of Loop Number", e1);
@@ -55,7 +55,7 @@ class PopulationPolicyConverter {
                 loop = 0;
             }
         }
-        boolean planifier = threadGroup.getScheduler();
+        final boolean planifier = threadGroup.getScheduler();
         //Infinite Loop if LoadDuration is null
         final LoadDuration loadDuration = getIterationLoadDuration(threadGroup, loop, planifier);
         final LoadPolicy loadPolicy = getLoadPolicy(threadGroup, nbUser, rampUp, loadDuration);
@@ -68,7 +68,7 @@ class PopulationPolicyConverter {
                 .build();
     }
 
-    private static LoadDuration getIterationLoadDuration(ThreadGroup threadGroup, int loop, boolean planifier) {
+    private static LoadDuration getIterationLoadDuration(final ThreadGroup threadGroup, final int loop, final boolean planifier) {
         EventListenerUtils.readSupportedAction("LoadDuration");
         if (planifier) {
             return getTimeLoadDuration(threadGroup);
@@ -78,7 +78,7 @@ class PopulationPolicyConverter {
         return null;
     }
 
-    private static LoadDuration getIterationLoadDuration(int loop) {
+    private static LoadDuration getIterationLoadDuration(final int loop) {
         EventListenerUtils.readSupportedAction("IterationDuration");
         return LoadDuration.builder()
                 .type(LoadDuration.Type.ITERATION)
@@ -86,7 +86,7 @@ class PopulationPolicyConverter {
                 .build();
     }
 
-    private static LoadDuration getTimeLoadDuration(ThreadGroup threadGroup) {
+    private static LoadDuration getTimeLoadDuration(final ThreadGroup threadGroup) {
         EventListenerUtils.readSupportedAction("TimeDuration");
         return LoadDuration.builder()
                 .type(LoadDuration.Type.TIME)
@@ -94,7 +94,7 @@ class PopulationPolicyConverter {
                 .build();
     }
 
-    private static LoadPolicy getLoadPolicy(ThreadGroup threadGroup, int nbUser, int rampUp, LoadDuration loadDuration) {
+    private static LoadPolicy getLoadPolicy(final ThreadGroup threadGroup, final int nbUser, final int rampUp, final LoadDuration loadDuration) {
         final LoadPolicy loadPolicy;
         //Sans planification
         if (rampUp == 0) {
@@ -106,7 +106,7 @@ class PopulationPolicyConverter {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private static LoadPolicy getRampupLoadPolicy(Integer delay, int nbUser, int rampUp, LoadDuration loadDuration) {
+    private static LoadPolicy getRampupLoadPolicy(final Integer delay, final int nbUser, final int rampUp, final LoadDuration loadDuration) {
         EventListenerUtils.readSupportedAction("RampUpPolicy");
         return RampupLoadPolicy.builder()
                 .minUsers(1)
@@ -122,7 +122,7 @@ class PopulationPolicyConverter {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private static LoadPolicy  getConstantLoadPolicy(Integer delay, int nbUser, LoadDuration loadDuration) {
+    private static LoadPolicy  getConstantLoadPolicy(final Integer delay, final int nbUser, final LoadDuration loadDuration) {
         EventListenerUtils.readSupportedAction("ConstantPolicy");
         return ConstantLoadPolicy.builder()
                 .users(nbUser)

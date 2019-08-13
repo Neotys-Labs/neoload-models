@@ -2,7 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.extractor;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import org.apache.jmeter.extractor.json.jsonpath.JSONPostProcessor;
 import org.apache.jorphan.collections.HashTree;
@@ -28,7 +28,7 @@ public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, Has
 
     //Methods
     @Override
-    public List<VariableExtractor> apply(JSONPostProcessor jsonPostProcessor, HashTree hashTree) {
+    public List<VariableExtractor> apply(final JSONPostProcessor jsonPostProcessor, final HashTree hashTree) {
 
         VariableExtractor.Builder variableExtractor = VariableExtractor.builder()
                 .description(jsonPostProcessor.getComment())
@@ -45,7 +45,7 @@ public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, Has
             variableExtractor.matchNumber(Integer.parseInt(jsonPostProcessor.getMatchNumbers()));
         }catch(Exception e){
             try{
-                variableExtractor.matchNumber(Integer.parseInt(VariablesUtils.getValue(jsonPostProcessor.getMatchNumbers())));
+                variableExtractor.matchNumber(Integer.parseInt(ContainerUtils.getValue(jsonPostProcessor.getMatchNumbers())));
             }catch (Exception e1){
                 LOGGER.warn("We can't manage the variable into the Match Number \n"
                         + "So We put 0 in value of Match Number", e1);
@@ -62,7 +62,7 @@ public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, Has
 
     }
 
-    static void checkConcatenation(JSONPostProcessor jsonPostProcessor) {
+    static void checkConcatenation(final JSONPostProcessor jsonPostProcessor) {
         if (jsonPostProcessor.getComputeConcatenation()) {
             LOGGER.warn("We can't manage the concatenation, we send only one result");
             EventListenerUtils.readSupportedParameterWithWarn(JSON_EXTRACTOR, "Concatenation", "send result", "Can't send multiple results");
@@ -78,7 +78,7 @@ public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, Has
      * @param jsonPostProcessor
      */
     @SuppressWarnings("Duplicates")
-    static void checkApplyTo(JSONPostProcessor jsonPostProcessor) {
+    static void checkApplyTo(final JSONPostProcessor jsonPostProcessor) {
         if ("all".equals(jsonPostProcessor.fetchScope())) {
             LOGGER.warn("We can't manage the sub-samples conditions");
             EventListenerUtils.readSupportedParameterWithWarn(JSON_EXTRACTOR, "ApplyTo", "Main Sample & Sub-Sample", "Can't check Sub-Sample");

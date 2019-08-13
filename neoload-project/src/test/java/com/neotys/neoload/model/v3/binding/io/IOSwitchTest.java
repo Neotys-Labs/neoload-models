@@ -1,16 +1,16 @@
-package com.neotys.neoload.model.readers;
+package com.neotys.neoload.model.v3.binding.io;
 
-import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
-import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
 import org.junit.Test;
 
-public class TestCreateProject {
+import java.io.IOException;
 
-    @Test
-    public void test() {
+import static org.junit.Assert.assertNotNull;
 
+public class IOSwitchTest extends AbstractIOElementsTest  {
+
+    private static Project getSwitchOnlyRequired() {
         final Switch aSwitch = Switch.builder()
                 .description("a simple switch")
                 .name("switch")
@@ -35,9 +35,14 @@ public class TestCreateProject {
                 .addUserPaths(userPath)
                 .build();
 
-
-        NeoLoadWriter neoLoadWriter = new NeoLoadWriter(ImmutableProject.copyOf(project).withName("test"),"C:/Users/tmartinez/Desktop/md-test-project",null);
-        neoLoadWriter.write(true);
+        return project;
     }
 
+    @Test
+    public void readIfOnlyRequired() throws IOException {
+        final Project expectedProject = getSwitchOnlyRequired();
+        assertNotNull(expectedProject);
+
+        read("test-switch-only-required", expectedProject);
+    }
 }

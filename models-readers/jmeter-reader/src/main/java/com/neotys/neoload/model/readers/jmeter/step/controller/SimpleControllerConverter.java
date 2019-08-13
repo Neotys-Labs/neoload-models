@@ -23,13 +23,13 @@ public class SimpleControllerConverter implements BiFunction<GenericController, 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleControllerConverter.class);
 
     //Constructor
-    public SimpleControllerConverter(StepConverters converters) {
+    public SimpleControllerConverter(final StepConverters converters) {
         this.converter = converters;
     }
 
     //Methods
-    public List<Step> apply(GenericController simpleController, HashTree hashTree) {
-        Container.Builder builder = Container.builder().description(simpleController.getComment()).name(simpleController.getName());
+    public List<Step> apply(final GenericController simpleController, HashTree hashTree) {
+        final Container.Builder builder = Container.builder().description(simpleController.getComment()).name(simpleController.getName());
         builder.addAllSteps(converter.convertStep(hashTree.get(simpleController)));
         LOGGER.info("SimpleController correctly converted");
         EventListenerUtils.readSupportedFunction("GenericController", "SimpleController");

@@ -17,25 +17,25 @@ public class JavascriptConverter {
 
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(JavascriptConverter.class);
-    private static String cookieManager = "CookieManager";
+    private static final String cookieManager = "CookieManager";
 
     //Constructor
     JavascriptConverter() {
     }
 
     //Methods
-    public static Step createJavascript(HashTree hashTree, HTTPSamplerProxy httpSamplerProxy) {
-        Javascript.Builder javascript = Javascript.builder();
-        StringBuilder script = new StringBuilder();
+    public static Step createJavascript(final HashTree hashTree, final HTTPSamplerProxy httpSamplerProxy) {
+        final Javascript.Builder javascript = Javascript.builder();
+        final StringBuilder script = new StringBuilder();
         for (Object o : hashTree.list()) {
             if (o instanceof CookieManager) {
-                CookieManager cookieManager = (CookieManager) o;
+                final CookieManager cookieManager = (CookieManager) o;
                 script.append(createCookieScript(cookieManager, httpSamplerProxy));
                 javascript.name(cookieManager.getName())
                         .description(cookieManager.getComment());
             }
             if (o instanceof CacheManager) {
-                CacheManager cacheManager = (CacheManager) o;
+                final CacheManager cacheManager = (CacheManager) o;
                 script.append(createCacheScript(cacheManager));
                 javascript.name(cacheManager.getName())
                         .description(cacheManager.getComment());
@@ -49,8 +49,8 @@ public class JavascriptConverter {
         }
     }
 
-    static StringBuilder createCacheScript(CacheManager cacheManager) {
-        StringBuilder script = new StringBuilder();
+    static StringBuilder createCacheScript(final CacheManager cacheManager) {
+        final StringBuilder script = new StringBuilder();
         if (cacheManager.getClearEachIteration()) {
             script.append("context.currentVU.clearCache()\n");
             LOGGER.info("Clear cache option converted");
@@ -59,8 +59,8 @@ public class JavascriptConverter {
         return script;
     }
 
-    static StringBuilder createCookieScript(CookieManager cookieManager, HTTPSamplerProxy httpSamplerProxy) {
-        StringBuilder script = new StringBuilder();
+    static StringBuilder createCookieScript(final CookieManager cookieManager, final HTTPSamplerProxy httpSamplerProxy) {
+        final StringBuilder script = new StringBuilder();
 
         for (int i = 0; i < cookieManager.getCookieCount(); i++) {
             if (cookieManager.get(i).getDomain().equals(httpSamplerProxy.getDomain())

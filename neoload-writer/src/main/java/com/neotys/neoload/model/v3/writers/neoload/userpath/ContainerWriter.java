@@ -46,9 +46,11 @@ public class ContainerWriter extends ElementWriter {
 		final Container theContainer = ((Container) this.element);
 		if(tagName.equals(DEFAULT_TAG_NAME)) {
 			super.writeXML(document, xmlContainerElement, outputFolder);
-			// Write SLA only on "basic logical action containers" not on "Then" or "Else" for example
-			SlaElementWriter.of(theContainer).writeXML(xmlContainerElement);
+		} else{
+				writeDescription(document, xmlContainerElement);
 		}
+		//In all containers
+		SlaElementWriter.of(theContainer).writeXML(xmlContainerElement);
 		currentElement.appendChild(xmlContainerElement);
 
 		setPropertyAttributes(xmlContainerElement);

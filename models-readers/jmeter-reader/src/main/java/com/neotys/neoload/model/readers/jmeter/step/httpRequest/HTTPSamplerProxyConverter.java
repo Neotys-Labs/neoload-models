@@ -44,11 +44,11 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
      * @param hashTree
      * @return
      */
-    public List<Step> apply(HTTPSamplerProxy httpSamplerProxy, HashTree hashTree) {
-        String domain = httpSamplerProxy.getDomain();
-        String path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath())).orElse("/");
-        String protocol = Optional.ofNullable(httpSamplerProxy.getProtocol().toLowerCase()).orElse("http");
-        int port = httpSamplerProxy.getPort();
+    public List<Step> apply(final HTTPSamplerProxy httpSamplerProxy, final HashTree hashTree) {
+        final String domain = httpSamplerProxy.getDomain();
+        final String path = Optional.ofNullable(Strings.emptyToNull(httpSamplerProxy.getPath())).orElse("/");
+        final String protocol = Optional.ofNullable(httpSamplerProxy.getProtocol().toLowerCase()).orElse("http");
+        final int port = httpSamplerProxy.getPort();
         httpSamplerProxy.setPath(path);
         httpSamplerProxy.setPort(port);
         httpSamplerProxy.setProtocol(protocol);
@@ -77,8 +77,8 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
             EventListenerUtils.readSupportedFunctionWithWarn("HeaderManager", "HttpRequest", "Don't have Header Manager");
         }
 
-        Request request = req.build();
-        Step javascript = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
+        final Request request = req.build();
+        final Step javascript = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
 
 
         if (javascript != null) {
@@ -87,8 +87,8 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         return ImmutableList.of(request);
     }
 
-    static void checkDefaultServer(HTTPSamplerProxy httpSamplerProxy, Request.Builder req) {
-        Server defaultServer = Servers.getDefaultServer();
+    static void checkDefaultServer(final HTTPSamplerProxy httpSamplerProxy, final Request.Builder req) {
+        final Server defaultServer = Servers.getDefaultServer();
         if (defaultServer != null) {
             req.server(defaultServer.getName());
             req.method(httpSamplerProxy.getMethod());
@@ -102,20 +102,20 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         }
     }
 
-    private void createParameters(HTTPSamplerProxy httpSamplerProxy, Request.Builder req) {
-        StringBuilder parameter = new StringBuilder();
-        CollectionProperty collectionParameter = httpSamplerProxy.getArguments().getArguments();
+    private void createParameters(final HTTPSamplerProxy httpSamplerProxy, final Request.Builder req) {
+        final StringBuilder parameter = new StringBuilder();
+        final CollectionProperty collectionParameter = httpSamplerProxy.getArguments().getArguments();
         if (httpSamplerProxy.getPostBodyRaw()) {
             for (JMeterProperty ValueParameter : collectionParameter) {
                 if (ValueParameter instanceof TestElementProperty) {
-                    HTTPArgument httpArgument = (HTTPArgument) ValueParameter.getObjectValue();
+                    final HTTPArgument httpArgument = (HTTPArgument) ValueParameter.getObjectValue();
                     parameter.append(httpArgument.getValue());
                 }
             }
         } else {
             for (JMeterProperty ValueParameter : collectionParameter) {
                 if (ValueParameter instanceof TestElementProperty) {
-                    HTTPArgument httpArgument = (HTTPArgument) ValueParameter.getObjectValue();
+                    final HTTPArgument httpArgument = (HTTPArgument) ValueParameter.getObjectValue();
                     parameter.append(httpArgument.getEncodedName());
                     parameter.append(httpArgument.getMetaData());
                     parameter.append((httpArgument.getEncodedValue()));
@@ -132,15 +132,15 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         EventListenerUtils.readSupportedFunction("Http Parameters", "Put parameters into HttpRequest");
     }
 
-    static String buildURL(HTTPSamplerProxy httpSamplerProxy){
-        StringBuilder url = new StringBuilder();
+    static String buildURL(final HTTPSamplerProxy httpSamplerProxy){
+        final StringBuilder url = new StringBuilder();
         url.append(httpSamplerProxy.getProtocol().toLowerCase());
         url.append("://");
         url.append(httpSamplerProxy.getDomain());
         url.append(":");
         url.append(httpSamplerProxy.getPort());
         url.append(httpSamplerProxy.getPath());
-        Map<String, String> parametersMap = httpSamplerProxy.getArguments().getArgumentsAsMap();
+        final Map<String, String> parametersMap = httpSamplerProxy.getArguments().getArgumentsAsMap();
         if("GET".equals(httpSamplerProxy.getMethod())){
             url.append("?");
             parametersMap.keySet().forEach(key -> {

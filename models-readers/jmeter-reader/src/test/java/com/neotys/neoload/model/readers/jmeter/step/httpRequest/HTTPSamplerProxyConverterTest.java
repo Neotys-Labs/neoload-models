@@ -1,7 +1,9 @@
 package com.neotys.neoload.model.readers.jmeter.step.httpRequest;
 
 import com.neotys.neoload.model.listener.TestEventListener;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.readers.jmeter.variable.VariableConverters;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.config.Argument;
@@ -37,6 +39,8 @@ public class HTTPSamplerProxyConverterTest {
         spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
         Servers.clear();
+        new ContainerUtils();
+        new VariableConverters();
     }
 
 

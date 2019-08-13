@@ -2,7 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.variable;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.v3.project.variable.CounterVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.modifiers.CounterConfig;
@@ -22,12 +22,12 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
     private static final Logger LOGGER = LoggerFactory.getLogger(CounterConverter.class);
 
     //Constructor
-    CounterConverter() {
+    public CounterConverter() { //public for a stepConverterTest
     }
 
     //Methods
     @Override
-    public List<Variable> apply(CounterConfig counterConfig, HashTree hashTree) {
+    public List<Variable> apply(final CounterConfig counterConfig, final  HashTree hashTree) {
         final CounterVariable.Builder counterBuilder = CounterVariable.builder()
                 .name(counterConfig.getVarName())
                 .description(counterConfig.getComment());
@@ -44,7 +44,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
             counterBuilder.increment(Integer.parseInt(counterConfig.getIncrementAsString()));
         }catch(Exception e){
             try{
-                counterBuilder.increment(Integer.parseInt(VariablesUtils.getValue(counterConfig.getIncrementAsString())));
+                counterBuilder.increment(Integer.parseInt(ContainerUtils.getValue(counterConfig.getIncrementAsString())));
             } catch (Exception e1){
                 LOGGER.warn("We can't manage the variable into the Increment Number \n"
                         + "So we put 0 in value of Port Number", e1);
@@ -59,7 +59,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
 
         }catch(Exception e){
             try{
-                counterBuilder.end(Integer.parseInt(VariablesUtils.getValue(counterConfig.getEndAsString())));
+                counterBuilder.end(Integer.parseInt(ContainerUtils.getValue(counterConfig.getEndAsString())));
             } catch (Exception e1){
                 LOGGER.warn("We can't manage the variable into the End Number \n"
                         + "So we put 0 in value of End Number", e1);
@@ -72,7 +72,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
             counterBuilder.start(Integer.parseInt(counterConfig.getStartAsString()));
         }catch(Exception e){
             try{
-                counterBuilder.start(Integer.parseInt(VariablesUtils.getValue(counterConfig.getStartAsString())));
+                counterBuilder.start(Integer.parseInt(ContainerUtils.getValue(counterConfig.getStartAsString())));
             } catch (Exception e1){
                 LOGGER.warn("We can't manage the variable into the Start Number \n"
                         + "So we put 0 in value of Start Number", e1);
@@ -88,7 +88,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
         return ImmutableList.of(counterBuilder.build());
     }
 
-    private void checkScope(CounterConfig counterConfig, CounterVariable.Builder counterBuilder) {
+    private void checkScope(final CounterConfig counterConfig, final CounterVariable.Builder counterBuilder) {
         if (counterConfig.isPerUser()) {
             counterBuilder.scope(Variable.Scope.LOCAL);
         } else {
@@ -96,7 +96,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
         }
     }
 
-    private void checkOutofValue(CounterConfig counterConfig) {
+    private void checkOutofValue(final CounterConfig counterConfig) {
         if (counterConfig.isResetOnThreadGroupIteration()) {
             LOGGER.warn("We can't converted this parameter");
             EventListenerUtils.readUnsupportedParameter("Counter", "Reset on each Thread Group Iteration", "not supported");

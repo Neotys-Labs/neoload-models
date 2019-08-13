@@ -14,14 +14,14 @@ import java.util.List;
 public class ConvertThreadGroupResult {
 
     //Attributs
-    private UserPath userPath;
-    private Population population;
-    private PopulationPolicy populationPolicy;
+    private final UserPath userPath;
+    private final Population population;
+    private final PopulationPolicy populationPolicy;
 
-    private List<Variable> variableList;
+    private final List<Variable> variableList;
 
     //Constructor
-    ConvertThreadGroupResult(UserPath userPath, Population population, PopulationPolicy populationPolicy, List<Variable> variableList) {
+    ConvertThreadGroupResult(final UserPath userPath, final Population population, final PopulationPolicy populationPolicy, final List<Variable> variableList) {
         this.userPath = userPath;
         this.population = population;
         this.populationPolicy = populationPolicy;

@@ -25,13 +25,13 @@ public class IfControllerConverter implements BiFunction<IfController, HashTree,
     private static final Logger LOGGER = LoggerFactory.getLogger(IfControllerConverter.class);
 
     ///Constructor
-    public IfControllerConverter(StepConverters converters) {
+    public IfControllerConverter(final StepConverters converters) {
         this.converter = converters;
     }
 
     //Methods
-    public List<Step> apply(IfController ifController, HashTree hashTree) {
-        List<Step> containerList = new ArrayList<>();
+    public List<Step> apply(final IfController ifController, final HashTree hashTree) {
+        final List<Step> containerList = new ArrayList<>();
         convertIfController(containerList, ifController, hashTree);
         LOGGER.info("IfController correctly converted");
         EventListenerUtils.readSupportedFunctionWithWarn("IfController", "Conditions", "We can't convert the conditions, so we put them on the Transaction's description");
@@ -46,16 +46,16 @@ public class IfControllerConverter implements BiFunction<IfController, HashTree,
      * @param ifController the JMeter element
      * @param hashTree HashTree of JMeter at the position of the IfController
      */
-    private void convertIfController(List<Step> containerList, IfController ifController, HashTree hashTree) {
-        If.Builder ifBuilder = If.builder()
+    private void convertIfController(final List<Step> containerList, final IfController ifController, final HashTree hashTree) {
+        final If.Builder ifBuilder = If.builder()
                 .name(ifController.getName())
                 .description(ifController.getCondition());
-        HashTree subTree = hashTree.get(ifController);
+        final HashTree subTree = hashTree.get(ifController);
         if(ifController.isEvaluateAll()){
             for (Object o : subTree.list()){
                 if( o instanceof AbstractTestElement) {
                     AbstractTestElement abstractTestElement = (AbstractTestElement) o;
-                    HashTree children = new HashTree();
+                    final HashTree children = new HashTree();
                     children.add(o);
                     children.get(o).add(subTree.getTree(o));
                     ifBuilder.name(ifController.getName() + " Children: " + abstractTestElement.getName())
@@ -66,8 +66,7 @@ public class IfControllerConverter implements BiFunction<IfController, HashTree,
                 }
             }
         }else{
-            ifBuilder
-                    .then(Container.builder()
+            ifBuilder.then(Container.builder()
                     .addAllSteps(converter.convertStep(subTree))
                     .build());
             containerList.add(ifBuilder.build());

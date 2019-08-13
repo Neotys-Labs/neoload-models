@@ -24,7 +24,7 @@ public class RecordingControllerConverter implements BiFunction<RecordingControl
     private static final Logger LOGGER = LoggerFactory.getLogger(RecordingControllerConverter.class);
 
     //Constructor
-    public RecordingControllerConverter(StepConverters stepConverters) {
+    public RecordingControllerConverter(final StepConverters stepConverters) {
         this.converter = stepConverters;
     }
 
@@ -36,8 +36,8 @@ public class RecordingControllerConverter implements BiFunction<RecordingControl
      * @param hashTree
      * @return
      */
-    public List<Step> apply(RecordingController recordingController, HashTree hashTree) {
-        Container.Builder builder = Container.builder().description(recordingController.getComment()).name(recordingController.getName());
+    public List<Step> apply(final RecordingController recordingController, HashTree hashTree) {
+        final Container.Builder builder = Container.builder().description(recordingController.getComment()).name(recordingController.getName());
         builder.addAllSteps(converter.convertStep(hashTree.get(recordingController)));
         LOGGER.info("RecordingController correctly converted");
         EventListenerUtils.readSupportedFunction("RecordingController","RecordingController");

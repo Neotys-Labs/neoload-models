@@ -2,7 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.variable;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.VariablesUtils;
+import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.v3.project.variable.RandomNumberVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.config.RandomVariableConfig;
@@ -27,7 +27,7 @@ public class RandomVariableConverter implements BiFunction<RandomVariableConfig,
 
     //Methods
     @Override
-    public List<Variable> apply(RandomVariableConfig randomVariableConfig, HashTree hashTree) {
+    public List<Variable> apply(final RandomVariableConfig randomVariableConfig, final  HashTree hashTree) {
         RandomNumberVariable.Builder randomNumberVariable = RandomNumberVariable.builder()
                 .name(randomVariableConfig.getVariableName())
                 .description(randomVariableConfig.getComment());
@@ -49,7 +49,7 @@ public class RandomVariableConverter implements BiFunction<RandomVariableConfig,
             randomNumberVariable.min(Integer.parseInt(randomVariableConfig.getMinimumValue()));
         }catch (Exception e){
             try{
-                randomNumberVariable.min(Integer.parseInt(VariablesUtils.getValue(randomVariableConfig.getMinimumValue())));
+                randomNumberVariable.min(Integer.parseInt(ContainerUtils.getValue(randomVariableConfig.getMinimumValue())));
             }catch (Exception e1){
                 LOGGER.warn("We can't manage the variable into the Min Number \n"
                         + "So we put 0 in value of Min Number", e1);
@@ -62,7 +62,7 @@ public class RandomVariableConverter implements BiFunction<RandomVariableConfig,
             randomNumberVariable.max(Integer.parseInt(randomVariableConfig.getMaximumValue()));
         }catch (Exception e){
             try{
-                randomNumberVariable.max(Integer.parseInt(VariablesUtils.getValue(randomVariableConfig.getMaximumValue())));
+                randomNumberVariable.max(Integer.parseInt(ContainerUtils.getValue(randomVariableConfig.getMaximumValue())));
             }catch (Exception e1){
                 LOGGER.warn("We can't manage the variable into the Max Number \n"
                         + "So we put 1 in value of Max Number", e1);
