@@ -3,6 +3,8 @@ package com.neotys.neoload.model.readers;
 import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
+import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
 import org.junit.Test;
 
@@ -16,11 +18,19 @@ public class MainTest {
     public void testCreateProject() {
         ImmutableProject project = Project.builder()
                 .name("project")
+                .addVariables(createVars())
                 .addUserPaths(createUp())
                 .build();
 
         new NeoLoadWriter(project, System.getProperty("user.home") + "/nlproject", Collections.emptyMap()).write(false);
         createUp();
+    }
+
+    private Variable createVars() {
+        return JavaScriptVariable.builder()
+                .name("jsvar1")
+                .script("function evaluate() {\tlogger.debug(\"Computing value of js variable\");\n\treturn new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField = myLibraryFunction();\n\t};\n}")
+                .build();
     }
 
     private UserPath createUp() {
@@ -46,7 +56,7 @@ public class MainTest {
                                 .addSteps(While.builder()
                                         .addConditions(Condition.builder()
                                                 .operand1("1")
-                                                .operator(Condition.Operator.GREATER)
+                                                .operator(Condition.Operator.EQUALS)
                                                 .operand2("2")
                                                 .build())
                                         .addSteps(ThinkTime.builder()
