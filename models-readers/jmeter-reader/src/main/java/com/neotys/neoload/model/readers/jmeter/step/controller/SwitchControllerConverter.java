@@ -18,10 +18,13 @@ public class SwitchControllerConverter implements BiFunction<SwitchController, H
     //Attributs
     private final StepConverters converter;
     private static final Logger LOGGER = LoggerFactory.getLogger(IfControllerConverter.class);
+
+    //Constructor
     public SwitchControllerConverter(final StepConverters converters) {
         this.converter = converters;
     }
 
+    //Methods
     @Override
     public List<Step> apply(SwitchController switchController, HashTree hashTree) {
         final List<Step> containerList = new ArrayList<>();
@@ -36,10 +39,11 @@ public class SwitchControllerConverter implements BiFunction<SwitchController, H
                 .description(switchController.getComment())
                 .value(switchController.getSelection());
         for(Object o : hashTree.get(switchController).list()) {
-            if (o instanceof Controller){
+            if (o instanceof Controller){ //To manage the controller like case
                 HashTree subtree = new HashTree();
                 Controller container = (Controller) o;
                 subtree.add(o);subtree.get(o).add(hashTree.get(switchController).get(container));
+
                 if("default".equalsIgnoreCase(container.getName().toLowerCase())){
                     switchBuilder.getDefault(Container.builder()
                             .addAllSteps(converter.convertStep(subtree))

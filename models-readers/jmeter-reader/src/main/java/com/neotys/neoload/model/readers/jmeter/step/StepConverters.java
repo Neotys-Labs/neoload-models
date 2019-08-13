@@ -68,7 +68,7 @@ public final class StepConverters {
             if (converter != null) {
                 List<Step> stepList = converter.apply(o, subTree);
                 if (stepList != null) {
-                    list.addAll(converter.apply(o, subTree));
+                    list.addAll(stepList);
                 }
             } else if( VariableConverters.getConvertersMap().containsKey(o.getClass())){
                 VariableConverters.convertVariable(subTree,o);

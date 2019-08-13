@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
 public class SwitchControllerConverterTest {
 
@@ -42,7 +42,7 @@ public class SwitchControllerConverterTest {
         constantTimer.setDelay("26081997");
 
         hashTree.add(switchController);
-        hashTree.get(switchController).add(aCase);
+        hashTree.get(switchController).add(aCase);hashTree.get(switchController).add(constantTimer);
         hashTree.get(switchController).add(aDefault);
 
         hashTree.get(switchController).get(aCase).add(constantTimer); hashTree.get(switchController).get(aDefault).add(constantTimer);
@@ -64,6 +64,8 @@ public class SwitchControllerConverterTest {
         expected.add(aSwitch);
 
         assertEquals(result,result);
+
+        verify(spy,times(1)).readUnsupportedAction("Element not tolerate at the first level of switch node");
     }
 
 }
