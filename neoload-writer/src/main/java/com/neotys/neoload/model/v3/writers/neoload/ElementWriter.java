@@ -11,7 +11,7 @@ public class ElementWriter {
     public static final String XML_DESCRIPTION_TAG = "description";
     public static final String XML_UID_TAG = "uid";
     
-    protected final Element element;
+    protected Element element;
     
     public ElementWriter(Element element) {
         this.element = element;

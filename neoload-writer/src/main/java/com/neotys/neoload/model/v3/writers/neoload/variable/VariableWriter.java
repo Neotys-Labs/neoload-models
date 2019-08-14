@@ -2,10 +2,9 @@ package com.neotys.neoload.model.v3.writers.neoload.variable;
 
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
-import org.w3c.dom.Document;
 
 
-public abstract class VariableWriter {
+public abstract class VariableWriter extends ElementWriter {
 
 	public static final String XML_ATTR_NAME = "name";
 	public static final String XML_ATTR_ORDER = "order";
@@ -13,10 +12,8 @@ public abstract class VariableWriter {
     public static final String XML_ATTR_RANGE = "range";
     public static final String XML_ATTR_WHEN_OUT_OF_VALUE = "whenOutOfValues";
 
-    protected Variable variable;
-
     protected VariableWriter(Variable variable) {
-    	this.variable = variable;
+    	super(variable);
 	}
 
 	protected int getPolicyCode(Variable.ChangePolicy pol) {
@@ -48,22 +45,22 @@ public abstract class VariableWriter {
 		}
 	}
 
-    public abstract void writeXML(final Document document, final org.w3c.dom.Element currentElement, final String outputFolder);
-
 	public void writeXML(final org.w3c.dom.Element currentElement) {
-    	currentElement.setAttribute(XML_ATTR_NAME, variable.getName());
+		final Variable variable = (Variable) element;
+
+    	currentElement.setAttribute(XML_ATTR_NAME, element.getName());
 		currentElement.setAttribute(XML_ATTR_ORDER, Integer.toString(variable.getOrder() == Variable.Order.SEQUENTIAL ? 1 : 2));
 		currentElement.setAttribute(XML_ATTR_POLICY, Integer.toString(getPolicyCode(variable.getChangePolicy())));
 		currentElement.setAttribute(XML_ATTR_RANGE, Integer.toString(getScopeCode(variable.getScope())));
 		currentElement.setAttribute(XML_ATTR_WHEN_OUT_OF_VALUE, getWhenOutOfValuesCode(variable.getOutOfValue()));
 	}
 
-	// needs a refactor to be put in an upper class or in an util class (duplication from ElementWritter). The original function might have a bug!!!
-	public void writeDescription(final Document document, final org.w3c.dom.Element currentElement) {
-		this.variable.getDescription().ifPresent(s -> {
-			org.w3c.dom.Element descElement = document.createElement(ElementWriter.XML_DESCRIPTION_TAG);
-			descElement.setTextContent(s);
-			currentElement.appendChild(descElement);
-		});
-	}
+//	// needs a refactor to be put in an upper class or in an util class (duplication from ElementWritter). The original function might have a bug!!!
+//	public void writeDescription(final Document document, final org.w3c.dom.Element currentElement) {
+//		this.element.getDescription().ifPresent(s -> {
+//			org.w3c.dom.Element descElement = document.createElement(ElementWriter.XML_DESCRIPTION_TAG);
+//			descElement.setTextContent(s);
+//			currentElement.appendChild(descElement);
+//		});
+//	}
 }

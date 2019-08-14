@@ -49,7 +49,7 @@ public class FileVariableWriter extends VariableWriter {
 		org.w3c.dom.Element xmlVariable = document.createElement(XML_TAG_NAME);
 		super.writeXML(xmlVariable) ;
 
-		FileVariable theFileVariable = (FileVariable) variable;
+		FileVariable theFileVariable = (FileVariable) element;
 		xmlVariable.setAttribute(XML_ATTR_DELIMITER, theFileVariable.getDelimiter());
 		xmlVariable.setAttribute(XML_ATTR_USE_FIRST_LINE, Boolean.toString(theFileVariable.isFirstLineColumnNames()));
 		xmlVariable.setAttribute(XML_ATTR_OFFSET, Integer.toString(theFileVariable.getStartFromLine()));

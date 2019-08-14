@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
+import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.util.Parameter;
 import org.w3c.dom.Document;
@@ -240,6 +241,17 @@ public class WrittingTestUtils {
                     .build()
             )
             .addSteps(DELAY_TEST)
+            .build();
+
+    public static final JavaScriptVariable JAVASCRIPT_VARIABLE_TEST = JavaScriptVariable.builder()
+            .name("myVar")
+            .script("function evaluate() {\n" +
+                    "\tlogger.debug(\"Computing value of js variable\");\n" +
+                    "\treturn new function() {\n" +
+                    "\t\tthis.firstField = \"a value\";\n" +
+                    "\t\tthis.secondField = myLibraryFunction();\n" +
+                    "\t};\n" +
+                    "}")
             .build();
 
     public static final CustomAction SET_OK_CODE_CUSTOM_ACTION = CustomAction.builder()

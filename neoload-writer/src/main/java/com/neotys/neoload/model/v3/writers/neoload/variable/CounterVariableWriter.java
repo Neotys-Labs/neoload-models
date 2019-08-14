@@ -20,7 +20,7 @@ public class CounterVariableWriter extends VariableWriter{
 		org.w3c.dom.Element xmlVariable = document.createElement(XML_TAG_NAME);
 		super.writeXML(xmlVariable) ;
 
-		CounterVariable theVariable = (CounterVariable) variable;
+		CounterVariable theVariable = (CounterVariable) element;
 		xmlVariable.setAttribute(XML_ATTR_START_VAL,	Integer.toString(theVariable.getStart()));
 		xmlVariable.setAttribute(XML_ATTR_MAX_VAL,	Integer.toString(theVariable.getEnd()));
 		xmlVariable.setAttribute(XML_ATTR_INC_VAL,	Integer.toString(theVariable.getIncrement()));

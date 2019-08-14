@@ -40,3 +40,10 @@ variables:
       max: -1
       predictable: false
       change_policy: each_request
+- javascript:
+    name: My JSVar
+    description: This is a js var
+    script: "function evaluate() {\n\tlogger.debug(\"Computing value of js variable\");\n\treturn
+      new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField =
+      myLibraryFunction();\n\t};\n}"
+    change_policy: each_iteration

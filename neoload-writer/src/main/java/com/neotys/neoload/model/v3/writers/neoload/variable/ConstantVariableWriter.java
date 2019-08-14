@@ -16,7 +16,7 @@ public class ConstantVariableWriter extends VariableWriter {
 	public void writeXML(final Document document, final org.w3c.dom.Element currentElement, final String outputFolder) {
 		org.w3c.dom.Element xmlVariable = document.createElement(XML_TAG_NAME);
 		super.writeXML(xmlVariable);
-		ConstantVariable theVariable = (ConstantVariable) variable;
+		ConstantVariable theVariable = (ConstantVariable) element;
 		xmlVariable.setAttribute(XML_CONST_VALUE, theVariable.getValue());
 		writeDescription(document, xmlVariable);
 		currentElement.appendChild(xmlVariable);
