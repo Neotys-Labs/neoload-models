@@ -31,7 +31,6 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
         final CounterVariable.Builder counterBuilder = CounterVariable.builder()
                 .name(counterConfig.getVarName())
                 .description(counterConfig.getComment());
-
         /*
         First, we try to take the value of the different parameters,
         If there is an error, we try to check the variables and take the good one
@@ -46,7 +45,7 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
             try{
                 counterBuilder.increment(Integer.parseInt(ContainerUtils.getValue(counterConfig.getIncrementAsString())));
             } catch (Exception e1){
-                LOGGER.warn("We can't manage the variable into the Increment Number \n"
+                LOGGER.warn("We can't manage a variable into the Increment Number \n"
                         + "So we put 0 in value of Port Number", e1);
                 EventListenerUtils.readUnsupportedParameter(counterVariable, variableString,"Increment");
 

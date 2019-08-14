@@ -17,7 +17,7 @@ public class SwitchControllerConverter implements BiFunction<SwitchController, H
 
     //Attributs
     private final StepConverters converter;
-    private static final Logger LOGGER = LoggerFactory.getLogger(IfControllerConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwitchControllerConverter.class);
 
     //Constructor
     public SwitchControllerConverter(final StepConverters converters) {

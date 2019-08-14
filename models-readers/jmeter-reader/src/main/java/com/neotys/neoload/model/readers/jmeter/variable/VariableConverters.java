@@ -28,12 +28,16 @@ public final class VariableConverters {
 
     private static Map<Class, BiFunction<?, HashTree, List<Variable>>> convertersMap = null;
 
+    private final VariableFunctionConverter variableFunctionConverter;
+
+
     //Constructor
     public VariableConverters() {
+        this.variableFunctionConverter= new VariableFunctionConverter();
         convertersMap = ImmutableMap.of(
                 CSVDataSet.class, new CSVDataSetConverter(),
                 CounterConfig.class, new CounterConverter(),
-                Arguments.class, new UserDefineVariableConverter(),
+                Arguments.class, new UserDefineVariableConverter(variableFunctionConverter),
                 RandomVariableConfig.class, new RandomVariableConverter());
     }
 

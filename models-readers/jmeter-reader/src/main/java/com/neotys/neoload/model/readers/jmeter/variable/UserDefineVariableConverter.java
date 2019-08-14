@@ -23,8 +23,11 @@ public class UserDefineVariableConverter implements BiFunction<Arguments, HashTr
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDefineVariableConverter.class);
 
+    private final VariableFunctionConverter variableFunctionConverter;
+
     //Constructor
-    UserDefineVariableConverter() {
+    UserDefineVariableConverter(VariableFunctionConverter variableFunctionConverter) {
+        this.variableFunctionConverter = variableFunctionConverter;
     }
 
     //Methods
@@ -43,12 +46,29 @@ public class UserDefineVariableConverter implements BiFunction<Arguments, HashTr
             Map<String, String> variableMap = jMeterProperties.getArgumentsAsMap();
             for(String key : variableMap.keySet()) {
                 String value = variableMap.get(key);
-                variableList.add(ConstantVariable.builder().name(key).value(value).build());
-                ContainerUtils.addKeyValue(key, value);
+                checkVariableFunction(value,key,variableList);
             }
         }
         LOGGER.info("The conversion of User Defined Variable is a Success");
         EventListenerUtils.readSupportedFunction("UserDefinedVariable", "Constant String variable");
         return variableList;
+    }
+
+    private void checkVariableFunction(String value , String key, List<Variable> variableList) {
+        if (value.substring(0,3).contains("${__")){
+            Variable valueConverted = variableFunctionConverter.convertVariableFunction(value,key);
+            if(valueConverted != null){
+                variableList.add(valueConverted);
+                ContainerUtils.addKeyValue(key,value);
+            }else{
+                LOGGER.warn("We can't convert the variable function");
+                EventListenerUtils.readUnsupportedAction("Convert Variable Action");
+                variableList.add(ConstantVariable.builder().name(key).value(value).build());
+                ContainerUtils.addKeyValue(key, value);
+            }
+        }else{
+            variableList.add(ConstantVariable.builder().name(key).value(value).build());
+            ContainerUtils.addKeyValue(key, value);
+        }
     }
 }

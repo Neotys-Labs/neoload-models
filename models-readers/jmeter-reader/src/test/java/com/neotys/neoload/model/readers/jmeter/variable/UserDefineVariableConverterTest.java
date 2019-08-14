@@ -19,10 +19,13 @@ import static org.mockito.Mockito.spy;
 public class UserDefineVariableConverterTest {
     private TestEventListener spy;
 
+    private VariableFunctionConverter variableFunctionConverter;
+
     @Before
     public void before()   {
         spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
+        variableFunctionConverter = new VariableFunctionConverter();
     }
 
     @Test
@@ -32,7 +35,7 @@ public class UserDefineVariableConverterTest {
         arguments.addArgument("variable1","valeur1");
         arguments.addArgument("variable2","valeur2");
 
-        List<Variable> result = new UserDefineVariableConverter().apply(arguments, new HashTree());
+        List<Variable> result = new UserDefineVariableConverter(variableFunctionConverter).apply(arguments, new HashTree());
         List<Variable> expected = new ArrayList<>();
 
         ConstantVariable variable1 = ConstantVariable.builder()

@@ -66,4 +66,15 @@ public class MainTest {
                 .description("test")
                 .build();
     }
+
+    @Test
+    public void testStrings(){
+        String value = "${__Random(0,1,test)}";
+        String cleanValue = value.substring(4,value.length()-1); // to have only the function name and parameters
+        String nameFunction = cleanValue.split("\\(")[0];
+        String parameters = cleanValue.split(nameFunction)[1];
+        System.out.println(parameters);
+        System.out.println(cleanValue);
+        System.out.println(nameFunction);
+    }
 }
