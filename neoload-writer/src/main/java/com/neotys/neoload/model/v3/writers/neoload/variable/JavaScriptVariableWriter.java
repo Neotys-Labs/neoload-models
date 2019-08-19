@@ -72,7 +72,7 @@ public class JavaScriptVariableWriter extends VariableWriter {
 
 		final String uid = UUID.randomUUID().toString();
 
-		writeJavascriptFile(new File(outputFolder), uid);
+		writeJavaScriptFile(new File(outputFolder), uid);
 
 		xmlJS.setAttribute(XML_ATTR_FILENAME_NAME, "scripts/jsVariable_" + uid + ".js");
 		xmlJS.setAttribute(XML_ATTR_NAME, element.getName());
@@ -82,7 +82,7 @@ public class JavaScriptVariableWriter extends VariableWriter {
 		return xmlJS;
 	}
 
-	private void writeJavascriptFile(final File projectFolder, final String uid) {
+	private void writeJavaScriptFile(final File projectFolder, final String uid) {
 		if (projectFolder == null) {
 			LOGGER.error("The output folder does not exists.");
 			return;
@@ -98,14 +98,14 @@ public class JavaScriptVariableWriter extends VariableWriter {
 		final File jsFile = new File(scriptFolder.getAbsolutePath() + File.separator + "jsVariable_" + uid + ".js");
 		try {
 			if (!jsFile.exists() && !jsFile.createNewFile()) {
-				LOGGER.error("An error occured while writing the Javascript file \"" + jsFile.getAbsolutePath() + ".");
+				LOGGER.error("An error occured while writing the JavaScript file \"" + jsFile.getAbsolutePath() + ".");
 				return;
 			}
 			final String strContent = getJavascriptContent();
 			final byte[] content = strContent == null ? new byte[0] : strContent.getBytes();
 			Files.write(content, jsFile);
 		} catch (IOException e) {
-			LOGGER.error("An error occured while writing the Javascript file \"" + jsFile.getAbsolutePath() + "\":\n" + e);
+			LOGGER.error("An error occured while writing the JavaScript file \"" + jsFile.getAbsolutePath() + "\":\n" + e);
 			return;
 		}
 	}

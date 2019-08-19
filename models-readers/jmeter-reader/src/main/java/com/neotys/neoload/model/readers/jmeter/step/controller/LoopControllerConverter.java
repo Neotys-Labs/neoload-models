@@ -33,7 +33,7 @@ public class LoopControllerConverter implements BiFunction<LoopController, HashT
         final Loop.Builder loopBuilder = Loop.builder()
                 .description(loopController.getComment())
                 .name(loopController.getName())
-                .times(loopController.getLoopString());
+                .count(loopController.getLoopString());
 
         loopBuilder.addAllSteps(converter.convertStep(hashTree.get(loopController)));
         LOGGER.info("LoopController correctly converted");

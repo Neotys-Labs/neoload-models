@@ -46,7 +46,7 @@ public class MainTest {
                                 .addSteps(Loop.builder()
                                         .name("looper")
                                         .description("a simple loop")
-                                        .times("20")
+                                        .count("20")
                                         .addSteps(Container.builder()
                                                 .name("Transaction in looper")
                                                 .build())

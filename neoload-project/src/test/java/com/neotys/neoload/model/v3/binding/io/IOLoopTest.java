@@ -22,7 +22,7 @@ public class IOLoopTest extends AbstractIOElementsTest {
                         .addSteps(Loop.builder()
                                 .name("looper")
                                 .description("a simple loop")
-                                .times("5")
+                                .count("5")
                                 .addSteps(Delay.builder()
                                         .value("200")
                                         .build())

@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.google.common.io.Files;
-import com.neotys.neoload.model.v3.project.userpath.Javascript;
+import com.neotys.neoload.model.v3.project.userpath.JavaScript;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 import org.assertj.core.api.Assertions;
@@ -14,16 +14,15 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 import java.util.List;
 
-public class JavascriptWriterTest {
+public class JavaScriptWriterTest {
 
     @Test
-    public void writeJavascriptTest() throws ParserConfigurationException, TransformerException, IOException {
+    public void writeJavaScriptTest() throws ParserConfigurationException, TransformerException, IOException {
         final Document doc = WrittingTestUtils.generateEmptyDocument();
         final Element root = WrittingTestUtils.generateTestRootElement(doc);
-        final Javascript javascript = new Javascript.Builder().name("myJS").script("// Get variable value from VariableManager\n" +
+        final JavaScript javascript = new JavaScript.Builder().name("myJS").script("// Get variable value from VariableManager\n" +
                 "var myVar = context.variableManager.getValue(\"myVar\");\n" +
                 "\n" +
                 "\n" +
@@ -40,7 +39,7 @@ public class JavascriptWriterTest {
         final String expectedEnd = "\" uid=\"" + WriterUtils.getElementUid(javascript)+ "\"><description>myDescription</description></js-action>"
                 + "</test-root>";
         String tmpDirPath = Files.createTempDir().getAbsolutePath();
-        JavascriptWriter.of(javascript).writeXML(doc, root, tmpDirPath);
+        JavaScriptWriter.of(javascript).writeXML(doc, root, tmpDirPath);
         final String generatedResult = WrittingTestUtils.getXmlString(doc);
         Assertions.assertThat(generatedResult).startsWith(expectedStart);
         // There is a timestamp in the middle

@@ -24,7 +24,7 @@ public class LoopWriter extends ElementWriter {
     @Override
     public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
         final Element loopElement = document.createElement(XML_TAG_NAME);
-        loopElement.setAttribute(XML_ATTR_LOOP, ((Loop) element).getTimes());
+        loopElement.setAttribute(XML_ATTR_LOOP, ((Loop) element).getCount());
         super.writeXML(document, loopElement, outputFolder);
         currentElement.appendChild(loopElement);
 

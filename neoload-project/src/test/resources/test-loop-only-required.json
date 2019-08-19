@@ -8,7 +8,7 @@
             "loop": {
               "description": "a simple loop",
               "name": "looper",
-              "times": 5,
+              "count": 5,
               "steps": [
                 {
                   "delay": "200ms"

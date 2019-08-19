@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter.step.javascript;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.v3.project.userpath.Javascript;
+import com.neotys.neoload.model.v3.project.userpath.JavaScript;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.protocol.http.control.CacheManager;
 import org.apache.jmeter.protocol.http.control.CookieManager;
@@ -13,19 +13,19 @@ import org.slf4j.LoggerFactory;
 /**
  * This class manage all the different javascript to write
  */
-public class JavascriptConverter {
+public class JavaScriptConverter {
 
     //Attributs
-    private static final Logger LOGGER = LoggerFactory.getLogger(JavascriptConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaScriptConverter.class);
     private static final String cookieManager = "CookieManager";
 
     //Constructor
-    JavascriptConverter() {
+    JavaScriptConverter() {
     }
 
     //Methods
     public static Step createJavascript(final HashTree hashTree, final HTTPSamplerProxy httpSamplerProxy) {
-        final Javascript.Builder javascript = Javascript.builder();
+        final JavaScript.Builder javascript = JavaScript.builder();
         final StringBuilder script = new StringBuilder();
         for (Object o : hashTree.list()) {
             if (o instanceof CookieManager) {
@@ -78,8 +78,8 @@ public class JavascriptConverter {
         }
 
         LOGGER.warn("We don't convert the Cookie Policy");
-        EventListenerUtils.readUnsupportedParameter(JavascriptConverter.cookieManager, "CookiePolicy", "Type of policy");
-        EventListenerUtils.readUnsupportedParameter(JavascriptConverter.cookieManager, "Option", "Clean for each iteration");
+        EventListenerUtils.readUnsupportedParameter(JavaScriptConverter.cookieManager, "CookiePolicy", "Type of policy");
+        EventListenerUtils.readUnsupportedParameter(JavaScriptConverter.cookieManager, "Option", "Clean for each iteration");
         return script;
     }
 }

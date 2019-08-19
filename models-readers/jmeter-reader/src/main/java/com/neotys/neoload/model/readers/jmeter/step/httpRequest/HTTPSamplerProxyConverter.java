@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.extractor.ExtractorConverters;
-import com.neotys.neoload.model.readers.jmeter.step.javascript.JavascriptConverter;
+import com.neotys.neoload.model.readers.jmeter.step.javascript.JavaScriptConverter;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
@@ -78,7 +78,7 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         }
 
         final Request request = req.build();
-        final Step javascript = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
+        final Step javascript = JavaScriptConverter.createJavascript(hashTree, httpSamplerProxy);
 
 
         if (javascript != null) {

@@ -60,7 +60,7 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
                 action = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
             } else if (actionNode.has(JAVASCRIPT)) {
                 final JsonNode javascriptNode = actionNode.get(JAVASCRIPT);
-                action = codec.treeToValue(javascriptNode, Javascript.class);
+                action = codec.treeToValue(javascriptNode, JavaScript.class);
             } else if (actionNode.has(IF)) {
                 final JsonNode ifNode = actionNode.get(IF);
                 action = codec.treeToValue(ifNode, If.class);

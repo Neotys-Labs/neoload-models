@@ -226,7 +226,7 @@ public class WrittingTestUtils {
     public static final Loop LOOP_TEST = Loop.builder()
             .name("looper")
             .description("a simple loop")
-            .times("20")
+            .count("20")
             .addSteps(CONTAINER_TEST)
             .addSteps(DELAY_TEST)
             .build();

@@ -2,7 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.step.javascript;
 
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.v3.project.userpath.Javascript;
+import com.neotys.neoload.model.v3.project.userpath.JavaScript;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.protocol.http.control.CacheManager;
 import org.apache.jmeter.protocol.http.control.Cookie;
@@ -31,7 +31,7 @@ public class JavascriptConverterTest {
         HashTree hashTree = new HashTree();
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         httpSamplerProxy.setDomain("kaldrogo.intranet.neotys.com");
-        Step step = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
+        Step step = JavaScriptConverter.createJavascript(hashTree, httpSamplerProxy);
         assertNull(step);
     }
 
@@ -57,8 +57,8 @@ public class JavascriptConverterTest {
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         httpSamplerProxy.setDomain("kaldrogo.intranet.neotys.com");
         httpSamplerProxy.setPath("/");
-        Step result = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
-        Step expected = Javascript.builder()
+        Step result = JavaScriptConverter.createJavascript(hashTree, httpSamplerProxy);
+        Step expected = JavaScript.builder()
                 .script("/* Creation of the cookie number: 0*/\n" +
                         "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=fd; path=/\")\n" )
                 .name("")
@@ -93,8 +93,8 @@ public class JavascriptConverterTest {
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
         httpSamplerProxy.setDomain("kaldrogo.intranet.neotys.com");
         httpSamplerProxy.setPath("/auth");
-        Step result = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
-        Step expected = Javascript.builder()
+        Step result = JavaScriptConverter.createJavascript(hashTree, httpSamplerProxy);
+        Step expected = JavaScript.builder()
                 .script("/* Creation of the cookie number: 1*/\n" +
                         "context.currentVU.setCookieForServer(\"kaldrogo.intranet.neotys.com\",\"HTTP Cookie Manager=d; path=/auth\")\n")
                 .name("")
@@ -115,8 +115,8 @@ public class JavascriptConverterTest {
         hashTree.add(cacheManager);
         HTTPSamplerProxy httpSamplerProxy = new HTTPSamplerProxy();
 
-        Step result = JavascriptConverter.createJavascript(hashTree, httpSamplerProxy);
-        Step expected = Javascript.builder()
+        Step result = JavaScriptConverter.createJavascript(hashTree, httpSamplerProxy);
+        Step expected = JavaScript.builder()
                 .script("context.currentVU.clearCache()\n")
                 .name("")
                 .description("")
