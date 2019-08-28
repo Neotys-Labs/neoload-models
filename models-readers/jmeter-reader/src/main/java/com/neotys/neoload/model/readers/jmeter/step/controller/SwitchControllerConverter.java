@@ -26,36 +26,47 @@ public class SwitchControllerConverter implements BiFunction<SwitchController, H
 
     //Methods
     @Override
-    public List<Step> apply(SwitchController switchController, HashTree hashTree) {
+    public List<Step> apply(final SwitchController switchController, final HashTree hashTree) {
         final List<Step> containerList = new ArrayList<>();
-        containerList.add(convertSwitch(switchController,hashTree));
+        containerList.add(convertSwitch(switchController, hashTree));
         LOGGER.info("SwitchController correctly converted");
         EventListenerUtils.readSupportedFunction("SwitchController", "Switch");
         return containerList;
     }
-    private ImmutableSwitch convertSwitch(SwitchController switchController, HashTree hashTree) {
-        Switch.Builder switchBuilder = Switch.builder()
+
+    private ImmutableSwitch convertSwitch(final SwitchController switchController, final HashTree hashTree) {
+        final Switch.Builder switchBuilder = Switch.builder()
                 .name(switchController.getName())
                 .description(switchController.getComment())
                 .value(switchController.getSelection());
-        for(Object o : hashTree.get(switchController).list()) {
-            if (o instanceof Controller){ //To manage the controller like case
-                HashTree subtree = new HashTree();
-                Controller container = (Controller) o;
-                subtree.add(o);subtree.get(o).add(hashTree.get(switchController).get(container));
+        for (Object o : hashTree.get(switchController).list()) {
+            if (o instanceof Controller) { //To manage the controller like case
+                final HashTree subtree = new HashTree();
+                final Controller container = (Controller) o;
 
-                if("default".equalsIgnoreCase(container.getName().toLowerCase())){
+                if ("default".equalsIgnoreCase(container.getName())) {
+                    subtree
+                            .add(hashTree
+                                    .get(switchController)
+                                    .get(container));
+
                     switchBuilder.getDefault(Container.builder()
                             .addAllSteps(converter.convertStep(subtree))
                             .build());
-                }else{
+                } else {
+                    subtree
+                            .add(container)
+                            .add(hashTree
+                                    .get(switchController)
+                                    .get(container));
+
                     switchBuilder.addCases(Case.builder()
                             .isBreak(true)
                             .addAllSteps(converter.convertStep(subtree))
                             .value(container.getName())
                             .build());
                 }
-            } else{
+            } else {
                 LOGGER.error("In the first level of a SwitchController node, you can only put Containers");
                 EventListenerUtils.readUnsupportedAction("Element not tolerate at the first level of switch node");
             }
