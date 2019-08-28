@@ -42,19 +42,20 @@ public class IfControllerConverter implements BiFunction<IfController, HashTree,
      * This method have an option to check the conditions for each element in the IfController,
      * If this option is not check we create a simple If in Neoload with all elements
      * Else we have to create an If for each Element in IfController
+     *
      * @param containerList which contains the steps
-     * @param ifController the JMeter element
-     * @param hashTree HashTree of JMeter at the position of the IfController
+     * @param ifController  the JMeter element
+     * @param hashTree      HashTree of JMeter at the position of the IfController
      */
     private void convertIfController(final List<Step> containerList, final IfController ifController, final HashTree hashTree) {
         final If.Builder ifBuilder = If.builder()
                 .name(ifController.getName())
                 .description(ifController.getCondition());
         final HashTree subTree = hashTree.get(ifController);
-        if(ifController.isEvaluateAll()){
-            for (Object o : subTree.list()){
-                if( o instanceof AbstractTestElement) {
-                    AbstractTestElement abstractTestElement = (AbstractTestElement) o;
+        if (ifController.isEvaluateAll()) {
+            for (Object o : subTree.list()) {
+                if (o instanceof AbstractTestElement) {
+                    final AbstractTestElement abstractTestElement = (AbstractTestElement) o;
                     final HashTree children = new HashTree();
                     children.add(o);
                     children.get(o).add(subTree.getTree(o));
@@ -65,15 +66,16 @@ public class IfControllerConverter implements BiFunction<IfController, HashTree,
                     containerList.add(ifBuilder.build());
                 }
             }
-        }else{
+        } else {
             ifBuilder.then(Container.builder()
                     .addAllSteps(converter.convertStep(subTree))
-                    .build());
+                    .build())
+                    .getElse(Container.builder().build());
             containerList.add(ifBuilder.build());
         }
-        if(ifController.isUseExpression()){
+        if (ifController.isUseExpression()) {
             LOGGER.warn("We don't convert the Interprete of Variable Expression");
-            EventListenerUtils.readSupportedFunctionWithWarn("IfController","Options", "Variable Expression");
+            EventListenerUtils.readSupportedFunctionWithWarn("IfController", "Options", "Variable Expression");
         }
 
     }
