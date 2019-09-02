@@ -13,17 +13,13 @@ import java.util.Map;
 public final class ContainerUtils {
 
     //Attributs
-    private  static Map<String, String> variablesList ;
-
-    private  static List<Variable> variableContainer;
+    private static Map<String, String> variablesList = new HashMap<>();
+    private static List<Variable> variableContainer = new ArrayList<>();
 
     ///Constructor
     public ContainerUtils() {
-
-        variablesList = new HashMap<>();
-        variableContainer = new ArrayList<>();
     }
-    
+
     //Methods
     public static void addKeyValue(final String key, final String value) {
         variablesList.put(key, value);
@@ -33,6 +29,7 @@ public final class ContainerUtils {
      * This method serve to get the variable store without the '{}'
      * This method will be serve to call an other method which interpret the value to see
      * If a function is used in the value
+     *
      * @param key
      * @return
      */
@@ -42,8 +39,12 @@ public final class ContainerUtils {
         return variablesList.get(key);
     }
 
-    public static void addVariable(final List<Variable> variable){ variableContainer.addAll(variable);}
+    public static void addVariable(final List<Variable> variable) {
+        variableContainer.addAll(variable);
+    }
 
-    public static List<Variable> getVariableContainer(){return variableContainer;}
+    public static List<Variable> getVariableContainer() {
+        return variableContainer;
+    }
 
 }
