@@ -7,9 +7,11 @@ import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.repository.Container;
 import com.neotys.neoload.model.repository.Delay;
 import com.neotys.neoload.model.repository.Page;
+import org.antlr.v4.runtime.CharStreams;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +56,7 @@ public class LoadRunnerReaderTest {
             final Page page = (Page)container.getChilds().get(0);
             assertThat(page.getChilds().size()).isEqualTo(12);
             // be sure all the requests names are unique
-            ((Page)container.getChilds().get(0)).getChilds().stream().forEach(pageElement -> {
+            ((Page)container.getChilds().get(0)).getChilds().forEach(pageElement -> {
                 if(page.getChilds().stream().filter(pageElement1 -> pageElement1.getName().equals(pageElement.getName())).count()!=1) {
                     fail("request names under a page are not unique");
                 }
@@ -99,6 +101,32 @@ public class LoadRunnerReaderTest {
         assertThat(LOAD_RUNNER_READER.currentProjectServers.size()).isEqualTo(3);
         assertThat(LOAD_RUNNER_READER.getOrAddServerIfNotExist("myhost2","myhost", "80",Optional.of("https")).getName()).isEqualTo("myhost2_2");
         assertThat(LOAD_RUNNER_READER.currentProjectServers.size()).isEqualTo(4);
+    }
+
+    @Test
+    public void loadAndCorrectGrammarFromLRTest() throws IOException {
+        InputStream input = new ByteArrayInputStream("test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("test");
+        input = new ByteArrayInputStream("test\"  \"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("test\"  \"test");
+        input = new ByteArrayInputStream("test\"\n\"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("testtest");
+        input = new ByteArrayInputStream("test\" \n \t \"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("testtest");
+        input = new ByteArrayInputStream("test\"\r\"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("testtest");
+        input = new ByteArrayInputStream("test\" \r\n  \"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("testtest");
+        input = new ByteArrayInputStream("test\" \n\r  \"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("testtest");
+        input = new ByteArrayInputStream("test\" \n\r\n\r  \"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("testtest");
+        input = new ByteArrayInputStream("test\" //this is a comment should be ignored \n  \"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("testtest");
+        input = new ByteArrayInputStream("test\" /*this is a comment should be ignored*/ \n  \"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("testtest");
+        input = new ByteArrayInputStream("test\" /*this is a NOT comment should be ignored* \n  \"test".getBytes());
+        assertThat(LoadRunnerReader.loadAndCorrectGrammarFromLR(input, Charsets.ISO_8859_1).toString()).isEqualTo("test\" /*this is a NOT comment should be ignored* \n  \"test");
     }
    
 }

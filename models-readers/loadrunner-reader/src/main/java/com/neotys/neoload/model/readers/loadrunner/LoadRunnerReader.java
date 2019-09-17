@@ -42,7 +42,7 @@ public class LoadRunnerReader extends Reader {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoadRunnerReader.class);
 
-	private static final String PATTERN = "\"\\s*\\n\\s*\"";
+	private static final String PATTERN = "\"\\s*(\\/\\*.*\\*\\/)?\\s*(//.*)?[\\n\\r]\\s*\"";
 	private static final String LOAD_PATTERN = "Load \"%s\"";
 	
 	private static final String TAG_INIT = "init-container";

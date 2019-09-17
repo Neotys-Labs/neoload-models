@@ -8,13 +8,7 @@ import java.util.Properties;
 
 import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.parsers.CPP14Parser.MethodcallContext;
-import com.neotys.neoload.model.repository.Header;
-import com.neotys.neoload.model.repository.ImmutablePage;
-import com.neotys.neoload.model.repository.ImmutablePostBinaryRequest;
-import com.neotys.neoload.model.repository.ImmutablePostTextRequest;
-import com.neotys.neoload.model.repository.Page;
-import com.neotys.neoload.model.repository.PostRequest;
-import com.neotys.neoload.model.repository.RecordedFiles;
+import com.neotys.neoload.model.repository.*;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.neotys.neoload.model.readers.loadrunner.MethodUtils.ITEM_BOUNDARY.EXTRARES;
@@ -27,22 +21,22 @@ public class WebCustomRequest extends WebRequest {
         Preconditions.checkNotNull(method);
         ImmutablePage.Builder pageBuilder = ImmutablePage.builder();
 
-		final PostRequest postRequest = buildRequest(visitor, method);
-		if(postRequest == null) {
-			visitor.readSupportedFunctionWithWarn(method.getName(), ctx, "There is not any body parameter for the following LR function");			
-			return null;
-		} 
+		final Request request = buildRequest(visitor, method);
 		visitor.readSupportedFunction(method.getName(), ctx);
-		pageBuilder.addChilds(postRequest);
+		pageBuilder.addChilds(request);
 
 		// we use the request headers of the main request for the resources.
-		final List<Header> recordedHeaders = getHeadersFromRecordedFile(postRequest.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile));
+		final List<Header> recordedHeaders = getHeadersFromRecordedFile(request.getRecordedFiles().flatMap(RecordedFiles::recordedRequestHeaderFile));
 
 		MethodUtils.extractItemListAsStringList(visitor, method.getParameters(), EXTRARES, Optional.of(pageBuilder))
 				.ifPresent(stringList -> getUrlList(stringList, getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method))
 						.forEach(url -> pageBuilder.addChilds(buildGetRequestFromURL(visitor, url, Optional.empty(), recordedHeaders))));
-		
-		return pageBuilder.name(MethodUtils.normalizeString(visitor.getLeftBrace(), visitor.getRightBrace(), method.getParameters().get(0)))
+		final String name = MethodUtils.normalizeName(MethodUtils.normalizeString(
+				visitor.getLeftBrace(),
+				visitor.getRightBrace(),
+				method.getParameters().get(0)
+		));
+		return pageBuilder.name(name)
                 .thinkTime(0)               
                 .build();		
     }
@@ -52,21 +46,20 @@ public class WebCustomRequest extends WebRequest {
      * @param method represent the LR "web_custom_request" function
      * @return the corresponding request of the model
      */
-    public static PostRequest buildRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
+    public static Request buildRequest(final LoadRunnerVUVisitor visitor, final MethodCall method) {
     	URL mainUrl = Preconditions.checkNotNull(getUrlFromMethodParameters(visitor.getLeftBrace(), visitor.getRightBrace(), method));
 
     	final Optional<Properties> snapshotProperties = getSnapshotProperties(visitor, method); 
     	final Optional<RecordedFiles> recordedFiles = getRecordedFilesFromSnapshotProperties(visitor, snapshotProperties);
 		final List<Header> recordedHeaders = getHeadersFromRecordedFile(recordedFiles.flatMap(RecordedFiles::recordedRequestHeaderFile));
 
-		if (MethodUtils.getParameterWithName(method, "Body").isPresent()) {
-			final ImmutablePostTextRequest.Builder builder = ImmutablePostTextRequest.builder()
+		if(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method).equals(Request.HttpMethod.GET)) {
+			final ImmutableGetPlainRequest.Builder builder = ImmutableGetPlainRequest.builder()
 					.name(mainUrl.getPath())
 					.path(mainUrl.getPath())
 					.server(visitor.getReader().getServer(mainUrl))
 					.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
 					.contentType(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "EncType"))
-					.data(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "Body").get())
 					.addAllExtractors(visitor.getCurrentExtractors())
 					.addAllValidators(visitor.getCurrentValidators())
 					.addAllHeaders(visitor.getCurrentHeaders())
@@ -74,28 +67,48 @@ public class WebCustomRequest extends WebRequest {
 					.addAllHeaders(recordedHeaders)
 					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
                     .recordedFiles(recordedFiles);
+			visitor.getCurrentValidators().clear();
 			visitor.getCurrentHeaders().clear();
 			return builder.build();
-		}
-		if(MethodUtils.getParameterWithName(method, "BodyBinary").isPresent()) {
+		} else {
+			if (MethodUtils.getParameterWithName(method, "BodyBinary").isPresent()) {
 				final ImmutablePostBinaryRequest.Builder builder = ImmutablePostBinaryRequest.builder()
-					.name(mainUrl.getPath())
-					.path(mainUrl.getPath())
-					.server(visitor.getReader().getServer(mainUrl))
-					.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
-					.contentType(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "EncType"))
-					.binaryData(extractBinaryBody(visitor.getLeftBrace(), visitor.getRightBrace(), method))
-					.addAllExtractors(visitor.getCurrentExtractors())
-					.addAllValidators(visitor.getCurrentValidators())
-					.addAllHeaders(visitor.getCurrentHeaders())
-					.addAllHeaders(visitor.getGlobalHeaders())
-					.addAllHeaders(recordedHeaders)
-					.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
-					.recordedFiles(recordedFiles);
+						.name(mainUrl.getPath())
+						.path(mainUrl.getPath())
+						.server(visitor.getReader().getServer(mainUrl))
+						.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+						.contentType(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "EncType"))
+						.binaryData(extractBinaryBody(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+						.addAllExtractors(visitor.getCurrentExtractors())
+						.addAllValidators(visitor.getCurrentValidators())
+						.addAllHeaders(visitor.getCurrentHeaders())
+						.addAllHeaders(visitor.getGlobalHeaders())
+						.addAllHeaders(recordedHeaders)
+						.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
+						.recordedFiles(recordedFiles);
+                visitor.getCurrentValidators().clear();
 				visitor.getCurrentHeaders().clear();
 				return builder.build();
-		}   	
-		return null;
+			} else {
+				final ImmutablePostTextRequest.Builder builder = ImmutablePostTextRequest.builder()
+						.name(mainUrl.getPath())
+						.path(mainUrl.getPath())
+						.server(visitor.getReader().getServer(mainUrl))
+						.httpMethod(getMethod(visitor.getLeftBrace(), visitor.getRightBrace(), method))
+						.contentType(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "EncType"))
+						.data(MethodUtils.getParameterValueWithName(visitor.getLeftBrace(), visitor.getRightBrace(), method, "Body").orElse(""))
+						.addAllExtractors(visitor.getCurrentExtractors())
+						.addAllValidators(visitor.getCurrentValidators())
+						.addAllHeaders(visitor.getCurrentHeaders())
+						.addAllHeaders(visitor.getGlobalHeaders())
+						.addAllHeaders(recordedHeaders)
+						.addAllParameters(MethodUtils.queryToParameterList(mainUrl.getQuery()))
+						.recordedFiles(recordedFiles);
+                visitor.getCurrentValidators().clear();
+				visitor.getCurrentHeaders().clear();
+				return builder.build();
+			}
+		}
     }
     
     public static byte[] extractBinaryBody(final String leftBrace, final String rightBrace, final MethodCall method) {
