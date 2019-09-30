@@ -2,6 +2,7 @@
 Think time is the time the user normally takes to make a decision to do the next task.
 
 For example, it is the simulation of the time taken by a real user to read one page before clicking to the next one.
+Thinktime values may be overriden for the entire VU Path. If the delay must not be overriden when the thinktime is overriden, use a 'delay' instead.
 
 #### Available settings
 | Name        | Description                                 | Accept variable  | Required | Since |
