@@ -1,6 +1,6 @@
 # Delay 
 
-The Delay Action pauses the Virtual User for a specified duration.
+The Delay Action pauses the Virtual User for a specified duration. This duration always applies and is not impacted by thinktime overriding.
 
 #### Available settings
 | Name        | Description                         | Accept variable | Required | Since |
