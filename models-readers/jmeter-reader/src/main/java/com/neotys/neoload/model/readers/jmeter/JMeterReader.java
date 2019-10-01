@@ -24,6 +24,7 @@ import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -31,7 +32,7 @@ import java.util.*;
 public class JMeterReader extends Reader {
 
     //Attributs
-    private static final Logger LOG = LoggerFactory.getLogger(JMeterReader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JMeterReader.class);
     private final String projectName;
     private final String jmeterPath;
     private final StepConverters stepConverters;
@@ -65,15 +66,15 @@ public class JMeterReader extends Reader {
             HashTree testPlanTree = null;
             try {
                 testPlanTree = readJMeterProject(fichier);
-            } catch (IOException e) {
-                LOG.error("Problem to Load HashTree", e);
+            } catch (IOException | IntrospectionException e) {
+                LOGGER.error("Problem to Load HashTree", e);
             }
             final List<PopulationPolicy> popPolicy = new ArrayList<>();
             Objects.requireNonNull(testPlanTree, "testPlanTree must not be null.");
             Object test = Iterables.getFirst(testPlanTree.list(), null);
 
             if (!(test instanceof TestPlan)) {
-                LOG.error("There is not TestPlan at the Highest Level. It's not a functional Script!");
+                LOGGER.error("There is not TestPlan at the Highest Level. It's not a functional Script!");
                 throw new IllegalArgumentException("Not a functionnal Script");
             }
             TestPlan testPlan = (TestPlan) test;
@@ -124,10 +125,13 @@ public class JMeterReader extends Reader {
      * @return
      * @throws IOException
      */
-    HashTree readJMeterProject(final File fichier) throws IOException {
+    HashTree readJMeterProject(final File fichier) throws IOException, IntrospectionException {
         JMeterUtils.setJMeterHome(jmeterPath);
         JMeterUtils.loadJMeterProperties(jmeterPath + File.separator + "bin" + File.separator + "jmeter.properties");
         JMeterUtils.initLocale();
+
+        ClasspathUtils.updateClassLoader();
+
         SaveService.loadProperties();
         HashTree testPlanTree;
         testPlanTree = SaveService.loadTree(fichier);
@@ -152,7 +156,7 @@ public class JMeterReader extends Reader {
     void convertThreadGroupElement(final Project.Builder projet, final List<PopulationPolicy> popPolicy, final HashTree hashTree, final Object o) {
         if (o instanceof ThreadGroup) {
             final ConvertThreadGroupResult result = new ThreadGroupConverter(stepConverters, (ThreadGroup) o, hashTree.get(o)).convert();
-            LOG.info("Successfully parsed ThreadGroup {}", result);
+            LOGGER.info("Successfully parsed ThreadGroup {}", result);
             projet.addUserPaths(result.getUserPath());
             projet.addPopulations(result.getPopulation());
             popPolicy.add(result.getPopulationPolicy());
@@ -168,7 +172,7 @@ public class JMeterReader extends Reader {
             subtree.getTree(o).add(hashTree.getTree(o));
             VariableConverters.convertVariable(null, o);
         } else {
-            LOG.warn("Unsupported first level node with type {}", o.getClass());
+            LOGGER.warn("Unsupported first level node with type {}", o.getClass());
             EventListenerUtils.readUnsupportedAction(o.getClass() + "\n");
         }
 
