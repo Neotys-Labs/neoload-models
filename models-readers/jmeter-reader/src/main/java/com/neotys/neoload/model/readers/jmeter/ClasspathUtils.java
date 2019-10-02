@@ -91,8 +91,8 @@ public final class ClasspathUtils {
             method.setAccessible(true);
             method.invoke(systemClassLoader, new Object[]{url});
         } catch (Throwable t) {
-            t.printStackTrace();
-            throw new IntrospectionException("Error when adding url to system ClassLoader ");
+            LOGGER.error("Error: ", t);
+            throw new IntrospectionException("Error when adding url to system ClassLoader");
         }
     }
 }
