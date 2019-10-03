@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
