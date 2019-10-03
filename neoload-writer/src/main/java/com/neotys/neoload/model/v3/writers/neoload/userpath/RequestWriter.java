@@ -25,6 +25,7 @@ public class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_SERV_UID = "serverUid";
 	public static final String XML_ATTR_PATH = "path";
 	public static final String XML_ATTR_CONTENT_TYPE = "contentType";
+	public static final String XML_ATTR_FOLLOW_REDIRECTS = "followRedirects";
 
 	public static final String XML_ATTR_POST_TYPE = "postType";
 	public static final String XML_URL_PARAMETER_TAG_NAME = "urlPostParameter";
@@ -55,6 +56,7 @@ public class RequestWriter extends ElementWriter {
 		getContentType(theRequest).ifPresent(c -> xmlRequest.setAttribute(XML_ATTR_CONTENT_TYPE, c));
 		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server));
 		xmlRequest.setAttribute(XML_ATTR_ACTION_TYPE, String.valueOf(getActionType()));
+		xmlRequest.setAttribute(XML_ATTR_FOLLOW_REDIRECTS, String.valueOf(theRequest.getFollowRedirects()));
 		URL url = RequestUtils.parseUrl(Optional.ofNullable(theRequest.getUrl()).orElse("/"));
 		xmlRequest.setAttribute(XML_ATTR_PATH, url.getPath());
 		theRequest.getExtractors().forEach(extractElem -> VariableExtractorWriter.of(extractElem).writeXML(document, xmlRequest));

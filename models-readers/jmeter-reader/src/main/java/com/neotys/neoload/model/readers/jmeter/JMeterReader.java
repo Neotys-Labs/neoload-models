@@ -45,8 +45,6 @@ public class JMeterReader extends Reader {
         this.projectName = Objects.requireNonNull(projectName);
         this.jmeterPath = Objects.requireNonNull(jmeterPath);
         this.stepConverters = new StepConverters();
-        new VariableConverters();
-        new ContainerUtils();
     }
 
     //Methods

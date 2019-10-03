@@ -17,7 +17,7 @@ public final class ContainerUtils {
     private static List<Variable> variableContainer = new ArrayList<>();
 
     ///Constructor
-    public ContainerUtils() {
+    private ContainerUtils() {
     }
 
     //Methods
@@ -45,6 +45,11 @@ public final class ContainerUtils {
 
     public static List<Variable> getVariableContainer() {
         return variableContainer;
+    }
+
+    public static void clearAll() {
+        variableContainer.clear();
+        variablesList.clear();
     }
 
 }

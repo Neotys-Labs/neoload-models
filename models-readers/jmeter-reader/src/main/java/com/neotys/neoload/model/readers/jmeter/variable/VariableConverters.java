@@ -26,15 +26,15 @@ public final class VariableConverters {
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(VariableConverters.class);
 
-    private static Map<Class, BiFunction<?, HashTree, List<Variable>>> convertersMap = null;
+    private static Map<Class, BiFunction<?, HashTree, List<Variable>>> convertersMap =
+            ImmutableMap.of(
+                    CSVDataSet.class, new CSVDataSetConverter(),
+                    CounterConfig.class, new CounterConverter(),
+                    Arguments.class, new UserDefineVariableConverter(),
+                    RandomVariableConfig.class, new RandomVariableConverter());
 
     //Constructor
-    public VariableConverters() {
-        convertersMap = ImmutableMap.of(
-                CSVDataSet.class, new CSVDataSetConverter(),
-                CounterConfig.class, new CounterConverter(),
-                Arguments.class, new UserDefineVariableConverter(),
-                RandomVariableConfig.class, new RandomVariableConverter());
+    private VariableConverters() {
     }
 
     //Methods

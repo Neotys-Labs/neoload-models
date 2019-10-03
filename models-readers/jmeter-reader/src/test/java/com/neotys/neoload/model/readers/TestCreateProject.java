@@ -36,7 +36,7 @@ public class TestCreateProject {
                 .build();
 
 
-        NeoLoadWriter neoLoadWriter = new NeoLoadWriter(ImmutableProject.copyOf(project).withName("test"),"C:/Users/tmartinez/Desktop/md-test-project",null);
+        NeoLoadWriter neoLoadWriter = new NeoLoadWriter(ImmutableProject.copyOf(project).withName("test"), System.getProperty("user.dir"), null);
         neoLoadWriter.write(true);
     }
 

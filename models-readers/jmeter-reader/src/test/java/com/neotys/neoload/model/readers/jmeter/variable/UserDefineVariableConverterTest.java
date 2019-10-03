@@ -102,7 +102,7 @@ public class UserDefineVariableConverterTest {
 
         ConstantVariable variable1 = ConstantVariable.builder()
                 .name("variable1")
-                .value("")
+                .value("${__fn(1,2)}")
                 .description("${__fn(1,2)}")
                 .build();
 

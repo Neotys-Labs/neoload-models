@@ -39,8 +39,7 @@ public class HTTPSamplerProxyConverterTest {
         spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
         Servers.clear();
-        new ContainerUtils();
-        new VariableConverters();
+        ContainerUtils.clearAll();
     }
 
 

@@ -20,7 +20,7 @@ public class RequestWriterTest {
     	Document doc = WrittingTestUtils.generateEmptyDocument();
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-    			+ "<test-root><http-action actionType=\"1\" "
+    			+ "<test-root><http-action actionType=\"1\" followRedirects=\"false\" "
     			+ "method=\"GET\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST2)+ "\">"
@@ -37,7 +37,7 @@ public class RequestWriterTest {
     	Document doc = WrittingTestUtils.generateEmptyDocument();
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-    			+ "<test-root><http-action actionType=\"1\" "
+    			+ "<test-root><http-action actionType=\"1\" followRedirects=\"false\" "
     			+ "method=\"GET\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
@@ -53,7 +53,7 @@ public class RequestWriterTest {
     	Document doc = WrittingTestUtils.generateEmptyDocument();
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-    			+ "<test-root><http-action actionType=\"1\" contentType=\"application/x-www-form-urlencoded\" "
+    			+ "<test-root><http-action actionType=\"1\" contentType=\"application/x-www-form-urlencoded\" followRedirects=\"false\" "
     			+ "method=\"POST\" name=\"request_test\" "
     			+ "path=\"/test_path\" postType=\"1\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST3)+ "\">"
@@ -72,7 +72,7 @@ public class RequestWriterTest {
     	Document doc = WrittingTestUtils.generateEmptyDocument();
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-    			+ "<test-root><http-action actionType=\"1\" contentType=\"text/plain\" "
+    			+ "<test-root><http-action actionType=\"1\" contentType=\"text/plain\" followRedirects=\"false\" "
     			+ "method=\"POST\" name=\"request_test\" "
     			+ "path=\"/test_path\" postType=\"4\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST4)+ "\">"
@@ -92,7 +92,7 @@ public class RequestWriterTest {
     	Document doc = WrittingTestUtils.generateEmptyDocument();
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-    			+ "<test-root><http-action actionType=\"1\" contentType=\"application/octet-stream\" "
+    			+ "<test-root><http-action actionType=\"1\" contentType=\"application/octet-stream\" followRedirects=\"false\" "
     			+ "method=\"POST\" name=\"request_test\" "
     			+ "path=\"/test_path\" postType=\"2\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST5)+ "\">"
@@ -111,7 +111,7 @@ public class RequestWriterTest {
     	final Document doc = WrittingTestUtils.generateEmptyDocument();
     	final Element root = WrittingTestUtils.generateTestRootElement(doc);
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-    			+ "<test-root><http-action actionType=\"1\" method=\"GET\" "
+    			+ "<test-root><http-action actionType=\"1\" followRedirects=\"false\" method=\"GET\" "
     			+ "name=\"GET_REQUEST_TEST\" path=\"/loadtest/\" "
     			+ "serverUid=\"jack\" slaProfileEnabled=\"false\" uid=\""
     			+ WriterUtils.getElementUid(WrittingTestUtils.GET_REQUEST_TEST)+ "\"/></test-root>";

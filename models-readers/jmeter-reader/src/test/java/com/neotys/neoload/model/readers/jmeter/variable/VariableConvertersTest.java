@@ -22,8 +22,7 @@ public class VariableConvertersTest {
     public void before()   {
         TestEventListener spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
-        new VariableConverters();
-        new ContainerUtils();
+        ContainerUtils.clearAll();
     }
 
     @Test

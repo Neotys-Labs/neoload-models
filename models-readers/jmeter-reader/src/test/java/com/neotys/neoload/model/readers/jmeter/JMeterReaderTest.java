@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,13 +39,12 @@ public class JMeterReaderTest {
 
     private TestEventListener spy;
 
-
     @Before
     public void before() {
         Servers.clear();
         spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
-
+        ContainerUtils.clearAll();
     }
 
     @After
@@ -53,7 +53,7 @@ public class JMeterReaderTest {
     }
 
     @Test
-    public void testRead() throws IOException {
+    public void testRead() throws IOException, IntrospectionException {
         JMeterReader jMeterReader = spy(new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter"));
         ThreadGroup threadGroup = new ThreadGroup();
         threadGroup.setName("Test Thread");
@@ -81,20 +81,20 @@ public class JMeterReaderTest {
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
 
         StepConverters stepConverters = new StepConverters();
-       ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup)).convert();
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters, threadGroup, hashTree.get(testPlan).get(threadGroup)).convert();
         Project.Builder project = Project.builder();
         Project result = jMeterReader.read();
         project.name("test");
         project.addUserPaths(convert.getUserPath());
         project.addPopulations(convert.getPopulation());
         populationPolicyList.add(convert.getPopulationPolicy());
-        project.addScenarios(jMeterReader.getScenario(populationPolicyList,"",""));
+        project.addScenarios(jMeterReader.getScenario(populationPolicyList, "", ""));
 
         assertEquals(result, project.build());
     }
 
     @Test
-    public void testReadScript() throws IOException {
+    public void testReadScript() throws IOException, IntrospectionException {
 
         JMeterReader jMeterReader = spy(new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter"));
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
@@ -120,7 +120,7 @@ public class JMeterReaderTest {
         hashTree.get(testPlan).get(threadGroup).add(objectList);
 
         StepConverters stepConverters = new StepConverters();
-        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(testPlan).get(threadGroup)).convert();
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters, threadGroup, hashTree.get(testPlan).get(threadGroup)).convert();
         File file = mock(File.class);
         doReturn(hashTree).when(jMeterReader).readJMeterProject(file);
 
@@ -131,7 +131,7 @@ public class JMeterReaderTest {
         project.addPopulations(convert.getPopulation());
         project.addUserPaths(convert.getUserPath());
         populationPolicyList.add(convert.getPopulationPolicy());
-        project.addScenarios(jMeterReader.getScenario(populationPolicyList,"",""));
+        project.addScenarios(jMeterReader.getScenario(populationPolicyList, "", ""));
 
         assertEquals(result, project.build());
 
@@ -139,7 +139,7 @@ public class JMeterReaderTest {
     }
 
     @Test
-    public void testReadScriptError() throws IOException {
+    public void testReadScriptError() throws IOException, IntrospectionException {
         JMeterReader jMeterReader = spy(new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter"));
         ThreadGroup threadGroup = new ThreadGroup();
         threadGroup.setName("Test Thread");
@@ -157,9 +157,9 @@ public class JMeterReaderTest {
         File file = mock(File.class);
         doReturn(hashTree).when(jMeterReader).readJMeterProject(file);
 
-        Assertions.assertThatThrownBy(()  -> jMeterReader.readScript(mock(Project.Builder.class),file))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Not a functionnal Script");
+        Assertions.assertThatThrownBy(() -> jMeterReader.readScript(mock(Project.Builder.class), file))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Not a functionnal Script");
         verify(jMeterReader, times(1)).readJMeterProject(file);
 
     }
@@ -220,7 +220,7 @@ public class JMeterReaderTest {
         hashTree.get(threadGroup).add(objectList);
 
         StepConverters stepConverters = new StepConverters();
-        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters,threadGroup,hashTree.get(threadGroup)).convert();
+        ConvertThreadGroupResult convert = new ThreadGroupConverter(stepConverters, threadGroup, hashTree.get(threadGroup)).convert();
         Project.Builder result = Project.builder();
         Project.Builder project = Project.builder();
         project.addUserPaths(convert.getUserPath());
@@ -238,7 +238,7 @@ public class JMeterReaderTest {
     public void testBuildProject() {
         JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         PopulationPolicy populationPolicy = mock(PopulationPolicy.class);
-        Servers.addServer("toto","blazedemo", 8080, "HTTP",new HashTree());
+        Servers.addServer("toto", "blazedemo", 8080, "HTTP", new HashTree());
 
         Scenario scenario = Scenario.builder()
                 .addPopulations(populationPolicy)
@@ -258,15 +258,15 @@ public class JMeterReaderTest {
     }
 
     @Test
-    public void testGetVariableSimple(){
+    public void testGetVariableSimple() {
         JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         TestPlan testPlan = mock(TestPlan.class);
         Map<String, String> variableList = new HashMap<>();
-        variableList.put("host","localhost");
+        variableList.put("host", "localhost");
         when(testPlan.getUserDefinedVariables()).thenReturn(variableList);
 
         Project.Builder result = Project.builder();
-        jMeterReader.getVariable(result,testPlan);
+        jMeterReader.getVariable(result, testPlan);
 
         Variable variable = ConstantVariable.builder()
                 .name("host")
@@ -274,19 +274,19 @@ public class JMeterReaderTest {
                 .build();
         Project expected = Project.builder().addVariables(variable).build();
 
-        assertEquals(result.build(),expected);
+        assertEquals(result.build(), expected);
     }
 
     @Test
-    public void testGetVariableComplexe(){
+    public void testGetVariableComplexe() {
         JMeterReader jMeterReader = new JMeterReader(spy, "/test", "test", "/jmeter");
         TestPlan testPlan = mock(TestPlan.class);
         Map<String, String> variableList = new HashMap<>();
-        variableList.put("host","${__property(http.server,,localhost)}");
+        variableList.put("host", "${__property(http.server,,localhost)}");
         when(testPlan.getUserDefinedVariables()).thenReturn(variableList);
 
         Project.Builder result = Project.builder();
-        jMeterReader.getVariable(result,testPlan);
+        jMeterReader.getVariable(result, testPlan);
 
         Variable variable = ConstantVariable.builder()
                 .name("host")
@@ -294,7 +294,7 @@ public class JMeterReaderTest {
                 .build();
         Project expected = Project.builder().addVariables(variable).build();
 
-        assertEquals(result.build(),expected);
+        assertEquals(result.build(), expected);
 
     }
 

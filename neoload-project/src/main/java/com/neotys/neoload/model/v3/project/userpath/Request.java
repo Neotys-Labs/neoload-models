@@ -29,6 +29,7 @@ public interface Request extends Step, SlaElement {
 	String HEADERS = "headers";
 	String BODY = "body";
 	String EXTRACTORS = "extractors";
+	String FOLLOW_REDIRECTS = "followRedirects";
 	
 	String DEFAULT_NAME = "#request#";
 	String DEFAULT_METHOD = Method.GET.name();
@@ -88,7 +89,12 @@ public interface Request extends Step, SlaElement {
 	@JsonProperty(EXTRACTORS)
 	@Valid
 	List<VariableExtractor> getExtractors();
-	
+
+	@JsonProperty(FOLLOW_REDIRECTS)
+	@Valid
+	@Value.Default
+	default Boolean getFollowRedirects() { return false; }
+
 	class Builder extends ImmutableRequest.Builder {}
 	static Builder builder() {
 		return new Builder();

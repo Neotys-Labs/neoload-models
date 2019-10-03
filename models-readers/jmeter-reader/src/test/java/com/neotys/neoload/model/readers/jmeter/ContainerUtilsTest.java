@@ -13,7 +13,6 @@ public class ContainerUtilsTest {
 
     @Test
     public void testGetterValue(){
-        new ContainerUtils();
         ContainerUtils.addKeyValue("Stagiaire","Thomas");
         assertEquals(ContainerUtils.getValue("${Stagiaire}"),"Thomas");
 
@@ -23,7 +22,6 @@ public class ContainerUtilsTest {
         ContainerUtils.addVariable(expected);
         List<Variable> result = ContainerUtils.getVariableContainer();
         assertEquals(result,expected);
-
     }
 
 }

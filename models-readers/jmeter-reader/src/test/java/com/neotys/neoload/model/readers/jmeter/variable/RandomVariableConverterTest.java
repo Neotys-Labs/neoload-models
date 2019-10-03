@@ -23,6 +23,7 @@ public class RandomVariableConverterTest {
     public void before()   {
         spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
+        ContainerUtils.clearAll();
     }
 
     @Test
@@ -47,7 +48,6 @@ public class RandomVariableConverterTest {
 
     @Test
     public void testWithGoodVariable(){
-        new ContainerUtils();
         ContainerUtils.addKeyValue("max","26");
         ContainerUtils.addKeyValue("min","8");
         RandomVariableConverter randomVariableConverter = new RandomVariableConverter();
@@ -71,7 +71,6 @@ public class RandomVariableConverterTest {
     @Test
     public void testWithProblems(){
         final String  randomVariable = "RandomVariable";
-        new ContainerUtils();
         ContainerUtils.addKeyValue("max","26");
         ContainerUtils.addKeyValue("min","8");
         RandomVariableConverter randomVariableConverter = new RandomVariableConverter();

@@ -56,7 +56,8 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         final Request.Builder req = Request.builder()
                 .name(httpSamplerProxy.getName())
                 .method(httpSamplerProxy.getMethod())
-                .description(httpSamplerProxy.getComment());
+                .description(httpSamplerProxy.getComment())
+                .followRedirects(httpSamplerProxy.getFollowRedirects() || httpSamplerProxy.getAutoRedirects());
 
         if (domain.isEmpty()) {
             checkDefaultServer(httpSamplerProxy, req);
