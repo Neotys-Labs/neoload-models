@@ -26,11 +26,11 @@ class PopulationPolicyConverter {
         final int rampUp = threadGroup.getRampUp();
 
         final String populationPolicy = "PopulationPolicy";
-        if(nbUser == 0){
+        if (nbUser == 0) {
             LOGGER.warn("There is a problem with the NumberUser of PopulationPolicy "
-            + "Please check that you have fill correctly this form and don't use Variable "
-            + " for NumberUser or Rampup or The TimeDuration");
-            EventListenerUtils.readUnsupportedParameter(populationPolicy, "Variable String","NbUser");
+                    + "Please check that you have fill correctly this form and don't use Variable "
+                    + " for NumberUser or Rampup or The TimeDuration");
+            EventListenerUtils.readUnsupportedParameter(populationPolicy, "Variable String", "NbUser");
 
         }
 
@@ -42,22 +42,22 @@ class PopulationPolicyConverter {
         Finally, if there is an error again,
         Maybe the user put a variable with a function or fill the form with a wrong value
          */
-        try{
+        try {
             loop = Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops"));
-        }catch(Exception e){
-            try{
+        } catch (Exception e) {
+            try {
                 loop = Integer.parseInt(ContainerUtils.getValue(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")));
             } catch (Exception e1) {
                 LOGGER.warn("We can't manage the variable into the Loop Number. "
                         + "So We put 0 in value of Loop Number", e1);
-                EventListenerUtils.readUnsupportedParameter(populationPolicy, "Variable String","Loop");
+                EventListenerUtils.readUnsupportedParameter(populationPolicy, "Variable String", "Loop");
 
                 loop = 0;
             }
         }
-        final boolean planifier = threadGroup.getScheduler();
+        final boolean scheduler = threadGroup.getScheduler();
         //Infinite Loop if LoadDuration is null
-        final LoadDuration loadDuration = getIterationLoadDuration(threadGroup, loop, planifier);
+        final LoadDuration loadDuration = getIterationLoadDuration(threadGroup, loop, scheduler);
         final LoadPolicy loadPolicy = getLoadPolicy(threadGroup, nbUser, rampUp, loadDuration);
         EventListenerUtils.readSupportedFunction("ThreadGroup Parameters", populationPolicy);
         LOGGER.info("Convertion of Population Policy");
@@ -68,14 +68,14 @@ class PopulationPolicyConverter {
                 .build();
     }
 
-    private static LoadDuration getIterationLoadDuration(final ThreadGroup threadGroup, final int loop, final boolean planifier) {
+    private static LoadDuration getIterationLoadDuration(final ThreadGroup threadGroup, final int loop, final boolean scheduler) {
         EventListenerUtils.readSupportedAction("LoadDuration");
-        if (planifier) {
+        if (scheduler) {
             return getTimeLoadDuration(threadGroup);
         } else if (loop != -1) {
             return getIterationLoadDuration(loop);
         }
-        return null;
+        return LoadDuration.builder().build();// empty load duration
     }
 
     private static LoadDuration getIterationLoadDuration(final int loop) {
@@ -95,14 +95,7 @@ class PopulationPolicyConverter {
     }
 
     private static LoadPolicy getLoadPolicy(final ThreadGroup threadGroup, final int nbUser, final int rampUp, final LoadDuration loadDuration) {
-        final LoadPolicy loadPolicy;
-        //Sans planification
-        if (rampUp == 0) {
-            loadPolicy = getConstantLoadPolicy((int) threadGroup.getDelay(), nbUser, loadDuration);
-        } else {
-            loadPolicy = getRampupLoadPolicy((int) threadGroup.getDelay(), nbUser, rampUp, loadDuration);
-        }
-        return loadPolicy;
+        return getConstantLoadPolicy((int) threadGroup.getDelay(), nbUser, rampUp, loadDuration);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -122,13 +115,17 @@ class PopulationPolicyConverter {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private static LoadPolicy  getConstantLoadPolicy(final Integer delay, final int nbUser, final LoadDuration loadDuration) {
+    private static LoadPolicy getConstantLoadPolicy(final Integer delay, final int nbUser, final int rampUp, final LoadDuration loadDuration) {
         EventListenerUtils.readSupportedAction("ConstantPolicy");
         return ConstantLoadPolicy.builder()
                 .users(nbUser)
                 .duration(loadDuration)
-                .rampup(delay == 0 ? null : delay)
-                .build();
+                .rampup((nbUser > 0) ? rampUp / nbUser : 0)
+                .startAfter(StartAfter.builder()
+                        .value(delay)
+                        .type(StartAfter.Type.TIME)
+                        .build()
+                ).build();
     }
 
 }
