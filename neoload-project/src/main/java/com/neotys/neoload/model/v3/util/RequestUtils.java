@@ -19,7 +19,9 @@ import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
 public class RequestUtils {
-	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?):\\/\\/(([^:\\/\\[\\]]+)|(\\[[^\\/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?(((\\$\\{.+\\})|\\/.*$)*)"); // <scheme>://<host>:<port><file> | <file>
+//	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?):\\/\\/(([^:\\/\\[\\]]+)|(\\[[^\\/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?(((\\$\\{.+\\})|\\/.*$)*)"); // <scheme>://<host>:<port><file> | <file>
+	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?|\\$\\{\\w+\\}):\\/\\/(([^:\\/\\[\\]]+)|(\\[[^\\/]+\\])):?((\\d+)|(\\$\\{\\w+\\}))?)?(((\\$\\{.+\\})|\\/.*$)*)");
+
 	private static final int URL_SERVER_GROUP = 1;
 	private static final int URL_SCHEME_GROUP = 2;
 	private static final int URL_HOST_GROUP = 3;
@@ -211,7 +213,14 @@ public class RequestUtils {
 	}
 
 	private static Scheme getScheme(final String scheme) {
-		return Scheme.valueOf(scheme.toUpperCase());
+		Scheme theScheme;
+		try {
+			theScheme = Scheme.valueOf(scheme.toUpperCase());
+		} catch (Exception e) {
+			theScheme = Scheme.HTTP;
+		}
+
+		return theScheme;
 	}
 
 	private static String getPort(final String scheme) {
