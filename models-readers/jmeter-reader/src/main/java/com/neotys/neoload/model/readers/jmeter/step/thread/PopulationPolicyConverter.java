@@ -120,7 +120,7 @@ class PopulationPolicyConverter {
         return ConstantLoadPolicy.builder()
                 .users(nbUser)
                 .duration(loadDuration)
-                .rampup((nbUser > 0) ? rampUp / nbUser : 0)
+                .rampup(rampUp)
                 .startAfter(StartAfter.builder()
                         .value(delay)
                         .type(StartAfter.Type.TIME)
