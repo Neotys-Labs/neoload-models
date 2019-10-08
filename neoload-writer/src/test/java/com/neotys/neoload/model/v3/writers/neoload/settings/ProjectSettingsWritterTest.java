@@ -25,9 +25,27 @@ public class ProjectSettingsWritterTest {
 
         String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName())));
         // Overrides
-        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" logicalNamesEnabled=\"false\" login=\"myLogin\"");
+        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" dynatraceHeader=\"X-Dynatrace-Test\" dynatraceType=\"Dynatrace AppMon\" logicalNamesEnabled=\"false\" login=\"myLogin\"");
         Assertions.assertThat(settingsContent).contains("<identification isEnabled=\"true\"/>");
+        // Defaults
+        Assertions.assertThat(settingsContent).contains("port=\"2020\" recordSessionEnabled=\"false\"");
 
+    }
+
+    @Test
+    public void writeSettingsDynatraceHeadersXMLTest() throws IOException {
+        File tmpDir = Files.createTempDir();
+        Map<String, String> settings = ImmutableMap.<String, String>builder()
+                .put("dynatrace.enabled", "true")
+                .put("dynatrace.type", "Dynatrace")
+                .put("dynatrace.header", "X-Dynatrace-MyHeader")
+                .put("dynatrace.login", "myLogin")
+                .build();
+        ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), settings);
+
+        String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName())));
+        // Overrides
+        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" dynatraceHeader=\"X-Dynatrace-MyHeader\" dynatraceType=\"Dynatrace\" logicalNamesEnabled=\"false\" login=\"myLogin\"");
         // Defaults
         Assertions.assertThat(settingsContent).contains("port=\"2020\" recordSessionEnabled=\"false\"");
 
