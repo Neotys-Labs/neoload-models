@@ -28,6 +28,7 @@ public interface Request extends Step, SlaElement {
 	String METHOD = "method";
 	String HEADERS = "headers";
 	String BODY = "body";
+	String BODYBINARY = "bodybinary";
 	String EXTRACTORS = "extractors";
 	
 	String DEFAULT_NAME = "#request#";
@@ -84,6 +85,11 @@ public interface Request extends Step, SlaElement {
 	
 	@JsonProperty(BODY)
 	Optional<String> getBody();
+
+	@JsonProperty(BODYBINARY)
+	Optional<byte[]> getBodyBinary();
+
+	Optional<List<Part>> getParts();
 	
 	@JsonProperty(EXTRACTORS)
 	@Valid

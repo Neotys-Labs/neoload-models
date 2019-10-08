@@ -1,6 +1,10 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.project.userpath.Header;
+import com.neotys.neoload.model.v3.project.userpath.Part;
+import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 import org.junit.Test;
@@ -143,6 +147,70 @@ public class RequestWriterTest {
 
         XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
     }
+
+	@Test
+	public void writePostRequestMultipartContentTypeTest() throws ParserConfigurationException {
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+
+		Request request = Request.builder()
+				.name("request_test")
+				.url("/test_path?param_name=param_value")
+				.server("server_test")
+				.method("POST")
+				.addHeaders(Header.builder().name("Content-Type").value("multipart/mixed").build())
+				.build();
+
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><http-action actionType=\"1\" contentType=\"multipart/mixed\" "
+				+ "method=\"POST\" name=\"request_test\" "
+				+ "path=\"/test_path\" postType=\"3\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
+				+ "uid=\"" + WriterUtils.getElementUid(request)+ "\">"
+				+ "<urlPostParameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
+				+ "<header name=\"Content-Type\" value=\"multipart/mixed\"/>"
+				+ "</http-action></test-root>";
+
+		(new RequestWriter(request)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
+
+	@Test
+	public void writePostRequestMultipartTest() throws ParserConfigurationException {
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+
+		Part filePart = Part.builder().filename("/myPath/myfilename").sourceFilename("/myPath/mysourcefilename").name("myFilePart").contentType("application/json").build();
+		Part stringPart = Part.builder().value("My Part Value").name("myStringPart").build();
+
+		Request request = Request.builder()
+				.name("request_test")
+				.url("/test_path?param_name=param_value")
+				.server("server_test")
+				.method("POST")
+				.parts(ImmutableList.of(stringPart, filePart))
+				.addHeaders(Header.builder().name("Content-Type").value("multipart/mixed").build())
+				.build();
+
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><http-action actionType=\"1\" contentType=\"multipart/mixed\" "
+				+ "method=\"POST\" name=\"request_test\" "
+				+ "path=\"/test_path\" postType=\"3\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
+				+ "uid=\"" + WriterUtils.getElementUid(request)+ "\">"
+				+ "<multiparts>"
+				+ "<multipart-string name=\"myStringPart\"\n"
+				+ "            value=\"My Part Value\" valueMode=\"USE_VALUE\"/>"
+				+ "<multipart-file attachedFilename=\"/myPath/mysourcefilename\"\n"
+				+ "            contentType=\"application/json\" filename=\"/myPath/myfilename\" name=\"myFilePart\"/>"
+				+ "</multiparts>"
+				+ "<urlPostParameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
+				+ "<header name=\"Content-Type\" value=\"multipart/mixed\"/>"
+				+ "</http-action></test-root>";
+
+		(new RequestWriter(request)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
 
 	@Test
     public void writeGetRequestTest() throws ParserConfigurationException {

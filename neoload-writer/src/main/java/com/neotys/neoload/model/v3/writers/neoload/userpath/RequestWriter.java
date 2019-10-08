@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.google.common.net.MediaType;
+import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.util.Parameter;
 import com.neotys.neoload.model.v3.util.RequestUtils;
@@ -30,9 +31,11 @@ public class RequestWriter extends ElementWriter {
 	public static final String XML_URL_PARAMETER_TAG_NAME = "urlPostParameter";
 	public static final String XML_STRING_DATA_TAG_NAME = "textPostContent";
 	public static final String XML_BINARY_DATA_TAG_NAME = "binaryPostContentBase64";
+	public static final String XML_PARTS_TAG_NAME = "multiparts";
 
 	public static final int FORM_CONTENT = 1;
 	public static final int RAW_CONTENT = 2;
+	public static final int MULTIPART_CONTENT = 3;
 	public static final int TEXT_CONTENT = 4;
 
 
@@ -65,8 +68,10 @@ public class RequestWriter extends ElementWriter {
 			theRequest.getBody().ifPresent(s -> {
 				if(postType==FORM_CONTENT) writeParameters(RequestUtils.getParameters(s), Optional.empty(), document, xmlRequest);
 				if(postType==TEXT_CONTENT) writePostTextBody(s, document, xmlRequest);
-				if(postType==RAW_CONTENT) writePostRawBody(s, document, xmlRequest);
+				if(postType==RAW_CONTENT) writePostRawBody(s.getBytes(), document, xmlRequest);
 			});
+			theRequest.getBodyBinary().ifPresent(s -> writePostRawBody(s, document, xmlRequest));
+			theRequest.getParts().ifPresent(s -> writeParts(s, document, xmlRequest));
 		}
 		final Optional<String> parameterTag = bodySupportedByMethod ? Optional.of(XML_URL_PARAMETER_TAG_NAME) : Optional.empty();
 		url.getQuery().ifPresent(s -> writeParameters(RequestUtils.getParameters(s), parameterTag, document, xmlRequest));
@@ -78,13 +83,17 @@ public class RequestWriter extends ElementWriter {
 				|| "put".equalsIgnoreCase(theRequest.getMethod());
 	}
 
-	protected int getPostType(Request request) {
+	protected int getPostType(final Request request) {
+		if(request.getBodyBinary().isPresent()) return RAW_CONTENT;
+		if(request.getParts().isPresent()) return MULTIPART_CONTENT;
+
 		return getContentType(request).map(s -> {
 			MediaType mediaType = MediaType.parse(s);
 			if(mediaType.is(MediaType.ANY_TEXT_TYPE)) return TEXT_CONTENT;
 			if("application".equalsIgnoreCase(mediaType.type())
 					&& mediaType.subtype().toLowerCase().contains("form-urlencoded")) return FORM_CONTENT;
 			if("application".equalsIgnoreCase(mediaType.type())) return RAW_CONTENT;
+			if("multipart".equalsIgnoreCase(mediaType.type())) return MULTIPART_CONTENT;
 			return TEXT_CONTENT;
 		}).orElse(TEXT_CONTENT);
 	}
@@ -101,15 +110,22 @@ public class RequestWriter extends ElementWriter {
 		xmlRequest.appendChild(xmlDataNode);
 
 		// write also in the binary content in case of conversion
-		writePostRawBody(body, document, xmlRequest);
+		writePostRawBody(body.getBytes(), document, xmlRequest);
 	}
 
-	public void writePostRawBody(final String body, final Document document, Element xmlRequest) {
+	public void writePostRawBody(final byte[] body, final Document document, Element xmlRequest) {
 		// write also in the binary content in case of conversion
 		Element xmlDataBinaryNode = document.createElement(XML_BINARY_DATA_TAG_NAME);
-		CDATASection xmlDataBinary = document.createCDATASection(Base64.getEncoder().encodeToString(body.getBytes()));
+		CDATASection xmlDataBinary = document.createCDATASection(Base64.getEncoder().encodeToString(body));
 		xmlDataBinaryNode.appendChild(xmlDataBinary);
 		xmlRequest.appendChild(xmlDataBinaryNode);
+	}
+
+	public void writeParts(final List<Part> parts, final Document document, Element xmlRequest) {
+		Element xmlDataPartsNode = document.createElement(XML_PARTS_TAG_NAME);
+		parts.forEach(part -> PartWriter.of(part).writeXML(document, xmlDataPartsNode, null));
+		xmlRequest.appendChild(xmlDataPartsNode);
+
 	}
 
 	private Optional<String> getContentType(Request request) {
