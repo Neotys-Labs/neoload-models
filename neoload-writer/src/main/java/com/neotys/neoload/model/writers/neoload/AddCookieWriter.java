@@ -22,12 +22,8 @@ public class AddCookieWriter extends JavascriptWriter {
 	static String buildCookie(final AddCookie addCookie){
 		final StringBuilder content = new StringBuilder();
 		content.append(addCookie.getCookieName()).append("=").append(addCookie.getCookieValue());
-		if(addCookie.getExpires().isPresent()){
-			content.append("; expires=").append(addCookie.getExpires().get());				
-		}
-		if(addCookie.getPath().isPresent()){
-			content.append("; path=").append(addCookie.getPath().get());				
-		}
+		addCookie.getExpires().ifPresent(s -> content.append("; expires=").append(s));
+		addCookie.getPath().ifPresent(s -> content.append("; path=").append(s));
 		return content.toString();
 	}	
 	
