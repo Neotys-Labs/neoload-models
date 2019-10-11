@@ -34,7 +34,7 @@ public class NeoLoadWriterTest {
 
         File tmpDir = Files.createTempDir();
 
-        NeoLoadWriter writer = new NeoLoadWriter(project, tmpDir.getAbsolutePath(), null);
+        NeoLoadWriter writer = new NeoLoadWriter(project, tmpDir.getAbsolutePath());
         writer.write(true);
 
         System.out.println(tmpDir.getAbsolutePath());
@@ -47,7 +47,7 @@ public class NeoLoadWriterTest {
 
         File tmpDir = Files.createTempDir();
 
-        NeoLoadWriter writer = new NeoLoadWriter(project, tmpDir.getAbsolutePath(), null);
+        NeoLoadWriter writer = new NeoLoadWriter(project, tmpDir.getAbsolutePath());
         writer.write(false);
 
         System.out.println(tmpDir.getAbsolutePath());
@@ -66,7 +66,7 @@ public class NeoLoadWriterTest {
                 .name(Optional.empty())
                 .addUserPaths(userPath)
                 .build();
-        NeoLoadWriter writer = new NeoLoadWriter(project, tmpDir.getAbsolutePath(), null);
+        NeoLoadWriter writer = new NeoLoadWriter(project, tmpDir.getAbsolutePath());
         writer.write(true);
 
         Assertions.assertThat(Arrays.stream(tmpDir.listFiles()).filter(file -> file.getPath().endsWith(".nlp")).findFirst()).isEmpty();
@@ -81,7 +81,7 @@ public class NeoLoadWriterTest {
                 .name("MyTest")
                 .addUserPaths(userPath)
                 .build();
-        NeoLoadWriter writer = new NeoLoadWriter(project, tmpFile.getAbsolutePath(), null);
+        NeoLoadWriter writer = new NeoLoadWriter(project, tmpFile.getAbsolutePath());
         writer.write(true);
     }
 
@@ -95,7 +95,7 @@ public class NeoLoadWriterTest {
                 .name("MyTest")
                 .addUserPaths(userPath)
                 .build();
-        NeoLoadWriter writer = new NeoLoadWriter(project, destDir.getAbsolutePath(), null);
+        NeoLoadWriter writer = new NeoLoadWriter(project, destDir.getAbsolutePath());
         writer.write(true);
 
         Assertions.assertThat(Arrays.stream(destDir.listFiles()).filter(file -> file.getPath().endsWith(".nlp")).findFirst()).isNotEmpty();

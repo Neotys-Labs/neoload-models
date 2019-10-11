@@ -19,14 +19,12 @@ import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
 public class RequestUtils {
-//	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?):\\/\\/(([^:\\/\\[\\]]+)|(\\[[^\\/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?(((\\$\\{.+\\})|\\/.*$)*)"); // <scheme>://<host>:<port><file> | <file>
-	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?|\\$\\{\\w+\\}):\\/\\/(([^:\\/\\[\\]]+)|(\\[[^\\/]+\\])):?((\\d+)|(\\$\\{\\w+\\}))?)?(((\\$\\{.+\\})|\\/.*$)*)");
+	private static final Pattern URL_PATTERN = Pattern.compile("^((?<scheme>http[s]?|\\$\\{\\w+\\}):\\/\\/(?<host>([^:\\/\\[\\]]+)|(\\[[^\\/]+\\])):?(?<port>(\\d+)|(\\$\\{[^\\/]*\\}))?)?(?<path>((\\$\\{.+\\})|\\/.*$)*)");
 
-	private static final int URL_SERVER_GROUP = 1;
-	private static final int URL_SCHEME_GROUP = 2;
-	private static final int URL_HOST_GROUP = 3;
-	private static final int URL_PORT_GROUP = 6;
-	private static final int URL_FILE_GROUP = 9;
+	private static final String URL_SCHEME_GROUP = "scheme";
+	private static final String URL_HOST_GROUP = "host";
+	private static final String URL_PORT_GROUP = "port";
+	private static final String URL_PATH_GROUP = "path";
 
 	private static final String FAKE_SERVER_URL = "http://host";
 	private static final String FUNCTION_ENCODE_URL_START = "__encodeURL(";
@@ -57,11 +55,10 @@ public class RequestUtils {
 		}
 
 		// Retrieve scheme, host, port and file from url
-		final String serverUrl = matcher.group(URL_SERVER_GROUP);
 		final String scheme = matcher.group(URL_SCHEME_GROUP);
 		final String host = matcher.group(URL_HOST_GROUP);
 		final String port = matcher.group(URL_PORT_GROUP);
-		final String file = matcher.group(URL_FILE_GROUP);
+		final String file = matcher.group(URL_PATH_GROUP);
 
 		// Retrieve path and query from file
 		String path;
@@ -78,7 +75,7 @@ public class RequestUtils {
 		}
 
 		Server server = null;
-		if (!Strings.isNullOrEmpty(serverUrl)) {
+		if (!Strings.isNullOrEmpty(host)) {
 			server = Server.builder()
 					.name(isVariableSyntax(host) ? getVariableName(host).get() : host)
 					.scheme(getScheme(scheme))

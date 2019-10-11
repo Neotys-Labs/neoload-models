@@ -15,22 +15,22 @@ public class JavaScriptVariableWriter extends VariableWriter {
 
 	private static final String SCRIPTS_FOLDER = "scripts";
 
-    public static final String XML_TAG_NAME = "variable-javascript";
+	private static final String XML_TAG_NAME = "variable-javascript";
 
-    public static final String XML_ATTR_OFFSET = "offset";
-    public static final int DEFAULT_OFFSET_VALUE = 1;
+	private static final String XML_ATTR_OFFSET = "offset";
+	private static final int DEFAULT_OFFSET_VALUE = 1;
 
     // element column
-    public static final String XML_TAG_COLUMN = "column";
-    public static final String XML_COLUMN_ATTR_NAME = "name";
-    public static final String DEFAULT_COLUMN_NAME = "col_0";
-    public static final String XML_COLUMN_ATTR_NUMBER = "number";
-    public static final String DEFAULT_COLUMN_NUMBER = "0";
+	private static final String XML_TAG_COLUMN = "column";
+	private static final String XML_COLUMN_ATTR_NAME = "name";
+	private static final String DEFAULT_COLUMN_NAME = "col_0";
+	private static final String XML_COLUMN_ATTR_NUMBER = "number";
+	private static final String DEFAULT_COLUMN_NUMBER = "0";
 
     // element script
-    public static final String XML_TAG_SCRIPT_NAME = "script";
-    public static final String XML_ATTR_FILENAME_NAME = "filename";
-	public static final String XML_UID_TAG = "uid";
+	private static final String XML_TAG_SCRIPT_NAME = "script";
+	private static final String XML_ATTR_FILENAME_NAME = "filename";
+	private static final String XML_UID_TAG = "uid";
 	private static final String XML_ATTR_NAME = "name";
 	private static final String XML_ATTR_TS = "ts";
 

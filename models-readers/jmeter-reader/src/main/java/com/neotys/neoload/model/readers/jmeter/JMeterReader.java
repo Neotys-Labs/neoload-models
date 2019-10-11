@@ -9,7 +9,8 @@ import com.neotys.neoload.model.readers.jmeter.step.httpRequest.Servers;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ConvertThreadGroupResult;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ThreadGroupConverter;
 import com.neotys.neoload.model.readers.jmeter.variable.VariableConverters;
-import com.neotys.neoload.model.v3.project.ImmutableProject;
+import com.neotys.neoload.model.v3.project.DependencyType;
+import com.neotys.neoload.model.v3.project.ImmutableDependency;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
@@ -52,18 +53,18 @@ public class JMeterReader extends Reader {
     /**
      * In this method, we load the JMX's HashTree into testPlan variable
      *
-     * @param projet
-     * @param fichier
+     * @param project
+     * @param file
      * @return
      */
-    ImmutableProject readScript(final Project.Builder projet, final File fichier) {
-        Preconditions.checkNotNull(fichier, "");
+    Project readScript(final Project.Builder project, final File file) {
+        Preconditions.checkNotNull(file, "");
         try {
-            EventListenerUtils.startScript(fichier.getName());
+            EventListenerUtils.startScript(file.getName());
 
             HashTree testPlanTree = null;
             try {
-                testPlanTree = readJMeterProject(fichier);
+                testPlanTree = readJMeterProject(file);
             } catch (IOException | IntrospectionException e) {
                 LOGGER.error("Problem to Load HashTree", e);
             }
@@ -79,7 +80,7 @@ public class JMeterReader extends Reader {
             final String nameTest = testPlan.getName();
             final String commentTest = testPlan.getComment();
 
-            getVariable(projet, testPlan);
+            getVariable(project, testPlan);
 
             final Collection<HashTree> testPlanSubTree = testPlanTree.values();
             Objects.requireNonNull(testPlanSubTree, "There is nothing in your Script");
@@ -87,12 +88,12 @@ public class JMeterReader extends Reader {
             for (HashTree hashTree : testPlanSubTree) {
                 final Collection<Object> firstLevelNodes = hashTree.list();
                 for (Object o : firstLevelNodes) {
-                    convertThreadGroupElement(projet, popPolicy, hashTree, o);
+                    convertThreadGroupElement(project, popPolicy, hashTree, o);
                 }
             }
             final Scenario scenarioBuilder = getScenario(popPolicy, nameTest, commentTest);
-            buildProject(projet, scenarioBuilder);
-            return projet.build();
+            buildProject(project, scenarioBuilder);
+            return project.build();
         } finally {
             EventListenerUtils.endScript();
         }
@@ -136,11 +137,19 @@ public class JMeterReader extends Reader {
         return testPlanTree;
     }
 
-    void buildProject(final Project.Builder projet, final Scenario scenarioBuilder) {
-        projet.addScenarios(scenarioBuilder);
-        projet.addAllServers(Servers.getServers());
-        projet.name(projectName);
+    void buildProject(final Project.Builder project, final Scenario scenarioBuilder) {
+        project.addScenarios(scenarioBuilder);
+        project.addAllServers(Servers.getServers());
+        project.name(projectName);
 
+        // the project jmeter needs the functions lib
+        project.addDependencies(ImmutableDependency.builder()
+                .name("JMeter Tool Library")
+                .description("Contains some useful JMeter JS functions.")
+                .type(DependencyType.JS_LIBRARY)
+                .inputStream(this.getClass().getResourceAsStream("js/jmeter-1.0.js"))
+                .filename("jmeter-1.0.js")
+                .build());
     }
 
     Scenario getScenario(final List<PopulationPolicy> popPolicy, final String nameTest, final String commentTest) {

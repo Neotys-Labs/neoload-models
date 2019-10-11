@@ -74,7 +74,10 @@ public interface Project {
 
 	@JsonIgnore
 	Map<String,String> getProjectSettings();
-	
+
+	@JsonIgnore
+	List<Dependency> getDependencies();
+
 	class Builder extends ImmutableProject.Builder {}
 	static Builder builder() {
 		return new Builder();

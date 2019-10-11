@@ -14,208 +14,128 @@ import static org.mockito.Mockito.spy;
 public class PopulationPolicyConverterTest {
 
     @Before
-    public void before()   {
+    public void before() {
         TestEventListener spy = spy(new TestEventListener());
         EventListenerUtils.setEventListener(spy);
     }
 
     @Test
-    public void testConvertLoadIterationWithConstant(){
+    public void testConverterIterationLoadDuration() {
+        final int numThreads = 74;
+        final int rampup = 0;
+        final int delay = 69;
+        final int loops = 1;
+
         ThreadGroup threadGroup = new ThreadGroup();
         threadGroup.setName("Test Thread");
         threadGroup.setScheduler(false);
-        threadGroup.setNumThreads(74);
+        threadGroup.setNumThreads(numThreads);
+        threadGroup.setRampUp(rampup);
+        threadGroup.setDelay(delay);
         LoopController loopController = new LoopController();
-        loopController.setLoops(1);
+        loopController.setLoops(loops);
         threadGroup.setSamplerController(loopController);
 
-        PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
+        PopulationPolicy actual = PopulationPolicyConverter.convert(threadGroup);
 
-       LoadDuration loadDuration =  LoadDuration.builder()
+        LoadDuration loadDuration = LoadDuration.builder()
                 .type(LoadDuration.Type.ITERATION)
                 .value(Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")))
                 .build();
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(threadGroup.getNumThreads())
                 .duration(loadDuration)
-                .rampup(null)
+                .rampup(rampup)
+                .startAfter(StartAfter.builder().type(StartAfter.Type.TIME).value(69).build())
                 .build();
 
-        PopulationPolicy result = PopulationPolicy.builder()
+        PopulationPolicy expected = PopulationPolicy.builder()
                 .loadPolicy(loadPolicy)
                 .name(threadGroup.getName())
                 .description(threadGroup.getComment())
                 .build();
-        assertEquals(result,populationPolicy);
+
+        assertEquals(expected, actual);
     }
-
     @Test
-    public void testConvertLoadIterationWithRampUp(){
-        ThreadGroup threadGroup = new ThreadGroup();
-        threadGroup.setName("Test Thread");
-        threadGroup.setScheduler(false);
-        threadGroup.setNumThreads(7);
-        threadGroup.setRampUp(26);
-        LoopController loopController = new LoopController();
-        loopController.setLoops(38);
-        threadGroup.setSamplerController(loopController);
+    public void testConverterTimeLoadDuration() {
+        final int numThreads = 73;
+        final int duration = 69;
+        final int rampup = 0;
+        final int delay = 0;
+        final int loops = 38;
 
-        PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
-
-        LoadDuration loadDuration =  LoadDuration.builder()
-                .type(LoadDuration.Type.ITERATION)
-                .value(Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")))
-                .build();
-        LoadPolicy loadPolicy = RampupLoadPolicy.builder()
-                .minUsers(1)
-                .maxUsers(threadGroup.getNumThreads())
-                .incrementUsers(Math.max(1, threadGroup.getRampUp() / threadGroup.getNumThreads()))
-                .incrementEvery(LoadDuration.builder()
-                        .value(1)
-                        .type(LoadDuration.Type.ITERATION)
-                        .build())
-                .duration(loadDuration)
-                .rampup(null)
-                .build();
-
-        PopulationPolicy result = PopulationPolicy.builder()
-                .loadPolicy(loadPolicy)
-                .name(threadGroup.getName())
-                .description(threadGroup.getComment())
-                .build();
-        assertEquals(result,populationPolicy);
-    }
-
-    @Test
-    public void testConvertLoadIterationConstantWithDelay(){
-        ThreadGroup threadGroup = new ThreadGroup();
-        threadGroup.setName("Test Thread");
-        threadGroup.setScheduler(false);
-        threadGroup.setNumThreads(42);
-        threadGroup.setDelay(69);
-        LoopController loopController = new LoopController();
-        loopController.setLoops(73);
-        threadGroup.setSamplerController(loopController);
-
-        PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
-
-        LoadDuration loadDuration =  LoadDuration.builder()
-                .type(LoadDuration.Type.ITERATION)
-                .value(Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")))
-                .build();
-        LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
-                .users(threadGroup.getNumThreads())
-                .duration(loadDuration)
-                .rampup((int)threadGroup.getDelay())
-                .build();
-
-        PopulationPolicy result = PopulationPolicy.builder()
-                .loadPolicy(loadPolicy)
-                .name(threadGroup.getName())
-                .description(threadGroup.getComment())
-                .build();
-        assertEquals(result,populationPolicy);
-    }
-
-    @Test
-    public void testConverterLoadRuntimeWithConstant(){
         ThreadGroup threadGroup = new ThreadGroup();
         threadGroup.setName("Test Thread");
         threadGroup.setScheduler(true);
-        threadGroup.setNumThreads(73);
-        threadGroup.setDuration(69);
+        threadGroup.setNumThreads(numThreads);
+        threadGroup.setDuration(duration);
         LoopController loopController = new LoopController();
-        loopController.setLoops(-1);
+        loopController.setLoops(loops);
         threadGroup.setSamplerController(loopController);
 
-        PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
+        PopulationPolicy actual = PopulationPolicyConverter.convert(threadGroup);
 
-        LoadDuration loadDuration =  LoadDuration.builder()
+        LoadDuration loadDuration = LoadDuration.builder()
                 .type(LoadDuration.Type.TIME)
                 .value((int) threadGroup.getDuration())
                 .build();
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(threadGroup.getNumThreads())
                 .duration(loadDuration)
-                .rampup(null)
-                .build();
-
-        PopulationPolicy result = PopulationPolicy.builder()
-                .loadPolicy(loadPolicy)
-                .name(threadGroup.getName())
-                .description(threadGroup.getComment())
-                .build();
-        assertEquals(result,populationPolicy);
-    }
-
-    @Test
-    public void testConverterLoadRuntimeWithRampUp(){
-        ThreadGroup threadGroup = new ThreadGroup();
-        threadGroup.setName("Test Thread");
-        threadGroup.setScheduler(true);
-        threadGroup.setNumThreads(73);
-        threadGroup.setDuration(69);
-        threadGroup.setRampUp(1);
-        LoopController loopController = new LoopController();
-        loopController.setLoops(-1);
-        threadGroup.setSamplerController(loopController);
-
-        PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
-
-        LoadDuration loadDuration =  LoadDuration.builder()
-                .type(LoadDuration.Type.TIME)
-                .value((int) threadGroup.getDuration())
-                .build();
-        LoadPolicy loadPolicy = RampupLoadPolicy.builder()
-                .minUsers(1)
-                .maxUsers(threadGroup.getNumThreads())
-                .incrementUsers(Math.max(1, threadGroup.getRampUp() / threadGroup.getNumThreads()))
-                .incrementEvery(LoadDuration.builder()
-                        .value(1)
-                        .type(LoadDuration.Type.ITERATION)
+                .rampup(rampup)
+                .startAfter(StartAfter.builder()
+                        .value(delay)
+                        .type(StartAfter.Type.TIME)
                         .build())
-                .duration(loadDuration)
-                .rampup(null)
                 .build();
 
-        PopulationPolicy result = PopulationPolicy.builder()
+        PopulationPolicy expected = PopulationPolicy.builder()
                 .loadPolicy(loadPolicy)
                 .name(threadGroup.getName())
                 .description(threadGroup.getComment())
                 .build();
-        assertEquals(result,populationPolicy);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testConverterInfiniteLoop(){
+    public void testConverterEmptyLoadDuration() {
+        final int numThreads = 73;
+        final int duration = 69;
+        final int rampup = 1;
+        final int delay = 0;
+        final int loops = -1;
+
         ThreadGroup threadGroup = new ThreadGroup();
         threadGroup.setName("Test Thread");
         threadGroup.setScheduler(false);
-        threadGroup.setNumThreads(69);
-        threadGroup.setRampUp(1);
+        threadGroup.setNumThreads(numThreads);
+        threadGroup.setDuration(duration);
+        threadGroup.setRampUp(rampup);
         LoopController loopController = new LoopController();
-        loopController.setLoops(-1);
+        loopController.setLoops(loops);
         threadGroup.setSamplerController(loopController);
 
-        PopulationPolicy populationPolicy = PopulationPolicyConverter.convert(threadGroup);
+        PopulationPolicy actual = PopulationPolicyConverter.convert(threadGroup);
 
-        LoadPolicy loadPolicy = RampupLoadPolicy.builder()
-                .minUsers(1)
-                .maxUsers(threadGroup.getNumThreads())
-                .incrementUsers(Math.max(1, threadGroup.getRampUp() / threadGroup.getNumThreads()))
-                .incrementEvery(LoadDuration.builder()
-                        .value(1)
-                        .type(LoadDuration.Type.ITERATION)
-                        .build())
-                .rampup(null)
-                .build();
+        LoadDuration loadDuration = LoadDuration.builder().build();
 
-        PopulationPolicy result = PopulationPolicy.builder()
+        LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
+                .users(numThreads)
+                .duration(loadDuration)
+                .rampup(rampup)
+                .startAfter(StartAfter.builder()
+                        .value(delay)
+                        .type(StartAfter.Type.TIME)
+                        .build()
+                ).build();
+
+        PopulationPolicy expected = PopulationPolicy.builder()
                 .loadPolicy(loadPolicy)
                 .name(threadGroup.getName())
                 .description(threadGroup.getComment())
                 .build();
-        assertEquals(result,populationPolicy);
-    }
 
+        assertEquals(expected, actual);
+    }
 }

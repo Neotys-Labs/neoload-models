@@ -6,13 +6,7 @@ import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
-import org.apache.jmeter.control.SwitchController;
-import org.apache.jmeter.timers.ConstantTimer;
 import org.junit.Test;
-
-import java.util.Collections;
-
-import static org.junit.Assert.*;
 
 public class MainTest {
 
@@ -24,7 +18,7 @@ public class MainTest {
                 .addUserPaths(createUp())
                 .build();
 
-        new NeoLoadWriter(project, System.getProperty("user.home") + "/nlproject", Collections.emptyMap()).write(false);
+        new NeoLoadWriter(project, System.getProperty("user.home") + "/nlproject").write(false);
         createUp();
     }
 

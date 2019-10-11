@@ -35,8 +35,7 @@ public class TestCreateProject {
                 .addUserPaths(userPath)
                 .build();
 
-
-        NeoLoadWriter neoLoadWriter = new NeoLoadWriter(ImmutableProject.copyOf(project).withName("test"), System.getProperty("user.dir"), null);
+        NeoLoadWriter neoLoadWriter = new NeoLoadWriter( ImmutableProject.copyOf(project).withName("test"), System.getProperty("user.dir"));
         neoLoadWriter.write(true);
     }
 
