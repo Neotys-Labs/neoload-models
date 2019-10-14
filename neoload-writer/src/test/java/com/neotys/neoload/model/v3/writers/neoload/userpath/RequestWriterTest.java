@@ -74,7 +74,7 @@ public class RequestWriterTest {
 		Document doc = WrittingTestUtils.generateEmptyDocument();
 		Element root = WrittingTestUtils.generateTestRootElement(doc);
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><http-action actionType=\"1\" contentType=\"application/x-www-form-urlencoded\" "
+				+ "<test-root><http-action actionType=\"1\" contentType=\"application/x-www-form-urlencoded\" followRedirects=\"false\" "
 				+ "method=\"PUT\" name=\"request_test\" "
 				+ "path=\"/test_path\" postType=\"1\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
 				+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST3_PUT_METHOD)+ "\">"
@@ -113,7 +113,7 @@ public class RequestWriterTest {
 		Document doc = WrittingTestUtils.generateEmptyDocument();
 		Element root = WrittingTestUtils.generateTestRootElement(doc);
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><http-action actionType=\"1\" contentType=\"text/plain\" "
+				+ "<test-root><http-action actionType=\"1\" contentType=\"text/plain\" followRedirects=\"false\" "
 				+ "method=\"PUT\" name=\"request_test\" "
 				+ "path=\"/test_path\" postType=\"4\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
 				+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST4_PUT_METHOD)+ "\">"
@@ -162,7 +162,7 @@ public class RequestWriterTest {
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><http-action actionType=\"1\" contentType=\"multipart/mixed\" "
+				+ "<test-root><http-action actionType=\"1\" contentType=\"multipart/mixed\" followRedirects=\"false\" "
 				+ "method=\"POST\" name=\"request_test\" "
 				+ "path=\"/test_path\" postType=\"3\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
 				+ "uid=\"" + WriterUtils.getElementUid(request)+ "\">"
@@ -193,7 +193,7 @@ public class RequestWriterTest {
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><http-action actionType=\"1\" contentType=\"multipart/mixed\" "
+				+ "<test-root><http-action actionType=\"1\" contentType=\"multipart/mixed\" followRedirects=\"false\" "
 				+ "method=\"POST\" name=\"request_test\" "
 				+ "path=\"/test_path\" postType=\"3\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
 				+ "uid=\"" + WriterUtils.getElementUid(request)+ "\">"
