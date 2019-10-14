@@ -12,15 +12,8 @@ import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 public class FileVariableWriterTest {
@@ -153,35 +146,5 @@ public class FileVariableWriterTest {
 		Assertions.assertThat(FileVariableWriter.getColumsFromFirstLine(Optional.of("test, test2"), ",")).containsExactly("test", "test2");
 		Assertions.assertThat(FileVariableWriter.getColumsFromFirstLine(Optional.of("test,test2"), ";")).containsExactly("test,test2");
 		Assertions.assertThat(FileVariableWriter.getColumsFromFirstLine(Optional.of("test.test2"), ".")).containsExactly("test","test2");
-	}
-
-	@Test
-	public void dumpDataInFileTest2() {
-
-		List<String> columns = new ArrayList<>();
-		columns.add("col_name_1");
-		columns.add("col_name_2");
-		String[][] theData = {
-				{"val 1", "Val 2"},
-				{"val 3", "Val 4"}
-		};
-		String fileName = FileVariableWriter.dumpDataInFile(null, "variable_name", columns, ",", theData);
-		assertTrue(fileName == null);
-	}
-
-	@Test
-	public void dumpDataInFileTest3() throws IOException {
-
-		List<String> columns = new ArrayList<>();
-		columns.add("col_name_1");
-		columns.add("col_name_2");
-		String[][] theData = {
-				{"val 1", "Val 2"},
-				{"val 3", "Val 4"}
-		};
-
-		File tmpFile = File.createTempFile("pre", "suf");
-		String fileName = FileVariableWriter.dumpDataInFile(tmpFile, "variable_name", columns, ",", theData);
-		assertTrue(fileName == null);
 	}
 }

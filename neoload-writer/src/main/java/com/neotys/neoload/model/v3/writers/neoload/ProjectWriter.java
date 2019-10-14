@@ -43,6 +43,7 @@ public class ProjectWriter {
         project.getServers().forEach(serv -> ServerWriter.of(serv).writeXML(repositoryDocument, repositoryElement));
         project.getVariables().forEach(var -> WriterUtils.<VariableWriter>getWriterFor(var).writeXML(repositoryDocument, repositoryElement, outputFolder));
         project.getPopulations().forEach(pop -> PopulationWriter.of(pop).writeXML(repositoryDocument, repositoryElement));
+        project.getDependencies().forEach(dependency -> DependencyWriter.of(dependency).writeXML(repositoryDocument, repositoryElement, outputFolder));
         writeZoneAndLG(repositoryDocument, repositoryElement);
 
         final Element scenariosElement = scenarioDocument.createElement(XML_SCENARIOS_TAG_NAME);

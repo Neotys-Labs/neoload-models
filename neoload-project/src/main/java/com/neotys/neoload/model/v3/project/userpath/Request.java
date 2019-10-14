@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
@@ -30,6 +30,7 @@ public interface Request extends Step, SlaElement {
 	String BODY = "body";
 	String BODYBINARY = "bodybinary";
 	String EXTRACTORS = "extractors";
+	String FOLLOW_REDIRECTS = "followRedirects";
 	
 	String DEFAULT_NAME = "#request#";
 	String DEFAULT_METHOD = Method.GET.name();
@@ -94,7 +95,12 @@ public interface Request extends Step, SlaElement {
 	@JsonProperty(EXTRACTORS)
 	@Valid
 	List<VariableExtractor> getExtractors();
-	
+
+	@JsonProperty(FOLLOW_REDIRECTS)
+	@Valid
+	@Value.Default
+	default Boolean getFollowRedirects() { return false; }
+
 	class Builder extends ImmutableRequest.Builder {}
 	static Builder builder() {
 		return new Builder();

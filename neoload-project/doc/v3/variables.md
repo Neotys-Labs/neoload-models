@@ -5,7 +5,7 @@ They may be combined with other variables or with static content (e.g. ${product
 
 
 #### Example
-Defining 4 variables: a Constant variable, a File variable, a Counter variable and a RandomNumber variable.
+Defining 5 variables: a Constant variable, a File variable, a Counter variable, a RandomNumber variable and a JavaScript variable.
 
 ```yaml
 variables:
@@ -37,6 +37,13 @@ variables:
     max: 999
     predictable: false
     change_policy: each_request
+- javascript:
+    name: My JSVar
+    description: This is a js var
+    script: "function evaluate() {\n\tlogger.debug(\"Computing value of js variable\");\n\treturn
+      new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField =
+      myLibraryFunction();\n\t};\n}"
+    change_policy: each_iteration
 ```
 
 ## Constant variable
@@ -96,11 +103,11 @@ A numerical variable having a start value, an end value and an incremental value
 
 | Name         | Description                   | Accept variable | Required | Since |
 |:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
-| name         | The variable name             | -               | &#x2713; |6.10|
-| description  | The variable description      | -               | -        |6.10|
-| start        | The variable start value      | -               | &#x2713; |6.10|
-| end          | The variable end value        | -               | &#x2713; |6.10|
-| increment    | The variable increment value  | -               | &#x2713; |6.10|
+| name         | The variable name             | -               | &#x2713; | 6.10  |
+| description  | The variable description      | -               | -        | 6.10  |
+| start        | The variable start value      | -               | &#x2713; | 6.10  |
+| end          | The variable end value        | -               | &#x2713; | 6.10  |
+| increment    | The variable increment value  | -               | &#x2713; | 6.10  |
 | change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |6.10|
 | scope        | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        |6.10|
 | out_of_value | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | -               | -        |6.10|
@@ -125,10 +132,10 @@ A random numerical value within a value range.
 
 | Name         | Description                   | Accept variable | Required | Since |
 |:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
-| name         | The variable name             | -               | &#x2713; |6.10|
-| description  | The variable description      | -               | -        |6.10|
-| min          | The variable min value        | -               | &#x2713; |6.10|
-| max          | The variable max value        | -               | &#x2713; |6.10|
+| name         | The variable name             | -               | &#x2713; | 6.10  |
+| description  | The variable description      | -               | -        | 6.10  |
+| min          | The variable min value        | -               | &#x2713; | 6.10  |
+| max          | The variable max value        | -               | &#x2713; | 6.10  |
 | predictable  | When true, randomly generated values will have comparable values for two identical tests.e            | -               | - |6.10|
 | change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |6.10|
 
@@ -142,4 +149,27 @@ random_number:
   max: 999
   predictable: false
   change_policy: each_request
+```
+
+## JavaScript variable
+A variable whose value is the result of the execution of a JavaScript script.
+
+| Name         | Description                   | Accept variable | Required | Since |
+|:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
+| name         | The variable name             | -               | &#x2713; | 7.2   |
+| description  | The variable description      | -               | -        | 7.2   |
+| script       | The JavaScript script         | -               | &#x2713; | 7.2   |
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 7.2   |
+
+#### Example
+Defining a JavaScript variable.
+
+```yaml
+- javascript:
+    name: My JSVar
+    description: This is a js var
+    script: "function evaluate() {\n\tlogger.debug(\"Computing value of js variable\");\n\treturn
+      new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField =
+      myLibraryFunction();\n\t};\n}"
+    change_policy: each_iteration
 ```

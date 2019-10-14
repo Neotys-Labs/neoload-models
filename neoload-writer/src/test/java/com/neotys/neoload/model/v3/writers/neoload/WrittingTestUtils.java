@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
+import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.util.Parameter;
 import org.w3c.dom.Document;
@@ -22,84 +23,85 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WrittingTestUtils {
-	private WrittingTestUtils() {}
-	
-	public static final Server SERVER_TEST = Server.builder()
+    private WrittingTestUtils() {
+    }
+
+    public static final Server SERVER_TEST = Server.builder()
             .name("server_test")
             .host("host_test.com")
             .port("8080")
             .scheme(Server.Scheme.HTTP)
             .build();
-	
-	public static final Request REQUEST_TEST = Request.builder()
+
+    public static final Request REQUEST_TEST = Request.builder()
             .name("request_test")
-			.url("/test_path")
-			.server(SERVER_TEST.getName())
+            .url("/test_path")
+            .server(SERVER_TEST.getName())
             .method("GET")
             .build();
-	
-	public static final Parameter PARAMETER_TEST = Parameter.builder()
-			.name("param_name")
-			.value("param_value")
-			.build();
-	
-	public static final Parameter PARAMETER_TEST_EMPTY_VALUE = Parameter.builder()
-			.name("param_name")
-			.value("")
-			.build();
-	
-	public static final Parameter PARAMETER_TEST_NO_VALUE = Parameter.builder()
-			.name("param_name")
-			.build();
-	
-	public static final Parameter POST_PARAMETER_TEST = Parameter.builder()
-			.name("post param_name")
-			.value("post_param Value")
-			.build(); 
-	
-	public static final Request REQUEST_TEST2 = Request.builder()
+
+    public static final Parameter PARAMETER_TEST = Parameter.builder()
+            .name("param_name")
+            .value("param_value")
+            .build();
+
+    public static final Parameter PARAMETER_TEST_EMPTY_VALUE = Parameter.builder()
+            .name("param_name")
+            .value("")
+            .build();
+
+    public static final Parameter PARAMETER_TEST_NO_VALUE = Parameter.builder()
+            .name("param_name")
+            .build();
+
+    public static final Parameter POST_PARAMETER_TEST = Parameter.builder()
+            .name("post param_name")
+            .value("post_param Value")
+            .build();
+
+    public static final Request REQUEST_TEST2 = Request.builder()
             .name("request_test")
             .url("/test_path?param_name=param_value")
             .server(SERVER_TEST.getName())
             .method("GET")
             .build();
-	
-	public static final Request REQUEST_TEST3 = Request.builder()
+
+    public static final Request REQUEST_TEST3 = Request.builder()
             .name("request_test")
-			.url("/test_path?param_name=param_value")
+            .url("/test_path?param_name=param_value")
             .server(SERVER_TEST.getName())
             .method("POST")
             .body("post param_name=post_param Value")
-			.addHeaders(Header.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
+            .addHeaders(Header.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
             .build();
 
 	public static final Request REQUEST_TEST3_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST3).withMethod("PUT");
 
-	public static final Request REQUEST_TEST4 = Request.builder()
+    public static final Request REQUEST_TEST4 = Request.builder()
             .name("request_test")
             .url("/test_path?param_name=param_value")
             .server(SERVER_TEST.getName())
             .method("POST")
             .body("texte a convertir en binaire")
-			.addHeaders(Header.builder().name("Content-Type").value("text/plain").build())
+            .addHeaders(Header.builder().name("Content-Type").value("text/plain").build())
             .build();
 
 	public static final Request REQUEST_TEST4_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST4).withMethod("PUT");
 
 
-	public static final byte[] BINARY_DATA_TEST = {116, 101, 120, 116, 101, 32, 97, 32, 99, 111, 110, 118, 101, 114, 116, 105, 114, 32, 101, 110, 32, 98, 105, 110, 97, 105, 114, 101};
-	
-	public static final Request REQUEST_TEST5 = Request.builder()
+    public static final byte[] BINARY_DATA_TEST = {116, 101, 120, 116, 101, 32, 97, 32, 99, 111, 110, 118, 101, 114, 116, 105, 114, 32, 101, 110, 32, 98, 105, 110, 97, 105, 114, 101};
+
+    public static final Request REQUEST_TEST5 = Request.builder()
             .name("request_test")
-			.url("/test_path?param_name=param_value")
+            .url("/test_path?param_name=param_value")
             .server(SERVER_TEST.getName())
             .method("POST")
-			// TODO !!! should be natively binary in the model
+            // TODO !!! should be natively binary in the model
             .body(new String(BINARY_DATA_TEST))
-			.addHeaders(Header.builder().name("Content-Type").value("application/octet-stream").build())
+            .addHeaders(Header.builder().name("Content-Type").value("application/octet-stream").build())
             .build();
 
-	// TODO page does not exist in V3
+    // TODO page does not exist in V3
 	/*
 	public static final Page PAGE_TEST = new Page.builder()
 			.addChilds(WrittingTestUtils.REQUEST_TEST)
@@ -107,30 +109,30 @@ public class WrittingTestUtils {
 			.name("page_name")
 			.isDynamic(false)
 			.build();*/
-	
-	public static final Server SERVER_JACK9090_TEST = Server.builder()
+
+    public static final Server SERVER_JACK9090_TEST = Server.builder()
             .name("jack")
             .host("jack")
             .port("9090")
-			// TODO why Scheme is an enum
+            // TODO why Scheme is an enum
             .scheme(Server.Scheme.HTTP)
             .build();
-	
-	public static final Request GET_REQUEST_TEST = Request.builder()
-			.name("GET_REQUEST_TEST")
-			.url("/loadtest/")
-			.server(SERVER_JACK9090_TEST.getName())
-			.method("GET")
-			.build();
 
-	public static final Request GET_REQUEST_WITH_RECORDED_FILES;
+    public static final Request GET_REQUEST_TEST = Request.builder()
+            .name("GET_REQUEST_TEST")
+            .url("/loadtest/")
+            .server(SERVER_JACK9090_TEST.getName())
+            .method("GET")
+            .build();
 
-	static {
-		final Request.Builder builder = Request.builder().name("GET_REQUEST_TEST")
-				.url("/loadtest/")
-				.server(SERVER_JACK9090_TEST.getName())
-				.method("GET");
-		// TODO no recorded files in V3
+    public static final Request GET_REQUEST_WITH_RECORDED_FILES;
+
+    static {
+        final Request.Builder builder = Request.builder().name("GET_REQUEST_TEST")
+                .url("/loadtest/")
+                .server(SERVER_JACK9090_TEST.getName())
+                .method("GET");
+        // TODO no recorded files in V3
 		/*try {
 
 			builder.recordedFiles(ImmutableRecordedFiles.builder()
@@ -143,10 +145,10 @@ public class WrittingTestUtils {
 		} catch (final URISyntaxException e) {
 			e.printStackTrace();
 		}*/
-		GET_REQUEST_WITH_RECORDED_FILES = builder.build();
-	}
+        GET_REQUEST_WITH_RECORDED_FILES = builder.build();
+    }
 
-	// TODO
+    // TODO
 	/*public static final Page PAGE_GET_REQUEST_TEST = ImmutablePage.builder()
 			.addChilds(GET_REQUEST_TEST)
 			.thinkTime(0)
@@ -154,7 +156,7 @@ public class WrittingTestUtils {
 			.isDynamic(false)
 			.build();*/
 
-	// TODO
+    // TODO
 	/*public static final GetFollowLinkRequest GET_FOLLOW_LINK_REQUEST_TEST = ImmutableGetFollowLinkRequest.builder()
 			.name("GET_FOLLOW_LINK_REQUEST_TEST")				
 			.server(SERVER_JACK9090_TEST)
@@ -163,7 +165,7 @@ public class WrittingTestUtils {
 			.httpMethod(HttpMethod.GET)
 			.build();*/
 
-	// TODO
+    // TODO
 	/*
 	public static final Page PAGE_GET_FOLLOW_LINK_REQUEST_TEST = ImmutablePage.builder()
 			.addChilds(GET_FOLLOW_LINK_REQUEST_TEST)
@@ -172,17 +174,17 @@ public class WrittingTestUtils {
 			.isDynamic(false)
 			.build();*/
 
-	public static final Request POST_SUBMIT_FORM_REQUEST_TEST = Request.builder()
-			.name("POST_SUBMIT_FORM_REQUEST_TEST")
-			.server(SERVER_JACK9090_TEST.getName())
-			.method("POST")
-			.body("firstname=a&lastname=b&email=c@d.fr&address=e&sex=Male")
-			.addHeaders(Header.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
-			// TDOD
-			//.referer(GET_FOLLOW_LINK_REQUEST_TEST)
-			.build();
+    public static final Request POST_SUBMIT_FORM_REQUEST_TEST = Request.builder()
+            .name("POST_SUBMIT_FORM_REQUEST_TEST")
+            .server(SERVER_JACK9090_TEST.getName())
+            .method("POST")
+            .body("firstname=a&lastname=b&email=c@d.fr&address=e&sex=Male")
+            .addHeaders(Header.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
+            // TDOD
+            //.referer(GET_FOLLOW_LINK_REQUEST_TEST)
+            .build();
 
-	// TODO
+    // TODO
 	/*
 	public static final PostMultipartRequest POST_MULTIPART_REQUEST_TEST = ImmutablePostMultipartRequest.builder()
 			.name("POST_MULTIPART_REQUEST_TEST")
@@ -199,21 +201,26 @@ public class WrittingTestUtils {
 			.name("PAGE_GET_SUBMIT_FORM_REQUEST_TEST")
 			.isDynamic(false)
 			.build();*/
-	
-	public static final Container CONTAINER_TEST = Container.builder()
-			// TODO
-			//.addSteps(PAGE_TEST)
-			.addSteps(REQUEST_TEST)
-			.name("Container_name")
-			.build();
 
-	public static final Container SHARED_CONTAINER_TEST = Container.builder()
-			// TODO
-			//.addSteps(PAGE_TEST)
-			.name("Shared_Container_name")
-			// TODO
-			//.isShared(true)
-			.build();
+    public static final Container CONTAINER_TEST = Container.builder()
+            // TODO
+            //.addSteps(PAGE_TEST)
+            .addSteps(REQUEST_TEST)
+            .name("Container_name")
+            .build();
+
+    public static final Delay DELAY_TEST = Delay.builder()
+            .name("Delay_name")
+            .value("200")
+            .build();
+
+    public static final Container SHARED_CONTAINER_TEST = Container.builder()
+            // TODO
+            //.addSteps(PAGE_TEST)
+            .name("Shared_Container_name")
+            // TODO
+            //.isShared(true)
+            .build();
 
 	/*public static final Container CONTAINER_WITH_SHARED_CHILD_TEST = new ImmutableContainer.Builder()
 			.addChilds(SHARED_CONTAINER_TEST)
@@ -221,130 +228,203 @@ public class WrittingTestUtils {
 			.build();*/
 
 
-	public static final CustomAction SET_OK_CODE_CUSTOM_ACTION = CustomAction.builder()
-			.name("setOkCode")
-			.type("SetText")
-			.asRequest(false)
-			.parameters(ImmutableList.of(CustomActionParameter.builder()
-					.name("objectId")
-					.value("x")
-					.type(CustomActionParameter.Type.TEXT)
-					.build()))
-			.build();
-	
-	public static final CustomAction IS_OBJECT_AVAILABLE_CUSTOM_ACTION = CustomAction.builder()
-			.name("isObjectAvailable")
-			.type("IsAvailable")
-			.asRequest(false)
-			.parameters(ImmutableList.of(CustomActionParameter.builder()
-					.name("objectId")
-					.value("x")
-					.type(CustomActionParameter.Type.TEXT)
-					.build()))
-			.build();
-	
-	public static final If IF_THEN_TEST_2 = If.builder()
-			.name("condition")
-			.addConditions(Condition.builder()
-							.operand1("${sapgui_is_object_available_2}")
-							.operator(Condition.Operator.EQUALS)
-							.operand2("true")
-							.build())
-			.match(If.Match.ANY)
-			.then(Container.builder()
-					.name("Then")
-					.addSteps(SET_OK_CODE_CUSTOM_ACTION)
-					.build())
-			.getElse(Container.builder()
-					.name("Else")
-					.build())
-			.build();
-	
-	public static final If IF_THEN_TEST_1 = If.builder()
-			.name("condition")
-			.addConditions(Condition.builder()
-						.operand1("${sapgui_is_object_available_1}")
-						.operator(Condition.Operator.EQUALS)
-						.operand2("true")
-						.build())
-			.match(If.Match.ANY)
-			.then(Container.builder()
-					.name("Then")
-					.addSteps(SET_OK_CODE_CUSTOM_ACTION)
-					.build())
-			.getElse(Container.builder()
-					.name("Else")
-					.addSteps(SET_OK_CODE_CUSTOM_ACTION, IS_OBJECT_AVAILABLE_CUSTOM_ACTION, IF_THEN_TEST_2)
-					.build())
-			.build();
-	
-	private static final List<String> COLUMNS;
-	static {
-		COLUMNS = new ArrayList<>();
-		COLUMNS.add("colonneTest");
-	}
-	
-	public static final FileVariable VARIABLE_TEST = FileVariable.builder()
-			.name("variable_test")
-			.delimiter(",")
-			.path("path_du_fichier")
-			.startFromLine(2)
-			.order(Variable.Order.SEQUENTIAL)
-			.changePolicy(Variable.ChangePolicy.EACH_ITERATION)
-			.isFirstLineColumnNames(true)
-			.scope(Variable.Scope.GLOBAL)
-			.columnNames(COLUMNS)
-			.outOfValue(Variable.OutOfValue.CYCLE)
-			.build();
-	
-	public static final FileVariable VARIABLE_TEST2 = FileVariable.builder()
-			.name("variable_test")
-			.delimiter(",")
-			.path("path_du_fichier")
-			.startFromLine(2)
-			.order(Variable.Order.RANDOM)
-			.changePolicy(Variable.ChangePolicy.EACH_USE)
-			.isFirstLineColumnNames(true)
-			.scope(Variable.Scope.LOCAL)
-			.columnNames(COLUMNS)
-			.outOfValue(Variable.OutOfValue.STOP)
-			.build();
-	
-	public static final FileVariable VARIABLE_TEST3 = FileVariable.builder()
-			.name("variable_test")
-			.delimiter(",")
-			.path("path_du_fichier")
-			.startFromLine(2)
-			.order(Variable.Order.SEQUENTIAL)
-			.changePolicy(Variable.ChangePolicy.EACH_USER)
-			.isFirstLineColumnNames(true)
-			.scope(Variable.Scope.UNIQUE)
-			.columnNames(COLUMNS)
-			.outOfValue(Variable.OutOfValue.CYCLE)
-			.build();
-	
-	public static Document generateEmptyDocument() throws ParserConfigurationException{
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		return docBuilder.newDocument();
-	}
+    public static final Loop LOOP_TEST = Loop.builder()
+            .name("looper")
+            .description("a simple loop")
+            .count("20")
+            .addSteps(CONTAINER_TEST)
+            .addSteps(DELAY_TEST)
+            .build();
 
-	public static Element generateTestRootElement(Document doc) {
-		final Element rootElement = doc.createElement("test-root");
+    public static final While WHILE_TEST = While.builder()
+            .name("while")
+            .match(Match.ANY)
+            .addConditions(Condition.builder()
+                    .operand1("1")
+                    .operand2("2")
+                    .operator(Condition.Operator.GREATER)
+                    .build()
+            )
+            .addSteps(DELAY_TEST)
+            .build();
+
+    public static final JavaScriptVariable JAVASCRIPT_VARIABLE_TEST = JavaScriptVariable.builder()
+            .name("myVar")
+            .script("function evaluate() {\n" +
+                    "\tlogger.debug(\"Computing value of js variable\");\n" +
+                    "\treturn new function() {\n" +
+                    "\t\tthis.firstField = \"a value\";\n" +
+                    "\t\tthis.secondField = myLibraryFunction();\n" +
+                    "\t};\n" +
+                    "}")
+            .build();
+
+    public static final CustomAction SET_OK_CODE_CUSTOM_ACTION = CustomAction.builder()
+            .name("setOkCode")
+            .type("SetText")
+            .asRequest(false)
+            .parameters(ImmutableList.of(CustomActionParameter.builder()
+                    .name("objectId")
+                    .value("x")
+                    .type(CustomActionParameter.Type.TEXT)
+                    .build()))
+            .build();
+
+    public static final CustomAction IS_OBJECT_AVAILABLE_CUSTOM_ACTION = CustomAction.builder()
+            .name("isObjectAvailable")
+            .type("IsAvailable")
+            .asRequest(false)
+            .parameters(ImmutableList.of(CustomActionParameter.builder()
+                    .name("objectId")
+                    .value("x")
+                    .type(CustomActionParameter.Type.TEXT)
+                    .build()))
+            .build();
+
+    public static final If IF_THEN_TEST_2 = If.builder()
+            .name("condition")
+            .addConditions(Condition.builder()
+                    .operand1("${sapgui_is_object_available_2}")
+                    .operator(Condition.Operator.EQUALS)
+                    .operand2("true")
+                    .build())
+            .match(Match.ANY)
+            .then(Container.builder()
+                    .name("Then")
+                    .addSteps(SET_OK_CODE_CUSTOM_ACTION)
+                    .build())
+            .getElse(Container.builder()
+                    .name("Else")
+                    .build())
+            .build();
+
+    public static final If IF_THEN_TEST_1 = If.builder()
+            .name("condition")
+            .addConditions(Condition.builder()
+                    .operand1("${sapgui_is_object_available_1}")
+                    .operator(Condition.Operator.EQUALS)
+                    .operand2("true")
+                    .build())
+            .match(Match.ANY)
+            .then(Container.builder()
+                    .name("Then")
+                    .addSteps(SET_OK_CODE_CUSTOM_ACTION)
+                    .build())
+            .getElse(Container.builder()
+                    .name("Else")
+                    .addSteps(SET_OK_CODE_CUSTOM_ACTION, IS_OBJECT_AVAILABLE_CUSTOM_ACTION, IF_THEN_TEST_2)
+                    .build())
+            .build();
+
+    public static final Delay DELAY_SWITCH_TEST_CASE = Delay.builder().name("delayB").value("0").build();
+
+    public static final Delay DELAY_SWITCH_TEST_DEFAULT = Delay.builder().name("delayB").value("0").build();
+
+    public static final Container CONTAINER_IN_DEFAULT_SWITCH =
+            Container.builder()
+                    .name("b")
+                    .build();
+
+    public static final Container CONTAINER_DEFAULT_SWITCH =
+            Container.builder() //
+            .name("Default")
+            .description("Elements executed by default when no Case equals the Switch value.")
+            .addSteps(DELAY_SWITCH_TEST_DEFAULT)
+            .addSteps(CONTAINER_IN_DEFAULT_SWITCH)
+            .build();
+
+
+
+    public static final Container CONTAINER_IN_CASE_SWITCH =
+            Container.builder()
+                    .name("b")
+                    .build();
+
+    public static final Case CASE_SWITCH =
+            Case.builder()
+                    .value("qsd")
+                    .isBreak(true)
+                    .description("Elements executed when the Case equals the Switch valueB.")
+                    .addSteps(DELAY_SWITCH_TEST_CASE)
+                    .addSteps(CONTAINER_IN_CASE_SWITCH)
+                    .build();
+
+    public static final Switch SWITCH_TEST = Switch.builder()
+            .name("switcher or Witcher")
+            .description("a simple hunter")
+            .value("sqdf")
+            .addCases(CASE_SWITCH)
+            .getDefault(CONTAINER_DEFAULT_SWITCH)
+            .build();
+
+    private static final List<String> COLUMNS;
+
+    static {
+        COLUMNS = new ArrayList<>();
+        COLUMNS.add("colonneTest");
+    }
+
+    public static final FileVariable VARIABLE_TEST = FileVariable.builder()
+            .name("variable_test")
+            .delimiter(",")
+            .path("path_du_fichier")
+            .startFromLine(2)
+            .order(Variable.Order.SEQUENTIAL)
+            .changePolicy(Variable.ChangePolicy.EACH_ITERATION)
+            .isFirstLineColumnNames(true)
+            .scope(Variable.Scope.GLOBAL)
+            .columnNames(COLUMNS)
+            .outOfValue(Variable.OutOfValue.CYCLE)
+            .build();
+
+    public static final FileVariable VARIABLE_TEST2 = FileVariable.builder()
+            .name("variable_test")
+            .delimiter(",")
+            .path("path_du_fichier")
+            .startFromLine(2)
+            .order(Variable.Order.RANDOM)
+            .changePolicy(Variable.ChangePolicy.EACH_USE)
+            .isFirstLineColumnNames(true)
+            .scope(Variable.Scope.LOCAL)
+            .columnNames(COLUMNS)
+            .outOfValue(Variable.OutOfValue.STOP)
+            .build();
+
+    public static final FileVariable VARIABLE_TEST3 = FileVariable.builder()
+            .name("variable_test")
+            .delimiter(",")
+            .path("path_du_fichier")
+            .startFromLine(2)
+            .order(Variable.Order.SEQUENTIAL)
+            .changePolicy(Variable.ChangePolicy.EACH_USER)
+            .isFirstLineColumnNames(true)
+            .scope(Variable.Scope.UNIQUE)
+            .columnNames(COLUMNS)
+            .outOfValue(Variable.OutOfValue.CYCLE)
+            .build();
+
+    public static Document generateEmptyDocument() throws ParserConfigurationException {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        return docBuilder.newDocument();
+    }
+
+    public static Element generateTestRootElement(Document doc) {
+        final Element rootElement = doc.createElement("test-root");
         doc.appendChild(rootElement);
-		return rootElement;
-	}
-	
-	public static String getXmlString(Document doc) throws TransformerException {
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
-		DOMSource source = new DOMSource(doc);
-		
-		StringWriter writer = new StringWriter();
-	    StreamResult result = new StreamResult(writer);
+        return rootElement;
+    }
 
-		transformer.transform(source, result);
+    public static String getXmlString(Document doc) throws TransformerException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(doc);
 
-		return writer.toString();
-	}
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+
+        transformer.transform(source, result);
+
+        return writer.toString();
+    }
 }

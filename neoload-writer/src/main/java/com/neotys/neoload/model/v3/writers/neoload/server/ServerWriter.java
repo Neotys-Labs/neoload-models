@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload.server;
 
 import com.neotys.neoload.model.v3.project.server.Server;
+import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import org.w3c.dom.Document;
 
 public class ServerWriter {
@@ -29,6 +30,9 @@ public class ServerWriter {
         xmlServer.setAttribute(XML_ATTRIBUTE_PORT, server.getPort());
         xmlServer.setAttribute(XML_ATTRIBUTE_SSL, String.valueOf(server.getScheme().equals(Server.Scheme.HTTPS)));
         xmlServer.setAttribute(XML_ATTRIBUTE_UID, server.getName());
+        if(server.getAuthentication().isPresent()) {
+            WriterUtils.<LoginPasswordAuthenticationWriter>getWriterFor(server.getAuthentication().get()).writeXML(document, xmlServer);
+        }
         currentElement.appendChild(xmlServer);
     }
 }

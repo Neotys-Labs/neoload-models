@@ -19,12 +19,12 @@ import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
 public class RequestUtils {
-	private static final Pattern URL_PATTERN = Pattern.compile("^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)"); // <scheme>://<host>:<port><file> | <file>
-	private static final int URL_SERVER_GROUP = 1;
-	private static final int URL_SCHEME_GROUP = 2;
-	private static final int URL_HOST_GROUP = 3;
-	private static final int URL_PORT_GROUP = 6;
-	private static final int URL_FILE_GROUP = 9;
+	private static final Pattern URL_PATTERN = Pattern.compile("^((?<scheme>http[s]?|\\$\\{\\w+\\}):\\/\\/(?<host>([^:\\/\\[\\]]+)|(\\[[^\\/]+\\])):?(?<port>(\\d+)|(\\$\\{[^\\/]*\\}))?)?(?<path>((\\$\\{.+\\})|\\/.*$)*)");
+
+	private static final String URL_SCHEME_GROUP = "scheme";
+	private static final String URL_HOST_GROUP = "host";
+	private static final String URL_PORT_GROUP = "port";
+	private static final String URL_PATH_GROUP = "path";
 
 	private static final String FAKE_SERVER_URL = "http://host";
 	private static final String FUNCTION_ENCODE_URL_START = "__encodeURL(";
@@ -55,25 +55,27 @@ public class RequestUtils {
 		}
 
 		// Retrieve scheme, host, port and file from url
-		final String serverUrl = matcher.group(URL_SERVER_GROUP);
 		final String scheme = matcher.group(URL_SCHEME_GROUP);
 		final String host = matcher.group(URL_HOST_GROUP);
 		final String port = matcher.group(URL_PORT_GROUP);
-		final String file = matcher.group(URL_FILE_GROUP);
+		final String file = matcher.group(URL_PATH_GROUP);
 
 		// Retrieve path and query from file
 		String path;
 		String query;
 		try {
-			final java.net.URL fakeUrl = new java.net.URL(FAKE_SERVER_URL + file);
+			String pathSep = "";
+			if(file!=null && !file.isEmpty() && !file.startsWith("/")) pathSep = "/";
+			final java.net.URL fakeUrl = new java.net.URL(FAKE_SERVER_URL + pathSep + file);
 			path = fakeUrl.getPath();
+			if(!pathSep.isEmpty() && path.startsWith(pathSep)) path = path.substring(1);
 			query = fakeUrl.getQuery();
 		} catch (final MalformedURLException e) {
 			throw new IllegalArgumentException("The url '" + url + "' does not match a valid URL: " + e.getMessage());
 		}
 
 		Server server = null;
-		if (!Strings.isNullOrEmpty(serverUrl)) {
+		if (!Strings.isNullOrEmpty(host)) {
 			server = Server.builder()
 					.name(isVariableSyntax(host) ? getVariableName(host).get() : host)
 					.scheme(getScheme(scheme))
@@ -208,7 +210,14 @@ public class RequestUtils {
 	}
 
 	private static Scheme getScheme(final String scheme) {
-		return Scheme.valueOf(scheme.toUpperCase());
+		Scheme theScheme;
+		try {
+			theScheme = Scheme.valueOf(scheme.toUpperCase());
+		} catch (Exception e) {
+			theScheme = Scheme.HTTP;
+		}
+
+		return theScheme;
 	}
 
 	private static String getPort(final String scheme) {

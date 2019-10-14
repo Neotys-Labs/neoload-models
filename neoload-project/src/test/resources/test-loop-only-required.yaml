@@ -1,0 +1,11 @@
+name: MyProject
+user_paths:
+  - name: MyUserPath
+    actions:
+      steps:
+        - loop:
+            description: a simple loop
+            name: looper
+            count: 5
+            steps:
+              - delay: 200ms

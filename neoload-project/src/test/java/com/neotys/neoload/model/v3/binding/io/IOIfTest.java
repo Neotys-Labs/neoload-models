@@ -59,7 +59,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 								.name("My If-Then-Else")
 								.description("My description")
 								.conditions(getConditions())
-								.match(If.Match.ANY)
+								.match(Match.ANY)
 								.then(getThen())
 								.getElse(getElse())
 								.build())

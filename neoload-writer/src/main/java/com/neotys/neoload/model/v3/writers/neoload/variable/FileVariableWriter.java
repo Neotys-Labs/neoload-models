@@ -2,17 +2,17 @@ package com.neotys.neoload.model.v3.writers.neoload.variable;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
-import com.neotys.neoload.model.v3.writers.neoload.RegExpUtils;
-import com.opencsv.CSVWriter;
+import com.neotys.neoload.model.v3.util.RegExpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -21,21 +21,18 @@ import java.util.stream.Stream;
 
 public class FileVariableWriter extends VariableWriter {
 
-	public static final String VARIABLE_DIRECTORY = "variables"; 
-	
-	public static final String DATA_FILE_BASE_NAME = "Variable";
-	public static final String DATA_FILE_BASE_EXT = ".csv";
-	
-	public static final String XML_TAG_NAME = "variable-file";
-    public static final String XML_ATTR_FILENAME = "filename";
-    public static final String XML_ATTR_OFFSET = "offset";
+	private static final String VARIABLE_DIRECTORY = "variables";
 
-    public static final String XML_ATTR_USE_FIRST_LINE = "useFirstLine";
-    public static final String XML_ATTR_DELIMITER = "delimiters";
-    
-    public static final String XML_TAG_COLOMN = "column";
-    public static final String XML_COLOMN_ATTR_NAME = "name";
-    public static final String XML_COLOMN_ATTR_NUMBER = "number";
+	private static final String XML_TAG_NAME = "variable-file";
+	private static final String XML_ATTR_FILENAME = "filename";
+	private static final String XML_ATTR_OFFSET = "offset";
+
+	private static final String XML_ATTR_USE_FIRST_LINE = "useFirstLine";
+	private static final String XML_ATTR_DELIMITER = "delimiters";
+
+	private static final String XML_TAG_COLOMN = "column";
+	private static final String XML_COLOMN_ATTR_NAME = "name";
+	private static final String XML_COLOMN_ATTR_NUMBER = "number";
     
     private static final Logger LOGGER = LoggerFactory.getLogger(FileVariableWriter.class);
     
@@ -49,21 +46,19 @@ public class FileVariableWriter extends VariableWriter {
 		org.w3c.dom.Element xmlVariable = document.createElement(XML_TAG_NAME);
 		super.writeXML(xmlVariable) ;
 
-		FileVariable theFileVariable = (FileVariable) variable;
-		xmlVariable.setAttribute(XML_ATTR_DELIMITER, theFileVariable.getDelimiter());
-		xmlVariable.setAttribute(XML_ATTR_USE_FIRST_LINE, Boolean.toString(theFileVariable.isFirstLineColumnNames()));
-		xmlVariable.setAttribute(XML_ATTR_OFFSET, Integer.toString(theFileVariable.getStartFromLine()));
-		
-		xmlVariable.setAttribute(XML_ATTR_FILENAME, theFileVariable.getPath());
+		FileVariable fileVariable = (FileVariable) element;
+		xmlVariable.setAttribute(XML_ATTR_DELIMITER, fileVariable.getDelimiter());
+		xmlVariable.setAttribute(XML_ATTR_USE_FIRST_LINE, Boolean.toString(fileVariable.isFirstLineColumnNames()));
+		xmlVariable.setAttribute(XML_ATTR_OFFSET, Integer.toString(fileVariable.getStartFromLine()));
 
 		//generate Column nodes
-		List<String> cols = theFileVariable.getColumnNames();
-		if(cols.isEmpty() && theFileVariable.isFirstLineColumnNames()) {
+		List<String> cols = fileVariable.getColumnNames();
+		if(cols.isEmpty() && fileVariable.isFirstLineColumnNames()) {
 			// read the first line and get the columns names
 			try {
-				cols = getColumnsFromFile(theFileVariable.getPath(), theFileVariable.getDelimiter());
+				cols = getColumnsFromFile(fileVariable.getPath(), fileVariable.getDelimiter());
 			}catch(IOException e) {
-				LOGGER.warn("Cannot read columns in file variable "+theFileVariable.getPath(), e);
+				LOGGER.warn("Cannot read columns in file variable "+fileVariable.getPath(), e);
 			}
 		}
 		int counter = 0;
@@ -74,8 +69,33 @@ public class FileVariableWriter extends VariableWriter {
 			xmlVariable.appendChild(xmlColumn);
 		}
 		writeDescription(document, xmlVariable);
-		
+
+		// copy file
+		final Path newFilename = writeFile(fileVariable);
+
+		xmlVariable.setAttribute(XML_ATTR_FILENAME, (newFilename != null) ? newFilename.toString() : fileVariable.getPath());
+
 		currentElement.appendChild(xmlVariable);
+	}
+
+	private Path writeFile(final FileVariable fileVariable) {
+		final Path path = Paths.get(fileVariable.getPath());
+		final Path filename = path.getFileName();
+		Path destination = null;
+		try {
+			if (filename != null) {
+				destination = Paths.get(VARIABLE_DIRECTORY + File.separator + filename);
+				if (!destination.equals(path)) { // if source and destination are the same, the copy is useless
+					Files.copy(path, destination, StandardCopyOption.REPLACE_EXISTING);
+				}
+			}
+		} catch (IOException e) {
+			LOGGER.error("Error occurred when copying file " + fileVariable.getPath() + " to " + VARIABLE_DIRECTORY, e);
+			// copy failed, we still keep the filename of the source in the attribute of the xml variable
+			destination = null;
+		}
+
+		return destination;
 	}
 
 	static List<String> getColumnsFromFile(String fileName, String columnsDelimiter) throws IOException {
@@ -87,58 +107,4 @@ public class FileVariableWriter extends VariableWriter {
 	static List<String> getColumsFromFirstLine(Optional<String> firstLine, String columnsDelimiter) {
         return firstLine.map(s -> Arrays.stream(s.split(RegExpUtils.escape(columnsDelimiter))).map(String::trim).collect(Collectors.toList())).orElseGet(ImmutableList::of);
     }
-	
-	
-	//generate the file
-	static String dumpDataInFile(File folder, String variableName, List<String> columnsNames, String delimiter, String [][] data) {
-		if(folder == null || !folder.isDirectory()) {
-			if (folder == null) {
-				LOGGER.error("the output folder does not exists");
-			} else {
-				LOGGER.error("the folder \"" + folder.getAbsolutePath() + "\" does not exists");
-			}
-			return null;
-		}
-		
-		boolean notFound = true;
-		int numFile = 0;
-		File dataFile = new File(folder.getAbsolutePath() + File.separator + VARIABLE_DIRECTORY);
-		if (! dataFile.exists()) {
-			dataFile.mkdir();
-		}
-		
-		//find file path
-		while (notFound) {
-			numFile++;
-			dataFile = new File(folder.getAbsolutePath() +
-					File.separator + VARIABLE_DIRECTORY +
-					File.separator + DATA_FILE_BASE_NAME +
-					"_" + variableName +
-					Integer.toString(numFile) + DATA_FILE_BASE_EXT);
-			if(!dataFile.exists()) {
-				notFound = false;
-			}
-		}
-		
-		try(Writer writer = Files.newBufferedWriter(Paths.get(dataFile.getPath()));
-				CSVWriter csvWriter = new CSVWriter(writer,
-				delimiter.charAt(0),
-				CSVWriter.NO_QUOTE_CHARACTER,
-				CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-				CSVWriter.DEFAULT_LINE_END);
-	        ) {
-			
-			String[] headerRecord = new String[columnsNames.size()];
-			columnsNames.toArray(headerRecord);
-			
-			csvWriter.writeNext(headerRecord);
-			Arrays.asList(data).stream().forEach(csvWriter::writeNext);
-			
-		} catch (IOException e) {
-			LOGGER.error("An error occured while writing the parameter File \"" + dataFile.getAbsolutePath() + "\":\n" + e);
-		}
-		
-		return VARIABLE_DIRECTORY + File.separator + dataFile.getName();
-	}
-	
 }

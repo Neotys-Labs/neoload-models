@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload.server;
 
+import com.neotys.neoload.model.v3.project.server.BasicAuthentication;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 import org.junit.Test;
@@ -46,6 +47,28 @@ public class ServerWriterTest {
 				.port("443")
 				.scheme(Server.Scheme.HTTPS)
 				.build();
+		ServerWriter.of(server).writeXML(doc, root);
+
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
+
+	@Test
+	public void writeServerWithAuthXmlTest() throws ParserConfigurationException {
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><http-server hostname=\"host_test.com\" "
+				+ "name=\"server_test\" port=\"8080\" ssl=\"false\" "
+				+ "uid=\"server_test\">"
+				+ "<authorization password=\"passwd\" realm=\"mysecurerealm\"\n"
+				+ "        scheme=\"Basic\" userName=\"username\"/>"
+				+ "</http-server>"
+				+ "</test-root>";
+
+		Server server = Server.builder().from(WrittingTestUtils.SERVER_TEST)
+				.authentication(BasicAuthentication.builder().login("username").password("passwd").realm("mysecurerealm").build())
+				.build();
+
 		ServerWriter.of(server).writeXML(doc, root);
 
 		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();

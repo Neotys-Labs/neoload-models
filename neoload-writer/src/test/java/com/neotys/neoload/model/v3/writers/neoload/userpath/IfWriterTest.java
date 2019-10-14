@@ -21,9 +21,9 @@ public class IfWriterTest {
     	final Element root = WrittingTestUtils.generateTestRootElement(doc);
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><if-action name=\"condition\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.IF_THEN_TEST_1)
-    			+ "\"><then-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
+    			+ "\"><then-container element-number=\"1\" execution-type=\"0\" slaProfileEnabled=\"false\" weightsEnabled=\"false\">"
     			+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.SET_OK_CODE_CUSTOM_ACTION)+ "\"/>"
-    			+ "</then-container><else-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
+    			+ "</then-container><else-container element-number=\"1\" execution-type=\"0\" slaProfileEnabled=\"false\" weightsEnabled=\"false\">"
     			+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.SET_OK_CODE_CUSTOM_ACTION)+ "\"/>"
     			+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.IS_OBJECT_AVAILABLE_CUSTOM_ACTION)+ "\"/>"
     			+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.IF_THEN_TEST_2)+ "\"/></else-container>"
@@ -37,9 +37,9 @@ public class IfWriterTest {
     			+ "isHit=\"false\" name=\"isObjectAvailable\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.IS_OBJECT_AVAILABLE_CUSTOM_ACTION)+ "\">"
     			+ "<custom-action-parameter name=\"objectId\" type=\"TEXT\" value=\"x\"/></custom-action>"
     			+ "<if-action name=\"condition\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.IF_THEN_TEST_2)+ "\">"
-    			+ "<then-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\">"
+    			+ "<then-container element-number=\"1\" execution-type=\"0\" slaProfileEnabled=\"false\" weightsEnabled=\"false\">"
     			+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.SET_OK_CODE_CUSTOM_ACTION)+ "\"/>"
-    			+ "</then-container><else-container element-number=\"1\" execution-type=\"0\" weightsEnabled=\"false\"/>"
+    			+ "</then-container><else-container element-number=\"1\" execution-type=\"0\" slaProfileEnabled=\"false\" weightsEnabled=\"false\"/>"
     			+ "<conditions match-type=\"1\"><condition operand1=\"${sapgui_is_object_available_2}\" operand2=\"true\" operator=\"EQUALS\"/>"
     			+ "</conditions></if-action><custom-action actionType=\"SetText\" isHit=\"false\" "
     			+ "name=\"setOkCode\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.SET_OK_CODE_CUSTOM_ACTION)+ "\">"

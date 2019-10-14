@@ -25,7 +25,7 @@ public class ContainerWriterTest {
 				+ "slaProfileEnabled=\"false\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.CONTAINER_TEST)+ "\" weightsEnabled=\"false\">"
     			+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
     			+ "</basic-logical-action-container>"
-    			+ "<http-action actionType=\"1\" "
+    			+ "<http-action actionType=\"1\" followRedirects=\"false\" "
     			+ "method=\"GET\" name=\"request_test\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"

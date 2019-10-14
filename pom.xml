@@ -101,11 +101,14 @@
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.classic.version>1.2.3</logback.classic.version>
 		<gpg.executable>/usr/bin/gpg</gpg.executable>
+		<!--suppress UnresolvedMavenProperty -->
 		<gpg.passphrase>${env.PGP_PASSPHRASE}</gpg.passphrase>
 		<jacoco.version>0.7.7.201606060606</jacoco.version>
     	<validation-api.version>2.0.1.Final</validation-api.version>
     	<hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
     	<glassfish.javax.el.version>3.0.1-b10</glassfish.javax.el.version>
+		<jmeter.version>5.1.1</jmeter.version>
+
 	</properties>
 
 	<dependencyManagement>
@@ -225,6 +228,58 @@
                 <artifactId>juniversalchardet</artifactId>
                 <version>1.0.3</version>
             </dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.17</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+				</exclusions>
+				<version>${jmeter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_core</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+				</exclusions>
+				<version>${jmeter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_http</artifactId>
+
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+				</exclusions>
+				<version>${jmeter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.jmeter</groupId>
+				<artifactId>ApacheJMeter_components</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+
+				</exclusions>
+				<version>${jmeter.version}</version>
+			</dependency>
 
 			<!-- Test -->
 			<dependency>
@@ -236,7 +291,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
-				<version>1.9.5</version>
+				<version>1.10.19</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -301,6 +356,8 @@
 								<goal>jar</goal>
 							</goals>
 							<configuration>
+								<javadocExecutable>/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home/bin/javadoc</javadocExecutable>
+
 								<additionalparam>-Xdoclint:none</additionalparam>
 							</configuration>
 						</execution>
