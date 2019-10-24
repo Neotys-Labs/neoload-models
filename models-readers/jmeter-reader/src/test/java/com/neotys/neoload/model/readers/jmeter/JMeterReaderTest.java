@@ -3,7 +3,7 @@ package com.neotys.neoload.model.readers.jmeter;
 import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
-import com.neotys.neoload.model.readers.jmeter.step.httpRequest.Servers;
+import com.neotys.neoload.model.readers.jmeter.step.httprequest.Servers;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ConvertThreadGroupResult;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ThreadGroupConverter;
 import com.neotys.neoload.model.v3.project.DependencyType;

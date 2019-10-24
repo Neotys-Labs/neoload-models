@@ -1,4 +1,4 @@
-package com.neotys.neoload.model.readers.jmeter.step.httpRequest;
+package com.neotys.neoload.model.readers.jmeter.step.httprequest;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;

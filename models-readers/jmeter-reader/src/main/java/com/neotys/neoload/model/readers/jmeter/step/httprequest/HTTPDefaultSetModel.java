@@ -1,4 +1,4 @@
-package com.neotys.neoload.model.readers.jmeter.step.httpRequest;
+package com.neotys.neoload.model.readers.jmeter.step.httprequest;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;

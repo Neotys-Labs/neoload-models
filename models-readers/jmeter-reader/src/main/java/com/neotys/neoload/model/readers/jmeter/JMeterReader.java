@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.neotys.neoload.model.listener.EventListener;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
-import com.neotys.neoload.model.readers.jmeter.step.httpRequest.Servers;
+import com.neotys.neoload.model.readers.jmeter.step.httprequest.Servers;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ConvertThreadGroupResult;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ThreadGroupConverter;
 import com.neotys.neoload.model.readers.jmeter.variable.VariableConverters;
