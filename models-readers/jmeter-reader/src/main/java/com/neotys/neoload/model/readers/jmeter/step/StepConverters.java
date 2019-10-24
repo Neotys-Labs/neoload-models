@@ -34,7 +34,7 @@ public final class StepConverters {
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(StepConverters.class);
 
-    private final Map<Class, BiFunction<?, HashTree, List<Step>>> convertersMap;
+    private final Map<Class, BiFunction<? extends Object, HashTree, List<Step>>> convertersMap;
 
     //Constructor
     public StepConverters() {
@@ -80,7 +80,7 @@ public final class StepConverters {
         return list;
     }
 
-    public Map<Class, BiFunction<?, HashTree, List<Step>>> getConvertersMap() {
+    public Map<Class, BiFunction<? extends Object, HashTree, List<Step>>> getConvertersMap() {
         return convertersMap;
     }
 

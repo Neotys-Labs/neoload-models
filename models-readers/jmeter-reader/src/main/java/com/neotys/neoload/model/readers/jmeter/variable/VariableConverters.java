@@ -26,7 +26,7 @@ public final class VariableConverters {
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(VariableConverters.class);
 
-    private static Map<Class, BiFunction<?, HashTree, List<Variable>>> convertersMap =
+    private static Map<Class, BiFunction<? extends Object, HashTree, List<Variable>>> convertersMap =
             ImmutableMap.of(
                     CSVDataSet.class, new CSVDataSetConverter(),
                     CounterConfig.class, new CounterConverter(),
@@ -58,7 +58,7 @@ public final class VariableConverters {
         ContainerUtils.addVariable(list);
     }
 
-    public static Map<Class, BiFunction<?, HashTree, List<Variable>>> getConvertersMap() {
+    public static Map<Class, BiFunction<? extends Object, HashTree, List<Variable>>> getConvertersMap() {
         return convertersMap;
     }
 }
