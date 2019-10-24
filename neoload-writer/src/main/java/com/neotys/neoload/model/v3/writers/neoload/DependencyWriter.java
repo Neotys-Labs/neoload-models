@@ -22,7 +22,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  */
 public class DependencyWriter extends ElementWriter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JavaScriptWriter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DependencyWriter.class);
 
     private static final String XML_JSLIB_TAG_NAME = "js-library";
     private static final String XML_ATTRIBUTE_FILENAME = "filename";

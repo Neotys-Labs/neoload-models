@@ -106,7 +106,6 @@ public class JavaScriptVariableWriter extends VariableWriter {
 			Files.write(content, jsFile);
 		} catch (IOException e) {
 			LOGGER.error("An error occured while writing the JavaScript file \"" + jsFile.getAbsolutePath() + "\":\n" + e);
-			return;
 		}
 	}
 

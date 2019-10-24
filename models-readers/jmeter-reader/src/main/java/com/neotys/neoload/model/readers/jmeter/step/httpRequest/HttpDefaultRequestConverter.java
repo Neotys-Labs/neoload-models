@@ -23,10 +23,6 @@ public class HttpDefaultRequestConverter implements BiFunction<ConfigTestElement
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpDefaultRequestConverter.class);
 
-    //Constructor
-    public HttpDefaultRequestConverter() {
-    }
-
     //Methods
     @Override
     public List<Step> apply(final ConfigTestElement configTestElement, final HashTree hashTree) {

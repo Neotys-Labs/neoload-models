@@ -16,9 +16,10 @@ public final class ClasspathUtils {
 
     private static final String JAVA_CLASS_PATH = "java.class.path";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JMeterReader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClasspathUtils.class);
 
-    private ClasspathUtils() {}
+    private ClasspathUtils() {
+    }
 
     public static void updateClassLoader() throws MalformedURLException, IntrospectionException {
         updatePath("search_paths", ";");
@@ -29,8 +30,8 @@ public final class ClasspathUtils {
     private static void addPath(final String path) throws MalformedURLException, IntrospectionException {
         File file = new File(path);
 
-        if (file.isDirectory() && !path.endsWith("/")) {
-            file = new File(path + "/");
+        if (file.isDirectory() && !path.endsWith(File.separator)) {
+            file = new File(path + File.separator);
         }
 
         addURLToSystemClassLoader(file.toURI().toURL());
@@ -47,7 +48,7 @@ public final class ClasspathUtils {
         }
 
         // ClassFinder needs this
-        System.setProperty(JAVA_CLASS_PATH,sb.toString());
+        System.setProperty(JAVA_CLASS_PATH, sb.toString());
     }
 
     private static File[] listJars(final File dir) {
@@ -90,8 +91,8 @@ public final class ClasspathUtils {
             final Method method = classLoaderClass.getDeclaredMethod("addURL", new Class[]{URL.class});
             method.setAccessible(true);
             method.invoke(systemClassLoader, new Object[]{url});
-        } catch (Throwable t) {
-            LOGGER.error("Error: ", t);
+        } catch (Exception e) {
+            LOGGER.error("Error: ", e);
             throw new IntrospectionException("Error when adding url to system ClassLoader");
         }
     }

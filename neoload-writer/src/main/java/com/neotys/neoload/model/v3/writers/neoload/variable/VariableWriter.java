@@ -54,13 +54,4 @@ public abstract class VariableWriter extends ElementWriter {
 		currentElement.setAttribute(XML_ATTR_RANGE, Integer.toString(getScopeCode(variable.getScope())));
 		currentElement.setAttribute(XML_ATTR_WHEN_OUT_OF_VALUE, getWhenOutOfValuesCode(variable.getOutOfValue()));
 	}
-
-//	// needs a refactor to be put in an upper class or in an util class (duplication from ElementWritter). The original function might have a bug!!!
-//	public void writeDescription(final Document document, final org.w3c.dom.Element currentElement) {
-//		this.element.getDescription().ifPresent(s -> {
-//			org.w3c.dom.Element descElement = document.createElement(ElementWriter.XML_DESCRIPTION_TAG);
-//			descElement.setTextContent(s);
-//			currentElement.appendChild(descElement);
-//		});
-//	}
 }

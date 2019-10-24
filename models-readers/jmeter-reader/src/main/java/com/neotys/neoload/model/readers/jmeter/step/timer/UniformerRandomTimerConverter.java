@@ -23,9 +23,6 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(UniformerRandomTimerConverter.class);
 
-    //Constructor
-    public UniformerRandomTimerConverter() { }
-
     //Methods
     @Override
     public List<Step> apply(final UniformRandomTimer uniformRandomTimer, final HashTree hashTree) {

@@ -18,7 +18,7 @@ import java.util.function.BiFunction;
 public class JSONExtractorConverter implements BiFunction<JSONPostProcessor, HashTree, List<VariableExtractor>> {
 
     //Attributs
-    private static final Logger LOGGER = LoggerFactory.getLogger(XPathExtractorConverter2.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JSONExtractorConverter.class);
 
     private static final String JSON_EXTRACTOR = "JsonExtractor";
 

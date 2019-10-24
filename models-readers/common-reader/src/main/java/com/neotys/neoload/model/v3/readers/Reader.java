@@ -31,19 +31,5 @@ public abstract class Reader {
 		dependencies.removeIf(filter);
 	}
 
-//	public Map<String, List<File>> getFileToCopy() {
-//		Map<String, List<File>> returnedMap = new HashMap<>();
-//		returnedMap.put("variables", dataFilesToCopy);
-//		return returnedMap;
-//	}
-
-//	public void addDataFilesToCopy(final File file) {
-//		dataFilesToCopy.add(file);
-//	}
-//
-//	public void removeDataFilesToCopyIf(final Predicate<File> filter) {
-//		dataFilesToCopy.removeIf(filter);
-//	}
-
 	public abstract Project read();
 }

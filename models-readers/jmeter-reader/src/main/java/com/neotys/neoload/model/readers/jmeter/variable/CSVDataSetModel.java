@@ -2,7 +2,8 @@ package com.neotys.neoload.model.readers.jmeter.variable;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.variable.ImmutableCSVDataSetModel.Builder;
-import com.neotys.neoload.model.v3.project.variable.FileVariable;
+import com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue;
+import com.neotys.neoload.model.v3.project.variable.Variable.Scope;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,23 +41,23 @@ abstract class CSVDataSetModel {
         return ImmutableCSVDataSetModel.builder();
     }
 
-    FileVariable.OutOfValue computeOutOfValue() {
+    OutOfValue computeOutOfValue() {
         if (getStopThread() && !getRecycle()) {
-            return FileVariable.OutOfValue.STOP;
+            return OutOfValue.STOP;
         } else {
-            return FileVariable.OutOfValue.CYCLE;
+            return OutOfValue.CYCLE;
         }
     }
 
-    Optional<FileVariable.Scope> computeScope() {
+    Optional<Scope> computeScope() {
         if ("shareMode.group".equals(getShareMode())) {
             LOGGER.warn("This Parameter can't be converted at 100%");
             EventListenerUtils.readSupportedParameterWithWarn("FileVariable", "Scope", "ShareMode", "Can't be 100% converted");
-            return of(FileVariable.Scope.GLOBAL);
+            return of(Scope.GLOBAL);
         } else if ("shareMode.all".equals(getShareMode())) {
-            return of(FileVariable.Scope.GLOBAL);
+            return of(Scope.GLOBAL);
         } else if ("shareMode.thread".equals(getShareMode())) {
-            return of(FileVariable.Scope.LOCAL);
+            return of(Scope.LOCAL);
         } else {
             LOGGER.error("Share mode parameter not supported");
             EventListenerUtils.readUnsupportedParameter("CSVDataSet", "String ", "ShareMode Parameter");

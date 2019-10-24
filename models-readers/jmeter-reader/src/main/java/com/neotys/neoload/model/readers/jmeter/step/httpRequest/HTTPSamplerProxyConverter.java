@@ -30,10 +30,6 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
 
-    //Constructor
-    public HTTPSamplerProxyConverter() {
-    }
-
     //Methods
     /**
      * Here we create the httpRequest of Neoload

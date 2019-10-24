@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.apache.jmeter.testelement.TestElement.GUI_CLASS;
 
 /**
  * This class convert UserSefinedVariable of JMter into Variables of neoload
@@ -51,7 +52,7 @@ public class UserDefineVariableConverter implements BiFunction<Arguments, HashTr
      */
     public List<Variable> apply(final Arguments jMeterProperties, final HashTree hashTree) {
         final List<Variable> variableList = new ArrayList<>();
-        if (ArgumentsPanel.class.getName().equals(jMeterProperties.getPropertyAsString(Arguments.GUI_CLASS))) {
+        if (ArgumentsPanel.class.getName().equals(jMeterProperties.getPropertyAsString(GUI_CLASS))) {
             final Map<String, String> variableMap = jMeterProperties.getArgumentsAsMap();
             for (String key : variableMap.keySet()) {
 

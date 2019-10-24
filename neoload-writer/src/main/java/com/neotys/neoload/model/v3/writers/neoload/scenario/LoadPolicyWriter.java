@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 
 import java.util.Optional;
 
-abstract public class LoadPolicyWriter {
+public abstract class LoadPolicyWriter {
     // duration-policy-entry
 	private static final String XML_TAG_DURATION_POLICY_NAME = "duration-policy-entry";
 	private static final String XML_ATTR_TYPE = "type";    

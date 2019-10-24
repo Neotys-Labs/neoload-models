@@ -20,9 +20,6 @@ public class ConstantTimerConverter implements BiFunction<ConstantTimer, HashTre
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(ConstantTimerConverter.class);
 
-    //Constructor
-    public ConstantTimerConverter() {}
-
     //Methods
     @Override
     public List<Step> apply(final ConstantTimer constantTimer, final HashTree hashtree) {
