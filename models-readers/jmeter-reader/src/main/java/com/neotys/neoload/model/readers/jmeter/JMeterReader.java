@@ -64,7 +64,7 @@ public class JMeterReader extends Reader {
             HashTree testPlanTree = null;
             try {
                 testPlanTree = readJMeterProject(file);
-            } catch (IOException | ExceptionWrapper e) {
+            } catch (IOException | UpdateClassLoaderExceptionWrapper e) {
                 LOGGER.error("Problem to Load HashTree", e);
             }
             final List<PopulationPolicy> popPolicy = new ArrayList<>();
@@ -123,7 +123,7 @@ public class JMeterReader extends Reader {
      * @return
      * @throws IOException
      */
-    HashTree readJMeterProject(final File fichier) throws IOException, ExceptionWrapper {
+    HashTree readJMeterProject(final File fichier) throws IOException, UpdateClassLoaderExceptionWrapper {
         JMeterUtils.setJMeterHome(jmeterPath);
         JMeterUtils.loadJMeterProperties(jmeterPath + File.separator + "bin" + File.separator + "jmeter.properties");
         JMeterUtils.initLocale();

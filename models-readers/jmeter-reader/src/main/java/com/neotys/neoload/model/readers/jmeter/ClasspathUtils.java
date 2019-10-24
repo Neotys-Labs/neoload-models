@@ -21,13 +21,13 @@ public final class ClasspathUtils {
     private ClasspathUtils() {
     }
 
-    public static void updateClassLoader() throws ExceptionWrapper {
+    public static void updateClassLoader() throws UpdateClassLoaderExceptionWrapper {
         updatePath("search_paths", ";");
         updatePath("user.classpath", File.pathSeparator);
         updatePath("plugin_dependency_paths", ";");
     }
 
-    private static void addPath(final String path) throws ExceptionWrapper {
+    private static void addPath(final String path) throws UpdateClassLoaderExceptionWrapper {
         File file = new File(path);
 
         if (file.isDirectory() && !path.endsWith(File.separator)) {
@@ -37,7 +37,7 @@ public final class ClasspathUtils {
         try {
             addURLToSystemClassLoader(file.toURI().toURL());
         } catch (IntrospectionException | MalformedURLException e) {
-            throw new ExceptionWrapper(e);
+            throw new UpdateClassLoaderExceptionWrapper(e);
         }
 
         final StringBuilder sb = new StringBuilder(System.getProperty(JAVA_CLASS_PATH));
@@ -49,7 +49,7 @@ public final class ClasspathUtils {
             try {
                 addURLToSystemClassLoader(jar.toURI().toURL());
             } catch (IntrospectionException | MalformedURLException e) {
-                throw new ExceptionWrapper(e);
+                throw new UpdateClassLoaderExceptionWrapper(e);
             }
             sb.append(File.pathSeparator);
             sb.append(jar.getPath());
@@ -72,7 +72,7 @@ public final class ClasspathUtils {
         return new File[0];
     }
 
-    private static void updatePath(final String property, final String sep) throws ExceptionWrapper {
+    private static void updatePath(final String property, final String sep) throws UpdateClassLoaderExceptionWrapper {
         final String userpath = JMeterUtils.getPropDefault(property, "");
         if (userpath.length() <= 0) {
             return;
@@ -108,9 +108,9 @@ public final class ClasspathUtils {
     }
 }
 
-class ExceptionWrapper extends Exception {
+class UpdateClassLoaderExceptionWrapper extends Exception {
 
-    public ExceptionWrapper(final Exception e) {
+    public UpdateClassLoaderExceptionWrapper(final Exception e) {
         super(e);
     }
 }

@@ -6,10 +6,8 @@ import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
 import com.neotys.neoload.model.readers.jmeter.step.httpRequest.Servers;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ConvertThreadGroupResult;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ThreadGroupConverter;
-import com.neotys.neoload.model.readers.jmeter.variable.VariableConverters;
 import com.neotys.neoload.model.v3.project.DependencyType;
 import com.neotys.neoload.model.v3.project.ImmutableDependency;
-import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
@@ -26,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +52,7 @@ public class JMeterReaderTest {
     }
 
     @Test
-    public void testRead() throws IOException, IntrospectionException {
+    public void testRead() throws IOException, UpdateClassLoaderExceptionWrapper {
         JMeterReader jMeterReader = spy(new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter"));
         ThreadGroup threadGroup = new ThreadGroup();
         threadGroup.setName("Test Thread");
@@ -103,7 +100,7 @@ public class JMeterReaderTest {
     }
 
     @Test
-    public void testReadScript() throws IOException, IntrospectionException {
+    public void testReadScript() throws IOException, UpdateClassLoaderExceptionWrapper {
 
         JMeterReader jMeterReader = spy(new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter"));
         List<PopulationPolicy> populationPolicyList = new ArrayList<>();
@@ -153,7 +150,7 @@ public class JMeterReaderTest {
     }
 
     @Test
-    public void testReadScriptError() throws IOException, IntrospectionException {
+    public void testReadScriptError() throws IOException, UpdateClassLoaderExceptionWrapper {
         JMeterReader jMeterReader = spy(new JMeterReader(mock(EventListener.class), "/test", "test", "/jmeter"));
         ThreadGroup threadGroup = new ThreadGroup();
         threadGroup.setName("Test Thread");
