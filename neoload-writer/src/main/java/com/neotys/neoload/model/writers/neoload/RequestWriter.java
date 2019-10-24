@@ -9,6 +9,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -183,7 +184,7 @@ public abstract class RequestWriter extends ElementWriter {
 
 	private static void writeRecordedResponseHeaders(final String recordedResponseHeaderFile, final Document document, final Element xmlRequest) {
 		try {
-			final String responseHeaders = new String(Files.readAllBytes(Paths.get(recordedResponseHeaderFile)), "UTF-8").replaceAll("\r\n", "\n");
+			final String responseHeaders = new String(Files.readAllBytes(Paths.get(recordedResponseHeaderFile)), StandardCharsets.UTF_8).replaceAll("\r\n", "\n");
 			writeRecordedStatusCode(xmlRequest, responseHeaders);
 			final Element element = document.createElement(XML_TAG_RESPONSE_HEADERS);
 			element.setTextContent(responseHeaders);

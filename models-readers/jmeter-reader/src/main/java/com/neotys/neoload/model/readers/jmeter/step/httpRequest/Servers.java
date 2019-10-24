@@ -23,7 +23,7 @@ public final class Servers {
     //Attributs
     private static final Set<ServerWrapper> SERVER_LIST = new HashSet<>();
     private static Server SERVER_Default_LIST = null;
-    private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Servers.class);
 
     //Constructor
     private Servers() {

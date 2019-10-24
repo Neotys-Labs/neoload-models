@@ -18,7 +18,7 @@ import static java.util.Optional.of;
 abstract class CSVDataSetModel {
 
     //Attributs
-    private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataSetConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CSVDataSetModel.class);
 
     abstract boolean getRecycle();
 

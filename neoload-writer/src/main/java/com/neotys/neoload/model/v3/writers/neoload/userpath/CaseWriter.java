@@ -55,9 +55,7 @@ public class CaseWriter extends ElementWriter {
         This will be done in the Switch Writer
          */
         ((Case) element).getSteps().forEach(
-                elt -> {
-                    WriterUtils.generateEmbeddedAction(document, caseElement, elt, Optional.of(WriterUtils.WEIGHTED_ACTION_XML_TAG_NAME), true);
-                }
+                elt -> WriterUtils.generateEmbeddedAction(document, caseElement, elt, Optional.of(WriterUtils.WEIGHTED_ACTION_XML_TAG_NAME), true)
         );
     }
 }

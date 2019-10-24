@@ -11,6 +11,7 @@ import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -32,8 +33,8 @@ public class HttpDefaultRequestConverter implements BiFunction<ConfigTestElement
             LOGGER.info("Conversion of HttpRequest Default");
             EventListenerUtils.readSupportedFunction("HttpRequestDefault", "Http Request Default Server");
         }
-        final List<Step> stepList = null;
-        return stepList;
+
+        return Collections.emptyList();
     }
 
     /**

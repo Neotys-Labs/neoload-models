@@ -17,7 +17,8 @@ public class JavaScriptConverter {
 
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(JavaScriptConverter.class);
-    private static final String cookieManager = "CookieManager";
+    private static final String COOKIE_MANAGER = "CookieManager";
+    private static final String CACHE_MANAGER = "CacheManager";
 
     //Constructor
     JavaScriptConverter() {
@@ -54,7 +55,7 @@ public class JavaScriptConverter {
         if (cacheManager.getClearEachIteration()) {
             script.append("context.currentVU.clearCache()\n");
             LOGGER.info("Clear cache option converted");
-            EventListenerUtils.readSupportedFunction("CacheManager", "Javascript CacheManager");
+            EventListenerUtils.readSupportedFunction(CACHE_MANAGER, "Javascript CacheManager");
         }
         return script;
     }
@@ -73,13 +74,13 @@ public class JavaScriptConverter {
                 script.append(cookieManager.get(i).getPath()).append("\")");
                 script.append(("\n"));
                 LOGGER.info("Cookie Converted");
-                EventListenerUtils.readSupportedFunction("CookieManager", "Javascript CookieManager");
+                EventListenerUtils.readSupportedFunction(COOKIE_MANAGER, "Javascript CookieManager");
             }
         }
 
         LOGGER.warn("We don't convert the Cookie Policy");
-        EventListenerUtils.readUnsupportedParameter(JavaScriptConverter.cookieManager, "CookiePolicy", "Type of policy");
-        EventListenerUtils.readUnsupportedParameter(JavaScriptConverter.cookieManager, "Option", "Clean for each iteration");
+        EventListenerUtils.readUnsupportedParameter(JavaScriptConverter.COOKIE_MANAGER, "CookiePolicy", "Type of policy");
+        EventListenerUtils.readUnsupportedParameter(JavaScriptConverter.COOKIE_MANAGER, "Option", "Clean for each iteration");
         return script;
     }
 }

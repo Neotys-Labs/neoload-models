@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 class HTTPHeaderConverter {
 
     //Attributs
-    private static final Logger LOGGER = LoggerFactory.getLogger(HTTPSamplerProxyConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HTTPHeaderConverter.class);
 
     //Constructor
      private HTTPHeaderConverter() {

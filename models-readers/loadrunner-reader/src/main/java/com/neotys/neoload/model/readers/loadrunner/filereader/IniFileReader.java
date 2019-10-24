@@ -28,7 +28,7 @@ public abstract class IniFileReader {
 	}
 	
 	IniFileReader(final File folderFullPath, String filename) {
-		this.fileName = filename != null && filename != "" ? Optional.of(filename) : Optional.empty();
+		this.fileName = filename != null && !filename.equals("") ? Optional.of(filename) : Optional.empty();
 		verifyPathAndLoadFile(folderFullPath);
 		if(fileInfos!=null) {
 			sectionNames.addAll(fileInfos.keySet());

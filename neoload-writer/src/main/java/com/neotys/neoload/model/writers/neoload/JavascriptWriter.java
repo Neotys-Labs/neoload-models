@@ -65,7 +65,6 @@ public class JavascriptWriter extends ElementWriter {
 			Files.write(content, jsFile);
 		} catch (IOException e) {
 			LOGGER.error("An error occured while writing the Javascript file \"" + jsFile.getAbsolutePath() + "\":\n" + e);
-			return;
 		}
 	}
 	

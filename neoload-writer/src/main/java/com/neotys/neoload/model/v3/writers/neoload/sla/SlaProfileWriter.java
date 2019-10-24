@@ -25,12 +25,9 @@ public class SlaProfileWriter extends ElementWriter {
 
         super.writeXML(document, xmlSla, outputFolder);
 
-        Arrays.stream(SlaThreshold.Scope.values()).forEach(scope -> {
-            scope.getKpis().forEach(kpi -> SlaThresholdWriter.of(getSlaThresholdFromProfile(kpi)).writeXML(document, xmlSla, scope, kpi));
-        });
+        Arrays.stream(SlaThreshold.Scope.values()).forEach(scope -> scope.getKpis().forEach(kpi -> SlaThresholdWriter.of(getSlaThresholdFromProfile(kpi)).writeXML(document, xmlSla, scope, kpi)));
 
         document.appendChild(xmlSla);
-
     }
 
     private Optional<SlaThreshold> getSlaThresholdFromProfile(SlaThreshold.KPI kpi) {

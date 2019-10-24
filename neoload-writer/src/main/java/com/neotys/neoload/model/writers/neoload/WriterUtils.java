@@ -22,7 +22,7 @@ public class WriterUtils {
 	public static final String NL_VARIABLE_START = "${";
 	public static final String NL_VARIABLE_END = "}";
 		
-    static final Logger LOGGER = LoggerFactory.getLogger(NeoLoadWriter.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(WriterUtils.class);
     
     private static Map<Element, String> elementUids = LazyMap.lazyMap(new HashMap<Element, String>(), a -> UUID.randomUUID().toString());
     

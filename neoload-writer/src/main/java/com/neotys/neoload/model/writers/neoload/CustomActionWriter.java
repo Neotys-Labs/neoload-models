@@ -14,7 +14,7 @@ import com.neotys.neoload.model.repository.CustomAction;
 
 public class CustomActionWriter extends ElementWriter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FileVariableWriter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomActionWriter.class);
 	public static final String XML_TAG_NAME = "custom-action";
 	public static final String XML_ACTION_TYPE_ATT = "actionType";
 	public static final String XML_IS_HIT_ATT = "isHit";

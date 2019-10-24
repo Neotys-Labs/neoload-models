@@ -21,20 +21,24 @@ public final class ClasspathUtils {
     private ClasspathUtils() {
     }
 
-    public static void updateClassLoader() throws MalformedURLException, IntrospectionException {
+    public static void updateClassLoader() throws ExceptionWrapper {
         updatePath("search_paths", ";");
         updatePath("user.classpath", File.pathSeparator);
         updatePath("plugin_dependency_paths", ";");
     }
 
-    private static void addPath(final String path) throws MalformedURLException, IntrospectionException {
+    private static void addPath(final String path) throws ExceptionWrapper {
         File file = new File(path);
 
         if (file.isDirectory() && !path.endsWith(File.separator)) {
             file = new File(path + File.separator);
         }
 
-        addURLToSystemClassLoader(file.toURI().toURL());
+        try {
+            addURLToSystemClassLoader(file.toURI().toURL());
+        } catch (IntrospectionException | MalformedURLException e) {
+            throw new ExceptionWrapper(e);
+        }
 
         final StringBuilder sb = new StringBuilder(System.getProperty(JAVA_CLASS_PATH));
         sb.append(File.pathSeparator);
@@ -42,7 +46,11 @@ public final class ClasspathUtils {
 
         final File[] jars = listJars(file);
         for (File jar : jars) {
-            addURLToSystemClassLoader(jar.toURI().toURL());
+            try {
+                addURLToSystemClassLoader(jar.toURI().toURL());
+            } catch (IntrospectionException | MalformedURLException e) {
+                throw new ExceptionWrapper(e);
+            }
             sb.append(File.pathSeparator);
             sb.append(jar.getPath());
         }
@@ -64,7 +72,7 @@ public final class ClasspathUtils {
         return new File[0];
     }
 
-    private static void updatePath(final String property, final String sep) throws MalformedURLException, IntrospectionException {
+    private static void updatePath(final String property, final String sep) throws ExceptionWrapper {
         final String userpath = JMeterUtils.getPropDefault(property, "");
         if (userpath.length() <= 0) {
             return;
@@ -88,12 +96,21 @@ public final class ClasspathUtils {
         final Class<URLClassLoader> classLoaderClass = URLClassLoader.class;
 
         try {
-            final Method method = classLoaderClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+            final Class[] parameterTypes = new Class[] { URL.class };
+            final Method method = classLoaderClass.getDeclaredMethod("addURL", parameterTypes);
             method.setAccessible(true);
-            method.invoke(systemClassLoader, new Object[]{url});
+            final Object[] args = new Object[] { url };
+            method.invoke(systemClassLoader, args);
         } catch (Exception e) {
             LOGGER.error("Error: ", e);
             throw new IntrospectionException("Error when adding url to system ClassLoader");
         }
+    }
+}
+
+class ExceptionWrapper extends Exception {
+
+    public ExceptionWrapper(final Exception e) {
+        super(e);
     }
 }

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,17 +55,17 @@ public class UserDefineVariableConverter implements BiFunction<Arguments, HashTr
         final List<Variable> variableList = new ArrayList<>();
         if (ArgumentsPanel.class.getName().equals(jMeterProperties.getPropertyAsString(GUI_CLASS))) {
             final Map<String, String> variableMap = jMeterProperties.getArgumentsAsMap();
-            for (String key : variableMap.keySet()) {
+            for(Entry<String, String> entry : variableMap.entrySet()) {
 
-                final String value = variableMap.get(key);
+                final String value = entry.getValue();
                 final String parsedValue = parseValue(value);
                 final ConstantVariable.Builder builder = (new ConstantVariable.Builder())
-                        .name(key)
+                        .name(entry.getKey())
                         .description(value)
                         .value(parsedValue);
 
                 variableList.add(builder.build());
-                ContainerUtils.addKeyValue(key, parsedValue);
+                ContainerUtils.addKeyValue(entry.getKey(), parsedValue);
             }
         }
         LOGGER.info("The conversion of User Defined Variable is a Success");
@@ -97,20 +98,20 @@ public class UserDefineVariableConverter implements BiFunction<Arguments, HashTr
 
     private String parseValue(final String value) {
         checkNotNull(value);
-        String result = "";
+        StringBuilder resultBuilder = new StringBuilder();
 
         final String[] segments = value.split(REGEX);
 
         if (segments.length == 0) {
-            result = parseMatch(value);
+            resultBuilder.append(parseMatch(value));
         } else {
             for (int i = 0; i < segments.length; i++) {
-                result += segments[i];
+                resultBuilder.append(segments[i]);
                 final String val = value.substring(value.indexOf(segments[i]) + segments[i].length());
-                result += parseMatch(val);
+                resultBuilder.append(parseMatch(val));
             }
         }
 
-        return result;
+        return resultBuilder.toString();
     }
 }

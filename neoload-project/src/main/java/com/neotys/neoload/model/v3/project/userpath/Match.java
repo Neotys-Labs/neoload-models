@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum Match {
 
@@ -11,6 +13,7 @@ public enum Match {
             try {
                 return Match.valueOf(name.toUpperCase());
             } catch (final IllegalArgumentException iae) {
+                LOGGER.warn("Match operator not supported");
             }
         }
         throw new IllegalArgumentException("The Match must be: 'any' or 'all'.");
@@ -21,4 +24,6 @@ public enum Match {
     }
 
     public final static String MATCH = "match";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Match.class);
 }
