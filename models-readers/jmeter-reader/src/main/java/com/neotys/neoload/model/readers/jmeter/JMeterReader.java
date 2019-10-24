@@ -25,7 +25,6 @@ import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -65,7 +64,7 @@ public class JMeterReader extends Reader {
             HashTree testPlanTree = null;
             try {
                 testPlanTree = readJMeterProject(file);
-            } catch (IOException | IntrospectionException e) {
+            } catch (IOException | ExceptionWrapper e) {
                 LOGGER.error("Problem to Load HashTree", e);
             }
             final List<PopulationPolicy> popPolicy = new ArrayList<>();
@@ -124,7 +123,7 @@ public class JMeterReader extends Reader {
      * @return
      * @throws IOException
      */
-    HashTree readJMeterProject(final File fichier) throws IOException, IntrospectionException {
+    HashTree readJMeterProject(final File fichier) throws IOException, ExceptionWrapper {
         JMeterUtils.setJMeterHome(jmeterPath);
         JMeterUtils.loadJMeterProperties(jmeterPath + File.separator + "bin" + File.separator + "jmeter.properties");
         JMeterUtils.initLocale();
