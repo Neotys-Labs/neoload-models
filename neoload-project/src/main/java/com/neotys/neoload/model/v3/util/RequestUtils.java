@@ -5,6 +5,7 @@ import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
 import com.neotys.neoload.model.v3.project.userpath.Header;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
+import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -19,6 +20,9 @@ import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
 public class RequestUtils {
+
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(RequestUtils.class);
+
 	private static final Pattern URL_PATTERN = Pattern.compile("^((?<scheme>http[s]?|\\$\\{\\w+\\}):\\/\\/(?<host>([^:\\/\\[\\]]+)|(\\[[^\\/]+\\])):?(?<port>(\\d+)|(\\$\\{[^\\/]*\\}))?)?(?<path>((\\$\\{.+\\})|\\/.*$)*)");
 
 	private static final String URL_SCHEME_GROUP = "scheme";
@@ -214,6 +218,7 @@ public class RequestUtils {
 		try {
 			theScheme = Scheme.valueOf(scheme.toUpperCase());
 		} catch (Exception e) {
+			LOGGER.warn("Scheme " + scheme + " is not supported. Using HTTP instead.", e);
 			theScheme = Scheme.HTTP;
 		}
 

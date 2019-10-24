@@ -2,7 +2,6 @@ package com.neotys.neoload.model.v3.writers.neoload;
 
 import com.neotys.neoload.model.v3.project.Dependency;
 import com.neotys.neoload.model.v3.project.DependencyType;
-import com.neotys.neoload.model.v3.writers.neoload.userpath.JavaScriptWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
