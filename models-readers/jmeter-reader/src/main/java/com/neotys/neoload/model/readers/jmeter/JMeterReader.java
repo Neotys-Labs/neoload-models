@@ -9,8 +9,8 @@ import com.neotys.neoload.model.readers.jmeter.step.httprequest.Servers;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ConvertThreadGroupResult;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ThreadGroupConverter;
 import com.neotys.neoload.model.readers.jmeter.variable.VariableConverters;
+import com.neotys.neoload.model.v3.project.Dependency;
 import com.neotys.neoload.model.v3.project.DependencyType;
-import com.neotys.neoload.model.v3.project.ImmutableDependency;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
@@ -142,7 +142,7 @@ public class JMeterReader extends Reader {
         project.name(projectName);
 
         // the project jmeter needs the functions lib
-        project.addDependencies(ImmutableDependency.builder()
+        project.addDependencies(Dependency.builder()
                 .name("JMeter Tool Library")
                 .description("Contains some useful JMeter JS functions.")
                 .type(DependencyType.JS_LIBRARY)

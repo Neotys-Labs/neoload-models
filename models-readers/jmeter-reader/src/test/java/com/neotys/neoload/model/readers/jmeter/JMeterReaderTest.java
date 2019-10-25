@@ -7,7 +7,6 @@ import com.neotys.neoload.model.readers.jmeter.step.httprequest.Servers;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ConvertThreadGroupResult;
 import com.neotys.neoload.model.readers.jmeter.step.thread.ThreadGroupConverter;
 import com.neotys.neoload.model.v3.project.DependencyType;
-import com.neotys.neoload.model.v3.project.ImmutableDependency;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
@@ -31,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.neotys.neoload.model.v3.project.Dependency.builder;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -88,7 +88,7 @@ public class JMeterReaderTest {
         project.addPopulations(convert.getPopulation());
         populationPolicyList.add(convert.getPopulationPolicy());
         project.addScenarios(jMeterReader.getScenario(populationPolicyList, "", ""));
-        project.addDependencies(ImmutableDependency.builder()
+        project.addDependencies(builder()
                 .name("JMeter Tool Library")
                 .description("Contains some useful JMeter JS functions.")
                 .type(DependencyType.JS_LIBRARY)
@@ -138,7 +138,7 @@ public class JMeterReaderTest {
         project.addUserPaths(convert.getUserPath());
         populationPolicyList.add(convert.getPopulationPolicy());
         project.addScenarios(jMeterReader.getScenario(populationPolicyList, "", ""));
-        project.addDependencies(ImmutableDependency.builder()
+        project.addDependencies(builder()
                 .name("JMeter Tool Library")
                 .description("Contains some useful JMeter JS functions.")
                 .type(DependencyType.JS_LIBRARY)
@@ -261,7 +261,7 @@ public class JMeterReaderTest {
                 .name("test")
                 .addScenarios(scenario)
                 .addAllServers(Servers.getServers())
-                .addDependencies(ImmutableDependency.builder()
+                .addDependencies(builder()
                         .name("JMeter Tool Library")
                         .description("Contains some useful JMeter JS functions.")
                         .type(DependencyType.JS_LIBRARY)

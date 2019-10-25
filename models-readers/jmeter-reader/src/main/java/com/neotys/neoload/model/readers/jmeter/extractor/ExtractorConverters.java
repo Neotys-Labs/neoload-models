@@ -27,7 +27,7 @@ public class ExtractorConverters {
     //Attributs
     private static final Logger LOGGER = LoggerFactory.getLogger(ExtractorConverters.class);
 
-    private final Map<Class, BiFunction<? extends Object, HashTree, List<VariableExtractor>>> convertersMap;
+    private final Map<Class, BiFunction<?, HashTree, List<VariableExtractor>>> convertersMap;
 
     //Constructor
     public ExtractorConverters() {
@@ -64,7 +64,7 @@ public class ExtractorConverters {
     }
 
 
-    public Map<Class, BiFunction<? extends Object, HashTree, List<VariableExtractor>>> getConvertersMap() {
+    public Map<Class, BiFunction<?, HashTree, List<VariableExtractor>>> getConvertersMap() {
         return convertersMap;
     }
 

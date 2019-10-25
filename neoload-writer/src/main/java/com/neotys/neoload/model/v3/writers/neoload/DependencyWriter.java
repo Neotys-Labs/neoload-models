@@ -74,8 +74,8 @@ public class DependencyWriter extends ElementWriter {
         if (dependency.getInputStream() != null) {
             Files.copy(dependency.getInputStream(), destination, REPLACE_EXISTING);
         } else {
-            final Path source = Paths.get(dependency.getFilename());
-            Files.copy(source, destination);
+            final Path source = Paths.get(dependency.getFileDirectory()).resolve(dependency.getFilename());
+            Files.copy(source, destination, REPLACE_EXISTING);
         }
     }
 }
