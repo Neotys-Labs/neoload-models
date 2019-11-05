@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -71,20 +70,24 @@ public class FileVariableWriter extends VariableWriter {
 		writeDescription(document, xmlVariable);
 
 		// copy file
-		final Path newFilename = writeFile(fileVariable);
+		final Path newFilename = writeFile(fileVariable, outputFolder);
 
 		xmlVariable.setAttribute(XML_ATTR_FILENAME, (newFilename != null) ? newFilename.toString() : fileVariable.getPath());
 
 		currentElement.appendChild(xmlVariable);
 	}
 
-	private Path writeFile(final FileVariable fileVariable) {
+	private Path writeFile(final FileVariable fileVariable, final String outputFolder) {
 		final Path path = Paths.get(fileVariable.getPath());
 		final Path filename = path.getFileName();
 		Path destination = null;
 		try {
 			if (filename != null) {
-				destination = Paths.get(VARIABLE_DIRECTORY + File.separator + filename);
+				final Path variablesDir = Paths.get(outputFolder).resolve(VARIABLE_DIRECTORY);
+				if (!Files.exists(variablesDir)) {
+					Files.createDirectory(variablesDir);
+				}
+				destination = variablesDir.resolve(filename);
 				if (!destination.equals(path)) { // if source and destination are the same, the copy is useless
 					Files.copy(path, destination, StandardCopyOption.REPLACE_EXISTING);
 				}
@@ -98,13 +101,13 @@ public class FileVariableWriter extends VariableWriter {
 		return destination;
 	}
 
-	static List<String> getColumnsFromFile(String fileName, String columnsDelimiter) throws IOException {
+	static List<String> getColumnsFromFile(final String fileName, final String columnsDelimiter) throws IOException {
 		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 			return getColumsFromFirstLine(stream.findFirst(), columnsDelimiter);
 		}
 	}
 
-	static List<String> getColumsFromFirstLine(Optional<String> firstLine, String columnsDelimiter) {
+	static List<String> getColumsFromFirstLine(final Optional<String> firstLine, final String columnsDelimiter) {
         return firstLine.map(s -> Arrays.stream(s.split(RegExpUtils.escape(columnsDelimiter))).map(String::trim).collect(Collectors.toList())).orElseGet(ImmutableList::of);
     }
 }

@@ -12,6 +12,7 @@ import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -87,9 +88,11 @@ public class FileVariableWriterTest {
 
 		Document doc = WrittingTestUtils.generateEmptyDocument();
 		Element root = WrittingTestUtils.generateTestRootElement(doc);
+
+		File tempDir =  Files.createTempDir();
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
 				+ "<test-root><variable-file delimiters=\";\" "
-				+ "filename=\"src/test/resources/com/neotys/neoload/model/v3/writers/neoload/filevariable.csv\" name=\"variable_test\" "
+				+ "filename=\"" + tempDir.getAbsolutePath() + File.separator + "variables/filevariable.csv\" name=\"variable_test\" "
 				+ "offset=\"1\" order=\"1\" policy=\"4\" range=\"4\" "
 				+ "useFirstLine=\"true\" whenOutOfValues=\"CYCLE_VALUES\">"
 				+ "<column name=\"myfirstcol\" number=\"0\"/>"
@@ -97,7 +100,7 @@ public class FileVariableWriterTest {
 				+ "<column name=\"mythirdcol\" number=\"2\"/>"
 				+ "</variable-file></test-root>";
 
-		(new FileVariableWriter(fileVariable)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+		(new FileVariableWriter(fileVariable)).writeXML(doc, root, tempDir.getAbsolutePath());
 
 		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
 	}

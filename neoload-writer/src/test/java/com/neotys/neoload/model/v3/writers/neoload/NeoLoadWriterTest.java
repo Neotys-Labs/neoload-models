@@ -5,6 +5,7 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
+
+import static junit.framework.TestCase.assertTrue;
 
 public class NeoLoadWriterTest {
 
@@ -75,7 +78,7 @@ public class NeoLoadWriterTest {
     @Test(expected = IllegalArgumentException.class)
     public void writeProjectOnFileShouldFail() throws IOException {
 
-        File tmpFile = new File(Files.createTempDir().getAbsoluteFile()+File.separator+"tmpfile");
+        File tmpFile = new File(Files.createTempDir().getAbsoluteFile() + File.separator + "tmpfile");
         tmpFile.createNewFile();
         Project project = Project.builder()
                 .name("MyTest")
@@ -89,7 +92,7 @@ public class NeoLoadWriterTest {
     public void writeProjectFolderDoesNotExist() {
 
         File tmpDir = Files.createTempDir();
-        File destDir = new File(tmpDir.getAbsoluteFile()+File.separator+"notexist");
+        File destDir = new File(tmpDir.getAbsoluteFile() + File.separator + "notexist");
 
         Project project = Project.builder()
                 .name("MyTest")
@@ -119,6 +122,41 @@ public class NeoLoadWriterTest {
         Assertions.assertThat(NeoLoadWriter.validateVersion("a.3", 2)).isNull();
         Assertions.assertThat(NeoLoadWriter.validateVersion("2.a.1", 3)).isNull();
         Assertions.assertThat(NeoLoadWriter.validateVersion("2.3.a", 3)).isNull();
+    }
+
+    @Test
+    public void projectWithFileVariables() throws IOException {
+
+        File tmpDir = Files.createTempDir();
+        File projectFolder = new File(tmpDir.getAbsoluteFile() + File.separator + "myProject");
+
+        // the resource of the variable
+        File resourceFile = File.createTempFile("file", "csv");
+
+        UserPath myUserPath = UserPath.builder()
+                .name("myUser")
+                .actions(Container.builder()
+                        .addSteps(Delay.builder()
+                                .name("myDelay")
+                                .value("3000")
+                                .build())
+                        .build())
+                .build();
+
+        Project project = Project.builder()
+                .name("myProject")
+                .addUserPaths(myUserPath)
+                .addVariables(FileVariable.builder()
+                        .path(resourceFile.getAbsolutePath())
+                        .name("myVar")
+                        .description("blabla")
+                        .build())
+                .build();
+
+        NeoLoadWriter writer = new NeoLoadWriter(project, projectFolder.getAbsolutePath());
+        writer.write(false);
+
+        assertTrue(Paths.get(projectFolder.getAbsolutePath()).resolve("variables").resolve(resourceFile.getName()).toFile().exists());
     }
 
 }
