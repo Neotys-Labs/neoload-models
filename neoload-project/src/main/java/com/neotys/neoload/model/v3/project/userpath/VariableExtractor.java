@@ -72,7 +72,7 @@ public interface VariableExtractor extends Element {
 	@JsonProperty(REGEXP)
 	@RequiredCheck(groups={NeoLoad.class})
 	@Value.Default
-	default String getRegexp() { return "(.*?)";}
+	default String getRegexp() { return "(.*)";}
 
 	@JsonProperty(MATCH_NUMBER)
 	@RequiredCheck(groups={NeoLoad.class})
