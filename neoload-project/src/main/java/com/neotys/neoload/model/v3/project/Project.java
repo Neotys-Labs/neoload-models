@@ -25,7 +25,7 @@ import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS})
+@JsonPropertyOrder({Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
 
 @JsonDeserialize(as = ImmutableProject.class)
 @Value.Immutable
@@ -37,7 +37,8 @@ public interface Project {
 	String SERVERS = "servers";
 	String USER_PATHS = "user_paths";
 	String POPULATIONS = "populations";
-	String SCENARIOS = "scenarios";	
+	String SCENARIOS = "scenarios";
+	String PROJECT_SETTINGS = "project_settings";
 
 	@JsonProperty(NAME)
 	Optional<String> getName();
@@ -72,7 +73,8 @@ public interface Project {
 	@Valid
 	List<Scenario> getScenarios();
 
-	@JsonIgnore
+	@JsonProperty(PROJECT_SETTINGS)
+	@Valid
 	Map<String,String> getProjectSettings();
 
 	@JsonIgnore

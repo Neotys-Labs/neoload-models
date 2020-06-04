@@ -19,6 +19,7 @@ Definition has several top-level keys:
 | [user_paths](user-paths.md)    | The definition of virtual User Paths           | -               | -        |       |
 | [populations](population.md)   | The definition of Populations                  | -               | -        |       |
 | [scenarios](scenario.md)       | The definition of Scenarios                    | -               | -        |       |
+| [project_settings](project_settings.md) | The definition of project preferences | -               | -        |       |
 
 #### Example
 Below is an example of a NeoLoad project:

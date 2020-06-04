@@ -170,17 +170,9 @@
 		
 		<!ATTLIST dynaTraceSettings
 			dynaTraceEnabled CDATA #REQUIRED
-			recordSessionEnabled CDATA #REQUIRED
 			logicalNamesEnabled CDATA #REQUIRED
-			containerNamesEnabled CDATA #REQUIRED
-			version CDATA #IMPLIED
-			server CDATA #REQUIRED
-			port CDATA #REQUIRED
-			ssl CDATA #REQUIRED
-			login CDATA #REQUIRED
-			password CDATA #REQUIRED
-			systemName CDATA #REQUIRED
-			systemNames CDATA #REQUIRED>
+			url CDATA #REQUIRED
+			token CDATA #REQUIRED>
 
 		<!ELEMENT appDynamicsSettings (#PCDATA)>
 		
@@ -193,7 +185,7 @@
 		<!ELEMENT nudgeSettings (#PCDATA)>
 		
 		<!ATTLIST nudgeSettings
-			nudgeEnabled CDATA #REQUIRED
+			enabled CDATA #REQUIRED
 			vuNamesEnabled CDATA #REQUIRED
 			containerNamesEnabled CDATA #IMPLIED
 			logicalActionNamesEnabled CDATA #REQUIRED>
@@ -270,7 +262,7 @@
 <headersSettings containerEnabled="true" headersEnabled="false" logicalActionEnabled="true" percentageOfVUToTrace="10" traceByVUEnabled="false" vuEnabled="true"/>
 <workstationSettings emDomain="SuperDomain" emLogin="admin" emPassword="" intervalEndDelay="0" intervalStartDelay="0" jwsHost="localhost" jwsPort="8081" linksEnabled="false"/>
 </caApmSettings>
-<dynaTraceSettings dynaTraceEnabled="@dynatrace.enabled@" dynatraceHeader="@dynatrace.header@" dynatraceType="@dynatrace.type@" logicalNamesEnabled="@dynatrace.logicalnames.enabled@" login="@dynatrace.login@" password="@dynatrace.password@" port="@dynatrace.port@" recordSessionEnabled="@dynatrace.recordsession.enabled@" server="@dynatrace.server@" sessionLockingEnabled="@dynatrace.sessionlocking.enabled@" ssl="@dynatrace.ssl.enabled@" systemName="@dynatrace.systemname@" version="@dynatrace.version@"/>
+<dynaTraceSettings dynaTraceEnabled="@dynatrace.enabled@" logicalNamesEnabled="@dynatrace.logicalnames.enabled@" url="@dynatrace.url@" token="@dynatrace.token@"/>
 <appDynamicsSettings appDynamicsEnabled="@appdynamics.enabled@" containerNamesEnabled="false" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
 <nudgeSettings containerNamesEnabled="false" enabled="@nudge.enabled@" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
 <amfSettings amfGDSLocale110GA="false" amfServer="1"/>
