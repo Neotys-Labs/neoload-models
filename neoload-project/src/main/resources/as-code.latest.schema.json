@@ -73,6 +73,17 @@
 		"type":"array",
 		"minItems": 1,
 		"items": { "$ref": "#/definitions/user_paths/user_path" }
+	  },
+	  "project_settings":{
+		"$id":"#root/project_settings",
+		"title":"Neoload_Project_settings",
+		"type":"object",
+		"additionalProperties": false,
+		"properties": {
+			"dynatrace.enabled": { "type": "boolean" },
+			"dynatrace.url": { "$ref": "#/definitions/common/text" },
+			"dynatrace.token": { "$ref": "#/definitions/common/text" }
+		}
 	  }
 	},
 	"definitions":{

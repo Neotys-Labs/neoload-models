@@ -19,17 +19,13 @@ public class ProjectSettingsWritterTest {
         Map<String, String> settings = ImmutableMap.<String, String>builder()
                 .put("dynatrace.enabled", "true")
                 .put("restapi.identification.enabled", "true")
-                .put("dynatrace.login", "myLogin")
                 .build();
         ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), settings);
 
         String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName())));
-        // Overrides
-        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" dynatraceHeader=\"X-Dynatrace-Test\" dynatraceType=\"Dynatrace AppMon\" logicalNamesEnabled=\"false\" login=\"myLogin\"");
+        // Default
+        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" logicalNamesEnabled=\"false\" url=\"\" token=\"\"/>");
         Assertions.assertThat(settingsContent).contains("<identification isEnabled=\"true\"/>");
-        // Defaults
-        Assertions.assertThat(settingsContent).contains("port=\"2020\" recordSessionEnabled=\"false\"");
-
     }
 
     @Test
@@ -38,16 +34,14 @@ public class ProjectSettingsWritterTest {
         Map<String, String> settings = ImmutableMap.<String, String>builder()
                 .put("dynatrace.enabled", "true")
                 .put("dynatrace.type", "Dynatrace")
-                .put("dynatrace.header", "X-Dynatrace-MyHeader")
-                .put("dynatrace.login", "myLogin")
+                .put("dynatrace.header", "X-Dynatrace-MyHeader(should not be taken into account)")
+                .put("dynatrace.url", "http://urlto.dynatrace.com")
+                .put("dynatrace.token", "myApiTokenInClear")
                 .build();
         ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), settings);
 
         String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName())));
         // Overrides
-        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" dynatraceHeader=\"X-Dynatrace-MyHeader\" dynatraceType=\"Dynatrace\" logicalNamesEnabled=\"false\" login=\"myLogin\"");
-        // Defaults
-        Assertions.assertThat(settingsContent).contains("port=\"2020\" recordSessionEnabled=\"false\"");
-
+        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" logicalNamesEnabled=\"false\" url=\"http://urlto.dynatrace.com\" token=\"myApiTokenInClear\"/>");
     }
 }
