@@ -13,5 +13,6 @@ public class ScenarioTest {
 	public void constants() {
 		assertEquals("sla_profile", Scenario.SLA_PROFILE);
 		assertEquals("populations", Scenario.POPULATIONS);
+		assertEquals("apm_configuration", Scenario.APM);
 	}
 }

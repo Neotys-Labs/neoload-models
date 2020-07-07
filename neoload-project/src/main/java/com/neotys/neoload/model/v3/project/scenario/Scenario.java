@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -25,12 +26,17 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Scenario extends Element, SlaElement {
 	String POPULATIONS = "populations";
+	String APM = "apm_configuration";
 
 	@JsonProperty(POPULATIONS)
 	@RequiredCheck(groups={NeoLoad.class})
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<PopulationPolicy> getPopulations();
+
+	@JsonProperty(APM)
+	@Valid
+	Optional<Apm> getApm();
 	
 	class Builder extends ImmutableScenario.Builder {}
 	static Builder builder() {

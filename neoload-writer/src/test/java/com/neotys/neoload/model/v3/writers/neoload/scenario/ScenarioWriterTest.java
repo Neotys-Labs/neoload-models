@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -582,5 +583,63 @@ public class ScenarioWriterTest {
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayIncrement").getNodeValue()).isEqualTo("2");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayTypeIncrement").getNodeValue()).isEqualTo("2");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("iterationNumber").getNodeValue()).isEqualTo("20");
+    }
+
+    @Test
+    public void writeScenarioApmTest() throws ParserConfigurationException {
+        Scenario scenario = Scenario.builder()
+                .name("myScenario")
+                .description("myDescription")
+                .slaProfile("mySlaProfile")
+                .apm(ImmutableApm.builder()
+                        .addDynatraceTags("firstTag", "secondTag")
+                        .addDynatraceAnomalyRules(ImmutableDynatraceAnomalyRule.builder()
+                                .metricId("builtin:metric")
+                                .operator("BELOW")
+                                .value("10")
+                                .severity("ERROR")
+                                .build())
+                        .addDynatraceAnomalyRules(ImmutableDynatraceAnomalyRule.builder()
+                                .metricId("builtin:metric2")
+                                .operator("ABOVE")
+                                .value("12")
+                                .severity("PERFORMANCE")
+                                .build())
+                        .build())
+                .build();
+
+        // write the repository
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document document = docBuilder.newDocument();
+        Element xmlScenario = document.createElement("scenario-test");
+        ScenarioWriter.of(scenario).writeXML(document, xmlScenario);
+
+        Assertions.assertThat(xmlScenario.getChildNodes().getLength()).isEqualTo(1);
+        Assertions.assertThat(xmlScenario.getChildNodes().item(0).getNodeName()).isEqualTo("scenario");
+
+        Assertions.assertThat(xmlScenario.getChildNodes().item(0).getChildNodes().getLength()).isEqualTo(2);
+        Assertions.assertThat(xmlScenario.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("description");
+        Assertions.assertThat(xmlScenario.getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("dynatrace-monitoring");
+        final NodeList dynatraceMonitoring = xmlScenario.getChildNodes().item(0).getChildNodes().item(1).getChildNodes();
+        Assertions.assertThat(dynatraceMonitoring.getLength()).isEqualTo(4);
+        Assertions.assertThat(dynatraceMonitoring.item(0).getNodeName()).isEqualTo("tag");
+        Assertions.assertThat(dynatraceMonitoring.item(0).getTextContent()).isEqualTo("firstTag");
+        Assertions.assertThat(dynatraceMonitoring.item(1).getNodeName()).isEqualTo("tag");
+        Assertions.assertThat(dynatraceMonitoring.item(1).getTextContent()).isEqualTo("secondTag");
+
+        Assertions.assertThat(dynatraceMonitoring.item(2).getNodeName()).isEqualTo("anomaly-rule");
+        Assertions.assertThat(dynatraceMonitoring.item(2).getAttributes().getLength()).isEqualTo(4);
+        Assertions.assertThat(dynatraceMonitoring.item(2).getAttributes().getNamedItem("metric").getNodeValue()).isEqualTo("builtin:metric");
+        Assertions.assertThat(dynatraceMonitoring.item(2).getAttributes().getNamedItem("operator").getNodeValue()).isEqualTo("BELOW");
+        Assertions.assertThat(dynatraceMonitoring.item(2).getAttributes().getNamedItem("value").getNodeValue()).isEqualTo("10");
+        Assertions.assertThat(dynatraceMonitoring.item(2).getAttributes().getNamedItem("severity").getNodeValue()).isEqualTo("ERROR");
+
+        Assertions.assertThat(dynatraceMonitoring.item(3).getNodeName()).isEqualTo("anomaly-rule");
+        Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getLength()).isEqualTo(4);
+        Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getNamedItem("metric").getNodeValue()).isEqualTo("builtin:metric2");
+        Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getNamedItem("operator").getNodeValue()).isEqualTo("ABOVE");
+        Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getNamedItem("value").getNodeValue()).isEqualTo("12");
+        Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getNamedItem("severity").getNodeValue()).isEqualTo("PERFORMANCE");
     }
 }

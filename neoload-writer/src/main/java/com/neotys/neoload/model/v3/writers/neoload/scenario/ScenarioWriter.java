@@ -45,5 +45,8 @@ public class ScenarioWriter {
          
         // Population tag
         scenario.getPopulations().forEach(population -> PopulationPolicyWriter.of(population).writeXML(document, xmlScenario));
+
+        // Apm tag (dynatrace monitoring)
+        scenario.getApm().ifPresent(apm -> ApmWriter.of(apm).writeXML(document, xmlScenario));
     }
 }
