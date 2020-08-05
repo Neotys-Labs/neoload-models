@@ -92,7 +92,7 @@ public class FileVariableWriterTest {
 		File tempDir =  Files.createTempDir();
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
 				+ "<test-root><variable-file delimiters=\";\" "
-				+ "filename=\"" + tempDir.getAbsolutePath() + File.separator + "variables/filevariable.csv\" name=\"variable_test\" "
+				+ "filename=\"" + tempDir.getAbsolutePath() + File.separator + "variables" + File.separator + "filevariable.csv\" name=\"variable_test\" "
 				+ "offset=\"1\" order=\"1\" policy=\"4\" range=\"4\" "
 				+ "useFirstLine=\"true\" whenOutOfValues=\"CYCLE_VALUES\">"
 				+ "<column name=\"myfirstcol\" number=\"0\"/>"
