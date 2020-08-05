@@ -36,7 +36,7 @@ public class DynatraceAnomalyRuleTest {
     public void validateMetricId() {
         final Validator validator = new Validator();
 
-        DynatraceAnomalyRule anomalyRule = ImmutableDynatraceAnomalyRule.builder()
+        DynatraceAnomalyRule anomalyRule = DynatraceAnomalyRule.builder()
                 .value("0")
                 .operator(Operator.BELOW.name())
                 .severity(Severity.AVAILABILITY.name())
@@ -60,7 +60,7 @@ public class DynatraceAnomalyRuleTest {
     public void validateOperator() {
         final Validator validator = new Validator();
 
-        DynatraceAnomalyRule anomalyRule = ImmutableDynatraceAnomalyRule.builder()
+        DynatraceAnomalyRule anomalyRule = DynatraceAnomalyRule.builder()
                 .metricId("m")
                 .value("0")
                 .severity(Severity.AVAILABILITY.name())
@@ -89,7 +89,7 @@ public class DynatraceAnomalyRuleTest {
     public void validateValue() {
         final Validator validator = new Validator();
 
-        DynatraceAnomalyRule anomalyRule = ImmutableDynatraceAnomalyRule.builder()
+        DynatraceAnomalyRule anomalyRule = DynatraceAnomalyRule.builder()
                 .metricId("some metric")
                 .operator(Operator.BELOW.name())
                 .severity(Severity.AVAILABILITY.name())
@@ -113,7 +113,7 @@ public class DynatraceAnomalyRuleTest {
     public void validateSeverity() {
         final Validator validator = new Validator();
 
-        DynatraceAnomalyRule anomalyRule = ImmutableDynatraceAnomalyRule.builder()
+        DynatraceAnomalyRule anomalyRule = DynatraceAnomalyRule.builder()
                 .metricId("m")
                 .operator(Operator.BELOW.name())
                 .value("0")

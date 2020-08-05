@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.util.StdConverter;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-public final class StringToTimeDurationWithMsConverter extends StdConverter<String, String> {
+public final class TimeDurationInMsOrInVariableToStringConverter extends StdConverter<String, String> {
 	private static final String ERROR_VALUE = "0";
 
-	public static final StringToTimeDurationWithMsConverter STRING_TO_TIME_DURATION_WITH_MS = new StringToTimeDurationWithMsConverter();
+	public static final TimeDurationInMsOrInVariableToStringConverter TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING = new TimeDurationInMsOrInVariableToStringConverter();
 
-	private StringToTimeDurationWithMsConverter() {
+	private TimeDurationInMsOrInVariableToStringConverter() {
 		//do nothing
 	}
 
@@ -24,6 +24,6 @@ public final class StringToTimeDurationWithMsConverter extends StdConverter<Stri
 			return input;
 		}
 
-		return TimeDurationWithMsHelper.convertToDuration(input);
+		return TimeDurationInMsHelper.convertToString(Long.valueOf(input));
 	}
 }

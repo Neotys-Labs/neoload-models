@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({RampupLoadPolicy.MIN_USERS, RampupLoadPolicy.MAX_USERS, RampupLoadPolicy.INCREMENT_USERS, RampupLoadPolicy.INCREMENT_EVERY, DurationPolicy.DURATION, StartStopPolicy.START_AFTER, RampupLoadPolicy.INCREMENT_RAMPUP, StartStopPolicy.STOP_AFTER})
+@JsonSerialize(as = ImmutableRampupLoadPolicy.class)
 @JsonDeserialize(as = ImmutableRampupLoadPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)

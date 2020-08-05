@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.neotys.neoload.model.v3.binding.serializer.ElementsDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.MatchDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
@@ -48,7 +48,7 @@ public interface While extends Step {
     @JsonProperty(STEPS)
     @RequiredCheck(groups = {NeoLoad.class})
     @Valid
-    @JsonDeserialize(using = ElementsDeserializer.class)
+    @JsonDeserialize(using = StepsDeserializer.class)
     List<Step> getSteps();
 
     @Override

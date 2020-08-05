@@ -34,4 +34,11 @@ scenarios:
       start_after: 1m
       step_rampup: 15s
       stop_after: 1m
- 
+  apm_configuration:
+    dynatrace_tags:
+    - myDynatraceTag
+    dynatrace_anomaly_rules:
+    - metric_id: builtin:host.cpu.usage
+      operator: ABOVE
+      value: 90
+      severity: PERFORMANCE

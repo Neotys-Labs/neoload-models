@@ -1,34 +1,41 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.neotys.neoload.model.v3.project.userpath.*;
+import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationInMsOrInVariableConverter.STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.DELAY;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.IF;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.JAVASCRIPT;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.LOOP;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.REQUEST;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.SWITCH;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.THINK_TIME;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.TRANSACTION;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.WHILE;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationWithMsConverter.STRING_TO_TIME_DURATION_WITH_MS;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.If;
+import com.neotys.neoload.model.v3.project.userpath.JavaScript;
+import com.neotys.neoload.model.v3.project.userpath.Loop;
+import com.neotys.neoload.model.v3.project.userpath.Request;
+import com.neotys.neoload.model.v3.project.userpath.Step;
+import com.neotys.neoload.model.v3.project.userpath.Switch;
+import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
+import com.neotys.neoload.model.v3.project.userpath.While;
 
-public class ElementsDeserializer extends StdDeserializer<List<Step>> {
+public class StepsDeserializer extends StdDeserializer<List<Step>> {
     private static final long serialVersionUID = -5696608939252369276L;
 
-    private static final String TRANSACTION = "transaction";
-    private static final String REQUEST = "request";
-    private static final String DELAY = "delay";
-    private static final String THINK_TIME = "think_time";
-    private static final String JAVASCRIPT = "javascript";
-    private static final String IF = "if";
-    private static final String LOOP = "loop";
-    private static final String WHILE = "while";
-    private static final String SWITCH = "switch";
-
-
-    public ElementsDeserializer() {
+    public StepsDeserializer() {
         super(List.class);
     }
 
@@ -52,11 +59,11 @@ public class ElementsDeserializer extends StdDeserializer<List<Step>> {
                 action = codec.treeToValue(requestNode, Request.class);
             } else if (actionNode.has(DELAY)) {
                 final String delayValue = actionNode.get(DELAY).asText();
-                final String delay = STRING_TO_TIME_DURATION_WITH_MS.convert(delayValue);
+                final String delay = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(delayValue);
                 action = Delay.builder().value(String.valueOf(delay)).build();
             } else if (actionNode.has(THINK_TIME)) {
                 final String thinkTimeValue = actionNode.get(THINK_TIME).asText();
-                final String thinkTime = STRING_TO_TIME_DURATION_WITH_MS.convert(thinkTimeValue);
+                final String thinkTime = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(thinkTimeValue);
                 action = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
             } else if (actionNode.has(JAVASCRIPT)) {
                 final JsonNode javascriptNode = actionNode.get(JAVASCRIPT);

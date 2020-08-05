@@ -67,6 +67,13 @@ public final class IO {
 		return mapper.readValue(content, type);
 	}
 
+	public String write(final Object value, final Format format) throws IOException {
+		// Gets the mapper from the format
+		final ObjectMapper mapper = getMapper(format);
+		// Deserialize
+		return mapper.writeValueAsString(value);
+	}
+
 	protected Format getFormat(final File file) {
 		if (file == null) return null;
 		

@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 
@@ -27,7 +26,7 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 	private static final long serialVersionUID = -9100000271338565024L;
 
 	public UserPathDeserializer() {
-		super(PopulationPolicy.class);
+		super(UserPath.class);
 	}
 
 	protected static UserPath.UserSession asUserSession(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {

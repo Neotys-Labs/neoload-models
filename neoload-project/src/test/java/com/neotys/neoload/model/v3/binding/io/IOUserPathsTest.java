@@ -170,4 +170,20 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 
 		read("test-userpaths-required-and-optional", expectedProject);
 	}
+	
+	@Test
+	public void writeUserPathsOnlyRequired() throws IOException {
+		final Project expectedProject = getUserPathsOnlyRequired();
+		assertNotNull(expectedProject);
+
+		write("test-userpaths-only-required", expectedProject);
+	}
+
+	@Test
+	public void writeUserPathsRequiredAndOptional() throws IOException {
+		final Project expectedProject = getUserPathsRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		write("test-userpaths-required-and-optional", expectedProject);
+	}
 }

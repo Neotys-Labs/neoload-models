@@ -1,10 +1,9 @@
 name: MyProject
 user_paths:
 - name: MyUserPath
-  actions: 
+  actions:
     steps:
     - transaction:
         name: MyTransaction
         steps:
         - delay: 1s
-    

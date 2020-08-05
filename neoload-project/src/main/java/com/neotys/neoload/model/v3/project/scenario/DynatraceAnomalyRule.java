@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -7,7 +9,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.ValueOfEnumCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.immutables.value.Value;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonSerialize(as = ImmutableDynatraceAnomalyRule.class)
@@ -46,4 +47,9 @@ public interface DynatraceAnomalyRule {
     @RequiredCheck(groups = {NeoLoad.class})
     @ValueOfEnumCheck(enumClass = Severity.class, groups = {NeoLoad.class})
     String getSeverity();
+    
+    class Builder extends ImmutableDynatraceAnomalyRule.Builder {}
+	static Builder builder() {
+		return new Builder();
+	}
 }

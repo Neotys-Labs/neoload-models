@@ -20,6 +20,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, UserPathPolicy.DISTRIBUTION})
+@JsonSerialize(as = ImmutableUserPathPolicy.class)
 @JsonDeserialize(as = ImmutableUserPathPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)

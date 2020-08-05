@@ -1,12 +1,12 @@
 package com.neotys.neoload.model.v3.binding.converter;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.time.Duration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
-final class TimeDurationWithMsHelper {
+final class TimeDurationInMsHelper {
 	private static final String ZERO = "0";
 
 	private static final String HOURS = "h";
@@ -16,12 +16,12 @@ final class TimeDurationWithMsHelper {
 
 	private static final Pattern TIME_PATTERN = Pattern.compile("((((\\d+)(h\\s*))?((\\d+)(m\\s*))?((\\d+)(s\\s*))?((\\d+)(ms\\s*))?)|(\\d+))");
 
-	private TimeDurationWithMsHelper() {
+	private TimeDurationInMsHelper() {
 		super();
 	}
 
-	protected static String convertToString(final Integer inputInMilliSecond) {
-		if (inputInMilliSecond == null) return null;
+	protected static String convertToString(final Long inputInMilliSecond) {
+		if (inputInMilliSecond == null) return ZERO;
 		if (inputInMilliSecond <= 0) return ZERO;
 
 		Duration duration = Duration.ofMillis(inputInMilliSecond);
@@ -38,12 +38,15 @@ final class TimeDurationWithMsHelper {
 			sb.append(hours).append(HOURS);
 		}
 		if (minutes != 0) {
+			addSeparatorIfNecessary(sb);
 			sb.append(minutes).append(MINUTES);
 		}
 		if (seconds != 0) {
+			addSeparatorIfNecessary(sb);
 			sb.append(seconds).append(SECONDS);
 		}
 		if (milliSeconds != 0) {
+			addSeparatorIfNecessary(sb);
 			sb.append(milliSeconds).append(MILLISECONDS);
 		}
 		return sb.toString();
@@ -59,12 +62,12 @@ final class TimeDurationWithMsHelper {
 	 */
 	protected static String convertToDuration(final String input) {
 		if (isNullOrEmpty(input)) {
-			return "0";
+			return ZERO;
 		}
 
 		final Matcher matcher = TIME_PATTERN.matcher(input.trim());
 		if (!matcher.matches()) {
-			return "0";
+			return ZERO;
 		}
 
 		if ((matcher.groupCount() == 15 && matcher.group(15) != null)) {
@@ -83,6 +86,12 @@ final class TimeDurationWithMsHelper {
 				+ Duration.ofMillis(milliSecondNumber).toMillis());
 	}
 
+	private static void addSeparatorIfNecessary(final StringBuilder sb) {
+		if ((sb != null) && (sb.length() > 0)) {
+			sb.append(' ');
+		}		
+	}
+	
 	private static int extractNumberFromGroup(final String group) {
 		if (group != null) {
 			return Integer.valueOf(group);

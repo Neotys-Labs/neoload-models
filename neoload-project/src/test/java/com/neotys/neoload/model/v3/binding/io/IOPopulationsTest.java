@@ -38,11 +38,11 @@ public class IOPopulationsTest extends AbstractIOElementsTest {
 				.description("My population 1 with 2 user paths")
 				.addUserPaths(UserPathPolicy.builder()
 						.name("MyUserPath11")
-						.distribution(75.0)
+						.distribution(75.4)
 						.build())
 				.addUserPaths(UserPathPolicy.builder()
 						.name("MyUserPath12")
-						.distribution(25.0)
+						.distribution(24.6)
 						.build())
 				.build();
 
@@ -60,7 +60,6 @@ public class IOPopulationsTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		read("test-populations-only-required", expectedProject);
-		read("test-populations-only-required", expectedProject);
 	}
 
 	@Test
@@ -69,6 +68,21 @@ public class IOPopulationsTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		read("test-populations-required-and-optional", expectedProject);
-		read("test-populations-required-and-optional", expectedProject);
+	}
+	
+	@Test
+	public void writePopulationsOnlyRequired() throws IOException {
+		final Project expectedProject = getPopulationsOnlyRequired();
+		assertNotNull(expectedProject);
+
+		write("test-populations-only-required", expectedProject);
+	}
+
+	@Test
+	public void writePopulationsRequiredAndOptional() throws IOException {
+		final Project expectedProject = getPopulationsRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		write("test-populations-required-and-optional", expectedProject);
 	}
 }

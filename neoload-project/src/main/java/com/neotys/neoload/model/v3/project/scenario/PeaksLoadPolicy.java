@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({PeaksLoadPolicy.MINIMUM, PeaksLoadPolicy.MAXIMUM, PeaksLoadPolicy.START, DurationPolicy.DURATION, StartStopPolicy.START_AFTER, PeaksLoadPolicy.STEP_RAMPUP, StartStopPolicy.STOP_AFTER})
+@JsonSerialize(as = ImmutablePeaksLoadPolicy.class)
 @JsonDeserialize(as = ImmutablePeaksLoadPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
@@ -38,7 +40,8 @@ public interface PeaksLoadPolicy extends LoadPolicy {
     @Valid
     PeakLoadPolicy getMaximum();
 	@RequiredCheck(groups={NeoLoad.class})
-    Peak getStart();
+	@JsonProperty(START)
+	Peak getStart();
 	@JsonProperty(STEP_RAMPUP)
 	Integer getRampup();
 	

@@ -56,7 +56,6 @@ user_paths:
         - delay: 1s
 - name: MyUserPath3
   description: My User Path 3
-  user_session: reset_auto
   init:
     description: My Init Container from My User Path 3
     sla_profile: MyInitSlaProfile3
@@ -81,4 +80,3 @@ user_paths:
         name: MyTransaction
         steps:
         - delay: 1s
-    

@@ -4,6 +4,6 @@ populations:
   description: My population 1 with 2 user paths
   user_paths:
   - name: MyUserPath11
-    distribution: 75%
+    distribution: 75.4%
   - name: MyUserPath12
-    distribution: 25%
+    distribution: 24.6%
