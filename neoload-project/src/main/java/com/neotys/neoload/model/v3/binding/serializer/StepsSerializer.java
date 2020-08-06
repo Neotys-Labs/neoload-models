@@ -35,7 +35,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 
     private static final Map<Class<? extends Step>, String> STEPS;
     static {
-    	final ImmutableMap.Builder<Class<? extends Step>, String> builder = new ImmutableMap.Builder<Class<? extends Step>, String>();
+    	final ImmutableMap.Builder<Class<? extends Step>, String> builder = new ImmutableMap.Builder<>();
     	builder.put(ImmutableContainer.class, TRANSACTION);
     	builder.put(ImmutableRequest.class, REQUEST);
     	builder.put(ImmutableJavaScript.class, JAVASCRIPT);

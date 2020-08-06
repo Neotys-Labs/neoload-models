@@ -39,7 +39,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
     
     private static final Map<String, Class<? extends Step>> STEPS;
     static {
-    	final ImmutableMap.Builder<String, Class<? extends Step>> builder = new ImmutableMap.Builder<String, Class<? extends Step>>();
+    	final ImmutableMap.Builder<String, Class<? extends Step>> builder = new ImmutableMap.Builder<>();
     	builder.put(TRANSACTION, Container.class);
     	builder.put(REQUEST, Request.class);
     	builder.put(JAVASCRIPT, JavaScript.class);
