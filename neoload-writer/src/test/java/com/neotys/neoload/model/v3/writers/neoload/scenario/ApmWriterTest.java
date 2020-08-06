@@ -22,9 +22,9 @@ public class ApmWriterTest {
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document document = docBuilder.newDocument();
         Element xmlScenario = document.createElement("scenario-test");
-        Apm apm = ImmutableApm.builder()
+        Apm apm = Apm.builder()
                 .addDynatraceTags("tag1")
-                .addDynatraceAnomalyRules(ImmutableDynatraceAnomalyRule.builder()
+                .addDynatraceAnomalyRules(DynatraceAnomalyRule.builder()
                         .metricId("theActualmetricId")
                         .operator("ABOVE")
                         .value("123")
@@ -54,7 +54,7 @@ public class ApmWriterTest {
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document document = docBuilder.newDocument();
         Element xmlScenario = document.createElement("scenario-test");
-        Apm apm = ImmutableApm.builder().build();
+        Apm apm = Apm.builder().build();
         ApmWriter.of(apm).writeXML(document, xmlScenario);
         Assertions.assertThat(xmlScenario.getChildNodes().getLength()).isEqualTo(1);
         Assertions.assertThat(xmlScenario.getChildNodes().item(0).getNodeName()).isEqualTo("dynatrace-monitoring");
