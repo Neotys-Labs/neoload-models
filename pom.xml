@@ -34,9 +34,9 @@
 
 	<profiles>
 		<profile>
-			<id>signed-artifact</id>
+			<id>sign-artifact</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<build>
 				<plugins>
