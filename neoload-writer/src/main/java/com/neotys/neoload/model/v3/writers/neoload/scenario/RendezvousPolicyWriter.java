@@ -29,30 +29,30 @@ class RendezvousPolicyWriter {
     public void writeXML(final Document document, final Element currentElement) {
 
 	    // Rendezvous Policy tag
-	    Element xmlPopulationPolicy = null;
+	    Element xmlRendezvousPolicy = null;
 	    final Object value = rendezvousPolicy.getWhen().getValue();
 	    final WhenRelease.Type type = rendezvousPolicy.getWhen().getType();
 	    switch (type){
 		    case VU_NUMBER:
-			    xmlPopulationPolicy = document.createElement(XML_TAG_NAME_FIXED_VU);
-			    xmlPopulationPolicy.setAttribute(XML_ATTR_FIXED_VU_COUNT, String.valueOf(value));
+			    xmlRendezvousPolicy = document.createElement(XML_TAG_NAME_FIXED_VU);
+			    xmlRendezvousPolicy.setAttribute(XML_ATTR_FIXED_VU_COUNT, String.valueOf(value));
 		    	break;
 		    case PERCENTAGE:
-			    xmlPopulationPolicy = document.createElement(XML_TAG_NAME_PERCENTILE);
-			    xmlPopulationPolicy.setAttribute(XML_ATTR_PERCENTILE_VU_COUNT, String.valueOf(value));
+			    xmlRendezvousPolicy = document.createElement(XML_TAG_NAME_PERCENTILE);
+			    xmlRendezvousPolicy.setAttribute(XML_ATTR_PERCENTILE_VU_COUNT, String.valueOf(value));
 			    break;
 		    case MANUAL:
-			    xmlPopulationPolicy = document.createElement(XML_TAG_NAME_MANUAL);
+			    xmlRendezvousPolicy = document.createElement(XML_TAG_NAME_MANUAL);
 			    break;
 	    }
 
         // Name attribute
-        xmlPopulationPolicy.setAttribute(XML_ATTR_NAME, rendezvousPolicy.getName());
+        xmlRendezvousPolicy.setAttribute(XML_ATTR_NAME, rendezvousPolicy.getName());
         // Timeout attribute
-        xmlPopulationPolicy.setAttribute(XML_ATTR_TIMEOUT, String.valueOf(rendezvousPolicy.getTimeout()));
+        xmlRendezvousPolicy.setAttribute(XML_ATTR_TIMEOUT, String.valueOf(rendezvousPolicy.getTimeout()));
         // Enabled attribute
-        xmlPopulationPolicy.setAttribute(XML_ATTR_ENABLED, "true");
+        xmlRendezvousPolicy.setAttribute(XML_ATTR_ENABLED, "true");
 
-        currentElement.appendChild(xmlPopulationPolicy);
+        currentElement.appendChild(xmlRendezvousPolicy);
     }
 }

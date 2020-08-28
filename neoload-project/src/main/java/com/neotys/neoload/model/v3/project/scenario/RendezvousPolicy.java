@@ -21,7 +21,7 @@ public interface RendezvousPolicy {
 	@JsonProperty(WHEN)
 	@Value.Default
 	@Valid
-	default WhenRelease getWhen(){return WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value("100%").build();};
+	default WhenRelease getWhen(){return WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value("100%").build();}
 
 	@JsonProperty(TIMEOUT)
 	@Value.Default

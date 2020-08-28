@@ -17,7 +17,7 @@ public final class StringToWhenReleaseConverter extends StdConverter<String, Whe
 			return ERROR_VALUE;
 		}
 
-		if (input.equalsIgnoreCase("manual")) {
+		if ("manual".equalsIgnoreCase(input)) {
 			return WhenRelease.builder()
 					.value(input.toLowerCase())
 					.type(WhenRelease.Type.MANUAL)
