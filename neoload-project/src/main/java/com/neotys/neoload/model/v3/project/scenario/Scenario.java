@@ -49,7 +49,6 @@ public interface Scenario extends Element, SlaElement {
 	@Valid
 	List<String> getExcludedUrls();
 
-	@RequiredCheck(groups = {NeoLoad.class})
 	@JsonProperty(RENDEZVOUS_POLICIES)
 	@Valid
 	List<RendezvousPolicy> getRendezvousPolicies();
@@ -62,7 +61,6 @@ public interface Scenario extends Element, SlaElement {
 	}
 
 	@JsonProperty(MONITORING)
-	@RequiredCheck(groups = {NeoLoad.class})
 	Optional<MonitoringParameters> getMonitoringParameters();
 
 	class Builder extends ImmutableScenario.Builder {

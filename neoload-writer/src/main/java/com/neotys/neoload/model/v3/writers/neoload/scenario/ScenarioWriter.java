@@ -9,6 +9,8 @@ public class ScenarioWriter {
 	
     private static final String XML_TAG_SCENARIO_NAME = "scenario";
     private static final String XML_ATTR_NAME = "uid";
+    private static final String XML_ATTR_SLAPROFILEENABLED = "slaProfileEnabled";
+    private static final String XML_ATTR_SLAPROFILENAME = "slaProfileName";
     private static final String XML_ATTR_REQUEST_PATH_EXCLUSION_FILTER = "request-path-exclusion-filter";
     private static final String XML_ATTR_REQUEST_PATH_EXCLUSION_FILTER_ENABLED = "isEnabled";
     private static final String XML_ATTR_REGEXPS = "regexps";
