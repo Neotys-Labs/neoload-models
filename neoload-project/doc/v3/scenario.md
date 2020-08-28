@@ -10,10 +10,11 @@ A scenario defines a test configuration. Select an existing SLA profile to verif
 | sla_profile                         | The name of the SLA profile to apply to the Scenario (will not be applied to children) | -               | -        |       |
 | [populations](population-policy.md) | The list of name of the existing populations                                           | -               | &#x2713; |       |
 | [apm_configuration](apm_configuration.md) | The APM configuration for the monitoring with Dynatrace                          | -               | -        |  7.5  |
+| excluded_urls                       | The regular expressions to ignore matching Requests from the scenario during the test playback | -       | -        |  7.6  |
 
 #### Example
 
-Defining a scenario with 1 SLA profile, 1 population and with Dynatrace monitoring:
+Defining a scenario with 1 SLA profile, 1 population, with Dynatrace monitoring and excluded URLs :
 
 ```yaml
 scenarios:
@@ -27,4 +28,9 @@ scenarios:
   apm_configuration:
     dynatrace_tags:
     - myDynatraceTag
+  excluded_urls:
+  - .*\.jpg
+  - .*\.jpeg
+  - .*\.gif
+  - .*\.png
 ```
