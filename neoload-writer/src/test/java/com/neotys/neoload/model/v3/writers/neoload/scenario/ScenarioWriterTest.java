@@ -4,14 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Collections;
 
 public class ScenarioWriterTest {
@@ -796,7 +795,7 @@ public class ScenarioWriterTest {
         Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getNamedItem("value").getNodeValue()).isEqualTo("12");
         Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getNamedItem("severity").getNodeValue()).isEqualTo("PERFORMANCE");
     }
-    
+
     @Test
     public void writeScenarioUrlExclusionTest() throws ParserConfigurationException {
         Scenario scenario = Scenario.builder()
@@ -828,5 +827,84 @@ public class ScenarioWriterTest {
 		Assertions.assertThat(regexpsNode.item(0).getTextContent()).isEqualTo(".*\\.jpg");
 		Assertions.assertThat(regexpsNode.item(1).getNodeName()).isEqualTo("regexp");
         Assertions.assertThat(regexpsNode.item(1).getTextContent()).isEqualTo(".*\\.png");
+    }
+
+    @Test
+    public void writeScenarioRendezvousTest() throws ParserConfigurationException {
+	    final List<RendezvousPolicy> listRendezvous = new ArrayList<>();
+	    listRendezvous.add(RendezvousPolicy.builder()
+			    .when(WhenRelease.builder()
+					    .type(WhenRelease.Type.PERCENTAGE)
+					    .value(15)
+					    .build())
+			    .name("percentage")
+			    .timeout(200)
+			    .build());
+	    listRendezvous.add(RendezvousPolicy.builder()
+			    .when(WhenRelease.builder()
+					    .type(WhenRelease.Type.VU_NUMBER)
+					    .value(25)
+					    .build())
+			    .name("number")
+			    .build());
+	    listRendezvous.add(RendezvousPolicy.builder()
+			    .when(WhenRelease.builder()
+					    .type(WhenRelease.Type.MANUAL)
+					    .build())
+			    .name("manually")
+			    .timeout(150)
+			    .build());
+	    Scenario scenario = Scenario.builder()
+                .name("myScenario")
+                .description("myDescription")
+                .slaProfile("mySlaProfile")
+                .rendezvousPolicies(listRendezvous)
+                .build();
+
+        // write the repository
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document document = docBuilder.newDocument();
+        Element xmlScenario = document.createElement("scenario-test");
+        ScenarioWriter.of(scenario).writeXML(document, xmlScenario);
+
+	    final NodeList childNodes = xmlScenario.getChildNodes();
+	    Assertions.assertThat(childNodes.getLength()).isEqualTo(1);
+	    final Node item0 = childNodes.item(0);
+	    Assertions.assertThat(item0.getNodeName()).isEqualTo("scenario");
+
+        Assertions.assertThat(item0.getChildNodes().getLength()).isEqualTo(4);
+        Assertions.assertThat(item0.getChildNodes().item(0).getNodeName()).isEqualTo("description");
+
+        Assertions.assertThat(item0.getChildNodes().item(1).getNodeName()).isEqualTo("rdv-percentile-vu-count-policy");
+	    final NamedNodeMap percentageAttributes = item0.getChildNodes().item(1).getAttributes();
+	    Assertions.assertThat(percentageAttributes.item(0).getNodeName()).isEqualTo("isEnabled");
+	    Assertions.assertThat(percentageAttributes.item(0).getNodeValue()).isEqualTo("true");
+	    Assertions.assertThat(percentageAttributes.item(1).getNodeName()).isEqualTo("percentileVirtualUserCount");
+	    Assertions.assertThat(percentageAttributes.item(1).getNodeValue()).isEqualTo("15");
+	    Assertions.assertThat(percentageAttributes.item(2).getNodeName()).isEqualTo("rendezVousName");
+	    Assertions.assertThat(percentageAttributes.item(2).getNodeValue()).isEqualTo("percentage");
+	    Assertions.assertThat(percentageAttributes.item(3).getNodeName()).isEqualTo("timeout");
+	    Assertions.assertThat(percentageAttributes.item(3).getNodeValue()).isEqualTo("200");
+
+        Assertions.assertThat(item0.getChildNodes().item(2).getNodeName()).isEqualTo("rdv-fixed-vu-count-policy");
+	    final NamedNodeMap fixedVuAttributes = item0.getChildNodes().item(2).getAttributes();
+	    Assertions.assertThat(fixedVuAttributes.item(0).getNodeName()).isEqualTo("fixedVirtualUserCount");
+	    Assertions.assertThat(fixedVuAttributes.item(0).getNodeValue()).isEqualTo("25");
+	    Assertions.assertThat(fixedVuAttributes.item(1).getNodeName()).isEqualTo("isEnabled");
+	    Assertions.assertThat(fixedVuAttributes.item(1).getNodeValue()).isEqualTo("true");
+	    Assertions.assertThat(fixedVuAttributes.item(2).getNodeName()).isEqualTo("rendezVousName");
+	    Assertions.assertThat(fixedVuAttributes.item(2).getNodeValue()).isEqualTo("number");
+	    Assertions.assertThat(fixedVuAttributes.item(3).getNodeName()).isEqualTo("timeout");
+	    Assertions.assertThat(fixedVuAttributes.item(3).getNodeValue()).isEqualTo("300");
+
+        Assertions.assertThat(item0.getChildNodes().item(3).getNodeName()).isEqualTo("rdv-manual-policy");
+	    final NamedNodeMap manualAttributes = item0.getChildNodes().item(3).getAttributes();
+	    Assertions.assertThat(manualAttributes.item(0).getNodeName()).isEqualTo("isEnabled");
+	    Assertions.assertThat(manualAttributes.item(0).getNodeValue()).isEqualTo("true");
+	    Assertions.assertThat(manualAttributes.item(1).getNodeName()).isEqualTo("rendezVousName");
+	    Assertions.assertThat(manualAttributes.item(1).getNodeValue()).isEqualTo("manually");
+	    Assertions.assertThat(manualAttributes.item(2).getNodeName()).isEqualTo("timeout");
+	    Assertions.assertThat(manualAttributes.item(2).getNodeValue()).isEqualTo("150");
     }
 }

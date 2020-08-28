@@ -27,13 +27,17 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Scenario extends Element, SlaElement {
+
 	String POPULATIONS = "populations";
 	String APM = "apm_configuration";
 	String EXCLUDED_URLS = "excluded_urls";
+	String RENDEZVOUS_POLICIES = "rendezvous_policies";
+	String STORE_VARIABLES = "store_variables_for_raw_data_export";
+	String MONITORING = "monitoring";
 
 	@JsonProperty(POPULATIONS)
-	@RequiredCheck(groups={NeoLoad.class})
-	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@RequiredCheck(groups = {NeoLoad.class})
+	@UniqueElementNameCheck(groups = {NeoLoad.class})
 	@Valid
 	List<PopulationPolicy> getPopulations();
 
@@ -44,8 +48,22 @@ public interface Scenario extends Element, SlaElement {
 	@JsonProperty(EXCLUDED_URLS)
 	@Valid
 	List<String> getExcludedUrls();
-	
-	class Builder extends ImmutableScenario.Builder {}
+
+	@JsonProperty(RENDEZVOUS_POLICIES)
+	@Valid
+	List<RendezvousPolicy> getRendezvousPolicies();
+
+	@JsonProperty(STORE_VARIABLES)
+	default Boolean isStoredVariables() {
+		return false;
+	}
+
+	@JsonProperty(MONITORING)
+	Optional<MonitoringParameters> getMonitoringParameters();
+
+	class Builder extends ImmutableScenario.Builder {
+	}
+
 	static Builder builder() {
 		return new Builder();
 	}

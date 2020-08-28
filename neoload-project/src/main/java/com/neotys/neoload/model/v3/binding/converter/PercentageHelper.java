@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 import com.google.common.base.Strings;
 
 final class PercentageHelper {
-	private static final String UNIT = "%";
-	private static final Pattern PATTERN = Pattern.compile("([-]?[0-9]+[\\.]?[0-9]*)([" + UNIT + "]?)");
+	public static final String UNIT = "%";
+	public static final Pattern PATTERN = Pattern.compile("([-]?[0-9]+[\\.]?[0-9]*)([" + UNIT + "]?)");
 	private static final DecimalFormat FORMAT = new DecimalFormat("###.###", new DecimalFormatSymbols(Locale.US));
 
 	private PercentageHelper() {
