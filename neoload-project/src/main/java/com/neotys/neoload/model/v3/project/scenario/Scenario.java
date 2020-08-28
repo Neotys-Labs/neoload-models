@@ -21,7 +21,7 @@ import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Scenario.POPULATIONS})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Scenario.POPULATIONS, Scenario.EXCLUDED_URLS})
 @JsonSerialize(as = ImmutableScenario.class)
 @JsonDeserialize(as = ImmutableScenario.class)
 @Value.Immutable
@@ -29,6 +29,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 public interface Scenario extends Element, SlaElement {
 	String POPULATIONS = "populations";
 	String APM = "apm_configuration";
+	String EXCLUDED_URLS = "excluded_urls";
 
 	@JsonProperty(POPULATIONS)
 	@RequiredCheck(groups={NeoLoad.class})
@@ -39,6 +40,10 @@ public interface Scenario extends Element, SlaElement {
 	@JsonProperty(APM)
 	@Valid
 	Optional<Apm> getApm();
+	
+	@JsonProperty(EXCLUDED_URLS)
+	@Valid
+	List<String> getExcludedUrls();
 	
 	class Builder extends ImmutableScenario.Builder {}
 	static Builder builder() {

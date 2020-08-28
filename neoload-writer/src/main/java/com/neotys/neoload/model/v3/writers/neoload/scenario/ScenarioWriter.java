@@ -11,7 +11,11 @@ public class ScenarioWriter {
     private static final String XML_ATTR_NAME = "uid";
     private static final String XML_ATTR_SLAPROFILEENABLED = "slaProfileEnabled";
     private static final String XML_ATTR_SLAPROFILENAME = "slaProfileName";
-
+    private static final String XML_ATTR_REQUEST_PATH_EXCLUSION_FILTER = "request-path-exclusion-filter";
+    private static final String XML_ATTR_REQUEST_PATH_EXCLUSION_FILTER_ENABLED = "isEnabled";
+    private static final String XML_ATTR_REGEXPS = "regexps";
+    private static final String XML_ATTR_REGEXP = "regexp";
+    
     private static final String XML_TAG_DESCRIPTION_NAME = "description";
 
     private final Scenario scenario;
@@ -48,5 +52,21 @@ public class ScenarioWriter {
 
         // Apm tag (dynatrace monitoring)
         scenario.getApm().ifPresent(apm -> ApmWriter.of(apm).writeXML(document, xmlScenario));
+        
+        // URL exclusions tag
+        if(!scenario.getExcludedUrls().isEmpty()){
+        	final Element requestPathExclusionFilter = document.createElement(XML_ATTR_REQUEST_PATH_EXCLUSION_FILTER);
+        	requestPathExclusionFilter.setAttribute(XML_ATTR_REQUEST_PATH_EXCLUSION_FILTER_ENABLED, "true");
+        	
+        	final Element regexps = document.createElement(XML_ATTR_REGEXPS);
+        	requestPathExclusionFilter.appendChild(regexps);
+        	
+        	for (final String excludedUrl : scenario.getExcludedUrls()) {
+                final Element excludedUrlEl = document.createElement(XML_ATTR_REGEXP);
+                excludedUrlEl.setTextContent(excludedUrl);
+                regexps.appendChild(excludedUrlEl);
+            }
+        	xmlScenario.appendChild(requestPathExclusionFilter);
+        }
     }
 }

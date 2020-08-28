@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload.scenario;
 
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -641,5 +642,38 @@ public class ScenarioWriterTest {
         Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getNamedItem("operator").getNodeValue()).isEqualTo("ABOVE");
         Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getNamedItem("value").getNodeValue()).isEqualTo("12");
         Assertions.assertThat(dynatraceMonitoring.item(3).getAttributes().getNamedItem("severity").getNodeValue()).isEqualTo("PERFORMANCE");
+    }
+    
+    @Test
+    public void writeScenarioUrlExclusionTest() throws ParserConfigurationException {
+        Scenario scenario = Scenario.builder()
+                .name("myScenario")
+                .description("myDescription")
+                .slaProfile("mySlaProfile")
+                .addAllExcludedUrls(ImmutableList.of(".*\\.jpg", ".*\\.png"))
+                .build();
+
+        // write the repository
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document document = docBuilder.newDocument();
+        Element xmlScenario = document.createElement("scenario-test");
+        ScenarioWriter.of(scenario).writeXML(document, xmlScenario);
+
+        Assertions.assertThat(xmlScenario.getChildNodes().getLength()).isEqualTo(1);
+        Assertions.assertThat(xmlScenario.getChildNodes().item(0).getNodeName()).isEqualTo("scenario");
+
+        Assertions.assertThat(xmlScenario.getChildNodes().item(0).getChildNodes().getLength()).isEqualTo(2);
+        Assertions.assertThat(xmlScenario.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("description");
+        Assertions.assertThat(xmlScenario.getChildNodes().item(0).getChildNodes().item(1).getNodeName()).isEqualTo("request-path-exclusion-filter");
+        final NodeList excludedUrls = xmlScenario.getChildNodes().item(0).getChildNodes().item(1).getChildNodes();
+        Assertions.assertThat(excludedUrls.getLength()).isEqualTo(1);
+        Assertions.assertThat(excludedUrls.item(0).getNodeName()).isEqualTo("regexps");
+        final NodeList regexpsNode = excludedUrls.item(0).getChildNodes();
+		Assertions.assertThat(regexpsNode.getLength()).isEqualTo(2);
+		Assertions.assertThat(regexpsNode.item(0).getNodeName()).isEqualTo("regexp");
+		Assertions.assertThat(regexpsNode.item(0).getTextContent()).isEqualTo(".*\\.jpg");
+		Assertions.assertThat(regexpsNode.item(1).getNodeName()).isEqualTo("regexp");
+        Assertions.assertThat(regexpsNode.item(1).getTextContent()).isEqualTo(".*\\.png");
     }
 }

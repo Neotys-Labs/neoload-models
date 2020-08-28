@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
+import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy.Peak;
@@ -165,6 +166,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.severity("PERFORMANCE")
 								.build())
 						.build())
+				.excludedUrls(ImmutableList.of(".*\\.abcd"))
 				.build();
 
 		final Project project = Project.builder()

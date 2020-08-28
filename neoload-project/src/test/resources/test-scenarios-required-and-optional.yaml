@@ -34,6 +34,8 @@ scenarios:
       start_after: 1m
       step_rampup: 15s
       stop_after: 1m
+  excluded_urls:
+  - .*\.abcd
   apm_configuration:
     dynatrace_tags:
     - myDynatraceTag
