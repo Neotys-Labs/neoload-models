@@ -44,15 +44,15 @@ public class StringToWhenReleaseConverterTest {
 		assertEquals(ERROR, converter.convert(""));
 
 		assertEquals(ERROR, converter.convert("0"));
+		assertEquals(ERROR, converter.convert("0%"));
+		assertEquals(ERROR, converter.convert("05%"));
 
 		// MANUAL
 		assertEquals(convertToWhenReleaseManual("manual"), converter.convert("manual"));
 		assertEquals(convertToWhenReleaseManual("manual"), converter.convert("Manual"));
 
 		//PERCENTAGE
-		assertEquals(convertToWhenReleasePercentage("0"), converter.convert("0%"));
 		assertEquals(convertToWhenReleasePercentage("5"), converter.convert("5%"));
-		assertEquals(convertToWhenReleasePercentage("05"), converter.convert("05%"));
 		assertEquals(convertToWhenReleasePercentage("20"), converter.convert("20%"));
 		assertEquals(convertToWhenReleasePercentage("100"), converter.convert("100%"));
 

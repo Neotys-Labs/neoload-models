@@ -12,10 +12,11 @@ import javax.validation.Payload;
 import com.neotys.neoload.model.v3.validation.constraintvalidators.DurationValidator;
 import com.neotys.neoload.model.v3.validation.constraintvalidators.StartAfterValidator;
 import com.neotys.neoload.model.v3.validation.constraintvalidators.StopAfterValidator;
+import com.neotys.neoload.model.v3.validation.constraintvalidators.WhenReleaseValidator;
 
 @Target( { TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = {DurationValidator.class, StartAfterValidator.class, StopAfterValidator.class})
+@Constraint(validatedBy = {DurationValidator.class, StartAfterValidator.class, StopAfterValidator.class, WhenReleaseValidator.class})
 public @interface CompositeCheck { //GreaterThanOrEqualOne
 	String message() default "";
 	 
