@@ -13,6 +13,8 @@ import java.util.Optional;
 
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
+@JsonSerialize(as = ImmutableMonitoringParameters.class)
+@JsonDeserialize(as = ImmutableMonitoringParameters.class)
 public interface MonitoringParameters {
 
 	String BEFORE_FIRST = "before";
