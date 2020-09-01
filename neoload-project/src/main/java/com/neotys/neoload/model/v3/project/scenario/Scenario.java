@@ -32,7 +32,7 @@ public interface Scenario extends Element, SlaElement {
 	String APM = "apm_configuration";
 	String EXCLUDED_URLS = "excluded_urls";
 	String RENDEZVOUS_POLICIES = "rendezvous_policies";
-	String STORE_VARIABLES = "store_variables_for_raw_data_export";
+	String STORE_VARIABLES = "store_variables_for_raw_data";
 	String MONITORING = "monitoring";
 
 	@JsonProperty(POPULATIONS)
