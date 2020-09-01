@@ -18,7 +18,6 @@ public final class StringToWhenReleaseConverter extends StdConverter<String, Whe
 			return ERROR_VALUE;
 		}
 
-
 		if ("manual".equalsIgnoreCase(input)) {
 			return WhenRelease.builder()
 					.value(input.toLowerCase())
@@ -28,14 +27,14 @@ public final class StringToWhenReleaseConverter extends StdConverter<String, Whe
 		final Matcher percentageMatcher = PERCENTAGE_PATTERN.matcher(input);
 		if (percentageMatcher.matches()) {
 			return WhenRelease.builder()
-					.value(percentageMatcher.group(1))
+					.value(Integer.parseInt(percentageMatcher.group(1)))
 					.type(WhenRelease.Type.PERCENTAGE)
 					.build();
 		}
 		final Matcher positiveMatcher = POSITIVE_PATTERN.matcher(input);
 		if (positiveMatcher.matches()) {
 			return WhenRelease.builder()
-					.value(input)
+					.value(Integer.parseInt(input))
 					.type(WhenRelease.Type.VU_NUMBER)
 					.build();
 		}

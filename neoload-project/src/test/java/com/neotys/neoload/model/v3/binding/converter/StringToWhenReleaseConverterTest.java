@@ -16,14 +16,14 @@ public class StringToWhenReleaseConverterTest {
 
 	private static WhenRelease convertToWhenReleasePercentage(final String input) {
 		return WhenRelease.builder()
-				.value(input)
+				.value(Integer.parseInt(input))
 				.type(WhenRelease.Type.PERCENTAGE)
 				.build();
 	}
 
 	private static WhenRelease convertToWhenReleaseVuNumber(final String input) {
 		return WhenRelease.builder()
-				.value(input)
+				.value(Integer.parseInt(input))
 				.type(WhenRelease.Type.VU_NUMBER)
 				.build();
 	}
