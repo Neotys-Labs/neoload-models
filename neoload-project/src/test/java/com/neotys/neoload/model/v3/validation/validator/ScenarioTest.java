@@ -31,18 +31,16 @@ public class ScenarioTest {
 	private static final String CONSTRAINTS_SCENARIO_NAME_BLANK;
 	static {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'name': missing value or value is empty.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'rendezvous_policies': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SCENARIO_NAME_BLANK = sb.toString();
 	}
 
 	private static final String CONSTRAINTS_SCENARIO_POPULATIONS;
 	static {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'populations': missing value or value is empty.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'rendezvous_policies': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SCENARIO_POPULATIONS = sb.toString();
 	}
 
