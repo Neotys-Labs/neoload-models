@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationConverter;
+import com.neotys.neoload.model.v3.binding.converter.TimeDurationToStringConverter;
+import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
 
 import javax.validation.Valid;
@@ -28,6 +32,9 @@ public interface RendezvousPolicy {
 	default WhenRelease getWhen(){return WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value("100%").build();}
 
 	@JsonProperty(TIMEOUT)
+	@PositiveCheck(unit="second", groups={NeoLoad.class})
+	@JsonSerialize(converter= TimeDurationToStringConverter.class)
+	@JsonDeserialize(converter= StringToTimeDurationConverter.class)
 	@Value.Default
 	default Integer getTimeout() {return 300;}
 

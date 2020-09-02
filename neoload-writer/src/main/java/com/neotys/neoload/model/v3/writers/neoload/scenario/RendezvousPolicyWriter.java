@@ -44,6 +44,8 @@ class RendezvousPolicyWriter {
 		    case MANUAL:
 			    xmlRendezvousPolicy = document.createElement(XML_TAG_NAME_MANUAL);
 			    break;
+		    default:
+			    throw new IllegalStateException("Unexpected value: " + type);
 	    }
 
         // Name attribute
