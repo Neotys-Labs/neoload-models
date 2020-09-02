@@ -20,7 +20,7 @@ Assertions allow checking the validity of the responses content returned by the 
 
 #### Example 1
 
-Defining a validation to check if the server response contains the specified regular expresion.
+Defining a validation to check if the response body contains the specified regular expression.
 
 ```yaml
 assert_content:
@@ -30,7 +30,7 @@ assert_content:
 
 #### Example 2
 
-Defining a validation to check if the server response contains the specified JSON node.
+Defining a validation to check if the response body contains the specified JSON node.
 
 ```yaml
 assert_content:
@@ -39,7 +39,7 @@ assert_content:
 
 #### Example 3
 
-Defining a validation to check if the server response doesn't contain the specified text from a specified XML node.
+Defining a validation to check if the response body doesn't contain the specified text from a specified XML node.
 
 ```yaml
 assert_content:
