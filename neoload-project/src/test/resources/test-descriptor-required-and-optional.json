@@ -14,6 +14,23 @@
             "users": 500
           }
         }
+      ],
+      "rendezvous_policies": [
+        {
+          "name": "rdv1",
+          "when": "manual",
+          "timeout": 200
+        },
+        {
+          "name": "rdv2",
+          "when": "50%",
+          "timeout": 100
+        },
+        {
+          "name": "rdv3",
+          "when": "20",
+          "timeout": 20
+        }
       ]
     }
   ]

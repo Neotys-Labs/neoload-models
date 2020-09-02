@@ -53,3 +53,8 @@ scenarios:
       operator: ABOVE
       value: 90
       severity: PERFORMANCE
+  rendezvous_policies:
+  - name: rdv
+    when: 200
+    timeout: 100
+  store_variables_for_raw_data: false

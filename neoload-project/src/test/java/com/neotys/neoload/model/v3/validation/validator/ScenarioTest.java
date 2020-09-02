@@ -7,6 +7,11 @@ import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy.Peak;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.junit.Test;
 
+import java.util.Collections;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -26,16 +31,18 @@ public class ScenarioTest {
 	private static final String CONSTRAINTS_SCENARIO_NAME_BLANK;
 	static {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'name': missing value or value is empty.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'rendezvous_policies': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SCENARIO_NAME_BLANK = sb.toString();
 	}
 
 	private static final String CONSTRAINTS_SCENARIO_POPULATIONS;
 	static {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'populations': missing value or value is empty.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'rendezvous_policies': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SCENARIO_POPULATIONS = sb.toString();
 	}
 
@@ -73,7 +80,8 @@ public class ScenarioTest {
 	@Test
 	public void validateName() {
 		final Validator validator = new Validator();
-		
+
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		Scenario scenario = Scenario.builder()
 				.addPopulations(PopulationPolicy.builder()
 						.name("MyPopulation")
@@ -81,6 +89,7 @@ public class ScenarioTest {
 								.users(25)
 								.build())
 						.build())
+				.addRendezvousPolicies(rendezvousPolicy)
 				.build();
 		Validation validation = validator.validate(scenario, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -120,6 +129,7 @@ public class ScenarioTest {
 								.users(25)
 								.build())
 						.build())
+				.addRendezvousPolicies(rendezvousPolicy)
 				.build();
 		validation = validator.validate(scenario, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -129,7 +139,7 @@ public class ScenarioTest {
 	@Test
 	public void validatePopulations() {
 		final Validator validator = new Validator();
-		
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		Scenario scenario = Scenario.builder()
 				.name("MyScenario")
 				.build();
@@ -145,6 +155,7 @@ public class ScenarioTest {
 								.users(25)
 								.build())
 						.build())
+				.addRendezvousPolicies(rendezvousPolicy)
 				.build();
 		validation = validator.validate(scenario, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -154,7 +165,7 @@ public class ScenarioTest {
 	@Test
 	public void validatePopulationsNames() {
 		final Validator validator = new Validator();
-				
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		Scenario scenario = Scenario.builder()
 				.name("MyScenario")
 				.addPopulations(PopulationPolicy.builder()
@@ -169,6 +180,7 @@ public class ScenarioTest {
 								.users(25)
 								.build())
 						.build())
+				.addRendezvousPolicies(rendezvousPolicy)
 				.build();
 		Validation validation = validator.validate(scenario, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -188,6 +200,7 @@ public class ScenarioTest {
 								.users(25)
 								.build())
 						.build())
+				.addRendezvousPolicies(rendezvousPolicy)
 				.build();
 	    validation = validator.validate(scenario, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -263,14 +276,15 @@ public class ScenarioTest {
 				.build();
 
         final Scenario scenario1 = Scenario.builder()
+
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
+		final Scenario scenario1 = Scenario.builder()
         		.name("MyScenario1")
         		.description("My scenario 1 with 4 populations")
         		.slaProfile("MySlaProfile")
-        		.addPopulations(population11)
-        		.addPopulations(population12)
-        		.addPopulations(population13)
-        		.addPopulations(population14)
-        		.build();
+        		.addPopulations(population11, population12, population13, population14)
+				.addRendezvousPolicies(rendezvousPolicy)
+				.build();
         
         final Project project = Project.builder()
         		.name("MyProject")

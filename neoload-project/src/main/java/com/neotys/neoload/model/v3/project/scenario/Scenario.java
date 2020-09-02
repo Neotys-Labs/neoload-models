@@ -49,16 +49,20 @@ public interface Scenario extends Element, SlaElement {
 	@Valid
 	List<String> getExcludedUrls();
 
+	@RequiredCheck(groups = {NeoLoad.class})
 	@JsonProperty(RENDEZVOUS_POLICIES)
 	@Valid
 	List<RendezvousPolicy> getRendezvousPolicies();
 
 	@JsonProperty(STORE_VARIABLES)
-	default Boolean isStoredVariables() {
+	@RequiredCheck(groups = {NeoLoad.class})
+	@Value.Default
+	default boolean isStoredVariables() {
 		return false;
 	}
 
 	@JsonProperty(MONITORING)
+	@RequiredCheck(groups = {NeoLoad.class})
 	Optional<MonitoringParameters> getMonitoringParameters();
 
 	class Builder extends ImmutableScenario.Builder {

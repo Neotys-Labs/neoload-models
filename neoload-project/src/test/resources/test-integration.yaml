@@ -28,3 +28,7 @@ scenarios:
   - name: MyPopulation
     constant_load:
       users: 500
+  rendezvous_policies:
+    - name: rdv
+      when: 200
+      timeout: 100
