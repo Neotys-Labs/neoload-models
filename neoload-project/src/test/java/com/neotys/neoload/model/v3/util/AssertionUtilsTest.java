@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.util;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -45,5 +46,11 @@ public class AssertionUtilsTest {
     	Assertions.assertThat(normalyzedAssertions.get(2).getName().get()).isEqualTo("assertion_2");
     	Assertions.assertThat(normalyzedAssertions.get(3).getName()).isPresent();
     	Assertions.assertThat(normalyzedAssertions.get(3).getName().get()).isEqualTo("assertion_3");
+    }
+    
+    @Test
+    public void normalyzeContainsTest() {
+    	Assertions.assertThat(AssertionUtils.normalyzeContains(Optional.empty())).isEqualTo("");
+    	Assertions.assertThat(AssertionUtils.normalyzeContains(Optional.of("contains"))).isEqualTo("contains");
     }
 }

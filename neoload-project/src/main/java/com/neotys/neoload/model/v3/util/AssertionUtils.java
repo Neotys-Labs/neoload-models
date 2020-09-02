@@ -56,7 +56,7 @@ public class AssertionUtils {
 	
 	private static Set<String> getNames(final List<ContentAssertion> assertions) {
 		final Set<String> names = Sets.newHashSet();
-		assertions.forEach(assertion -> assertion.getName().ifPresent(name -> names.add(name)));
+		assertions.forEach(assertion -> assertion.getName().ifPresent(names::add));
 		return names;
 	}
 	
