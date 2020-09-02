@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.writers.neoload;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
@@ -125,6 +126,16 @@ public class WrittingTestUtils {
             .method("GET")
             .build();
 
+    public static final Request GET_REQUEST_WITH_ASSERTIONS_TEST = Request.builder()
+            .name("GET_REQUEST_TEST")
+            .url("/loadtest/")
+            .server(SERVER_JACK9090_TEST.getName())
+            .method("GET")
+            .addContentAssertions(ContentAssertion.builder()
+            		.contains("request_contains_1")
+            		.build())            
+            .build();
+
     public static final Request GET_REQUEST_WITH_RECORDED_FILES;
 
     static {
@@ -203,10 +214,16 @@ public class WrittingTestUtils {
 			.build();*/
 
     public static final Container CONTAINER_TEST = Container.builder()
-            // TODO
-            //.addSteps(PAGE_TEST)
+    		.name("Container_name")
             .addSteps(REQUEST_TEST)
-            .name("Container_name")
+            .build();
+
+    public static final Container CONTAINER_WITH_ASSERTIONS_TEST = Container.builder()
+    		.name("Container_name")
+            .addSteps(REQUEST_TEST)
+            .addContentAssertions(ContentAssertion.builder()
+            		.contains("container_contains_1")
+            		.build())
             .build();
 
     public static final Delay DELAY_TEST = Delay.builder()
@@ -333,6 +350,16 @@ public class WrittingTestUtils {
             .addSteps(CONTAINER_IN_DEFAULT_SWITCH)
             .build();
 
+    public static final Container CONTAINER_DEFAULT_WITH_ASSERTIONS_SWITCH =
+            Container.builder() //
+            .name("Default")
+            .description("Elements executed by default when no Case equals the Switch value.")
+            .addSteps(DELAY_SWITCH_TEST_DEFAULT)
+            .addSteps(CONTAINER_IN_DEFAULT_SWITCH)
+            .addContentAssertions(ContentAssertion.builder()
+            		.contains("default_contains_1")
+            		.build())
+            .build();
 
 
     public static final Container CONTAINER_IN_CASE_SWITCH =
@@ -349,6 +376,18 @@ public class WrittingTestUtils {
                     .addSteps(CONTAINER_IN_CASE_SWITCH)
                     .build();
 
+    public static final Case CASE_WITH_ASSERTIONS_SWITCH =
+            Case.builder()
+                    .value("qsd")
+                    .isBreak(true)
+                    .description("Elements executed when the Case equals the Switch valueB.")
+                    .addSteps(DELAY_SWITCH_TEST_CASE)
+                    .addSteps(CONTAINER_IN_CASE_SWITCH)
+                    .addContentAssertions(ContentAssertion.builder()
+                    		.contains("case_contains_1")
+                    		.build())
+                    .build();
+
     public static final Switch SWITCH_TEST = Switch.builder()
             .name("switcher or Witcher")
             .description("a simple hunter")
@@ -357,6 +396,15 @@ public class WrittingTestUtils {
             .getDefault(CONTAINER_DEFAULT_SWITCH)
             .build();
 
+    public static final Switch SWITCH_WITH_ASSERTIONS_TEST = Switch.builder()
+            .name("switcher or Witcher")
+            .description("a simple hunter")
+            .value("sqdf")
+            .addCases(CASE_WITH_ASSERTIONS_SWITCH)
+            .getDefault(CONTAINER_DEFAULT_WITH_ASSERTIONS_SWITCH)
+            .build();
+
+    
     private static final List<String> COLUMNS;
 
     static {

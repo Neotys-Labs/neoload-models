@@ -3,10 +3,12 @@
 A container only contains steps to be executed.
 
 #### Available settings
-| Name                  | Description                                                                             | Accept variable | Required | Since |
-|:--------------------- |:--------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
-| sla_profile           | The name of the SLA profile to apply to the Container (will not be applied to children) | -               | -        | 6.9   |
-| [steps](steps.md)     | The steps to be executed                                                                | -               | &#x2713; |       |
+| Name                                | Description                                                                                         | Accept variable | Required | Since |
+|:----------------------------------- |:--------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| sla_profile                         | The name of the SLA profile to apply to the Container (will not be applied to children)             | -               | -        | 6.9   |
+| [steps](steps.md)                   | The steps to be executed                                                                            | -               | &#x2713; |       |
+| [assert_content](assert_content.md) | The list of assertions allowing to check the validity of the responses content within the Container | -               | -        | 7.6   |
+
 
 #### Example
 Defining an "actions" container with 2 steps: 1 request and 1 Delay.

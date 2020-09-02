@@ -1,0 +1,21 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - switch:
+        name: MySwitch
+        description: My Switch
+        value: '0'
+        case:
+        - name: MyCase0
+          description: My Case 0
+          value: '0'
+          break: false
+          steps:
+          - delay: 3ms
+          assert_content:
+          - contains: My Assertion on Content
+        default:
+          steps:
+          - delay: 3ms

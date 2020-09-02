@@ -11,6 +11,8 @@ user_paths:
         name: MyTransaction
         steps:
         - delay: 1s
+    assert_content:
+    - contains: MyUserPath1_init
   actions:
     description: My Actions Container from My User Path 1
     sla_profile: MyActionsSlaProfile1
@@ -19,6 +21,10 @@ user_paths:
         name: MyTransaction
         steps:
         - delay: 1s
+        assert_content:
+        - contains: MyUserPath1_actions_MyTransaction
+    assert_content:
+    - contains: MyUserPath1_actions
   end:
     description: My End Container from My User Path 1
     sla_profile: MyEndSlaProfile1
@@ -27,6 +33,10 @@ user_paths:
         name: MyTransaction
         steps:
         - delay: 1s
+    assert_content:
+    - contains: MyUserPath1_end
+  assert_content:
+  - contains: MyUserPath1
 - name: MyUserPath2
   description: My User Path 2
   user_session: reset_off

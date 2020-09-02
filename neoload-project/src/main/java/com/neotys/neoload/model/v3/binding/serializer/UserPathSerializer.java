@@ -9,6 +9,7 @@ import static com.neotys.neoload.model.v3.project.userpath.UserPath.INIT;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.USER_SESSION;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -16,6 +17,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertionElement;
 
 public final class UserPathSerializer extends StdSerializer<UserPath> {
 	private static final long serialVersionUID = -9059965357953456780L;
@@ -51,6 +54,15 @@ public final class UserPathSerializer extends StdSerializer<UserPath> {
         if (end.isPresent()) {
         	generator.writeObjectField(END, Container.builder().from(end.get()).name("").build());
         }
+        
+        final List<ContentAssertion> assertions = userPath.getContentAssertions();
+        if ((assertions != null) && (!assertions.isEmpty())) {
+        	generator.writeArrayFieldStart(ContentAssertionElement.ASSERT_CONTENT);
+        	for (final ContentAssertion assertion : assertions) {
+        		generator.writeObject(assertion);				
+			}
+        	generator.writeEndArray();
+        }        
         
         generator.writeEndObject();		
 	}

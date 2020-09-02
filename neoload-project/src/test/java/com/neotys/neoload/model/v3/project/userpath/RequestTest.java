@@ -13,6 +13,7 @@ import com.neotys.neoload.model.v3.project.userpath.Request.Method;
 public class RequestTest {
 	@Test
 	public void constants() {
+		assertEquals("name", Request.NAME);
 		assertEquals("url", Request.URL);
 		assertEquals("server", Request.SERVER);
 		assertEquals("method", Request.METHOD);

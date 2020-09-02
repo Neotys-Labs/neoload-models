@@ -17,6 +17,8 @@ user_paths:
         extractors:
         - name: MyVariable1
           jsonpath: MyJsonPath
+        assert_content:
+        - contains: MyUserPath_actions_request_1
         sla_profile: MySlaProfile
     - request:
         url: /select?name=neoload
@@ -32,4 +34,6 @@ user_paths:
         extractors:
         - name: MyVariable1
           jsonpath: MyJsonPath
+        assert_content:
+        - contains: MyUserPath_actions_request_2
         sla_profile: MySlaProfile

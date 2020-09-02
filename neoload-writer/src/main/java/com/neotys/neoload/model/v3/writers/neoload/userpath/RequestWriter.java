@@ -3,11 +3,14 @@ package com.neotys.neoload.model.v3.writers.neoload.userpath;
 import com.google.common.net.MediaType;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.util.Parameter;
 import com.neotys.neoload.model.v3.util.RequestUtils;
 import com.neotys.neoload.model.v3.util.URL;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
+import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
+
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -51,6 +54,11 @@ public class RequestWriter extends ElementWriter {
 		super.writeXML(document, xmlRequest, outputFolder);
 		fillXML(document, xmlRequest, theRequest);
 		SlaElementWriter.of(theRequest).writeXML(xmlRequest);
+		// write assertions
+        final List<ContentAssertion> assertions = theRequest.getContentAssertions();
+        if ((assertions != null && (!assertions.isEmpty()))) {
+        	AssertionsWriter.of(assertions).writeXML(document, xmlRequest);	
+        } 
 		currentElement.appendChild(xmlRequest);
 	}
 

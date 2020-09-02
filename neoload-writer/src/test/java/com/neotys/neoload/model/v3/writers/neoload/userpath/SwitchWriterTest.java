@@ -14,9 +14,10 @@ import javax.xml.parsers.ParserConfigurationException;
 public class SwitchWriterTest {
 
     @Test
-    public void testWriteXML() throws ParserConfigurationException {
+    public void writeXmlTest() throws ParserConfigurationException {
         final Document doc = WrittingTestUtils.generateEmptyDocument();
         final Element root = WrittingTestUtils.generateTestRootElement(doc);
+        
         final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
                 + "<test-root>"
                 + "<switch-container condition=\"sqdf\" name=\"switcher or Witcher\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.SWITCH_TEST) + "\">"
@@ -49,10 +50,60 @@ public class SwitchWriterTest {
                 + "    slaProfileEnabled=\"false\""
                 + "    uid=\""+ WriterUtils.getElementUid(WrittingTestUtils.CONTAINER_IN_DEFAULT_SWITCH) +"\" weightsEnabled=\"false\"/>"
                 + "</test-root>";
+        
         SwitchWriter.of(WrittingTestUtils.SWITCH_TEST).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
 
         XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
 
     }
+    
+    @Test
+    public void writeXmlWithAssertionsTest() throws ParserConfigurationException {
+        final Document doc = WrittingTestUtils.generateEmptyDocument();
+        final Element root = WrittingTestUtils.generateTestRootElement(doc);
+        final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+                + "<test-root>"
+                + "<switch-container condition=\"sqdf\" name=\"switcher or Witcher\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.SWITCH_WITH_ASSERTIONS_TEST) + "\">"
+                + "<description>a simple hunter</description>"
+                + "<case-statement case-break=\"true\""
+                + "        case-uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.CASE_WITH_ASSERTIONS_SWITCH)+ "\" case-value=\"qsd\""
+                + "        element-number=\"1\" execution-type=\"0\""
+                + "        slaProfileEnabled=\"false\" weightsEnabled=\"false\">"
+                + "<description>Elements executed when the Case equals the Switch valueB.</description>"
+                + "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.DELAY_SWITCH_TEST_CASE) +"\"/>"
+                + "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.CONTAINER_IN_CASE_SWITCH) +"\"/>"
+    			+ "<assertions>"
+		        + "<assertion-content name=\"assertion_1\" notType=\"false\" pattern=\"case_contains_1\"/>"
+		        + "</assertions>"
+                + "</case-statement>"
+                + "<default-statement element-number=\"1\" execution-type=\"0\""
+                + "        slaProfileEnabled=\"false\" weightsEnabled=\"false\">"
+                + "<description>Elements executed by default when no Case equals the Switch value.</description>"
+                + "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.DELAY_SWITCH_TEST_DEFAULT) +"\"/>"
+                + "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.CONTAINER_IN_DEFAULT_SWITCH) +"\"/>"
+    			+ "<assertions>"
+		        + "<assertion-content name=\"assertion_1\" notType=\"false\" pattern=\"default_contains_1\"/>"
+		        + "</assertions>"
+                + "</default-statement>"
+                + "</switch-container>"
+                + "<delay-action duration=\"0\" isThinkTime=\"false\" name=\"delayB\""
+                + "    uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.DELAY_SWITCH_TEST_CASE)+ "\"/>"
+                + "<basic-logical-action-container element-number=\"1\" execution-type=\"0\"" +
+                "    name=\"b\"" +
+                "    slaProfileEnabled=\"false\"" +
+                "    uid=\""+ WriterUtils.getElementUid(WrittingTestUtils.CONTAINER_IN_CASE_SWITCH) +"\" weightsEnabled=\"false\"/>"
+                + "<delay-action duration=\"0\" isThinkTime=\"false\" name=\"delayB\""
+                + "    uid=\""+ WriterUtils.getElementUid(WrittingTestUtils.DELAY_SWITCH_TEST_DEFAULT) + "\"/>"
+                + "<basic-logical-action-container element-number=\"1\" execution-type=\"0\""
+                + "    name=\"b\""
+                + "    slaProfileEnabled=\"false\""
+                + "    uid=\""+ WriterUtils.getElementUid(WrittingTestUtils.CONTAINER_IN_DEFAULT_SWITCH) +"\" weightsEnabled=\"false\"/>"
+                + "</test-root>";
+        SwitchWriter.of(WrittingTestUtils.SWITCH_WITH_ASSERTIONS_TEST).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+        XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+
+    }
+
 
 }

@@ -1,12 +1,16 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
+import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.List;
 import java.util.Optional;
 
 public class ContainerWriter extends ElementWriter {
@@ -55,6 +59,12 @@ public class ContainerWriter extends ElementWriter {
 
 		setPropertyAttributes(xmlContainerElement);
 		writeEmbeddedActions(document, outputFolder, xmlContainerElement, theContainer);
+		
+		// write assertions
+        final List<ContentAssertion> assertions = theContainer.getContentAssertions();
+        if ((assertions != null && (!assertions.isEmpty()))) {
+        	AssertionsWriter.of(assertions).writeXML(document, xmlContainerElement);	
+        } 
 	}
 
 	protected static void writeEmbeddedActions(final Document document, final String outputFolder, final Element xmlContainerElement, final Container theContainer) {

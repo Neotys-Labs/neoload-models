@@ -6,6 +6,8 @@ import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath.UserSession;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -50,6 +52,9 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 								.addSteps(Delay.builder().value("1000")
 										.build())
 								.build())
+						.addContentAssertions(ContentAssertion.builder()
+								.contains("MyUserPath1_init")
+								.build())
 						.build())
 				.actions(Container.builder()
 						.name("actions")
@@ -59,6 +64,12 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
 										.build())
+								.addContentAssertions(ContentAssertion.builder()
+										.contains("MyUserPath1_actions_MyTransaction")
+										.build())
+								.build())
+						.addContentAssertions(ContentAssertion.builder()
+								.contains("MyUserPath1_actions")
 								.build())
 						.build())
 				.end(Container.builder()
@@ -70,6 +81,12 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 								.addSteps(Delay.builder().value("1000")
 										.build())
 								.build())
+						.addContentAssertions(ContentAssertion.builder()
+								.contains("MyUserPath1_end")
+								.build())
+						.build())
+				.addContentAssertions(ContentAssertion.builder()
+						.contains("MyUserPath1")
 						.build())
 				.build();
 

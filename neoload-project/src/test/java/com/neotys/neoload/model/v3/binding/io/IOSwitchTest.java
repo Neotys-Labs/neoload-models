@@ -2,6 +2,8 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -12,15 +14,58 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
 
     private static Project getSwitchOnlyRequired() {
         final Switch aSwitch = Switch.builder()
-                .description("a simple switch")
-                .name("switch")
+        		.value("1")
                 .addCases(Case.builder()
-                        .addSteps(Delay.builder().value("3").build())
-                        .value("0")
+                		.value("0")
                         .isBreak(true)
+                        .addSteps(Delay.builder()
+                        		.value("3")
+                        		.build())                        
                         .build())
-                .getDefault(Container.builder().addSteps(Delay.builder().value("3").build()).build())
-                .value("1")
+                .getDefault(Container.builder()
+                		.addSteps(Delay.builder()
+                				.value("3")
+                				.build())
+                		.build())                
+                .build();
+        final UserPath userPath = UserPath.builder()
+                .name("MyUserPath")
+                .actions(Container.builder()
+                        .name("actions")
+                        .addSteps(aSwitch)
+                        .build())
+                .build();
+
+        final Project project = Project.builder()
+                .name("MyProject")
+                .addUserPaths(userPath)
+                .build();
+
+        return project;
+    }
+    
+    private static Project getSwitchRequiredAndOptional() {
+        final Switch aSwitch = Switch.builder()
+        		.name("MySwitch")
+                .description("My Switch")    
+                .value("0")
+                .addCases(Case.builder()
+                		.name("MyCase0")
+                		.description("My Case 0")
+                		.value("0")
+                        .isBreak(false)
+                        .addSteps(Delay.builder()
+                        		.value("3")
+                        		.build())
+                        .addContentAssertions(ContentAssertion.builder()
+                        		.contains("My Assertion on Content")
+                        		.build())
+                        .build())
+                .getDefault(Container.builder()
+                		.addSteps(Delay.builder()
+                				.value("3")
+                				.build())
+                		.build())                
                 .build();
         final UserPath userPath = UserPath.builder()
                 .name("MyUserPath")
@@ -38,11 +83,21 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
         return project;
     }
 
+
     @Test
-    public void readIfOnlyRequired() throws IOException {
+    public void readSwitchOnlyRequired() throws IOException {
         final Project expectedProject = getSwitchOnlyRequired();
         assertNotNull(expectedProject);
 
         read("test-switch-only-required", expectedProject);
     }
+    
+    @Test
+    public void readSwitchRequiredAndOptional() throws IOException {
+        final Project expectedProject = getSwitchRequiredAndOptional();
+        assertNotNull(expectedProject);
+
+        read("test-switch-required-and-optional", expectedProject);
+    }
+
 }

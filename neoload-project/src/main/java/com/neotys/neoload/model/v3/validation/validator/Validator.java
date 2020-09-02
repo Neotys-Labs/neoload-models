@@ -15,6 +15,8 @@ import javax.validation.Path.Node;
 import javax.validation.ValidatorFactory;
 
 import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertionElement;
+import com.neotys.neoload.model.v3.validation.naming.DefaultPropertyNamingStrategy;
 import com.neotys.neoload.model.v3.validation.naming.LoadPolicyStrategy;
 import com.neotys.neoload.model.v3.validation.naming.PropertyNamingStrategy;
 import com.neotys.neoload.model.v3.validation.naming.RampupStrategy;
@@ -29,6 +31,7 @@ public final class Validator {
 		PROPERTY_NAMING_STRATEGIES = new HashMap<>();
 		PROPERTY_NAMING_STRATEGIES.put("loadPolicy", new LoadPolicyStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("rampup", new RampupStrategy());
+		PROPERTY_NAMING_STRATEGIES.put("contentAssertions", new DefaultPropertyNamingStrategy(ContentAssertionElement.ASSERT_CONTENT));
 	}
 	
 	private static final PropertyNamingStrategy defaultNamingStrategy = new SnakeCaseStrategy();

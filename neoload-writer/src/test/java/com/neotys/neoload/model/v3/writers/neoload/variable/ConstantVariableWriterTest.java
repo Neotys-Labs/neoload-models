@@ -1,19 +1,17 @@
 package com.neotys.neoload.model.v3.writers.neoload.variable;
 
-import com.google.common.io.Files;
-import com.neotys.neoload.model.v3.project.variable.ConstantVariable;
-import com.neotys.neoload.model.v3.project.variable.Variable;
-import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import static org.junit.Assert.assertEquals;
+import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.project.variable.ConstantVariable;
+import com.neotys.neoload.model.v3.project.variable.Variable;
+import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 
 public class ConstantVariableWriterTest {
 	

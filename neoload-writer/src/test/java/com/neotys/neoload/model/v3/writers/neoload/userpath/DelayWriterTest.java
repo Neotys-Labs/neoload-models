@@ -1,18 +1,17 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
-import com.google.common.io.Files;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
-import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
-import org.assertj.core.api.Assertions;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
+import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 
 public class DelayWriterTest {
 

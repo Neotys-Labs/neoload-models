@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.serializer.UserPathDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.UserPathSerializer;
 import com.neotys.neoload.model.v3.project.Element;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertionElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
@@ -25,7 +26,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(using = UserPathDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface UserPath extends Element {
+public interface UserPath extends Element, ContentAssertionElement {
 	String USER_SESSION = "user_session";
 	String RESET_ON = "reset_on";
 	String RESET_OFF = "reset_off";
@@ -46,6 +47,7 @@ public interface UserPath extends Element {
 		RESET_AUTO;
 	}
 	
+	@JsonInclude(value=Include.NON_DEFAULT)
 	@Value.Default
 	default UserSession getUserSession() {
 		return DEFAULT_USER_SESSION;

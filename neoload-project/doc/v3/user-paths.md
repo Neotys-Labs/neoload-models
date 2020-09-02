@@ -5,14 +5,16 @@ The User Path is a succession of web pages that may contain logical Actions such
 
 #### Available settings
 
-| Name         | Description                                                                                                                                                | Accept variable | Required           | Since |
-|:------------ |:---------------------------------------------------------------------------------------------------------------------------------------------------------- |:---------------:|:------------------:|:-----:|
-| name         | The name of the User Path                                                                                                                                  | -               | &#x2713;           |       |
-| description  | The description of the User Path                                                                                                                           | -               | -                  |       |
-| user_session | The "user_session" value can be: <ul><li>`reset_on`</li><li>`reset_off`</li><li>`reset_auto`</li></ul></br>The default value is `reset_auto`.              | -               | -                  |       |
-| init         | The init [container](container.md)                                                                                                                         | -               | -                  |       |
-| actions      | The actions [container](container.md)                                                                                                                      | -               | &#x2713;           |       |
-| end          | The end [container](container.md)                                                                                                                          | -               | -                  |       |
+| Name                                | Description                                                                                                                                                | Accept variable | Required           | Since |
+|:----------------------------------- |:---------------------------------------------------------------------------------------------------------------------------------------------------------- |:---------------:|:------------------:|:-----:|
+| name                                | The name of the User Path                                                                                                                                  | -               | &#x2713;           |       |
+| description                         | The description of the User Path                                                                                                                           | -               | -                  |       |
+| user_session                        | The "user_session" value can be: <ul><li>`reset_on`</li><li>`reset_off`</li><li>`reset_auto`</li></ul></br>The default value is `reset_auto`.              | -               | -                  |       |
+| init                                | The init [container](container.md)                                                                                                                         | -               | -                  |       |
+| actions                             | The actions [container](container.md)                                                                                                                      | -               | &#x2713;           |       |
+| end                                 | The end [container](container.md)                                                                                                                          | -               | -                  |       |
+| [assert_content](assert_content.md) | The list of assertions allowing to check the validity of the responses content within the User Path                                                                                                                                         | -               | -                  | 7.6   |
+
 
 #### Example
 Defining a User Path:

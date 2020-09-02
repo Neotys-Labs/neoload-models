@@ -52,7 +52,8 @@
                       "url": "http://www.neotys.com/select"
                     }
                   }
-                ]
+                ],
+                "assert_content":[{"contains":"ThenAssertion"}]
               },
               "else": {
                 "description": "My else description",
@@ -61,7 +62,8 @@
                   {
                     "delay": "3m 200ms"
                   }
-                ]
+                ],
+                "assert_content":[{"contains":"ElseAssertion"}]
               }
             }
           }

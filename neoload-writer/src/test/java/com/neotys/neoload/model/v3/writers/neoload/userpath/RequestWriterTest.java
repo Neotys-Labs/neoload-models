@@ -227,6 +227,27 @@ public class RequestWriterTest {
         XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
     }
 	
+	@Test
+    public void writeGetRequestWithAssertionsTest() throws ParserConfigurationException {
+    	final Document doc = WrittingTestUtils.generateEmptyDocument();
+    	final Element root = WrittingTestUtils.generateTestRootElement(doc);
+    	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+    			+ "<test-root>"
+    			+ "<http-action actionType=\"1\" followRedirects=\"false\" method=\"GET\" "
+    			+ "name=\"GET_REQUEST_TEST\" path=\"/loadtest/\" "
+    			+ "serverUid=\"jack\" slaProfileEnabled=\"false\" uid=\""
+    			+ WriterUtils.getElementUid(WrittingTestUtils.GET_REQUEST_WITH_ASSERTIONS_TEST)+ "\">"
+    			+ "<assertions>"
+    			+ "<assertion-content name=\"assertion_1\" notType=\"false\" pattern=\"request_contains_1\"/>"
+    			+ "</assertions>"
+    			+ "</http-action>"
+    			+ "</test-root>";
+    	
+    	(new RequestWriter(WrittingTestUtils.GET_REQUEST_WITH_ASSERTIONS_TEST)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+        XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+    }
+
 	/*@Test
     public void writePostSubmitFormRequestTest() throws ParserConfigurationException {
     	final Document doc = WrittingTestUtils.generateEmptyDocument();

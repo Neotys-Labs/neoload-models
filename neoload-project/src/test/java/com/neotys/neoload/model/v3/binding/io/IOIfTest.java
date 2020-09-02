@@ -3,6 +3,8 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -135,8 +137,11 @@ public class IOIfTest extends AbstractIOElementsTest {
 				.addSteps(Request
 						.builder()
 						.url("http://www.neotys.com/select")
-						.build()
-				).build();
+						.build())
+				.addContentAssertions(ContentAssertion.builder()
+						.contains("ThenAssertion")
+						.build())
+				.build();
 	}
 
 	private static Container getElse() {
@@ -147,8 +152,11 @@ public class IOIfTest extends AbstractIOElementsTest {
 				.addSteps(Delay
 						.builder()
 						.value(String.valueOf(3*60*1000+200)) // "3m 200ms"
-						.build()
-				).build();
+						.build())
+				.addContentAssertions(ContentAssertion.builder()
+						.contains("ElseAssertion")
+						.build())
+				.build();
 	}
 
 	@Test

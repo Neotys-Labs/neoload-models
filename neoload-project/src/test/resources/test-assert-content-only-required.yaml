@@ -1,0 +1,11 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        name: request
+        url: http://www.neotys.com/select?name:neoload
+        method: GET
+        assert_content:
+        - contains: DevOps and Automation

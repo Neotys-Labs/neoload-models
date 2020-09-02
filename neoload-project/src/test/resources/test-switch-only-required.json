@@ -1,4 +1,5 @@
 {
+  "name": "MyProject",
   "user_paths": [
     {
       "name": "MyUserPath",
@@ -6,8 +7,6 @@
         "steps": [
           {
             "switch": {
-              "description": "a simple switch",
-              "name": "switch",
               "value": "1",
               "case": [
                 {
@@ -32,6 +31,5 @@
         ]
       }
     }
-  ],
-  "name": "MyProject"
+  ]
 }

@@ -1,28 +1,34 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.project.SlaElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertionElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-import java.util.List;
-import java.util.Optional;
-
-@JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
+@JsonInclude(value=Include.NON_DEFAULT)
+@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, ContentAssertionElement.ASSERT_CONTENT, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
+@JsonSerialize(as = ImmutableRequest.class)
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface Request extends Step, SlaElement {
+public interface Request extends Step, SlaElement, ContentAssertionElement {
+	String NAME = "name";
 	String URL = "url";
 	String SERVER = "server";
 	String METHOD = "method";
@@ -59,6 +65,7 @@ public interface Request extends Step, SlaElement {
     	}
     }
 
+    @JsonProperty(NAME)
     @RequiredCheck(groups={NeoLoad.class})
 	@Value.Default
 	default String getName() {
@@ -95,7 +102,7 @@ public interface Request extends Step, SlaElement {
 	@JsonProperty(EXTRACTORS)
 	@Valid
 	List<VariableExtractor> getExtractors();
-
+	
 	@JsonProperty(FOLLOW_REDIRECTS)
 	@Valid
 	@Value.Default

@@ -1,18 +1,17 @@
 package com.neotys.neoload.model.v3.writers.neoload.scenario;
 
-import com.neotys.neoload.model.v3.project.scenario.DynatraceAnomalyRule;
-import com.neotys.neoload.model.v3.project.scenario.ImmutableDynatraceAnomalyRule;
-import com.neotys.neoload.model.v3.project.scenario.ImmutableApm;
-import com.neotys.neoload.model.v3.project.scenario.Apm;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import com.neotys.neoload.model.v3.project.scenario.Apm;
+import com.neotys.neoload.model.v3.project.scenario.DynatraceAnomalyRule;
 
 public class ApmWriterTest {
 

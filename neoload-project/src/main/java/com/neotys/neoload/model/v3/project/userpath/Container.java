@@ -18,16 +18,17 @@ import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.SlaElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertionElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Container.STEPS})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Container.STEPS, ContentAssertionElement.ASSERT_CONTENT})
 @JsonSerialize(as = ImmutableContainer.class)
 @JsonDeserialize(as = ImmutableContainer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface Container extends Step, SlaElement {
+public interface Container extends Step, SlaElement, ContentAssertionElement {
 	String DEFAULT_NAME = "container";
 	String STEPS = "steps";
 
