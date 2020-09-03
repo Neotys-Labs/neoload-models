@@ -1,11 +1,9 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
-import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
+import static org.junit.Assert.assertEquals;
 
 
 public class PopulationPolicyTest {
@@ -15,5 +13,6 @@ public class PopulationPolicyTest {
 		assertEquals("constant_load", PopulationPolicy.CONSTANT_LOAD);
 		assertEquals("rampup_load", PopulationPolicy.RAMPUP_LOAD);
 		assertEquals("peaks_load", PopulationPolicy.PEAKS_LOAD);
+		assertEquals("custom_load", PopulationPolicy.CUSTOM_LOAD);
 	}
 }

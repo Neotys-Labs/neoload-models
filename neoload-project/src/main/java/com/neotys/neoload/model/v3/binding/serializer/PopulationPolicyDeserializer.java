@@ -1,25 +1,19 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
-import static com.neotys.neoload.model.v3.binding.serializer.DeserializerHelper.asObject;
-import static com.neotys.neoload.model.v3.binding.serializer.DeserializerHelper.asText;
-import static com.neotys.neoload.model.v3.project.Element.NAME;
-import static com.neotys.neoload.model.v3.project.scenario.PopulationPolicy.CONSTANT_LOAD;
-import static com.neotys.neoload.model.v3.project.scenario.PopulationPolicy.PEAKS_LOAD;
-import static com.neotys.neoload.model.v3.project.scenario.PopulationPolicy.RAMPUP_LOAD;
-
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.LoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
-import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.*;
+
+import java.io.IOException;
+
+import static com.neotys.neoload.model.v3.binding.serializer.DeserializerHelper.asObject;
+import static com.neotys.neoload.model.v3.binding.serializer.DeserializerHelper.asText;
+import static com.neotys.neoload.model.v3.project.Element.NAME;
+import static com.neotys.neoload.model.v3.project.scenario.PopulationPolicy.*;
 
 public final class PopulationPolicyDeserializer extends StdDeserializer<PopulationPolicy> {
 	private static final long serialVersionUID = -9100000271338565024L;
@@ -44,7 +38,8 @@ public final class PopulationPolicyDeserializer extends StdDeserializer<Populati
 		if (loadPolicy != null) {
 			return loadPolicy;
 		}
-		return null;
+		// Custom Load Policy if exists
+		return asObject(codec, node, CUSTOM_LOAD, CustomLoadPolicy.class);
 	}
 
 	@Override

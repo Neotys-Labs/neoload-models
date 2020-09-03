@@ -32,6 +32,8 @@ public abstract class LoadPolicyWriter {
     private static final String XML_ATTR_VU_START_MODE = "vuStartMode";
     private static final String XML_ATTR_VU_START_DELAY = "vuStartDelay";
 
+    protected static final String XML_ATTR_ITERATIONNUMBER = "iterationNumber";
+
     protected final LoadPolicy loadPolicy;
 
     public LoadPolicyWriter(final LoadPolicy loadPolicy) {

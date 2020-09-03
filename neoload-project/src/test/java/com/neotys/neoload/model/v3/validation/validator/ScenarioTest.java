@@ -1,26 +1,15 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
-import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
-import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.Scenario;
-import com.neotys.neoload.model.v3.project.scenario.StartAfter;
-import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import com.neotys.neoload.model.v3.project.scenario.*;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy.Peak;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
+import org.junit.Test;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.*;
 
 
 public class ScenarioTest {
@@ -61,7 +50,7 @@ public class ScenarioTest {
 	private static final String CONSTRAINTS_FULL_VERSION;
 	static {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 12.").append(LINE_SEPARATOR);
+		sb.append("Data Model is invalid. Violation Number: 16.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'scenarios[0].populations[0].constant_load.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
 		sb.append("Violation 2 - Incorrect value for 'scenarios[0].populations[0].constant_load.start_after': must be greater than or equal to 1 second or must be an existing population.").append(LINE_SEPARATOR);
 		sb.append("Violation 3 - Incorrect value for 'scenarios[0].populations[0].constant_load.stop_after': must be greater than or equal to 1 second or must be current_iteration.").append(LINE_SEPARATOR);
@@ -74,6 +63,10 @@ public class ScenarioTest {
 		sb.append("Violation 10 - Incorrect value for 'scenarios[0].populations[2].peaks_load.minimum.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
 		sb.append("Violation 11 - Incorrect value for 'scenarios[0].populations[2].peaks_load.start_after': must be greater than or equal to 1 second or must be an existing population.").append(LINE_SEPARATOR);
 		sb.append("Violation 12 - Incorrect value for 'scenarios[0].populations[2].peaks_load.stop_after': must be greater than or equal to 1 second or must be current_iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 13 - Incorrect value for 'scenarios[0].populations[3].custom_load.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 14 - Incorrect value for 'scenarios[0].populations[3].custom_load.start_after': must be greater than or equal to 1 second or must be an existing population.").append(LINE_SEPARATOR);
+		sb.append("Violation 15 - Incorrect value for 'scenarios[0].populations[3].custom_load.steps[0].users': must be greater than or equal to 0.").append(LINE_SEPARATOR);
+		sb.append("Violation 16 - Incorrect value for 'scenarios[0].populations[3].custom_load.stop_after': must be greater than or equal to 1 second or must be current_iteration.").append(LINE_SEPARATOR);
 		CONSTRAINTS_FULL_VERSION = sb.toString();
 	}
 
@@ -248,14 +241,35 @@ public class ScenarioTest {
         				.stopAfter(StopAfter.builder().build())
         				.build())
         		.build();
-  
+
+		ImmutableLoadDuration loadDuration = LoadDuration.builder()
+				.value(100)
+				.type(LoadDuration.Type.TIME)
+				.build();
+		ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
+				.when(loadDuration)
+				.users(-1)
+				.build();
+
+		final PopulationPolicy population14 = PopulationPolicy.builder()
+				.name("MyPopulation14")
+				.loadPolicy(CustomLoadPolicy.builder()
+						.steps(Arrays.asList(customPolicyStep, customPolicyStep, customPolicyStep))
+						.duration(LoadDuration.builder().build())
+						.startAfter(StartAfter.builder().build())
+						.rampup(60)
+						.stopAfter(StopAfter.builder().build())
+						.build())
+				.build();
+
         final Scenario scenario1 = Scenario.builder()
         		.name("MyScenario1")
-        		.description("My scenario 1 with 3 populations")
+        		.description("My scenario 1 with 4 populations")
         		.slaProfile("MySlaProfile")
         		.addPopulations(population11)
         		.addPopulations(population12)
         		.addPopulations(population13)
+        		.addPopulations(population14)
         		.build();
         
         final Project project = Project.builder()

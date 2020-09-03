@@ -12,6 +12,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.Collections;
 
 public class ScenarioWriterTest {
 
@@ -584,6 +585,158 @@ public class ScenarioWriterTest {
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayIncrement").getNodeValue()).isEqualTo("2");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("delayTypeIncrement").getNodeValue()).isEqualTo("2");
         Assertions.assertThat(volumePolicyNode.getAttributes().getNamedItem("iterationNumber").getNodeValue()).isEqualTo("20");
+    }
+
+    @Test
+    public void writeScenarioCustomNoLimitTest() throws ParserConfigurationException {
+        ImmutableLoadDuration loadDuration = LoadDuration.builder()
+                .value(100)
+                .type(LoadDuration.Type.TIME)
+                .build();
+        ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
+                .when(loadDuration)
+                .users(300)
+                .build();
+
+        Scenario scenario = Scenario.builder()
+                .name("myScenario")
+                .addPopulations(PopulationPolicy.builder()
+                        .name("myPopulation1")
+                        .loadPolicy(CustomLoadPolicy.builder()
+                                .steps(Collections.singletonList(customPolicyStep))
+                                .build())
+                        .build())
+                .build();
+
+        // write the repository
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document document = docBuilder.newDocument();
+        Element xmlPopulation = document.createElement("scenario-test");
+        ScenarioWriter.of(scenario).writeXML(document, xmlPopulation);
+        Assertions.assertThat(xmlPopulation.getChildNodes().getLength()).isEqualTo(1);
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getAttributes().getNamedItem("uid").getNodeValue()).isEqualTo("myScenario");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getAttributes().getNamedItem("slaProfileEnabled").getNodeValue()).isEqualTo("false");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().getLength()).isEqualTo(1);
+
+        // <population-policy name="Population1">
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("population-policy");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
+
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyNoLimit(xmlPopulation);
+
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("custom-volume-policy");
+        Node volumePolicyNode = xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0);
+        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("100");
+        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("position").getNodeValue()).isEqualTo("0");
+        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("users").getNodeValue()).isEqualTo("300");
+    }
+
+    @Test
+    public void writeScenarioCustomTimeTest() throws ParserConfigurationException {
+        ImmutableLoadDuration loadDuration = LoadDuration.builder()
+                .value(240)
+                .type(LoadDuration.Type.TIME)
+                .build();
+        ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
+                .when(loadDuration)
+                .users(300)
+                .build();
+
+        Scenario scenario = Scenario.builder()
+                .name("myScenario")
+                .addPopulations(PopulationPolicy.builder()
+                        .name("myPopulation1")
+                        .loadPolicy(CustomLoadPolicy.builder()
+                                .steps(Collections.singletonList(customPolicyStep))
+                                .duration(loadDuration)
+                                .startAfter(StartAfter.builder()
+                                        .value(60)
+                                        .type(StartAfter.Type.TIME)
+                                        .build())
+                                .rampup(120)
+                                .stopAfter(StopAfter.builder()
+                                        .value(180)
+                                        .type(StopAfter.Type.TIME)
+                                        .build())
+                                .build())
+                        .build())
+                .build();
+
+        // write the repository
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document document = docBuilder.newDocument();
+        Element xmlPopulation = document.createElement("scenario-test");
+        ScenarioWriter.of(scenario).writeXML(document, xmlPopulation);
+        Assertions.assertThat(xmlPopulation.getChildNodes().getLength()).isEqualTo(1);
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getAttributes().getNamedItem("uid").getNodeValue()).isEqualTo("myScenario");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getAttributes().getNamedItem("slaProfileEnabled").getNodeValue()).isEqualTo("false");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().getLength()).isEqualTo(1);
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("population-policy");
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
+
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyTime(xmlPopulation);
+
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("custom-volume-policy");
+        Node volumePolicyNode = xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0);
+        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("240");
+        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("position").getNodeValue()).isEqualTo("0");
+        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("users").getNodeValue()).isEqualTo("300");
+    }
+
+    @Test
+    public void writeScenarioCustomIterationTest() throws ParserConfigurationException {
+        ImmutableLoadDuration loadDuration = LoadDuration.builder()
+                .value(240)
+                .type(LoadDuration.Type.ITERATION)
+                .build();
+        ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
+                .when(loadDuration)
+                .users(300)
+                .build();
+
+        Scenario scenario = Scenario.builder()
+                .name("myScenario")
+                .description("myDescription")
+                .slaProfile("mySlaProfile")
+                .addPopulations(PopulationPolicy.builder()
+                        .name("myPopulation1")
+                        .loadPolicy(CustomLoadPolicy.builder()
+                                .steps(Collections.singletonList(customPolicyStep))
+                                .duration(LoadDuration.builder()
+                                        .value(20)
+                                        .type(LoadDuration.Type.ITERATION)
+                                        .build())
+                                .startAfter(StartAfter.builder()
+                                        .value("myPopulation0")
+                                        .type(StartAfter.Type.POPULATION)
+                                        .build())
+                                .rampup(120)
+                                .stopAfter(StopAfter.builder()
+                                        .type(StopAfter.Type.CURRENT_ITERATION)
+                                        .build())
+                                .build())
+                        .build())
+                .build();
+
+        // write the repository
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document document = docBuilder.newDocument();
+        Element xmlPopulation = document.createElement("scenario-test");
+        ScenarioWriter.of(scenario).writeXML(document, xmlPopulation);
+
+        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
+        checkLoadPolicyIteration(xmlPopulation);
+
+        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("custom-volume-policy");
+        Node volumePolicyNode = xmlPopulation.getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(0);
+        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("iteration").getNodeValue()).isEqualTo("240");
+        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("position").getNodeValue()).isEqualTo("0");
+        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("users").getNodeValue()).isEqualTo("300");
     }
 
     @Test
