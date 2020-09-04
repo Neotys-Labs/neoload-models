@@ -10,8 +10,9 @@ The simulated load from a population is determined by a duration and a number of
 | [constant_load](#constant-load-policy) | A load that generates a fixed number of Virtual Users.                                                                                                                          | - | - |  |
 | [rampup_load](#ramp-up-load-policy)    | A load that generates a number of Virtual Users that increases throughout the test. Useful for checking the server behavior under an increasing load.                           | - | - |  |
 | [peaks_load](#peaks-load-policy)       | A load that generates a fixed number of Virtual Users with periodic phases of high load. Useful for checking whether the server recovers its normal behavior after a load peak. | - | - |  |
+| [custom_load](#custom-load-policy)       | A load that generates Virtual Users depending on multiple factors. Useful for checking the server behavior in really specific circumstances | - | - | 7.6 |
 
-> A population must contain only one load policy among the constant, ramp-up and peaks load.
+> A population must contain only one load policy among the constant, ramp-up, peaks and custom load.
 
 #### Example
 ```yaml
@@ -33,6 +34,11 @@ populations:
       users: 500
       duration: 3m
     start: minimum
+- name: MyPopulation4
+  custom_load:
+    steps:
+    - when: 1m40s
+      users: 100
 ```
 
 ## Constant Load Policy
@@ -132,6 +138,66 @@ populations:
     start_after: MyPopulation1
     step_rampup: 15s
     stop_after: current_iteration
+```
+
+## Custom Load Policy
+
+This load policy generates a load with Virtual Users depending on multiple factors. 
+
+| Name        | Description                                                  | Accept variable | Required | Since |
+|:----------- |:------------------------------------------------------------ |:---------------:|:--------:|:-----:|
+| duration    | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
+| start_after | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population. | - | - |  |
+| rampup      | Define how Virtual Users start: simultaneously or with a preset [delay](#human-readable-time-specifications).<br>There is different behaviour depending on duration mode (unlimited, [time](#human-readable-time-specifications), [iterations](#human-readable-iteration-specifications))<br> - Unlimited/[time](#human-readable-time-specifications): This rule is used each time Virtual Users count is updated<br> - [iterations](#human-readable-iteration-specifications): This rule is used each time a new step start| - | - |  |
+| stop_after  | Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset [delay](#human-readable-time-specifications) to finish the current iteration or allow the population to end the current iteration for each Virtual User. | - | - |  |
+| steps       | Multiple [steps](#custom-policy-step-composition) for defining the Virtual Users count behaviours | - | &#x2713; | |
+
+#### Custom policy step composition
+
+| Name     | Description                                                  | Accept variable   | Required | Since |
+|:-------- |:------------------------------------------------------------ |:-----------------:|:--------:|:-----:|
+| when  | The moment when Virtual Users count will reach the specified number: [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
+| users | The fixed number of Virtual Users at the specified instant | - | &#x2713; |  |
+
+The defined moment need to be of the same type of the duration type defined on the custom load policy.<br>
+All steps must be ordered chronologically.<br>
+
+#### Example
+One custom load during 15 minutes. <br>
+The population starts 30 seconds after the start of the test. <br>
+Each ramp-up or ramp-down between 2 steps will be split with ramp-up/ramp-down of 10 second instead of a linear one<br>
+The population Virtual users have 30 seconds to finish the current iteration.<br>
+
+Steps: 
+ - The population start with 50 Virtual users
+ - There is a ramp-up to 100 users, it takes 1 minute 40 seconds to do it
+ - There is a ramp-up to 150 users, it takes 20 seconds to do it
+ - There is a ramp-up to 200 users, it takes 0 seconds to do it
+ - There is a constant at 200 users, from 2 minute to 3 minute
+ - There is a ramp-down to 0 users, it takes 1 minute to do it
+ - There is 0 user from 4 minute to 15 minute on the population 
+
+```yaml
+populations:
+- name: MyPopulation14
+  custom_load:
+    duration: 15m
+    start_after: 30s
+    rampup: 10s
+    stop_after: 30s
+    steps:
+    - when: 0
+      users: 50
+    - when: 1m40s
+      users: 100
+    - when: 2m
+      users: 150
+    - when: 2m
+      users: 200
+    - when: 3m
+      users: 200
+    - when: 4m
+      users: 0
 ```
 
 ## Human-Readable Time Specifications
