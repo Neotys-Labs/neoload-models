@@ -12,7 +12,7 @@ A request defines a plain HTTP request.
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
-| [assert_content](assert_content.md) | The list of assertions allowing to check the validity of the response content | -               | -        | 7.6   |
+| [assert_content](assert_content.md) | The list of assertions to validate the response content                       | -               | -        | 7.6   |
 | sla_profile                         | The name of the SLA profile to apply to the Request                           | -               | -        | 6.9   |
 
 #### Example 1

@@ -13,7 +13,7 @@ The User Path is a succession of web pages that may contain logical Actions such
 | init                                | The init [container](container.md)                                                                                                                         | -               | -                  |       |
 | actions                             | The actions [container](container.md)                                                                                                                      | -               | &#x2713;           |       |
 | end                                 | The end [container](container.md)                                                                                                                          | -               | -                  |       |
-| [assert_content](assert_content.md) | The list of assertions allowing to check the validity of the responses content within the User Path                                                                                                                                         | -               | -                  | 7.6   |
+| [assert_content](assert_content.md) | The list of assertions to validate the response content of all requests matching a criteria within the User Path (text/html and text/xhtml content types by default. Cannot be set with as-code only. See Project Settings / Runtime Parameters when as-code overloads a GUI project).                                                                                                                                         | -               | -                  | 7.6   |
 
 
 #### Example
