@@ -13,6 +13,9 @@ import static org.junit.Assert.assertEquals;
 public class UserPathTest {
 	@Test
 	public void constants() {
+		assertEquals("name", UserPath.NAME);
+		assertEquals("description", UserPath.DESCRIPTION);
+
 		assertEquals("user_session", UserPath.USER_SESSION);
 		assertEquals("reset_on", UserPath.RESET_ON);
 		assertEquals("reset_off", UserPath.RESET_OFF);
@@ -21,6 +24,8 @@ public class UserPathTest {
 		assertEquals("init", UserPath.INIT);
 		assertEquals("actions", UserPath.ACTIONS);
 		assertEquals("end", UserPath.END);
+		
+		assertEquals("assert_content", UserPath.ASSERT_CONTENT);
 		
 		assertEquals(UserPath.UserSession.RESET_AUTO, UserPath.DEFAULT_USER_SESSION);
 		

@@ -14,5 +14,6 @@ public class ScenarioTest {
 		assertEquals("sla_profile", Scenario.SLA_PROFILE);
 		assertEquals("populations", Scenario.POPULATIONS);
 		assertEquals("apm_configuration", Scenario.APM);
+		assertEquals("excluded_urls", Scenario.EXCLUDED_URLS);
 	}
 }

@@ -24,11 +24,21 @@ Defining a validation to check if the response body contains the specified regul
 
 ```yaml
 assert_content:
-- contains: <span class="welcome">Welcome \w+ \w+ </span>
+- contains: https?://www\.neotys\.com/solutions/.*
   regexp: true
 ```
 
 #### Example 2
+
+Defining a validation to check if the response body contains the specified regular expression in using a variable.
+
+```yaml
+assert_content:
+- contains: <a href="${UrlToValidate}">.*?</a>
+  regexp: true
+```
+
+#### Example 3
 
 Defining a validation to check if the response body contains the specified JSON node.
 
@@ -37,7 +47,7 @@ assert_content:
 - jsonpath: $.payload.success
 ```
 
-#### Example 3
+#### Example 4
 
 Defining a validation to check if the response body doesn't contain the specified text from a specified XML node.
 
