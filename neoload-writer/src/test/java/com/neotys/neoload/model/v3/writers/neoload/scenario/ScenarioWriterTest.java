@@ -909,4 +909,72 @@ public class ScenarioWriterTest {
 	    Assertions.assertThat(manualAttributes.item(2).getNodeName()).isEqualTo("timeout");
 	    Assertions.assertThat(manualAttributes.item(2).getNodeValue()).isEqualTo("150");
     }
+
+	@Test
+	public void writeScenarioMonitoringTest() throws ParserConfigurationException {
+
+		Scenario scenario = Scenario.builder()
+				.name("myScenario")
+				.description("myDescription")
+				.slaProfile("mySlaProfile")
+				.monitoringParameters(MonitoringParameters.builder().afterLastVus(50).beforeFirstVu(10).build())
+				.build();
+
+		// write the repository
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document document = docBuilder.newDocument();
+		Element xmlScenario = document.createElement("scenario-test");
+		ScenarioWriter.of(scenario).writeXML(document, xmlScenario);
+
+		final NodeList childNodes = xmlScenario.getChildNodes();
+		Assertions.assertThat(childNodes.getLength()).isEqualTo(1);
+		final Node item0 = childNodes.item(0);
+		Assertions.assertThat(item0.getNodeName()).isEqualTo("scenario");
+
+		Assertions.assertThat(item0.getAttributes().getLength()).isEqualTo(6);
+		Assertions.assertThat(item0.getAttributes().getNamedItem("postMonitoringTime").getNodeValue()).isEqualTo("50");
+		Assertions.assertThat(item0.getAttributes().getNamedItem("preMonitoringTime").getNodeValue()).isEqualTo("10");
+	}
+
+	@Test
+	public void writeScenarioStoreVariableTest() throws ParserConfigurationException {
+
+		Scenario scenario = Scenario.builder()
+				.name("myScenario")
+				.description("myDescription")
+				.slaProfile("mySlaProfile")
+				.isStoredVariables(true)
+				.build();
+
+		// write the repository
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document document = docBuilder.newDocument();
+		Element xmlScenario = document.createElement("scenario-test");
+		ScenarioWriter.of(scenario).writeXML(document, xmlScenario);
+
+		final NodeList childNodes = xmlScenario.getChildNodes();
+		Assertions.assertThat(childNodes.getLength()).isEqualTo(1);
+		final Node item0 = childNodes.item(0);
+		Assertions.assertThat(item0.getNodeName()).isEqualTo("scenario");
+
+		Assertions.assertThat(item0.getAttributes().getLength()).isEqualTo(4);
+		Assertions.assertThat(item0.getAttributes().getNamedItem("traceVariables").getNodeValue()).isEqualTo("true");
+
+		Scenario scenario2 = Scenario.builder()
+				.name("myScenario")
+				.description("myDescription")
+				.slaProfile("mySlaProfile")
+				.isStoredVariables(false)
+				.build();
+
+		// write the repository
+		Element xmlScenario2 = document.createElement("scenario-test2");
+		ScenarioWriter.of(scenario2).writeXML(document, xmlScenario2);
+		final NodeList childNodes2 = xmlScenario2.getChildNodes();
+		final Node item2_1 = childNodes2.item(0);
+		Assertions.assertThat(item2_1.getAttributes().getLength()).isEqualTo(4);
+		Assertions.assertThat(item2_1.getAttributes().getNamedItem("traceVariables").getNodeValue()).isEqualTo("false");
+	}
 }

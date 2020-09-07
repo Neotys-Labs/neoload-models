@@ -11,6 +11,8 @@ import org.immutables.value.Value;
 
 import java.util.Optional;
 
+@JsonSerialize(as = ImmutableMonitoringParameters.class)
+@JsonDeserialize(as = ImmutableMonitoringParameters.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 @JsonSerialize(as = ImmutableMonitoringParameters.class)
@@ -32,4 +34,9 @@ public interface MonitoringParameters {
 	@JsonSerialize(converter=TimeDurationToStringConverter.class)
 	@JsonDeserialize(converter=StringToTimeDurationConverter.class)
 	Optional<Integer> getAfterLastVus();
+
+
+	static ImmutableMonitoringParameters.Builder builder() {
+		return ImmutableMonitoringParameters.builder();
+	}
 }

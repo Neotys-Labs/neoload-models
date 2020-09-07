@@ -11,6 +11,7 @@ A scenario defines a test configuration. Select an existing SLA profile to verif
 | [populations](population-policy.md) | The list of name of the existing populations                                           | -               | &#x2713; |       |
 | [apm_configuration](apm_configuration.md) | The APM configuration for the monitoring with Dynatrace                          | -               | -        |  7.5  |
 | excluded_urls                       | The regular expressions to ignore matching Requests from the scenario during the test playback | -       | -        |  7.6  |
+| [rendezvous_policies](rendezvous_policy.md) | The list of Rendezvous policies                                                | -               | -        |  7.6  |
 
 #### Example
 
