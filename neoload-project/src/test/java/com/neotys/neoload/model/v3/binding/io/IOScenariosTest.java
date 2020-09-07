@@ -8,6 +8,7 @@ import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy.Peak;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -55,11 +56,28 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
+		ImmutableLoadDuration loadDuration = LoadDuration.builder()
+				.value(100)
+				.type(LoadDuration.Type.TIME)
+				.build();
+		ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
+				.when(loadDuration)
+				.users(300)
+				.build();
+
+		final PopulationPolicy population14 = PopulationPolicy.builder()
+				.name("MyPopulation14")
+				.loadPolicy(CustomLoadPolicy.builder()
+						.steps(Collections.singletonList(customPolicyStep))
+						.build())
+				.build();
+
 		final Scenario scenario1 = Scenario.builder()
 				.name("MyScenario1")
 				.addPopulations(population11)
 				.addPopulations(population12)
 				.addPopulations(population13)
+				.addPopulations(population14)
 				.build();
 
 		final Project project = Project.builder()
@@ -150,13 +168,43 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
+		ImmutableLoadDuration loadDuration = LoadDuration.builder()
+				.value(100)
+				.type(LoadDuration.Type.TIME)
+				.build();
+		ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
+				.when(loadDuration)
+				.users(300)
+				.build();
+
+		final PopulationPolicy population14 = PopulationPolicy.builder()
+				.name("MyPopulation14")
+				.loadPolicy(CustomLoadPolicy.builder()
+						.steps(Collections.singletonList(customPolicyStep))
+						.duration(LoadDuration.builder()
+								.value(900)
+								.type(LoadDuration.Type.TIME)
+								.build())
+						.startAfter(StartAfter.builder()
+								.value(30)
+								.type(StartAfter.Type.TIME)
+								.build())
+						.rampup(60)
+						.stopAfter(StopAfter.builder()
+								.value(30)
+								.type(StopAfter.Type.TIME)
+								.build())
+						.build())
+				.build();
+
 		final Scenario scenario1 = Scenario.builder()
 				.name("MyScenario1")
-				.description("My scenario 1 with 3 populations")
+				.description("My scenario 1 with 4 populations")
 				.slaProfile("MySlaProfile")
 				.addPopulations(population11)
 				.addPopulations(population12)
 				.addPopulations(population13)
+				.addPopulations(population14)
 				.apm(Apm.builder()
 						.addDynatraceTags("myDynatraceTag")
 						.addDynatraceAnomalyRules(DynatraceAnomalyRule.builder()

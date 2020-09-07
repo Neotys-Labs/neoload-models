@@ -19,7 +19,6 @@ public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
 	private static final String XML_ATTR_MAXDURATION = "peakDelay";
 	private static final String XML_ATTR_MAXTYPE = "peakDelayType";
 	private static final String XML_ATTR_STARTPOLICY = "startPoint";
-	private static final String XML_ATTR_ITERATIONNUMBER = "iterationNumber";
 
     public PeaksLoadPolicyWriter(final PeaksLoadPolicy peaksLoadPolicy) {
     	super(peaksLoadPolicy);

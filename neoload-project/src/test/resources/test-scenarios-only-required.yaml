@@ -19,3 +19,8 @@ scenarios:
         users: 500
         duration: 2m
       start: minimum
+  - name: MyPopulation14
+    custom_load:
+      steps:
+      - when: 1m40s
+        users: 300

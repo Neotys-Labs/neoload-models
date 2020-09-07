@@ -13,7 +13,6 @@ public class RampupLoadPolicyWriter extends LoadPolicyWriter {
 	private static final String XML_ATTR_INITIALUSERNUMBER = "initialUserNumber";
 	private static final String XML_ATTR_USERINCREMENT = "userIncrement";
 	private static final String XML_ATTR_MAXUSERNUMBER = "maxUserNumber";
-	private static final String XML_ATTR_ITERATIONNUMBER = "iterationNumber";
 	private static final String XML_ATTR_DELAYINCREMENT = "delayIncrement";
 	private static final String XML_ATTR_DELAYTYPEINCREMENT = "delayTypeIncrement";
 

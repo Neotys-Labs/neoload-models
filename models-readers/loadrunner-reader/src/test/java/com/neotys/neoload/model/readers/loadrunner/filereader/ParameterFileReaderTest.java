@@ -1,19 +1,15 @@
 package com.neotys.neoload.model.readers.loadrunner.filereader;
-import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
-import static org.assertj.core.api.Assertions.assertThat;
+
+import com.neotys.neoload.model.listener.TestEventListener;
+import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
+import com.neotys.neoload.model.repository.*;
+import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
 
-import org.junit.Test;
-
-import com.neotys.neoload.model.listener.TestEventListener;
-import com.neotys.neoload.model.readers.loadrunner.MethodUtils;
-import com.neotys.neoload.model.repository.ConstantVariable;
-import com.neotys.neoload.model.repository.CounterNumberVariable;
-import com.neotys.neoload.model.repository.FileVariable;
-import com.neotys.neoload.model.repository.RandomNumberVariable;
-import com.neotys.neoload.model.repository.Variable;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
+import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("squid:S2699")
 public class ParameterFileReaderTest {
 
@@ -80,7 +76,7 @@ public class ParameterFileReaderTest {
 		assertThat(((FileVariable)pfr.getVariable("NewParam")).getColumnsNames()).containsExactly("param5","Col 3");
 		assertThat(((FileVariable)pfr.getVariable("NewParam")).getData()).isNotEmpty();
 		String[][] expectedData = {{"value12", "value31"}, {"value15", "value32"}};
-		assertThat(((FileVariable)pfr.getVariable("NewParam")).getData().get()).contains(expectedData);
+		assertThat(((FileVariable)pfr.getVariable("NewParam")).getData()).hasValueSatisfying(strings -> assertThat(strings).isDeepEqualTo(expectedData));
 
 	}
 
@@ -96,7 +92,7 @@ public class ParameterFileReaderTest {
 		assertThat(((FileVariable)pfr.getVariable("param1")).getColumnsNames()).containsExactly("param2","param6");
 		assertThat(((FileVariable)pfr.getVariable("param1")).getData()).isNotEmpty();
 		String[][] expectedData = {{"value2", "value13"}, {"value5", "value16"}, {"value8",""}};
-		assertThat(((FileVariable)pfr.getVariable("param1")).getData().get()).contains(expectedData);
+		assertThat(((FileVariable)pfr.getVariable("param1")).getData()).hasValueSatisfying(strings -> assertThat(strings).isDeepEqualTo(expectedData));
 	}
 
 	@Test
@@ -110,8 +106,8 @@ public class ParameterFileReaderTest {
 		assertThat(pfr.getVariable("param2_1")).isInstanceOf(FileVariable.class);
 		assertThat(((FileVariable)pfr.getVariable("param2_1")).getColumnsNames()).containsExactly("param6","param2");
 		assertThat(((FileVariable)pfr.getVariable("param2_1")).getData()).isNotEmpty();
-		String[][] expectedData = {{"value13", "value2"}, {"value16", "value5"}};
-		assertThat(((FileVariable)pfr.getVariable("param2_1")).getData().get()).contains(expectedData);
+		String[][] expectedData = {{"value13", "value2"}, {"value16", "value5"}, null};
+		assertThat(((FileVariable)pfr.getVariable("param2_1")).getData()).hasValueSatisfying(strings -> assertThat(strings).isDeepEqualTo(expectedData));
 
 	}
 

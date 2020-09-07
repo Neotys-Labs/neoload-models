@@ -91,7 +91,7 @@ public class ParametersReaderUtilsTest {
 		columnNames.add("param1");
 		columnNames.add("param3");
 
-		assertThat(ParametersReaderUtils.loadColumnOfDataFile(file.getPath(), columnNames, ",")).containsExactly(expectedResult);
+		assertThat(ParametersReaderUtils.loadColumnOfDataFile(file.getPath(), columnNames, ",")).isDeepEqualTo(expectedResult);
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class ParametersReaderUtilsTest {
 		columnNames.add("param1");
 		columnNames.add("param3");
 
-		assertThat(ParametersReaderUtils.loadColumnOfDataFile(file.getPath(), columnNames, ",")).containsExactly(expectedResult);
+		assertThat(ParametersReaderUtils.loadColumnOfDataFile(file.getPath(), columnNames, ",")).isDeepEqualTo(expectedResult);
 	}
 
 	@Test
@@ -123,7 +123,7 @@ public class ParametersReaderUtilsTest {
 		columnNames.add("param1");
 		columnNames.add("param3");
 
-		assertThat(ParametersReaderUtils.loadColumnOfDataFile(file.getPath(), columnNames, ",")).containsExactly(expectedResult);
+		assertThat(ParametersReaderUtils.loadColumnOfDataFile(file.getPath(), columnNames, ",")).isDeepEqualTo(expectedResult);
 	}
 
 	

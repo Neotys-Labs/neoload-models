@@ -11,7 +11,6 @@ public class ConstantLoadPolicyWriter extends LoadPolicyWriter {
 
 	private static final String XML_TAG_NAME = "constant-volume-policy";
 	private static final String XML_ATTR_USERNUMBER = "userNumber";
-	private static final String XML_ATTR_ITERATIONNUMBER = "iterationNumber";
 
     public ConstantLoadPolicyWriter(final ConstantLoadPolicy constantLoadPolicy) {
     	super(constantLoadPolicy);

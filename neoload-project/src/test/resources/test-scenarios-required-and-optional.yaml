@@ -1,7 +1,7 @@
 name: MyProject
 scenarios:
 - name: MyScenario1
-  description: My scenario 1 with 3 populations
+  description: My scenario 1 with 4 populations
   sla_profile: MySlaProfile
   populations:
   - name: MyPopulation11
@@ -34,6 +34,15 @@ scenarios:
       start_after: 1m
       step_rampup: 15s
       stop_after: 1m
+  - name: MyPopulation14
+    custom_load:
+      duration: 15m
+      start_after: 30s
+      rampup: 1m
+      stop_after: 30s
+      steps:
+      - when: 1m40s
+        users: 300
   excluded_urls:
   - .*\.abcd
   apm_configuration:
