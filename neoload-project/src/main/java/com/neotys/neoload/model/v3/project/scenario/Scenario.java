@@ -54,7 +54,6 @@ public interface Scenario extends Element, SlaElement {
 	List<RendezvousPolicy> getRendezvousPolicies();
 
 	@JsonProperty(STORE_VARIABLES)
-	@RequiredCheck(groups = {NeoLoad.class})
 	@Value.Default
 	default boolean isStoredVariables() {
 		return false;
