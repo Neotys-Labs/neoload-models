@@ -273,8 +273,6 @@ public class ScenarioTest {
 						.build())
 				.build();
 
-        final Scenario scenario1 = Scenario.builder()
-
 		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		final Scenario scenario1 = Scenario.builder()
         		.name("MyScenario1")
