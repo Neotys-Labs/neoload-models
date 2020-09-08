@@ -34,4 +34,13 @@ scenarios:
       start_after: 1m
       step_rampup: 15s
       stop_after: 1m
+  rendezvous_policies:
+    - name: rdv
+      when: 30s
+      timeout: 50s
+  store_variables_for_raw_data: false
+  monitoring:
+    before: 10s
+    after: 2m
+
  

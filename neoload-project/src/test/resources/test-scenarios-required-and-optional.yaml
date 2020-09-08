@@ -56,5 +56,5 @@ scenarios:
   rendezvous_policies:
   - name: rdv
     when: 200
-    timeout: 100
+    timeout: 1m40s
   store_variables_for_raw_data: false

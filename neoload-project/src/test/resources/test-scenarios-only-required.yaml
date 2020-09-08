@@ -27,11 +27,11 @@ scenarios:
   rendezvous_policies:
   - name: rdv1
     when: manual
-    timeout: 200
+    timeout: 3m20s
   - name: rdv2
     when: 50%
-    timeout: 100
+    timeout: 1m40s
   - name: rdv3
     when: 20
-    timeout: 20
+    timeout: 20s
   store_variables_for_raw_data: false

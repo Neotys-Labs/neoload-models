@@ -56,10 +56,8 @@ public class ProjectTest {
 
 	static {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 3.").append(LINE_SEPARATOR);
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'scenarios': must contain only unique names.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'scenarios[0].rendezvous_policies': missing value or value is empty.").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'scenarios[1].rendezvous_policies': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_PROJECT_SCENARIOS_NAMES = sb.toString();
 	}
 
