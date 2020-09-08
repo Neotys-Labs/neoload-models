@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationConverter;
@@ -11,6 +13,8 @@ import org.immutables.value.Value;
 
 import java.util.Optional;
 
+@JsonInclude(value= JsonInclude.Include.NON_EMPTY)
+@JsonPropertyOrder({MonitoringParameters.BEFORE_FIRST, MonitoringParameters.AFTER_LAST})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 @JsonSerialize(as = ImmutableMonitoringParameters.class)
@@ -24,14 +28,14 @@ public interface MonitoringParameters {
 	@PositiveCheck(unit="second", groups={NeoLoad.class})
 	@JsonSerialize(converter= TimeDurationToStringConverter.class)
 	@JsonDeserialize(converter= StringToTimeDurationConverter.class)
-	Optional<Integer> getBeforeFirstVu();
+	Integer getBeforeFirstVu();
 
 
 	@JsonProperty(AFTER_LAST)
 	@PositiveCheck(unit="second", groups={NeoLoad.class})
 	@JsonSerialize(converter=TimeDurationToStringConverter.class)
 	@JsonDeserialize(converter=StringToTimeDurationConverter.class)
-	Optional<Integer> getAfterLastVus();
+	Integer getAfterLastVus();
 
 
 	static ImmutableMonitoringParameters.Builder builder() {

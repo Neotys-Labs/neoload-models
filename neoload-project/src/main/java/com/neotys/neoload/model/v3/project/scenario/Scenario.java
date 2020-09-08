@@ -20,8 +20,8 @@ import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
-@JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Scenario.POPULATIONS, Scenario.EXCLUDED_URLS})
+@JsonInclude(value = Include.NON_EMPTY)
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Scenario.STORE_VARIABLES, Scenario.MONITORING, Scenario.POPULATIONS, Scenario.RENDEZVOUS_POLICIES, Scenario.EXCLUDED_URLS, Scenario.APM})
 @JsonSerialize(as = ImmutableScenario.class)
 @JsonDeserialize(as = ImmutableScenario.class)
 @Value.Immutable
@@ -44,7 +44,7 @@ public interface Scenario extends Element, SlaElement {
 	@JsonProperty(APM)
 	@Valid
 	Optional<Apm> getApm();
-	
+
 	@JsonProperty(EXCLUDED_URLS)
 	@Valid
 	List<String> getExcludedUrls();

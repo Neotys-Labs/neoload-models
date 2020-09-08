@@ -1,6 +1,7 @@
 name: MyProject
 scenarios:
 - name: MyScenario1
+  store_variables_for_raw_data: true
   populations:
   - name: MyPopulation11
     constant_load:
@@ -24,14 +25,3 @@ scenarios:
       steps:
       - when: 1m40s
         users: 300
-  rendezvous_policies:
-  - name: rdv1
-    when: manual
-    timeout: 3m20s
-  - name: rdv2
-    when: 50%
-    timeout: 1m40s
-  - name: rdv3
-    when: 20
-    timeout: 20s
-  store_variables_for_raw_data: false

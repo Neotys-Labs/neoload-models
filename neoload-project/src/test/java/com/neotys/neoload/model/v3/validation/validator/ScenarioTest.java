@@ -280,6 +280,8 @@ public class ScenarioTest {
         		.slaProfile("MySlaProfile")
         		.addPopulations(population11, population12, population13, population14)
 				.addRendezvousPolicies(rendezvousPolicy)
+				.monitoringParameters(MonitoringParameters.builder().afterLastVus(0).beforeFirstVu(0).build())
+				.isStoredVariables(true)
 				.build();
         
         final Project project = Project.builder()

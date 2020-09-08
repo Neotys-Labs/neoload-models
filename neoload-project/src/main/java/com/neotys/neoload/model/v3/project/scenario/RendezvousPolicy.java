@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationConverter;
 import com.neotys.neoload.model.v3.binding.converter.TimeDurationToStringConverter;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
+import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
 
@@ -24,12 +25,14 @@ public interface RendezvousPolicy {
 	String WHEN = "when";
 
 	@JsonProperty(NAME)
+	@RequiredCheck(groups={NeoLoad.class})
 	String getName();
 
 	@JsonProperty(WHEN)
+	@RequiredCheck(groups={NeoLoad.class})
 	@Value.Default
 	@Valid
-	default WhenRelease getWhen(){return WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value("100%").build();}
+	default WhenRelease getWhen(){return WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value(100).build();}
 
 	@JsonProperty(TIMEOUT)
 	@PositiveCheck(unit="second", groups={NeoLoad.class})

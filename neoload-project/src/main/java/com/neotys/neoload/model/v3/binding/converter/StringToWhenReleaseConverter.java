@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public final class StringToWhenReleaseConverter extends StdConverter<String, WhenRelease> {
 	private static final WhenRelease ERROR_VALUE = WhenRelease.builder().build();
-	public static final Pattern PERCENTAGE_PATTERN = Pattern.compile("([-]?[1-9]+[\\.]?[0-9]*)?([%])");
+	public static final Pattern PERCENTAGE_PATTERN = Pattern.compile("^([1-9][0-9]?|^100)%$");
 	public static final Pattern POSITIVE_PATTERN = Pattern.compile("^[1-9]\\d*$");
 
 	@Override

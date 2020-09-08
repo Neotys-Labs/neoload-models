@@ -14,16 +14,16 @@ public class StringToWhenReleaseConverterTest {
 			.type(WhenRelease.Type.MANUAL)
 			.build();
 
-	private static WhenRelease convertToWhenReleasePercentage(final String input) {
+	private static WhenRelease convertToWhenReleasePercentage(final int input) {
 		return WhenRelease.builder()
-				.value(Integer.parseInt(input))
+				.value(input)
 				.type(WhenRelease.Type.PERCENTAGE)
 				.build();
 	}
 
-	private static WhenRelease convertToWhenReleaseVuNumber(final String input) {
+	private static WhenRelease convertToWhenReleaseVuNumber(final int input) {
 		return WhenRelease.builder()
-				.value(Integer.parseInt(input))
+				.value(input)
 				.type(WhenRelease.Type.VU_NUMBER)
 				.build();
 	}
@@ -52,14 +52,14 @@ public class StringToWhenReleaseConverterTest {
 		assertEquals(convertToWhenReleaseManual("manual"), converter.convert("Manual"));
 
 		//PERCENTAGE
-		assertEquals(convertToWhenReleasePercentage("5"), converter.convert("5%"));
-		assertEquals(convertToWhenReleasePercentage("20"), converter.convert("20%"));
-		assertEquals(convertToWhenReleasePercentage("100"), converter.convert("100%"));
+		assertEquals(convertToWhenReleasePercentage(5), converter.convert("5%"));
+		assertEquals(convertToWhenReleasePercentage(20), converter.convert("20%"));
+		assertEquals(convertToWhenReleasePercentage(100), converter.convert("100%"));
 
 		//VU NUMBER
-		assertEquals(convertToWhenReleaseVuNumber("5"), converter.convert("5"));
-		assertEquals(convertToWhenReleaseVuNumber("20"), converter.convert("20"));
-		assertEquals(convertToWhenReleaseVuNumber("100"), converter.convert("100"));
+		assertEquals(convertToWhenReleaseVuNumber(5), converter.convert("5"));
+		assertEquals(convertToWhenReleaseVuNumber(20), converter.convert("20"));
+		assertEquals(convertToWhenReleaseVuNumber(100), converter.convert("100"));
 
 
 	}

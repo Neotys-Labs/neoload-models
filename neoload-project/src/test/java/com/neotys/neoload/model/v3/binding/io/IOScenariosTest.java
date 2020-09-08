@@ -72,13 +72,10 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		final RendezvousPolicy rdv1 = RendezvousPolicy.builder().name("rdv1").timeout(200).when(WhenRelease.builder().type(WhenRelease.Type.MANUAL).value("manual").build()).build();
-		final RendezvousPolicy rdv2 = RendezvousPolicy.builder().name("rdv2").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value("50").build()).build();;
-		final RendezvousPolicy rdv3 = RendezvousPolicy.builder().name("rdv3").timeout(20).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value("20").build()).build();;
 		final Scenario scenario1 = Scenario.builder()
 				.name("MyScenario1")
-				.addPopulations(population11,population12, population13, population14)
-				.addRendezvousPolicies(rdv1, rdv2, rdv3)
+				.addPopulations(population11, population12, population13, population14)
+				.isStoredVariables(true)
 				.build();
 
 		final Project project = Project.builder()
@@ -214,6 +211,8 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.build())
 						.build())
 				.addRendezvousPolicies(rendezvousPolicy)
+				.monitoringParameters(MonitoringParameters.builder().beforeFirstVu(6).afterLastVus(99).build())
+				.isStoredVariables(true)
 				.excludedUrls(ImmutableList.of(".*\\.abcd"))
 				.build();
 
@@ -240,7 +239,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 
 		read("test-scenarios-required-and-optional", expectedProject);
 	}
-	
+
 	@Test
 	public void writeScenariosOnlyRequired() throws IOException {
 		final Project expectedProject = getScenariosOnlyRequired();

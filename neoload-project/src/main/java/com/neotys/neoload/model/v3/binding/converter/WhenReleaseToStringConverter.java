@@ -20,8 +20,8 @@ public final class WhenReleaseToStringConverter extends StdConverter<WhenRelease
 				convertedValue = whenRelease.getValue() + "%";
 				break;
 			case VU_NUMBER:
-				convertedValue = (String) whenRelease.getValue();
-
+				convertedValue = String.valueOf(whenRelease.getValue());
+				break;
 		}
 
 		return convertedValue;

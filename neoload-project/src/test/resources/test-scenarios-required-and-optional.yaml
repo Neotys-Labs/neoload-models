@@ -3,6 +3,10 @@ scenarios:
 - name: MyScenario1
   description: My scenario 1 with 4 populations
   sla_profile: MySlaProfile
+  store_variables_for_raw_data: true
+  monitoring:
+    before: 6s
+    after: 1m39s
   populations:
   - name: MyPopulation11
     constant_load:
@@ -43,6 +47,10 @@ scenarios:
       steps:
       - when: 1m40s
         users: 300
+  rendezvous_policies:
+  - name: rdv
+    when: 200
+    timeout: 1m40s
   excluded_urls:
   - .*\.abcd
   apm_configuration:
@@ -53,8 +61,3 @@ scenarios:
       operator: ABOVE
       value: 90
       severity: PERFORMANCE
-  rendezvous_policies:
-  - name: rdv
-    when: 200
-    timeout: 1m40s
-  store_variables_for_raw_data: false
