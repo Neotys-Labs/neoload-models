@@ -3,8 +3,22 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.scenario.*;
+import com.neotys.neoload.model.v3.project.scenario.Apm;
+import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
+import com.neotys.neoload.model.v3.project.scenario.DynatraceAnomalyRule;
+import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
+import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy.Peak;
+import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
+import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.Scenario;
+import com.neotys.neoload.model.v3.project.scenario.StartAfter;
+import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -180,10 +194,6 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.name("MyPopulation14")
 				.loadPolicy(CustomLoadPolicy.builder()
 						.steps(Collections.singletonList(customPolicyStep))
-						.duration(LoadDuration.builder()
-								.value(900)
-								.type(LoadDuration.Type.TIME)
-								.build())
 						.startAfter(StartAfter.builder()
 								.value(30)
 								.type(StartAfter.Type.TIME)

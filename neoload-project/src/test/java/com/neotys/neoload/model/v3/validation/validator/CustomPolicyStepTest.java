@@ -60,7 +60,7 @@ public class CustomPolicyStepTest {
     }
 
     @Test
-    public void whenFieldValidationsAreExecuted() {
+    public void CustomStepDurationCheckIsExecuted() {
         final Validator validator = new Validator();
         ImmutableLoadDuration loadDuration = LoadDuration.builder()
                 .value(100)
@@ -70,7 +70,7 @@ public class CustomPolicyStepTest {
         assertFalse(validation.isValid());
         assertThat(validation.getMessage())
                 .hasValueSatisfying(new Condition<>(
-                        string -> string.contains("Incorrect value for 'when': must be greater than or equal to 1 second or 1 iteration."),
+                        string -> string.contains("Incorrect value for 'when': must be greater than or equal to 0 second or 0 iteration."),
                         "Sub validation on field when are executed")
                 );
     }

@@ -10,7 +10,7 @@ The simulated load from a population is determined by a duration and a number of
 | [constant_load](#constant-load-policy) | A load that generates a fixed number of Virtual Users.                                                                                                                          | - | - |  |
 | [rampup_load](#ramp-up-load-policy)    | A load that generates a number of Virtual Users that increases throughout the test. Useful for checking the server behavior under an increasing load.                           | - | - |  |
 | [peaks_load](#peaks-load-policy)       | A load that generates a fixed number of Virtual Users with periodic phases of high load. Useful for checking whether the server recovers its normal behavior after a load peak. | - | - |  |
-| [custom_load](#custom-load-policy)       | A load that generates Virtual Users according to various elements. Useful for checking the server behavior in really specific circumstances | - | - | 7.6 |
+| [custom_load](#custom-load-policy)       | A load that generates Virtual Users defined by custom steps. Useful for checking the server behavior in really specific circumstances | - | - | 7.6 |
 
 > A population must contain only one load policy among the constant, ramp-up, peaks and custom load.
 
@@ -142,11 +142,10 @@ populations:
 
 ## Custom Load Policy
 
-This load policy generates a load with Virtual Users according to various elements. 
+This load policy generates a load defined by custom steps
 
 | Name        | Description                                                  | Accept variable | Required | Since |
 |:----------- |:------------------------------------------------------------ |:---------------:|:--------:|:-----:|
-| duration    | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
 | start_after | Start policy for this population: at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of another selected population | - | - |  |
 | rampup      | Simultaneously or with a preset [delay](#human-readable-time-specifications).There are different behaviours depending on duration mode (unlimited, [time](#human-readable-time-specifications), [iterations](#human-readable-iteration-specifications)) - unlimited/[time](#human-readable-time-specifications): This rule is used each time Virtual Users count is updated - [iterations](#human-readable-iteration-specifications): This rule is used each time a new step starts| - | - |  |
 | stop_after  | Stop policy for this population: immediate (the execution of current iteration is stopped), after a preset [delay](#human-readable-time-specifications) or the population is allowed to end current iteration for each Virtual User. | - | - |  |
@@ -159,11 +158,11 @@ This load policy generates a load with Virtual Users according to various elemen
 | when  | The moment when Virtual Users count will reach the specified number: [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
 | users | The fixed number of Virtual Users at the specified moment | - | &#x2713; |  |
 
-The specified moment must have the same duration type as the Custom Load Policy.
+The specified moment must have the same duration type as the others steps.
 All steps must be ordered chronologically.
+The last step is defining the duration of the load policy
 
 #### Example
-One custom load during 15 minutes.
 The population starts 30 seconds after the start of the test.
 Each ramp-up or ramp-down between 2 steps will be split with ramp-up/ramp-down of 10 seconds.
 The population Virtual users has 30 seconds to finish the current iteration.
@@ -181,7 +180,6 @@ Steps:
 populations:
 - name: MyPopulation14
   custom_load:
-    duration: 15m
     start_after: 30s
     rampup: 10s
     stop_after: 30s

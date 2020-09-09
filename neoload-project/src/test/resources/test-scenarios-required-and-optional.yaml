@@ -40,7 +40,6 @@ scenarios:
       stop_after: 1m
   - name: MyPopulation14
     custom_load:
-      duration: 15m
       start_after: 30s
       rampup: 1m
       stop_after: 30s

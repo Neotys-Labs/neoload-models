@@ -1,18 +1,34 @@
 package com.neotys.neoload.model.v3.writers.neoload.scenario;
 
 import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.v3.project.scenario.*;
+import com.neotys.neoload.model.v3.project.scenario.Apm;
+import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
+import com.neotys.neoload.model.v3.project.scenario.DynatraceAnomalyRule;
+import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
+import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
+import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.Scenario;
+import com.neotys.neoload.model.v3.project.scenario.StartAfter;
+import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ScenarioWriterTest {
@@ -589,52 +605,6 @@ public class ScenarioWriterTest {
     }
 
     @Test
-    public void writeScenarioCustomNoLimitTest() throws ParserConfigurationException {
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
-                .when(loadDuration)
-                .users(300)
-                .build();
-
-        Scenario scenario = Scenario.builder()
-                .name("myScenario")
-                .addPopulations(PopulationPolicy.builder()
-                        .name("myPopulation1")
-                        .loadPolicy(CustomLoadPolicy.builder()
-                                .steps(Collections.singletonList(customPolicyStep))
-                                .build())
-                        .build())
-                .build();
-
-        // write the repository
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        Document document = docBuilder.newDocument();
-        Element xmlPopulation = document.createElement("scenario-test");
-        ScenarioWriter.of(scenario).writeXML(document, xmlPopulation);
-        Assertions.assertThat(xmlPopulation.getChildNodes().getLength()).isEqualTo(1);
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getAttributes().getNamedItem("uid").getNodeValue()).isEqualTo("myScenario");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getAttributes().getNamedItem("slaProfileEnabled").getNodeValue()).isEqualTo("false");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().getLength()).isEqualTo(1);
-
-        // <population-policy name="Population1">
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getNodeName()).isEqualTo("population-policy");
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getAttributes().getNamedItem("name").getNodeValue()).isEqualTo("myPopulation1");
-
-        // Check duration-policy-entry, volume-policy-entry, start-stop-policy-entry and runtime-policy tags
-        checkLoadPolicyNoLimit(xmlPopulation);
-
-        Assertions.assertThat(xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0).getNodeName()).isEqualTo("custom-volume-policy");
-        Node volumePolicyNode = xmlPopulation.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(1).getChildNodes().item(0);
-        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("time").getNodeValue()).isEqualTo("100");
-        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("position").getNodeValue()).isEqualTo("0");
-        Assertions.assertThat(volumePolicyNode.getChildNodes().item(0).getAttributes().getNamedItem("users").getNodeValue()).isEqualTo("300");
-    }
-
-    @Test
     public void writeScenarioCustomTimeTest() throws ParserConfigurationException {
         ImmutableLoadDuration loadDuration = LoadDuration.builder()
                 .value(240)
@@ -651,7 +621,6 @@ public class ScenarioWriterTest {
                         .name("myPopulation1")
                         .loadPolicy(CustomLoadPolicy.builder()
                                 .steps(Collections.singletonList(customPolicyStep))
-                                .duration(loadDuration)
                                 .startAfter(StartAfter.builder()
                                         .value(60)
                                         .type(StartAfter.Type.TIME)
@@ -707,10 +676,6 @@ public class ScenarioWriterTest {
                         .name("myPopulation1")
                         .loadPolicy(CustomLoadPolicy.builder()
                                 .steps(Collections.singletonList(customPolicyStep))
-                                .duration(LoadDuration.builder()
-                                        .value(20)
-                                        .type(LoadDuration.Type.ITERATION)
-                                        .build())
                                 .startAfter(StartAfter.builder()
                                         .value("myPopulation0")
                                         .type(StartAfter.Type.POPULATION)
