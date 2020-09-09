@@ -5,14 +5,15 @@ The Rendezvous policy to be applied on the already defined Rendezvous in the Use
 
 | Name                                                   | Description                                   | Accept variable | Required | Since |
 |:------------------------------------------------------ |:--------------------------------------------- |:---------------:|:--------:|:-----:|
-| name                                                   | The name of the rendezvous.            | -               | -        |  7.6  |
-| when                                                   | When to release the rendezvous. Possible values are: manual, percentage or positive number.              | -               | -        |  7.6  |
-| timeout                                                | The timeout between virtual users. Timeout duration is expressed in hours, minutes, seconds. | -               | -        |  7.6  |
+| name                                                   | The name of the Rendezvous.            | -               | -        |  7.6  |
+| when                                                   | When to release the Rendezvous. Possible values are: "manual", percentage or positive number.              | -               | -        |  7.6  |
+| timeout                                                | The timeout between Virtual Users. Timeout duration is expressed in hours (h), minutes (m), seconds (s). | -               | -        |  7.6  |
 
 #### Example
 
 Defining the Rendezvous policy for the Scenario:
-
+When manual, use a Javascript action to free waiting Virtual Users.
+Release when percentage or positive number of Virtual Users arrived at the Rendezvous point.
 ```yaml
 rendezvous_policies:
   - name: rendezvous1

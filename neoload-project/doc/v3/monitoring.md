@@ -5,8 +5,8 @@ The monitoring configuration to apply to the Scenario.
 
 | Name                                                   | Description                                   | Accept variable | Required | Since |
 |:------------------------------------------------------ |:--------------------------------------------- |:---------------:|:--------:|:-----:|
-| before                                                 | The monitor time before the first Virtual user start.            | -               | -        |  7.6  |
-| after                                                  | The monitor time after the last Virtual user stop.            | -               | -        |  7.6  |
+| before                                                 | The monitoring time before the first Virtual User starts. Monitoring time is expressed in hours (h), minutes (m), seconds (s). | -               | -        |  7.6  |
+| after                                                  | The monitoring time after the last Virtual User stops. Monitoring time is expressed in hours (h), minutes (m), seconds (s).  | -               | -        |  7.6  |
 
 #### Example
 
