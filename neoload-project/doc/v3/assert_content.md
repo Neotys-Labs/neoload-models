@@ -34,7 +34,7 @@ Defining a validation to check if the response body contains the specified regul
 
 ```yaml
 assert_content:
-- contains: <a href="${UrlToValidate}">.*?</a>
+- contains: <a href="${UrlToValidate}">.*</a>
   regexp: true
 ```
 
