@@ -32,6 +32,7 @@ import static org.junit.Assert.assertTrue;
 public class ScenarioTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
+	private static final String CONSTRAINTS_SCENARIO_NAME_BLANK_AND_NULL;
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
