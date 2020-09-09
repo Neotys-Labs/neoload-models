@@ -74,10 +74,8 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 
 		final Scenario scenario1 = Scenario.builder()
 				.name("MyScenario1")
-				.addPopulations(population11)
-				.addPopulations(population12)
-				.addPopulations(population13)
-				.addPopulations(population14)
+				.addPopulations(population11, population12, population13, population14)
+				.isStoredVariables(true)
 				.build();
 
 		final Project project = Project.builder()
@@ -89,6 +87,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 	}
 
 	private static Project getScenariosRequiredAndOptional() {
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value("200").build()).build();
 		final PopulationPolicy population11 = PopulationPolicy.builder()
 				.name("MyPopulation11")
 				.loadPolicy(ConstantLoadPolicy.builder()
@@ -201,10 +200,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.name("MyScenario1")
 				.description("My scenario 1 with 4 populations")
 				.slaProfile("MySlaProfile")
-				.addPopulations(population11)
-				.addPopulations(population12)
-				.addPopulations(population13)
-				.addPopulations(population14)
+				.addPopulations(population11, population12, population13, population14)
 				.apm(Apm.builder()
 						.addDynatraceTags("myDynatraceTag")
 						.addDynatraceAnomalyRules(DynatraceAnomalyRule.builder()
@@ -214,6 +210,9 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.severity("PERFORMANCE")
 								.build())
 						.build())
+				.addRendezvousPolicies(rendezvousPolicy)
+				.monitoringParameters(MonitoringParameters.builder().beforeFirstVu(6).afterLastVus(99).build())
+				.isStoredVariables(true)
 				.excludedUrls(ImmutableList.of(".*\\.abcd"))
 				.build();
 
@@ -240,7 +239,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 
 		read("test-scenarios-required-and-optional", expectedProject);
 	}
-	
+
 	@Test
 	public void writeScenariosOnlyRequired() throws IOException {
 		final Project expectedProject = getScenariosOnlyRequired();

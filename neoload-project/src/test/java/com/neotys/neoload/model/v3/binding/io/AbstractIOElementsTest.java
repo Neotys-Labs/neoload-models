@@ -42,12 +42,12 @@ abstract class AbstractIOElementsTest {
 		final IO mapper1 = new IO();
 		final ProjectDescriptor actualDescriptor1 = mapper1.read(file);
 		validate(actualDescriptor1);	
-		assertEquals(expectedDescriptor, actualDescriptor1);
+		assertEquals(expectedDescriptor.toString(), actualDescriptor1.toString());
 		
 		final IO mapper2 = new IO();
 		final ProjectDescriptor actualDescriptor2 = mapper2.read(new String(Files.readAllBytes(Paths.get(file.toURI()))));
 		validate(actualDescriptor2);	
-		assertEquals(expectedDescriptor, actualDescriptor2);
+		assertEquals(expectedDescriptor.toString(), actualDescriptor2.toString());
 	}
 
 	protected void write(final String fileName, final Project expectedProject) throws IOException {

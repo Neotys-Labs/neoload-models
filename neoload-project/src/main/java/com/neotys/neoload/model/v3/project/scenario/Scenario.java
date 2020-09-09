@@ -20,32 +20,51 @@ import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
-@JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Scenario.POPULATIONS, Scenario.EXCLUDED_URLS})
+@JsonInclude(value = Include.NON_EMPTY)
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Scenario.STORE_VARIABLES, Scenario.MONITORING, Scenario.POPULATIONS, Scenario.RENDEZVOUS_POLICIES, Scenario.EXCLUDED_URLS, Scenario.APM})
 @JsonSerialize(as = ImmutableScenario.class)
 @JsonDeserialize(as = ImmutableScenario.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Scenario extends Element, SlaElement {
+
 	String POPULATIONS = "populations";
 	String APM = "apm_configuration";
 	String EXCLUDED_URLS = "excluded_urls";
+	String RENDEZVOUS_POLICIES = "rendezvous_policies";
+	String STORE_VARIABLES = "store_variables_for_raw_data";
+	String MONITORING = "monitoring";
 
 	@JsonProperty(POPULATIONS)
-	@RequiredCheck(groups={NeoLoad.class})
-	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@RequiredCheck(groups = {NeoLoad.class})
+	@UniqueElementNameCheck(groups = {NeoLoad.class})
 	@Valid
 	List<PopulationPolicy> getPopulations();
 
 	@JsonProperty(APM)
 	@Valid
 	Optional<Apm> getApm();
-	
+
 	@JsonProperty(EXCLUDED_URLS)
 	@Valid
 	List<String> getExcludedUrls();
-	
-	class Builder extends ImmutableScenario.Builder {}
+
+	@JsonProperty(RENDEZVOUS_POLICIES)
+	@Valid
+	List<RendezvousPolicy> getRendezvousPolicies();
+
+	@JsonProperty(STORE_VARIABLES)
+	@Value.Default
+	default boolean isStoredVariables() {
+		return false;
+	}
+
+	@JsonProperty(MONITORING)
+	Optional<MonitoringParameters> getMonitoringParameters();
+
+	class Builder extends ImmutableScenario.Builder {
+	}
+
 	static Builder builder() {
 		return new Builder();
 	}

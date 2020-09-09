@@ -1,6 +1,7 @@
 name: MyProject
 scenarios:
 - name: MyScenario1
+  store_variables_for_raw_data: true
   populations:
   - name: MyPopulation11
     constant_load:

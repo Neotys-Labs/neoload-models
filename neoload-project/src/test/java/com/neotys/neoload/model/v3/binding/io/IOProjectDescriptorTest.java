@@ -5,12 +5,10 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 
+import com.neotys.neoload.model.v3.project.scenario.*;
 import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
-import com.neotys.neoload.model.v3.project.scenario.Scenario;
 
 
 public class IOProjectDescriptorTest extends AbstractIOElementsTest {
@@ -34,10 +32,14 @@ public class IOProjectDescriptorTest extends AbstractIOElementsTest {
 						.users(500)
 						.build())
 				.build();
+		final RendezvousPolicy rdv1 = RendezvousPolicy.builder().name("rdv1").timeout(200).when(WhenRelease.builder().type(WhenRelease.Type.MANUAL).value("manual").build()).build();
+		final RendezvousPolicy rdv2 = RendezvousPolicy.builder().name("rdv2").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value("50").build()).build();;
+		final RendezvousPolicy rdv3 = RendezvousPolicy.builder().name("rdv3").timeout(20).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value("20").build()).build();;
 
 		final Scenario scenario = Scenario.builder()
 				.name("MyScenario")
 				.addPopulations(population)
+				.addRendezvousPolicies(rdv1, rdv2, rdv3)
 				.build();
 
 		final Project project = Project.builder()
@@ -50,7 +52,7 @@ public class IOProjectDescriptorTest extends AbstractIOElementsTest {
 				.addIncludes("/as-codes/variables.yaml")
 				.project(project)
 				.build();
-		
+
 		return descriptor;
 	}
 
