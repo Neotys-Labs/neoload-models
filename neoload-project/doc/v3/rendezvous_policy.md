@@ -1,4 +1,4 @@
-# Rendezvous Policy
+# Rendezvous policy
 The Rendezvous policy to be applied on the already defined Rendezvous in the User Path.
 
 #### Available settings
@@ -12,8 +12,7 @@ The Rendezvous policy to be applied on the already defined Rendezvous in the Use
 #### Example
 
 Defining the Rendezvous policy for the Scenario:
-When manual, use a Javascript action to free waiting Virtual Users.
-Release when percentage or positive number of Virtual Users arrived at the Rendezvous point.
+If "When" is "manual", use a Javascript action to free waiting Virtual Users. Otherwise, release when percentage or positive number of Virtual Users arrive at the Rendezvous point.
 ```yaml
 rendezvous_policies:
   - name: rendezvous1
