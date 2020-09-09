@@ -8,14 +8,17 @@ import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.MonitoringParameters;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy.Peak;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.RendezvousPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.junit.Test;
 
@@ -29,7 +32,6 @@ import static org.junit.Assert.assertTrue;
 public class ScenarioTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
-	private static final String CONSTRAINTS_SCENARIO_NAME_BLANK_AND_NULL;
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
@@ -87,7 +89,8 @@ public class ScenarioTest {
 	public void validateName() {
 		final Validator validator = new Validator();
 
-		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(
+				WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		Scenario scenario = Scenario.builder()
 				.addPopulations(PopulationPolicy.builder()
 						.name("MyPopulation")
