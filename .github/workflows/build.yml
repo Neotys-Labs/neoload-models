@@ -17,4 +17,4 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
       - name: SonarCloud Scan
-        run: mvn -B sonar:sonar -Dsonar.host.url=http://sonar:9000/ -Dsonar.branch='${{ steps.extract_branch.outputs.branch }}' -P sonar
+        run: mvn -B sonar:sonar -Dsonar.branch='${{ steps.extract_branch.outputs.branch }}' -P sonar
