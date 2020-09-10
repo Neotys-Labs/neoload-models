@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - v3
+  pull_request:
+    types: [opened, synchronize, reopened]
+name: Main Workflow (Sonar)
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
