@@ -1,5 +1,21 @@
 package com.neotys.neoload.model.v3.writers.neoload.scenario;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.scenario.Apm;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
@@ -9,27 +25,16 @@ import com.neotys.neoload.model.v3.project.scenario.DynatraceAnomalyRule;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.MonitoringParameters;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.RendezvousPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
 
 public class ScenarioWriterTest {
 

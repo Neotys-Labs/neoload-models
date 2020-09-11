@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -9,9 +11,6 @@ import com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationConvert
 import com.neotys.neoload.model.v3.binding.converter.TimeDurationToStringConverter;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.immutables.value.Value;
-
-import java.util.Optional;
 
 @JsonInclude(value= JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({MonitoringParameters.BEFORE_FIRST, MonitoringParameters.AFTER_LAST})
