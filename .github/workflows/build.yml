@@ -22,6 +22,13 @@ jobs:
         id: extract_branch
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.organization=neotys
+            -Dsonar.projectKey=neoload-models
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.branch='${{ steps.extract_branch.outputs.branch }}' 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
