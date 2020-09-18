@@ -10,6 +10,7 @@ import com.neotys.neoload.model.repository.UserPath;
 import org.junit.Test;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,10 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ContainerInFileMethodTest {
 
 	@Test
-	public void containersInFileReaderTest() {
+	public void containersInFileReaderTest() throws URISyntaxException {
 
 		final URL url = this.getClass().getResource("functionsfiles");
-		final File projectFolder = new File(url.getFile());
+		final File projectFolder = new File(url.toURI());
 
 		final LoadRunnerReader lrReader = new LoadRunnerReader(new TestEventListener(), projectFolder.getPath(), "project",  "");
 

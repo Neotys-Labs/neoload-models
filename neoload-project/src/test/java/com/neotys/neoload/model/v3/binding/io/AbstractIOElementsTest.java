@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -36,9 +37,7 @@ abstract class AbstractIOElementsTest {
 	}
 	
 	private void read(final String fileName, final String extension, final ProjectDescriptor expectedDescriptor) throws IOException {
-		final ClassLoader classLoader = getClass().getClassLoader();
-		final File file = new File(Objects.requireNonNull(classLoader.getResource(fileName + "." + extension)).getFile());
-		
+		final File file = getFile(fileName, extension);
 		final IO mapper1 = new IO();
 		final ProjectDescriptor actualDescriptor1 = mapper1.read(file);
 		validate(actualDescriptor1);	
@@ -48,6 +47,15 @@ abstract class AbstractIOElementsTest {
 		final ProjectDescriptor actualDescriptor2 = mapper2.read(new String(Files.readAllBytes(Paths.get(file.toURI()))));
 		validate(actualDescriptor2);	
 		assertEquals(expectedDescriptor.toString(), actualDescriptor2.toString());
+	}
+
+	private File getFile(final String fileName, final String extension) {
+		try {
+			final ClassLoader classLoader = getClass().getClassLoader();
+			return new File(Objects.requireNonNull(classLoader.getResource(fileName + "." + extension)).toURI());
+		} catch (URISyntaxException e) {
+			throw new RuntimeException("Fail to get uri of file " + fileName + extension, e);
+		}
 	}
 
 	protected void write(final String fileName, final Project expectedProject) throws IOException {
@@ -64,9 +72,7 @@ abstract class AbstractIOElementsTest {
 	}
 
 	private void write(final String fileName, final String extension, final ProjectDescriptor expectedDescriptor) throws IOException {
-		final ClassLoader classLoader = getClass().getClassLoader();
-		final File file = new File(Objects.requireNonNull(classLoader.getResource(fileName + "." + extension)).getFile());
-		
+		final File file = getFile(fileName, extension);
 		final String expectedContent = new String(Files.readAllBytes(Paths.get(file.toURI()))).replace("\r\n", "\n");
 		
 		final IO mapper = new IO();

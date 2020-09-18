@@ -3,6 +3,7 @@ import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUt
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
@@ -15,9 +16,9 @@ import com.neotys.neoload.model.readers.loadrunner.filereader.ProjectFileReader;
 public class ProjectFileReaderTest {
 	
 	@Test
-	public void loadTest() {
+	public void loadTest() throws URISyntaxException {
 		URL url = this.getClass().getResource("projectTest");
-		File projectFolder = new File(url.getFile());		
+		File projectFolder = new File(url.toURI());
 		
 		ProjectFileReader pfr = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
 		

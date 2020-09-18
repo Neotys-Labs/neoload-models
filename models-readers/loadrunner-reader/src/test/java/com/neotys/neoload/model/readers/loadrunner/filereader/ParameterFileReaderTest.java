@@ -6,6 +6,7 @@ import com.neotys.neoload.model.repository.*;
 import org.junit.Test;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
@@ -15,20 +16,17 @@ public class ParameterFileReaderTest {
 
 	@Test
 	public void loadTest() {
-		final URL url = this.getClass().getResource("../projectTest");
-		final File projectFolder = new File(url.getFile());
-		
+		final File projectFolder = getProjectFolder();
 		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
 		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
 		assertThat(pfr.getVariable("param inexistant")).isNull();
 		assertThat(pfr.getVariable("NewParam")).isNotNull();
 	}
-	
+
 	@Test
 	public void tableVariableNameTest() {
-		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());		
+		final File projectFolder = getProjectFolder();
 		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
 		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
@@ -52,8 +50,7 @@ public class ParameterFileReaderTest {
 
 	@Test
 	public void tableVariableColumnsWithSameFileTest() {
-		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());		
+		final File projectFolder = getProjectFolder();
 		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
 		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
@@ -66,8 +63,7 @@ public class ParameterFileReaderTest {
 
 	@Test
 	public void tableVariableColumnsWithDifferentFileTest() {
-		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());		
+		final File projectFolder = getProjectFolder();
 		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
 		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
@@ -82,8 +78,7 @@ public class ParameterFileReaderTest {
 
 	@Test
 	public void tableVariableColumnsWithDifferentFileSizeTest() {
-		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());		
+		final File projectFolder = getProjectFolder();
 		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
 		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
@@ -97,8 +92,7 @@ public class ParameterFileReaderTest {
 
 	@Test
 	public void tableVariableColumnsWithDifferentFileSize2Test() {
-		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());		
+		final File projectFolder = getProjectFolder();
 		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
 		ParameterFileReader pfr = new ParameterFileReader(LOAD_RUNNER_READER,projectFileReader, projectFolder);
 
@@ -113,8 +107,7 @@ public class ParameterFileReaderTest {
 
 	@Test
 	public void getPolicyTest() {
-		URL url = this.getClass().getResource("../projectTest");
-		File projectFolder = new File(url.getFile());		
+		final File projectFolder = getProjectFolder();
 		final ProjectFileReader projectFileReader = new ProjectFileReader(LOAD_RUNNER_READER, new TestEventListener(), projectFolder);
 		final ParameterFileReader reader = new ParameterFileReader(LOAD_RUNNER_READER, projectFileReader, projectFolder);
 		assertThat(reader.getPolicy("EachOccurrence", "")).isEqualTo(Variable.VariablePolicy.EACH_USE);
@@ -122,6 +115,13 @@ public class ParameterFileReaderTest {
 		assertThat(reader.getPolicy("Once", "")).isEqualTo(Variable.VariablePolicy.EACH_VUSER);
 		assertThat(reader.getPolicy("INVALID", "")).isEqualTo(Variable.VariablePolicy.EACH_USE);
 	}
-	
-	
+
+	private File getProjectFolder() {
+		final URL url = this.getClass().getResource("../projectTest");
+		try {
+			return new File(url.toURI());
+		} catch (URISyntaxException e) {
+			throw new RuntimeException("Fail to get uri of file " + url, e);
+		}
+	}
 }

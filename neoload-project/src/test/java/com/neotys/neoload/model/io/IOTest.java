@@ -235,7 +235,7 @@ public class IOTest {
 	}
 
 	protected void writeScenarios(final String fileName, final String extension, final Project expectedProject) throws IOException, URISyntaxException {
-		final File file = new File(ClassLoader.getSystemResource(fileName + "." + extension).getFile());
+		final File file = new File(ClassLoader.getSystemResource(fileName + "." + extension).toURI());
 		
 		final IO mapper = new IO();
 

@@ -3,6 +3,7 @@ package com.neotys.neoload.model.readers.loadrunner.filereader;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,14 +80,14 @@ public class ParametersReaderUtilsTest {
 
 	
 	@Test
-	public void loadColumnOfDataFileTest() {
+	public void loadColumnOfDataFileTest() throws URISyntaxException {
 		String[][] expectedResult = {
 				{"value1","value3"},
 				{"value4","value6"},
 				{"value7","value9"}
 		};
 		URL url = this.getClass().getResource("../projectTest");
-		File file = new File(url.getFile() + File.separator + "param1.dat");
+		File file = new File(new File(url.toURI()), "param1.dat");
 		List<String> columnNames = new ArrayList<>();
 		columnNames.add("param1");
 		columnNames.add("param3");
@@ -95,14 +96,14 @@ public class ParametersReaderUtilsTest {
 	}
 
 	@Test
-	public void loadColumnOfDataFileWithEmptyValueTest() {
+	public void loadColumnOfDataFileWithEmptyValueTest() throws URISyntaxException {
 		String[][] expectedResult = {
 				{"value1","value3"},
 				{"value4",""},
 				{"","value9"}
 		};
 		URL url = this.getClass().getResource("../projectTest");
-		File file = new File(url.getFile() + File.separator + "param4.dat");
+		File file = new File(new File(url.toURI()), "param4.dat");
 		List<String> columnNames = new ArrayList<>();
 		columnNames.add("param1");
 		columnNames.add("param3");
@@ -111,14 +112,14 @@ public class ParametersReaderUtilsTest {
 	}
 
 	@Test
-	public void loadColumnOfDataFileWithEmptyLineTest() {
+	public void loadColumnOfDataFileWithEmptyLineTest() throws URISyntaxException {
 		String[][] expectedResult = {
 				{"value1","value3"},
 				{"value4","value6"},
 				{"value7","value9"}
 		};
 		URL url = this.getClass().getResource("../projectTest");
-		File file = new File(url.getFile() + File.separator + "param5.dat");
+		File file = new File(new File(url.toURI()), "param5.dat");
 		List<String> columnNames = new ArrayList<>();
 		columnNames.add("param1");
 		columnNames.add("param3");
