@@ -903,8 +903,8 @@ public class ScenarioWriterTest {
 		Assertions.assertThat(item0.getNodeName()).isEqualTo("scenario");
 
 		Assertions.assertThat(item0.getAttributes().getLength()).isEqualTo(6);
-		Assertions.assertThat(item0.getAttributes().getNamedItem("postMonitoringTime").getNodeValue()).isEqualTo("50");
-		Assertions.assertThat(item0.getAttributes().getNamedItem("preMonitoringTime").getNodeValue()).isEqualTo("10");
+		Assertions.assertThat(item0.getAttributes().getNamedItem("postMonitoringTime").getNodeValue()).isEqualTo("50000");
+		Assertions.assertThat(item0.getAttributes().getNamedItem("preMonitoringTime").getNodeValue()).isEqualTo("10000");
 	}
 
 	@Test

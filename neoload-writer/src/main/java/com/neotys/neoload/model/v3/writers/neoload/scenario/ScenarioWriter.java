@@ -44,12 +44,12 @@ public class ScenarioWriter {
         xmlScenario.setAttribute(XML_ATTR_TRACE_VARIABLES, String.valueOf(scenario.isStoredVariables()));
         scenario.getMonitoringParameters().ifPresent(monitoringParameters -> {
         	if(monitoringParameters.getBeforeFirstVu() != null){
-        		xmlScenario.setAttribute(XML_ATTR_PRE_MONITORING_TIME, String.valueOf(monitoringParameters.getBeforeFirstVu()));
+        		xmlScenario.setAttribute(XML_ATTR_PRE_MONITORING_TIME, String.valueOf(monitoringParameters.getBeforeFirstVu() * 1000));
 	        }else {
 		        xmlScenario.setAttribute(XML_ATTR_PRE_MONITORING_TIME, "-1");
 	        }
         	if(monitoringParameters.getAfterLastVus() != null){
-        		xmlScenario.setAttribute(XML_ATTR_POST_MONITORING_TIME, String.valueOf(monitoringParameters.getAfterLastVus()));
+        		xmlScenario.setAttribute(XML_ATTR_POST_MONITORING_TIME, String.valueOf(monitoringParameters.getAfterLastVus() * 1000));
 	        }else {
 		        xmlScenario.setAttribute(XML_ATTR_POST_MONITORING_TIME, "-1");
 	        }
