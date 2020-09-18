@@ -9,7 +9,7 @@ The Transaction Action is used to group together certain actions, namely those r
 | description                         | The Transaction description                                                                           | -               | -        |       |
 | sla_profile                         | The name of the SLA profile to apply to the Transaction (will not be applied to children)             | -               | -        | 6.9   |
 | [steps](steps.md)                   | Steps of the Transaction                                                                              | -               | &#x2713; |       |
-| [assert_content](assert_content.md) | The list of assertions to validate the response content of all requests matching a criteria within the Transaction (text/html and text/xhtml content types by default. Cannot be set with as-code only. See Project Settings / Runtime Parameters when as-code overloads a GUI project). | -               | -        | 7.6   |
+| [assert_content](assert_content.md) | The list of assertions to validate the response content of all requests matching a criteria within the Transaction. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the GUI project, in the Project Settings / Runtime Parameters (cannot be customized with As-code only project). | -               | -        | 7.6   |
 
 #### Example
 
