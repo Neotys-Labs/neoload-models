@@ -1,26 +1,24 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
-import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
-import static org.junit.Assert.assertEquals;
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.repository.*;
+import com.neotys.neoload.model.repository.Request.HttpMethod;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.repository.GetRequest;
-import com.neotys.neoload.model.repository.ImmutableGetPlainRequest;
-import com.neotys.neoload.model.repository.ImmutableParameter;
-import com.neotys.neoload.model.repository.ImmutableServer;
-import com.neotys.neoload.model.repository.Request;
-import com.neotys.neoload.model.repository.Request.HttpMethod;
-import com.neotys.neoload.model.repository.Server;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
+import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
+import static org.junit.Assert.assertEquals;
 @SuppressWarnings("squid:S2699")
 public class WebRequestTest {
 		
@@ -259,5 +257,32 @@ public class WebRequestTest {
 		assertEquals(Optional.empty(), WebRequest.extractPathFromUrl(""));
 		assertEquals(Optional.of("/path"), WebRequest.extractPathFromUrl("http://www.neotys.com/path"));
 	}
-	
+
+	@Test
+	public void getRecordedFilesFromSnapshotPropertiesEmpty() {
+		assertEquals(Optional.empty(), WebRequest.getRecordedFilesFromSnapshotProperties(LOAD_RUNNER_VISITOR, Optional.empty()));
+
+		final Optional<RecordedFiles> recordedFiles = WebRequest.getRecordedFilesFromSnapshotProperties(LOAD_RUNNER_VISITOR, Optional.of(new Properties()));
+		final RecordedFiles expectedRecordedFiles = ImmutableRecordedFiles.builder().build();
+		assertEquals(expectedRecordedFiles, recordedFiles.get());
+	}
+
+	@Test
+	public void getRecordedFilesFromSnapshotProperties() throws IOException {
+		final String propertiesString = "RequestHeaderFile=reqHeader" + System.lineSeparator() +
+				"RequestBodyFile=reqBody" + System.lineSeparator() +
+				"ResponseHeaderFile=resHeader" + System.lineSeparator() +
+				"FileName1=resBody" + System.lineSeparator();
+		final Properties properties = new Properties();
+		properties.load(new ByteArrayInputStream(propertiesString.getBytes()));
+		final Optional<RecordedFiles> recordedFiles = WebRequest.getRecordedFilesFromSnapshotProperties(LOAD_RUNNER_VISITOR, Optional.of(properties));
+
+		final RecordedFiles expectedRecordedFiles = ImmutableRecordedFiles.builder()
+				.recordedRequestHeaderFile("data" + File.separator + "reqHeader")
+				.recordedRequestBodyFile("data" + File.separator + "reqBody")
+				.recordedResponseHeaderFile("data" + File.separator + "resHeader")
+				.recordedResponseBodyFile("data" + File.separator + "resBody")
+				.build();
+		assertEquals(expectedRecordedFiles, recordedFiles.get());
+	}
 }
