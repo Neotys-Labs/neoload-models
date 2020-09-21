@@ -10,7 +10,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,7 @@ import java.util.Properties;
 import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
 import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
 import static org.junit.Assert.assertEquals;
+
 @SuppressWarnings("squid:S2699")
 public class WebRequestTest {
 		
@@ -259,10 +263,12 @@ public class WebRequestTest {
 	}
 
 	@Test
-	public void getRecordedFilesFromSnapshotPropertiesEmpty() {
+	public void getRecordedFilesFromSnapshotPropertiesEmpty() throws IOException {
 		assertEquals(Optional.empty(), WebRequest.getRecordedFilesFromSnapshotProperties(LOAD_RUNNER_VISITOR, Optional.empty()));
 
-		final Optional<RecordedFiles> recordedFiles = WebRequest.getRecordedFilesFromSnapshotProperties(LOAD_RUNNER_VISITOR, Optional.of(new Properties()));
+		final Properties properties = new Properties();
+		properties.load(new ByteArrayInputStream("RequestHeaderFile=NONE".getBytes()));
+		final Optional<RecordedFiles> recordedFiles = WebRequest.getRecordedFilesFromSnapshotProperties(LOAD_RUNNER_VISITOR, Optional.of(properties));
 		final RecordedFiles expectedRecordedFiles = ImmutableRecordedFiles.builder().build();
 		assertEquals(expectedRecordedFiles, recordedFiles.get());
 	}
@@ -284,5 +290,21 @@ public class WebRequestTest {
 				.recordedResponseBodyFile("data" + File.separator + "resBody")
 				.build();
 		assertEquals(expectedRecordedFiles, recordedFiles.get());
+	}
+
+	@Test
+	public void getHeadersFromRecordedFile() throws URISyntaxException {
+		final URI recordedFileUri = this.getClass().getResource("recordedFile.txt").toURI();
+		final List<Header> properties = WebRequest.getHeadersFromRecordedFile(Optional.ofNullable(Paths.get(recordedFileUri).toString()));
+		assertEquals(1, properties.size());
+		assertEquals("propertyKey", properties.get(0).getHeaderName());
+		assertEquals("propertyValue", properties.get(0).getHeaderValue());
+	}
+
+	@Test
+	public void getHeadersFromRecordedFileInvalid() throws URISyntaxException {
+		final URI recordedFileUri = this.getClass().getResource("recordedFile.txt").toURI().resolve("bad_path");
+		final List<Header> properties = WebRequest.getHeadersFromRecordedFile(Optional.ofNullable(Paths.get(recordedFileUri).toString()));
+		assertEquals(0, properties.size());
 	}
 }
