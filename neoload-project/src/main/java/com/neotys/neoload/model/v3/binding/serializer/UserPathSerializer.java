@@ -7,6 +7,7 @@ import static com.neotys.neoload.model.v3.project.userpath.UserPath.DEFAULT_USER
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.END;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.INIT;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.USER_SESSION;
+import static com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement.ASSERTIONS;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,8 +18,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertionElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 
 public final class UserPathSerializer extends StdSerializer<UserPath> {
 	private static final long serialVersionUID = -9059965357953456780L;
@@ -55,13 +55,9 @@ public final class UserPathSerializer extends StdSerializer<UserPath> {
         	generator.writeObjectField(END, Container.builder().from(end.get()).name("").build());
         }
         
-        final List<ContentAssertion> assertions = userPath.getContentAssertions();
+        final List<Assertion> assertions = userPath.getAssertions();
         if ((assertions != null) && (!assertions.isEmpty())) {
-        	generator.writeArrayFieldStart(ContentAssertionElement.ASSERT_CONTENT);
-        	for (final ContentAssertion assertion : assertions) {
-        		generator.writeObject(assertion);				
-			}
-        	generator.writeEndArray();
+        	AssertionsSerializer.serialize(generator, ASSERTIONS, assertions);
         }        
         
         generator.writeEndObject();		

@@ -7,5 +7,5 @@ user_paths:
         name: request
         url: http://www.neotys.com/select?name:neoload
         method: GET
-        assert_content:
+        assertions:
         - contains: DevOps and Automation

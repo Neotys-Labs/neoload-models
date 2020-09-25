@@ -17,7 +17,7 @@ user_paths:
         extractors:
         - name: MyVariable1
           jsonpath: MyJsonPath
-        assert_content:
+        assertions:
         - contains: MyUserPath_actions_request_1
         sla_profile: MySlaProfile
     - request:
@@ -34,6 +34,6 @@ user_paths:
         extractors:
         - name: MyVariable1
           jsonpath: MyJsonPath
-        assert_content:
+        assertions:
         - contains: MyUserPath_actions_request_2
         sla_profile: MySlaProfile

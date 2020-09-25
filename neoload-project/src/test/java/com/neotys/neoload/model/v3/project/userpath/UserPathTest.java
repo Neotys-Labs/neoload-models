@@ -25,7 +25,7 @@ public class UserPathTest {
 		assertEquals("actions", UserPath.ACTIONS);
 		assertEquals("end", UserPath.END);
 		
-		assertEquals("assert_content", UserPath.ASSERT_CONTENT);
+		assertEquals("assertions", UserPath.ASSERTIONS);
 		
 		assertEquals(UserPath.UserSession.RESET_AUTO, UserPath.DEFAULT_USER_SESSION);
 		

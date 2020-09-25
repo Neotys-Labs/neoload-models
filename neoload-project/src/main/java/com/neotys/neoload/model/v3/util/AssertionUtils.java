@@ -3,9 +3,11 @@ package com.neotys.neoload.model.v3.util;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 
 public class AssertionUtils {
@@ -17,34 +19,19 @@ public class AssertionUtils {
 	private AssertionUtils() {
 	}
 
-	public static List<ContentAssertion> normalyze(final List<ContentAssertion> assertions) {
+	public static List<Assertion> normalyze(final List<Assertion> assertions) {
 		// Retrieves all names
 		final Set<String> names = getNames(assertions);
 		
 		// Constructs a new list of assertions with the filled name
-		int index = 1;
-		final ImmutableList.Builder<ContentAssertion> copiedAssertions = new ImmutableList.Builder<>();
-		for (ContentAssertion assertion : assertions) {
-			final Optional<String> name = assertion.getName();
-			if (name.isPresent()) {
-				// If name exists, use the given assertion
-				copiedAssertions.add(assertion);
+		final AtomicInteger index = new AtomicInteger(1);
+		final ImmutableList.Builder<Assertion> copiedAssertions = new ImmutableList.Builder<>();
+		for (final Assertion assertion : assertions) {
+			if (ContentAssertion.class.isInstance(assertion)) {
+				copiedAssertions.add(normalyze((ContentAssertion) assertion, names, index));				
 			}
-			else {				
-				// If name doesn't exist, compute a name and do a copy from the given assertion with the computed name
-				String computedName = "";
-				do {
-					computedName = computeName(index);
-					index = index + 1;
-				}
-				while (contains(names, computedName));
-				names.add(computedName);
-				
-				final ContentAssertion copiedAssertion = ContentAssertion.builder()
-						.from(assertion)
-						.name(computedName)
-						.build();
-				copiedAssertions.add(copiedAssertion);
+			else {
+				copiedAssertions.add(assertion);
 			}
 		}
 		return copiedAssertions.build();
@@ -53,10 +40,34 @@ public class AssertionUtils {
 	public static String normalyzeContains(final Optional<String> contains) {
 		return contains.orElse(EMPTY);
 	}
-	
-	private static Set<String> getNames(final List<ContentAssertion> assertions) {
+
+	private static Assertion normalyze(final ContentAssertion assertion, final Set<String> names, final AtomicInteger index) {
+		final Optional<String> name = assertion.getName();
+		if (name.isPresent()) {
+			// If name exists, use the given assertion
+			return assertion;
+		}
+		else {				
+			// If name doesn't exist, compute a name and do a copy from the given assertion with the computed name
+			String computedName = "";
+			do {
+				computedName = computeName(index.getAndIncrement());				
+			}
+			while (contains(names, computedName));
+			names.add(computedName);
+			
+			return ContentAssertion.builder()
+					.from(assertion)
+					.name(computedName)
+					.build();
+		}
+	}
+
+	private static Set<String> getNames(final List<Assertion> assertions) {
 		final Set<String> names = Sets.newHashSet();
-		assertions.forEach(assertion -> assertion.getName().ifPresent(names::add));
+		assertions.stream()
+			.filter(assertion -> ContentAssertion.class.isInstance(assertion))
+			.forEach(assertion -> ((ContentAssertion) assertion).getName().ifPresent(names::add));
 		return names;
 	}
 	

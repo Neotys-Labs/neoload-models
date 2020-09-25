@@ -1,1 +1,1 @@
-{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"transaction":{"name":"MyTransaction","description":"My Transaction","sla_profile":"MySlaProfile","steps":[{"delay":"1s"}],"assert_content":[{"contains":"MyUserPath_actions_MyTransaction"}]}}]}}]}
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"transaction":{"name":"MyTransaction","description":"My Transaction","sla_profile":"MySlaProfile","steps":[{"delay":"1s"}],"assertions":[{"contains":"MyUserPath_actions_MyTransaction"}]}}]}}]}

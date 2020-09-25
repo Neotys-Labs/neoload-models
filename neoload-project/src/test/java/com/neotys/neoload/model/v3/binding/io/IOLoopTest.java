@@ -1,15 +1,17 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
-import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.*;
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+
+import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.Loop;
+import com.neotys.neoload.model.v3.project.userpath.UserPath;
 
 
 public class IOLoopTest extends AbstractIOElementsTest {

@@ -7,7 +7,7 @@ user_paths:
         name: request
         url: http://www.neotys.com/select?name:neoload
         method: GET
-        assert_content:
+        assertions:
         - name: assertion_1
           not: true
           contains: Design & Maintenance

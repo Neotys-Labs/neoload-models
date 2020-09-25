@@ -17,17 +17,17 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.project.SlaElement;
-import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertionElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_DEFAULT)
-@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, ContentAssertionElement.ASSERT_CONTENT, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
 @JsonSerialize(as = ImmutableRequest.class)
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface Request extends Step, SlaElement, ContentAssertionElement {
+public interface Request extends Step, SlaElement, AssertionsElement {
 	String NAME = "name";
 	String URL = "url";
 	String SERVER = "server";

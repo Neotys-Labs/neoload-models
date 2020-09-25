@@ -21,7 +21,7 @@
                       "delay": "3ms"
                     }
                   ],
-                  "assert_content": [
+                  "assertions": [
                     {
                       "contains": "My Assertion on Content"
                     }

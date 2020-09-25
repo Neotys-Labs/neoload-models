@@ -25,7 +25,7 @@
                   "jsonpath": "MyJsonPath"
                 }
               ],
-              "assert_content": [
+              "assertions": [
                 {
                   "contains": "MyUserPath_actions_request_1"
                 }
@@ -53,7 +53,7 @@
                   "jsonpath": "MyJsonPath"
                 }
               ],
-              "assert_content": [
+              "assertions": [
                 {
                   "contains": "MyUserPath_actions_request_2"
                 }

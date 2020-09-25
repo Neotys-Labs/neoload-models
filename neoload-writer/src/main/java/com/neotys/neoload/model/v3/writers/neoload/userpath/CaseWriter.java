@@ -1,17 +1,17 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
-import com.neotys.neoload.model.v3.project.userpath.Case;
-import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
-import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
-import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
-import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
+import java.util.List;
+import java.util.Optional;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.List;
-import java.util.Optional;
+import com.neotys.neoload.model.v3.project.userpath.Case;
+import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
+import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
+import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
+import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
+import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
 
 public class CaseWriter extends ElementWriter {
     private static final String XML_TAG_NAME = "case-statement";
@@ -63,7 +63,7 @@ public class CaseWriter extends ElementWriter {
         );
         
 		// write assertions
-        final List<ContentAssertion> assertions = aCase.getContentAssertions();
+        final List<Assertion> assertions = aCase.getAssertions();
         if ((assertions != null && (!assertions.isEmpty()))) {
         	AssertionsWriter.of(assertions).writeXML(document, caseElement);	
         } 

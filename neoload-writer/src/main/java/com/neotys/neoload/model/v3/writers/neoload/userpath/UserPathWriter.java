@@ -7,7 +7,7 @@ import org.w3c.dom.Element;
 
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
 
@@ -46,7 +46,7 @@ public class UserPathWriter extends ElementWriter {
         ContainerWriter.of(this.userPath.getEnd().orElse(Container.builder().build()), END_CONTAINER_TAG_NAME).writeXML(document, element, outputFolder);
         
         // write assertions
-        final List<ContentAssertion> assertions = this.userPath.getContentAssertions();
+        final List<Assertion> assertions = this.userPath.getAssertions();
         if ((assertions != null && (!assertions.isEmpty()))) {
         	AssertionsWriter.of(assertions).writeXML(document, element);	
         }        

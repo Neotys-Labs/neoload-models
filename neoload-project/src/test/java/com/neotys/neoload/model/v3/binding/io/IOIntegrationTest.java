@@ -1,9 +1,19 @@
 package com.neotys.neoload.model.v3.binding.io;
 
+import static junit.framework.TestCase.assertNotNull;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
-import com.neotys.neoload.model.v3.project.scenario.*;
+import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
+import com.neotys.neoload.model.v3.project.scenario.RendezvousPolicy;
+import com.neotys.neoload.model.v3.project.scenario.Scenario;
+import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Request;
@@ -11,12 +21,6 @@ import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Collections;
-
-import static junit.framework.TestCase.assertNotNull;
 
 public class IOIntegrationTest extends AbstractIOElementsTest {
 

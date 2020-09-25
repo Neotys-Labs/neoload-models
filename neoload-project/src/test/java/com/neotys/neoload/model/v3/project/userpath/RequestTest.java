@@ -20,7 +20,7 @@ public class RequestTest {
 		assertEquals("headers", Request.HEADERS);
 		assertEquals("body", Request.BODY);
 		assertEquals("extractors", Request.EXTRACTORS);
-		assertEquals("assert_content", Request.ASSERT_CONTENT);
+		assertEquals("assertions", Request.ASSERTIONS);
 		
 		assertEquals("#request#", Request.DEFAULT_NAME);
 		assertEquals("GET", Request.DEFAULT_METHOD);

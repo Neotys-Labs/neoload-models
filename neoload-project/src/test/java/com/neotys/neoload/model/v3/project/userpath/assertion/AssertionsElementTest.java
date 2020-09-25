@@ -6,9 +6,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 
-public class ContentAssertionElementTest {
+public class AssertionsElementTest {
 	@Test
 	public void constants() {
-		assertEquals("assert_content", ContentAssertionElement.ASSERT_CONTENT);
+		assertEquals("assertions", AssertionsElement.ASSERTIONS);
 	}
 }

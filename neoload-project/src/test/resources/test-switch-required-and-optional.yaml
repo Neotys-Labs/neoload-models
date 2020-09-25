@@ -14,7 +14,7 @@ user_paths:
           break: false
           steps:
           - delay: 3ms
-          assert_content:
+          assertions:
           - contains: My Assertion on Content
         default:
           steps:

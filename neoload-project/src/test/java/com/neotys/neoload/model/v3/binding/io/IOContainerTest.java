@@ -10,7 +10,6 @@ import org.junit.Test;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.project.userpath.ImmutableUserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 
@@ -49,7 +48,7 @@ public class IOContainerTest extends AbstractIOElementsTest {
 								.slaProfile("MySlaProfile")
 								.addSteps(Delay.builder().value("1000")
 										.build())
-								.addContentAssertions(ContentAssertion.builder()
+								.addAssertions(ContentAssertion.builder()
 										.contains("MyUserPath_actions_MyTransaction")
 										.build())
 								.build())

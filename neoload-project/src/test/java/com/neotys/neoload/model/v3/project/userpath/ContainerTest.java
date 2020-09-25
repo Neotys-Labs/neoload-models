@@ -10,6 +10,6 @@ public class ContainerTest {
 	@Test
 	public void constants() {
 		assertEquals("steps", Container.STEPS);
-		assertEquals("assert_content", Container.ASSERT_CONTENT);
+		assertEquals("assertions", Container.ASSERTIONS);
 	}
 }

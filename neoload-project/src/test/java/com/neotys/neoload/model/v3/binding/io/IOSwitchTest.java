@@ -57,7 +57,7 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
                         .addSteps(Delay.builder()
                         		.value("3")
                         		.build())
-                        .addContentAssertions(ContentAssertion.builder()
+                        .addAssertions(ContentAssertion.builder()
                         		.contains("My Assertion on Content")
                         		.build())
                         .build())

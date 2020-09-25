@@ -131,7 +131,7 @@ public class WrittingTestUtils {
             .url("/loadtest/")
             .server(SERVER_JACK9090_TEST.getName())
             .method("GET")
-            .addContentAssertions(ContentAssertion.builder()
+            .addAssertions(ContentAssertion.builder()
             		.contains("request_contains_1")
             		.build())            
             .build();
@@ -221,7 +221,7 @@ public class WrittingTestUtils {
     public static final Container CONTAINER_WITH_ASSERTIONS_TEST = Container.builder()
     		.name("Container_name")
             .addSteps(REQUEST_TEST)
-            .addContentAssertions(ContentAssertion.builder()
+            .addAssertions(ContentAssertion.builder()
             		.contains("container_contains_1")
             		.build())
             .build();
@@ -356,7 +356,7 @@ public class WrittingTestUtils {
             .description("Elements executed by default when no Case equals the Switch value.")
             .addSteps(DELAY_SWITCH_TEST_DEFAULT)
             .addSteps(CONTAINER_IN_DEFAULT_SWITCH)
-            .addContentAssertions(ContentAssertion.builder()
+            .addAssertions(ContentAssertion.builder()
             		.contains("default_contains_1")
             		.build())
             .build();
@@ -383,7 +383,7 @@ public class WrittingTestUtils {
                     .description("Elements executed when the Case equals the Switch valueB.")
                     .addSteps(DELAY_SWITCH_TEST_CASE)
                     .addSteps(CONTAINER_IN_CASE_SWITCH)
-                    .addContentAssertions(ContentAssertion.builder()
+                    .addAssertions(ContentAssertion.builder()
                     		.contains("case_contains_1")
                     		.build())
                     .build();

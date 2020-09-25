@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 
@@ -18,7 +19,7 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforContentAssertionTest() throws ParserConfigurationException {
-    	final List<ContentAssertion> assertions = ImmutableList.of(
+    	final List<Assertion> assertions = ImmutableList.of(
     			ContentAssertion.builder()
     					.contains("contains_1")
     					.build(),   
@@ -51,18 +52,17 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforPluginContentAssertionTest() throws ParserConfigurationException {
-    	final List<ContentAssertion> assertions = new ImmutableList.Builder<ContentAssertion>()
-    			.add(ContentAssertion.builder()
+    	final List<Assertion> assertions = ImmutableList.of(
+    			ContentAssertion.builder()
     					.xPath("xpath_1")
     					.contains("contains_1")
-    					.build())   
-    			.add(ContentAssertion.builder()
+    					.build(),   
+    			ContentAssertion.builder()
     					.xPath("xpath_2")
     					.not(true)
     					.contains("contains_2")
     					.regexp(false)
-    					.build())    
-    			.build();
+    					.build());
     	
     	final Document document = WrittingTestUtils.generateEmptyDocument();
     	final Element root = WrittingTestUtils.generateTestRootElement(document);
@@ -91,18 +91,17 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforJsonContentAssertionTest() throws ParserConfigurationException {
-    	final List<ContentAssertion> assertions = new ImmutableList.Builder<ContentAssertion>()
-    			.add(ContentAssertion.builder()
+    	final List<Assertion> assertions = ImmutableList.of(
+    			ContentAssertion.builder()
     					.jsonPath("jsonpath_1")
     					.contains("contains_1")
-    					.build())   
-    			.add(ContentAssertion.builder()
+    					.build(),   
+    			ContentAssertion.builder()
     					.jsonPath("jsonpath_2")
     					.not(true)
     					.contains("contains_2")
     					.regexp(false)
-    					.build())    
-    			.build();
+    					.build());
     	
     	final Document document = WrittingTestUtils.generateEmptyDocument();
     	final Element root = WrittingTestUtils.generateTestRootElement(document);
@@ -131,17 +130,16 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforResponseAssertionTest() throws ParserConfigurationException {
-    	final List<ContentAssertion> assertions = new ImmutableList.Builder<ContentAssertion>()
-    			.add(ContentAssertion.builder()
+    	final List<Assertion> assertions = ImmutableList.of(
+    			ContentAssertion.builder()
     					.contains("contains_1")
     					.regexp(true)
-    					.build())   
-    			.add(ContentAssertion.builder()
+    					.build(),   
+    			ContentAssertion.builder()
     					.not(true)
     					.contains("contains_2")
     					.regexp(true)
-    					.build())    
-    			.build();
+    					.build());
     	
     	final Document document = WrittingTestUtils.generateEmptyDocument();
     	final Element root = WrittingTestUtils.generateTestRootElement(document);
@@ -172,19 +170,18 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforPluginResponseAssertionTest() throws ParserConfigurationException {
-    	final List<ContentAssertion> assertions = new ImmutableList.Builder<ContentAssertion>()
-    			.add(ContentAssertion.builder()
+    	final List<Assertion> assertions = ImmutableList.of(
+    			ContentAssertion.builder()
     					.xPath("xpath_1")
     					.contains("contains_1")
     					.regexp(true)
-    					.build())   
-    			.add(ContentAssertion.builder()
+    					.build(),   
+    			ContentAssertion.builder()
     					.xPath("xpath_2")
     					.not(true)
     					.contains("contains_2")
     					.regexp(true)
-    					.build())    
-    			.build();
+    					.build());
     	
     	final Document document = WrittingTestUtils.generateEmptyDocument();
     	final Element root = WrittingTestUtils.generateTestRootElement(document);
@@ -219,19 +216,18 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforJsonResponseAssertionTest() throws ParserConfigurationException {
-    	final List<ContentAssertion> assertions = new ImmutableList.Builder<ContentAssertion>()
-    			.add(ContentAssertion.builder()
+    	final List<Assertion> assertions = ImmutableList.of(
+    			ContentAssertion.builder()
     					.jsonPath("jsonpath_1")
     					.contains("contains_1")
     					.regexp(true)
-    					.build())   
-    			.add(ContentAssertion.builder()
+    					.build(),  
+    			ContentAssertion.builder()
     					.jsonPath("jsonpath_2")
     					.not(true)
     					.contains("contains_2")
     					.regexp(true)
-    					.build())    
-    			.build();
+    					.build());
     	
     	final Document document = WrittingTestUtils.generateEmptyDocument();
     	final Element root = WrittingTestUtils.generateTestRootElement(document);

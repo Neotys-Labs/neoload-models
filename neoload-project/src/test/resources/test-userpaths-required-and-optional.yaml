@@ -11,7 +11,7 @@ user_paths:
         name: MyTransaction
         steps:
         - delay: 1s
-    assert_content:
+    assertions:
     - contains: MyUserPath1_init
   actions:
     description: My Actions Container from My User Path 1
@@ -21,9 +21,9 @@ user_paths:
         name: MyTransaction
         steps:
         - delay: 1s
-        assert_content:
+        assertions:
         - contains: MyUserPath1_actions_MyTransaction
-    assert_content:
+    assertions:
     - contains: MyUserPath1_actions
   end:
     description: My End Container from My User Path 1
@@ -33,9 +33,9 @@ user_paths:
         name: MyTransaction
         steps:
         - delay: 1s
-    assert_content:
+    assertions:
     - contains: MyUserPath1_end
-  assert_content:
+  assertions:
   - contains: MyUserPath1
 - name: MyUserPath2
   description: My User Path 2

@@ -1,23 +1,23 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.google.common.net.MediaType;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
-import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 import com.neotys.neoload.model.v3.util.Parameter;
 import com.neotys.neoload.model.v3.util.RequestUtils;
 import com.neotys.neoload.model.v3.util.URL;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
-
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
 
 
 public class RequestWriter extends ElementWriter {
@@ -55,7 +55,7 @@ public class RequestWriter extends ElementWriter {
 		fillXML(document, xmlRequest, theRequest);
 		SlaElementWriter.of(theRequest).writeXML(xmlRequest);
 		// write assertions
-        final List<ContentAssertion> assertions = theRequest.getContentAssertions();
+        final List<Assertion> assertions = theRequest.getAssertions();
         if ((assertions != null && (!assertions.isEmpty()))) {
         	AssertionsWriter.of(assertions).writeXML(document, xmlRequest);	
         } 
