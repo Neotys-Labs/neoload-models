@@ -66,7 +66,7 @@ public class AssertionUtils {
 	private static Set<String> getNames(final List<Assertion> assertions) {
 		final Set<String> names = Sets.newHashSet();
 		assertions.stream()
-			.filter(assertion -> ContentAssertion.class.isInstance(assertion))
+			.filter(ContentAssertion.class::isInstance)
 			.forEach(assertion -> ((ContentAssertion) assertion).getName().ifPresent(names::add));
 		return names;
 	}

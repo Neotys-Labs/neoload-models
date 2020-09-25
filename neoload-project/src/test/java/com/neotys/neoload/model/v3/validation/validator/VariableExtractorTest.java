@@ -39,7 +39,7 @@ public class VariableExtractorTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for '': invalid attributes usage (xpath and jsonpath cannot be used at the same time in variable extractor).").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for '': invalid attributes usage (xpath and jsonpath cannot be used simultaneously in variable extractor).").append(LINE_SEPARATOR);
 		CONSTRAINTS_VARIABLE_EXTRACTOR_JSONPATH_OR_XPATH = sb.toString();
 	}
 

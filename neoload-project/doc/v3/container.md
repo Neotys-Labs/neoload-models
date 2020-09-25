@@ -7,7 +7,7 @@ A container only contains steps to be executed.
 |:----------------------------------- |:--------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | sla_profile                         | The name of the SLA profile to apply to the Container (will not be applied to children)             | -               | -        | 6.9   |
 | [steps](steps.md)                   | The steps to be executed                                                                            | -               | &#x2713; |       |
-| [assert_content](assert_content.md) | The list of assertions to validate the response content of all requests matching a criteria within the Container (text/html and text/xhtml content types by default. Cannot be set with as-code only. See Project Settings / Runtime Parameters when as-code overloads a GUI project). | -               | -        | 7.6   |
+| [assertions](assertion.md)          | The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project). | -               | -        | 7.6   |
 
 
 #### Example
