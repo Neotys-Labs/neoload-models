@@ -18,13 +18,13 @@ jobs:
         with:
           java-version: 1.8.0
       - name: Cache SonarCloud packages
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache Maven packages
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -34,3 +34,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar  -Dsonar.projectKey=com.neotys.neoload:neoload-models -Dsonar.organization=neotys -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.branch='${{github.head_ref}}'
+      - name: Set PROJECT_SNAPSHOT_VERSION environment variable
+        run: echo "::set-env name=PROJECT_SNAPSHOT_VERSION::$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)"
+      - name: Set SIMPLIFIED_BRANCH_NAME environment variable
+        run: echo "::set-env name=SIMPLIFIED_BRANCH_NAME::$(echo "${{github.head_ref}}" | sed -r -e 's/^(featuregroup|feature|hotfix)\///' -e 's/\//-/')"
+      - name: Set BRANCH_SNAPSHOT_VERSION environment variable
+        run: echo "::set-env name=BRANCH_SNAPSHOT_VERSION::$(projectSnapshotVersion="${{env.PROJECT_SNAPSHOT_VERSION}}" && echo "${projectSnapshotVersion::6}-${{env.SIMPLIFIED_BRANCH_NAME}}-SNAPSHOT")"
+      - name: Update branch version
+        run: mvn -B build-helper:parse-version versions:set -DnewVersion='${{env.BRANCH_SNAPSHOT_VERSION}}'
+      - name: Snapshot with branch name
+        run: mvn -B com.neotys:nversions-maven-plugin:2.4:use-branch-snapshots -DbranchName='${{env.BRANCH_SNAPSHOT_VERSION}}'
