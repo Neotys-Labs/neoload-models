@@ -43,4 +43,4 @@ jobs:
       - name: Update branch version
         run: mvn -B build-helper:parse-version versions:set -DnewVersion='${{env.BRANCH_SNAPSHOT_VERSION}}'
       - name: Push new snapshot
-        run:  mvn -B release:clean release:prepare && mvn -B org.apache.maven.plugins:maven-release-plugin:3.0.0-M1:perform
+        run: mvn -B org.apache.maven.plugins:maven-release-plugin:3.0.0-M1:perform
