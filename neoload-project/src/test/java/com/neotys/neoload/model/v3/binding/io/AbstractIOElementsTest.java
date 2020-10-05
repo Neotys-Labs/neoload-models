@@ -47,6 +47,11 @@ abstract class AbstractIOElementsTest {
 		final ProjectDescriptor actualDescriptor2 = mapper2.read(new String(Files.readAllBytes(Paths.get(file.toURI()))));
 		validate(actualDescriptor2);	
 		assertEquals(expectedDescriptor.toString(), actualDescriptor2.toString());
+		
+		final IO mapper3 = new IO();
+		final ProjectDescriptor actualDescriptor3 = mapper3.read(new String(Files.readAllBytes(Paths.get(file.toURI()))), ProjectDescriptor.class);
+		validate(actualDescriptor3);	
+		assertEquals(expectedDescriptor.toString(), actualDescriptor3.toString());
 	}
 
 	private File getFile(final String fileName, final String extension) {

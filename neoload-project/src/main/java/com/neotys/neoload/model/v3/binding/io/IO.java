@@ -60,6 +60,10 @@ public final class IO {
 		return read(content, getFormat(content), ProjectDescriptor.class);
 	}
 	
+	public <T> T read(final String content, final Class<T> type) throws IOException {
+		return read(content, getFormat(content), type);
+	}
+	
 	private <T> T read(final String content, final Format format, final Class<T> type) throws IOException {
 		// Gets the mapper from the format
 		final ObjectMapper mapper = getMapper(format);
