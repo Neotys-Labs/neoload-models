@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.validation.constraints.CustomStepDurationCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
 import javax.validation.constraints.PositiveOrZero;
@@ -18,6 +19,7 @@ import javax.validation.constraints.PositiveOrZero;
 @JsonDeserialize(as = ImmutableCustomPolicyStep.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface CustomPolicyStep {
 
     String WHEN = "when";

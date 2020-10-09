@@ -7,6 +7,7 @@ import com.neotys.neoload.model.v3.binding.converter.StringToStartAfterConverter
 import com.neotys.neoload.model.v3.project.Composite;
 import com.neotys.neoload.model.v3.validation.constraints.CompositeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
@@ -15,6 +16,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 @JsonDeserialize(converter=StringToStartAfterConverter.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface StartAfter extends Composite<Object, StartAfter.Type> {
 	enum Type {
 		POPULATION,

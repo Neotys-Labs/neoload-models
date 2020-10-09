@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,6 +19,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 @JsonSerialize(as = ImmutableMonitoringParameters.class)
 @JsonDeserialize(as = ImmutableMonitoringParameters.class)
+@Gson.TypeAdapters
 public interface MonitoringParameters {
 
 	String BEFORE_FIRST = "before";

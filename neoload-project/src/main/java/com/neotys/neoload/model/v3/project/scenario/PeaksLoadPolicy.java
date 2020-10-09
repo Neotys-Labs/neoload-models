@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 @JsonDeserialize(as = ImmutablePeaksLoadPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface PeaksLoadPolicy extends LoadPolicy {
 	String MINIMUM = "minimum";
 	String MAXIMUM = "maximum";

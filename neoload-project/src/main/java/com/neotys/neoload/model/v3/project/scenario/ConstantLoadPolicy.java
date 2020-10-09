@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
@@ -17,6 +18,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 @JsonDeserialize(as = ImmutableConstantLoadPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface ConstantLoadPolicy extends LoadPolicy {
 	String USERS = "users";
 	String RAMPUP = "rampup";

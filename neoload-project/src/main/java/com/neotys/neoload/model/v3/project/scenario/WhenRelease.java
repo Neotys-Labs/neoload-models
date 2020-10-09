@@ -7,6 +7,7 @@ import com.neotys.neoload.model.v3.binding.converter.WhenReleaseToStringConverte
 import com.neotys.neoload.model.v3.project.Composite;
 import com.neotys.neoload.model.v3.validation.constraints.CompositeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
 @CompositeCheck(groups={NeoLoad.class}, message="{com.neotys.neoload.model.v3.validation.constraints.CompositeCheck.whenRelease.message}")
@@ -14,6 +15,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(converter= StringToWhenReleaseConverter.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface WhenRelease extends Composite<Object, WhenRelease.Type> {
 	enum Type {
 		PERCENTAGE,

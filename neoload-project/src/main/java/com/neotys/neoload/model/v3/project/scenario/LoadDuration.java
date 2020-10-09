@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
@@ -16,6 +17,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(converter=StringToDurationConverter.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface LoadDuration extends Composite<Integer, LoadDuration.Type> {
 	enum Type {
 		ITERATION,

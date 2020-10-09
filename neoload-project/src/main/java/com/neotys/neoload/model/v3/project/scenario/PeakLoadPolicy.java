@@ -2,6 +2,7 @@ package com.neotys.neoload.model.v3.project.scenario;
 
 import javax.validation.Valid;
 
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
@@ -21,6 +22,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutablePeakLoadPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface PeakLoadPolicy {
 	String USERS = "users";
 	String DURATION = "duration";

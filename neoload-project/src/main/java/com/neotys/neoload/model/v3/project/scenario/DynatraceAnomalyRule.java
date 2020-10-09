@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,6 +16,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutableDynatraceAnomalyRule.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface DynatraceAnomalyRule {
     String METRIC_ID = "metric_id";
     String OPERATOR = "operator";

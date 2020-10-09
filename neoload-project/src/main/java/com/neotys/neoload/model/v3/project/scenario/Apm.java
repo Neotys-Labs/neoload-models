@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonDeserialize(as = ImmutableApm.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface Apm {
     String DYNATRACE_TAGS = "dynatrace_tags";
     String DYNATRACE_ANOMALY_RULES = "dynatrace_anomaly_rules";

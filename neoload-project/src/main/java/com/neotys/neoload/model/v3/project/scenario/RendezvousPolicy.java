@@ -9,6 +9,7 @@ import com.neotys.neoload.model.v3.binding.converter.TimeDurationToStringConvert
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 
 import javax.validation.Valid;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 @JsonDeserialize(as = ImmutableRendezvousPolicy.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface RendezvousPolicy {
 
 	String TIMEOUT = "timeout";

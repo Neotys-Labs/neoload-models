@@ -9,6 +9,7 @@ import com.neotys.neoload.model.v3.binding.serializer.PopulationPolicySerializer
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 @JsonDeserialize(using=PopulationPolicyDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@Gson.TypeAdapters
 public interface PopulationPolicy extends Element {
 	String LOAD_POLICY = "load_policy";
 	String CONSTANT_LOAD = "constant_load";
