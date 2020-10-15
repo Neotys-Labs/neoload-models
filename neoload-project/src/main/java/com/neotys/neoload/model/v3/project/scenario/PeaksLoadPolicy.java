@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.gson.Gson;
@@ -46,7 +47,18 @@ public interface PeaksLoadPolicy extends LoadPolicy {
 	Peak getStart();
 	@JsonProperty(STEP_RAMPUP)
 	Integer getRampup();
-	
+
+    @Value.Check
+    default void check() {
+        Preconditions.checkState(getType() == LoadPolicyType.PEAKS);
+    }
+
+    @Override
+    @Value.Default
+    default LoadPolicyType getType() {
+        return LoadPolicyType.PEAKS;
+    }
+
 	class Builder extends ImmutablePeaksLoadPolicy.Builder {}
 	static Builder builder() {
 		return new Builder();

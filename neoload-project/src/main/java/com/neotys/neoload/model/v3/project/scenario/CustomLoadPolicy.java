@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.v3.validation.constraints.CustomPolicyStepsAtLeastOneGreaterThanZeroDurationCheck;
 import com.neotys.neoload.model.v3.validation.constraints.CustomPolicyStepsOrderedCheck;
 import com.neotys.neoload.model.v3.validation.constraints.CustomPolicyStepsSameDurationTypeCheck;
@@ -48,6 +49,17 @@ public interface CustomLoadPolicy extends LoadPolicy {
             return null;
         }
         return getSteps().get(getSteps().size()-1).getWhen();
+    }
+
+    @Value.Check
+    default void check() {
+        Preconditions.checkState(getType() == LoadPolicyType.CUSTOM);
+    }
+
+    @Override
+    @Value.Default
+    default LoadPolicyType getType() {
+        return LoadPolicyType.CUSTOM;
     }
 
     class Builder extends ImmutableCustomLoadPolicy.Builder {}

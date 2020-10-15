@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -44,7 +45,18 @@ public interface RampupLoadPolicy extends LoadPolicy {
 	LoadDuration getIncrementEvery();
 	@JsonProperty(INCREMENT_RAMPUP)
 	Integer getRampup();
-	
+
+	@Override
+	@Value.Default
+	default LoadPolicyType getType() {
+		return LoadPolicyType.RAMPUP;
+	}
+
+    @Value.Check
+    default void check() {
+        Preconditions.checkState(getType() == LoadPolicyType.RAMPUP);
+    }
+
 	class Builder extends ImmutableRampupLoadPolicy.Builder {}
 	static Builder builder() {
 		return new Builder();

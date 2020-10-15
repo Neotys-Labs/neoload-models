@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.gson.Gson;
@@ -22,14 +23,25 @@ import org.immutables.value.Value.Style.ValidationMethod;
 public interface ConstantLoadPolicy extends LoadPolicy {
 	String USERS = "users";
 	String RAMPUP = "rampup";
-	
+
 	@PositiveCheck(unit="user", groups={NeoLoad.class})
 	@JsonProperty(USERS)
 	int getUsers();
-	
+
 	@JsonProperty(RAMPUP)
 	Integer getRampup();
-	
+
+    @Value.Check
+    default void check() {
+        Preconditions.checkState(getType() == LoadPolicyType.CONSTANT);
+    }
+
+    @Override
+    @Value.Default
+    default LoadPolicyType getType() {
+        return LoadPolicyType.CONSTANT;
+    }
+
 	class Builder extends ImmutableConstantLoadPolicy.Builder {}
 	static Builder builder() {
 		return new Builder();
