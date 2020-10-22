@@ -109,6 +109,7 @@
     	<glassfish.javax.el.version>3.0.1-b10</glassfish.javax.el.version>
 		<jmeter.version>5.1.1</jmeter.version>
 		<assertj-core.version>3.17.1</assertj-core.version>
+		<jackson.core.version>2.10.5</jackson.core.version>
 	</properties>
 
 	<dependencyManagement>
@@ -187,6 +188,11 @@
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${jackson.core.version}</version>
 			</dependency>
 		    <dependency>
 		        <groupId>com.fasterxml.jackson.core</groupId>
