@@ -193,7 +193,7 @@ public final class ScenarioUtils {
 	
 	private static int getMaxUsers(final CustomLoadPolicy loadPolicy) {
 		return loadPolicy.getSteps().stream()
-				.mapToInt(step -> step.getUsers())
+				.mapToInt(CustomPolicyStep::getUsers)
 				.max()
 				.getAsInt();
 	}
