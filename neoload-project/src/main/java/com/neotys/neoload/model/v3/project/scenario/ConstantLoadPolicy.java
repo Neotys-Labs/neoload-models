@@ -1,8 +1,8 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -37,7 +37,7 @@ public interface ConstantLoadPolicy extends LoadPolicy {
     }
 
     @Override
-    @Value.Default
+	@Value.Derived
     default LoadPolicyType getType() {
         return LoadPolicyType.CONSTANT;
     }
