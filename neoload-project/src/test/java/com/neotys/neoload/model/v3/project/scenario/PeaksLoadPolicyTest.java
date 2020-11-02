@@ -16,4 +16,11 @@ public class PeaksLoadPolicyTest {
 		assertEquals("start", PeaksLoadPolicy.START);
 		assertEquals("step_rampup", PeaksLoadPolicy.STEP_RAMPUP);
 	}
+	
+	@Test
+	public void check() {
+		PeaksLoadPolicy.builder()
+				.build()
+				.check();
+	}	
 }

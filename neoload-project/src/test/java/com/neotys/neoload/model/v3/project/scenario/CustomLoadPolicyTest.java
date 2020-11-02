@@ -10,4 +10,11 @@ public class CustomLoadPolicyTest {
         assertEquals("steps", CustomLoadPolicy.STEPS);
         assertEquals("rampup", CustomLoadPolicy.RAMPUP);
     }
+    
+	@Test
+	public void check() {
+		CustomLoadPolicy.builder()
+				.build()
+				.check();
+	}
 }

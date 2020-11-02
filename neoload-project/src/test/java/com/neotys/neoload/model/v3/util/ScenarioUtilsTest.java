@@ -317,4 +317,24 @@ public class ScenarioUtilsTest {
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS, ScenarioUtils.getSummaryFromPopulationPolicies(Arrays.asList(POPULATION_RAMPUP_MAX_USERS_AND_60_SECONDS)));
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS, ScenarioUtils.getSummaryFromPopulationPolicies(Arrays.asList(POPULATION_RAMPUP_MAX_USERS_AND_100_ITERATIONS)));
 	}
+	
+	@Test
+	public void getSummaryFromLoadSummaries() {
+		LoadSummary expecedLoadSummary = LoadSummary.builder()
+				.maxUsers(0)
+				.duration(LoadDuration.builder()
+						.type(Type.TIME)
+						.value(0)
+						.build())
+				.build();
+		assertEquals(expecedLoadSummary, ScenarioUtils.getSummaryFromLoadSummaries(Arrays.asList()));
+		
+		assertEquals(LOAD_SUMMARY_MAX_USERS, ScenarioUtils.getSummaryFromLoadSummaries(Arrays.asList(LOAD_SUMMARY_MAX_USERS)));
+		assertEquals(LoadSummary.builder().maxUsers(2 * MAX_USERS).build(), ScenarioUtils.getSummaryFromLoadSummaries(Arrays.asList(LOAD_SUMMARY_MAX_USERS, LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS)));
+		assertEquals(LoadSummary.builder().maxUsers(2 * MAX_USERS).build(), ScenarioUtils.getSummaryFromLoadSummaries(Arrays.asList(LOAD_SUMMARY_MAX_USERS, LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS)));
+		assertEquals(LoadSummary.builder().maxUsers(3 * MAX_USERS).build(), ScenarioUtils.getSummaryFromLoadSummaries(Arrays.asList(LOAD_SUMMARY_MAX_USERS, LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS, LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS)));
+		assertEquals(LoadSummary.builder().maxUsers(2 * MAX_USERS).build(), ScenarioUtils.getSummaryFromLoadSummaries(Arrays.asList(LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS, LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS)));
+		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS, ScenarioUtils.getSummaryFromLoadSummaries(Arrays.asList(LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS)));
+		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS, ScenarioUtils.getSummaryFromLoadSummaries(Arrays.asList(LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS)));
+	}
 }

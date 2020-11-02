@@ -17,4 +17,11 @@ public class RampupLoadPolicyTest {
 		assertEquals("increment_every", RampupLoadPolicy.INCREMENT_EVERY);
 		assertEquals("increment_rampup", RampupLoadPolicy.INCREMENT_RAMPUP);
 	}
+	
+	@Test
+	public void check() {
+		RampupLoadPolicy.builder()
+				.build()
+				.check();
+	}	
 }
