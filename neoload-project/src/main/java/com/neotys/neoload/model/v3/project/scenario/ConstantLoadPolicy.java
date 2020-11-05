@@ -37,7 +37,7 @@ public interface ConstantLoadPolicy extends LoadPolicy {
     }
 
     @Override
-	@Value.Derived
+	@Value.Default
     default LoadPolicyType getType() {
         return LoadPolicyType.CONSTANT;
     }

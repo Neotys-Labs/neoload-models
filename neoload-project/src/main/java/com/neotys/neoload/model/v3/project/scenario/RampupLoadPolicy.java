@@ -47,7 +47,7 @@ public interface RampupLoadPolicy extends LoadPolicy {
 	Integer getRampup();
 
 	@Override
-	@Value.Derived
+	@Value.Default
 	default LoadPolicyType getType() {
 		return LoadPolicyType.RAMPUP;
 	}
