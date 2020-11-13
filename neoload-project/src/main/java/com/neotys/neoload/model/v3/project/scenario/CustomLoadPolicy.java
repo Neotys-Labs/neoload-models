@@ -57,7 +57,7 @@ public interface CustomLoadPolicy extends LoadPolicy {
     }
 
     @Override
-    @Value.Default
+    @Value.Lazy
     default LoadPolicyType getType() {
         return LoadPolicyType.CUSTOM;
     }

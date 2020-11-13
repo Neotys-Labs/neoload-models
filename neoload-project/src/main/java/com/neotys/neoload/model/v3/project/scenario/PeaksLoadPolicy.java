@@ -54,7 +54,7 @@ public interface PeaksLoadPolicy extends LoadPolicy {
     }
 
     @Override
-    @Value.Default
+	@Value.Lazy
     default LoadPolicyType getType() {
         return LoadPolicyType.PEAKS;
     }
