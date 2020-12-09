@@ -1,0 +1,8 @@
+name: MyéèProject
+scenarios:
+- name: MyéèScenario
+  store_variables_for_raw_data: true
+  populations:
+  - name: MyéèPopulation
+    constant_load:
+      users: 500

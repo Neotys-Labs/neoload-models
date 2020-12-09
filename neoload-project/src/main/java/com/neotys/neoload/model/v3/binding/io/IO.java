@@ -6,6 +6,8 @@ import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.WRITE_
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -53,7 +55,11 @@ public final class IO {
 	}
 	
 	public ProjectDescriptor read(final File file) throws IOException {
-		return read(new String(Files.readAllBytes(Paths.get(file.toURI()))), getFormat(file), ProjectDescriptor.class);
+		return read(file, StandardCharsets.UTF_8);
+	}
+	
+	public ProjectDescriptor read(final File file, final Charset charset) throws IOException {
+		return read(new String(Files.readAllBytes(Paths.get(file.toURI())), charset), getFormat(file), ProjectDescriptor.class);
 	}
 	
 	public ProjectDescriptor read(final String content) throws IOException {
@@ -75,7 +81,8 @@ public final class IO {
 		// Gets the mapper from the format
 		final ObjectMapper mapper = getMapper(format);
 		// Deserialize
-		return mapper.writeValueAsString(value);
+		final byte[] bytes = mapper.writeValueAsBytes(value);
+		return new String(bytes, StandardCharsets.UTF_8);
 	}
 
 	protected Format getFormat(final File file) {

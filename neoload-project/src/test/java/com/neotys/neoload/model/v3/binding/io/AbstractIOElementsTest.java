@@ -8,6 +8,8 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -42,27 +44,23 @@ abstract class AbstractIOElementsTest {
 		final ProjectDescriptor actualDescriptor1 = mapper1.read(file);
 		validate(actualDescriptor1);	
 		assertEquals(expectedDescriptor.toString(), actualDescriptor1.toString());
-		
+	
 		final IO mapper2 = new IO();
-		final ProjectDescriptor actualDescriptor2 = mapper2.read(new String(Files.readAllBytes(Paths.get(file.toURI()))));
+		final ProjectDescriptor actualDescriptor2 = mapper2.read(file, StandardCharsets.UTF_8);
 		validate(actualDescriptor2);	
 		assertEquals(expectedDescriptor.toString(), actualDescriptor2.toString());
-		
+
 		final IO mapper3 = new IO();
-		final ProjectDescriptor actualDescriptor3 = mapper3.read(new String(Files.readAllBytes(Paths.get(file.toURI()))), ProjectDescriptor.class);
+		final ProjectDescriptor actualDescriptor3 = mapper3.read(getContent(file, StandardCharsets.UTF_8));
 		validate(actualDescriptor3);	
 		assertEquals(expectedDescriptor.toString(), actualDescriptor3.toString());
+		
+		final IO mapper4 = new IO();
+		final ProjectDescriptor actualDescriptor4 = mapper4.read(getContent(file, StandardCharsets.UTF_8), ProjectDescriptor.class);
+		validate(actualDescriptor4);	
+		assertEquals(expectedDescriptor.toString(), actualDescriptor4.toString());
 	}
-
-	private File getFile(final String fileName, final String extension) {
-		try {
-			final ClassLoader classLoader = getClass().getClassLoader();
-			return new File(Objects.requireNonNull(classLoader.getResource(fileName + "." + extension)).toURI());
-		} catch (URISyntaxException e) {
-			throw new RuntimeException("Fail to get uri of file " + fileName + extension, e);
-		}
-	}
-
+	
 	protected void write(final String fileName, final Project expectedProject) throws IOException {
 		assertNotNull(expectedProject);
 		
@@ -78,14 +76,27 @@ abstract class AbstractIOElementsTest {
 
 	private void write(final String fileName, final String extension, final ProjectDescriptor expectedDescriptor) throws IOException {
 		final File file = getFile(fileName, extension);
-		final String expectedContent = new String(Files.readAllBytes(Paths.get(file.toURI()))).replace("\r\n", "\n");
+		final String expectedContent = getContent(file, StandardCharsets.UTF_8).replace("\r\n", "\n");
 		
 		final IO mapper = new IO();
 		final String actualContent = mapper.write(expectedDescriptor, Format.valueOf(extension.toUpperCase()));
 		assertEquals(expectedContent, actualContent);	
 	}
 
-	private void validate(final ProjectDescriptor descriptor) {
+	protected File getFile(final String fileName, final String extension) {
+		try {
+			final ClassLoader classLoader = getClass().getClassLoader();
+			return new File(Objects.requireNonNull(classLoader.getResource(fileName + "." + extension)).toURI());
+		} catch (URISyntaxException e) {
+			throw new RuntimeException("Fail to get uri of file " + fileName + extension, e);
+		}
+	}
+
+	protected String getContent(final File file, final Charset charset) throws IOException {
+		return new String(Files.readAllBytes(Paths.get(file.toURI())), charset);
+	}
+
+	protected void validate(final ProjectDescriptor descriptor) {
 		final Validation validation = VALIDATOR.validate(descriptor, NeoLoad.class);
 		if (!validation.isValid()) {
 			fail(validation.getMessage().get());
