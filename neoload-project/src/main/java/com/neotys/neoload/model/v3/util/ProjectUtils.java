@@ -1,11 +1,11 @@
 package com.neotys.neoload.model.v3.util;
 
-import java.util.List;
-import java.util.Set;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Sets;
 import com.neotys.neoload.model.v3.project.Project;
+
+import java.util.List;
+import java.util.Set;
 
 public class ProjectUtils {
 
@@ -26,6 +26,6 @@ public class ProjectUtils {
 			return asCodeProjectNames.iterator().next();
 		}
 
-		throw new IllegalArgumentException("Project name must be defined in one as code file");
+		throw new IllegalArgumentException("Project name must be defined in one as-code file");
 	}
 }

@@ -48,9 +48,9 @@ This load policy generates a load with a fixed number of Virtual Users.
 | Name        | Description                                                  | Accept variable | Required | Since |
 |:----------- |:------------------------------------------------------------ |:---------------:|:--------:|:-----:|
 | users       | The fixed number of Virtual Users                            | -               | &#x2713; |       |
-| duration    | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
+| duration    | The duration of the load policy: unlimited, [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
 | start_after | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population. | - | - |  |
-| rampup      | Define how Virtual Users start: simultaneously or with a preset [delay](#human-readable-time-specifications). | - | - |  |
+| rampup      | Define how Virtual Users should be started: simultaneously or with a preset [delay](#human-readable-time-specifications). | - | - |  |
 | stop_after  | Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset [delay](#human-readable-time-specifications) to finish the current iteration or allow the population to end the current iteration for each Virtual User. | - | - |  |
 
 #### Example
@@ -76,11 +76,11 @@ This load policy generates a load with a number of Virtual Users that increases 
 | min_users        | The initial number of Virtual Users                         | -                 | &#x2713; |       |
 | max_users        | The maximum number of Virtual Users                         | -                 | -        |       |
 | increment_users  | The number of Virtual Users to increment                    | -                 | &#x2713; |       |
-| increment_every  | The duration to increment: [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
-| duration         | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
+| increment_every  | The incrementation frequency: [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
+| duration         | The duration of the load policy: unlimited, [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
 | start_after      | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population. | - | - |   |
 | increment_rampup | Define how Virtual Users start: simultaneously or with a preset [delay](#human-readable-time-specifications). This rule is used each time new Virtual Users are created, at each load increase for a ramp-up load policy. | - | - |  |
-| stop_after       | Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset [delay](#human-readable-time-specifications) to finish the current iteration or allow the population to end the current iteration for each Virtual User. | - | - |  |
+| stop_after       | Define how Virtual Users should be started: the population immediately stop the executing of the current iteration, give a preset [delay](#human-readable-time-specifications) to finish the current iteration or allow the population to end the current iteration for each Virtual User. | - | - |  |
 
 #### Example
 1 ramp-up load of 100 initial Virtual Users in incrementing 50 Virtual Users every iteration during 30 iterations and limited at 1500 maximum Virtual Users. The population starts after the end of the selected population. The Virtual Users start with 5 seconds. The population stops in waiting the executing of the current iteration.
@@ -108,9 +108,9 @@ This load policy generates a load with a fixed number of Virtual Users with peri
 | minimum     | The [phase](#available-settings-for-the-minimum-and-maximum-phases-are) of low load       | -               | &#x2713; |       |
 | maximum     | The [phase](#available-settings-for-the-minimum-and-maximum-phases-are) of high load      | -               | &#x2713; |       |
 | start       | Select the phase to start                                                                 | -               | &#x2713; |       |
-| duration    | The duration of the load policy: unlimited, [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
+| duration    | The duration of the load policy: unlimited, [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
 | start_after | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population. | - | - |  |
-| step_rampup | Define how Virtual Users start: simultaneously or with a preset [delay](#human-readable-time-specifications). This rule is used each time new Virtual Users are created, at each load peak for a peak load policy. | - | - |  |
+| step_rampup | Define how Virtual Users should be started: simultaneously or with a preset [delay](#human-readable-time-specifications). This rule is used each time new Virtual Users are created, at each load peak for a peak load policy. | - | - |  |
 | stop_after  | Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset [delay](#human-readable-time-specifications) to finish the current iteration or allow the population to end the current iteration for each Virtual User. | - | - |  |
 
 #### Available settings for the minimum and maximum phases are
@@ -118,7 +118,7 @@ This load policy generates a load with a fixed number of Virtual Users with peri
 | Name     | Description                                                  | Accept variable   | Required | Since |
 |:-------- |:------------------------------------------------------------ |:-----------------:|:--------:|:-----:|
 | users    | The fixed number of Virtual Users                            | -                 | &#x2713; |       |
-| duration | The duration of the phase: [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
+| duration | The duration of the phase: [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
 
 #### Example
 1 peaks load: a minimum load of 100 Virtual Users during 5 iterations and a maximum load of 500 Virtual Users during 3 iterations. The test starts with the minimum load. The duration of the test is 80 iterations. The population starts after the end of the selected population. The Virtual Users start with 15 seconds. The population stops in waiting the executing of the current iteration.
@@ -147,7 +147,7 @@ This load policy generates a load defined by custom steps
 | Name        | Description                                                  | Accept variable | Required | Since |
 |:----------- |:------------------------------------------------------------ |:---------------:|:--------:|:-----:|
 | start_after | Start policy for this population: at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of another selected population | - | - |  |
-| rampup      | Simultaneously or with a preset [delay](#human-readable-time-specifications).There are different behaviours depending on duration mode (unlimited, [time](#human-readable-time-specifications), [iterations](#human-readable-iteration-specifications)) - unlimited/[time](#human-readable-time-specifications): This rule is used each time Virtual Users count is updated - [iterations](#human-readable-iteration-specifications): This rule is used each time a new step starts| - | - |  |
+| rampup      | Simultaneously or with a preset [delay](#human-readable-time-specifications).There are different behaviours depending on duration mode (unlimited, [time length](#human-readable-time-specifications), [iterations](#human-readable-iteration-specifications)) - unlimited/[time length](#human-readable-time-specifications): This rule is used each time Virtual Users count is updated - [iterations](#human-readable-iteration-specifications): This rule is used each time a new step starts| - | - |  |
 | stop_after  | Stop policy for this population: immediate (the execution of current iteration is stopped), after a preset [delay](#human-readable-time-specifications) or the population is allowed to end current iteration for each Virtual User. | - | - |  |
 | steps       | [Steps](#custom-policy-step) to define the Virtual Users count for a specific period | - | &#x2713; | |
 
@@ -155,7 +155,7 @@ This load policy generates a load defined by custom steps
 
 | Name     | Description                                                  | Accept variable   | Required | Since |
 |:-------- |:------------------------------------------------------------ |:-----------------:|:--------:|:-----:|
-| when  | The moment when Virtual Users count will reach the specified number: [time](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
+| when  | The moment when Virtual Users count will reach the specified number: [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
 | users | The fixed number of Virtual Users at the specified moment | - | &#x2713; |  |
 
 The specified moment must have the same duration type as the others steps.

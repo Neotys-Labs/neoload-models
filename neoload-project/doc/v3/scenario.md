@@ -10,7 +10,7 @@ A scenario defines a test configuration. Select an existing SLA profile to verif
 | sla_profile                         | The name of the SLA profile to apply to the Scenario (will not be applied to children) | -               | -        |       |
 | store_variables_for_raw_data        | This option allows storing variables for raw data.</br> The default value is "false".  | -               | -        |  7.6  |
 | [monitoring](monitoring.md)         | The monitoring parameters                                                              | -               | -        |  7.6  |
-| [populations](population-policy.md) | The list of name of the existing populations                                           | -               | &#x2713; |       |
+| [populations](population-policy.md) | The list of runtime settings per population                                           | -               | &#x2713; |       |
 | [rendezvous_policies](rendezvous_policy.md) | The list of the Rendezvous                                                     | -               | -        |  7.6  |
 | excluded_urls                       | The regular expressions to ignore matching Requests from the scenario during the test playback | -       | -        |  7.6  |
 | [apm_configuration](apm_configuration.md) | The APM configuration for the monitoring with Dynatrace                          | -               | -        |  7.5  |
