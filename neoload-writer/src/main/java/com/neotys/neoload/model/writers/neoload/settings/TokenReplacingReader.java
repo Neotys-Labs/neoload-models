@@ -8,12 +8,13 @@ import java.util.Map;
 
 public class TokenReplacingReader extends Reader {
 
+	private static final String OPERATION_NOT_SUPPORTED = "Operation Not Supported";
+
 	private PushbackReader pushbackReader = null;
 	private Map<String,String> tokenResolver = null;
 	private StringBuilder tokenNameBuffer = new StringBuilder();
 	private String tokenValue = null;
 	private int tokenValueIndex = 0;
-	private static final String OPERATION_NOT_SUPPORTED = "Operation Not Supported";
 
 	public TokenReplacingReader(final Reader source, final Map<String,String> tokenResolver) {
 		this.pushbackReader = new PushbackReader(source, 2);

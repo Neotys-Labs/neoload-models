@@ -15,9 +15,10 @@ import java.util.function.BiFunction;
 
 public class SwitchControllerConverter implements BiFunction<SwitchController, HashTree, List<Step>> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwitchControllerConverter.class);
+
     //Attributs
     private final StepConverters converter;
-    private static final Logger LOGGER = LoggerFactory.getLogger(SwitchControllerConverter.class);
 
     //Constructor
     public SwitchControllerConverter(final StepConverters converters) {

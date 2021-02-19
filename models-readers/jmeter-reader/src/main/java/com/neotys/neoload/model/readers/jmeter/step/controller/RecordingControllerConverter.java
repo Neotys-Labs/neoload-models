@@ -18,10 +18,10 @@ import java.util.function.BiFunction;
  */
 public class RecordingControllerConverter implements BiFunction<RecordingController, HashTree, List<Step>> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RecordingControllerConverter.class);
+
     //Attributs
     private final StepConverters converter;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(RecordingControllerConverter.class);
 
     //Constructor
     public RecordingControllerConverter(final StepConverters stepConverters) {

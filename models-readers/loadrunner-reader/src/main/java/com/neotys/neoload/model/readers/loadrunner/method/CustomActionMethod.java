@@ -21,9 +21,9 @@ import com.neotys.neoload.model.repository.ImmutableCustomActionParameter;
 
 public class CustomActionMethod implements LoadRunnerMethod {
 
-	private final AtomicInteger counter = new AtomicInteger(0);
-	
 	private static final Set<String> IGNORED_PARAMETER_VALUE = ImmutableSet.of("LAST", "");
+
+	private final AtomicInteger counter = new AtomicInteger(0);
 	
 	public CustomActionMethod() {
 		super();

@@ -20,9 +20,10 @@ import java.util.function.BiFunction;
  */
 public class IfControllerConverter implements BiFunction<IfController, HashTree, List<Step>> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(IfControllerConverter.class);
+
     //Attributs
     private final StepConverters converter;
-    private static final Logger LOGGER = LoggerFactory.getLogger(IfControllerConverter.class);
 
     ///Constructor
     public IfControllerConverter(final StepConverters converters) {

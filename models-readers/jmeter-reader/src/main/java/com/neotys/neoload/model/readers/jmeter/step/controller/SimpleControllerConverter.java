@@ -18,9 +18,10 @@ import java.util.function.BiFunction;
  */
 public class SimpleControllerConverter implements BiFunction<GenericController, HashTree, List<Step>> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleControllerConverter.class);
+
     //Attributs
     private final StepConverters converter;
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleControllerConverter.class);
 
     //Constructor
     public SimpleControllerConverter(final StepConverters converters) {

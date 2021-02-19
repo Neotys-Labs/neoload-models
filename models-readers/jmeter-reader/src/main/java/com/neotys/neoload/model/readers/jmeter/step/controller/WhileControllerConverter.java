@@ -18,9 +18,10 @@ import java.util.function.BiFunction;
  */
 public class WhileControllerConverter implements BiFunction<WhileController, HashTree, List<Step>> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(WhileControllerConverter.class);
+
     //Attributes
     private final StepConverters converter;
-    private static final Logger LOGGER = LoggerFactory.getLogger(WhileControllerConverter.class);
 
     //Constructor
     public WhileControllerConverter(StepConverters converters) {

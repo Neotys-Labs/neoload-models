@@ -18,9 +18,10 @@ import java.util.function.BiFunction;
  */
 public class TransactionControllerConverter implements BiFunction<TransactionController, HashTree, List<Step>> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionControllerConverter.class);
+
     //Attributs
     private final StepConverters converter;
-    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionControllerConverter.class);
 
     //Constructor
     public TransactionControllerConverter(final StepConverters converters) {
