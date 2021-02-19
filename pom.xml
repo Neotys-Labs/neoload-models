@@ -93,10 +93,7 @@
 		<commons-lang3.version>3.4</commons-lang3.version>
 		<jsr305.version>3.0.1</jsr305.version>
 		<guava.version>24.1.1-jre</guava.version>
-		<jackson.databind.version>2.10.5</jackson.databind.version>
-		<jackson.dataformat.yaml.version>2.10.5</jackson.dataformat.yaml.version>
-		<jackson.datatype.guava.version>2.10.5</jackson.datatype.guava.version>
-		<jackson.datatype.jdk8.version>2.10.5</jackson.datatype.jdk8.version>
+		<jackson.version>2.11.4</jackson.version>
 		<antlr.version>4.7</antlr.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.classic.version>1.2.3</logback.classic.version>
@@ -197,22 +194,22 @@
 		    <dependency>
 		        <groupId>com.fasterxml.jackson.core</groupId>
 		        <artifactId>jackson-databind</artifactId>
-		        <version>${jackson.databind.version}</version>
+		        <version>${jackson.version}</version>
 		    </dependency>
 		    <dependency>
 		        <groupId>com.fasterxml.jackson.dataformat</groupId>
 		        <artifactId>jackson-dataformat-yaml</artifactId>
-		        <version>${jackson.dataformat.yaml.version}</version>
+		        <version>${jackson.version}</version>
 		    </dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-guava</artifactId>
-				<version>${jackson.datatype.guava.version}</version>
+				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-jdk8</artifactId>
-				<version>${jackson.datatype.jdk8.version}</version>
+				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.immutables</groupId>
