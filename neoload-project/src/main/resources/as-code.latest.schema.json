@@ -92,7 +92,13 @@
 				"$id":"#/definitions/common/text",
 				"title":"Text",
 				"type":"string",
-				"pattern":"^.*$"
+				"pattern":".+"
+			},
+			"textblob":{
+				"$id":"#/definitions/common/textblob",
+				"title":"Blob",
+				"type":"string",
+				"pattern":"((.|\n)*)"
 			},
 			"positive_number":{
 				"$id":"#/definitions/common/positive_number",
@@ -605,10 +611,19 @@
 						},
 						"headers": {
 							"type": "array",
-							"items": { "$ref": "#/definitions/common/text" }
+							"items": {
+								"type": "object",
+								"properties": {
+									"/": {}
+								},
+								"patternProperties": {
+									".*": { "type": "string" }
+								},
+								"additionalProperties": false
+							}
 						},
 						"sla_profile": { "$ref": "#/definitions/common/text" },
-						"body": { "$ref": "#/definitions/common/text" },
+						"body": { "$ref": "#/definitions/common/textblob" },
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
