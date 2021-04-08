@@ -16,6 +16,6 @@ interface StepDuration extends Step {
 	}
 
 	@RequiredCheck(groups = {NeoLoad.class})
-	@Pattern(regexp = "(\\d+|\\$\\{\\w+\\})", groups = {NeoLoad.class})
+	@Pattern(regexp = "(\\d+|\\$\\{\\w+\\})(-(\\d+|\\$\\{\\w+\\}))?", groups = {NeoLoad.class})
 	String getValue();
 }
