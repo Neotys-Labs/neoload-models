@@ -22,13 +22,14 @@ import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_DEFAULT)
-@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE, Request.DYNAMIC_RESOURCES})
 @JsonSerialize(as = ImmutableRequest.class)
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Request extends Step, SlaElement, AssertionsElement {
 	String NAME = "name";
+	String DYNAMIC_RESOURCES = "dynamicResources";
 	String URL = "url";
 	String SERVER = "server";
 	String METHOD = "method";
@@ -64,6 +65,12 @@ public interface Request extends Step, SlaElement, AssertionsElement {
 			}    		
     	}
     }
+
+    @JsonProperty(DYNAMIC_RESOURCES)
+	@Value.Default
+	default boolean isDynamic(){
+    	return false;
+	}
 
     @JsonProperty(NAME)
     @RequiredCheck(groups={NeoLoad.class})

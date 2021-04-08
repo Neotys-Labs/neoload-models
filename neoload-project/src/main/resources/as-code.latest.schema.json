@@ -558,7 +558,8 @@
 								"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
 								"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
 								"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
-								"if": { "$ref": "#/definitions/user_paths/actions/if" }
+								"if": { "$ref": "#/definitions/user_paths/actions/if" },
+								"page": { "$ref": "#/definitions/user_paths/actions/page" },
 							},
 							"additionalProperties": false
 						}
@@ -622,6 +623,7 @@
 								"additionalProperties": false
 							}
 						},
+						"dynamic": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
 						"extractors": {
@@ -677,6 +679,18 @@
 						},
 						"then": { "$ref": "#/definitions/user_paths/container" },
 						"else": { "$ref": "#/definitions/user_paths/container" }
+					}
+				},
+				"page": {
+					"$id":"#/definitions/user_paths/actions/page",
+					"title":"Action: Page",
+					"type": "object",
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"isDynamic": { "$ref": "#/definitions/common/text" },
+						"isSequential": { "$ref": "#/definitions/common/text" },
+						"thinkTime": { "$ref": "#/definitions/common/text" }
 					}
 				}
 
