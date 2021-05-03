@@ -1,7 +1,7 @@
 
 	<!DOCTYPE settings [
 	
-		<!ELEMENT settings (configuration?, clientCertificatesSettings?, pageNamingSettings?, jsPolicySettings?, errorHandleSettings?, globalAssertionSettings?, caApmSettings?, dynaTraceSettings?, appDynamicsSettings?, nudgeSettings?, amfSettings?, ofSettings?, performanceSettings?, statisticsSettings?, wsSecuritySettings?, media-streaming-settings?, plugin-identification-settings*, team-server-settings?, restApisSettings?, exportNeoSenseSettings?)>
+		<!ELEMENT settings (configuration?, clientCertificatesSettings?, pageNamingSettings?, jsPolicySettings?, errorHandleSettings?, globalAssertionSettings?, caApmSettings?, dynaTraceSettings?, appDynamicsSettings?, nudgeSettings?, qTestSettings?, amfSettings?, ofSettings?, performanceSettings?, statisticsSettings?, wsSecuritySettings?, media-streaming-settings?, plugin-identification-settings*, team-server-settings?, restApisSettings?, exportNeoSenseSettings?)>
 		
 	    <!ELEMENT configuration (#PCDATA)>
 	
@@ -190,6 +190,18 @@
 			containerNamesEnabled CDATA #IMPLIED
 			logicalActionNamesEnabled CDATA #REQUIRED>
 
+		<!ELEMENT qTestSettings (#PCDATA)>
+
+		<!ATTLIST qTestSettings
+				enable CDATA #REQUIRED
+				url CDATA #IMPLIED
+				token CDATA #IMPLIED
+				username CDATA #IMPLIED
+				password CDATA #IMPLIED
+				authMethod CDATA #IMPLIED
+				projectId CDATA #IMPLIED
+				contextTreePathIds CDATA #IMPLIED>
+
 		<!ELEMENT amfSettings (#PCDATA)>
 		
 		<!ATTLIST amfSettings
@@ -265,6 +277,7 @@
 <dynaTraceSettings dynaTraceEnabled="@dynatrace.enabled@" logicalNamesEnabled="@dynatrace.logicalnames.enabled@" url="@dynatrace.url@" token="@dynatrace.token@"/>
 <appDynamicsSettings appDynamicsEnabled="@appdynamics.enabled@" containerNamesEnabled="false" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
 <nudgeSettings containerNamesEnabled="false" enabled="@nudge.enabled@" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
+<qTestSettings authMethod="@qtest.auth_method@" contextTreePathIds="@qtest.cycle_id@" enable="@qtest.enabled@" password="@qtest.password@" projectId="@qtest.project_id@" token="@qtest.token@" url="@qtest.url@" username="@qtest.username@"/>
 <amfSettings amfGDSLocale110GA="false" amfServer="1"/>
 <ofSettings isHandlerIdAutomaticManagementEnabled="true" isHandlerIdCleanedAtRecord="true" isHandlerIdErrorReportingEnabled="true"/>
 <performanceSettings optimizationReferrerOnly="false"/>

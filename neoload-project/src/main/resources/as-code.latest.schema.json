@@ -82,7 +82,15 @@
 		"properties": {
 			"dynatrace.enabled": { "type": "boolean" },
 			"dynatrace.url": { "$ref": "#/definitions/common/text" },
-			"dynatrace.token": { "$ref": "#/definitions/common/text" }
+			"dynatrace.token": { "$ref": "#/definitions/common/text" },
+			"qtest.enabled": { "type": "boolean" },
+			"qtest.url": { "$ref": "#/definitions/common/text" },
+			"qtest.token": { "$ref": "#/definitions/common/text" },
+			"qtest.username": { "$ref": "#/definitions/common/text" },
+			"qtest.password": { "$ref": "#/definitions/common/text" },
+			"qtest.auth_method": { "type": "string", "enum": ["TOKEN", "LOGIN_PWD"]  },
+			"qtest.project_id": { "type": "integer" },
+			"qtest.cycle_id": { "type": "integer" }
 		}
 	  }
 	},
