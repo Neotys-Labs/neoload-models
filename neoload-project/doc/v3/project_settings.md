@@ -15,7 +15,7 @@ Some preferences of the project can be overwritten.
 | qtest.password                          | The password to log into qTest as clear text or encrypted by Neoload                              | -               | -        | 7.10   |
 | qtest.auth_method                       | The way to authenticate to the qTest server. Allowed values are "TOKEN" and "LOGIN_PWD"           | -               | -        | 7.10   |
 | qtest.project_id                        | The qTest unique identifier of the qTest project in which the result will be transferred          | -               | -        | 7.10   |
-| qtest.cycle_id                          | The qTest unique identifier of the release or the cycle in which the result will be transferred   | -               | -        | 7.10   |
+| qtest.cycle_id                          | The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier.  | -               | -        | 7.10   |
 
 #### Example
 - Enable Dynatrace integration monitoring. It is possible, for example, to quickly activate Dynatrace monitoring for the pre-production server.
