@@ -16,6 +16,7 @@ Some preferences of the project can be overwritten.
 | qtest.auth_method                       | The way to authenticate to the qTest server. Allowed values are "TOKEN" and "LOGIN_PWD"           | -               | -        | 7.10   |
 | qtest.project_id                        | The qTest unique identifier of the qTest project in which the result will be transferred          | -               | -        | 7.10   |
 | qtest.cycle_id                          | The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier.  | -               | -        | 7.10   |
+| qtest.create_defects                    | Enable automatic creation of Defects on failed and warning SLAs                                   | -               | -        | 7.11   |
 
 #### Example
 - Enable Dynatrace integration monitoring. It is possible, for example, to quickly activate Dynatrace monitoring for the pre-production server.
@@ -32,4 +33,5 @@ project_settings:
   qtest.auth_method: TOKEN
   qtest.project_id: 101762
   qtest.cycle_id: 3761630
+  qtest.create_defects: false
 ```
