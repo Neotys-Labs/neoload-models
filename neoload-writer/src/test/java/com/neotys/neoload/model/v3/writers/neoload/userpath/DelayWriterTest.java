@@ -2,6 +2,7 @@ package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,5 +29,21 @@ public class DelayWriterTest {
 
         XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
     }
+
+	@Test
+	public void writeDelayIntervalXmlTest() throws ParserConfigurationException {
+		final Document doc = WrittingTestUtils.generateEmptyDocument();
+		final Element root = WrittingTestUtils.generateTestRootElement(doc);
+		final Delay delay = new Delay.Builder().name("myDelay").value("1000-2000").description("myDescription").build();
+		final String expectedResult =
+				"<test-root>" +
+						"<delay-action isThinkTime=\"false\" name=\"myDelay\" timeMode=\"MODE_RANGE_THINK_TIME\" timeRangeEnd=\"2000\" timeRangeStart=\"1000\" uid=\""+ WriterUtils.getElementUid(delay)+"\">" +
+						"<description>myDescription</description>" +
+						"</delay-action>" +
+						"</test-root>";
+		DelayWriter.of(delay).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
 
 }
