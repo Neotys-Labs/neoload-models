@@ -4,13 +4,12 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
+import com.neotys.neoload.model.v3.project.userpath.*;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.google.common.net.MediaType;
-import com.neotys.neoload.model.v3.project.userpath.Part;
-import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 import com.neotys.neoload.model.v3.util.Parameter;
 import com.neotys.neoload.model.v3.util.RequestUtils;
@@ -49,8 +48,19 @@ public class RequestWriter extends ElementWriter {
 
 	@Override
 	public void writeXML(final Document document, final Element currentElement, final String outputFolder) {
-		final Element xmlRequest = document.createElement(XML_TAG_NAME);
 		final Request theRequest = (Request) this.element;
+		if (theRequest.isDynamic()){
+			final URL url = RequestUtils.parseUrl(Optional.ofNullable(theRequest.getUrl()).orElse("/"));
+			final Request requestUnDynamic = ImmutableRequest.copyOf(theRequest).withIsDynamic(false);
+			final ImmutablePage pageDynamic = ImmutablePage.builder()
+					.addChildren(requestUnDynamic)
+					.name(url.getPath())
+					.isDynamic(true)
+					.build();
+			PageWriter.of(pageDynamic).writeXML(document,currentElement,outputFolder);
+			return;
+		}
+		final Element xmlRequest = document.createElement(XML_TAG_NAME);
 		super.writeXML(document, xmlRequest, outputFolder);
 		fillXML(document, xmlRequest, theRequest);
 		SlaElementWriter.of(theRequest).writeXML(xmlRequest);
