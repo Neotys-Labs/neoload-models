@@ -9,6 +9,8 @@ An SLA profile is a collection of [KPI thresholds](sla-thresholds.md). SLA profi
 * [Request](request.md)
 * [Scenario](scenario.md)
 
+:warning: If the project already have an SLA profile with the same name from NeoLoad, the whole SLA profile will be __replaced__ by the as-code one.
+
 #### Available settings
 
 | Name                            | Description                                                  | Accept variable | Required           | Since |

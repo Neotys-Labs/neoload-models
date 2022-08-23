@@ -1,6 +1,8 @@
 # Population
 A Population is a group of Virtual Users.
 
+:warning: If the project already have a Population with the same name from NeoLoad, the whole Population will be __replaced__ by the as-code one.
+
 #### Available settings are:
 
 | Name                                  | Description                          | Accept variable  | Required | Since |

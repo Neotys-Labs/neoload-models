@@ -1,6 +1,8 @@
 # Server
 The server settings are centralized, which means the target server for the test can be quickly changed. It is possible, for example, to quickly switch from the development to the pre-production server.
 
+:warning: If the project already have a server with the same name from NeoLoad, the whole server will be __replaced__ by the as-code one.
+
 #### Available settings
 
 | Name                                                  | Description                                                                                         | Accept variable | Required | Since |

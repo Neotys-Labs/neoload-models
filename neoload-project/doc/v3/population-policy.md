@@ -2,6 +2,10 @@
 A population is a group of Virtual User types. Select an existing population to test and defines its load policy.
 The simulated load from a population is determined by a duration and a number of Virtual Users.
 
+:warning: If the project already have a Scenario that define with the same name from NeoLoad, the whole Population will be __replaced__ by the as-code one.
+
+:warning: When using the [NeoLoad CLI run command](https://github.com/Neotys-Labs/neoload-cli#run-a-test), make sure to add the --scenario option if you don't want to use the NeoLoad Web Custom scenario (10 VUs 5 minutes).
+
 #### Available settings
 
 | Name          | Description                                                  | Accept variable   | Required | Since |
@@ -45,12 +49,12 @@ populations:
 
 This load policy generates a load with a fixed number of Virtual Users. 
 
-| Name        | Description                                                  | Accept variable | Required | Since |
-|:----------- |:------------------------------------------------------------ |:---------------:|:--------:|:-----:|
-| users       | The fixed number of Virtual Users                            | -               | &#x2713; |       |
-| duration    | The duration of the load policy: unlimited, [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
-| start_after | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population. | - | - |  |
-| rampup      | Define how Virtual Users should be started: simultaneously or with a preset [delay](#human-readable-time-specifications). | - | - |  |
+| Name        | Description                                                                                                                                                                                                                                                                          | Accept variable | Required | Since |
+|:----------- |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|:--------:|:-----:|
+| users       | The fixed number of Virtual Users                                                                                                                                                                                                                                                    | -               | &#x2713; |       |
+| duration    | The duration of the load policy: unlimited (the default value), [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications).                                                                                              | - | - |  |
+| start_after | Define how the population is started: the population starts at the start of the test, after a preset [delay](#human-readable-time-specifications) or after the end of the selected population.                                                                                       | - | - |  |
+| rampup      | Define how Virtual Users should be started: simultaneously or with a preset [delay](#human-readable-time-specifications).                                                                                                                                                            | - | - |  |
 | stop_after  | Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset [delay](#human-readable-time-specifications) to finish the current iteration or allow the population to end the current iteration for each Virtual User. | - | - |  |
 
 #### Example

@@ -1,6 +1,9 @@
 # Scenario
 A scenario defines a test configuration. Select an existing SLA profile to verify and a list of existing populations to test from NeoLoad project. Define a load policy for each population.
 
+:warning: If the project already have a Scenario with the same name defined from NeoLoad, the whole scenario will be __replaced__ by the as-code one.
+Consequently, you cannot override only the populations, the apm_configuration, the duration or the load policy. You __must__ define the whole scenario in as-code.
+
 #### Available settings
 
 | Name                                | Description                                                                            | Accept variable | Required | Since |
@@ -33,6 +36,7 @@ scenarios:
   - name: MyPopulation
     constant_load:
       users: 500
+      duration: 5m
   rendezvous_policies:
   - name: rendezvous
     when: 50%

@@ -1,5 +1,6 @@
 # Project settings
-Some preferences of the project can be overwritten.
+Some preferences of the project can be overwritten. Each of these properties can be overwritten one by one,
+the other properties will keep the value defined from NeoLoad.
 
 #### Available settings
 
@@ -34,4 +35,11 @@ project_settings:
   qtest.project_id: 101762
   qtest.cycle_id: 3761630
   qtest.create_defects: false
+```
+
+#### Other Example
+This configuration will override the Dynatrace token but keep the URL and enabled defined in the project from NeoLoad.
+```yaml
+project_settings:
+  dynatrace.token: xxxxxxxxxx
 ```

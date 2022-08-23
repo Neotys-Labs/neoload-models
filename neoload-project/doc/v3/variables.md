@@ -1,8 +1,10 @@
 # Variables
 Variables are used to add dynamic content to a scenario.
 
-They may be combined with other variables or with static content (e.g. ${product_${productID}}) and used in a number of places, such as in form parameter values.
+They may be combined with other variables or with static content (e.g. `${product_${productID}}`) and used in a number of places, such as in form parameter values.
 
+:warning: If the project already have a variable with the same name from NeoLoad, the variable will be __replaced__ by the as-code one.
+Variables that does not exist in the project will be added.
 
 #### Example
 Defining 5 variables: a Constant variable, a File variable, a Counter variable, a RandomNumber variable and a JavaScript variable.

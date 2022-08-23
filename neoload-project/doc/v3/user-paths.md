@@ -3,6 +3,8 @@ A User Path simulates the browsing activity of a real visitor.
 
 The User Path is a succession of web pages that may contain logical Actions such as Containers, Loops or Delays to create a more complex behavior.
 
+:warning: If the project already have a User Path with the same name from NeoLoad, the whole User Path will be __replaced__ by the as-code one.
+
 #### Available settings
 
 | Name                                | Description                                                                                                                                                | Accept variable | Required           | Since |
