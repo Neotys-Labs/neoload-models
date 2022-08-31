@@ -7,3 +7,5 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 - [think_time](think_time.md)
 - [javascript](javascript.md)
 - [if](if.md)
+- [loop](loop.md)
+- [while](while.md)
