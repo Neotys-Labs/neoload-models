@@ -4,6 +4,7 @@ import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.MINIMI
 import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.USE_NATIVE_TYPE_ID;
 import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.WRITE_DOC_START_MARKER;
 
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -21,6 +22,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.base.Strings;
+import org.yaml.snakeyaml.LoaderOptions;
 
 
 public final class IO {
@@ -144,7 +146,7 @@ public final class IO {
 	
 	private static ObjectMapper newYamlMapper() {
 		// Configures Yaml Factory
-		final YAMLFactory yamlFactory = new YAMLFactory();
+		final YAMLFactory yamlFactory = new YAMLFactoryBuilder(new YAMLFactory()).loaderOptions(new LoaderOptions()).build();
 		yamlFactory.configure(WRITE_DOC_START_MARKER, false);
 		yamlFactory.configure(USE_NATIVE_TYPE_ID, false);
 		yamlFactory.configure(MINIMIZE_QUOTES, true);

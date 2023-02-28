@@ -94,8 +94,7 @@
 		<commons-lang3.version>3.4</commons-lang3.version>
 		<jsr305.version>3.0.1</jsr305.version>
 		<guava.version>30.1.1-jre</guava.version>
-		<jackson.version>2.13.4</jackson.version>
-		<jackson-databind.version>2.13.4.1</jackson-databind.version>
+		<jackson.version>2.14.2</jackson.version>
 		<antlr.version>4.7</antlr.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<logback.classic.version>1.2.3</logback.classic.version>
@@ -188,6 +187,11 @@
 				<version>${guava.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>2.0</version>
+			</dependency>
+			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
 				<version>${jackson.version}</version>
@@ -195,7 +199,7 @@
 		    <dependency>
 		        <groupId>com.fasterxml.jackson.core</groupId>
 		        <artifactId>jackson-databind</artifactId>
-		        <version>${jackson-databind.version}</version>
+		        <version>${jackson.version}</version>
 		    </dependency>
 		    <dependency>
 		        <groupId>com.fasterxml.jackson.dataformat</groupId>
