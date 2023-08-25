@@ -20,8 +20,8 @@ Operator value can be: <ul><li>`equals`</li><li>`==`</li><li>`not_equals`</li><l
 #### Example
 Execute a request while all of the following conditions evaluate to true.
 ```yaml
-actions:
-  steps:
+  actions:
+    steps:
     - while:
         name: My While
         description: My description
@@ -30,15 +30,15 @@ actions:
         - "'${variable2}' equals '2'"
         - "'${variable3}' == 'string with space'"
         - "'${variable4}' != stringwithoutspace"
-        - "'${variable5}' not_exist"
-        - "'${variable6}' exist"
+        - "'variable5' not_exists"
+        - "'variable6' exists"
         - "'${variable7}' == ''"
         - "'${variable8}' equals \"value'with'simple'quote\""
         - "'${variable9}' equals 'value\"with\"double\"quote'"
-        - "'${variable10}' equals 'value\\'with"simple\\'and"double\\'quote'"
+        - "'${variable10}' equals 'value\\'with\"simple\\'and\"double\\'quote'"
         - "'' == ''"
         match: all
         steps:
         - request:
-          url: http://www.neotys.com/
+          url: https://www.tricentis.com/
 ```

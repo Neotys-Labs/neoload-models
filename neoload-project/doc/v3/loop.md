@@ -14,13 +14,13 @@ A repetition structure which executes steps sequentially a specific number of ti
 #### Example
 Execute a request three times.
 ```yaml
-actions:
-  steps:
+  actions:
+    steps:
     - loop:
         name: My Loop
         description: My description
         count: 3
         steps:
         - request:
-          url: http://www.neotys.com/
+          url: https://www.tricentis.com/
 ```
