@@ -27,5 +27,19 @@ public class ThinktimeWriterTest {
 		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
     }
 
+	@Test
+	public void writeThinktimeIntervalXmlTest() throws ParserConfigurationException {
+		final Document doc = WrittingTestUtils.generateEmptyDocument();
+		final Element root = WrittingTestUtils.generateTestRootElement(doc);
+		final ThinkTime thinktime = new ThinkTime.Builder().name("myThinktime").value("1000-2000").description("myDescription").build();
+		final String expectedResult =
+			"<test-root>" +
+				"<delay-action isThinkTime=\"true\" name=\"myThinktime\" timeMode=\"MODE_RANGE_THINK_TIME\" timeRangeEnd=\"2000\" timeRangeStart=\"1000\" uid=\""+ WriterUtils.getElementUid(thinktime)+"\">" +
+					"<description>myDescription</description>" +
+				"</delay-action>" +
+			"</test-root>";
+		ThinkTimeWriter.of(thinktime).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
 
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
 }

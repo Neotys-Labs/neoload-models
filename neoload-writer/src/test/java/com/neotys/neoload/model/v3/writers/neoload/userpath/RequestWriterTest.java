@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.writers.neoload.userpath;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.project.userpath.Header;
+import com.neotys.neoload.model.v3.project.userpath.Page;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
@@ -14,6 +15,12 @@ import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RequestWriterTest {
 	
@@ -248,58 +255,41 @@ public class RequestWriterTest {
         XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
     }
 
-	/*@Test
-    public void writePostSubmitFormRequestTest() throws ParserConfigurationException {
-    	final Document doc = WrittingTestUtils.generateEmptyDocument();
-    	final Element root = WrittingTestUtils.generateTestRootElement(doc);
-    	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-    			+ "<test-root><http-action actionType=\"4\" "
-    			+ "confFormExtractorParameters=\"firstname,lastname,email,address,sex\" "
-    			+ "extractorPath=\"POST_SUBMIT_FORM_REQUEST_TEST\" extractorServerUid=\"jack\" "
-    			+ "linkExtractorType=\"6\" method=\"POST\" name=\"POST_SUBMIT_FORM_REQUEST_TEST\" postType=\"1\" "
-    			//+ "refererUid=\"" + WriterUtils.getElementUid(WrittingTestUtils.GET_FOLLOW_LINK_REQUEST_TEST)+ "\" "
-    			+ "serverUid=\"jack\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.POST_SUBMIT_FORM_REQUEST_TEST)+ "\"><parameter name=\"firstname\" "
-    			+ "separator=\"=\" value=\"a\"/><parameter name=\"lastname\" separator=\"=\" value=\"b\"/><parameter name=\"email\" "
-    			+ "separator=\"=\" value=\"c@d.fr\"/><parameter name=\"address\" separator=\"=\" value=\"e\"/><parameter name=\"sex\" "
-    			+ "separator=\"=\" value=\"Male\"/><record-html-infos extractorOccurence=\"1\" extractorRegExp=\"false\" "
-    			+ "htmlType=\"2\"/><extractor-html-infos extractorOccurence=\"1\" extractorRegExp=\"false\" "
-    			+ "htmlType=\"2\"/></http-action></test-root>";
-    	
-    	(new RequestWriter(WrittingTestUtils.POST_SUBMIT_FORM_REQUEST_TEST)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
-    	
-    	XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
-    }
 
-	@Test
-	public void writeRequestWithRecordedFiles() throws ParserConfigurationException, TransformerException, IOException {
+    @Test
+	public void writeDynamicRequest() throws ParserConfigurationException {
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
 
-		final String outputFolder = Files.createTempDir().getAbsolutePath();
-		final Path recordedRequestsFolderPath = Paths.get(outputFolder, RECORDED_REQUESTS_FOLDER);
-		if (!recordedRequestsFolderPath.toFile().exists()) {
-			createDirectory(recordedRequestsFolderPath);
-		}
+		Request request = Request.builder()
+				.name("request_test")
+				.url("/test_path?param_name=param_value")
+				.server("server_test")
+				.method("GET")
+				.isDynamic(true)
+				.addHeaders(Header.builder().name("Content-Type").value("Text/Html").build())
+				.build();
 
-		final Path recordedResponsesFolderPath = Paths.get(outputFolder, RECORDED_RESPONSE_FOLDER);
-		if (!recordedResponsesFolderPath.toFile().exists()) {
-			createDirectory(recordedResponsesFolderPath);
-		}
+		new RequestWriter(request).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
 
-		final Document doc = WrittingTestUtils.generateEmptyDocument();
-		final Element root = WrittingTestUtils.generateTestRootElement(doc);
+		final Set<Map.Entry<com.neotys.neoload.model.v3.project.Element, String>> generatedUids = WriterUtils.getGeneratedUids();
+		assertEquals(2,generatedUids.size());
+		final Optional<String> pageId = generatedUids.stream().filter(c -> c.getKey() instanceof Page).map(Map.Entry::getValue).findAny();
+		final Optional<String> requestId = generatedUids.stream().filter(c -> c.getKey() instanceof Request).map(Map.Entry::getValue).findAny();
+		assertTrue(pageId.isPresent());
+		assertTrue(requestId.isPresent());
+		String expectedResult =
+				"<test-root>" +
+					"<http-page executeResourcesDynamically=\"true\" name=\"/test_path\" slaProfileEnabled=\"false\" uid=\""+pageId.get()+"\">" +
+						"<embedded-action>"+requestId.get()+"</embedded-action>" +
+					"</http-page>" +
+					"<http-action actionType=\"1\" contentType=\"Text/Html\" followRedirects=\"false\" method=\"GET\" name=\"request_test\" path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" uid=\""+requestId.get()+"\"><parameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>" +
+						"<header name=\"Content-Type\" value=\"Text/Html\"/>" +
+					"</http-action>" +
+				"</test-root>" ;
 
-		(new RequestWriter(WrittingTestUtils.GET_REQUEST_WITH_RECORDED_FILES)).writeXML(doc, root, outputFolder);
 
-		String generatedResult = WrittingTestUtils.getXmlString(doc);
-		Assertions.assertThat(generatedResult)
-				.contains("<requestContentFileDescription>recorded-requests/req_requestBody")
-				.contains("<responseHeaders>HTTP/1.1 200 OK" + System.lineSeparator() +
-						"Date: Thu, 11 Feb 2015 13:23:40 GMT" + System.lineSeparator() +
-						"X-AspNet-Version: 2.0.50727" + System.lineSeparator() +
-						"Cache-Control: private, max-age=0" + System.lineSeparator() +
-						"Content-Type: application/json; charset=utf-8" + System.lineSeparator() +
-						"Content-Length: 150" + System.lineSeparator() + System.lineSeparator() +
-						"</responseHeaders>")
-				.contains("<responsePageFileDescription>recorded-responses/res_responseBody_");
-	}*/
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
 
 }

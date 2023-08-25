@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.neotys.neoload.model.v3.project.Element;
 import org.apache.commons.collections4.map.LazyMap;
 import org.slf4j.Logger;
@@ -7,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class WriterUtils {
 	
@@ -77,5 +75,10 @@ public class WriterUtils {
 
 	public static String extractVariableName(final String value) {
 		return value.substring(NL_VARIABLE_START.length(), value.length()-NL_VARIABLE_END.length());
+	}
+
+	@VisibleForTesting
+	public static Set<Map.Entry<Element, String>> getGeneratedUids(){
+    	return elementUids.entrySet();
 	}
 }
