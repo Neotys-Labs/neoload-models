@@ -2,19 +2,11 @@ package com.neotys.neoload.model.v3.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.primitives.Doubles;
+import com.neotys.neoload.model.v3.project.scenario.*;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration.Type;
 import java.util.List;
 import java.util.Optional;
-
-import com.google.common.primitives.Doubles;
-import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
-import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
-import com.neotys.neoload.model.v3.project.scenario.LoadDuration.Type;
-import com.neotys.neoload.model.v3.project.scenario.LoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
-import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
 
 public final class ScenarioUtils {
 	private static final int UNDETERMINED_MAX_VUS = -1;
@@ -167,6 +159,16 @@ public final class ScenarioUtils {
 			maxDuration = loadPolicy.getDuration();
 		} else if (loadPolicy instanceof CustomLoadPolicy) {
 			maxDuration = getDuration((CustomLoadPolicy)loadPolicy);
+		}
+		if (maxDuration != null && maxDuration.getType().equals(Type.TIME)) {
+			Integer additionalDuration = 0;
+			if (loadPolicy.getStartAfter() != null && StartAfter.Type.TIME.equals(loadPolicy.getStartAfter().getType())) {
+				additionalDuration += (Integer) loadPolicy.getStartAfter().getValue();
+			}
+			if (loadPolicy.getStopAfter() != null && StopAfter.Type.TIME.equals(loadPolicy.getStopAfter().getType())) {
+				additionalDuration += (Integer) loadPolicy.getStopAfter().getValue();
+			}
+			maxDuration = LoadDuration.builder().type(Type.TIME).value(maxDuration.getValue() + additionalDuration).build();
 		}
 		return maxDuration;
 	}

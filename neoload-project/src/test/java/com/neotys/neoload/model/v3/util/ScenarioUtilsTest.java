@@ -2,19 +2,10 @@ package com.neotys.neoload.model.v3.util;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
-import org.junit.Test;
-
-import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
-import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.*;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration.Type;
-import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
-import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
-import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import java.util.Arrays;
+import org.junit.Test;
 
 public class ScenarioUtilsTest {
 	// Users
@@ -29,6 +20,10 @@ public class ScenarioUtilsTest {
 	private static final LoadDuration DURATION_60_SECONDS = LoadDuration.builder()
 			.type(Type.TIME)
 			.value(60)
+			.build();
+	private static final LoadDuration DURATION_120_SECONDS = LoadDuration.builder()
+			.type(Type.TIME)
+			.value(120)
 			.build();
 	private static final LoadDuration DURATION_50_ITERATIONS = LoadDuration.builder()
 			.type(Type.ITERATION)
@@ -52,6 +47,15 @@ public class ScenarioUtilsTest {
 			.loadPolicy(ConstantLoadPolicy.builder()
 					.users(MAX_USERS)
 					.duration(DURATION_60_SECONDS)
+					.build())
+			.build();
+	private static final PopulationPolicy POPULATION_CONSTANT_MAX_USERS_WITH_START_STOP_120_SECONDS_TOTAL = PopulationPolicy.builder()
+			.name("MyPopulation")
+			.loadPolicy(ConstantLoadPolicy.builder()
+					.users(MAX_USERS)
+					.duration(DURATION_60_SECONDS)
+					.startAfter(StartAfter.builder().type(StartAfter.Type.TIME).value(30).build())
+					.stopAfter(StopAfter.builder().type(StopAfter.Type.TIME).value(30).build())
 					.build())
 			.build();
 	private static final PopulationPolicy POPULATION_CONSTANT_MAX_USERS_AND_100_ITERATIONS = PopulationPolicy.builder()
@@ -83,6 +87,21 @@ public class ScenarioUtilsTest {
 							.users(MAX_USERS)
 							.build())
 					.duration(DURATION_60_SECONDS)
+					.build())
+			.build();
+
+	private static final PopulationPolicy POPULATION_PEAKS_MAX_USERS_WITH_START_STOP_120_SECONDS_TOTAL = PopulationPolicy.builder()
+			.name("MyPopulation")
+			.loadPolicy(PeaksLoadPolicy.builder()
+					.minimum(PeakLoadPolicy.builder()
+							.users(MIN_USERS)
+							.build())
+					.maximum(PeakLoadPolicy.builder()
+							.users(MAX_USERS)
+							.build())
+					.duration(DURATION_60_SECONDS)
+					.startAfter(StartAfter.builder().type(StartAfter.Type.TIME).value(30).build())
+					.stopAfter(StopAfter.builder().type(StopAfter.Type.TIME).value(30).build())
 					.build())
 			.build();
 	private static final PopulationPolicy POPULATION_PEAKS_MAX_USERS_AND_100_ITERATIONS = PopulationPolicy.builder()
@@ -158,6 +177,22 @@ public class ScenarioUtilsTest {
 					.duration(DURATION_60_SECONDS)
 					.build())
 			.build();
+
+	private static final PopulationPolicy POPULATION_RAMPUP_MAX_USERS_WITH_START_STOP_120_SECONDS_TOTAL = PopulationPolicy.builder()
+			.name("MyPopulation")
+			.loadPolicy(RampupLoadPolicy.builder()
+					.minUsers(MIN_USERS)
+					.incrementEvery(LoadDuration.builder()
+							.type(Type.TIME)
+							.value(1)
+							.build())
+					.incrementUsers(1)
+					.maxUsers(MAX_USERS)
+					.duration(DURATION_60_SECONDS)
+					.startAfter(StartAfter.builder().type(StartAfter.Type.TIME).value(30).build())
+					.stopAfter(StopAfter.builder().type(StopAfter.Type.TIME).value(30).build())
+					.build())
+			.build();
 	private static final PopulationPolicy POPULATION_RAMPUP_MAX_USERS_AND_100_ITERATIONS = PopulationPolicy.builder()
 			.name("MyPopulation")
 			.loadPolicy(RampupLoadPolicy.builder()
@@ -182,6 +217,10 @@ public class ScenarioUtilsTest {
 			.maxUsers(MAX_USERS)
 			.duration(DURATION_60_SECONDS)
 			.build();
+	private static final LoadSummary LOAD_SUMMARY_MAX_USERS_AND_120_SECONDS = LoadSummary.builder()
+			.maxUsers(MAX_USERS)
+			.duration(DURATION_120_SECONDS)
+			.build();
 	private static final LoadSummary LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS = LoadSummary.builder()
 			.maxUsers(MAX_USERS)
 			.duration(DURATION_100_ITERATIONS)
@@ -191,6 +230,7 @@ public class ScenarioUtilsTest {
 	public void getSummaryForConstantLoadPolicy() {
 		assertEquals(LOAD_SUMMARY_MAX_USERS, ScenarioUtils.getSummary(POPULATION_CONSTANT_MAX_USERS));
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS, ScenarioUtils.getSummary(POPULATION_CONSTANT_MAX_USERS_AND_60_SECONDS));
+		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_120_SECONDS, ScenarioUtils.getSummary(POPULATION_CONSTANT_MAX_USERS_WITH_START_STOP_120_SECONDS_TOTAL));
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS, ScenarioUtils.getSummary(POPULATION_CONSTANT_MAX_USERS_AND_100_ITERATIONS));
 	}
 
@@ -198,6 +238,7 @@ public class ScenarioUtilsTest {
 	public void getSummaryForPeaksLoadPolicy() {
 		assertEquals(LOAD_SUMMARY_MAX_USERS, ScenarioUtils.getSummary(POPULATION_PEAKS_MAX_USERS));
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS, ScenarioUtils.getSummary(POPULATION_PEAKS_MAX_USERS_AND_60_SECONDS));
+		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_120_SECONDS, ScenarioUtils.getSummary(POPULATION_PEAKS_MAX_USERS_WITH_START_STOP_120_SECONDS_TOTAL));
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS, ScenarioUtils.getSummary(POPULATION_PEAKS_MAX_USERS_AND_100_ITERATIONS));
 	}
 	
@@ -219,6 +260,7 @@ public class ScenarioUtilsTest {
 		// Rampup Load Policy with maxUsers
 		assertEquals(LOAD_SUMMARY_MAX_USERS, ScenarioUtils.getSummary(POPULATION_RAMPUP_MAX_USERS));
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS, ScenarioUtils.getSummary(POPULATION_RAMPUP_MAX_USERS_AND_60_SECONDS));
+		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_120_SECONDS, ScenarioUtils.getSummary(POPULATION_RAMPUP_MAX_USERS_WITH_START_STOP_120_SECONDS_TOTAL));
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS, ScenarioUtils.getSummary(POPULATION_RAMPUP_MAX_USERS_AND_100_ITERATIONS));
 	}
 	
@@ -238,6 +280,14 @@ public class ScenarioUtilsTest {
 						.build())
 				.build();
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_60_SECONDS, ScenarioUtils.getSummary(populationPolicy));
+
+		final ImmutablePopulationPolicy populationPolicyWithStartStop = PopulationPolicy.builder()
+				.from(populationPolicy)
+				.loadPolicy(ImmutableCustomLoadPolicy.copyOf((CustomLoadPolicy) populationPolicy.getLoadPolicy())
+						.withStartAfter(StartAfter.builder().type(StartAfter.Type.TIME).value(30).build())
+						.withStopAfter(StopAfter.builder().type(StopAfter.Type.TIME).value(30).build())
+				).build();
+		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_120_SECONDS, ScenarioUtils.getSummary(populationPolicyWithStartStop));
 
 		populationPolicy = PopulationPolicy.builder()
 				.name("MyPopulation")
