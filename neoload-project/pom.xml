@@ -78,7 +78,15 @@
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
     </dependency>
-		<dependency>
+			<dependency>
+				<groupId>com.github.victools</groupId>
+				<artifactId>jsonschema-generator</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>io.github.classgraph</groupId>
+				<artifactId>classgraph</artifactId>
+			</dependency>
+			<dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

@@ -253,6 +253,16 @@
 				<artifactId>log4j</artifactId>
 				<version>1.2.17</version>
 			</dependency>
+			<dependency>
+				<groupId>com.github.victools</groupId>
+				<artifactId>jsonschema-generator</artifactId>
+				<version>4.31.1</version>
+			</dependency>
+			<dependency>
+				<groupId>io.github.classgraph</groupId>
+				<artifactId>classgraph</artifactId>
+				<version>4.8.149</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.apache.jmeter</groupId>

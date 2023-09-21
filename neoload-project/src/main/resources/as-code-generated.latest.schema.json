@@ -1,0 +1,1197 @@
+{
+  "$schema" : "http://json-schema.org/draft-07/schema#",
+  "definitions" : {
+    "ChangePolicy" : {
+      "type" : "string",
+      "enum" : [ "EACH_USE", "EACH_REQUEST", "EACH_PAGE", "EACH_USER", "EACH_ITERATION" ]
+    },
+    "ImmutableCondition" : {
+      "type" : "object",
+      "properties" : {
+        "operand1" : {
+          "type" : "string"
+        },
+        "operand2" : {
+          "type" : "string"
+        },
+        "operator" : {
+          "type" : "string",
+          "enum" : [ "EQUALS", "NOT_EQUALS", "CONTAINS", "NOT_CONTAINS", "STARTS_WITH", "NOT_STARTS_WITH", "ENDS_WITH", "NOT_ENDS_WITH", "MATCH_REGEXP", "NOT_MATCH_REGEXP", "GREATER", "GREATER_EQUAL", "LESS", "LESS_EQUAL", "EXISTS", "NOT_EXISTS" ]
+        }
+      },
+      "required" : [ "operator" ]
+    },
+    "ImmutableContainer" : {
+      "type" : "object",
+      "properties" : {
+        "assertions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ImmutableContentAssertion"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "sla_profile" : {
+          "type" : "string"
+        },
+        "steps" : {
+          "type" : "array",
+          "items" : {
+            "anyOf" : [ {
+              "$ref" : "#/definitions/ImmutableContainer"
+            }, {
+              "$ref" : "#/definitions/ImmutableCustomAction"
+            }, {
+              "$ref" : "#/definitions/ImmutableDelay"
+            }, {
+              "$ref" : "#/definitions/ImmutableIf"
+            }, {
+              "$ref" : "#/definitions/ImmutableJavaScript"
+            }, {
+              "$ref" : "#/definitions/ImmutableLoop"
+            }, {
+              "$ref" : "#/definitions/ImmutableRequest"
+            }, {
+              "$ref" : "#/definitions/ImmutableSwitch"
+            }, {
+              "$ref" : "#/definitions/ImmutableThinkTime"
+            }, {
+              "$ref" : "#/definitions/ImmutableWhile"
+            } ]
+          }
+        }
+      },
+      "required" : [ "name", "steps" ]
+    },
+    "ImmutableContentAssertion" : {
+      "type" : "object",
+      "properties" : {
+        "contains" : {
+          "type" : "string"
+        },
+        "jsonpath" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "not" : {
+          "type" : "boolean"
+        },
+        "regexp" : {
+          "type" : "boolean"
+        },
+        "xpath" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ImmutableCustomAction" : {
+      "type" : "object",
+      "properties" : {
+        "asRequest" : {
+          "type" : "boolean"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "libraryPath" : {
+          "type" : "object"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "parameters" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "name" : {
+                "type" : "string"
+              },
+              "type" : {
+                "type" : "string",
+                "enum" : [ "TEXT", "PASSWORD" ]
+              },
+              "value" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "type" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "ImmutableDelay" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "value" ]
+    },
+    "ImmutableIf" : {
+      "type" : "object",
+      "properties" : {
+        "conditions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ImmutableCondition"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "getElse" : {
+          "$ref" : "#/definitions/ImmutableContainer"
+        },
+        "match" : {
+          "$ref" : "#/definitions/Match"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "then" : {
+          "$ref" : "#/definitions/ImmutableContainer"
+        }
+      },
+      "required" : [ "match", "name", "then" ]
+    },
+    "ImmutableJavaScript" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "script" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "script" ]
+    },
+    "ImmutableLoadDuration" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "ITERATION", "TIME" ]
+        },
+        "value" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "ImmutableLoop" : {
+      "type" : "object",
+      "properties" : {
+        "count" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "steps" : {
+          "type" : "array",
+          "items" : {
+            "anyOf" : [ {
+              "$ref" : "#/definitions/ImmutableContainer"
+            }, {
+              "$ref" : "#/definitions/ImmutableCustomAction"
+            }, {
+              "$ref" : "#/definitions/ImmutableDelay"
+            }, {
+              "$ref" : "#/definitions/ImmutableIf"
+            }, {
+              "$ref" : "#/definitions/ImmutableJavaScript"
+            }, {
+              "$ref" : "#/definitions/ImmutableLoop"
+            }, {
+              "$ref" : "#/definitions/ImmutableRequest"
+            }, {
+              "$ref" : "#/definitions/ImmutableSwitch"
+            }, {
+              "$ref" : "#/definitions/ImmutableThinkTime"
+            }, {
+              "$ref" : "#/definitions/ImmutableWhile"
+            } ]
+          }
+        }
+      },
+      "required" : [ "count", "name", "steps" ]
+    },
+    "ImmutablePeakLoadPolicy" : {
+      "type" : "object",
+      "properties" : {
+        "duration" : {
+          "$ref" : "#/definitions/ImmutableLoadDuration"
+        },
+        "users" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "duration" ]
+    },
+    "ImmutableRequest" : {
+      "type" : "object",
+      "properties" : {
+        "assertions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ImmutableContentAssertion"
+          }
+        },
+        "body" : {
+          "type" : "string"
+        },
+        "bodybinary" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "extractors" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "decode" : {
+                "anyOf" : [ {
+                  "type" : "null"
+                }, {
+                  "type" : "string",
+                  "enum" : [ "HTML", "URL" ]
+                } ]
+              },
+              "description" : {
+                "type" : "string"
+              },
+              "extract_once" : {
+                "type" : "boolean"
+              },
+              "from" : {
+                "type" : "string",
+                "enum" : [ "HEADER", "BODY", "BOTH" ]
+              },
+              "getDefault" : {
+                "type" : "string"
+              },
+              "jsonpath" : {
+                "type" : "string"
+              },
+              "match_number" : {
+                "type" : "integer"
+              },
+              "name" : {
+                "type" : "string"
+              },
+              "regexp" : {
+                "type" : "string"
+              },
+              "template" : {
+                "type" : "string"
+              },
+              "throw_assertion_error" : {
+                "type" : "boolean"
+              },
+              "xpath" : {
+                "type" : "string"
+              }
+            },
+            "required" : [ "extract_once", "from", "match_number", "name", "regexp", "template", "throw_assertion_error" ]
+          }
+        },
+        "followRedirects" : {
+          "type" : "boolean"
+        },
+        "headers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "name" : {
+                "type" : "string"
+              },
+              "value" : {
+                "type" : "string"
+              }
+            },
+            "required" : [ "name" ]
+          }
+        },
+        "method" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "parts" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "charSet" : {
+                "type" : "string"
+              },
+              "contentType" : {
+                "type" : "string"
+              },
+              "description" : {
+                "type" : "string"
+              },
+              "filename" : {
+                "type" : "string"
+              },
+              "name" : {
+                "type" : "string"
+              },
+              "sourceFilename" : {
+                "type" : "string"
+              },
+              "transferEncoding" : {
+                "type" : "string"
+              },
+              "value" : {
+                "type" : "string"
+              }
+            },
+            "required" : [ "name" ]
+          }
+        },
+        "server" : {
+          "type" : "string"
+        },
+        "sla_profile" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "method", "name", "url" ]
+    },
+    "ImmutableStartAfter" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "POPULATION", "TIME" ]
+        },
+        "value" : { }
+      }
+    },
+    "ImmutableStopAfter" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "CURRENT_ITERATION", "TIME" ]
+        },
+        "value" : { }
+      }
+    },
+    "ImmutableSwitch" : {
+      "type" : "object",
+      "properties" : {
+        "case" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "assertions" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/definitions/ImmutableContentAssertion"
+                }
+              },
+              "description" : {
+                "type" : "string"
+              },
+              "isBreak" : {
+                "type" : "boolean"
+              },
+              "name" : {
+                "type" : "string"
+              },
+              "sla_profile" : {
+                "type" : "string"
+              },
+              "steps" : {
+                "type" : "array",
+                "items" : {
+                  "anyOf" : [ {
+                    "$ref" : "#/definitions/ImmutableContainer"
+                  }, {
+                    "$ref" : "#/definitions/ImmutableCustomAction"
+                  }, {
+                    "$ref" : "#/definitions/ImmutableDelay"
+                  }, {
+                    "$ref" : "#/definitions/ImmutableIf"
+                  }, {
+                    "$ref" : "#/definitions/ImmutableJavaScript"
+                  }, {
+                    "$ref" : "#/definitions/ImmutableLoop"
+                  }, {
+                    "$ref" : "#/definitions/ImmutableRequest"
+                  }, {
+                    "$ref" : "#/definitions/ImmutableSwitch"
+                  }, {
+                    "$ref" : "#/definitions/ImmutableThinkTime"
+                  }, {
+                    "$ref" : "#/definitions/ImmutableWhile"
+                  } ]
+                }
+              },
+              "value" : {
+                "type" : "string"
+              }
+            },
+            "required" : [ "name", "steps", "value" ]
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "getDefault" : {
+          "$ref" : "#/definitions/ImmutableContainer"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "case", "name" ]
+    },
+    "ImmutableThinkTime" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "value" ]
+    },
+    "ImmutableWhile" : {
+      "type" : "object",
+      "properties" : {
+        "conditions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ImmutableCondition"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "match" : {
+          "$ref" : "#/definitions/Match"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "steps" : {
+          "type" : "array",
+          "items" : {
+            "anyOf" : [ {
+              "$ref" : "#/definitions/ImmutableContainer"
+            }, {
+              "$ref" : "#/definitions/ImmutableCustomAction"
+            }, {
+              "$ref" : "#/definitions/ImmutableDelay"
+            }, {
+              "$ref" : "#/definitions/ImmutableIf"
+            }, {
+              "$ref" : "#/definitions/ImmutableJavaScript"
+            }, {
+              "$ref" : "#/definitions/ImmutableLoop"
+            }, {
+              "$ref" : "#/definitions/ImmutableRequest"
+            }, {
+              "$ref" : "#/definitions/ImmutableSwitch"
+            }, {
+              "$ref" : "#/definitions/ImmutableThinkTime"
+            }, {
+              "$ref" : "#/definitions/ImmutableWhile"
+            } ]
+          }
+        }
+      },
+      "required" : [ "match", "name", "steps" ]
+    },
+    "LoadPolicyType" : {
+      "type" : "string",
+      "enum" : [ "CONSTANT", "CUSTOM", "PEAKS", "RAMPUP" ]
+    },
+    "Match" : {
+      "type" : "string",
+      "enum" : [ "ANY", "ALL" ]
+    },
+    "Order" : {
+      "type" : "string",
+      "enum" : [ "SEQUENTIAL", "RANDOM", "ANY" ]
+    },
+    "OutOfValue" : {
+      "type" : "string",
+      "enum" : [ "CYCLE", "STOP", "NO_VALUE" ]
+    },
+    "Scope" : {
+      "type" : "string",
+      "enum" : [ "UNIQUE", "GLOBAL", "LOCAL" ]
+    }
+  },
+  "type" : "object",
+  "properties" : {
+    "dependencies" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "fileDirectory" : {
+            "type" : "string"
+          },
+          "filename" : {
+            "type" : "string"
+          },
+          "inputStream" : {
+            "type" : "object"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "JAVA_FOR_JS_LIBRARY", "JAVA_LIBRARY", "JS_LIBRARY" ]
+          }
+        },
+        "required" : [ "name" ]
+      }
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "populations" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "user_paths" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "description" : {
+                  "type" : "string"
+                },
+                "distribution" : {
+                  "type" : "number"
+                },
+                "name" : {
+                  "type" : "string"
+                }
+              },
+              "required" : [ "name" ]
+            }
+          }
+        },
+        "required" : [ "name", "user_paths" ]
+      }
+    },
+    "project_settings" : {
+      "type" : "object"
+    },
+    "scenarios" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "apm_configuration" : {
+            "type" : "object",
+            "properties" : {
+              "dynatrace_anomaly_rules" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "metric_id" : {
+                      "type" : "string"
+                    },
+                    "operator" : {
+                      "type" : "string"
+                    },
+                    "severity" : {
+                      "type" : "string"
+                    },
+                    "value" : {
+                      "type" : "string"
+                    }
+                  },
+                  "required" : [ "metric_id", "operator", "severity", "value" ]
+                }
+              },
+              "dynatrace_tags" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "excluded_urls" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "isStoredVariables" : {
+            "type" : "boolean"
+          },
+          "monitoring" : {
+            "type" : "object",
+            "properties" : {
+              "after" : {
+                "type" : "integer"
+              },
+              "before" : {
+                "type" : "integer"
+              }
+            }
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "populations" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "description" : {
+                  "type" : "string"
+                },
+                "loadPolicy" : {
+                  "anyOf" : [ {
+                    "type" : "object",
+                    "properties" : {
+                      "duration" : {
+                        "$ref" : "#/definitions/ImmutableLoadDuration"
+                      },
+                      "rampup" : {
+                        "type" : "integer"
+                      },
+                      "start_after" : {
+                        "$ref" : "#/definitions/ImmutableStartAfter"
+                      },
+                      "stop_after" : {
+                        "$ref" : "#/definitions/ImmutableStopAfter"
+                      },
+                      "type" : {
+                        "$ref" : "#/definitions/LoadPolicyType"
+                      },
+                      "users" : {
+                        "type" : "integer"
+                      }
+                    }
+                  }, {
+                    "type" : "object",
+                    "properties" : {
+                      "rampup" : {
+                        "type" : "integer"
+                      },
+                      "start_after" : {
+                        "$ref" : "#/definitions/ImmutableStartAfter"
+                      },
+                      "steps" : {
+                        "type" : "array",
+                        "items" : {
+                          "type" : "object",
+                          "properties" : {
+                            "users" : {
+                              "type" : "integer"
+                            },
+                            "when" : {
+                              "$ref" : "#/definitions/ImmutableLoadDuration"
+                            }
+                          },
+                          "required" : [ "users", "when" ]
+                        }
+                      },
+                      "stop_after" : {
+                        "$ref" : "#/definitions/ImmutableStopAfter"
+                      },
+                      "type" : {
+                        "$ref" : "#/definitions/LoadPolicyType"
+                      }
+                    },
+                    "required" : [ "steps" ]
+                  }, {
+                    "type" : "object",
+                    "properties" : {
+                      "duration" : {
+                        "$ref" : "#/definitions/ImmutableLoadDuration"
+                      },
+                      "maximum" : {
+                        "$ref" : "#/definitions/ImmutablePeakLoadPolicy"
+                      },
+                      "minimum" : {
+                        "$ref" : "#/definitions/ImmutablePeakLoadPolicy"
+                      },
+                      "start" : {
+                        "type" : "string",
+                        "enum" : [ "MINIMUM", "MAXIMUM" ]
+                      },
+                      "start_after" : {
+                        "$ref" : "#/definitions/ImmutableStartAfter"
+                      },
+                      "step_rampup" : {
+                        "type" : "integer"
+                      },
+                      "stop_after" : {
+                        "$ref" : "#/definitions/ImmutableStopAfter"
+                      },
+                      "type" : {
+                        "$ref" : "#/definitions/LoadPolicyType"
+                      }
+                    },
+                    "required" : [ "maximum", "minimum", "start" ]
+                  }, {
+                    "type" : "object",
+                    "properties" : {
+                      "duration" : {
+                        "$ref" : "#/definitions/ImmutableLoadDuration"
+                      },
+                      "increment_every" : {
+                        "$ref" : "#/definitions/ImmutableLoadDuration"
+                      },
+                      "increment_rampup" : {
+                        "type" : "integer"
+                      },
+                      "increment_users" : {
+                        "type" : "integer"
+                      },
+                      "max_users" : {
+                        "type" : "integer"
+                      },
+                      "min_users" : {
+                        "type" : "integer"
+                      },
+                      "start_after" : {
+                        "$ref" : "#/definitions/ImmutableStartAfter"
+                      },
+                      "stop_after" : {
+                        "$ref" : "#/definitions/ImmutableStopAfter"
+                      },
+                      "type" : {
+                        "$ref" : "#/definitions/LoadPolicyType"
+                      }
+                    },
+                    "required" : [ "increment_every" ]
+                  } ]
+                },
+                "name" : {
+                  "type" : "string"
+                }
+              },
+              "required" : [ "loadPolicy", "name" ]
+            }
+          },
+          "rendezvous_policies" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "name" : {
+                  "type" : "string"
+                },
+                "timeout" : {
+                  "type" : "integer"
+                },
+                "when" : {
+                  "type" : "object",
+                  "properties" : {
+                    "type" : {
+                      "type" : "string",
+                      "enum" : [ "PERCENTAGE", "VU_NUMBER", "MANUAL" ]
+                    },
+                    "value" : { }
+                  }
+                }
+              },
+              "required" : [ "name", "when" ]
+            }
+          },
+          "sla_profile" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "name", "populations" ]
+      }
+    },
+    "servers" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "authentication" : {
+            "anyOf" : [ {
+              "type" : "object",
+              "properties" : {
+                "login" : {
+                  "type" : "string"
+                },
+                "password" : {
+                  "type" : "string"
+                },
+                "realm" : {
+                  "type" : "string"
+                }
+              },
+              "required" : [ "login", "password" ]
+            }, {
+              "type" : "object",
+              "properties" : {
+                "domain" : {
+                  "type" : "string"
+                },
+                "login" : {
+                  "type" : "string"
+                },
+                "password" : {
+                  "type" : "string"
+                }
+              },
+              "required" : [ "login", "password" ]
+            }, {
+              "type" : "object",
+              "properties" : {
+                "domain" : {
+                  "type" : "string"
+                },
+                "login" : {
+                  "type" : "string"
+                },
+                "password" : {
+                  "type" : "string"
+                }
+              },
+              "required" : [ "login", "password" ]
+            } ]
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "host" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "port" : {
+            "type" : "string"
+          },
+          "scheme" : {
+            "type" : "string",
+            "enum" : [ "HTTP", "HTTPS" ]
+          }
+        },
+        "required" : [ "host", "name", "port", "scheme" ]
+      }
+    },
+    "sla_profiles" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "thresholds" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "conditions" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object",
+                    "properties" : {
+                      "operator" : {
+                        "type" : "string",
+                        "enum" : [ "LESS_THAN", "GREATER_THAN", "EQUALS" ]
+                      },
+                      "severity" : {
+                        "type" : "string",
+                        "enum" : [ "WARN", "FAIL" ]
+                      },
+                      "value" : {
+                        "type" : "number"
+                      }
+                    },
+                    "required" : [ "operator", "severity", "value" ]
+                  }
+                },
+                "kpi" : {
+                  "type" : "string",
+                  "enum" : [ "AVG_ELT_PER_SEC", "AVG_PAGE_RESP_TIME", "AVG_REQUEST_PER_SEC", "AVG_REQUEST_RESP_TIME", "AVG_RESP_TIME", "AVG_THROUGHPUT_PER_SEC", "AVG_TRANSACTION_RESP_TIME", "COUNT", "ERROR_RATE", "ERRORS_PER_SEC", "ERRORS_COUNT", "PERC_TRANSACTION_RESP_TIME", "THROUGHPUT" ]
+                },
+                "percent" : {
+                  "type" : "integer"
+                },
+                "scope" : {
+                  "anyOf" : [ {
+                    "type" : "string"
+                  }, {
+                    "type" : "string"
+                  } ]
+                }
+              },
+              "required" : [ "conditions", "kpi", "scope" ]
+            }
+          }
+        },
+        "required" : [ "name", "thresholds" ]
+      }
+    },
+    "user_paths" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "actions" : {
+            "$ref" : "#/definitions/ImmutableContainer"
+          },
+          "assertions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/ImmutableContentAssertion"
+            }
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "end" : {
+            "$ref" : "#/definitions/ImmutableContainer"
+          },
+          "init" : {
+            "$ref" : "#/definitions/ImmutableContainer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "userSession" : {
+            "type" : "string",
+            "enum" : [ "RESET_ON", "RESET_OFF", "RESET_AUTO" ]
+          }
+        },
+        "required" : [ "actions", "name" ]
+      }
+    },
+    "variables" : {
+      "type" : "array",
+      "items" : {
+        "anyOf" : [ {
+          "type" : "object",
+          "properties" : {
+            "change_policy" : {
+              "$ref" : "#/definitions/ChangePolicy"
+            },
+            "description" : {
+              "type" : "string"
+            },
+            "name" : {
+              "type" : "string"
+            },
+            "order" : {
+              "$ref" : "#/definitions/Order"
+            },
+            "out_of_value" : {
+              "$ref" : "#/definitions/OutOfValue"
+            },
+            "scope" : {
+              "$ref" : "#/definitions/Scope"
+            },
+            "value" : {
+              "type" : "string"
+            }
+          },
+          "required" : [ "name", "value" ]
+        }, {
+          "type" : "object",
+          "properties" : {
+            "change_policy" : {
+              "$ref" : "#/definitions/ChangePolicy"
+            },
+            "description" : {
+              "type" : "string"
+            },
+            "end" : {
+              "type" : "integer"
+            },
+            "increment" : {
+              "type" : "integer"
+            },
+            "name" : {
+              "type" : "string"
+            },
+            "order" : {
+              "$ref" : "#/definitions/Order"
+            },
+            "out_of_value" : {
+              "$ref" : "#/definitions/OutOfValue"
+            },
+            "scope" : {
+              "$ref" : "#/definitions/Scope"
+            },
+            "start" : {
+              "type" : "integer"
+            }
+          },
+          "required" : [ "end", "increment", "name", "start" ]
+        }, {
+          "type" : "object",
+          "properties" : {
+            "change_policy" : {
+              "$ref" : "#/definitions/ChangePolicy"
+            },
+            "column_names" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            },
+            "delimiter" : {
+              "type" : "string"
+            },
+            "description" : {
+              "type" : "string"
+            },
+            "isFirstLineColumnNames" : {
+              "type" : "boolean"
+            },
+            "name" : {
+              "type" : "string"
+            },
+            "order" : {
+              "$ref" : "#/definitions/Order"
+            },
+            "out_of_value" : {
+              "$ref" : "#/definitions/OutOfValue"
+            },
+            "path" : {
+              "type" : "string"
+            },
+            "scope" : {
+              "$ref" : "#/definitions/Scope"
+            },
+            "start_from_line" : {
+              "type" : "integer"
+            }
+          },
+          "required" : [ "name", "path" ]
+        }, {
+          "type" : "object",
+          "properties" : {
+            "change_policy" : {
+              "$ref" : "#/definitions/ChangePolicy"
+            },
+            "description" : {
+              "type" : "string"
+            },
+            "name" : {
+              "type" : "string"
+            },
+            "order" : {
+              "$ref" : "#/definitions/Order"
+            },
+            "out_of_value" : {
+              "$ref" : "#/definitions/OutOfValue"
+            },
+            "scope" : {
+              "$ref" : "#/definitions/Scope"
+            },
+            "script" : {
+              "type" : "string"
+            }
+          },
+          "required" : [ "name", "script" ]
+        }, {
+          "type" : "object",
+          "properties" : {
+            "change_policy" : {
+              "$ref" : "#/definitions/ChangePolicy"
+            },
+            "description" : {
+              "type" : "string"
+            },
+            "isPredictable" : {
+              "type" : "boolean"
+            },
+            "max" : {
+              "type" : "integer"
+            },
+            "min" : {
+              "type" : "integer"
+            },
+            "name" : {
+              "type" : "string"
+            },
+            "order" : {
+              "$ref" : "#/definitions/Order"
+            },
+            "out_of_value" : {
+              "$ref" : "#/definitions/OutOfValue"
+            },
+            "scope" : {
+              "$ref" : "#/definitions/Scope"
+            }
+          },
+          "required" : [ "max", "min", "name" ]
+        } ]
+      }
+    }
+  }
+}
