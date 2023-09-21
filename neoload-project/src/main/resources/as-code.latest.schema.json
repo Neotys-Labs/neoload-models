@@ -16,7 +16,7 @@
 	"type": "object",
 	"additionalProperties": false,
 	"minProperties": 1,
-	"xrequired": ["name", "because neoload files can be partial"],
+	"required": ["name"],
 	"properties": {
 		"$schema": { "$ref": "#/definitions/common/full_url" },
 		"name": { "$ref": "#/definitions/common/name" },
@@ -96,6 +96,7 @@
 				"qtest.password": { "$ref": "#/definitions/common/text" },
 				"qtest.auth_method": { "type": "string", "enum": ["TOKEN", "LOGIN_PWD"] },
 				"qtest.project_id": { "type": "integer" },
+				"qtest.create_defects": { "type": "boolean" },
 				"qtest.cycle_id": { "type": "integer" }
 			}
 		}
@@ -104,9 +105,9 @@
 		"common": {
 			"text": {
 				"$id": "#/definitions/common/text",
-				"title": "Text",
+				"title": "Value",
 				"type": "string",
-				"pattern": ".+"
+				"pattern": "^.*$"
 			},
 			"textblob": {
 				"$id": "#/definitions/common/textblob",
@@ -147,13 +148,18 @@
 				"type": "string",
 				"pattern": "^(\\d+ iterations)$"
 			},
+			"conditions": {
+				"$id": "#/definitions/common/conditions",
+				"title": "Conditions list",
+				"type": "array",
+				"items": {
+					"type": "string",
+					"title": "Condition. Format is: operand1 operation operand2  Example: '${MyVariable}' == 'value'",
+					"pattern": "^.+(>=|==|!=|<=|>|<|equals|not_equals|contains|not_contains|starts_with|not_starts_with|ends_with|not_ends_with|match_regexp|not_match_regexp|greater|greater_equal|less|less_equal|exists|not_exists).*$"
+				}
+			},
 			"name": {
 				"title": "Name",
-				"type": "string",
-				"pattern": "^.*$"
-			},
-			"text": {
-				"title": "Value",
 				"type": "string",
 				"pattern": "^.*$"
 			},
@@ -547,23 +553,27 @@
 					"sla_profile": {
 						"type": "string"
 					},
-					"steps": {
-						"title": "Steps",
-						"type": "array",
-						"minItems": 1,
-						"items": {
-							"type": "object",
-							"properties": {
-								"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
-								"request": { "$ref": "#/definitions/user_paths/actions/request" },
-								"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
-								"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
-								"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
-								"if": { "$ref": "#/definitions/user_paths/actions/if" }
-							},
-							"additionalProperties": false
-						}
-					}
+					"steps": { "$ref": "#/definitions/user_paths/steps" }
+				}
+			},
+			"steps": {
+				"$id": "#/definitions/user_paths/steps",
+				"title": "Steps",
+				"type": "array",
+				"minItems": 1,
+				"items": {
+					"type": "object",
+					"properties": {
+						"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
+						"request": { "$ref": "#/definitions/user_paths/actions/request" },
+						"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
+						"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
+						"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
+						"if": { "$ref": "#/definitions/user_paths/actions/if" },
+						"while": { "$ref": "#/definitions/user_paths/actions/while" },
+						"loop": { "$ref": "#/definitions/user_paths/actions/loop" }
+					},
+					"additionalProperties": false
 				}
 			},
 			"actions": {
@@ -576,23 +586,8 @@
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
-						"steps": {
-							"title": "Steps",
-							"type": "array",
-							"minItems": 1,
-							"items": {
-								"type": "object",
-								"properties": {
-									"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
-									"request": { "$ref": "#/definitions/user_paths/actions/request" },
-									"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
-									"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
-									"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
-									"if": { "$ref": "#/definitions/user_paths/actions/if" }
-								},
-								"additionalProperties": false
-							}
-						}
+						"sla_profile": { "$ref": "#/definitions/common/text" },
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
 				},
@@ -649,22 +644,18 @@
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
-						"script": { "$ref": "#/definitions/common/text" }
+						"script": { "$ref": "#/definitions/common/textblob" }
 					}
 				},
 				"if": {
 					"$id": "#/definitions/user_paths/actions/if",
 					"title": "Action: If",
 					"type": "object",
-					"xrequired": ["conditions", "then"],
+					"required": ["then"],
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
-						"conditions": {
-							"type": "array",
-							"xcomments": "like GWBSR said: 'aint gonna do it', at least not this commit",
-							"items": { "$ref": "#/definitions/common/text" }
-						},
+						"conditions": { "$ref": "#/definitions/common/conditions" },
 						"match": {
 							"type": "string",
 							"enum": ["any", "all"],
@@ -672,7 +663,39 @@
 						},
 						"then": { "$ref": "#/definitions/user_paths/container" },
 						"else": { "$ref": "#/definitions/user_paths/container" }
-					}
+					},
+					"additionalProperties": false
+				},
+				"while": {
+					"$id": "#/definitions/user_paths/actions/while",
+					"title": "Action: While",
+					"type": "object",
+					"required": ["steps"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"conditions": { "$ref": "#/definitions/common/conditions" },
+						"match": {
+							"type": "string",
+							"enum": ["any", "all"],
+							"default": "any"
+						},
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
+					},
+					"additionalProperties": false
+				},
+				"loop": {
+					"$id": "#/definitions/user_paths/actions/loop",
+					"title": "Action: If",
+					"type": "object",
+					"required": ["count", "steps"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"count": { "$ref": "#/definitions/common/positive_number" },
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
+					},
+					"additionalProperties": false
 				}
 			},
 			"extractor": {
