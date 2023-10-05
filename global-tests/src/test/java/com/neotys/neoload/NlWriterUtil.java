@@ -40,7 +40,7 @@ public class NlWriterUtil {
 		Transformer transformer = transformerFactory.newTransformer();
 		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 		transformer.setOutputProperty(OutputKeys.VERSION, "1.1");
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty(OutputKeys.INDENT, "no");
 		final DOMSource repositorySource = new DOMSource(document);
 		final File result = File.createTempFile(LrToNlTest.class.toString(), "");
 		StreamResult repositoryStream = new StreamResult(result);

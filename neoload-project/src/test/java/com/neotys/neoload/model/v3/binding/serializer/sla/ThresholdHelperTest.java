@@ -165,7 +165,7 @@ public class ThresholdHelperTest {
 			final StringBuilder expectedMessage = new StringBuilder();
 			expectedMessage.append("avg-request-resp-time warn >= 1.0 fail >= 2.0 pertest is not a valid threshold: ");
 			expectedMessage.append(System.lineSeparator());
-			expectedMessage.append("String index out of range: 54");
+			expectedMessage.append("offset 52, count 2, length 53");
 			assertEquals(expectedMessage.toString(), e.getMessage());
 			throwException = true;
 		}
