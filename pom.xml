@@ -92,12 +92,13 @@
 		<commons-configuration2.version>2.1.1</commons-configuration2.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<commons-lang3.version>3.4</commons-lang3.version>
+		<commons-collections4.version>4.4</commons-collections4.version>
 		<jsr305.version>3.0.1</jsr305.version>
 		<guava.version>32.0.1-jre</guava.version>
 		<jackson.version>2.14.2</jackson.version>
 		<antlr.version>4.7</antlr.version>
 		<slf4j.version>1.7.36</slf4j.version>
-		<logback.classic.version>1.2.3</logback.classic.version>
+		<logback.classic.version>1.2.12</logback.classic.version>
 		<gpg.executable>/usr/bin/gpg</gpg.executable>
 		<!--suppress UnresolvedMavenProperty -->
 		<gpg.passphrase>${env.PGP_PASSPHRASE}</gpg.passphrase>
@@ -155,6 +156,11 @@
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${commons-io.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-collections4</artifactId>
+				<version>${commons-collections4.version}</version>
 			</dependency>
 			<dependency>
     			<groupId>javax.validation</groupId>
@@ -249,9 +255,9 @@
                 <version>1.0.3</version>
             </dependency>
 			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>2.20.0</version>
 			</dependency>
 
 			<dependency>
