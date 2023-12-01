@@ -106,7 +106,7 @@
     	<validation-api.version>2.0.1.Final</validation-api.version>
     	<hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
     	<glassfish.jakarta.el.version>3.0.4</glassfish.jakarta.el.version>
-		<jmeter.version>5.1.1</jmeter.version>
+		<jmeter.version>5.2</jmeter.version>
 		<assertj-core.version>3.17.1</assertj-core.version>
 	</properties>
 
