@@ -1,14 +1,7 @@
 package com.neotys.neoload.model.readers.loadrunner;
 
-import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.repository.ImmutablePage;
 import com.neotys.neoload.model.repository.ImmutableParameter;
 import com.neotys.neoload.model.repository.ImmutablePostFormRequest;
@@ -23,9 +16,19 @@ import com.neotys.neoload.model.repository.Request.HttpMethod;
 import com.neotys.neoload.model.repository.Server;
 import com.neotys.neoload.model.repository.Validator;
 import com.neotys.neoload.model.repository.VariableExtractor;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 @SuppressWarnings("squid:S2699")
 public class WebSubmitDataTest {
-			
+
+	private static final LoadRunnerReader LOAD_RUNNER_READER = new LoadRunnerReader(new TestEventListener(), "", "", "");
+	private static final LoadRunnerVUVisitor LOAD_RUNNER_VISITOR = new LoadRunnerVUVisitor(LOAD_RUNNER_READER, "{", "}", "");
+
 	public static final MethodCall WEB_SUBMIT_DATA_TEST = ImmutableMethodCall.builder()
 			.name("\"test_web_submit_data\"")
 			.addParameters("\"test_web_submit_data\"")
@@ -137,7 +140,7 @@ public class WebSubmitDataTest {
 	}
 
 	@Test
-	public void toElementTestWithExtractorsAndValidators() {		
+	public void toElementTestWithExtractorsAndValidators() {
 		final List<VariableExtractor> variableExtractors = ImmutableList.of(ImmutableVariableExtractor.builder()
 				.name("myName")
 				.startExpression("")
