@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.validation.constraintvalidators;
 import com.neotys.neoload.model.v3.validation.constraints.ValueOfEnumCheck;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorContextImpl;
 import org.hibernate.validator.internal.engine.path.PathImpl;
+import org.hibernate.validator.messageinterpolation.ExpressionLanguageFeatureLevel;
 import org.junit.Test;
 
 import javax.validation.ConstraintValidatorContext;
@@ -34,7 +35,9 @@ public class ValueOfEnumValidatorTest {
                 null,
                 PathImpl.createPathFromString("mock"),
                 null,
-                null);
+                null,
+                ExpressionLanguageFeatureLevel.DEFAULT,
+                ExpressionLanguageFeatureLevel.DEFAULT);
         assertFalse(validator.isValid("VALUE3", contextMock));
     }
 }
