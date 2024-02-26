@@ -116,8 +116,10 @@ public class RequestUtils {
 				final String[] pair = param.split("=");
 				if (pair.length > 1) {
 					parameterBuilder.name(pair[0]).value(pair[1]);
-				} else {
+				} else if (pair.length == 1) {
 					parameterBuilder.name(pair[0]).value("");
+				} else{
+					parameterBuilder.name("").value("");
 				}
 			} else {
 				parameterBuilder.name(param);

@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.util;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -208,17 +209,27 @@ public class RequestUtilsTest {
 		Parameter parameter = Parameter.builder()
 				.name("name")
 				.build();
-		assertEquals(Arrays.asList(parameter), RequestUtils.getParameters("name"));
+		assertEquals(singletonList(parameter), RequestUtils.getParameters("name"));
 		parameter = Parameter.builder()
 				.name("name")
 				.value("")
 				.build();
-		assertEquals(Arrays.asList(parameter), RequestUtils.getParameters("name="));
+		assertEquals(singletonList(parameter), RequestUtils.getParameters("name="));
+		parameter = Parameter.builder()
+				.name("")
+				.value("")
+				.build();
+		assertEquals(singletonList(parameter), RequestUtils.getParameters("="));
+		parameter = Parameter.builder()
+				.name("")
+				.value("value")
+				.build();
+		assertEquals(singletonList(parameter), RequestUtils.getParameters("=value"));
 		parameter = Parameter.builder()
 				.name("name")
 				.value("value")
 				.build();
-		assertEquals(Arrays.asList(parameter), RequestUtils.getParameters("name=value"));
+		assertEquals(singletonList(parameter), RequestUtils.getParameters("name=value"));
 
 		final Parameter parameter1 = Parameter.builder()
 				.name("name1")
