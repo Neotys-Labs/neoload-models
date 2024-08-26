@@ -139,10 +139,16 @@
 					{
 						"name": "Random user load",
 						"custom_load": {
-							"steps": {
-								"when": "1m",
-								"users": 20
-							}
+							"steps": [
+								{
+									"when": "1m",
+									"users": 20
+								},
+								{
+									"when": "1h",
+									"users": 10
+								}
+							]
 						}
 					}
 				]
@@ -248,11 +254,15 @@
 				"stop_after": {"$ref": "#/definitions/stop_after_options"},
 				"rampup": {"$ref": "#/definitions/time"},
 				"steps": {
-					"type": "object", "additionalProperties": false,
-					"required": ["when", "users"],
-					"properties": {
-						"when": {"$ref": "#/definitions/duration"},
-						"users": {"type": "integer", "minimum": 0}
+					"type": "array", "additionalItems": false,
+					"minItems": 1,
+					"items": {
+						"type": "object", "additionalProperties": false,
+						"required": ["when", "users"],
+						"properties": {
+							"when": {"$ref": "#/definitions/duration"},
+							"users": {"type": "integer", "minimum": 0}
+						}
 					}
 				}
 			}
