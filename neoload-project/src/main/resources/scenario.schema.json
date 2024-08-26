@@ -93,6 +93,59 @@
 						}
 					}
 				}
+			},
+			"example": {
+				"name": "LOGIN PERF HEAVY LOAD",
+				"description": "User Load for the login page",
+				"populations": [
+					{
+						"name": "Constant user load",
+						"constant_load": {
+							"users": 100000,
+							"duration": "1h5m2s",
+							"rampup": "5m2s",
+							"start_after": "1m",
+							"stop_after": "current_iteration"
+						}
+					},
+					{
+						"name": "Start of the work day user load",
+						"rampup_load": {
+							"increment_every": "1 iterations",
+							"increment_users": 10000,
+							"min_users": 1000,
+							"duration": "1h",
+							"increment_rampup": "1m",
+							"max_users": 1000000,
+							"start_after": "5m2s"
+						}
+					},
+					{
+						"name": "Expected Peak user load",
+						"peaks_load": {
+							"maximum": {
+								"duration": "10m",
+								"users": 100000
+							},
+							"minimum": {
+								"duration": "2m",
+								"users": 100
+							},
+							"start": "minimum",
+							"duration": "12m",
+							"start_after": "Random user load"
+						}
+					},
+					{
+						"name": "Random user load",
+						"custom_load": {
+							"steps": {
+								"when": "1m",
+								"users": 20
+							}
+						}
+					}
+				]
 			}
 		},
 		"required_text": {
@@ -124,19 +177,11 @@
 		},
 		"time": {
 			"type": "string",
-			"pattern": "^((\\d{1,2}[hms]{1}){1,3})+$"
+			"pattern": "^(\\d+h)?(\\d+m)?(\\d+s)?$"
 		},
 		"iterations": {
 			"type": "string",
-			"pattern": "^(\\d+ iterations)$"
-		},
-		"name": {
-			"type": "string",
-			"pattern": "^.*$"
-		},
-		"full_url": {
-			"type": "string",
-			"pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
+			"pattern": "^\\d+ iterations$"
 		},
 		"peaks_phase": {
 			"type": "object", "additionalProperties": false,
