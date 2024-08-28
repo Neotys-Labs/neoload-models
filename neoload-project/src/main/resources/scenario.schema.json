@@ -59,21 +59,27 @@
 					}
 				},
 				"rendezvous_policies": {
-					"type": "object", "additionalProperties": false,
-					"required": ["name", "when"],
-					"properties": {
-						"name": {"$ref": "#/definitions/required_text"},
-						"when": {
-							"anyOf": [
-								{"type": "string", "enum": ["manual"]},
-								{"type": "string", "pattern": "^((100)|(\\d{1,2}(\\.\\d*)?))%$"},
-								{"type": "integer", "minimum": 0}
-							]
-						},
-						"timeout": {"$ref": "#/definitions/time"}
+					"type": "array", "additionalItems": false,
+					"items": {
+						"type": "object", "additionalProperties": false,
+						"required": ["name", "when"],
+						"properties": {
+							"name": {"$ref": "#/definitions/required_text"},
+							"when": {
+								"anyOf": [
+									{"type": "string", "enum": ["manual"]},
+									{"type": "string", "pattern": "^((100)|(\\d{1,2}(\\.\\d*)?))%$"},
+									{"type": "integer", "minimum": 0}
+								]
+							},
+							"timeout": {"$ref": "#/definitions/time"}
+						}
 					}
 				},
-				"excluded_urls": {"type": "string"},
+				"excluded_urls": {
+					"type": "array", "additionalItems": false,
+					"items": {"type": "string"}
+				},
 				"apm_configuration": {
 					"type": "object", "additionalProperties": false,
 					"properties": {
@@ -82,13 +88,16 @@
 							"items": {"type": "string"}
 						},
 						"dynatrace_anomaly_rules": {
-							"type": "object", "additionalProperties": false,
-							"required": ["metric_id", "operator", "value", "severity"],
-							"properties": {
-								"metric_id": {"$ref": "#/definitions/required_text"},
-								"operator": {"type": "string", "enum": ["BELOW", "ABOVE"]},
-								"value": {"$ref": "#/definitions/required_text"},
-								"severity": {"type": "string", "enum": ["AVAILABILITY", "CUSTOM_ALERT", "ERROR", "INFO", "PERFORMANCE", "RESOURCE_CONTENTION"]}
+							"type": "array", "additionalItems": false,
+							"items": {
+								"type": "object", "additionalProperties": false,
+								"required": ["metric_id", "operator", "value", "severity"],
+								"properties": {
+									"metric_id": {"$ref": "#/definitions/required_text"},
+									"operator": {"type": "string", "enum": ["BELOW", "ABOVE"]},
+									"value": {"$ref": "#/definitions/required_text"},
+									"severity": {"type": "string", "enum": ["AVAILABILITY", "CUSTOM_ALERT", "ERROR", "INFO", "PERFORMANCE", "RESOURCE_CONTENTION"]}
+								}
 							}
 						}
 					}
