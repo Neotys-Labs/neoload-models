@@ -208,7 +208,7 @@
 		},
 		"constant_load": {
 			"type": "object", "additionalProperties": false,
-			"required": ["users"],
+			"required": ["users", "duration"],
 			"properties": {
 				"duration": {"$ref": "#/definitions/duration"},
 				"start_after": {"$ref": "#/definitions/start_after_options"},
@@ -223,7 +223,7 @@
 		},
 		"rampup_load": {
 			"type": "object", "additionalProperties": false,
-			"required": ["min_users", "increment_users", "increment_every"],
+			"required": ["min_users", "increment_users", "increment_every", "duration"],
 			"properties": {
 				"duration": {"$ref": "#/definitions/duration"},
 				"start_after": {"$ref": "#/definitions/start_after_options"},
@@ -241,7 +241,7 @@
 		},
 		"peaks_load": {
 			"type": "object", "additionalProperties": false,
-			"required": ["minimum", "maximum", "start"],
+			"required": ["minimum", "maximum", "start", "duration"],
 			"properties": {
 				"minimum": {"$ref": "#/definitions/peaks_phase"},
 				"maximum": {"$ref": "#/definitions/peaks_phase"},
