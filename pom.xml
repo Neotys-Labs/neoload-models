@@ -103,7 +103,7 @@
 		<!--suppress UnresolvedMavenProperty -->
 		<gpg.passphrase>${env.PGP_PASSPHRASE}</gpg.passphrase>
 		<jacoco.version>0.8.10</jacoco.version>
-    	<validation-api.version>2.0.1.Final</validation-api.version>
+    	<validation-api.version>2.0.2</validation-api.version>
     	<hibernate-validator.version>6.2.5.Final</hibernate-validator.version>
     	<glassfish.jakarta.el.version>3.0.4</glassfish.jakarta.el.version>
 		<jmeter.version>5.6.3</jmeter.version>
@@ -163,9 +163,9 @@
 				<version>${commons-collections4.version}</version>
 			</dependency>
 			<dependency>
-    			<groupId>javax.validation</groupId>
-    			<artifactId>validation-api</artifactId>
-    			<version>${validation-api.version}</version>
+				<groupId>jakarta.validation</groupId>
+				<artifactId>jakarta.validation-api</artifactId>
+				<version>${validation-api.version}</version>
 			</dependency>
 			<dependency>
 			    <groupId>org.hibernate.validator</groupId>
