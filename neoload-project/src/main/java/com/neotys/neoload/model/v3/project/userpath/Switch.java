@@ -46,7 +46,9 @@ public interface Switch extends Step {
 
         @Override
         default Stream<Element> flattened() {
-                return Stream.concat(Stream.of(this), Stream.concat(getCases().stream().flatMap(Case::flattened), getDefault().flattened()));
+                final Stream<Element> casesStream = getCases().stream().flatMap(Case::flattened);
+                final Stream<Element> childrenStream = getDefault() != null ? Stream.concat(casesStream, getDefault().flattened()) : casesStream;
+                return Stream.concat(Stream.of(this), childrenStream);
         }
 
         class Builder extends ImmutableSwitch.Builder{}
