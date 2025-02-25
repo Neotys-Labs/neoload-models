@@ -12,7 +12,10 @@ import java.util.Optional;
 @JsonDeserialize(as = ImmutableCustomAction.class)
 public interface CustomAction extends Step {
 	String getType();
-	boolean asRequest();
+	@Value.Default
+	default boolean asRequest(){
+		return false;
+	}
 	List<CustomActionParameter> getParameters();
 	Optional<Path> getLibraryPath();
 

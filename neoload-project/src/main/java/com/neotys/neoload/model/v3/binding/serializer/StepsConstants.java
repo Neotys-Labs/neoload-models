@@ -10,6 +10,7 @@ class StepsConstants {
     protected static final String LOOP = "loop";
     protected static final String WHILE = "while";
     protected static final String SWITCH = "switch";
+    protected static final String CUSTOM_ACTION = "custom_action";
 
     private StepsConstants() {
         super();
