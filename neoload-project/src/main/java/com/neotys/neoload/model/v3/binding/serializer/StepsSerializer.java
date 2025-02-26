@@ -1,15 +1,7 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
 import static com.neotys.neoload.model.v3.binding.converter.TimeDurationInMsOrInVariableToStringConverter.TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.DELAY;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.IF;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.JAVASCRIPT;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.LOOP;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.REQUEST;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.SWITCH;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.THINK_TIME;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.TRANSACTION;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.WHILE;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,16 +11,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.google.common.collect.ImmutableMap;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.project.userpath.ImmutableContainer;
-import com.neotys.neoload.model.v3.project.userpath.ImmutableIf;
-import com.neotys.neoload.model.v3.project.userpath.ImmutableJavaScript;
-import com.neotys.neoload.model.v3.project.userpath.ImmutableLoop;
-import com.neotys.neoload.model.v3.project.userpath.ImmutableRequest;
-import com.neotys.neoload.model.v3.project.userpath.ImmutableSwitch;
-import com.neotys.neoload.model.v3.project.userpath.ImmutableWhile;
-import com.neotys.neoload.model.v3.project.userpath.Step;
-import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
+import com.neotys.neoload.model.v3.project.userpath.*;
 
 public class StepsSerializer extends StdSerializer<List<Step>> {
     private static final long serialVersionUID = -4569870233567503685L;
@@ -43,6 +26,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
     	builder.put(ImmutableLoop.class, LOOP);
     	builder.put(ImmutableWhile.class, WHILE);
     	builder.put(ImmutableSwitch.class, SWITCH);
+		builder.put(ImmutableCustomAction.class, CUSTOM_ACTION);
     	STEPS = builder.build();
     }
 

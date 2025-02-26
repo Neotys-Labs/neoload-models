@@ -1,0 +1,14 @@
+name: MyProject
+user_paths:
+  - name: user_path_1
+    actions:
+      steps:
+        - custom_action:
+            name: sql action
+            type: SQL
+            parameters:
+              - name: connectionURL
+                value: jdbc:mysql://localhost:3306/
+              - name: connection.password
+                value: myPassword
+                type: PASSWORD

@@ -1,15 +1,7 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
 import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationInMsOrInVariableConverter.STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.DELAY;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.IF;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.JAVASCRIPT;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.LOOP;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.REQUEST;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.SWITCH;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.THINK_TIME;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.TRANSACTION;
-import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.WHILE;
+import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,16 +15,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableMap;
-import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.project.userpath.If;
-import com.neotys.neoload.model.v3.project.userpath.JavaScript;
-import com.neotys.neoload.model.v3.project.userpath.Loop;
-import com.neotys.neoload.model.v3.project.userpath.Request;
-import com.neotys.neoload.model.v3.project.userpath.Step;
-import com.neotys.neoload.model.v3.project.userpath.Switch;
-import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
-import com.neotys.neoload.model.v3.project.userpath.While;
+import com.neotys.neoload.model.v3.project.userpath.*;
 
 public class StepsDeserializer extends StdDeserializer<List<Step>> {
     private static final long serialVersionUID = -5696608939252369276L;
@@ -47,6 +30,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
     	builder.put(LOOP, Loop.class);
     	builder.put(WHILE, While.class);
     	builder.put(SWITCH, Switch.class);
+        builder.put(CUSTOM_ACTION, CustomAction.class);
     	STEPS = builder.build();
     }
     
