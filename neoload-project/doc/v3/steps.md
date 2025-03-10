@@ -9,3 +9,5 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 - [if](if.md)
 - [loop](loop.md)
 - [while](while.md)
+- [switch](switch.md)
+- [custom_action](custom_action.md)
