@@ -571,7 +571,9 @@
 						"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
 						"if": { "$ref": "#/definitions/user_paths/actions/if" },
 						"while": { "$ref": "#/definitions/user_paths/actions/while" },
-						"loop": { "$ref": "#/definitions/user_paths/actions/loop" }
+						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
+						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
+						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
 					},
 					"additionalProperties": false
 				}
@@ -696,6 +698,44 @@
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
+				},
+				"switch": {
+					"$id": "#/definitions/user_paths/actions/switch",
+					"title": "Action: Switch",
+					"type": "object",
+					"required": ["value", "default"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"value": { "$ref": "#/definitions/common/text" },
+						"case": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/case" }
+						},
+						"default": { "$ref": "#/definitions/user_paths/container" }
+					},
+					"additionalProperties": false
+				},
+				"custom_action": {
+					"$id": "#/definitions/user_paths/actions/custom_action",
+					"title": "Action: Custom Action",
+					"type": "object",
+					"required": ["name", "type"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"type": { "$ref": "#/definitions/common/text" },
+						"parameters": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/custom-action-parameter" }
+						},
+						"asRequest": {
+							"type": "boolean",
+							"default": false
+						},
+						"libraryPath": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
 				}
 			},
 			"extractor": {
@@ -733,6 +773,31 @@
 						"default": true
 					}
 				}
+			},
+			"case": {
+				"type": "object",
+				"required": ["value"],
+				"properties": {
+					"description": { "$ref": "#/definitions/common/text" },
+					"value": { "$ref": "#/definitions/common/text" },
+					"break": { "type": "boolean" },
+					"steps": { "$ref": "#/definitions/user_paths/steps" }
+				},
+				"additionalProperties": false
+			},
+			"custom-action-parameter": {
+				"type": "object",
+				"required": ["name", "value"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"value": { "$ref": "#/definitions/common/text" },
+					"type": {
+						"type": "string",
+						"enum": ["TEXT", "PASSWORD"],
+						"default": "TEXT"
+					}
+				},
+				"additionalProperties": false
 			}
 		}
 	}
