@@ -17,40 +17,108 @@ A Custom Advanced action can also be developed using Java.
 ## type
 
 The type of the action is an internal value, not displayed in NeoLoad GUI, used to identify the action.
+
 This can be an Advanced Action:
 - SQL Connection
 - SQL
 - SQL Disconnection
+- Executable Test Script Action
+- Java Test Script Action
 - Command line Action
-- KafkaSendAction
+- Java Action
+- amqp-close-channel
+- amqp-create-channel
+- amqp-connect
+- amqp-disconnect
+- amqp-declare-exchange
+- amqp-delete-exchange
+- amqp-publish
+- amqp-consume
+- amqp-declare-queue
+- amqp-delete-queue
+- Connect
+- Disconnect
+- Receive from Queue
+- Send To Queue
+- Send And Receive
+- Publish to Topic
+- Receive from Topic
+- Subscribe To Topic
+- Unsubscribe From Topic
 - KafkaReceiveAction
-- ...
+- KafkaSendAction
+- MQTT Connect
+- MQTT Disconnect
+- MQTT publish
+- MQTT receive messages on a topic
+- MQTT subscribe to topic
+- MQTT unsubscribe
+- CustomMeasurementAction
+- Store External Data Entries
+- Store External Data Entry
 
 A SAP GUI Action:
-- SapConnect
 - SapClick
+- SapClose 
+- SapCloseAllSessions
+- SapCollapse
+- SapConnect
+- SapDoubleClick
+- SapEvent
+- SapExpand
+- SapIsAvailable
+- SapIsChangeable
+- SapIsSelected
+- SapPress
+- SapRead
+- SapResize
+- SapRightClick
+- SapSelect
+- SapFocus
 - SapSetText
-- ...
+- SapUnselect
 
 A Citrix Action:
 - CitrixConnect
-- CitrixMouseClick
-- CitrixKeyType
+- CitrixConnectICA
 - CitrixDisconnect
-- ...
+- CitrixKeyType
+- CitrixMouseClick
+- CitrixMouseMove
+- CitrixScreenshotGet
+- CitrixScreenshotWait
+- CitrixTextGet
+- CitrixTextType
+- CitrixTextWait
+- CitrixWindowActivate
+- CitrixWindowWait
 
 A RealBrowser Action:
-- BrowserOpen
+- BrowserCaptureRequests
 - BrowserClick
-- BrowserType
 - BrowserClose
-- ...
+- BrowserCloseTab
+- BrowserDragAndDrop
+- BrowserEvaluateJavascript
+- BrowserHandleDialog
+- BrowserMouseOver
+- BrowserNavigate
+- BrowserOpen
+- BrowserOpenTab
+- BrowserPress
+- BrowserRead
+- BrowserScroll
+- BrowserSelectOption
+- BrowserSwitchTab
+- BrowserType
+- BrowserUploadFile
+- BrowserWaitSelector
 
 An RTE Action:
 - RTEConnect
-- RTESendKey
+- RTEDisconnect
 - RTERead
-- DisconnectAction
+- RTESendKey
 
 This can also be the type of Custom Advanced Action, developed using Java.
 
