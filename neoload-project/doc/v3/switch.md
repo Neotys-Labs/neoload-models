@@ -3,6 +3,8 @@
 The Switch action is used to execute conditional actions based on a selection control mechanism. It allows the Switch value to change the control flow of the User Path execution via a multiway branch, named Case statements.
 The Switch action is fall-through, which means that if a Break flag is disabled on a Case, then the next Case statement is executed.
 
+Switches are supported in NeoLoad from version 2025.1 onwards.
+
 #### Available settings
 
 | Name          | Description                                     | Accept variable | Required | Since |
