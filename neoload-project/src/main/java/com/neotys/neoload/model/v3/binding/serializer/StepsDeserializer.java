@@ -20,19 +20,19 @@ import com.neotys.neoload.model.v3.project.userpath.*;
 public class StepsDeserializer extends StdDeserializer<List<Step>> {
     private static final long serialVersionUID = -5696608939252369276L;
     
-    private static final Map<String, Class<? extends Step>> STEPS;
-    static {
-    	final ImmutableMap.Builder<String, Class<? extends Step>> builder = new ImmutableMap.Builder<>();
-    	builder.put(TRANSACTION, Container.class);
-    	builder.put(REQUEST, Request.class);
-    	builder.put(JAVASCRIPT, JavaScript.class);
-    	builder.put(IF, If.class);
-    	builder.put(LOOP, Loop.class);
-    	builder.put(WHILE, While.class);
-    	builder.put(SWITCH, Switch.class);
-        builder.put(CUSTOM_ACTION, CustomAction.class);
-    	STEPS = builder.build();
-    }
+    private static final Map<String, Class<? extends Step>> STEPS = new ImmutableMap.Builder<String, Class<? extends Step>>()
+    		.put(TRANSACTION, Container.class)
+    		.put(REQUEST, Request.class)
+    		.put(JAVASCRIPT, JavaScript.class)
+    		.put(IF, If.class)
+    		.put(LOOP, Loop.class)
+    		.put(WHILE, While.class)
+    		.put(SWITCH, Switch.class)
+        	.put(CUSTOM_ACTION, CustomAction.class)
+			.put(TRY_CATCH, TryCatch.class)
+			.put(CALL, Call.class)
+			.build();
+
     
     public StepsDeserializer() {
         super(List.class);

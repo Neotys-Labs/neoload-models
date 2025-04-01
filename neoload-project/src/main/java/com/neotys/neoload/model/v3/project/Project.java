@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.v3.project;
 
+import com.neotys.neoload.model.v3.binding.serializer.SharedContainersDeserializer;
+import com.neotys.neoload.model.v3.project.userpath.Step;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +41,7 @@ public interface Project {
 	String POPULATIONS = "populations";
 	String SCENARIOS = "scenarios";
 	String PROJECT_SETTINGS = "project_settings";
+	String SHARED_CONTAINER = "shared_containers";
 
 	@JsonProperty(NAME)
 	Optional<String> getName();
@@ -57,6 +60,12 @@ public interface Project {
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<Server> getServers();
+
+	@JsonProperty(SHARED_CONTAINER)
+	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@JsonDeserialize(using = SharedContainersDeserializer.class)
+	@Valid
+	List<Step> getSharedContainers();
 
 	@JsonProperty(USER_PATHS)
 	@UniqueElementNameCheck(groups={NeoLoad.class})

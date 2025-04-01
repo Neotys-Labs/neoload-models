@@ -7,13 +7,6 @@ import org.immutables.value.Value;
 import javax.validation.constraints.Pattern;
 
 interface StepDuration extends Step {
-	String DEFAULT_NAME = "#duration#";
-
-	@RequiredCheck(groups = {NeoLoad.class})
-	@Value.Default
-	default String getName() {
-		return DEFAULT_NAME;
-	}
 
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Pattern(regexp = "(\\d+|\\$\\{\\w+\\})", groups = {NeoLoad.class})

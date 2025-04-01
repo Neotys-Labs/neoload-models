@@ -16,6 +16,7 @@ public interface CustomAction extends Step {
 	default boolean asRequest(){
 		return false;
 	}
+
 	List<CustomActionParameter> getParameters();
 	Optional<Path> getLibraryPath();
 

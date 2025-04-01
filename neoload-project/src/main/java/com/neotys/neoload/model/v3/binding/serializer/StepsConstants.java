@@ -11,6 +11,9 @@ class StepsConstants {
     protected static final String WHILE = "while";
     protected static final String SWITCH = "switch";
     protected static final String CUSTOM_ACTION = "custom_action";
+    protected static final String TRY_CATCH = "try_catch";
+    protected static final String CALL = "call";
+
 
     private StepsConstants() {
         super();
