@@ -80,6 +80,18 @@
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/user_paths/user_path" }
 		},
+		"shared_containers": {
+			"$id": "#root/shared_containers",
+			"title": "Shared Containers",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"transaction": { "$ref": "#/definitions/user_paths/actions/transaction"},
+					"while": { "$ref": "#/definitions/user_paths/actions/while" },
+					"loop": { "$ref": "#/definitions/user_paths/actions/loop" }
+				}
+			},
 		"project_settings": {
 			"$id": "#root/project_settings",
 			"title": "Neoload_Project_settings",
@@ -574,6 +586,9 @@
 						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
 						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
 						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
+						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
+						"try_catch": { "$ref": "#/definitions/user_paths/actions/try_catch" },
+						"call" : {"$ref": "#/definitions/user_paths/actions/call" }
 					},
 					"additionalProperties": false
 				}
@@ -736,6 +751,31 @@
 						"libraryPath": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
+				},
+				"try_catch": {
+					"$id": "#/definitions/user_paths/actions/try_catch",
+					"title": "Action: Try Catch",
+					"type": "object",
+					"required": ["try", "catch"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"policy": {
+							"type": "string",
+							"enum": ["catch_all", "catch_errors","catch_assertions"]
+						},
+						"try": { "$ref": "#/definitions/user_paths/container" },
+						"catch": { "$ref": "#/definitions/user_paths/container" }
+					},
+					"additionalProperties": false
+				},
+				"call": {
+					"$id": "#/definitions/user_paths/actions/call",
+					"title": "Action: call",
+					"type": "object",
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" }
+					}
 				}
 			},
 			"extractor": {
