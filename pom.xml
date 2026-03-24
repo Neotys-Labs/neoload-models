@@ -67,21 +67,10 @@
 	</profiles>
 
 	<scm>
-		<connection>scm:git:git://github.com/neotysbde/neoload-models.git</connection>
-		<developerConnection>scm:git:ssh://github.com:neotysbde/neoload-models.git</developerConnection>
-		<url>https://github.com/neotysbde/neoload-models/tree/master</url>
+		<connection>scm:git:git://github.com/Neotys-Labs/neoload-models.git</connection>
+		<developerConnection>scm:git:ssh://github.com:Neotys-Labs/neoload-models.git</developerConnection>
+		<url>https://github.com/Neotys-Labs/neoload-models/tree/master</url>
 	</scm>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
 
 	<properties>
 		<project.scm.id>git</project.scm.id>
@@ -369,6 +358,18 @@
 
 
 	<build>
+		<plugins>
+				<plugin>
+					<groupId>org.sonatype.central</groupId>
+					<artifactId>central-publishing-maven-plugin</artifactId>
+					<version>0.9.0</version>
+					<extensions>true</extensions>
+					<configuration>
+						<publishingServerId>ossrh</publishingServerId>
+						<autoPublish>true</autoPublish>
+					</configuration>
+				</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
