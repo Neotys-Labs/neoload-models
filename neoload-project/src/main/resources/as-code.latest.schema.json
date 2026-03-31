@@ -573,7 +573,8 @@
 						"while": { "$ref": "#/definitions/user_paths/actions/while" },
 						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
 						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
+						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
+						"stop_vu": { "$ref": "#/definitions/user_paths/actions/stop_vu" }
 					},
 					"additionalProperties": false
 				}
@@ -734,6 +735,18 @@
 							"default": false
 						},
 						"libraryPath": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"stop_vu": {
+					"$id": "#/definitions/user_paths/actions/stop_vu",
+					"title": "Action: Stop Virtual User",
+					"type": "object",
+					"properties": {
+						"start_new_vu": {
+							"type": "boolean",
+							"default": true
+						}
 					},
 					"additionalProperties": false
 				}
