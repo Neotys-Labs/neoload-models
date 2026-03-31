@@ -50,7 +50,11 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
             final JsonNode stepNode = iterator.next();
            
             Step step = null;
-            if (stepNode.has(DELAY)) {
+            if (stepNode.isTextual() && GO_TO_NEXT_ITERATION.equals(stepNode.asText())) {
+                step = GoToNextIteration.builder().build();
+            } else if (stepNode.has(GO_TO_NEXT_ITERATION)) {
+                step = GoToNextIteration.builder().build();
+            } else if (stepNode.has(DELAY)) {
                 final String delayValue = stepNode.get(DELAY).asText();
                 final String delay = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(delayValue);
                 step = Delay.builder().value(String.valueOf(delay)).build();
