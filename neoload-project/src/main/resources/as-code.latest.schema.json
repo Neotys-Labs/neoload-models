@@ -573,7 +573,8 @@
 						"while": { "$ref": "#/definitions/user_paths/actions/while" },
 						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
 						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
+						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
+						"go_to_next_iteration": { "$ref": "#/definitions/user_paths/actions/go_to_next_iteration" }
 					},
 					"additionalProperties": false
 				}
@@ -735,6 +736,12 @@
 						},
 						"libraryPath": { "$ref": "#/definitions/common/text" }
 					},
+					"additionalProperties": false
+				},
+				"go_to_next_iteration": {
+					"$id": "#/definitions/user_paths/actions/go_to_next_iteration",
+					"title": "Action: Go to next iteration",
+					"type": "object",
 					"additionalProperties": false
 				}
 			},
