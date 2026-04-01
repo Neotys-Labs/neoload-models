@@ -1,0 +1,14 @@
+{
+  "name": "MyProject",
+  "user_paths": [{
+    "name": "user_path_1",
+    "actions": {
+      "steps": [{
+        "debug_logger": {
+          "text": "Current user: ${user_id}",
+          "file": "logs/custom.txt"
+        }
+      }]
+    }
+  }]
+}
