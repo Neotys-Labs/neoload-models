@@ -573,7 +573,8 @@
 						"while": { "$ref": "#/definitions/user_paths/actions/while" },
 						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
 						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
+						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
+						"rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" }
 					},
 					"additionalProperties": false
 				}
@@ -734,6 +735,17 @@
 							"default": false
 						},
 						"libraryPath": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"rendezvous": {
+					"$id": "#/definitions/user_paths/actions/rendezvous",
+					"title": "Action: Rendezvous",
+					"type": "object",
+					"required": ["name"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				}
