@@ -30,7 +30,8 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
     	builder.put(LOOP, Loop.class);
     	builder.put(WHILE, While.class);
     	builder.put(SWITCH, Switch.class);
-        builder.put(CUSTOM_ACTION, CustomAction.class);
+			builder.put(CUSTOM_ACTION, CustomAction.class);
+			builder.put(VARIABLE_MODIFIER, VariableModifier.class);
     	STEPS = builder.build();
     }
     

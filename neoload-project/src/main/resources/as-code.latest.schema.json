@@ -573,7 +573,8 @@
 						"while": { "$ref": "#/definitions/user_paths/actions/while" },
 						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
 						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
+						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
+						"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" }
 					},
 					"additionalProperties": false
 				}
@@ -734,6 +735,30 @@
 							"default": false
 						},
 						"libraryPath": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"variable_modifier": {
+					"$id": "#/definitions/user_paths/actions/variable_modifier",
+					"title": "Action: Variable Modifier",
+					"type": "object",
+					"required": ["mode"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"category": {
+							"type": "string",
+							"enum": ["defined", "shared"],
+							"default": "defined"
+						},
+						"mode": {
+							"type": "string",
+							"enum": ["next_value", "init_value", "add_value", "get_value"]
+						},
+						"variable_name": { "$ref": "#/definitions/common/text" },
+						"shared_variable_name": { "$ref": "#/definitions/common/text" },
+						"src_variable_name": { "$ref": "#/definitions/common/text" },
+						"dest_variable_name": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				}
