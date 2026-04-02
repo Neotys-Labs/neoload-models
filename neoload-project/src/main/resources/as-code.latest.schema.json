@@ -599,11 +599,12 @@
 					"type": "object",
 					"required": ["url"],
 					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
 						"url": { "$ref": "#/definitions/common/text" },
 						"server": { "$ref": "#/definitions/common/text" },
 						"method": {
 							"type": "string",
-							"enum": ["GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS", "TRACE"]
+							"enum": ["GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS", "TRACE", "CUSTOM"]
 						},
 						"headers": {
 							"type": "array",
@@ -623,6 +624,10 @@
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"followRedirects": {
+							"type": "boolean",
+							"default": false
 						}
 					}
 				},
