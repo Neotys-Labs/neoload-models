@@ -688,7 +688,11 @@
 					"sla_profile": {
 						"type": "string"
 					},
-					"steps": { "$ref": "#/definitions/user_paths/steps" }
+					"steps": { "$ref": "#/definitions/user_paths/steps" },
+					"assertions": {
+						"type": "array",
+						"items": { "$ref": "#/definitions/user_paths/assertion" }
+					}
 				}
 			},
 			"steps": {
@@ -739,7 +743,11 @@
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": { "$ref": "#/definitions/user_paths/steps" },
+						"assertions": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/assertion" }
+						}
 					},
 					"additionalProperties": false
 				},
@@ -773,6 +781,10 @@
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"assertions": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/assertion" }
 						}
 					}
 				},
@@ -1053,6 +1065,26 @@
 						"default": true
 					}
 				}
+			},
+			"assertion": {
+				"$id": "#/definitions/user_paths/assertion",
+				"title": "Assertion",
+				"type": "object",
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"xpath": { "$ref": "#/definitions/common/text" },
+					"jsonpath": { "$ref": "#/definitions/common/text" },
+					"not": {
+						"type": "boolean",
+						"default": false
+					},
+					"contains": { "$ref": "#/definitions/common/text" },
+					"regexp": {
+						"type": "boolean",
+						"default": false
+					}
+				},
+				"additionalProperties": false
 			},
 			"case": {
 				"type": "object",
