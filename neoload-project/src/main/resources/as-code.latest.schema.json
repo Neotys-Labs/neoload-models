@@ -505,6 +505,21 @@
 			"properties": {
 				"name": { "$ref": "#/definitions/common/text" },
 				"description": { "$ref": "#/definitions/common/text" },
+				"sla_profile": { "$ref": "#/definitions/common/text" },
+				"store_variables_for_raw_data": {
+					"type": "boolean",
+					"default": false
+				},
+				"excluded_urls": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/common/text" }
+				},
+				"apm_configuration": { "$ref": "#/definitions/scenario/apm" },
+				"monitoring": { "$ref": "#/definitions/scenario/monitoring" },
+				"rendezvous_policies": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/scenario/rendezvous_policy" }
+				},
 				"populations": {
 					"$id": "#/definitions/scenario/populations",
 					"title": "Scenario Populations",
@@ -524,6 +539,63 @@
 						}
 					}
 				}
+			},
+			"apm": {
+				"$id": "#/definitions/scenario/apm",
+				"title": "APM Configuration",
+				"type": "object",
+				"properties": {
+					"dynatrace_tags": {
+						"type": "array",
+						"items": { "$ref": "#/definitions/common/text" }
+					},
+					"dynatrace_anomaly_rules": {
+						"type": "array",
+						"items": { "$ref": "#/definitions/scenario/dynatrace_anomaly_rule" }
+					}
+				},
+				"additionalProperties": false
+			},
+			"dynatrace_anomaly_rule": {
+				"$id": "#/definitions/scenario/dynatrace_anomaly_rule",
+				"title": "Dynatrace Anomaly Rule",
+				"type": "object",
+				"required": ["metric_id", "operator", "value", "severity"],
+				"properties": {
+					"metric_id": { "$ref": "#/definitions/common/text" },
+					"operator": {
+						"type": "string",
+						"enum": ["ABOVE", "BELOW"]
+					},
+					"value": { "$ref": "#/definitions/common/text" },
+					"severity": {
+						"type": "string",
+						"enum": ["AVAILABILITY", "CUSTOM_ALERT", "ERROR", "INFO", "PERFORMANCE", "RESOURCE_CONTENTION"]
+					}
+				},
+				"additionalProperties": false
+			},
+			"monitoring": {
+				"$id": "#/definitions/scenario/monitoring",
+				"title": "Monitoring Parameters",
+				"type": "object",
+				"properties": {
+					"before": { "$ref": "#/definitions/common/time" },
+					"after": { "$ref": "#/definitions/common/time" }
+				},
+				"additionalProperties": false
+			},
+			"rendezvous_policy": {
+				"$id": "#/definitions/scenario/rendezvous_policy",
+				"title": "Rendezvous Policy",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"when": { "$ref": "#/definitions/common/text" },
+					"timeout": { "$ref": "#/definitions/common/time" }
+				},
+				"additionalProperties": false
 			}
 		},
 		"user_paths": {
