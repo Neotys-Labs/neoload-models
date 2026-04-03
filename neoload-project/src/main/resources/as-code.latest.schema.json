@@ -623,6 +623,10 @@
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"parts": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/part" }
 						}
 					}
 				},
@@ -773,6 +777,22 @@
 						"default": true
 					}
 				}
+			},
+			"part": {
+				"$id": "#/definitions/user_paths/part",
+				"title": "Multipart Part",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"contentType": { "$ref": "#/definitions/common/text" },
+					"charSet": { "$ref": "#/definitions/common/text" },
+					"transferEncoding": { "$ref": "#/definitions/common/text" },
+					"value": { "$ref": "#/definitions/common/text" },
+					"filename": { "$ref": "#/definitions/common/text" },
+					"sourceFilename": { "$ref": "#/definitions/common/text" }
+				},
+				"additionalProperties": false
 			},
 			"case": {
 				"type": "object",
