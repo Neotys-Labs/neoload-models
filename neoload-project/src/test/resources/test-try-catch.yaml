@@ -1,0 +1,15 @@
+name: MyProject
+user_paths:
+- name: user_path_1
+  actions:
+    steps:
+    - try_catch:
+        name: my_try_catch
+        policy: catch_errors
+        try:
+          steps:
+          - delay: 1000
+          - delay: 2000
+        catch:
+          steps:
+          - delay: 500
