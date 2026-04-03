@@ -20,3 +20,4 @@ buildNumber.properties
 .sonarlint/
 .recommenders/caches/identified-project-coordinates.json
 .recommenders/caches/manual-mappings.json
+.claude/
