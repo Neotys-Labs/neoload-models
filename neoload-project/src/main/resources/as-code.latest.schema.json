@@ -496,6 +496,34 @@
 					"users": { "$ref": "#/definitions/common/positive_number" },
 					"duration": { "$ref": "#/definitions/common/duration" }
 				}
+			},
+			"custom_load": {
+				"$id": "#/definitions/populations/custom_load",
+				"title": "Custom Load",
+				"type": "object",
+				"required": ["steps"],
+				"properties": {
+					"steps": {
+						"type": "array",
+						"minItems": 1,
+						"items": { "$ref": "#/definitions/populations/custom_policy_step" }
+					},
+					"rampup": { "type": "integer" },
+					"start_after": { "$ref": "#/definitions/common/start_after_options" },
+					"stop_after": { "$ref": "#/definitions/common/stop_after_options" }
+				},
+				"additionalProperties": false
+			},
+			"custom_policy_step": {
+				"$id": "#/definitions/populations/custom_policy_step",
+				"title": "Custom Policy Step",
+				"type": "object",
+				"required": ["when", "users"],
+				"properties": {
+					"when": { "$ref": "#/definitions/common/duration" },
+					"users": { "$ref": "#/definitions/common/positive_number" }
+				},
+				"additionalProperties": false
 			}
 		},
 		"scenario": {
@@ -520,7 +548,8 @@
 							"name": { "$ref": "#/definitions/common/text" },
 							"constant_load": { "$ref": "#/definitions/populations/constant_load" },
 							"rampup_load": { "$ref": "#/definitions/populations/rampup_load" },
-							"peaks_load": { "$ref": "#/definitions/populations/peaks_load" }
+							"peaks_load": { "$ref": "#/definitions/populations/peaks_load" },
+							"custom_load": { "$ref": "#/definitions/populations/custom_load" }
 						}
 					}
 				}
