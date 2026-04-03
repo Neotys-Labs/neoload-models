@@ -579,7 +579,8 @@
 						"fork": { "$ref": "#/definitions/user_paths/actions/fork" },
 						"wait_until": { "$ref": "#/definitions/user_paths/actions/wait_until" },
 						"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" },
-						"debug_logger": { "$ref": "#/definitions/user_paths/actions/debug_logger" }
+						"debug_logger": { "$ref": "#/definitions/user_paths/actions/debug_logger" },
+						"rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" }
 					},
 					"additionalProperties": false
 				}
@@ -827,6 +828,17 @@
 					"properties": {
 						"text": { "$ref": "#/definitions/common/text" },
 						"file": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"rendezvous": {
+					"$id": "#/definitions/user_paths/actions/rendezvous",
+					"title": "Action: Rendezvous",
+					"type": "object",
+					"required": ["name"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				}
