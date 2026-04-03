@@ -636,6 +636,7 @@
 						},
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
+						"bodybinary": { "$ref": "#/definitions/common/textblob" },
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
