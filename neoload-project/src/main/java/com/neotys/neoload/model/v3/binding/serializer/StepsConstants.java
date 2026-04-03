@@ -12,6 +12,7 @@ class StepsConstants {
     protected static final String SWITCH = "switch";
     protected static final String CUSTOM_ACTION = "custom_action";
     protected static final String GO_TO_NEXT_ITERATION = "go_to_next_iteration";
+    protected static final String STOP_VU = "stop_vu";
 
     private StepsConstants() {
         super();

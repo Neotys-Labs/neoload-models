@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/aoriglia/**)",
+      "Read(//Users/aoriglia/dev/**)",
+      "mcp__claude_ai_Atlassian__createJiraIssue",
+      "mcp__claude_ai_Atlassian__getJiraIssue",
+      "mcp__claude_ai_Atlassian__getJiraProjectIssueTypesMetadata",
+      "mcp__claude_ai_Atlassian__editJiraIssue",
+      "Bash(mvn clean:*fngcleltvffkuhilb)"
+    ]
+  }
+}
