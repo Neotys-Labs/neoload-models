@@ -16,6 +16,7 @@ class StepsConstants {
     protected static final String FORK = "fork";
     protected static final String WAIT_UNTIL = "wait_until";
     protected static final String VARIABLE_MODIFIER = "variable_modifier";
+    protected static final String DEBUG_LOGGER = "debug_logger";
 
     private StepsConstants() {
         super();

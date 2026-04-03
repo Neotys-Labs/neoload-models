@@ -578,7 +578,8 @@
 						"stop_vu": { "$ref": "#/definitions/user_paths/actions/stop_vu" },
 						"fork": { "$ref": "#/definitions/user_paths/actions/fork" },
 						"wait_until": { "$ref": "#/definitions/user_paths/actions/wait_until" },
-						"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" }
+						"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" },
+						"debug_logger": { "$ref": "#/definitions/user_paths/actions/debug_logger" }
 					},
 					"additionalProperties": false
 				}
@@ -815,6 +816,17 @@
 						"shared_variable_name": { "$ref": "#/definitions/common/text" },
 						"src_variable_name": { "$ref": "#/definitions/common/text" },
 						"dest_variable_name": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"debug_logger": {
+					"$id": "#/definitions/user_paths/actions/debug_logger",
+					"title": "Action: Debug Logger",
+					"type": "object",
+					"required": ["text"],
+					"properties": {
+						"text": { "$ref": "#/definitions/common/text" },
+						"file": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				}
