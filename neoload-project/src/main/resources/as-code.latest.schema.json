@@ -577,7 +577,8 @@
 						"go_to_next_iteration": { "$ref": "#/definitions/user_paths/actions/go_to_next_iteration" },
 						"stop_vu": { "$ref": "#/definitions/user_paths/actions/stop_vu" },
 						"fork": { "$ref": "#/definitions/user_paths/actions/fork" },
-						"wait_until": { "$ref": "#/definitions/user_paths/actions/wait_until" }
+						"wait_until": { "$ref": "#/definitions/user_paths/actions/wait_until" },
+						"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" }
 					},
 					"additionalProperties": false
 				}
@@ -790,6 +791,30 @@
 							"default": "any"
 						},
 						"timeout": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"variable_modifier": {
+					"$id": "#/definitions/user_paths/actions/variable_modifier",
+					"title": "Action: Variable Modifier",
+					"type": "object",
+					"required": ["mode"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"category": {
+							"type": "string",
+							"enum": ["defined", "shared"],
+							"default": "defined"
+						},
+						"mode": {
+							"type": "string",
+							"enum": ["next_value", "init_value", "add_value", "get_value"]
+						},
+						"variable_name": { "$ref": "#/definitions/common/text" },
+						"shared_variable_name": { "$ref": "#/definitions/common/text" },
+						"src_variable_name": { "$ref": "#/definitions/common/text" },
+						"dest_variable_name": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				}

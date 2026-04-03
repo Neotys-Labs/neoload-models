@@ -15,6 +15,7 @@ class StepsConstants {
     protected static final String STOP_VU = "stop_vu";
     protected static final String FORK = "fork";
     protected static final String WAIT_UNTIL = "wait_until";
+    protected static final String VARIABLE_MODIFIER = "variable_modifier";
 
     private StepsConstants() {
         super();

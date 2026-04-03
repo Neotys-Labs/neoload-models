@@ -34,6 +34,8 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
     	builder.put(STOP_VU, StopVU.class);
     	builder.put(FORK, Fork.class);
     	builder.put(WAIT_UNTIL, WaitUntil.class);
+			builder.put(CUSTOM_ACTION, CustomAction.class);
+			builder.put(VARIABLE_MODIFIER, VariableModifier.class);
     	STEPS = builder.build();
     }
     
