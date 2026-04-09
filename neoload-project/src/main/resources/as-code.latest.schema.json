@@ -41,6 +41,7 @@
 					{ "$ref": "#/definitions/variables/file" },
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
+					{ "$ref": "#/definitions/variables/date" },
 					{ "$ref": "#/definitions/variables/javascript" }
 				]
 			}
@@ -291,6 +292,31 @@
 							},
 							"predictable": {
 								"type": "boolean"
+							}
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"date": {
+				"$id": "#/definitions/variables/date",
+				"title": "Date",
+				"type": "object",
+				"xrequired": ["pattern"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"pattern": { "$ref": "#/definitions/common/text" },
+							"start_date": { "$ref": "#/definitions/common/text" },
+							"inc_type": {
+								"type": "string",
+								"enum": ["second", "minute", "hour", "day", "month", "year"],
+								"default": "day"
+							},
+							"inc_value": {
+								"type": "number",
+								"default": 1
 							}
 						}
 					}
