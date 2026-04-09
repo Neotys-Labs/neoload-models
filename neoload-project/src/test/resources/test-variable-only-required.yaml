@@ -57,6 +57,13 @@ variables:
       inc_type: day
       inc_value: 1
       change_policy: each_iteration
+- list:
+      name: MyList
+      column_names: ["city", "country"]
+      values:
+      - ["Paris", "France"]
+      - ["London", "UK"]
+      order: sequential
 - javascript:
     name: My JSVar
     description: This is a js var
