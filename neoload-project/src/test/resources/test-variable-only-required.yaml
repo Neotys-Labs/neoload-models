@@ -40,6 +40,13 @@ variables:
       max: -1
       predictable: false
       change_policy: each_request
+- date:
+      name: MyDate
+      pattern: "yyyy-MM-dd"
+      start_date: "2026-01-01"
+      inc_type: day
+      inc_value: 1
+      change_policy: each_iteration
 - javascript:
     name: My JSVar
     description: This is a js var

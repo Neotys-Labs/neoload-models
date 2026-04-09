@@ -77,6 +77,15 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .changePolicy(EACH_REQUEST)
                 .build();
 
+        final Variable dateVariable = DateVariable.builder()
+                .name("MyDate")
+                .pattern("yyyy-MM-dd")
+                .startDate("2026-01-01")
+                .incType(DateVariable.IncType.DAY)
+                .incValue(1)
+                .changePolicy(EACH_ITERATION)
+                .build();
+
         final JavaScriptVariable javaScriptVariable = JavaScriptVariable.builder()
                 .name("My JSVar")
                 .description("This is a js var")
@@ -92,7 +101,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, dateVariable, javaScriptVariable)
                 .build();
     }
 }
