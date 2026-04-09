@@ -42,6 +42,7 @@
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
 					{ "$ref": "#/definitions/variables/random_string" },
+					{ "$ref": "#/definitions/variables/password" },
 					{ "$ref": "#/definitions/variables/javascript" }
 				]
 			}
@@ -316,6 +317,21 @@
 							"predictable": {
 								"type": "boolean"
 							}
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"password": {
+				"$id": "#/definitions/variables/password",
+				"title": "Password",
+				"type": "object",
+				"xrequired": ["value"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"value": { "$ref": "#/definitions/common/text" }
 						}
 					}
 				],
