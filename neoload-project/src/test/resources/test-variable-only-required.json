@@ -63,6 +63,15 @@
       }
     },
     {
+      "random_string": {
+        "name": "MyRandomString",
+        "min_length": 5,
+        "max_length": 20,
+        "predictable": false,
+        "change_policy": "each_use"
+      }
+    },
+    {
       "javascript": {
         "name": "My JSVar",
         "description": "This is a js var",

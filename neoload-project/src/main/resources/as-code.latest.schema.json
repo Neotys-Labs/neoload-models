@@ -41,6 +41,7 @@
 					{ "$ref": "#/definitions/variables/file" },
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
+					{ "$ref": "#/definitions/variables/random_string" },
 					{ "$ref": "#/definitions/variables/javascript" }
 				]
 			}
@@ -287,6 +288,29 @@
 								"type": "number"
 							},
 							"max": {
+								"type": "number"
+							},
+							"predictable": {
+								"type": "boolean"
+							}
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"random_string": {
+				"$id": "#/definitions/variables/random_string",
+				"title": "Random String",
+				"type": "object",
+				"xrequired": ["min_length", "max_length"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"min_length": {
+								"type": "number"
+							},
+							"max_length": {
 								"type": "number"
 							},
 							"predictable": {
