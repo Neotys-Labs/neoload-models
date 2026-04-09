@@ -45,6 +45,7 @@
 					{ "$ref": "#/definitions/variables/password" },
 					{ "$ref": "#/definitions/variables/date" },
 					{ "$ref": "#/definitions/variables/list" },
+					{ "$ref": "#/definitions/variables/sql" },
 					{ "$ref": "#/definitions/variables/javascript" }
 				]
 			}
@@ -369,6 +370,11 @@
 				"title": "List",
 				"type": "object",
 				"xrequired": ["values"],
+			"sql": {
+				"$id": "#/definitions/variables/sql",
+				"title": "SQL",
+				"type": "object",
+				"xrequired": ["query", "driver", "url"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
@@ -383,6 +389,14 @@
 									"type": "array",
 									"items": { "type": "string" }
 								}
+							"query": { "$ref": "#/definitions/common/text" },
+							"driver": { "$ref": "#/definitions/common/text" },
+							"url": { "$ref": "#/definitions/common/text" },
+							"login": { "$ref": "#/definitions/common/text" },
+							"password": { "$ref": "#/definitions/common/text" },
+							"column_names": {
+								"type": "array",
+								"items": { "type": "string" }
 							}
 						}
 					}

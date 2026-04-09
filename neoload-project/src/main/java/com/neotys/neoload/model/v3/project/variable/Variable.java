@@ -16,6 +16,7 @@ import org.immutables.value.Value;
 		@JsonSubTypes.Type(value = PasswordVariable.class, name = "password"),
 		@JsonSubTypes.Type(value = DateVariable.class, name = "date"),
 		@JsonSubTypes.Type(value = ListVariable.class, name = "list"),
+		@JsonSubTypes.Type(value = SqlVariable.class, name = "sql"),
 		@JsonSubTypes.Type(value = JavaScriptVariable.class, name = "javascript")
 
 })

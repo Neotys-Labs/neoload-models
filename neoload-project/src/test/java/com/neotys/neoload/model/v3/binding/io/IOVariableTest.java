@@ -107,6 +107,17 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .order(SEQUENTIAL)
                 .build();
 
+        final Variable sqlVariable = SqlVariable.builder()
+                .name("MySqlVar")
+                .query("SELECT username, email FROM users")
+                .driver("com.mysql.jdbc.Driver")
+                .url("jdbc:mysql://localhost:3306/mydb")
+                .login("admin")
+                .password("pass")
+                .addColumnNames("username", "email")
+                .order(SEQUENTIAL)
+                .build();
+
         final JavaScriptVariable javaScriptVariable = JavaScriptVariable.builder()
                 .name("My JSVar")
                 .description("This is a js var")
@@ -122,7 +133,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable, passwordVariable, dateVariable, listVariable, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable, passwordVariable, dateVariable, listVariable, sqlVariable, javaScriptVariable)
                 .build();
     }
 }
