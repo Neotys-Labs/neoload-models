@@ -41,6 +41,7 @@
 					{ "$ref": "#/definitions/variables/file" },
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
+					{ "$ref": "#/definitions/variables/sql" },
 					{ "$ref": "#/definitions/variables/javascript" }
 				]
 			}
@@ -291,6 +292,29 @@
 							},
 							"predictable": {
 								"type": "boolean"
+							}
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"sql": {
+				"$id": "#/definitions/variables/sql",
+				"title": "SQL",
+				"type": "object",
+				"xrequired": ["query", "driver", "url"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"query": { "$ref": "#/definitions/common/text" },
+							"driver": { "$ref": "#/definitions/common/text" },
+							"url": { "$ref": "#/definitions/common/text" },
+							"login": { "$ref": "#/definitions/common/text" },
+							"password": { "$ref": "#/definitions/common/text" },
+							"column_names": {
+								"type": "array",
+								"items": { "type": "string" }
 							}
 						}
 					}

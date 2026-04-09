@@ -40,6 +40,15 @@ variables:
       max: -1
       predictable: false
       change_policy: each_request
+- sql:
+      name: MySqlVar
+      query: "SELECT username, email FROM users"
+      driver: "com.mysql.jdbc.Driver"
+      url: "jdbc:mysql://localhost:3306/mydb"
+      login: admin
+      password: pass
+      column_names: ["username", "email"]
+      order: sequential
 - javascript:
     name: My JSVar
     description: This is a js var
