@@ -63,6 +63,17 @@
       }
     },
     {
+      "list": {
+        "name": "MyList",
+        "column_names": ["city", "country"],
+        "values": [
+          ["Paris", "France"],
+          ["London", "UK"]
+        ],
+        "order": "sequential"
+      }
+    },
+    {
       "javascript": {
         "name": "My JSVar",
         "description": "This is a js var",
