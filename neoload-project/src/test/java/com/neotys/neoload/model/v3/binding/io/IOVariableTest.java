@@ -77,6 +77,12 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .changePolicy(EACH_REQUEST)
                 .build();
 
+        final Variable passwordVariable = PasswordVariable.builder()
+                .name("MyPassword")
+                .value("s3cr3t")
+                .changePolicy(EACH_ITERATION)
+                .build();
+
         final JavaScriptVariable javaScriptVariable = JavaScriptVariable.builder()
                 .name("My JSVar")
                 .description("This is a js var")
@@ -92,7 +98,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, passwordVariable, javaScriptVariable)
                 .build();
     }
 }

@@ -63,6 +63,13 @@
       }
     },
     {
+      "password": {
+        "name": "MyPassword",
+        "value": "s3cr3t",
+        "change_policy": "each_iteration"
+      }
+    },
+    {
       "javascript": {
         "name": "My JSVar",
         "description": "This is a js var",
