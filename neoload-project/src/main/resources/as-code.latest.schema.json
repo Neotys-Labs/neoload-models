@@ -370,11 +370,6 @@
 				"title": "List",
 				"type": "object",
 				"xrequired": ["values"],
-			"sql": {
-				"$id": "#/definitions/variables/sql",
-				"title": "SQL",
-				"type": "object",
-				"xrequired": ["query", "driver", "url"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
@@ -389,6 +384,21 @@
 									"type": "array",
 									"items": { "type": "string" }
 								}
+							}
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"sql": {
+				"$id": "#/definitions/variables/sql",
+				"title": "SQL",
+				"type": "object",
+				"xrequired": ["query", "driver", "url"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
 							"query": { "$ref": "#/definitions/common/text" },
 							"driver": { "$ref": "#/definitions/common/text" },
 							"url": { "$ref": "#/definitions/common/text" },
