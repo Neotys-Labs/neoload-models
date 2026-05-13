@@ -573,7 +573,8 @@
 						"while": { "$ref": "#/definitions/user_paths/actions/while" },
 						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
 						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
+						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
+						"http_page": { "$ref": "#/definitions/user_paths/actions/http_page" }
 					},
 					"additionalProperties": false
 				}
@@ -589,6 +590,35 @@
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
+					},
+					"additionalProperties": false
+				},
+				"http_page": {
+					"$id": "#/definitions/user_paths/actions/http_page",
+					"name": "http_page",
+					"title": "Action: HTTP Page",
+					"type": "object",
+					"required": ["name", "steps"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"think_time": { "$ref": "#/definitions/common/text" },
+						"think_time_range": {
+							"type": "object",
+							"required": ["min", "max"],
+							"properties": {
+								"min": { "$ref": "#/definitions/common/text" },
+								"max": { "$ref": "#/definitions/common/text" }
+							},
+							"additionalProperties": false
+						},
+						"think_time_mode": {
+							"type": "string",
+							"enum": ["constant", "random"]
+						},
+						"screenshot": { "type": "boolean" },
+						"dynamic_action": { "type": "boolean" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
