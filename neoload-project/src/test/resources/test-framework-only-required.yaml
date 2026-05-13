@@ -1,0 +1,10 @@
+name: MyProject
+frameworks:
+- name: MyFramework
+  enabled: true
+  parameters:
+  - name: MyParam
+    enabled: true
+    extraction_source: body
+    match_number: 1
+    template: $1$
