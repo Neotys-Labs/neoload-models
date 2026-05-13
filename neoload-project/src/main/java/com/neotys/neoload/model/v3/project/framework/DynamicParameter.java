@@ -2,8 +2,6 @@ package com.neotys.neoload.model.v3.project.framework;
 
 import java.util.Optional;
 
-import javax.validation.constraints.Min;
-
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
@@ -16,9 +14,11 @@ import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
-// Note: the extraction primitives (xpath, jsonpath, regexp, match_number, template) are
-// intentionally duplicated from VariableExtractor for now. See LOAD-37460 (tech debt) for
-// the planned refactor into a shared ExtractionPrimitives interface.
+// Note: the extraction primitives (xpath, jsonpath, regexp, template) are intentionally
+// duplicated from VariableExtractor for now. See LOAD-37460 (tech debt) for the planned
+// refactor into a shared ExtractionPrimitives interface. Note also that match_number is
+// intentionally absent: the designer-side ExpressionPathRegexpExtractorDefinition used by
+// DynamicParameter does not support an Nth-match selector.
 @JsonInclude(value = Include.NON_EMPTY)
 @JsonPropertyOrder({
 		Element.NAME,
@@ -28,7 +28,6 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 		DynamicParameter.XPATH,
 		DynamicParameter.JSON_PATH,
 		DynamicParameter.REGEXP,
-		DynamicParameter.MATCH_NUMBER,
 		DynamicParameter.TEMPLATE
 })
 @JsonDeserialize(as = ImmutableDynamicParameter.class)
@@ -40,7 +39,6 @@ public interface DynamicParameter extends Element {
 	String XPATH = "xpath";
 	String JSON_PATH = "jsonpath";
 	String REGEXP = "regexp";
-	String MATCH_NUMBER = "match_number";
 	String TEMPLATE = "template";
 
 	@JsonProperty(ENABLED)
@@ -64,13 +62,6 @@ public interface DynamicParameter extends Element {
 
 	@JsonProperty(REGEXP)
 	Optional<String> getRegexp();
-
-	@JsonProperty(MATCH_NUMBER)
-	@Min(value = -1, groups = {NeoLoad.class})
-	@Value.Default
-	default int getMatchNumber() {
-		return 1;
-	}
 
 	@JsonProperty(TEMPLATE)
 	@Value.Default

@@ -847,11 +847,6 @@
 					"xpath": { "$ref": "#/definitions/common/text" },
 					"jsonpath": { "$ref": "#/definitions/common/text" },
 					"regexp": { "$ref": "#/definitions/common/text" },
-					"match_number": {
-						"type": "integer",
-						"minimum": -1,
-						"default": 1
-					},
 					"template": {
 						"$ref": "#/definitions/common/text",
 						"default": "$1$"

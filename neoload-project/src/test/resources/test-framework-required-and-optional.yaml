@@ -11,5 +11,4 @@ frameworks:
     xpath: //x
     jsonpath: $.x
     regexp: name="csrf" value="(.+?)"
-    match_number: 2
     template: $1$$2$

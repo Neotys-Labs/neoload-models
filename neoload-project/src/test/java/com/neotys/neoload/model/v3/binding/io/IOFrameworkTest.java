@@ -42,7 +42,6 @@ public class IOFrameworkTest extends AbstractIOElementsTest {
 						.xpath("//x")
 						.jsonPath("$.x")
 						.regexp("name=\"csrf\" value=\"(.+?)\"")
-						.matchNumber(2)
 						.template("$1$$2$")
 						.build())
 				.build();

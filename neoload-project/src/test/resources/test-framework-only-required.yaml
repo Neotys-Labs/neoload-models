@@ -6,5 +6,4 @@ frameworks:
   - name: MyParam
     enabled: true
     extraction_source: body
-    match_number: 1
     template: $1$
