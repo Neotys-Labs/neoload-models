@@ -1,0 +1,9 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - http_page:
+        name: MyHttpPage
+        steps:
+        - delay: 1s
