@@ -55,6 +55,7 @@ public class IOHttpPageTest extends AbstractIOElementsTest {
 								.thinkTimeMode(ThinkTimeMode.RANDOM)
 								.screenshot(true)
 								.dynamicAction(true)
+								.forceEncodingForDynamicResources(true)
 								.addSteps(Delay.builder().value("1000")
 										.build())
 								.build())

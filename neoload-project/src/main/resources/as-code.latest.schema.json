@@ -619,6 +619,7 @@
 						},
 						"screenshot": { "type": "boolean" },
 						"dynamic_action": { "type": "boolean" },
+						"force_encoding_for_dynamic_resources": { "type": "boolean" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false

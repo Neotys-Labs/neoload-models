@@ -22,7 +22,7 @@ import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value = Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, HttpPage.THINK_TIME, HttpPage.THINK_TIME_RANGE, HttpPage.THINK_TIME_MODE, HttpPage.SCREENSHOT, HttpPage.DYNAMIC_ACTION, HttpPage.STEPS})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, HttpPage.THINK_TIME, HttpPage.THINK_TIME_RANGE, HttpPage.THINK_TIME_MODE, HttpPage.SCREENSHOT, HttpPage.DYNAMIC_ACTION, HttpPage.FORCE_ENCODING_FOR_DYNAMIC_RESOURCES, HttpPage.STEPS})
 @JsonSerialize(as = ImmutableHttpPage.class)
 @JsonDeserialize(as = ImmutableHttpPage.class)
 @Value.Immutable
@@ -34,6 +34,7 @@ public interface HttpPage extends Step {
 	String THINK_TIME_MODE = "think_time_mode";
 	String SCREENSHOT = "screenshot";
 	String DYNAMIC_ACTION = "dynamic_action";
+	String FORCE_ENCODING_FOR_DYNAMIC_RESOURCES = "force_encoding_for_dynamic_resources";
 	String STEPS = "steps";
 
 	@JsonProperty(NAME)
@@ -57,6 +58,9 @@ public interface HttpPage extends Step {
 
 	@JsonProperty(DYNAMIC_ACTION)
 	Optional<Boolean> getDynamicAction();
+
+	@JsonProperty(FORCE_ENCODING_FOR_DYNAMIC_RESOURCES)
+	Optional<Boolean> getForceEncodingForDynamicResources();
 
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Valid

@@ -13,5 +13,6 @@ user_paths:
         think_time_mode: random
         screenshot: true
         dynamic_action: true
+        force_encoding_for_dynamic_resources: true
         steps:
         - delay: 1s
