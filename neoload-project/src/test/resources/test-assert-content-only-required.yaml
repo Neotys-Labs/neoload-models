@@ -7,8 +7,11 @@ user_paths:
         name: request
         url: http://www.neotys.com/select?name:neoload
         assertions:
-        - contains: DevOps and Automation
-        - xpath: xpath
-          contains: DevOps
-        - jsonpath: jsonpath
-          contains: Automation
+        - content:
+            contains: DevOps and Automation
+        - content:
+            xpath: xpath
+            contains: DevOps
+        - content:
+            jsonpath: jsonpath
+            contains: Automation
