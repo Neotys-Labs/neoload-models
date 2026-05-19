@@ -83,4 +83,34 @@ public class IOFrameworkTest extends AbstractIOElementsTest {
 
 		write("test-framework-required-and-optional", expectedProject);
 	}
+
+	private static Project getFrameworkBuiltinRef() {
+		return Project.builder()
+				.name("MyProject")
+				.addFrameworks(Framework.builder()
+						.name("dotNet")
+						.isEnabled(false)
+						.build())
+				.addFrameworks(Framework.builder()
+						.name("JSF")
+						.isEnabled(true)
+						.build())
+				.build();
+	}
+
+	@Test
+	public void readFrameworkBuiltinRef() throws IOException {
+		final Project expectedProject = getFrameworkBuiltinRef();
+		assertNotNull(expectedProject);
+
+		read("test-framework-builtin-ref", expectedProject);
+	}
+
+	@Test
+	public void writeFrameworkBuiltinRef() throws IOException {
+		final Project expectedProject = getFrameworkBuiltinRef();
+		assertNotNull(expectedProject);
+
+		write("test-framework-builtin-ref", expectedProject);
+	}
 }

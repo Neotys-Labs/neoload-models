@@ -85,7 +85,14 @@
 			"title": "Frameworks",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/framework/framework" }
+			"items": {
+				"type": "object",
+				"properties": {
+					"builtin": { "$ref": "#/definitions/framework/builtin_framework_ref" },
+					"custom": { "$ref": "#/definitions/framework/custom_framework" }
+				},
+				"additionalProperties": false
+			}
 		},
 		"project_settings": {
 			"$id": "#root/project_settings",
@@ -808,11 +815,26 @@
 			}
 		},
 		"framework": {
-			"framework": {
-				"$id": "#/definitions/framework/framework",
-				"title": "Framework",
+			"builtin_framework_ref": {
+				"$id": "#/definitions/framework/builtin_framework_ref",
+				"title": "Built-in Framework Reference",
 				"type": "object",
 				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"enabled": {
+						"type": "boolean",
+						"default": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"custom_framework": {
+				"$id": "#/definitions/framework/custom_framework",
+				"title": "Custom Framework",
+				"type": "object",
+				"required": ["name", "parameters"],
 				"properties": {
 					"name": { "$ref": "#/definitions/common/text" },
 					"description": { "$ref": "#/definitions/common/text" },
@@ -822,6 +844,7 @@
 					},
 					"parameters": {
 						"type": "array",
+						"minItems": 1,
 						"items": { "$ref": "#/definitions/framework/dynamic_parameter" }
 					}
 				},

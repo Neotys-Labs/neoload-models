@@ -15,6 +15,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.binding.serializer.FrameworksDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.FrameworksSerializer;
 import com.neotys.neoload.model.v3.project.framework.Framework;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
@@ -76,6 +79,8 @@ public interface Project {
 	List<Scenario> getScenarios();
 
 	@JsonProperty(FRAMEWORKS)
+	@JsonSerialize(using = FrameworksSerializer.class)
+	@JsonDeserialize(using = FrameworksDeserializer.class)
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<Framework> getFrameworks();
