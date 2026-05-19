@@ -10,15 +10,17 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.serializer.AssertionsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.AssertionsSerializer;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueContentAssertionNameCheck;
+import com.neotys.neoload.model.v3.validation.constraints.UniqueSizeAssertionOperatorCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 public interface AssertionsElement {
 	String ASSERTIONS = "assertions";
-	
+
 	@JsonProperty(ASSERTIONS)
 	@JsonDeserialize(using = AssertionsDeserializer.class)
 	@JsonSerialize(using = AssertionsSerializer.class)
 	@UniqueContentAssertionNameCheck(groups={NeoLoad.class})
+	@UniqueSizeAssertionOperatorCheck(groups={NeoLoad.class})
 	@Valid
-	List<Assertion> getAssertions();	
+	List<Assertion> getAssertions();
 }

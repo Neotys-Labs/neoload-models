@@ -556,7 +556,12 @@
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"type": "array",
-						"items": { "$ref": "#/definitions/user_paths/assertion" }
+						"items": {
+							"oneOf": [
+								{ "$ref": "#/definitions/user_paths/content_assertion" },
+								{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
+							]
+						}
 					}
 				}
 			},
@@ -596,7 +601,12 @@
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": {
 							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/assertion" }
+							"items": {
+								"oneOf": [
+									{ "$ref": "#/definitions/user_paths/content_assertion" },
+									{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
+								]
+							}
 						}
 					},
 					"additionalProperties": false
@@ -634,7 +644,12 @@
 						},
 						"assertions": {
 							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/assertion" }
+							"items": {
+								"oneOf": [
+									{ "$ref": "#/definitions/user_paths/content_assertion" },
+									{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
+								]
+							}
 						}
 					}
 				},
@@ -786,9 +801,9 @@
 					}
 				}
 			},
-			"assertion": {
-				"$id": "#/definitions/user_paths/assertion",
-				"title": "Assertion",
+			"content_assertion": {
+				"$id": "#/definitions/user_paths/content_assertion",
+				"title": "Content Assertion",
 				"type": "object",
 				"properties": {
 					"name": { "$ref": "#/definitions/common/text" },
@@ -803,6 +818,34 @@
 						"type": "boolean",
 						"default": false
 					}
+				},
+				"additionalProperties": false
+			},
+			"size_assertion": {
+				"$id": "#/definitions/user_paths/size_assertion",
+				"title": "Size Assertion",
+				"type": "object",
+				"required": ["operator", "value"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"operator": {
+						"type": "string",
+						"enum": ["equals", "less_than", "greater_than"]
+					},
+					"value": {
+						"type": "integer",
+						"minimum": 0
+					}
+				},
+				"additionalProperties": false
+			},
+			"assertion_wrapper": {
+				"$id": "#/definitions/user_paths/assertion_wrapper",
+				"title": "Assertion (wrapped)",
+				"type": "object",
+				"properties": {
+					"content": { "$ref": "#/definitions/user_paths/content_assertion" },
+					"size": { "$ref": "#/definitions/user_paths/size_assertion" }
 				},
 				"additionalProperties": false
 			},
