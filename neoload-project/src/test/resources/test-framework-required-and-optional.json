@@ -1,0 +1,1 @@
+{"name":"MyProject","frameworks":[{"custom":{"name":"MyFramework","description":"My Framework","enabled":false,"parameters":[{"name":"csrf_token","description":"CSRF token","enabled":false,"extraction_source":"headers","xpath":"//x","jsonpath":"$.x","regexp":"name=\"csrf\" value=\"(.+?)\"","template":"$1$$2$"}]}}]}

@@ -85,6 +85,20 @@
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/user_paths/user_path" }
 		},
+		"frameworks": {
+			"$id": "#root/frameworks",
+			"title": "Frameworks",
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"properties": {
+					"builtin": { "$ref": "#/definitions/framework/builtin_framework_ref" },
+					"custom": { "$ref": "#/definitions/framework/custom_framework" }
+				},
+				"additionalProperties": false
+			}
+		},
 		"project_settings": {
 			"$id": "#root/project_settings",
 			"title": "Neoload_Project_settings",
@@ -1225,6 +1239,70 @@
 						"type": "string",
 						"enum": ["TEXT", "PASSWORD"],
 						"default": "TEXT"
+					}
+				},
+				"additionalProperties": false
+			}
+		},
+		"framework": {
+			"builtin_framework_ref": {
+				"$id": "#/definitions/framework/builtin_framework_ref",
+				"title": "Built-in Framework Reference",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"enabled": {
+						"type": "boolean",
+						"default": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"custom_framework": {
+				"$id": "#/definitions/framework/custom_framework",
+				"title": "Custom Framework",
+				"type": "object",
+				"required": ["name", "parameters"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"enabled": {
+						"type": "boolean",
+						"default": true
+					},
+					"parameters": {
+						"type": "array",
+						"minItems": 1,
+						"items": { "$ref": "#/definitions/framework/dynamic_parameter" }
+					}
+				},
+				"additionalProperties": false
+			},
+			"dynamic_parameter": {
+				"$id": "#/definitions/framework/dynamic_parameter",
+				"title": "Dynamic Parameter",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"enabled": {
+						"type": "boolean",
+						"default": true
+					},
+					"extraction_source": {
+						"type": "string",
+						"enum": ["body", "headers", "all"],
+						"default": "body"
+					},
+					"xpath": { "$ref": "#/definitions/common/text" },
+					"jsonpath": { "$ref": "#/definitions/common/text" },
+					"regexp": { "$ref": "#/definitions/common/text" },
+					"template": {
+						"$ref": "#/definitions/common/text",
+						"default": "$1$"
 					}
 				},
 				"additionalProperties": false

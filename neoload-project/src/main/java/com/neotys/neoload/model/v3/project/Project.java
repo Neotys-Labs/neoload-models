@@ -15,6 +15,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.binding.serializer.FrameworksDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.FrameworksSerializer;
+import com.neotys.neoload.model.v3.project.framework.Framework;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.server.Server;
@@ -25,7 +29,7 @@ import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
+@JsonPropertyOrder({Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.FRAMEWORKS, Project.PROJECT_SETTINGS})
 
 @JsonDeserialize(as = ImmutableProject.class)
 @Value.Immutable
@@ -38,6 +42,7 @@ public interface Project {
 	String USER_PATHS = "user_paths";
 	String POPULATIONS = "populations";
 	String SCENARIOS = "scenarios";
+	String FRAMEWORKS = "frameworks";
 	String PROJECT_SETTINGS = "project_settings";
 
 	@JsonProperty(NAME)
@@ -72,6 +77,13 @@ public interface Project {
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<Scenario> getScenarios();
+
+	@JsonProperty(FRAMEWORKS)
+	@JsonSerialize(using = FrameworksSerializer.class)
+	@JsonDeserialize(using = FrameworksDeserializer.class)
+	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@Valid
+	List<Framework> getFrameworks();
 
 	@JsonProperty(PROJECT_SETTINGS)
 	@Valid
