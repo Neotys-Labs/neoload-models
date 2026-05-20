@@ -69,6 +69,25 @@
         "script": "function evaluate() {\n\tlogger.debug(\"Computing value of js variable\");\n\treturn new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField = myLibraryFunction();\n\t};\n}",
         "change_policy": "each_iteration"
       }
+    },
+    {
+      "shared_queue": {
+        "name": "MyMinimalSharedQueue"
+      }
+    },
+    {
+      "shared_queue": {
+        "name": "MyFullSharedQueue",
+        "description": "A producer/consumer shared queue",
+        "queue_size": 5000,
+        "consumer_timeout": 2000,
+        "swap_activated": true,
+        "swap_file": "data/my_queue_swap.csv",
+        "swap_loaded": true,
+        "swap_dump": false,
+        "delimiter": ",",
+        "change_policy": "each_request"
+      }
     }
   ]
 }

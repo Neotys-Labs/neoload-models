@@ -41,7 +41,8 @@
 					{ "$ref": "#/definitions/variables/file" },
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
-					{ "$ref": "#/definitions/variables/javascript" }
+					{ "$ref": "#/definitions/variables/javascript" },
+					{ "$ref": "#/definitions/variables/shared_queue" }
 				]
 			}
 		},
@@ -307,6 +308,46 @@
 					{
 						"properties": {
 							"script": { "$ref": "#/definitions/common/text" }
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"shared_queue": {
+				"$id": "#/definitions/variables/shared_queue",
+				"title": "Shared Queue",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"queue_size": {
+								"type": "integer",
+								"minimum": 1,
+								"default": 10000
+							},
+							"consumer_timeout": {
+								"type": "integer",
+								"minimum": 0,
+								"default": 5000
+							},
+							"swap_activated": {
+								"type": "boolean",
+								"default": false
+							},
+							"swap_file": { "$ref": "#/definitions/common/text" },
+							"swap_loaded": {
+								"type": "boolean",
+								"default": false
+							},
+							"swap_dump": {
+								"type": "boolean",
+								"default": true
+							},
+							"delimiter": {
+								"$ref": "#/definitions/common/text",
+								"default": ";"
+							}
 						}
 					}
 				],
