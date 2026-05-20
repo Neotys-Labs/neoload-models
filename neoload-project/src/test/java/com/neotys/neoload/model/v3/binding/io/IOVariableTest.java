@@ -118,6 +118,19 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .order(SEQUENTIAL)
                 .build();
 
+        final Variable minimalRandomUuidVariable = RandomUUIDVariable.builder()
+                .name("MyMinimalRandomUUID")
+                .build();
+
+        final Variable fullRandomUuidVariable = RandomUUIDVariable.builder()
+                .name("MyFullRandomUUID")
+                .description("Uppercase predictable UUID")
+                .isUpperCase(true)
+                .isPredictable(true)
+                .changePolicy(EACH_USE)
+                .build();
+
+
         final JavaScriptVariable javaScriptVariable = JavaScriptVariable.builder()
                 .name("My JSVar")
                 .description("This is a js var")
@@ -133,7 +146,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable, passwordVariable, dateVariable, listVariable, sqlVariable, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable, passwordVariable, dateVariable, listVariable, sqlVariable, minimalRandomUuidVariable, fullRandomUuidVariable, javaScriptVariable)
                 .build();
     }
 }

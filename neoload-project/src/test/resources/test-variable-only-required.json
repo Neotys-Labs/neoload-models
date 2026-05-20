@@ -112,6 +112,20 @@
       }
     },
     {
+      "random_uuid": {
+        "name": "MyMinimalRandomUUID"
+      }
+    },
+    {
+      "random_uuid": {
+        "name": "MyFullRandomUUID",
+        "description": "Uppercase predictable UUID",
+        "upper_case": true,
+        "predictable": true,
+        "change_policy": "each_use"
+      }
+    },
+    {
       "javascript": {
         "name": "My JSVar",
         "description": "This is a js var",
