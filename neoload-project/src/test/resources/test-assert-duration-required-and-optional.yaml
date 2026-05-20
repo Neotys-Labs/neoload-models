@@ -1,0 +1,13 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        name: request
+        url: http://www.neotys.com/download
+        method: GET
+        assertions:
+        - duration:
+            name: under_500ms
+            value: 500

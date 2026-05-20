@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertion;
 import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertion;
 
 /**
@@ -21,6 +22,7 @@ public class AssertionsSerializer extends StdSerializer<List<Assertion>> {
 
     public static final String CONTENT = "content";
     public static final String SIZE = "size";
+    public static final String DURATION = "duration";
 
     public AssertionsSerializer() {
         super(List.class, false);
@@ -62,6 +64,9 @@ public class AssertionsSerializer extends StdSerializer<List<Assertion>> {
 		}
 		if (assertion instanceof SizeAssertion) {
 			return SIZE;
+		}
+		if (assertion instanceof DurationAssertion) {
+			return DURATION;
 		}
 		return null;
 	}
