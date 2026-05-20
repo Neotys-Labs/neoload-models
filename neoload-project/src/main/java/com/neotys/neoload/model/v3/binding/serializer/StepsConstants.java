@@ -19,6 +19,7 @@ class StepsConstants {
     protected static final String DEBUG_LOGGER = "debug_logger";
     protected static final String RENDEZVOUS = "rendezvous";
     protected static final String TRY_CATCH = "try_catch";
+    protected static final String HTTP_PAGE = "http_page";
 
     private StepsConstants() {
         super();

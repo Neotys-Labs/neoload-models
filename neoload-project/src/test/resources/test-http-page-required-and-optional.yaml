@@ -1,0 +1,18 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - http_page:
+        name: MyHttpPage
+        description: My Http Page
+        think_time: 2s
+        think_time_range:
+          min: 1s
+          max: 5s
+        think_time_mode: random
+        screenshot: true
+        dynamic_action: true
+        force_encoding_for_dynamic_resources: true
+        steps:
+        - delay: 1s
