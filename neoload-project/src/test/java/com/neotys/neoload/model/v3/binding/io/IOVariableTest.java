@@ -94,6 +94,20 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .changePolicy(EACH_ITERATION)
                 .build();
 
+        final Variable minimalCurrentDateVariable = CurrentDateVariable.builder()
+                .name("MyMinimalCurrentDate")
+                .pattern("yyyy-MM-dd")
+                .build();
+
+        final Variable fullCurrentDateVariable = CurrentDateVariable.builder()
+                .name("MyFullCurrentDate")
+                .description("now plus 5 minutes")
+                .pattern("yyyy-MM-dd'T'HH:mm:ss")
+                .incType(DateVariable.IncType.MINUTE)
+                .incValue(5)
+                .changePolicy(EACH_USE)
+                .build();
+
         final JavaScriptVariable javaScriptVariable = JavaScriptVariable.builder()
                 .name("My JSVar")
                 .description("This is a js var")
@@ -109,7 +123,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, dateVariable, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, dateVariable, minimalCurrentDateVariable, fullCurrentDateVariable, javaScriptVariable)
                 .build();
     }
 }
