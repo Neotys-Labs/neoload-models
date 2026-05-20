@@ -41,6 +41,7 @@
 					{ "$ref": "#/definitions/variables/file" },
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
+					{ "$ref": "#/definitions/variables/random_uuid" },
 					{ "$ref": "#/definitions/variables/javascript" }
 				]
 			}
@@ -307,6 +308,27 @@
 					{
 						"properties": {
 							"script": { "$ref": "#/definitions/common/text" }
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"random_uuid": {
+				"$id": "#/definitions/variables/random_uuid",
+				"title": "Random UUID",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"upper_case": {
+								"type": "boolean",
+								"default": false
+							},
+							"predictable": {
+								"type": "boolean",
+								"default": false
+							}
 						}
 					}
 				],
