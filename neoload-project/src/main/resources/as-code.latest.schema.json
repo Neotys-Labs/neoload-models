@@ -44,6 +44,7 @@
 					{ "$ref": "#/definitions/variables/random_string" },
 					{ "$ref": "#/definitions/variables/password" },
 					{ "$ref": "#/definitions/variables/date" },
+					{ "$ref": "#/definitions/variables/current_date" },
 					{ "$ref": "#/definitions/variables/list" },
 					{ "$ref": "#/definitions/variables/sql" },
 					{ "$ref": "#/definitions/variables/random_uuid" },
@@ -375,6 +376,30 @@
 							"inc_value": {
 								"type": "number",
 								"default": 1
+							}
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"current_date": {
+				"$id": "#/definitions/variables/current_date",
+				"title": "Current Date",
+				"type": "object",
+				"xrequired": ["pattern"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"pattern": { "$ref": "#/definitions/common/text" },
+							"inc_type": {
+								"type": "string",
+								"enum": ["second", "minute", "hour", "day", "month", "year"],
+								"default": "second"
+							},
+							"inc_value": {
+								"type": "number",
+								"default": 0
 							}
 						}
 					}
