@@ -1339,13 +1339,28 @@
 				},
 				"additionalProperties": false
 			},
+			"duration_assertion": {
+				"$id": "#/definitions/user_paths/duration_assertion",
+				"title": "Duration Assertion",
+				"type": "object",
+				"required": ["value"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"value": {
+						"type": "integer",
+						"minimum": 0
+					}
+				},
+				"additionalProperties": false
+			},
 			"assertion_wrapper": {
 				"$id": "#/definitions/user_paths/assertion_wrapper",
 				"title": "Assertion (wrapped)",
 				"type": "object",
 				"properties": {
 					"content": { "$ref": "#/definitions/user_paths/content_assertion" },
-					"size": { "$ref": "#/definitions/user_paths/size_assertion" }
+					"size": { "$ref": "#/definitions/user_paths/size_assertion" },
+					"duration": { "$ref": "#/definitions/user_paths/duration_assertion" }
 				},
 				"additionalProperties": false
 			},

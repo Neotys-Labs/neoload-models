@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertion;
 import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertion;
 
 public class AssertionsDeserializer extends StdDeserializer<List<Assertion>> {
@@ -53,6 +54,9 @@ public class AssertionsDeserializer extends StdDeserializer<List<Assertion>> {
         }
         if (assertionNode.has(AssertionsSerializer.SIZE)) {
             return codec.treeToValue(assertionNode.get(AssertionsSerializer.SIZE), SizeAssertion.class);
+        }
+        if (assertionNode.has(AssertionsSerializer.DURATION)) {
+            return codec.treeToValue(assertionNode.get(AssertionsSerializer.DURATION), DurationAssertion.class);
         }
         // Legacy flat form (BC): content assertion fields directly at the item level
         if (assertionNode.has(ContentAssertion.JSON_PATH) || assertionNode.has(ContentAssertion.XPATH) || assertionNode.has(ContentAssertion.CONTAINS)) {
