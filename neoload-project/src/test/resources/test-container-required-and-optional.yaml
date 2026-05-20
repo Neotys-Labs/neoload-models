@@ -10,4 +10,5 @@ user_paths:
         steps:
         - delay: 1s
         assertions:
-        - contains: MyUserPath_actions_MyTransaction
+        - content:
+            contains: MyUserPath_actions_MyTransaction

@@ -8,5 +8,9 @@ user_paths:
         url: http://www.neotys.com/select?name:neoload
         method: GET
         assertions:
-        - content:
-            contains: DevOps and Automation
+        - contains: DevOps and Automation
+        - name: assertion_named
+          xpath: xpath
+          not: true
+          contains: Analyze
+          regexp: true
