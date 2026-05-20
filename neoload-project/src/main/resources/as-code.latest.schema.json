@@ -42,6 +42,7 @@
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
 					{ "$ref": "#/definitions/variables/date" },
+					{ "$ref": "#/definitions/variables/current_date" },
 					{ "$ref": "#/definitions/variables/javascript" }
 				]
 			}
@@ -317,6 +318,30 @@
 							"inc_value": {
 								"type": "number",
 								"default": 1
+							}
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"current_date": {
+				"$id": "#/definitions/variables/current_date",
+				"title": "Current Date",
+				"type": "object",
+				"xrequired": ["pattern"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"pattern": { "$ref": "#/definitions/common/text" },
+							"inc_type": {
+								"type": "string",
+								"enum": ["second", "minute", "hour", "day", "month", "year"],
+								"default": "second"
+							},
+							"inc_value": {
+								"type": "number",
+								"default": 0
 							}
 						}
 					}
