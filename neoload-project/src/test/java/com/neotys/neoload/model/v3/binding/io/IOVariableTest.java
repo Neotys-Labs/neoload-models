@@ -144,9 +144,26 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .changePolicy(EACH_ITERATION)
                 .build();
 
+        final SharedQueueVariable minimalSharedQueueVariable = SharedQueueVariable.builder()
+                .name("MyMinimalSharedQueue")
+                .build();
+
+        final SharedQueueVariable fullSharedQueueVariable = SharedQueueVariable.builder()
+                .name("MyFullSharedQueue")
+                .description("A producer/consumer shared queue")
+                .queueSize(5000)
+                .consumerTimeout(2000L)
+                .isSwapActivated(true)
+                .swapFile("data/my_queue_swap.csv")
+                .isSwapLoaded(true)
+                .isSwapDump(false)
+                .delimiter(",")
+                .changePolicy(EACH_REQUEST)
+                .build();
+
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable, passwordVariable, dateVariable, listVariable, sqlVariable, minimalRandomUuidVariable, fullRandomUuidVariable, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable, passwordVariable, dateVariable, listVariable, sqlVariable, minimalRandomUuidVariable, fullRandomUuidVariable, javaScriptVariable, minimalSharedQueueVariable, fullSharedQueueVariable)
                 .build();
     }
 }
