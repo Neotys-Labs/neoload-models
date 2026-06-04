@@ -1,11 +1,15 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import org.immutables.value.Value;
 
 import java.util.Optional;
 
 
+@JsonSerialize(as = ImmutablePart.class)
+@JsonDeserialize(as = ImmutablePart.class)
 @Value.Immutable
 public interface Part extends Element {
 
