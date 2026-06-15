@@ -25,12 +25,14 @@ import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
+@JsonPropertyOrder({Project.SCHEMA_VERSION, Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
 
 @JsonDeserialize(as = ImmutableProject.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Project {
+	String SCHEMA_VERSION = "schemaVersion";
+	String DEFAULT_SCHEMA_VERSION = "3.0";
 	String NAME = "name";
 	String SLA_PROFILES = "sla_profiles";
 	String VARIABLES = "variables";
@@ -39,6 +41,13 @@ public interface Project {
 	String POPULATIONS = "populations";
 	String SCENARIOS = "scenarios";
 	String PROJECT_SETTINGS = "project_settings";
+
+	@JsonProperty(SCHEMA_VERSION)
+	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = SchemaVersionDefaultFilter.class)
+	@Value.Default
+	default String getSchemaVersion() {
+		return DEFAULT_SCHEMA_VERSION;
+	}
 
 	@JsonProperty(NAME)
 	Optional<String> getName();
