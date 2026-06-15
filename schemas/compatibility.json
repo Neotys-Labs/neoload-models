@@ -1,0 +1,9 @@
+{
+	"3.0": {
+		"nlg":           "*",
+		"nlw-onpremise": "*",
+		"nlw-saas":      "*",
+		"neoload-cli":   "*",
+		"checkvu-cli":   "*"
+	}
+}
