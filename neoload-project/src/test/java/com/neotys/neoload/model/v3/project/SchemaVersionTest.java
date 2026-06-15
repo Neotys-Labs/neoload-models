@@ -6,6 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.binding.io.IO;
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.validation.validator.Validation;
+import com.neotys.neoload.model.v3.validation.validator.Validator;
 import org.junit.Test;
 
 /**
@@ -129,6 +132,34 @@ public class SchemaVersionTest {
 		final String output = writeYaml(project);
 		assertTrue("3.1 should still be present after round-trip: " + output,
 				output.contains("schemaVersion") && output.contains("3.1"));
+	}
+
+	// ----- Bean Validation integration (@ValidSchemaVersion) -----
+
+	private static final Validator BEAN_VALIDATOR = new Validator();
+
+	@Test
+	public void bean_validation_passes_for_default_schemaVersion() {
+		final Project project = Project.builder().name("foo").build();
+		final Validation validation = BEAN_VALIDATOR.validate(project, NeoLoad.class);
+		assertTrue("default 3.0 must pass: " + validation.getMessage().orElse(""), validation.isValid());
+	}
+
+	@Test
+	public void bean_validation_passes_for_explicit_supported_schemaVersion() {
+		final Project project = Project.builder().name("foo").schemaVersion("3.0").build();
+		final Validation validation = BEAN_VALIDATOR.validate(project, NeoLoad.class);
+		assertTrue("explicit 3.0 must pass: " + validation.getMessage().orElse(""), validation.isValid());
+	}
+
+	@Test
+	public void bean_validation_fails_for_unsupported_schemaVersion() {
+		final Project project = Project.builder().name("foo").schemaVersion("3.999").build();
+		final Validation validation = BEAN_VALIDATOR.validate(project, NeoLoad.class);
+		final String message = validation.getMessage().orElse("");
+		assertFalse("3.999 must not pass: " + message, validation.isValid());
+		assertTrue("violation must reference schemaVersion: " + message,
+				message.contains("schemaVersion") || message.contains("schema_version"));
 	}
 
 	// ----- Property order -----

@@ -22,6 +22,7 @@ import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
+import com.neotys.neoload.model.v3.validation.constraints.ValidSchemaVersion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
@@ -44,6 +45,7 @@ public interface Project {
 
 	@JsonProperty(SCHEMA_VERSION)
 	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = SchemaVersionDefaultFilter.class)
+	@ValidSchemaVersion(groups = {NeoLoad.class})
 	@Value.Default
 	default String getSchemaVersion() {
 		return DEFAULT_SCHEMA_VERSION;
