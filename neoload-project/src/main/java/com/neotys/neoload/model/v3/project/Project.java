@@ -26,15 +26,18 @@ import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
+import com.neotys.neoload.model.v3.validation.constraints.ValidSchemaVersion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.FRAMEWORKS, Project.PROJECT_SETTINGS})
+@JsonPropertyOrder({Project.SCHEMA_VERSION, Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.FRAMEWORKS, Project.PROJECT_SETTINGS})
 
 @JsonDeserialize(as = ImmutableProject.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Project {
+	String SCHEMA_VERSION = "schemaVersion";
+	String DEFAULT_SCHEMA_VERSION = "3.0";
 	String NAME = "name";
 	String SLA_PROFILES = "sla_profiles";
 	String VARIABLES = "variables";
@@ -44,6 +47,14 @@ public interface Project {
 	String SCENARIOS = "scenarios";
 	String FRAMEWORKS = "frameworks";
 	String PROJECT_SETTINGS = "project_settings";
+
+	@JsonProperty(SCHEMA_VERSION)
+	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = SchemaVersionDefaultFilter.class)
+	@ValidSchemaVersion(groups = {NeoLoad.class})
+	@Value.Default
+	default String getSchemaVersion() {
+		return DEFAULT_SCHEMA_VERSION;
+	}
 
 	@JsonProperty(NAME)
 	Optional<String> getName();

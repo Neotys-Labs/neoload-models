@@ -9,6 +9,8 @@ import org.junit.Test;
 public class ProjectTest {
 	@Test
 	public void name() {
+		assertEquals("schemaVersion", Project.SCHEMA_VERSION);
+		assertEquals("3.0", Project.DEFAULT_SCHEMA_VERSION);
 		assertEquals("name", Project.NAME);
 		assertEquals("sla_profiles", Project.SLA_PROFILES);
 		assertEquals("variables", Project.VARIABLES);
