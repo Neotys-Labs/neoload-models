@@ -69,6 +69,13 @@
         "script": "function evaluate() {\n\tlogger.debug(\"Computing value of js variable\");\n\treturn new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField = myLibraryFunction();\n\t};\n}",
         "change_policy": "each_iteration"
       }
+    },
+    {
+      "secret_vault": {
+        "name": "db_password",
+        "provider_id": "665f1a2b3c4d5e6f7a8b9c0d",
+        "secret_identifier": "my-app/db"
+      }
     }
   ]
 }
