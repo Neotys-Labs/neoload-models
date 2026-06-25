@@ -72,6 +72,13 @@
 		<url>https://github.com/Neotys-Labs/neoload-models/tree/master</url>
 	</scm>
 
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>https://neoload-725151763610.d.codeartifact.us-east-1.amazonaws.com/maven/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<properties>
 		<project.scm.id>git</project.scm.id>
 		<encoding>UTF-8</encoding>
@@ -379,16 +386,6 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
-				<plugin>
-					<groupId>org.sonatype.central</groupId>
-					<artifactId>central-publishing-maven-plugin</artifactId>
-					<version>0.9.0</version>
-					<extensions>true</extensions>
-					<configuration>
-						<publishingServerId>ossrh</publishingServerId>
-						<autoPublish>true</autoPublish>
-					</configuration>
-				</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
