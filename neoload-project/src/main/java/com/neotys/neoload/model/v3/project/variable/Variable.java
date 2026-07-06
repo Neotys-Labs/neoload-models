@@ -20,7 +20,8 @@ import org.immutables.value.Value;
 		@JsonSubTypes.Type(value = SqlVariable.class, name = "sql"),
 		@JsonSubTypes.Type(value = RandomUUIDVariable.class, name = "random_uuid"),
 		@JsonSubTypes.Type(value = SharedQueueVariable.class, name = "shared_queue"),
-		@JsonSubTypes.Type(value = JavaScriptVariable.class, name = "javascript")
+		@JsonSubTypes.Type(value = JavaScriptVariable.class, name = "javascript"),
+		@JsonSubTypes.Type(value = SecretVaultVariable.class, name = "secret_vault")
 
 })
 public interface Variable extends Element {

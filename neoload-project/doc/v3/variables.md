@@ -7,7 +7,7 @@ They may be combined with other variables or with static content (e.g. `${produc
 Variables that does not exist in the project will be added.
 
 #### Example
-Defining 5 variables: a Constant variable, a File variable, a Counter variable, a RandomNumber variable and a JavaScript variable.
+Defining 6 variables: a Constant variable, a File variable, a Counter variable, a RandomNumber variable, a JavaScript variable and a Secret Vault variable.
 
 ```yaml
 variables:
@@ -46,6 +46,10 @@ variables:
       new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField =
       myLibraryFunction();\n\t};\n}"
     change_policy: each_iteration
+- secret_vault:
+    name: db_password
+    provider_id: 665f1a2b3c4d5e6f7a8b9c0d
+    secret_identifier: my-app/db
 ```
 
 ## Constant variable
@@ -174,4 +178,33 @@ Defining a JavaScript variable.
       new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField =
       myLibraryFunction();\n\t};\n}"
     change_policy: each_iteration
+```
+
+## Secret Vault variable
+A reference to a secret stored in an external vault provider configured in NeoLoad Web (HashiCorp Vault or AWS Secrets Manager). The provider type is resolved server-side from `provider_id`; it is not stored in the as-code file.
+
+| Name               | Description                                                                 | Accept variable | Required | Since |
+|:------------------ |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name               | The variable name                                                           | -               | &#x2713; |       |
+| description        | The variable description                                                    | -               | -        |       |
+| provider_id        | The opaque NeoLoad Web id of the configured vault provider                  | -               | &#x2713; |       |
+| secret_identifier  | The location of the secret within the provider (see mapping below). For HashiCorp Vault, this is the path within the mount — the mount itself (e.g. `secret`) is configured on the vault provider in NeoLoad Web, not in this field. | -               | &#x2713; |       |
+| change_policy      | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_user`. | -               | -        |       |
+| scope              | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `local`. | -               | -        |       |
+
+`secret_identifier` maps to a provider-specific concept:
+
+| Provider            | Maps to      | Example                          |
+|:------------------- |:------------ |:-------------------------------- |
+| HashiCorp Vault     | `secretPath` | `my-app/db` (path within the mount; mount configured on the provider) |
+| AWS Secrets Manager | `secretName` | Secret name or ARN               |
+
+#### Example
+Defining a Secret Vault variable.
+
+```yaml
+secret_vault:
+  name: db_password
+  provider_id: 665f1a2b3c4d5e6f7a8b9c0d
+  secret_identifier: my-app/db
 ```
