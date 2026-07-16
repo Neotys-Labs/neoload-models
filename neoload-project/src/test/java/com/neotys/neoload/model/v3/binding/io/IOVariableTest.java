@@ -174,9 +174,15 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .changePolicy(EACH_REQUEST)
                 .build();
 
+        final Variable secretVaultVariable = SecretVaultVariable.builder()
+                .name("db_password")
+                .providerId("665f1a2b3c4d5e6f7a8b9c0d")
+                .secretIdentifier("my-app/db")
+                .build();
+
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable, passwordVariable, dateVariable, minimalCurrentDateVariable, fullCurrentDateVariable, listVariable, sqlVariable, minimalRandomUuidVariable, fullRandomUuidVariable, javaScriptVariable, minimalSharedQueueVariable, fullSharedQueueVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable, passwordVariable, dateVariable, minimalCurrentDateVariable, fullCurrentDateVariable, listVariable, sqlVariable, minimalRandomUuidVariable, fullRandomUuidVariable, javaScriptVariable, minimalSharedQueueVariable, fullSharedQueueVariable, secretVaultVariable)
                 .build();
     }
 }
