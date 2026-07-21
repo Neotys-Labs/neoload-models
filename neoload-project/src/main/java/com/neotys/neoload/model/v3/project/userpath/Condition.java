@@ -3,8 +3,10 @@ package com.neotys.neoload.model.v3.project.userpath;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.binding.serializer.ConditionDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.ConditionSerializer;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
@@ -14,28 +16,29 @@ import javax.validation.Valid;
 import java.util.*;
 
 @JsonInclude(value=Include.NON_EMPTY)
+@JsonSerialize(using = ConditionSerializer.class)
 @JsonDeserialize(using = ConditionDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Condition {
 
 	enum Operator {
-		EQUALS(Arrays.asList("equals", "==")),
-		NOT_EQUALS(Arrays.asList("not_equals", "!=")),
-		CONTAINS(Arrays.asList("contains")),
-		NOT_CONTAINS(Arrays.asList("not_contains")),
-		STARTS_WITH(Arrays.asList("starts_with")),
-		NOT_STARTS_WITH(Arrays.asList("not_starts_with")),
-		ENDS_WITH(Arrays.asList("ends_with")),
-		NOT_ENDS_WITH(Arrays.asList("not_ends_with")),
-		MATCH_REGEXP(Arrays.asList("match_regexp")),
-		NOT_MATCH_REGEXP(Arrays.asList("not_match_regexp")),
-		GREATER(Arrays.asList("greater", ">")),
-		GREATER_EQUAL(Arrays.asList("greater_equal", ">=")),
-		LESS(Arrays.asList("less", "<")),
-		LESS_EQUAL(Arrays.asList("less_equal", "<=")),
-		EXISTS(Arrays.asList("exists")),
-		NOT_EXISTS(Arrays.asList("not_exists"));
+		EQUALS(List.of("equals", "==")),
+		NOT_EQUALS(List.of("not_equals", "!=")),
+		CONTAINS(List.of("contains")),
+		NOT_CONTAINS(List.of("not_contains")),
+		STARTS_WITH(List.of("starts_with")),
+		NOT_STARTS_WITH(List.of("not_starts_with")),
+		ENDS_WITH(List.of("ends_with")),
+		NOT_ENDS_WITH(List.of("not_ends_with")),
+		MATCH_REGEXP(List.of("match_regexp")),
+		NOT_MATCH_REGEXP(List.of("not_match_regexp")),
+		GREATER(List.of("greater", ">")),
+		GREATER_EQUAL(List.of("greater_equal", ">=")),
+		LESS(List.of("less", "<")),
+		LESS_EQUAL(List.of("less_equal", "<=")),
+		EXISTS(List.of("exists")),
+		NOT_EXISTS(List.of("not_exists"));
 
 		private final List<String> names;
 

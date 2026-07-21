@@ -18,11 +18,9 @@ public class IOProjectDescriptorTest extends AbstractIOElementsTest {
 				.name("MyProject")
 				.build();
 
-		final ProjectDescriptor descriptor = ProjectDescriptor.builder()
+		return ProjectDescriptor.builder()
 				.project(project)
 				.build();
-
-		return descriptor;
 	}
 
 	private static ProjectDescriptor getDescriptorRequiredAndOptional() {
@@ -33,8 +31,8 @@ public class IOProjectDescriptorTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 		final RendezvousPolicy rdv1 = RendezvousPolicy.builder().name("rdv1").timeout(200).when(WhenRelease.builder().type(WhenRelease.Type.MANUAL).value("manual").build()).build();
-		final RendezvousPolicy rdv2 = RendezvousPolicy.builder().name("rdv2").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value("50").build()).build();;
-		final RendezvousPolicy rdv3 = RendezvousPolicy.builder().name("rdv3").timeout(20).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value("20").build()).build();;
+		final RendezvousPolicy rdv2 = RendezvousPolicy.builder().name("rdv2").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value("50").build()).build();
+		final RendezvousPolicy rdv3 = RendezvousPolicy.builder().name("rdv3").timeout(20).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value("20").build()).build();
 
 		final Scenario scenario = Scenario.builder()
 				.name("MyScenario")
@@ -47,13 +45,11 @@ public class IOProjectDescriptorTest extends AbstractIOElementsTest {
 				.addScenarios(scenario)
 				.build();
 
-		final ProjectDescriptor descriptor = ProjectDescriptor.builder()
+		return ProjectDescriptor.builder()
 				.addIncludes("C:\\work\\as-codes\\servers.yaml")
 				.addIncludes("/as-codes/variables.yaml")
 				.project(project)
 				.build();
-
-		return descriptor;
 	}
 
 	@Test
@@ -65,10 +61,26 @@ public class IOProjectDescriptorTest extends AbstractIOElementsTest {
 	}
 
 	@Test
+	public void writeOnlyRequired() throws IOException {
+		final ProjectDescriptor expectedDescriptor = getDescriptorOnlyRequired();
+		assertNotNull(expectedDescriptor);
+
+		write("test-descriptor-only-required", expectedDescriptor);
+	}
+
+	@Test
 	public void readRequiredAndOptional() throws IOException {
 		final ProjectDescriptor expectedDescriptor = getDescriptorRequiredAndOptional();
 		assertNotNull(expectedDescriptor);
 
 		read("test-descriptor-required-and-optional", expectedDescriptor);
+	}
+
+	@Test
+	public void writeRequiredAndOptional() throws IOException {
+		final ProjectDescriptor expectedDescriptor = getDescriptorRequiredAndOptional();
+		assertNotNull(expectedDescriptor);
+
+		write("test-descriptor-required-and-optional", expectedDescriptor);
 	}
 }

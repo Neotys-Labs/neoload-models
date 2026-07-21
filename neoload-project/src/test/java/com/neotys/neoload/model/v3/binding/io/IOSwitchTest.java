@@ -36,12 +36,10 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
                         .build())
                 .build();
 
-        final Project project = Project.builder()
-                .name("MyProject")
-                .addUserPaths(userPath)
-                .build();
-
-        return project;
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
     }
     
     private static Project getSwitchRequiredAndOptional() {
@@ -75,12 +73,10 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
                         .build())
                 .build();
 
-        final Project project = Project.builder()
-                .name("MyProject")
-                .addUserPaths(userPath)
-                .build();
-
-        return project;
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
     }
 
 
@@ -98,6 +94,22 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
         assertNotNull(expectedProject);
 
         read("test-switch-required-and-optional", expectedProject);
+    }
+
+    @Test
+    public void writeSwitchOnlyRequired() throws IOException {
+        final Project expectedProject = getSwitchOnlyRequired();
+        assertNotNull(expectedProject);
+
+        write("test-switch-only-required", expectedProject);
+    }
+
+    @Test
+    public void writeSwitchRequiredAndOptional() throws IOException {
+        final Project expectedProject = getSwitchRequiredAndOptional();
+        assertNotNull(expectedProject);
+
+        write("test-switch-required-and-optional", expectedProject);
     }
 
 }

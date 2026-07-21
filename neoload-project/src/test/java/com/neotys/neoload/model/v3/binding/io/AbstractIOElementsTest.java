@@ -77,10 +77,10 @@ abstract class AbstractIOElementsTest {
 	private void write(final String fileName, final String extension, final ProjectDescriptor expectedDescriptor) throws IOException {
 		final File file = getFile(fileName, extension);
 		final String expectedContent = getContent(file, StandardCharsets.UTF_8).replace("\r\n", "\n");
-		
+
 		final IO mapper = new IO();
 		final String actualContent = mapper.write(expectedDescriptor, Format.valueOf(extension.toUpperCase()));
-		assertEquals(expectedContent, actualContent);	
+		assertEquals(expectedContent, actualContent);
 	}
 
 	protected File getFile(final String fileName, final String extension) {

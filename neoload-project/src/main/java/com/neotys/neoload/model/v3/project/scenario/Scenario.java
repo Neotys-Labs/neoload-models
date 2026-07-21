@@ -56,6 +56,7 @@ public interface Scenario extends Element, SlaElement {
 	List<RendezvousPolicy> getRendezvousPolicies();
 
 	@JsonProperty(STORE_VARIABLES)
+	@JsonInclude(Include.NON_DEFAULT)
 	@Value.Default
 	default boolean isStoredVariables() {
 		return false;

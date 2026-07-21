@@ -42,14 +42,14 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		checkMandatoryFieldsForServer(jsonNode);
 
 		final String name = jsonNode.get(NAME).asText();
-		final Server.Scheme scheme = getScheme(codec, jsonNode);
 		final String host = jsonNode.findValue(HOST).asText();
+		final Server.Scheme scheme = getScheme(codec, jsonNode);
 		final String port = getPort(jsonNode, scheme);
 
 		return Server.builder()
 				.name(name)
-				.scheme(scheme)
 				.host(host)
+				.scheme(scheme)
 				.port(port)
 				.authentication(getAuthentication(codec, jsonNode))
 				.build();

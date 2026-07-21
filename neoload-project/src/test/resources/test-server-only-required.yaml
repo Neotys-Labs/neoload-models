@@ -1,4 +1,0 @@
-name: MyProject
-servers:
-- name: serverName
-  host: mypc.intranet.neotys.com

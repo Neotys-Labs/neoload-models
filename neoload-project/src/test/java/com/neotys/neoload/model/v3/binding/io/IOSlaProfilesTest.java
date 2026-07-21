@@ -44,12 +44,10 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 						.build()))
 				.build();
 
-		final Project project = Project.builder()
+		return Project.builder()
 				.name("MyProject")
 				.addSlaProfiles(slaProfile)
 				.build();
-
-		return project;
 	}
 
 	private static Project getUserPathsRequiredAndOptional() {
@@ -105,12 +103,10 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 						))
 				.build();
 
-		final Project project = Project.builder()
+		return Project.builder()
 				.name("MyProject")
 				.addSlaProfiles(slaProfile)
 				.build();
-
-		return project;
 	}
 
 	@Test
@@ -127,5 +123,21 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		read("test-slaprofiles-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void writeSlaProfilesOnlyRequired() throws IOException {
+		final Project expectedProject = getUserPathsOnlyRequired();
+		assertNotNull(expectedProject);
+
+		write("test-slaprofiles-only-required", expectedProject);
+	}
+
+	@Test
+	public void writeSlaProfilesRequiredAndOptional() throws IOException {
+		final Project expectedProject = getUserPathsRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		write("test-slaprofiles-required-and-optional", expectedProject);
 	}
 }

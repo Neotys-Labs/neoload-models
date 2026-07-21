@@ -25,6 +25,14 @@ public class IOVariableTest extends AbstractIOElementsTest {
         read("test-variable-only-required", expectedProject);
     }
 
+    @Test
+    public void writeVariableOnlyRequired() throws IOException {
+        final Project expectedProject = buildProjectContainingVariable();
+        assertNotNull(expectedProject);
+
+        write("test-variable-only-required", expectedProject);
+    }
+
     private Project buildProjectContainingVariable() {
 
         final Variable constantVariable = ConstantVariable.builder()

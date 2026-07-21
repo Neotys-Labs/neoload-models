@@ -1,7 +1,7 @@
-name: MyProject
 includes:
 - C:\work\as-codes\servers.yaml
 - /as-codes/variables.yaml
+name: MyProject
 scenarios:
 - name: MyScenario
   populations:
@@ -9,12 +9,12 @@ scenarios:
     constant_load:
       users: 500
   rendezvous_policies:
-    - name: rdv1
-      when: manual
-      timeout: 200
-    - name: rdv2
-      when: 50%
-      timeout: 100
-    - name: rdv3
-      when: 20
-      timeout: 20
+  - name: rdv1
+    when: manual
+    timeout: 3m20s
+  - name: rdv2
+    when: 50%
+    timeout: 1m40s
+  - name: rdv3
+    when: 20
+    timeout: 20s

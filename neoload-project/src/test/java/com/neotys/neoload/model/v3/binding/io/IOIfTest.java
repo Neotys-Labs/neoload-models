@@ -50,12 +50,10 @@ public class IOIfTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		final Project project = Project.builder()
+		return Project.builder()
 				.name("MyProject")
 				.addUserPaths(userPath)
 				.build();
-
-		return project;
 	}
 
 	private static Project getIfRequiredAndOptional() {
@@ -74,12 +72,10 @@ public class IOIfTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		final Project project = Project.builder()
+		return Project.builder()
 				.name("MyProject")
 				.addUserPaths(userPath)
 				.build();
-
-		return project;
 	}
 
 	private static final List<Condition> getConditions(){
@@ -179,5 +175,21 @@ public class IOIfTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		read("test-if-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void writeIfOnlyRequired() throws IOException {
+		final Project expectedProject = getIfOnlyRequired();
+		assertNotNull(expectedProject);
+
+		write("test-if-only-required", expectedProject);
+	}
+
+	@Test
+	public void writeIfRequiredAndOptional() throws IOException {
+		final Project expectedProject = getIfRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		write("test-if-required-and-optional", expectedProject);
 	}
 }

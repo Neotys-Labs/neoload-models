@@ -31,12 +31,10 @@ public class IORequestTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		final Project project = Project.builder()
+		return Project.builder()
 				.name("MyProject")
 				.addUserPaths(userPath)
 				.build();
-
-		return project;
 	}
 
 	private static Project getRequestRequiredAndOptional() {
@@ -92,12 +90,10 @@ public class IORequestTest extends AbstractIOElementsTest {
 				.build();
 
 
-		final Project project = Project.builder()
+		return Project.builder()
 				.name("MyProject")
 				.addUserPaths(userPath)
 				.build();
-
-		return project;
 	}
 
 	@Test
@@ -109,10 +105,26 @@ public class IORequestTest extends AbstractIOElementsTest {
 	}
 
 	@Test
+	public void writeRequestOnlyRequired() throws IOException {
+		final Project expectedProject = getRequestOnlyRequired();
+		assertNotNull(expectedProject);
+
+		write("test-request-only-required", expectedProject);
+	}
+
+	@Test
 	public void readUserPathsRequiredAndOptional() throws IOException {
 		final Project expectedProject = getRequestRequiredAndOptional();
 		assertNotNull(expectedProject);
 
 		read("test-request-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void writeRequestRequiredAndOptional() throws IOException {
+		final Project expectedProject = getRequestRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		write("test-request-required-and-optional", expectedProject);
 	}
 }

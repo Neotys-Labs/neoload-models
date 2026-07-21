@@ -9,7 +9,7 @@ user_paths:
         method: POST
         headers:
         - Content-Type: text/html; charset=utf-8
-        - Accept-Encoding: gzip, compress, br
+        - Accept-Encoding: "gzip, compress, br"
         body: |
           My Body
           line 1
@@ -26,11 +26,8 @@ user_paths:
         method: POST
         headers:
         - Content-Type: text/html; charset=utf-8
-        - Accept-Encoding: gzip, compress, br
-        body: >-
-          My Body
-          line 1
-          line 2
+        - Accept-Encoding: "gzip, compress, br"
+        body: My Body line 1 line 2
         extractors:
         - name: MyVariable1
           jsonpath: MyJsonPath

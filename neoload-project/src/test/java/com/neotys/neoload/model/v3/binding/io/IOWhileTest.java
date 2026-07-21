@@ -31,17 +31,15 @@ public class IOWhileTest extends AbstractIOElementsTest {
                         ).build()
                 ).build();
 
-        final Project project = Project.builder()
-                .name("MyProject")
-                .addUserPaths(userPath)
-                .build();
-
-        return project;
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
     }
 
-    private static final List<Condition> getConditions() {
+    private static List<Condition> getConditions() {
         return Arrays.asList(
-                getCondition("operand1", Condition.Operator.EQUALS, "operand2"),
+                getCondition("operand 1", Condition.Operator.EQUALS, "operand 2"),
                 getCondition("0", Condition.Operator.EQUALS, "operand2"),
                 getCondition("operand1", Condition.Operator.NOT_EQUALS, "${parameter}"),
                 getCondition("${parameter}", Condition.Operator.NOT_EQUALS, "10"),
@@ -75,7 +73,7 @@ public class IOWhileTest extends AbstractIOElementsTest {
         );
     }
 
-    private static final Condition getCondition(final String operand1, final Condition.Operator operator, final String operand2) {
+    private static Condition getCondition(final String operand1, final Condition.Operator operator, final String operand2) {
         return Condition
                 .builder()
                 .operand1(operand1)
@@ -84,7 +82,7 @@ public class IOWhileTest extends AbstractIOElementsTest {
                 .build();
     }
 
-    private static final Condition getCondition(final String operand1, final Condition.Operator operator) {
+    private static Condition getCondition(final String operand1, final Condition.Operator operator) {
         return Condition
                 .builder()
                 .operand1(operand1)
@@ -98,5 +96,13 @@ public class IOWhileTest extends AbstractIOElementsTest {
         assertNotNull(expectedProject);
 
         read("test-while-only-required", expectedProject);
+    }
+
+    @Test
+    public void writeWhileOnlyRequired() throws IOException {
+        final Project expectedProject = getIfOnlyRequired();
+        assertNotNull(expectedProject);
+
+        write("test-while-only-required", expectedProject);
     }
 }

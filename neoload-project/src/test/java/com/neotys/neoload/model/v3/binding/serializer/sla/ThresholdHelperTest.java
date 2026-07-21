@@ -231,4 +231,73 @@ public class ThresholdHelperTest {
 			, 
 			SlaThresholdHelper.convertToThreshold("avg-request-resp-time warn <= 1.0 fail <= 2.0 per interval"));
 	}
+
+	@Test
+	public void convertToStringNull() {
+		assertEquals(null, SlaThresholdHelper.convertToString(null));
+	}
+
+	@Test
+	public void convertToStringSingleCondition() {
+		// Whole values are rendered without a decimal part; the scope is always written.
+		assertEquals("avg-request-resp-time warn >= 1 per test",
+				SlaThresholdHelper.convertToString(SlaThreshold.builder()
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
+						.addConditions(condition(Severity.WARN, Operator.GREATER_THAN, 1.0))
+						.build()));
+	}
+
+	@Test
+	public void convertToStringTwoConditions() {
+		assertEquals("avg-request-resp-time warn >= 0.15 fail >= 1.25 per test",
+				SlaThresholdHelper.convertToString(SlaThreshold.builder()
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
+						.addConditions(condition(Severity.WARN, Operator.GREATER_THAN, 0.15))
+						.addConditions(condition(Severity.FAIL, Operator.GREATER_THAN, 1.25))
+						.build()));
+	}
+
+	@Test
+	public void convertToStringPercentileAndInterval() {
+		assertEquals("perc-transaction-resp-time (p90) warn == 0.15 per interval",
+				SlaThresholdHelper.convertToString(SlaThreshold.builder()
+						.kpi(KPI.PERC_TRANSACTION_RESP_TIME)
+						.percent(90)
+						.addConditions(condition(Severity.WARN, Operator.EQUALS, 0.15))
+						.scope(Scope.PER_INTERVAL)
+						.build()));
+	}
+
+	@Test
+	public void convertToStringThenBackIsIdentity() throws IOException {
+		final SlaThreshold[] thresholds = {
+				SlaThreshold.builder()
+						.kpi(KPI.AVG_REQUEST_RESP_TIME)
+						.addConditions(condition(Severity.WARN, Operator.GREATER_THAN, 1.0))
+						.build(),
+				SlaThreshold.builder()
+						.kpi(KPI.AVG_RESP_TIME)
+						.addConditions(condition(Severity.WARN, Operator.LESS_THAN, 0.15))
+						.addConditions(condition(Severity.FAIL, Operator.LESS_THAN, 1.25))
+						.scope(Scope.PER_INTERVAL)
+						.build(),
+				SlaThreshold.builder()
+						.kpi(KPI.PERC_TRANSACTION_RESP_TIME)
+						.percent(50)
+						.addConditions(condition(Severity.WARN, Operator.EQUALS, 0.15))
+						.addConditions(condition(Severity.FAIL, Operator.EQUALS, 1.25))
+						.build()
+		};
+		for (final SlaThreshold threshold : thresholds) {
+			assertEquals(threshold, SlaThresholdHelper.convertToThreshold(SlaThresholdHelper.convertToString(threshold)));
+		}
+	}
+
+	private static SlaThresholdCondition condition(final Severity severity, final Operator operator, final double value) {
+		return SlaThresholdCondition.builder()
+				.severity(severity)
+				.operator(operator)
+				.value(value)
+				.build();
+	}
 }
