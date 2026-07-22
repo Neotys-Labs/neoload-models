@@ -1,0 +1,44 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - while:
+        name: MyWhile
+        description: MyWhileDescription
+        conditions:
+        - "'operand1' == 'operand2'"
+        - "'0' == 'operand2'"
+        - "'operand1' != '${parameter}'"
+        - "'${parameter}' != '10'"
+        - "'${parameter}' contains 'contains'"
+        - "'operand1' not_contains 'operand2'"
+        - "'operand1' starts_with '=='"
+        - "'operand1' not_starts_with 'operand2'"
+        - "'operand1' ends_with 'operand2'"
+        - "'operand1' not_ends_with 'operand2'"
+        - "'operand1' match_regexp 'operand2'"
+        - "'operand1' not_match_regexp 'operand2'"
+        - "'operand1' > 'operand2'"
+        - "'operand1' > 'operand2'"
+        - "'operand1' >= 'operand2'"
+        - "'operand1' >= 'operand2'"
+        - "'operand1' < 'operand2'"
+        - "'operand1' < 'operand2'"
+        - "'operand1' <= 'operand2'"
+        - "'operand1' <= 'operand2'"
+        - "'operand1' exists"
+        - "'operand1' not_exists"
+        - "'${myVariable1}' == 'value'"
+        - "'${myVariable1}' == 'value'"
+        - "'${myVariable1}' != '5'"
+        - "'${myVariable2}' not_exists"
+        - "'${myVariable3}' exists"
+        - "'${myVariable4}' == ''"
+        - "'${myVariable6}' == \"value'with'simple'quote\""
+        - "'${myVariable7}' == 'value\"with\"double\"quote'"
+        - "'' == ''"
+        match: all
+        steps:
+        - request:
+            url: http://www.neotys.com/select

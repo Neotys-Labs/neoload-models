@@ -20,6 +20,10 @@ import javax.validation.Valid;
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 @Gson.TypeAdapters
+// S2097 suppressed: the nested Jackson value-filter classes override equals(Object) to compare the
+// property value (not another filter instance), which is how the CUSTOM value filter selects the default
+// value to omit; a real class check would always be false and defeat the omission.
+@SuppressWarnings("java:S2097")
 public interface RendezvousPolicy {
 
 	String TIMEOUT = "timeout";
@@ -31,17 +35,37 @@ public interface RendezvousPolicy {
 	String getName();
 
 	@JsonProperty(WHEN)
+	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultWhenFilter.class)
 	@RequiredCheck(groups={NeoLoad.class})
 	@Value.Default
 	@Valid
 	default WhenRelease getWhen(){return WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value(100).build();}
 
 	@JsonProperty(TIMEOUT)
+	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultTimeoutFilter.class)
 	@PositiveCheck(unit="second", groups={NeoLoad.class})
 	@JsonSerialize(converter= TimeDurationToStringConverter.class)
 	@JsonDeserialize(converter= StringToTimeDurationConverter.class)
 	@Value.Default
 	default Integer getTimeout() {return 300;}
+
+	// Jackson value filters excluding each property's default value from serialization:
+	// a property is omitted when the filter's equals(value) returns true. The value received is the
+	// raw property value (WhenRelease / Integer), before any @JsonSerialize converter is applied.
+	class DefaultWhenFilter {
+		private static final WhenRelease DEFAULT_WHEN = WhenRelease.builder().type(WhenRelease.Type.PERCENTAGE).value(100).build();
+		@Override
+		public boolean equals(final Object value) { return DEFAULT_WHEN.equals(value); }
+		@Override
+		public int hashCode() { return DEFAULT_WHEN.hashCode(); }
+	}
+
+	class DefaultTimeoutFilter {
+		@Override
+		public boolean equals(final Object value) { return Integer.valueOf(300).equals(value); }
+		@Override
+		public int hashCode() { return Integer.valueOf(300).hashCode(); }
+	}
 
     class Builder extends ImmutableRendezvousPolicy.Builder {}
 	static Builder builder() {

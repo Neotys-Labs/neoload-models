@@ -5,7 +5,6 @@ user_paths:
     steps:
     - javascript:
         name: My Javascript
-        description: My description
         script: |
           // Get variable value from VariableManager
           var myVar = context.variableManager.getValue("CounterVariable_1");

@@ -6,6 +6,9 @@ user_paths:
     - request:
         name: request
         url: http://www.neotys.com/select?name:neoload
-        method: GET
         assertions:
         - contains: DevOps and Automation
+        - xpath: xpath
+          contains: DevOps
+        - jsonpath: jsonpath
+          contains: Automation

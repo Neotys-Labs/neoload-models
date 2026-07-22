@@ -1,0 +1,10 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - think_time: 3790200
+    - think_time: 3600000
+    - think_time: 180000
+    - think_time: 10000
+    - think_time: 200

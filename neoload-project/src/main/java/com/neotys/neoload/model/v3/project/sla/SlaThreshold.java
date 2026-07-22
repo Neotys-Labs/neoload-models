@@ -15,9 +15,11 @@ import org.immutables.value.Value.Style.ValidationMethod;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.neotys.neoload.model.v3.binding.serializer.SlaThresholdDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.SlaThresholdSerializer;
 import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck;
@@ -25,6 +27,7 @@ import com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck.Usag
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value = Include.NON_EMPTY)
+@JsonSerialize(using = SlaThresholdSerializer.class)
 @JsonDeserialize(using = SlaThresholdDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)

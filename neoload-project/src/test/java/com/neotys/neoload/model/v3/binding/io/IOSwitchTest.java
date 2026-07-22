@@ -8,85 +8,64 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
 public class IOSwitchTest extends AbstractIOElementsTest  {
 
-    private static Project getSwitchOnlyRequired() {
-        final Switch aSwitch = Switch.builder()
-        		.value("1")
+    private static Switch getSwitchOnlyRequired() {
+        return Switch.builder()
+        		.value("${MySwitchVariable}")
+				.addCases(Case.builder()
+						.value("0")
+						.isBreak(true)
+						.addSteps(Delay.builder()
+								.value("1000")
+								.build())
+						.build())
+                .getDefault(Container.builder()
+                		.addSteps(Delay.builder()
+                				.value("3000")
+                				.build())
+                		.build())                
+                .build();
+    }
+    
+    private static Switch getSwitchRequiredAndOptional() {
+        return Switch.builder()
+        		.name("MySwitch")
+                .description("MySwitchDescription")
+                .value("${MySwitchVariable}")
                 .addCases(Case.builder()
                 		.value("0")
                         .isBreak(true)
                         .addSteps(Delay.builder()
-                        		.value("3")
-                        		.build())                        
+                        		.value("1000")
+                        		.build())
                         .build())
+				.addCases(Case.builder()
+						.description("MyCase1Description")
+						.value("1")
+						.isBreak(false)
+						.addSteps(Delay.builder()
+								.value("1000")
+								.build())
+						.addAssertions(ContentAssertion.builder()
+								.contains("MyCase1Assertion on Content")
+								.build())
+						.build())
                 .getDefault(Container.builder()
                 		.addSteps(Delay.builder()
-                				.value("3")
+                				.value("3000")
                 				.build())
                 		.build())                
                 .build();
-        final UserPath userPath = UserPath.builder()
-                .name("MyUserPath")
-                .actions(Container.builder()
-                        .name("actions")
-                        .addSteps(aSwitch)
-                        .build())
-                .build();
-
-        final Project project = Project.builder()
-                .name("MyProject")
-                .addUserPaths(userPath)
-                .build();
-
-        return project;
-    }
-    
-    private static Project getSwitchRequiredAndOptional() {
-        final Switch aSwitch = Switch.builder()
-        		.name("MySwitch")
-                .description("My Switch")    
-                .value("0")
-                .addCases(Case.builder()
-                		.name("MyCase0")
-                		.description("My Case 0")
-                		.value("0")
-                        .isBreak(false)
-                        .addSteps(Delay.builder()
-                        		.value("3")
-                        		.build())
-                        .addAssertions(ContentAssertion.builder()
-                        		.contains("My Assertion on Content")
-                        		.build())
-                        .build())
-                .getDefault(Container.builder()
-                		.addSteps(Delay.builder()
-                				.value("3")
-                				.build())
-                		.build())                
-                .build();
-        final UserPath userPath = UserPath.builder()
-                .name("MyUserPath")
-                .actions(Container.builder()
-                        .name("actions")
-                        .addSteps(aSwitch)
-                        .build())
-                .build();
-
-        final Project project = Project.builder()
-                .name("MyProject")
-                .addUserPaths(userPath)
-                .build();
-
-        return project;
     }
 
 
     @Test
     public void readSwitchOnlyRequired() throws IOException {
-        final Project expectedProject = getSwitchOnlyRequired();
+        final Project expectedProject = buildProject(getSwitchOnlyRequired());
         assertNotNull(expectedProject);
 
         read("test-switch-only-required", expectedProject);
@@ -94,10 +73,26 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
     
     @Test
     public void readSwitchRequiredAndOptional() throws IOException {
-        final Project expectedProject = getSwitchRequiredAndOptional();
+        final Project expectedProject = buildProject(getSwitchRequiredAndOptional());
         assertNotNull(expectedProject);
 
         read("test-switch-required-and-optional", expectedProject);
+    }
+
+    @Test
+    public void writeSwitchOnlyRequired() throws IOException {
+        final Project expectedProject = buildProject(getSwitchOnlyRequired());
+        assertNotNull(expectedProject);
+
+        write("test-switch-only-required", expectedProject);
+    }
+
+    @Test
+    public void writeSwitchRequiredAndOptional() throws IOException {
+        final Project expectedProject = buildProject(getSwitchRequiredAndOptional());
+        assertNotNull(expectedProject);
+
+        write("test-switch-required-and-optional", expectedProject);
     }
 
 }

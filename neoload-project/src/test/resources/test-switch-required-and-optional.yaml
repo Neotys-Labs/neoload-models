@@ -5,17 +5,20 @@ user_paths:
     steps:
     - switch:
         name: MySwitch
-        description: My Switch
-        value: '0'
+        description: MySwitchDescription
+        value: "${MySwitchVariable}"
         case:
-        - name: MyCase0
-          description: My Case 0
-          value: '0'
+        - value: 0
+          break: true
+          steps:
+          - delay: 1s
+        - description: MyCase1Description
+          value: 1
           break: false
           steps:
-          - delay: 3ms
+          - delay: 1s
           assertions:
-          - contains: My Assertion on Content
+          - contains: MyCase1Assertion on Content
         default:
           steps:
-          - delay: 3ms
+          - delay: 3s

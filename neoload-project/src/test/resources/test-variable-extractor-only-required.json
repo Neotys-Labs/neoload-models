@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"request":{"name":"request","url":"http://www.neotys.com/select?name:neoload","extractors":[{"name":"first-match"},{"name":"first-match-on-jsonpath","jsonpath":"$.store.book[?(@.price<10)].title"},{"name":"first-match-on-xpath","xpath":"//bookstore/book[price<10]/title"}]}}]}}]}
