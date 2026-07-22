@@ -9,37 +9,38 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
 
 public class IOWhileTest extends AbstractIOElementsTest {
 
-    private static Project getIfOnlyRequired() {
-        final UserPath userPath = UserPath.builder()
-                .name("MyUserPath")
-                .actions(Container.builder()
-                        .name("actions")
-                        .addSteps(While.builder()
-                                .name("My While")
-                                .description("My description")
-                                .conditions(getConditions())
-                                .addSteps(
-                                        Request.builder()
-                                                .url("http://www.neotys.com/select")
-                                                .build()
-                                ).build()
-                        ).build()
-                ).build();
-
-		return Project.builder()
-				.name("MyProject")
-				.addUserPaths(userPath)
-				.build();
+    private static While getWhileOnlyRequired() {
+        return While.builder()
+				.conditions(getConditions())
+				.addSteps(
+						Request.builder()
+								.url("http://www.neotys.com/select")
+								.build()
+				).build();
     }
 
-    private static List<Condition> getConditions() {
+	private static While getWhileRequiredAndOptional() {
+		return While.builder()
+				.name("MyWhile")
+				.description("MyWhileDescription")
+				.conditions(getConditions())
+				.match(Match.ALL)
+				.addSteps(
+						Request.builder()
+								.url("http://www.neotys.com/select")
+								.build()
+				).build();
+	}
+
+	private static List<Condition> getConditions() {
         return Arrays.asList(
-                getCondition("operand 1", Condition.Operator.EQUALS, "operand 2"),
+                getCondition("operand1", Condition.Operator.EQUALS, "operand2"),
                 getCondition("0", Condition.Operator.EQUALS, "operand2"),
                 getCondition("operand1", Condition.Operator.NOT_EQUALS, "${parameter}"),
                 getCondition("${parameter}", Condition.Operator.NOT_EQUALS, "10"),
@@ -91,18 +92,34 @@ public class IOWhileTest extends AbstractIOElementsTest {
     }
 
     @Test
-    public void readIfOnlyRequired() throws IOException {
-        final Project expectedProject = getIfOnlyRequired();
+    public void readWhileOnlyRequired() throws IOException {
+        final Project expectedProject = buildProject(getWhileOnlyRequired());
         assertNotNull(expectedProject);
 
-        read("test-while-only-required", expectedProject);
+        read("test-readonly-while-only-required", expectedProject);
     }
 
-    @Test
+	@Test
+	public void readWhileRequiredAndOptional() throws IOException {
+		final Project expectedProject = buildProject(getWhileRequiredAndOptional());
+		assertNotNull(expectedProject);
+
+		read("test-readonly-while-required-and-optional", expectedProject);
+	}
+
+	@Test
     public void writeWhileOnlyRequired() throws IOException {
-        final Project expectedProject = getIfOnlyRequired();
+        final Project expectedProject = buildProject(getWhileOnlyRequired());
         assertNotNull(expectedProject);
 
         write("test-while-only-required", expectedProject);
     }
+
+	@Test
+	public void writeWhileRequiredAndOptional() throws IOException {
+		final Project expectedProject = buildProject(getWhileRequiredAndOptional());
+		assertNotNull(expectedProject);
+
+		write("test-while-required-and-optional", expectedProject);
+	}
 }

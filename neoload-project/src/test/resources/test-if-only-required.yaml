@@ -5,8 +5,8 @@ user_paths:
     steps:
     - if:
         conditions:
-        - "${variable} equals 2"
-        - operand1 equals operand2
+        - "'${variable}' == '2'"
+        - "'operand1' == 'operand2'"
         then:
           steps:
           - delay: 3m 200ms

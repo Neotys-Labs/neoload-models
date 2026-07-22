@@ -51,6 +51,10 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-loop-required-and-optional",
 			"test-populations-only-required",
 			"test-populations-required-and-optional",
+			"test-readonly-slaprofiles-only-required",
+			"test-readonly-slaprofiles-required-and-optional",
+			"test-readonly-while-only-required",
+			"test-readonly-while-required-and-optional",
 			"test-request-only-required",
 			"test-request-required-and-optional",
 			"test-scenarios-only-required",
@@ -71,6 +75,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-variable-extractor-required-and-optional",
 			"test-variable-only-required",
 			"test-while-only-required",
+			"test-while-required-and-optional",
 			"test-assert-content-only-required",
 			"test-assert-content-required-and-optional"
 	};

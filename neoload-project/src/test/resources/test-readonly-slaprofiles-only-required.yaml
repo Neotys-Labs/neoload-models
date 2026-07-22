@@ -1,0 +1,6 @@
+name: MyProject
+sla_profiles:
+- name: MySlaProfile
+  thresholds:
+  - avg-request-resp-time warn >= 1
+  - perc-transaction-resp-time (p90) warn >= 1

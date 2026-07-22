@@ -3,9 +3,9 @@ user_paths:
 - name: MyUserPath
   actions:
     steps:
-    - if:
-        name: MyIfThenElse
-        description: MyIfThenElseDescription
+    - while:
+        name: MyWhile
+        description: MyWhileDescription
         conditions:
         - "'operand1' == 'operand2'"
         - "'0' == 'operand2'"
@@ -39,18 +39,6 @@ user_paths:
         - "'${myVariable7}' == 'value\"with\"double\"quote'"
         - "'' == ''"
         match: all
-        then:
-          description: MyThenDescription
-          sla_profile: MySLAProfile
-          steps:
-          - request:
-              url: http://www.neotys.com/select
-          assertions:
-          - contains: ThenAssertion
-        else:
-          description: MyElseDescription
-          sla_profile: MySLAProfile
-          steps:
-          - delay: 3m 200ms
-          assertions:
-          - contains: ElseAssertion
+        steps:
+        - request:
+            url: http://www.neotys.com/select

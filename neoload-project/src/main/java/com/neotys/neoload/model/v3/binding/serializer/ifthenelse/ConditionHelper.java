@@ -9,35 +9,12 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public final class ConditionHelper {
 
 	private ConditionHelper() {
 		super();
-	}
-
-	// Operands made only of these characters are emitted as-is (grammar rule WORD); everything else
-	// (empty, spaces, operators, quotes...) must be quoted so it re-parses to the same operand.
-	private static final String WORD_PATTERN = "[a-zA-Z0-9${}_]+";
-
-	// Operator keywords must be quoted when they appear as an operand, otherwise the lexer tokenizes
-	// them as the operator instead of as a value (e.g. operand2 == "contains").
-	private static final Set<String> RESERVED_WORDS = buildReservedWords();
-
-	private static Set<String> buildReservedWords() {
-		final Set<String> words = new HashSet<>();
-		for (final Condition.Operator operator : Condition.Operator.values()) {
-			for (final String name : operator.getNames()) {
-				if (name.matches(WORD_PATTERN)) {
-					words.add(name);
-				}
-			}
-		}
-		words.add("find_regexp"); // present in the grammar but not in the Operator enum
-		return words;
 	}
 
 	/**
@@ -49,22 +26,26 @@ public final class ConditionHelper {
 
 		final StringBuilder builder = new StringBuilder();
 		builder.append(escapeOperand(condition.getOperand1()));
-		builder.append(' ').append(condition.getOperator().getNames().get(0));
+		builder.append(' ').append(operatorSign(condition.getOperator()));
 		condition.getOperand2().ifPresent(operand2 -> builder.append(' ').append(escapeOperand(operand2)));
 		return builder.toString();
 	}
 
+	// The operator names are ordered [word, sign]; the sign (last element) is emitted when it exists,
+	// otherwise the word form is used (e.g. exists, contains). Both forms are accepted on read.
+	private static String operatorSign(final Condition.Operator operator) {
+		final List<String> names = operator.getNames();
+		return names.get(names.size() - 1);
+	}
+
 	private static String escapeOperand(final String operand) {
-		if (operand != null && operand.matches(WORD_PATTERN) && !RESERVED_WORDS.contains(operand)) {
-			return operand;
-		}
 		final String value = (operand != null) ? operand : "";
-		// Use single quotes when the value contains double quotes but no single quote, otherwise
-		// double quotes (escaping backslashes and inner double quotes).
-		if (value.contains("\"") && !value.contains("'")) {
-			return "'" + value + "'";
+		// Every operand is wrapped in single quotes; fall back to double quotes when the value
+		// contains a single quote but no double quote, to avoid escaping.
+		if (value.contains("'") && !value.contains("\"")) {
+			return "\"" + value + "\"";
 		}
-		return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
+		return "'" + value.replace("\\", "\\\\").replace("'", "\\'") + "'";
 	}
 
 	public static Condition convertToCondition(final String input) throws IOException {

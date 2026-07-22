@@ -94,38 +94,45 @@ public class ConditionHelperTest {
 
 	@Test
 	public void convertToString2Operands() {
-		assertEquals("operand1 equals operand2",
+		assertEquals("'operand1' == 'operand2'",
 				ConditionHelper.convertToString(getCondition("operand1", Condition.Operator.EQUALS, "operand2")));
 	}
 
 	@Test
 	public void convertToString1Operand() {
-		assertEquals("operand1 exists",
+		assertEquals("'operand1' exists",
 				ConditionHelper.convertToString(getCondition("operand1", Condition.Operator.EXISTS)));
 	}
 
 	@Test
-	public void convertToStringUsesWordFormOfOperator() {
-		// GREATER accepts both "greater" and ">"; the word form is emitted.
-		assertEquals("operand1 greater operand2",
+	public void convertToStringUsesSignFormOfOperator() {
+		// GREATER accepts both "greater" and ">"; the sign form is emitted.
+		assertEquals("'operand1' > 'operand2'",
 				ConditionHelper.convertToString(getCondition("operand1", Condition.Operator.GREATER, "operand2")));
 	}
 
 	@Test
-	public void convertToStringVariableOperandStaysBare() {
-		assertEquals("${variable} equals 2",
+	public void convertToStringOperatorWithoutSignUsesWordForm() {
+		// CONTAINS has no sign, so the word form is emitted.
+		assertEquals("'operand1' contains 'operand2'",
+				ConditionHelper.convertToString(getCondition("operand1", Condition.Operator.CONTAINS, "operand2")));
+	}
+
+	@Test
+	public void convertToStringVariableOperandIsQuoted() {
+		assertEquals("'${variable}' == '2'",
 				ConditionHelper.convertToString(getCondition("${variable}", Condition.Operator.EQUALS, "2")));
 	}
 
 	@Test
 	public void convertToStringEmptyOperandIsQuoted() {
-		assertEquals("operand1 equals \"\"",
+		assertEquals("'operand1' == ''",
 				ConditionHelper.convertToString(getCondition("operand1", Condition.Operator.EQUALS, "")));
 	}
 
 	@Test
 	public void convertToStringOperandWithSpaceIsQuoted() {
-		assertEquals("operand1 equals \"value with space\"",
+		assertEquals("'operand1' == 'value with space'",
 				ConditionHelper.convertToString(getCondition("operand1", Condition.Operator.EQUALS, "value with space")));
 	}
 
@@ -133,19 +140,19 @@ public class ConditionHelperTest {
 	public void convertToStringReservedWordOperandIsQuoted() {
 		// The operand equals an operator keyword, so it must be quoted otherwise the parser would
 		// read it as the operator instead of a value.
-		assertEquals("${parameter} contains \"contains\"",
+		assertEquals("'${parameter}' contains 'contains'",
 				ConditionHelper.convertToString(getCondition("${parameter}", Condition.Operator.CONTAINS, "contains")));
 	}
 
 	@Test
 	public void convertToStringOperandWithDoubleQuoteUsesSingleQuotes() {
-		assertEquals("operand1 equals 'oper\"and1'",
+		assertEquals("'operand1' == 'oper\"and1'",
 				ConditionHelper.convertToString(getCondition("operand1", Condition.Operator.EQUALS, "oper\"and1")));
 	}
 
 	@Test
 	public void convertToStringOperandWithSimpleQuoteUsesDoubleQuotes() {
-		assertEquals("operand1 equals \"oper'and1\"",
+		assertEquals("'operand1' == \"oper'and1\"",
 				ConditionHelper.convertToString(getCondition("operand1", Condition.Operator.EQUALS, "oper'and1")));
 	}
 

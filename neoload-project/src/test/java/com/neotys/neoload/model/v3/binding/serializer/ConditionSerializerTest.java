@@ -16,7 +16,7 @@ public class ConditionSerializerTest {
 
 	@Test
 	public void serializeTwoOperands() throws IOException {
-		assertEquals("\"operand1 equals operand2\"",
+		assertEquals("\"'operand1' == 'operand2'\"",
 				serialize(Condition.builder()
 						.operand1("operand1")
 						.operator(Condition.Operator.EQUALS)
@@ -26,7 +26,7 @@ public class ConditionSerializerTest {
 
 	@Test
 	public void serializeSingleOperand() throws IOException {
-		assertEquals("\"${variable} exists\"",
+		assertEquals("\"'${variable}' exists\"",
 				serialize(Condition.builder()
 						.operand1("${variable}")
 						.operator(Condition.Operator.EXISTS)
