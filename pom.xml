@@ -93,7 +93,7 @@
 		<gpg.executable>/usr/bin/gpg</gpg.executable>
 		<!--suppress UnresolvedMavenProperty -->
 		<gpg.passphrase>${env.PGP_PASSPHRASE}</gpg.passphrase>
-		<jacoco.version>0.8.10</jacoco.version>
+		<jacoco.version>0.8.12</jacoco.version>
     	<validation-api.version>2.0.2</validation-api.version>
     	<hibernate-validator.version>6.2.5.Final</hibernate-validator.version>
     	<glassfish.jakarta.el.version>3.0.4</glassfish.jakarta.el.version>
