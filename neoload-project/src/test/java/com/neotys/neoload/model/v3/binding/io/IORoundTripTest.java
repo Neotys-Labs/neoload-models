@@ -43,6 +43,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-delay-with-unit-only-required",
 			"test-descriptor-only-required",
 			"test-descriptor-required-and-optional",
+			"test-go-to-next-iteration",
 			"test-if-only-required",
 			"test-if-required-and-optional",
 			"test-javascript-only-required",

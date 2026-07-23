@@ -23,6 +23,14 @@ public class IOGoToNextIterationTest extends AbstractIOElementsTest {
 		read("test-go-to-next-iteration", expectedProject);
 	}
 
+	@Test
+	public void writeGoToNextIteration() throws IOException {
+		final Project expectedProject = buildProjectContainingGoToNextIteration();
+		assertNotNull(expectedProject);
+
+		write("test-go-to-next-iteration", expectedProject);
+	}
+
 	private Project buildProjectContainingGoToNextIteration() {
 		final GoToNextIteration goToNextIteration = GoToNextIteration.builder().build();
 

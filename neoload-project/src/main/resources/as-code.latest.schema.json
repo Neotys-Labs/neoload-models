@@ -562,21 +562,28 @@
 				"type": "array",
 				"minItems": 1,
 				"items": {
-					"type": "object",
-					"properties": {
-						"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
-						"request": { "$ref": "#/definitions/user_paths/actions/request" },
-						"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
-						"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
-						"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
-						"if": { "$ref": "#/definitions/user_paths/actions/if" },
-						"while": { "$ref": "#/definitions/user_paths/actions/while" },
-						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
-						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
-						"go_to_next_iteration": { "$ref": "#/definitions/user_paths/actions/go_to_next_iteration" }
-					},
-					"additionalProperties": false
+					"oneOf": [
+						{
+							"type": "string",
+							"enum": ["go_to_next_iteration"]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
+								"request": { "$ref": "#/definitions/user_paths/actions/request" },
+								"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
+								"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
+								"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
+								"if": { "$ref": "#/definitions/user_paths/actions/if" },
+								"while": { "$ref": "#/definitions/user_paths/actions/while" },
+								"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
+								"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
+								"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
+							},
+							"additionalProperties": false
+						}
+					]
 				}
 			},
 			"actions": {
@@ -741,8 +748,8 @@
 				"go_to_next_iteration": {
 					"$id": "#/definitions/user_paths/actions/go_to_next_iteration",
 					"title": "Action: Go to next iteration",
-					"type": "object",
-					"additionalProperties": false
+					"type": "string",
+					"enum": ["go_to_next_iteration"]
 				}
 			},
 			"extractor": {
