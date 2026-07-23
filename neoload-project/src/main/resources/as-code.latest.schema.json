@@ -562,21 +562,29 @@
 				"type": "array",
 				"minItems": 1,
 				"items": {
-					"type": "object",
-					"properties": {
-						"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
-						"request": { "$ref": "#/definitions/user_paths/actions/request" },
-						"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
-						"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
-						"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
-						"if": { "$ref": "#/definitions/user_paths/actions/if" },
-						"while": { "$ref": "#/definitions/user_paths/actions/while" },
-						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
-						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
-						"rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" }
-					},
-					"additionalProperties": false
+					"anyOf": [
+						{
+							"type": "string",
+							"enum": ["rendezvous"]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
+								"request": { "$ref": "#/definitions/user_paths/actions/request" },
+								"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
+								"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
+								"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
+								"if": { "$ref": "#/definitions/user_paths/actions/if" },
+								"while": { "$ref": "#/definitions/user_paths/actions/while" },
+								"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
+								"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
+								"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
+								"rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" }
+							},
+							"additionalProperties": false
+						}
+					]
 				}
 			},
 			"actions": {
@@ -742,7 +750,6 @@
 					"$id": "#/definitions/user_paths/actions/rendezvous",
 					"title": "Action: Rendezvous",
 					"type": "object",
-					"required": ["name"],
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" }

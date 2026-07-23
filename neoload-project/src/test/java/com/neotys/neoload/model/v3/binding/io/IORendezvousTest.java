@@ -16,25 +16,70 @@ import com.neotys.neoload.model.v3.project.userpath.UserPath;
 public class IORendezvousTest extends AbstractIOElementsTest {
 
 	@Test
-	public void readRendezvous() throws IOException {
-		final Project expectedProject = buildProjectContainingRendezvous();
+	public void read_Rendezvous_OnlyRequired() throws IOException {
+		final Project expectedProject = buildProjectContainingRendezvous_OnlyRequired();
 		assertNotNull(expectedProject);
 
-		read("test-rendezvous", expectedProject);
+		read("test-rendezvous-only-required", expectedProject);
 	}
 
-	private Project buildProjectContainingRendezvous() {
-		final Rendezvous rendezvous = Rendezvous.builder()
-				.name("my_rendezvous")
+	@Test
+	public void writeRendezvous_OnlyRequired() throws IOException {
+		final Project expectedProject = buildProjectContainingRendezvous_OnlyRequired();
+		assertNotNull(expectedProject);
+
+		write("test-rendezvous-only-required", expectedProject);
+	}
+
+	@Test
+	public void read_Rendezvous_RequiredAndOptional() throws IOException {
+		final Project expectedProject = buildProjectContainingRendezvous_RequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		read("test-rendezvous-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void writeRendezvous_RequiredAndOptional() throws IOException {
+		final Project expectedProject = buildProjectContainingRendezvous_RequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		write("test-rendezvous-required-and-optional", expectedProject);
+	}
+
+
+	private Project buildProjectContainingRendezvous_OnlyRequired() {
+		final Rendezvous defaultRendezvous = Rendezvous.builder().build();
+
+		final Container container = Container.builder()
+				.name("actions")
+				.addSteps(defaultRendezvous)
+				.build();
+
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(container)
+				.build();
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
+	}
+
+
+	private Project buildProjectContainingRendezvous_RequiredAndOptional() {
+		final Rendezvous namedRendezvous = Rendezvous.builder()
+				.name("MyRendezVous")
+				.description("MyRendezVousDescription")
 				.build();
 
 		final Container container = Container.builder()
 				.name("actions")
-				.addSteps(rendezvous)
+				.addSteps(namedRendezvous)
 				.build();
 
 		final UserPath userPath = UserPath.builder()
-				.name("user_path_1")
+				.name("MyUserPath")
 				.actions(container)
 				.build();
 		return Project.builder()

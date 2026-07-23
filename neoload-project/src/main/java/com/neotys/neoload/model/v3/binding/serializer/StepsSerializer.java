@@ -27,6 +27,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
     	builder.put(ImmutableWhile.class, WHILE);
     	builder.put(ImmutableSwitch.class, SWITCH);
 		builder.put(ImmutableCustomAction.class, CUSTOM_ACTION);
+		builder.put(ImmutableRendezvous.class, RENDEZVOUS);
     	STEPS = builder.build();
     }
 
@@ -48,6 +49,16 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 				generator.writeStartObject();
 				generator.writeStringField(THINK_TIME, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(((ThinkTime)step).getValue()));
 				generator.writeEndObject();
+			}
+			else if (step instanceof Rendezvous) {
+				final Rendezvous rdv = (Rendezvous) step;
+				if (RENDEZVOUS.equals(rdv.getName()) && rdv.getDescription().isEmpty()) {
+					generator.writeString(RENDEZVOUS);
+				} else {
+					generator.writeStartObject();
+					generator.writeObjectField(RENDEZVOUS, rdv);
+					generator.writeEndObject();
+				}
 			}
 			else {
 				final String stepName = STEPS.get(step.getClass());
