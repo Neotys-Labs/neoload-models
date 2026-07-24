@@ -14,4 +14,4 @@ user_paths:
           value: myPassword
           type: PASSWORD
         asRequest: true
-        libraryPath: file:///C:/path/to/library
+        libraryPath: /path/to/library

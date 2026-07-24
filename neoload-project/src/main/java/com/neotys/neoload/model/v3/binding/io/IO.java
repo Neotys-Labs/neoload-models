@@ -10,13 +10,18 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
@@ -46,7 +51,7 @@ public final class IO {
 	
 	public enum Format {
 		YAML,
-		JSON;
+		JSON
 	}
 	
 	private ObjectMapper yamlMapper = null;
@@ -87,7 +92,7 @@ public final class IO {
 		return new String(bytes, StandardCharsets.UTF_8);
 	}
 
-	protected Format getFormat(final File file) {
+	Format getFormat(final File file) {
 		if (file == null) return null;
 		
 		// Gets the extension from the specified file
@@ -108,7 +113,7 @@ public final class IO {
 		throw new IllegalArgumentException("The extension of the file must be 'yaml', 'yml' or 'json'");
 	}
 
-	protected Format getFormat(final String content) {
+	Format getFormat(final String content) {
 		if (Strings.isNullOrEmpty(content)) return null;
 		
 		final String tmp = content.trim();
@@ -123,7 +128,7 @@ public final class IO {
 		return DEFAULT_FORMAT;
 	}
 
-	protected synchronized ObjectMapper getMapper(final Format format) {
+	synchronized ObjectMapper getMapper(final Format format) {
 		if (format == null) {
 			throw new IllegalArgumentException("The format is unknown");
 		}
@@ -172,5 +177,23 @@ public final class IO {
 		final Jdk8Module jdk8Module = new Jdk8Module();
 		jdk8Module.configureAbsentsAsNulls(true);
         objectMapper.registerModule(jdk8Module);
+        objectMapper.registerModule(newPathModule());
+	}
+
+	/**
+	 * Serializes a Path as a normalized relative string (OS-independent),
+	 * instead of Jackson's default toUri(), which produces an absolute file:/// URI
+	 * that is platform-dependent (Windows drive letter, CWD resolution).
+	 */
+	private static SimpleModule newPathModule() {
+		final SimpleModule module = new SimpleModule();
+		module.addSerializer(Path.class, new JsonSerializer<>() {
+			@Override
+			public void serialize(final Path value, final JsonGenerator gen,
+					final SerializerProvider provider) throws IOException {
+				gen.writeString(value.toString().replace('\\', '/'));
+			}
+		});
+		return module;
 	}
 }
