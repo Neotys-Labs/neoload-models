@@ -180,9 +180,11 @@ public final class IO {
         objectMapper.registerModule(newPathModule());
 	}
 
-	// Sérialise un Path en chaîne relative normalisée (indépendant de l'OS),
-	// au lieu du toUri() par défaut de Jackson qui produit un file:/// absolu
-	// et dépendant de la plateforme (lettre de lecteur Windows, résolution CWD).
+	/**
+	 * Serializes a Path as a normalized relative string (OS-independent),
+	 * instead of Jackson's default toUri(), which produces an absolute file:/// URI
+	 * that is platform-dependent (Windows drive letter, CWD resolution).
+	 */
 	private static SimpleModule newPathModule() {
 		final SimpleModule module = new SimpleModule();
 		module.addSerializer(Path.class, new JsonSerializer<>() {
