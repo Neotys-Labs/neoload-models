@@ -69,7 +69,7 @@ public class IOCustomActionTest extends AbstractIOElementsTest {
 								.build()
 				)
 				.asRequest(true)
-				.libraryPath(Path.of("C:/path/to/library"))
+				.libraryPath(Path.of("/path/to/library"))
 				.build();
 	}
 }
