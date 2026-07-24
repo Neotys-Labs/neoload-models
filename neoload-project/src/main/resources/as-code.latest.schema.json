@@ -1,5 +1,5 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$schema": "https://json-schema.org/draft/2019-09/schema",
 	"$id": "https://neotys.com/schemas/as-code/v3",
 	"title": "JSON Schema for NeoLoad as-code files",
 	"fileMatch": [
@@ -193,10 +193,10 @@
 			"generic": {
 				"$id": "#/definitions/variables/generic",
 				"type": "object",
-				"xrequired": ["name"],
+				"required": ["name"],
 				"properties": {
 					"name": { "$ref": "#/definitions/common/name" },
-					"descrption": { "$ref": "#/definitions/common/text" },
+					"description": { "$ref": "#/definitions/common/text" },
 					"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 				}
 			},
@@ -204,7 +204,7 @@
 				"$id": "#/definitions/variables/constant",
 				"title": "Constant",
 				"type": "object",
-				"xrequired": ["value"],
+				"required": ["value"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
@@ -213,13 +213,13 @@
 						}
 					}
 				],
-				"x-d7nosupport-additionalProperties": false
+				"unevaluatedProperties": false
 			},
 			"file": {
 				"$id": "#/definitions/variables/file",
 				"title": "File",
 				"type": "object",
-				"xrequired": ["path"],
+				"required": ["path"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
@@ -247,13 +247,13 @@
 						}
 					}
 				],
-				"x-d7nosupport-additionalProperties": false
+				"unevaluatedProperties": false
 			},
 			"counter": {
 				"$id": "#/definitions/variables/counter",
 				"title": "Counter",
 				"type": "object",
-				"xrequired": ["start", "end", "increment"],
+				"required": ["start", "end", "increment"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
@@ -272,13 +272,13 @@
 						}
 					}
 				],
-				"x-d7nosupport-additionalProperties": false
+				"unevaluatedProperties": false
 			},
 			"random_number": {
 				"$id": "#/definitions/variables/random_number",
 				"title": "Random Number",
 				"type": "object",
-				"xrequired": ["min", "max"],
+				"required": ["min", "max"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
@@ -295,13 +295,13 @@
 						}
 					}
 				],
-				"x-d7nosupport-additionalProperties": false
+				"unevaluatedProperties": false
 			},
 			"javascript": {
 				"$id": "#/definitions/variables/javascript",
 				"title": "Javascript",
 				"type": "object",
-				"xrequired": ["script"],
+				"required": ["script"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
@@ -310,14 +310,14 @@
 						}
 					}
 				],
-				"x-d7nosupport-additionalProperties": false
+				"unevaluatedProperties": false
 			}
 		},
 		"server": {
 			"$id": "#/definitions/server",
 			"title": "Server",
 			"type": "object",
-			"xrequired": ["name", "host"],
+			"required": ["name", "host"],
 			"additionalProperties": false,
 			"properties": {
 				"name": { "$ref": "#/definitions/common/text" },
@@ -339,7 +339,7 @@
 			"auth-generic": {
 				"$id": "#/definitions/authentication/auth-generic",
 				"type": "object",
-				"xrequired": ["login", "password"],
+				"required": ["login", "password"],
 				"properties": {
 					"login": { "$ref": "#/definitions/common/text" },
 					"password": { "$ref": "#/definitions/common/text" }
@@ -387,7 +387,7 @@
 			"$id": "#/definitions/sla",
 			"title": "SLA Profile",
 			"type": "object",
-			"xrequired": ["name", "thresholds"],
+			"required": ["name", "thresholds"],
 			"properties": {
 				"name": { "$ref": "#/definitions/common/text" },
 				"description": { "$ref": "#/definitions/common/text" },
@@ -642,7 +642,7 @@
 					"$id": "#/definitions/user_paths/actions/javascript",
 					"title": "Action: Javascript",
 					"type": "object",
-					"xrequired": ["name", "script"],
+					"required": ["name", "script"],
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
@@ -740,7 +740,7 @@
 			},
 			"extractor": {
 				"type": "object",
-				"xrequired": ["name"],
+				"required": ["name"],
 				"properties": {
 					"name": { "$ref": "#/definitions/common/text" },
 					"from": {
