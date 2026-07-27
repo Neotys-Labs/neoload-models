@@ -206,7 +206,7 @@ public abstract class WebRequest {
 			URI resolvedURI = context != null ? context.toURI().resolve(spec) : URI.create(spec);
 			return Optional.of(resolvedURI.toURL());
 		} catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
-			LOGGER.warn("Invalid URL found in request, could be a variable in the host");
+			LOGGER.warn("Invalid URL found in request, could be a variable in the host", e);
 		}
 		return Optional.empty();
 	}
