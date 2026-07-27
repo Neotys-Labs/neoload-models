@@ -307,4 +307,73 @@ public class WebRequestTest {
 		final List<Header> properties = WebRequest.getHeadersFromRecordedFile(Optional.ofNullable(Paths.get(recordedFileUri).toString()));
 		assertEquals(0, properties.size());
 	}
+
+	@Test
+	public void buildUrlWithVariableHostSimpleHttp() {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}/index.html");
+		assertEquals("http", url.getProtocol());
+		assertEquals("${host}", url.getHost());
+		assertEquals("/index.html", url.getPath());
+		assertEquals(-1, url.getPort());
+		assertEquals(80, url.getDefaultPort());
+		assertEquals(null, url.getQuery());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostHttpsDefaultPort() {
+		final URL url = WebRequest.buildUrlWithVariableHost("https://${host}/secure");
+		assertEquals("https", url.getProtocol());
+		assertEquals("${host}", url.getHost());
+		assertEquals("/secure", url.getPath());
+		assertEquals(443, url.getDefaultPort());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostWithExplicitPort() {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}:8080/path");
+		assertEquals("${host}", url.getHost());
+		assertEquals(8080, url.getPort());
+		assertEquals("/path", url.getPath());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostWithQuery() {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}/path?param1=value1&param2");
+		assertEquals("${host}", url.getHost());
+		assertEquals("/path", url.getPath());
+		assertEquals("param1=value1&param2", url.getQuery());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostWithoutPath() {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}");
+		assertEquals("${host}", url.getHost());
+		assertEquals("", url.getPath());
+		assertEquals(null, url.getQuery());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostWithNonNumericPortKeepsAuthorityAsHost() {
+		// The ':' belongs to the variable, not to a port: the whole authority must stay the host.
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${ho:st}/path");
+		assertEquals("${ho:st}", url.getHost());
+		assertEquals(-1, url.getPort());
+		assertEquals("/path", url.getPath());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostReturnsNullForNull() {
+		assertEquals(null, WebRequest.buildUrlWithVariableHost(null));
+	}
+
+	@Test
+	public void buildUrlWithVariableHostReturnsNullWhenNoProtocol() {
+		assertEquals(null, WebRequest.buildUrlWithVariableHost("${host}/index.html"));
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void variableHostUrlCannotOpenConnection() throws IOException {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}/index.html");
+		url.openConnection();
+	}
 }

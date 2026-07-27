@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -93,12 +95,87 @@ public abstract class WebRequest {
 			return new URL(urlStr);
 		}catch(MalformedURLException e) {
 			LOGGER.error("Invalid URL in LR project:" + urlStr + "\nThe error is : " + e);
-			if(e.getMessage().startsWith("no protocol") && urlParam.startsWith(leftBrace)) {
+			final String message = (e.getMessage() != null) ? e.getMessage() : "";
+			if(message.startsWith("no protocol") && urlParam.startsWith(leftBrace)) {
 				// the protocol is in a variable like {BaseUrl}/index.html, try to do something
 				return getUrlFromParameterString(leftBrace, rightBrace, "http://" + urlParam);
 			}
+			// Since JDK 20 (JDK-8293590), new URL(String) rejects NeoLoad variable placeholders such as
+			// "${host}" in the host part ("Illegal character found in host"). Rebuild the URL with a
+			// lenient URLStreamHandler, which is exempt from that validation, to keep the variable host.
+			return buildUrlWithVariableHost(urlStr);
 		}
-		return null;
+	}
+
+	/**
+	 * Builds a URL whose host is a NeoLoad variable (e.g. {@code http://${host}/path}). The built-in
+	 * JDK stream handlers reject such hosts since JDK 20, so a lenient {@link URLStreamHandler} is used
+	 * to preserve the previous (JDK 11) behavior across JDK versions.
+	 */
+	@VisibleForTesting
+	protected static URL buildUrlWithVariableHost(final String urlStr) {
+		if (urlStr == null || !urlStr.contains("://")) {
+			return null;
+		}
+		final String protocol = urlStr.substring(0, urlStr.indexOf("://"));
+		final int defaultPort = "https".equalsIgnoreCase(protocol) ? 443 : ("http".equalsIgnoreCase(protocol) ? 80 : -1);
+		try {
+			return new URL(null, urlStr, new VariableHostUrlStreamHandler(defaultPort));
+		} catch (final MalformedURLException e) {
+			LOGGER.error("Cannot build URL with variable host from: " + urlStr + "\nThe error is : " + e);
+			return null;
+		}
+	}
+
+	/**
+	 * Lenient stream handler that parses a URL without the host validation the JDK built-in handlers
+	 * perform since JDK 20. Only used for URLs carrying a NeoLoad variable in the host; such URLs are
+	 * never opened.
+	 */
+	private static final class VariableHostUrlStreamHandler extends URLStreamHandler {
+		private final int defaultPort;
+
+		private VariableHostUrlStreamHandler(final int defaultPort) {
+			this.defaultPort = defaultPort;
+		}
+
+		@Override
+		protected int getDefaultPort() {
+			return defaultPort;
+		}
+
+		@Override
+		protected URLConnection openConnection(final URL url) {
+			throw new UnsupportedOperationException("Cannot open a connection to a URL with a variable host: " + url);
+		}
+
+		@Override
+		protected void parseURL(final URL url, final String spec, final int start, final int limit) {
+			final String content = spec.substring(start, limit);
+			final String rest = content.substring(content.indexOf("://") + 3);
+			final int pathStart = rest.indexOf('/');
+			final String authority = (pathStart >= 0) ? rest.substring(0, pathStart) : rest;
+			final String file = (pathStart >= 0) ? rest.substring(pathStart) : "";
+			String host = authority;
+			int port = -1;
+			final int portSeparator = authority.lastIndexOf(':');
+			if (portSeparator >= 0) {
+				try {
+					port = Integer.parseInt(authority.substring(portSeparator + 1));
+					host = authority.substring(0, portSeparator);
+				} catch (final NumberFormatException ignored) {
+					// ':' belongs to the host (or its variable): keep the whole authority as host.
+				}
+			}
+			String path = file;
+			String query = null;
+			final int queryStart = file.indexOf('?');
+			if (queryStart >= 0) {
+				path = file.substring(0, queryStart);
+				query = file.substring(queryStart + 1);
+			}
+			setURL(url, url.getProtocol(), host, port, authority, null, path, query, null);
+		}
 	}
     
     /**
