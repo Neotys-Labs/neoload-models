@@ -15,6 +15,7 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @JsonInclude(value = Include.NON_EMPTY)
@@ -56,6 +57,7 @@ public interface WaitUntil extends Step {
 	}
 
 	@JsonProperty(TIMEOUT)
+	@Pattern(regexp = "(\\d+|\\$\\{\\w+\\})", groups = {NeoLoad.class})
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultTimeoutFilter.class)
 	@JsonSerialize(converter= TimeDurationInMsOrInVariableToStringConverter.class)
 	@JsonDeserialize(converter= StringToTimeDurationInMsOrInVariableConverter.class)
