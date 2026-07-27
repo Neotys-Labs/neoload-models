@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
@@ -92,11 +94,10 @@ public abstract class WebRequest {
 		String urlStr=null;
 		try {
 			urlStr = MethodUtils.normalizeString(leftBrace, rightBrace, urlParam);
-			return new URL(urlStr);
-		}catch(MalformedURLException e) {
+			return URI.create(urlStr).toURL();
+		}catch(IllegalArgumentException | MalformedURLException e) {
 			LOGGER.error("Invalid URL in LR project:" + urlStr + "\nThe error is : " + e);
-			final String message = (e.getMessage() != null) ? e.getMessage() : "";
-			if(message.startsWith("no protocol") && urlParam.startsWith(leftBrace)) {
+			if(urlParam.startsWith(leftBrace)) {
 				// the protocol is in a variable like {BaseUrl}/index.html, try to do something
 				return getUrlFromParameterString(leftBrace, rightBrace, "http://" + urlParam);
 			}
@@ -113,7 +114,8 @@ public abstract class WebRequest {
 	 * to preserve the previous (JDK 11) behavior across JDK versions.
 	 */
 	@VisibleForTesting
-	protected static URL buildUrlWithVariableHost(final String urlStr) {
+	@SuppressWarnings({"deprecated","squid:S1874"}) //Not possible to use URI since it strictly enforces RFC 2396/3986 syntax, we keep deprecated URL
+    protected static URL buildUrlWithVariableHost(final String urlStr) {
 		if (urlStr == null || !urlStr.contains("://")) {
 			return null;
 		}
@@ -200,8 +202,10 @@ public abstract class WebRequest {
 
 	private static Optional<URL> getURLFromItem(final URL context, final Item item,  final String urlTag) {
 		try {
-			return Optional.of(new URL(context, item.getAttribute(urlTag).get()));
-		} catch (MalformedURLException e) {
+			String spec = item.getAttribute(urlTag).get();
+			URI resolvedURI = context != null ? context.toURI().resolve(spec) : URI.create(spec);
+			return Optional.of(resolvedURI.toURL());
+		} catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
 			LOGGER.warn("Invalid URL found in request, could be a variable in the host");
 		}
 		return Optional.empty();
@@ -360,8 +364,8 @@ public abstract class WebRequest {
 	static Optional<String> extractPathFromUrl(final String url){
 		if(!Strings.isNullOrEmpty(url)){
 			try {
-				return Optional.of((new URL(url)).getPath());								
-			} catch (MalformedURLException e) {
+				return Optional.of(URI.create(url).toURL().getPath());
+			} catch (IllegalArgumentException | MalformedURLException e) {
 				LOGGER.error("Cannot extract path from URL :"+url  + "\nThe error is : " + e);
 			}
 		}	
