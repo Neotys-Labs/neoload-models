@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema",
-	"$id": "https://neotys.com/schemas/as-code/v3",
+	"$id": "https://neotys.com/schemas/as-code/v3.1",
 	"title": "JSON Schema for NeoLoad as-code files",
 	"fileMatch": [
 		"*.nl.yaml",
@@ -36,13 +36,17 @@
 			"minItems": 1,
 			"additionalProperties": false,
 			"items": {
-				"anyOf": [
-					{ "$ref": "#/definitions/variables/constant" },
-					{ "$ref": "#/definitions/variables/file" },
-					{ "$ref": "#/definitions/variables/counter" },
-					{ "$ref": "#/definitions/variables/random_number" },
-					{ "$ref": "#/definitions/variables/javascript" }
-				]
+				"type": "object",
+				"additionalProperties": false,
+				"minProperties": 1,
+				"maxProperties": 1,
+				"properties": {
+					"constant": { "$ref": "#/definitions/variables/constant" },
+					"file": { "$ref": "#/definitions/variables/file" },
+					"counter": { "$ref": "#/definitions/variables/counter" },
+					"random_number": { "$ref": "#/definitions/variables/random_number" },
+					"javascript": { "$ref": "#/definitions/variables/javascript" }
+				}
 			}
 		},
 		"servers": {
