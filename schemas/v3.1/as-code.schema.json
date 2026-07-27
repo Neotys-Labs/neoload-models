@@ -26,7 +26,6 @@
 		},
 		"name": { "$ref": "#/definitions/common/name" },
 		"includes": {
-			"$anchor": "root-includes",
 			"title": "Includes",
 			"type": "array",
 			"minItems": 1,
@@ -34,7 +33,6 @@
 			"items": { "$ref": "#/definitions/common/text" }
 		},
 		"variables": {
-			"$anchor": "root-variables",
 			"title": "Variables",
 			"type": "array",
 			"additionalItems": false,
@@ -63,42 +61,36 @@
 			}
 		},
 		"servers": {
-			"$anchor": "root-servers",
 			"title": "Servers",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/server" }
 		},
 		"sla_profiles": {
-			"$anchor": "root-sla_profiles",
 			"title": "SLA Profiles",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/sla" }
 		},
 		"populations": {
-			"$anchor": "root-populations",
 			"title": "Populations",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/populations/population" }
 		},
 		"scenarios": {
-			"$anchor": "root-scenarios",
 			"title": "Scenarios",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/scenario" }
 		},
 		"user_paths": {
-			"$anchor": "root-user_paths",
 			"title": "User_paths",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/user_paths/user_path" }
 		},
 		"frameworks": {
-			"$anchor": "root-frameworks",
 			"title": "Frameworks",
 			"type": "array",
 			"minItems": 1,
@@ -112,7 +104,6 @@
 			}
 		},
 		"project_settings": {
-			"$anchor": "root-project_settings",
 			"title": "Neoload_Project_settings",
 			"type": "object",
 			"additionalProperties": false,
@@ -135,52 +126,43 @@
 	"definitions": {
 		"common": {
 			"text": {
-				"$anchor": "definitions-common-text",
 				"title": "Value",
 				"type": "string",
 				"pattern": "^.*$"
 			},
 			"textblob": {
-				"$anchor": "definitions-common-textblob",
 				"title": "Blob",
 				"type": "string",
 				"pattern": "((.|\n)*)"
 			},
 			"positive_number": {
-				"$anchor": "definitions-common-positive_number",
 				"title": "Positive Number",
 				"type": "integer",
 				"minimum": 0
 			},
 			"duration": {
-				"$anchor": "definitions-common-duration",
 				"title": "Duration",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
 			},
 			"stop_after_options": {
-				"$anchor": "definitions-common-stop_after_options",
 				"title": "variation_policy.stop_after values",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "type": "string", "enum": ["current_iteration"] }]
 			},
 			"start_after_options": {
-				"$anchor": "definitions-common-start_after",
 				"title": "Start after",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/text" }]
 			},
 			"time": {
-				"$anchor": "definitions-common-time",
 				"title": "Time",
 				"type": "string",
 				"pattern": "^((\\d{1,2}[hms]{1}){1,3})+$"
 			},
 			"iterations": {
-				"$anchor": "definitions-common-iterations",
 				"title": "Iterations",
 				"type": "string",
 				"pattern": "^(\\d+ iterations)$"
 			},
 			"conditions": {
-				"$anchor": "definitions-common-conditions",
 				"title": "Conditions list",
 				"type": "array",
 				"items": {
@@ -222,7 +204,6 @@
 		},
 		"variables": {
 			"generic": {
-				"$anchor": "definitions-variables-generic",
 				"type": "object",
 				"required": ["name"],
 				"properties": {
@@ -232,7 +213,6 @@
 				}
 			},
 			"constant": {
-				"$anchor": "definitions-variables-constant",
 				"title": "Constant",
 				"type": "object",
 				"required": ["value"],
@@ -247,7 +227,6 @@
 				"unevaluatedProperties": false
 			},
 			"file": {
-				"$anchor": "definitions-variables-file",
 				"title": "File",
 				"type": "object",
 				"required": ["path"],
@@ -281,7 +260,6 @@
 				"unevaluatedProperties": false
 			},
 			"counter": {
-				"$anchor": "definitions-variables-counter",
 				"title": "Counter",
 				"type": "object",
 				"required": ["start", "end", "increment"],
@@ -306,7 +284,6 @@
 				"unevaluatedProperties": false
 			},
 			"random_number": {
-				"$anchor": "definitions-variables-random_number",
 				"title": "Random Number",
 				"type": "object",
 				"required": ["min", "max"],
@@ -329,7 +306,6 @@
 				"unevaluatedProperties": false
 			},
 			"random_string": {
-				"$anchor": "definitions-variables-random_string",
 				"title": "Random String",
 				"type": "object",
 				"required": ["min_length", "max_length"],
@@ -352,7 +328,6 @@
 				"unevaluatedProperties": false
 			},
 			"password": {
-				"$anchor": "definitions-variables-password",
 				"title": "Password",
 				"type": "object",
 				"required": ["value"],
@@ -367,7 +342,6 @@
 				"unevaluatedProperties": false
 			},
 			"date": {
-				"$anchor": "definitions-variables-date",
 				"title": "Date",
 				"type": "object",
 				"required": ["pattern"],
@@ -392,7 +366,6 @@
 				"unevaluatedProperties": false
 			},
 			"current_date": {
-				"$anchor": "definitions-variables-current_date",
 				"title": "Current Date",
 				"type": "object",
 				"required": ["pattern"],
@@ -416,7 +389,6 @@
 				"unevaluatedProperties": false
 			},
 			"list": {
-				"$anchor": "definitions-variables-list",
 				"title": "List",
 				"type": "object",
 				"required": ["values"],
@@ -441,7 +413,6 @@
 				"unevaluatedProperties": false
 			},
 			"sql": {
-				"$anchor": "definitions-variables-sql",
 				"title": "SQL",
 				"type": "object",
 				"required": ["query", "driver", "url"],
@@ -464,7 +435,6 @@
 				"unevaluatedProperties": false
 			},
 			"javascript": {
-				"$anchor": "definitions-variables-javascript",
 				"title": "Javascript",
 				"type": "object",
 				"required": ["script"],
@@ -479,7 +449,6 @@
 				"unevaluatedProperties": false
 			},
 			"random_uuid": {
-				"$anchor": "definitions-variables-random_uuid",
 				"title": "Random UUID",
 				"type": "object",
 				"allOf": [
@@ -500,7 +469,6 @@
 				"unevaluatedProperties": false
 			},
 			"shared_queue": {
-				"$anchor": "definitions-variables-shared_queue",
 				"title": "Shared Queue",
 				"type": "object",
 				"allOf": [
@@ -541,7 +509,6 @@
 			}
 		},
 		"server": {
-			"$anchor": "definitions-server",
 			"title": "Server",
 			"type": "object",
 			"required": ["name", "host"],
@@ -550,7 +517,6 @@
 				"name": { "$ref": "#/definitions/common/text" },
 				"host": { "$ref": "#/definitions/common/text" },
 				"scheme": {
-					"$anchor": "root-servers-items-scheme",
 					"type": "string",
 					"enum": ["http", "https"]
 				},
@@ -564,7 +530,6 @@
 		},
 		"authentication": {
 			"auth-generic": {
-				"$anchor": "definitions-authentication-auth-generic",
 				"type": "object",
 				"required": ["login", "password"],
 				"properties": {
@@ -573,7 +538,6 @@
 				}
 			},
 			"auth-generic-domain": {
-				"$anchor": "definitions-authentication-auth-generic-domain",
 				"type": "object",
 				"allOf": [
 					{ "$ref": "#/definitions/authentication/auth-generic" },
@@ -585,7 +549,6 @@
 				]
 			},
 			"basic": {
-				"$anchor": "definitions-authentication-basic",
 				"title": "Basic Authentication",
 				"type": "object",
 				"allOf": [
@@ -598,20 +561,17 @@
 				]
 			},
 			"ntlm": {
-				"$anchor": "definitions-authentication-ntlm",
 				"title": "NTLM Authentication",
 				"type": "object",
 				"allOf": [{ "$ref": "#/definitions/authentication/auth-generic-domain" }]
 			},
 			"negotiate": {
-				"$anchor": "definitions-authentication-negotiate",
 				"title": "Negotiate Authentication",
 				"type": "object",
 				"allOf": [{ "$ref": "#/definitions/authentication/auth-generic-domain" }]
 			}
 		},
 		"sla": {
-			"$anchor": "definitions-sla",
 			"title": "SLA Profile",
 			"type": "object",
 			"required": ["name", "thresholds"],
@@ -619,7 +579,6 @@
 				"name": { "$ref": "#/definitions/common/text" },
 				"description": { "$ref": "#/definitions/common/text" },
 				"thresholds": {
-					"$anchor": "definitions-sla-thresholds",
 					"title": "Thresholds",
 					"type": "array",
 					"minItems": 1,
@@ -628,7 +587,6 @@
 				}
 			},
 			"threshold": {
-				"$anchor": "definitions-sla-threshold",
 				"title": "Threshold",
 				"type": "string",
 				"pattern": "^(.*?)\\s(warn\\s(>=|==|<=|>|<))(?=\\s)(.*?)per\\s(test|interval)$"
@@ -636,7 +594,6 @@
 		},
 		"populations": {
 			"population": {
-				"$anchor": "definitions-population",
 				"title": "Population",
 				"type": "object",
 				"properties": {
@@ -660,7 +617,6 @@
 				}
 			},
 			"constant_load": {
-				"$anchor": "definitions-populations-constant_load",
 				"title": "Constant Load",
 				"type": "object",
 				"required": ["users"],
@@ -676,7 +632,6 @@
 				}
 			},
 			"rampup_load": {
-				"$anchor": "definitions-populations-rampup_load",
 				"title": "Ramp-up Load",
 				"type": "object",
 				"required": ["min_users", "increment_users", "increment_every"],
@@ -696,7 +651,6 @@
 				"additionalProperties": false
 			},
 			"peaks_load": {
-				"$anchor": "definitions-populations-peaks_load",
 				"title": "Peaks Load",
 				"type": "object",
 				"required": ["minimum", "maximum", "start"],
@@ -715,7 +669,6 @@
 				"additionalProperties": false
 			},
 			"peaks_phase": {
-				"$anchor": "definitions-populations-peaks_phase",
 				"title": "Peak Phase",
 				"type": "object",
 				"required": ["users", "duration"],
@@ -725,7 +678,6 @@
 				}
 			},
 			"custom_load": {
-				"$anchor": "definitions-populations-custom_load",
 				"title": "Custom Load",
 				"type": "object",
 				"required": ["steps"],
@@ -742,7 +694,6 @@
 				"additionalProperties": false
 			},
 			"custom_policy_step": {
-				"$anchor": "definitions-populations-custom_policy_step",
 				"title": "Custom Policy Step",
 				"type": "object",
 				"required": ["when", "users"],
@@ -754,7 +705,6 @@
 			}
 		},
 		"scenario": {
-			"$anchor": "definitions-scenario",
 			"title": "Scenario",
 			"type": "object",
 			"properties": {
@@ -776,14 +726,12 @@
 					"items": { "$ref": "#/definitions/scenario/rendezvous_policy" }
 				},
 				"populations": {
-					"$anchor": "definitions-scenario-populations",
 					"title": "Scenario Populations",
 					"type": "array",
 					"minItems": 1,
 					"additionalItems": false,
 					"additionalProperties": false,
 					"items": {
-						"$anchor": "definitions-scenario-populations-items",
 						"type": "object",
 						"required": ["name"],
 						"properties": {
@@ -797,7 +745,6 @@
 				}
 			},
 			"apm": {
-				"$anchor": "definitions-scenario-apm",
 				"title": "APM Configuration",
 				"type": "object",
 				"properties": {
@@ -813,7 +760,6 @@
 				"additionalProperties": false
 			},
 			"dynatrace_anomaly_rule": {
-				"$anchor": "definitions-scenario-dynatrace_anomaly_rule",
 				"title": "Dynatrace Anomaly Rule",
 				"type": "object",
 				"required": ["metric_id", "operator", "value", "severity"],
@@ -832,7 +778,6 @@
 				"additionalProperties": false
 			},
 			"monitoring": {
-				"$anchor": "definitions-scenario-monitoring",
 				"title": "Monitoring Parameters",
 				"type": "object",
 				"properties": {
@@ -842,7 +787,6 @@
 				"additionalProperties": false
 			},
 			"rendezvous_policy": {
-				"$anchor": "definitions-scenario-rendezvous_policy",
 				"title": "Rendezvous Policy",
 				"type": "object",
 				"required": ["name"],
@@ -856,7 +800,6 @@
 		},
 		"user_paths": {
 			"user_path": {
-				"$anchor": "definitions-user_paths-user_path",
 				"title": "User Path",
 				"type": "object",
 				"required": ["name", "actions"],
@@ -873,7 +816,6 @@
 				}
 			},
 			"container": {
-				"$anchor": "definitions-user_paths-container",
 				"title": "Containers",
 				"type": "object",
 				"required": ["steps"],
@@ -894,7 +836,6 @@
 				}
 			},
 			"steps": {
-				"$anchor": "definitions-user_paths-steps",
 				"title": "Steps",
 				"type": "array",
 				"minItems": 1,
@@ -926,7 +867,6 @@
 			},
 			"actions": {
 				"transaction": {
-					"$anchor": "definitions-user_paths-actions-transaction",
 					"name": "transaction",
 					"title": "Action: Transaction",
 					"type": "object",
@@ -949,7 +889,6 @@
 					"additionalProperties": false
 				},
 				"http_page": {
-					"$anchor": "definitions-user_paths-actions-http_page",
 					"name": "http_page",
 					"title": "Action: HTTP Page",
 					"type": "object",
@@ -979,7 +918,6 @@
 					"additionalProperties": false
 				},
 				"request": {
-					"$anchor": "definitions-user_paths-actions-request",
 					"title": "Action: HTTP/s Request",
 					"type": "object",
 					"required": ["url"],
@@ -1031,19 +969,16 @@
 					}
 				},
 				"delay": {
-					"$anchor": "definitions-user_paths-actions-delay",
 					"title": "Action: Delay",
 					"type": "string",
 					"allOf": [{ "$ref": "#/definitions/common/text" }]
 				},
 				"think_time": {
-					"$anchor": "definitions-user_paths-actions-think_time",
 					"title": "Action: Think Time",
 					"type": "string",
 					"allOf": [{ "$ref": "#/definitions/common/text" }]
 				},
 				"javascript": {
-					"$anchor": "definitions-user_paths-actions-javascript",
 					"title": "Action: Javascript",
 					"type": "object",
 					"required": ["name", "script"],
@@ -1054,7 +989,6 @@
 					}
 				},
 				"if": {
-					"$anchor": "definitions-user_paths-actions-if",
 					"title": "Action: If",
 					"type": "object",
 					"required": ["then"],
@@ -1073,7 +1007,6 @@
 					"additionalProperties": false
 				},
 				"while": {
-					"$anchor": "definitions-user_paths-actions-while",
 					"title": "Action: While",
 					"type": "object",
 					"required": ["steps"],
@@ -1091,7 +1024,6 @@
 					"additionalProperties": false
 				},
 				"loop": {
-					"$anchor": "definitions-user_paths-actions-loop",
 					"title": "Action: If",
 					"type": "object",
 					"required": ["count", "steps"],
@@ -1104,7 +1036,6 @@
 					"additionalProperties": false
 				},
 				"switch": {
-					"$anchor": "definitions-user_paths-actions-switch",
 					"title": "Action: Switch",
 					"type": "object",
 					"required": ["value", "default"],
@@ -1121,7 +1052,6 @@
 					"additionalProperties": false
 				},
 				"custom_action": {
-					"$anchor": "definitions-user_paths-actions-custom_action",
 					"title": "Action: Custom Action",
 					"type": "object",
 					"required": ["name", "type"],
@@ -1142,13 +1072,11 @@
 					"additionalProperties": false
 				},
 				"go_to_next_iteration": {
-					"$anchor": "definitions-user_paths-actions-go_to_next_iteration",
 					"title": "Action: Go to next iteration",
 					"type": "object",
 					"additionalProperties": false
 				},
 				"stop_vu": {
-					"$anchor": "definitions-user_paths-actions-stop_vu",
 					"title": "Action: Stop Virtual User",
 					"type": "object",
 					"properties": {
@@ -1160,7 +1088,6 @@
 					"additionalProperties": false
 				},
 				"fork": {
-					"$anchor": "definitions-user_paths-actions-fork",
 					"title": "Action: Fork",
 					"type": "object",
 					"required": ["steps"],
@@ -1176,7 +1103,6 @@
 					"additionalProperties": false
 				},
 				"wait_until": {
-					"$anchor": "definitions-user_paths-actions-wait_until",
 					"title": "Action: Wait Until",
 					"type": "object",
 					"required": ["conditions"],
@@ -1194,7 +1120,6 @@
 					"additionalProperties": false
 				},
 				"variable_modifier": {
-					"$anchor": "definitions-user_paths-actions-variable_modifier",
 					"title": "Action: Variable Modifier",
 					"type": "object",
 					"required": ["mode"],
@@ -1218,7 +1143,6 @@
 					"additionalProperties": false
 				},
 				"debug_logger": {
-					"$anchor": "definitions-user_paths-actions-debug_logger",
 					"title": "Action: Debug Logger",
 					"type": "object",
 					"required": ["text"],
@@ -1229,7 +1153,6 @@
 					"additionalProperties": false
 				},
 				"rendezvous": {
-					"$anchor": "definitions-user_paths-actions-rendezvous",
 					"title": "Action: Rendezvous",
 					"type": "object",
 					"required": ["name"],
@@ -1240,7 +1163,6 @@
 					"additionalProperties": false
 				},
 				"try_catch": {
-					"$anchor": "definitions-user_paths-actions-try_catch",
 					"title": "Action: Try Catch",
 					"type": "object",
 					"required": ["try"],
@@ -1295,7 +1217,6 @@
 				}
 			},
 			"content_assertion": {
-				"$anchor": "definitions-user_paths-content_assertion",
 				"title": "Content Assertion",
 				"type": "object",
 				"properties": {
@@ -1315,7 +1236,6 @@
 				"additionalProperties": false
 			},
 			"part": {
-				"$anchor": "definitions-user_paths-part",
 				"title": "Multipart Part",
 				"type": "object",
 				"required": ["name"],
@@ -1331,7 +1251,6 @@
 				"additionalProperties": false
 			},
 			"size_assertion": {
-				"$anchor": "definitions-user_paths-size_assertion",
 				"title": "Size Assertion",
 				"type": "object",
 				"required": ["operator", "value"],
@@ -1349,7 +1268,6 @@
 				"additionalProperties": false
 			},
 			"duration_assertion": {
-				"$anchor": "definitions-user_paths-duration_assertion",
 				"title": "Duration Assertion",
 				"type": "object",
 				"required": ["value"],
@@ -1363,7 +1281,6 @@
 				"additionalProperties": false
 			},
 			"assertion_wrapper": {
-				"$anchor": "definitions-user_paths-assertion_wrapper",
 				"title": "Assertion (wrapped)",
 				"type": "object",
 				"properties": {
@@ -1401,7 +1318,6 @@
 		},
 		"framework": {
 			"builtin_framework_ref": {
-				"$anchor": "definitions-framework-builtin_framework_ref",
 				"title": "Built-in Framework Reference",
 				"type": "object",
 				"required": ["name"],
@@ -1416,7 +1332,6 @@
 				"additionalProperties": false
 			},
 			"custom_framework": {
-				"$anchor": "definitions-framework-custom_framework",
 				"title": "Custom Framework",
 				"type": "object",
 				"required": ["name", "parameters"],
@@ -1436,7 +1351,6 @@
 				"additionalProperties": false
 			},
 			"dynamic_parameter": {
-				"$anchor": "definitions-framework-dynamic_parameter",
 				"title": "Dynamic Parameter",
 				"type": "object",
 				"required": ["name"],
