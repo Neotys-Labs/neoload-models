@@ -838,6 +838,7 @@
 				"required": ["steps"],
 				"additionalProperties": false,
 				"properties": {
+					"description": { "$ref": "#/definitions/common/text" },
 					"sla_profile": {
 						"type": "string"
 					},
