@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
@@ -89,15 +87,23 @@ public abstract class WebRequest {
         return null;
     }
 
+    // java.net.URL and its constructors are deprecated since JDK 20. We intentionally keep them here
+    // because this class uses URL purely as a string parser to split scheme/host/port/path/query —
+    // no network connection is ever opened. Migrating to URI is not straightforward: URI strictly
+    // enforces RFC 3986 and rejects NeoLoad variable placeholders (e.g. "${host}") in the host part,
+    // which would break script parsing. The proper long-term fix is to replace URL with a dedicated
+    // model class, but that requires a broader refactor across the codebase.
+    @SuppressWarnings({"deprecation", "squid:S1874"})
     @VisibleForTesting
     protected static URL getUrlFromParameterString(final String leftBrace, final String rightBrace, String urlParam) {
 		String urlStr=null;
 		try {
 			urlStr = MethodUtils.normalizeString(leftBrace, rightBrace, urlParam);
-			return URI.create(urlStr).toURL();
-		}catch(IllegalArgumentException | MalformedURLException e) {
+			return new URL(urlStr);
+		}catch(MalformedURLException e) {
 			LOGGER.error("Invalid URL in LR project:" + urlStr + "\nThe error is : " + e);
-			if(urlParam.startsWith(leftBrace)) {
+			final String message = (e.getMessage() != null) ? e.getMessage() : "";
+			if(message.startsWith("no protocol") && urlParam.startsWith(leftBrace)) {
 				// the protocol is in a variable like {BaseUrl}/index.html, try to do something
 				return getUrlFromParameterString(leftBrace, rightBrace, "http://" + urlParam);
 			}
@@ -200,13 +206,12 @@ public abstract class WebRequest {
 		return getURLFromItem(context, item, "URL");
 	}
 
+	@SuppressWarnings({"deprecation", "squid:S1874"})
 	private static Optional<URL> getURLFromItem(final URL context, final Item item,  final String urlTag) {
 		try {
-			String spec = item.getAttribute(urlTag).get();
-			URI resolvedURI = context != null ? context.toURI().resolve(spec) : URI.create(spec);
-			return Optional.of(resolvedURI.toURL());
-		} catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
-			LOGGER.warn("Invalid URL found in request, could be a variable in the host", e);
+			return Optional.of(new URL(context, item.getAttribute(urlTag).get()));
+		} catch (MalformedURLException e) {
+			LOGGER.warn("Invalid URL found in request, could be a variable in the host");
 		}
 		return Optional.empty();
 	}
@@ -360,12 +365,13 @@ public abstract class WebRequest {
 		return extractPathFromUrl(snapshotProperties.get().getProperty("URL1", ""));		
 	}
 
+	@SuppressWarnings({"deprecation", "squid:S1874"})
 	@VisibleForTesting
 	static Optional<String> extractPathFromUrl(final String url){
 		if(!Strings.isNullOrEmpty(url)){
 			try {
-				return Optional.of(URI.create(url).toURL().getPath());
-			} catch (IllegalArgumentException | MalformedURLException e) {
+				return Optional.of((new URL(url)).getPath());
+			} catch (MalformedURLException e) {
 				LOGGER.error("Cannot extract path from URL :"+url  + "\nThe error is : " + e);
 			}
 		}	
