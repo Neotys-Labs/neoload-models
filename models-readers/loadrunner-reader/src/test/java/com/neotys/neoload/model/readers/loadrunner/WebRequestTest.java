@@ -22,6 +22,7 @@ import java.util.Properties;
 import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_READER;
 import static com.neotys.neoload.model.readers.loadrunner.LoadRunnerReaderTestUtil.LOAD_RUNNER_VISITOR;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @SuppressWarnings("squid:S2699")
 public class WebRequestTest {
@@ -92,7 +93,7 @@ public class WebRequestTest {
 	
 	@Test
 	public void buildRequestFromURLTest() throws MalformedURLException {
-		final URL urlTest = new URL("https://test_server.com:8080/request/path?param1=value1&param2&param3=value%203");
+		final URL urlTest = URI.create("https://test_server.com:8080/request/path?param1=value1&param2&param3=value%203").toURL();
 		
 		LOAD_RUNNER_VISITOR.getCurrentExtractors().clear();
 		LOAD_RUNNER_VISITOR.getCurrentHeaders().clear();
@@ -127,8 +128,8 @@ public class WebRequestTest {
 		List<URL> generatedResult = WebRequest.getUrlList(input, null);
 		
 		List<URL> expectedResult = new ArrayList<>();
-		expectedResult.add(new URL("https://server-test.com/path/1/photo1.png"));
-		expectedResult.add(new URL("https://server-test.com/path2/photo2.png"));
+		expectedResult.add(URI.create("https://server-test.com/path/1/photo1.png").toURL());
+		expectedResult.add(URI.create("https://server-test.com/path2/photo2.png").toURL());
 		
 		assertEquals(expectedResult, generatedResult);
 	}
@@ -150,13 +151,13 @@ public class WebRequestTest {
 		input.add("\"Referer=https://www.google.fr/\"");
         input.add("ENDITEM");
 
-        List<URL> generatedResult = WebRequest.getUrlList(input, new URL("https://server-test.com/context/image.jpg"));
+        List<URL> generatedResult = WebRequest.getUrlList(input, URI.create("https://server-test.com/context/image.jpg").toURL());
 
         List<URL> expectedResult = new ArrayList<>();
-        expectedResult.add(new URL("https://server-test.com/path/1/photo1.png"));
-        expectedResult.add(new URL("https://server-test.com/context/path2/photo2.png"));
-		expectedResult.add(new URL("https://server-test.com/path3/photo3.png"));
-		expectedResult.add(new URL("https://server-test.com/path4/photo4.png"));
+        expectedResult.add(URI.create("https://server-test.com/path/1/photo1.png").toURL());
+        expectedResult.add(URI.create("https://server-test.com/context/path2/photo2.png").toURL());
+		expectedResult.add(URI.create("https://server-test.com/path3/photo3.png").toURL());
+		expectedResult.add(URI.create("https://server-test.com/path4/photo4.png").toURL());
 
         assertEquals(expectedResult, generatedResult);
     }
@@ -171,13 +172,13 @@ public class WebRequestTest {
 				"\"Referer=https://www.google.fr/\"",
 				"ENDITEM"
 		);
-		Assertions.assertThat(WebRequest.getUrlList(input,null)).isEqualTo(ImmutableList.of(new URL("https://server-test.com/path2/photo2.png")));
+		Assertions.assertThat(WebRequest.getUrlList(input,null)).isEqualTo(ImmutableList.of(URI.create("https://server-test.com/path2/photo2.png").toURL()));
 	}
 
 	@Test
     public void getServerTest() throws MalformedURLException {
-		final URL urlTest = new URL("https://test_server.com:8080/request/path");
-		final URL urlTest2 = new URL("https://test_server.com:80/request/path");		
+		final URL urlTest = URI.create("https://test_server.com:8080/request/path").toURL();
+		final URL urlTest2 = URI.create("https://test_server.com:80/request/path").toURL();		
 		final Server serverGenerated1 = LOAD_RUNNER_READER.getServer(urlTest);
 		final Server serverGenerated2 = LOAD_RUNNER_READER.getServer(urlTest2);
 		
@@ -307,4 +308,75 @@ public class WebRequestTest {
 		final List<Header> properties = WebRequest.getHeadersFromRecordedFile(Optional.ofNullable(Paths.get(recordedFileUri).toString()));
 		assertEquals(0, properties.size());
 	}
+
+	@Test
+	public void buildUrlWithVariableHostSimpleHttp() {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}/index.html");
+		assertEquals("http", url.getProtocol());
+		assertEquals("${host}", url.getHost());
+		assertEquals("/index.html", url.getPath());
+		assertEquals(-1, url.getPort());
+		assertEquals(80, url.getDefaultPort());
+        assertNull(url.getQuery());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostHttpsDefaultPort() {
+		final URL url = WebRequest.buildUrlWithVariableHost("https://${host}/secure");
+		assertEquals("https", url.getProtocol());
+		assertEquals("${host}", url.getHost());
+		assertEquals("/secure", url.getPath());
+		assertEquals(443, url.getDefaultPort());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostWithExplicitPort() {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}:8080/path");
+		assertEquals("${host}", url.getHost());
+		assertEquals(8080, url.getPort());
+		assertEquals("/path", url.getPath());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostWithQuery() {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}/path?param1=value1&param2");
+		assertEquals("${host}", url.getHost());
+		assertEquals("/path", url.getPath());
+		assertEquals("param1=value1&param2", url.getQuery());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostWithoutPath() {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}");
+		assertEquals("${host}", url.getHost());
+		assertEquals("", url.getPath());
+        assertNull(url.getQuery());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostWithNonNumericPortKeepsAuthorityAsHost() {
+		// The ':' belongs to the variable, not to a port: the whole authority must stay the host.
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${ho:st}/path");
+		assertEquals("${ho:st}", url.getHost());
+		assertEquals(-1, url.getPort());
+		assertEquals("/path", url.getPath());
+	}
+
+	@Test
+	public void buildUrlWithVariableHostReturnsNullForNull() {
+        assertNull(WebRequest.buildUrlWithVariableHost(null));
+	}
+
+	@Test
+	public void buildUrlWithVariableHostReturnsNullWhenNoProtocol() {
+        assertNull(WebRequest.buildUrlWithVariableHost("${host}/index.html"));
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void variableHostUrlCannotOpenConnection() throws IOException {
+		final URL url = WebRequest.buildUrlWithVariableHost("http://${host}/index.html");
+		url.openConnection();
+	}
 }
+
+

@@ -12,7 +12,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -90,15 +94,90 @@ public abstract class WebRequest {
 		String urlStr=null;
 		try {
 			urlStr = MethodUtils.normalizeString(leftBrace, rightBrace, urlParam);
-			return new URL(urlStr);
-		}catch(MalformedURLException e) {
+			return URI.create(urlStr).toURL();
+		}catch(IllegalArgumentException | MalformedURLException e) {
 			LOGGER.error("Invalid URL in LR project:" + urlStr + "\nThe error is : " + e);
-			if(e.getMessage().startsWith("no protocol") && urlParam.startsWith(leftBrace)) {
+			if(urlParam.startsWith(leftBrace)) {
 				// the protocol is in a variable like {BaseUrl}/index.html, try to do something
 				return getUrlFromParameterString(leftBrace, rightBrace, "http://" + urlParam);
 			}
+			// Since JDK 20 (JDK-8293590), new URL(String) rejects NeoLoad variable placeholders such as
+			// "${host}" in the host part ("Illegal character found in host"). Rebuild the URL with a
+			// lenient URLStreamHandler, which is exempt from that validation, to keep the variable host.
+			return buildUrlWithVariableHost(urlStr);
 		}
-		return null;
+	}
+
+	/**
+	 * Builds a URL whose host is a NeoLoad variable (e.g. {@code http://${host}/path}). The built-in
+	 * JDK stream handlers reject such hosts since JDK 20, so a lenient {@link URLStreamHandler} is used
+	 * to preserve the previous (JDK 11) behavior across JDK versions.
+	 */
+	@VisibleForTesting
+	@SuppressWarnings({"deprecated","squid:S1874"}) //Not possible to use URI since it strictly enforces RFC 2396/3986 syntax, we keep deprecated URL
+    protected static URL buildUrlWithVariableHost(final String urlStr) {
+		if (urlStr == null || !urlStr.contains("://")) {
+			return null;
+		}
+		final String protocol = urlStr.substring(0, urlStr.indexOf("://"));
+		final int defaultPort = "https".equalsIgnoreCase(protocol) ? 443 : ("http".equalsIgnoreCase(protocol) ? 80 : -1);
+		try {
+			return new URL(null, urlStr, new VariableHostUrlStreamHandler(defaultPort));
+		} catch (final MalformedURLException e) {
+			LOGGER.error("Cannot build URL with variable host from: " + urlStr + "\nThe error is : " + e);
+			return null;
+		}
+	}
+
+	/**
+	 * Lenient stream handler that parses a URL without the host validation the JDK built-in handlers
+	 * perform since JDK 20. Only used for URLs carrying a NeoLoad variable in the host; such URLs are
+	 * never opened.
+	 */
+	private static final class VariableHostUrlStreamHandler extends URLStreamHandler {
+		private final int defaultPort;
+
+		private VariableHostUrlStreamHandler(final int defaultPort) {
+			this.defaultPort = defaultPort;
+		}
+
+		@Override
+		protected int getDefaultPort() {
+			return defaultPort;
+		}
+
+		@Override
+		protected URLConnection openConnection(final URL url) {
+			throw new UnsupportedOperationException("Cannot open a connection to a URL with a variable host: " + url);
+		}
+
+		@Override
+		protected void parseURL(final URL url, final String spec, final int start, final int limit) {
+			final String content = spec.substring(start, limit);
+			final String rest = content.substring(content.indexOf("://") + 3);
+			final int pathStart = rest.indexOf('/');
+			final String authority = (pathStart >= 0) ? rest.substring(0, pathStart) : rest;
+			final String file = (pathStart >= 0) ? rest.substring(pathStart) : "";
+			String host = authority;
+			int port = -1;
+			final int portSeparator = authority.lastIndexOf(':');
+			if (portSeparator >= 0) {
+				try {
+					port = Integer.parseInt(authority.substring(portSeparator + 1));
+					host = authority.substring(0, portSeparator);
+				} catch (final NumberFormatException ignored) {
+					// ':' belongs to the host (or its variable): keep the whole authority as host.
+				}
+			}
+			String path = file;
+			String query = null;
+			final int queryStart = file.indexOf('?');
+			if (queryStart >= 0) {
+				path = file.substring(0, queryStart);
+				query = file.substring(queryStart + 1);
+			}
+			setURL(url, url.getProtocol(), host, port, authority, null, path, query, null);
+		}
 	}
     
     /**
@@ -123,9 +202,11 @@ public abstract class WebRequest {
 
 	private static Optional<URL> getURLFromItem(final URL context, final Item item,  final String urlTag) {
 		try {
-			return Optional.of(new URL(context, item.getAttribute(urlTag).get()));
-		} catch (MalformedURLException e) {
-			LOGGER.warn("Invalid URL found in request, could be a variable in the host");
+			String spec = item.getAttribute(urlTag).get();
+			URI resolvedURI = context != null ? context.toURI().resolve(spec) : URI.create(spec);
+			return Optional.of(resolvedURI.toURL());
+		} catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
+			LOGGER.warn("Invalid URL found in request, could be a variable in the host", e);
 		}
 		return Optional.empty();
 	}
@@ -283,8 +364,8 @@ public abstract class WebRequest {
 	static Optional<String> extractPathFromUrl(final String url){
 		if(!Strings.isNullOrEmpty(url)){
 			try {
-				return Optional.of((new URL(url)).getPath());								
-			} catch (MalformedURLException e) {
+				return Optional.of(URI.create(url).toURL().getPath());
+			} catch (IllegalArgumentException | MalformedURLException e) {
 				LOGGER.error("Cannot extract path from URL :"+url  + "\nThe error is : " + e);
 			}
 		}	
