@@ -310,14 +310,14 @@
 						"properties": {
 							"pattern": { "$ref": "#/definitions/common/text" },
 							"start_date": { "$ref": "#/definitions/common/text" },
+							"increment_value": {
+								"type": "number",
+								"default": 1
+							},
 							"increment_timeunit": {
 								"type": "string",
 								"enum": ["second", "minute", "hour", "day", "month", "year"],
 								"default": "day"
-							},
-							"increment_value": {
-								"type": "number",
-								"default": 1
 							}
 						}
 					}
@@ -328,20 +328,19 @@
 				"$id": "#/definitions/variables/current_date",
 				"title": "Current Date",
 				"type": "object",
-				"xrequired": ["pattern"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"pattern": { "$ref": "#/definitions/common/text" },
+							"increment_value": {
+								"type": "number",
+								"default": 0
+							},
 							"increment_timeunit": {
 								"type": "string",
 								"enum": ["second", "minute", "hour", "day", "month", "year"],
 								"default": "second"
-							},
-							"increment_value": {
-								"type": "number",
-								"default": 0
 							}
 						}
 					}
