@@ -949,7 +949,7 @@
 						"server": { "$ref": "#/definitions/common/text" },
 						"method": {
 							"type": "string",
-							"enum": ["GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS", "TRACE", "CUSTOM"]
+							"default": "GET"
 						},
 						"headers": {
 							"type": "array",
