@@ -742,25 +742,40 @@
 					"$id": "#/definitions/user_paths/actions/variable_modifier",
 					"title": "Action: Variable Modifier",
 					"type": "object",
-					"required": ["mode"],
+					"required": ["variable_name"],
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"category": {
 							"type": "string",
-							"enum": ["defined", "shared"],
-							"default": "defined"
-						},
-						"mode": {
-							"type": "string",
-							"enum": ["next_value", "init_value", "add_value", "get_value"]
+							"enum": ["predefined", "shared_queue"],
+							"default": "predefined"
 						},
 						"variable_name": { "$ref": "#/definitions/common/text" },
-						"shared_variable_name": { "$ref": "#/definitions/common/text" },
-						"src_variable_name": { "$ref": "#/definitions/common/text" },
-						"dest_variable_name": { "$ref": "#/definitions/common/text" }
+						"mode": {
+							"type": "string",
+							"enum": ["next_value", "init_value", "add_shared_queue_value", "poll_shared_queue"],
+							"default": "next_value"
+						},
+						"value": { "$ref": "#/definitions/common/text" }
 					},
-					"additionalProperties": false
+					"additionalProperties": false,
+					"if": {
+						"properties": { "category": { "const": "shared_queue" } },
+						"required": ["category"]
+					},
+					"then": {
+						"properties": {
+							"mode": { "enum": ["add_shared_queue_value", "poll_shared_queue"] }
+						},
+						"required": ["value"]
+					},
+					"else": {
+						"properties": {
+							"mode": { "enum": ["next_value", "init_value"] }
+						},
+						"not": { "required": ["value"] }
+					}
 				}
 			},
 			"extractor": {

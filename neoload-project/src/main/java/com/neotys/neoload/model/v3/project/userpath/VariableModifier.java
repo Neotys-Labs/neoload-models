@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.VariableModifierCheck;
@@ -15,27 +16,29 @@ import java.util.Optional;
 
 @JsonInclude(value = Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, VariableModifier.CATEGORY, VariableModifier.MODE,
-		VariableModifier.VARIABLE_NAME, VariableModifier.SHARED_VARIABLE_NAME,
-		VariableModifier.SRC_VARIABLE_NAME, VariableModifier.DEST_VARIABLE_NAME})
+		VariableModifier.VARIABLE_NAME, VariableModifier.VALUE})
 @JsonDeserialize(as = ImmutableVariableModifier.class)
+@JsonSerialize(as = ImmutableVariableModifier.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 @VariableModifierCheck(groups = {NeoLoad.class})
 public interface VariableModifier extends Step {
 
+	//default values
 	String DEFAULT_NAME = "variable_modifier";
+	Category DEFAULT_CATEGORY = Category.PREDEFINED;
+	Mode DEFAULT_MODE = Mode.NEXT_VALUE;
+	//fields
 	String CATEGORY = "category";
+	String VARIABLE_NAME = "variable_name"; //handles GUI "Defined Variable - Name" + "Shared Queue - Name"
 	String MODE = "mode";
-	String VARIABLE_NAME = "variable_name";
-	String SHARED_VARIABLE_NAME = "shared_variable_name";
-	String SRC_VARIABLE_NAME = "src_variable_name";
-	String DEST_VARIABLE_NAME = "dest_variable_name";
+	String VALUE = "value"; //handles GUI "Shared Queue - add value" + "Shared Queue - poll value"
 
 	enum Category {
-		@JsonProperty("defined")
-		DEFINED,
-		@JsonProperty("shared")
-		SHARED
+		@JsonProperty("predefined")
+		PREDEFINED,
+		@JsonProperty("shared_queue")
+		SHARED_QUEUE
 	}
 
 	enum Mode {
@@ -43,41 +46,88 @@ public interface VariableModifier extends Step {
 		NEXT_VALUE,
 		@JsonProperty("init_value")
 		INIT_VALUE,
-		@JsonProperty("add_value")
-		ADD_VALUE,
-		@JsonProperty("get_value")
-		GET_VALUE
+		@JsonProperty("add_shared_queue_value")
+		ADD_SHARED_QUEUE_VALUE,
+		@JsonProperty("poll_shared_queue")
+		POLL_SHARED_QUEUE
 	}
 
+	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultNameFilter.class)
 	@Value.Default
 	default String getName() {
 		return DEFAULT_NAME;
 	}
 
 	@JsonProperty(CATEGORY)
+	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultCategoryFilter.class)
 	@Value.Default
 	default Category getCategory() {
-		return Category.DEFINED;
+		return DEFAULT_CATEGORY;
 	}
 
 	@JsonProperty(MODE)
-	@RequiredCheck(groups = {NeoLoad.class})
-	Mode getMode();
+	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultModeFilter.class)
+	@Value.Default
+	default Mode getMode() {
+		return DEFAULT_MODE;
+	}
 
 	@JsonProperty(VARIABLE_NAME)
-	Optional<String> getVariableName();
+	@RequiredCheck(groups = {NeoLoad.class})
+	String getVariableName();
 
-	@JsonProperty(SHARED_VARIABLE_NAME)
-	Optional<String> getSharedVariableName();
-
-	@JsonProperty(SRC_VARIABLE_NAME)
-	Optional<String> getSrcVariableName();
-
-	@JsonProperty(DEST_VARIABLE_NAME)
-	Optional<String> getDestVariableName();
+	@JsonProperty(VALUE)
+	Optional<String> getValue(); //can be empty in case Category == PREDEFINED
 
 	class Builder extends ImmutableVariableModifier.Builder {}
 	static Builder builder() {
 		return new Builder();
+	}
+
+	// Jackson value filters excluding the default name / match from serialization:
+	// a property is omitted when the filter's equals(value) returns true.
+	class DefaultNameFilter {
+		@Override
+		public boolean equals(final Object value) {
+			if (value instanceof String) {
+				return DEFAULT_NAME.equals(value);
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return DEFAULT_NAME.hashCode();
+		}
+	}
+
+	class DefaultCategoryFilter {
+		@Override
+		public boolean equals(final Object value) {
+			if  (value instanceof Category) {
+				return DEFAULT_CATEGORY.equals(value);
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return DEFAULT_CATEGORY.hashCode();
+		}
+	}
+
+	class DefaultModeFilter {
+		@Override
+		public boolean equals(final Object value) {
+			if  (value instanceof Mode) {
+				return DEFAULT_MODE.equals(value);
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return DEFAULT_MODE.hashCode();
+		}
 	}
 }

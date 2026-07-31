@@ -5,6 +5,11 @@ import javax.validation.ConstraintValidatorContext;
 import com.neotys.neoload.model.v3.project.userpath.VariableModifier;
 import com.neotys.neoload.model.v3.validation.constraints.VariableModifierCheck;
 
+import java.util.Optional;
+
+import static com.neotys.neoload.model.v3.project.userpath.VariableModifier.Category.*;
+import static com.neotys.neoload.model.v3.project.userpath.VariableModifier.Mode.*;
+
 public final class VariableModifierValidator extends AbstractConstraintValidator<VariableModifierCheck, VariableModifier> {
 
 	@Override
@@ -15,31 +20,24 @@ public final class VariableModifierValidator extends AbstractConstraintValidator
 
 		final VariableModifier.Category category = variableModifier.getCategory();
 		final VariableModifier.Mode mode = variableModifier.getMode();
+		final Optional<String> value = variableModifier.getValue();
 
-		if (category == VariableModifier.Category.DEFINED) {
-			if (!variableModifier.getVariableName().isPresent()) {
-				return false;
-			}
+		if (category == PREDEFINED && mode != NEXT_VALUE && mode != INIT_VALUE) {
+			return false;
 		}
 
-		if (category == VariableModifier.Category.SHARED) {
-			if (!variableModifier.getSharedVariableName().isPresent()) {
-				return false;
-			}
+		//value is not needed when category is "PREDEFINED"
+		if (category == PREDEFINED ) {
+			return value.isEmpty();
 		}
 
-		if (mode == VariableModifier.Mode.ADD_VALUE) {
-			if (!variableModifier.getSrcVariableName().isPresent()) {
+		if (category == SHARED_QUEUE ) {
+			if (mode != ADD_SHARED_QUEUE_VALUE && mode != POLL_SHARED_QUEUE) {
 				return false;
 			}
+            return value.isPresent() && !value.get().trim().isEmpty();
 		}
 
-		if (mode == VariableModifier.Mode.GET_VALUE) {
-			if (!variableModifier.getDestVariableName().isPresent()) {
-				return false;
-			}
-		}
-
-		return true;
+		throw new IllegalStateException("Unhandled category: " + category);
 	}
 }
