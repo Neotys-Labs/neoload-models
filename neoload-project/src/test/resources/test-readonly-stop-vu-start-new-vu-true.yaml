@@ -1,7 +1,7 @@
 name: MyProject
 user_paths:
-- name: user_path_1
+- name: MyUserPath
   actions:
     steps:
     - stop_vu:
-        start_new_vu: false
+        start_new_vu: true

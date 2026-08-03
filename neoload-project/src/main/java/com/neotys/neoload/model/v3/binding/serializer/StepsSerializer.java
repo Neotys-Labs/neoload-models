@@ -49,6 +49,19 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 				generator.writeStringField(THINK_TIME, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(((ThinkTime)step).getValue()));
 				generator.writeEndObject();
 			}
+			else if (step instanceof StopVU) {
+				final StopVU stopVU = (StopVU) step;
+				if (stopVU.getStartNewVU()) {
+					generator.writeString(STOP_VU);
+				}
+				else {
+					generator.writeStartObject();
+					generator.writeObjectFieldStart(STOP_VU);
+					generator.writeBooleanField(StopVU.START_NEW_VU, stopVU.getStartNewVU());
+					generator.writeEndObject();
+					generator.writeEndObject();
+				}
+			}
 			else {
 				final String stepName = STEPS.get(step.getClass());
 				if (stepName != null) {
