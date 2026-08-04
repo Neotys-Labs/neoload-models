@@ -52,14 +52,20 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 
 	private Project getAsertionsOnlyRequired() {
 
-		final ContentAssertion assertion = ContentAssertion.builder()
-				.contains("DevOps and Automation")
-				.build();
-
 		final ImmutableRequest request = Request.builder()
 				.name("request")
 				.url("http://www.neotys.com/select?name:neoload")
-				.addAssertions(assertion)
+				.addAssertions(ContentAssertion.builder()
+						.contains("DevOps and Automation")
+						.build())
+				.addAssertions(ContentAssertion.builder()
+						.xPath("xpath")
+						.contains("DevOps")
+						.build())
+				.addAssertions(ContentAssertion.builder()
+						.jsonPath("jsonpath")
+						.contains("Automation")
+						.build())
 				.build();
 
 		final UserPath userPath = UserPath.builder()

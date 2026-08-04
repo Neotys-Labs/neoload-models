@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
-import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.Apm;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
@@ -27,22 +26,24 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
 
 public class IOScenariosTest extends AbstractIOElementsTest {
 
-	private static Project getScenariosOnlyRequired() {
-		final PopulationPolicy population11 = PopulationPolicy.builder()
-				.name("MyPopulation11")
+	private static Scenario getScenarioOnlyRequired() {
+		final PopulationPolicy population1 = PopulationPolicy.builder()
+				.name("MyPopulation1")
 				.loadPolicy(ConstantLoadPolicy.builder()
 						.users(500)
 						.build())
 				.build();
 
-		final PopulationPolicy population12 = PopulationPolicy.builder()
-				.name("MyPopulation12")
+		final PopulationPolicy population2 = PopulationPolicy.builder()
+				.name("MyPopulation2")
 				.loadPolicy(RampupLoadPolicy.builder()
 						.minUsers(1)
 						.incrementUsers(10)
@@ -53,8 +54,8 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		final PopulationPolicy population13 = PopulationPolicy.builder()
-				.name("MyPopulation13")
+		final PopulationPolicy population3 = PopulationPolicy.builder()
+				.name("MyPopulation3")
 				.loadPolicy(PeaksLoadPolicy.builder()
 						.minimum(PeakLoadPolicy.builder()
 								.users(100)
@@ -83,31 +84,22 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.users(300)
 				.build();
 
-		final PopulationPolicy population14 = PopulationPolicy.builder()
-				.name("MyPopulation14")
+		final PopulationPolicy population4 = PopulationPolicy.builder()
+				.name("MyPopulation4")
 				.loadPolicy(CustomLoadPolicy.builder()
 						.steps(Collections.singletonList(customPolicyStep))
 						.build())
 				.build();
 
-		final Scenario scenario1 = Scenario.builder()
-				.name("MyScenario1")
-				.addPopulations(population11, population12, population13, population14)
-				.isStoredVariables(true)
+		return Scenario.builder()
+				.name("MyScenario")
+				.addPopulations(population1, population2, population3, population4)
 				.build();
-
-		final Project project = Project.builder()
-				.name("MyProject")
-				.addScenarios(scenario1)
-				.build();
-
-		return project;
 	}
 
-	private static Project getScenariosRequiredAndOptional() {
-		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value("200").build()).build();
-		final PopulationPolicy population11 = PopulationPolicy.builder()
-				.name("MyPopulation11")
+	private static Scenario getScenarioRequiredAndOptional() {
+		final PopulationPolicy population1 = PopulationPolicy.builder()
+				.name("MyPopulation1")
 				.loadPolicy(ConstantLoadPolicy.builder()
 						.users(500)
 						.duration(LoadDuration.builder()
@@ -126,8 +118,8 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		final PopulationPolicy population12 = PopulationPolicy.builder()
-				.name("MyPopulation12")
+		final PopulationPolicy population2 = PopulationPolicy.builder()
+				.name("MyPopulation2")
 				.loadPolicy(RampupLoadPolicy.builder()
 						.minUsers(1)
 						.maxUsers(500)
@@ -141,7 +133,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.type(LoadDuration.Type.ITERATION)
 								.build())
 						.startAfter(StartAfter.builder()
-								.value("MyPopulation11")
+								.value("MyPopulation1")
 								.type(StartAfter.Type.POPULATION)
 								.build())
 						.rampup(90)
@@ -151,8 +143,8 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		final PopulationPolicy population13 = PopulationPolicy.builder()
-				.name("MyPopulation13")
+		final PopulationPolicy population3 = PopulationPolicy.builder()
+				.name("MyPopulation3")
 				.loadPolicy(PeaksLoadPolicy.builder()
 						.minimum(PeakLoadPolicy.builder()
 								.users(100)
@@ -194,8 +186,8 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.users(300)
 				.build();
 
-		final PopulationPolicy population14 = PopulationPolicy.builder()
-				.name("MyPopulation14")
+		final PopulationPolicy population4 = PopulationPolicy.builder()
+				.name("MyPopulation4")
 				.loadPolicy(CustomLoadPolicy.builder()
 						.steps(Collections.singletonList(customPolicyStep))
 						.startAfter(StartAfter.builder()
@@ -210,11 +202,11 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		final Scenario scenario1 = Scenario.builder()
-				.name("MyScenario1")
-				.description("My scenario 1 with 4 populations")
+		return Scenario.builder()
+				.name("MyScenario")
+				.description("My scenario with 4 populations")
 				.slaProfile("MySlaProfile")
-				.addPopulations(population11, population12, population13, population14)
+				.addPopulations(population1, population2, population3, population4)
 				.apm(Apm.builder()
 						.addDynatraceTags("myDynatraceTag")
 						.addDynatraceAnomalyRules(DynatraceAnomalyRule.builder()
@@ -224,23 +216,43 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.severity("PERFORMANCE")
 								.build())
 						.build())
-				.addRendezvousPolicies(rendezvousPolicy)
+				.addRendezvousPolicies(
+						RendezvousPolicy.builder()
+								.name("rdv")
+								.build(),
+						RendezvousPolicy.builder()
+								.name("rdv_manual")
+								.when(WhenRelease.builder()
+										.type(WhenRelease.Type.MANUAL)
+										.value("manual")
+										.build())
+								.timeout(900)
+								.build(),
+						RendezvousPolicy.builder()
+								.name("rdv_percentage")
+								.when(WhenRelease.builder()
+										.type(WhenRelease.Type.PERCENTAGE)
+										.value("50")
+										.build())
+								.build(),
+						RendezvousPolicy.builder()
+								.name("rdv_vu_number")
+								.when(WhenRelease.builder()
+										.type(WhenRelease.Type.VU_NUMBER)
+										.value("200")
+										.build())
+								.timeout(100)
+								.build()
+				)
 				.monitoringParameters(MonitoringParameters.builder().beforeFirstVu(6).afterLastVus(99).build())
 				.isStoredVariables(true)
-				.excludedUrls(ImmutableList.of(".*\\.abcd"))
+				.excludedUrls(List.of(".*\\.abcd"))
 				.build();
-
-		final Project project = Project.builder()
-				.name("MyProject")
-				.addScenarios(scenario1)
-				.build();
-
-		return project;
 	}
 
 	@Test
 	public void readScenariosOnlyRequired() throws IOException {
-		final Project expectedProject = getScenariosOnlyRequired();
+		final Project expectedProject = buildProject(getScenarioOnlyRequired());
 		assertNotNull(expectedProject);
 
 		read("test-scenarios-only-required", expectedProject);
@@ -248,7 +260,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readScenariosRequiredAndOptional() throws IOException {
-		final Project expectedProject = getScenariosRequiredAndOptional();
+		final Project expectedProject = buildProject(getScenarioRequiredAndOptional());
 		assertNotNull(expectedProject);
 
 		read("test-scenarios-required-and-optional", expectedProject);
@@ -256,7 +268,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 
 	@Test
 	public void writeScenariosOnlyRequired() throws IOException {
-		final Project expectedProject = getScenariosOnlyRequired();
+		final Project expectedProject = buildProject(getScenarioOnlyRequired());
 		assertNotNull(expectedProject);
 
 		write("test-scenarios-only-required", expectedProject);
@@ -264,7 +276,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 
 	@Test
 	public void writeScenariosRequiredAndOptional() throws IOException {
-		final Project expectedProject = getScenariosRequiredAndOptional();
+		final Project expectedProject = buildProject(getScenarioRequiredAndOptional());
 		assertNotNull(expectedProject);
 
 		write("test-scenarios-required-and-optional", expectedProject);

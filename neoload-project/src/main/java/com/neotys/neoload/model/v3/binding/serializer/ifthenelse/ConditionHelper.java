@@ -17,6 +17,37 @@ public final class ConditionHelper {
 		super();
 	}
 
+	/**
+	 * Serializes a {@link Condition} to its compact textual form {@code operand1 operator operand2},
+	 * inverse of {@link #convertToCondition(String)}.
+	 */
+	public static String convertToString(final Condition condition) {
+		if (condition == null) return null;
+
+		final StringBuilder builder = new StringBuilder();
+		builder.append(escapeOperand(condition.getOperand1()));
+		builder.append(' ').append(operatorSign(condition.getOperator()));
+		condition.getOperand2().ifPresent(operand2 -> builder.append(' ').append(escapeOperand(operand2)));
+		return builder.toString();
+	}
+
+	// The operator names are ordered [word, sign]; the sign (last element) is emitted when it exists,
+	// otherwise the word form is used (e.g. exists, contains). Both forms are accepted on read.
+	private static String operatorSign(final Condition.Operator operator) {
+		final List<String> names = operator.getNames();
+		return names.get(names.size() - 1);
+	}
+
+	private static String escapeOperand(final String operand) {
+		final String value = (operand != null) ? operand : "";
+		// Every operand is wrapped in single quotes; fall back to double quotes when the value
+		// contains a single quote but no double quote, to avoid escaping.
+		if (value.contains("'") && !value.contains("\"")) {
+			return "\"" + value + "\"";
+		}
+		return "'" + value.replace("\\", "\\\\").replace("'", "\\'") + "'";
+	}
+
 	public static Condition convertToCondition(final String input) throws IOException {
 		// Normalise condition
 		final String conditionAsText = (input != null) ? input : "";

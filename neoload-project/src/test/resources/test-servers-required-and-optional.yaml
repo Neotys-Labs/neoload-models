@@ -1,25 +1,43 @@
 name: MyProject
 servers:
-- name: serverName
-  host: mypc.intranet.neotys.com
-  port: 443
+- name: MyServer1
+  host: myserver1.intranet.neotys.com
   scheme: https
   basic_authentication:
     login: neotysuser
     password: admin@admin
+- name: MyServer2
+  host: myserver2.intranet.neotys.com
+  scheme: https
+  port: 8443
+  basic_authentication:
+    login: neotysuser
+    password: admin@admin
     realm: realm-value
-- name: serverName2
-  host: mypc2.intranet.neotys.com
-  port: 81
-  scheme: http
+- name: MyServer3
+  host: myserver3.intranet.neotys.com
+  negotiate_authentication:
+    login: neotysusernego
+    password: admin@adminnego
+- name: MyServer4
+  host: myserver4.intranet.neotys.com
+  port: 8080
   negotiate_authentication:
     login: neotysusernego
     password: admin@adminnego
     domain: domain-valuenego
-- name: serverName3
-  host: mypc3.intranet.neotys.com
+- name: MyServer5
+  host: myserver5.intranet.neotys.com
+  scheme: https
+  port: 8443
   ntlm_authentication:
     login: neotysuserntlm
     password: admin@adminntlm
-- name: serverName4
-  host: mypc4.intranet.neotys.com
+- name: MyServer6
+  host: myserver6.intranet.neotys.com
+  scheme: https
+  port: 8443
+  ntlm_authentication:
+    login: neotysuserntlm
+    password: admin@adminntlm
+    domain: domain-valuentlm

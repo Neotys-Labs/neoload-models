@@ -1,31 +1,31 @@
 name: MyProject
 scenarios:
-- name: MyScenario1
-  description: My scenario 1 with 4 populations
+- name: MyScenario
+  description: My scenario with 4 populations
   sla_profile: MySlaProfile
   store_variables_for_raw_data: true
   monitoring:
     before: 6s
     after: 1m39s
   populations:
-  - name: MyPopulation11
+  - name: MyPopulation1
     constant_load:
       users: 500
       duration: 15m
       start_after: 30s
       rampup: 1m
       stop_after: 30s
-  - name: MyPopulation12
+  - name: MyPopulation2
     rampup_load:
       min_users: 1
       max_users: 500
       increment_users: 10
       increment_every: 1 iteration
       duration: 15 iterations
-      start_after: MyPopulation11
+      start_after: MyPopulation1
       increment_rampup: 1m30s
       stop_after: current_iteration
-  - name: MyPopulation13
+  - name: MyPopulation3
     peaks_load:
       minimum:
         users: 100
@@ -38,7 +38,7 @@ scenarios:
       start_after: 1m
       step_rampup: 15s
       stop_after: 1m
-  - name: MyPopulation14
+  - name: MyPopulation4
     custom_load:
       start_after: 30s
       rampup: 1m
@@ -48,6 +48,12 @@ scenarios:
         users: 300
   rendezvous_policies:
   - name: rdv
+  - name: rdv_manual
+    when: manual
+    timeout: 15m
+  - name: rdv_percentage
+    when: 50%
+  - name: rdv_vu_number
     when: 200
     timeout: 1m40s
   excluded_urls:

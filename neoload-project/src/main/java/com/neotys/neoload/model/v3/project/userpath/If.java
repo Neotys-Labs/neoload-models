@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.binding.converter.MatchToStringConverter;
 import com.neotys.neoload.model.v3.binding.serializer.MatchDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
@@ -18,10 +20,15 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.DESCRIPTION, If.CONDITIONS, Match.MATCH, If.THEN, If.ELSE})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, If.CONDITIONS, Match.MATCH, If.THEN, If.ELSE})
+@JsonSerialize(as = ImmutableIf.class)
 @JsonDeserialize(as = ImmutableIf.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+// S2097 suppressed: the nested Jackson value-filter classes override equals(Object) to compare the
+// property value (not another filter instance), which is how the CUSTOM value filter selects the default
+// value to omit; a real class check would always be false and defeat the omission.
+@SuppressWarnings("java:S2097")
 public interface If extends Step {
 
 	String DEFAULT_NAME = "if";
@@ -29,6 +36,7 @@ public interface If extends Step {
 	String THEN = "then";
 	String ELSE = "else";
 
+	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultNameFilter.class)
 	@Value.Default
 	default String getName() {
 		return DEFAULT_NAME;
@@ -40,6 +48,8 @@ public interface If extends Step {
 
 	@JsonProperty(Match.MATCH)
 	@RequiredCheck(groups={NeoLoad.class})
+	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultMatchFilter.class)
+	@JsonSerialize(converter = MatchToStringConverter.class)
 	@JsonDeserialize(using = MatchDeserializer.class)
 	@Value.Default
 	default Match getMatch() { return Match.ANY; }
@@ -61,6 +71,32 @@ public interface If extends Step {
 			return Stream.concat(Stream.of(this), getThen().flattened());
 		}
 
+	}
+
+	// Jackson value filters excluding the default name / match from serialization:
+	// a property is omitted when the filter's equals(value) returns true.
+	class DefaultNameFilter {
+		@Override
+		public boolean equals(final Object value) {
+			return DEFAULT_NAME.equals(value);
+		}
+
+		@Override
+		public int hashCode() {
+			return DEFAULT_NAME.hashCode();
+		}
+	}
+
+	class DefaultMatchFilter {
+		@Override
+		public boolean equals(final Object value) {
+			return Match.ANY.equals(value);
+		}
+
+		@Override
+		public int hashCode() {
+			return Match.ANY.hashCode();
+		}
 	}
 
 	class Builder extends ImmutableIf.Builder {}

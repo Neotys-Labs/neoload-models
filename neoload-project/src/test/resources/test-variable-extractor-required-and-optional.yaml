@@ -7,9 +7,12 @@ user_paths:
         name: request
         url: http://www.neotys.com/select?name:neoload
         extractors:
-        - name: first-match-on-jsonpath
-          jsonpath: $.features[0].type
+        - name: MyExtractedVariable
+          from: both
           regexp: Fea(.*)
-          match_number: 1
+          match_number: -1
+          template: $0$
           decode: url
           extract_once: true
+          default: <NOT EXTRACTED>
+          throw_assertion_error: false

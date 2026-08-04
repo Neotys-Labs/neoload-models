@@ -1,47 +1,44 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static junit.framework.TestCase.assertNotNull;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
-import com.neotys.neoload.model.v3.project.userpath.UserPath;
 
 
 public class IODelayTest extends AbstractIOElementsTest {
 
 	@Test
-	public void readServerOnlyRequired() throws IOException {
-		final Project expectedProject = buildProjectContainingDelay();
+	public void readDelayOnlyRequired() throws IOException {
+		final Project expectedProject = buildProject(getDelaysOnlyRequired());
 		assertNotNull(expectedProject);
 
-		read("test-delay-only-required", expectedProject);
+		read("test-delay-without-unit-only-required", expectedProject);
+		read("test-delay-with-unit-only-required", expectedProject);
 	}
 
-	private Project buildProjectContainingDelay() {
-		final Delay delay1 = Delay.builder().value("180200").build();
-		final Delay delay2 = Delay.builder().value("3790100").build();
-		final ThinkTime thinkTime = ThinkTime.builder().value("1000").build();
-		final Delay delay3 = Delay.builder().value("1000").build();
+	@Test
+	public void writeDelayOnlyRequired() throws IOException {
+		final Project expectedProject = buildProject(getDelaysOnlyRequired());
+		assertNotNull(expectedProject);
 
-		final Container container = Container.builder()
-				.name("actions")
-				.addSteps(delay1, delay2, delay3, thinkTime)
-				.build();
+		write("test-delay-with-unit-only-required", expectedProject);
+	}
 
-		final UserPath userPath = UserPath.builder()
-				.name("user_path_1")
-				.actions(container)
-				.build();
-		return Project.builder()
-				.name("MyProject")
-				.addUserPaths(userPath)
-				.build();
+	private List<Delay> getDelaysOnlyRequired() {
+		return List.of(
+				Delay.builder().value("3790200").build(),
+				Delay.builder().value("3600000").build(),
+				Delay.builder().value("180000").build(),
+				Delay.builder().value("10000").build(),
+				Delay.builder().value("200").build()
+		);
 	}
 }

@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
@@ -16,73 +17,46 @@ import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.If;
 import com.neotys.neoload.model.v3.project.userpath.Match;
 import com.neotys.neoload.model.v3.project.userpath.Request;
-import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 
 
 public class IOIfTest extends AbstractIOElementsTest {
 
-	private static Project getIfOnlyRequired() {
-		final UserPath userPath = UserPath.builder()
-				.name("MyUserPath")
-				.actions(Container.builder()
-						.name("actions")
-						.addSteps(If.builder()
-								.conditions(Arrays.asList(Condition
-										.builder()
-										.operand1("${variable}")
-										.operator(Condition.Operator.EQUALS)
-										.operand2("2")
-										.build(),Condition
-										.builder()
-										.operand1("operand1")
-										.operator(Condition.Operator.EQUALS)
-										.operand2("operand2")
-										.build()))
-								.then(Container.builder()
-										.name("container")
-										.addSteps(Delay
-												.builder()
-												.value(String.valueOf(3*60*1000+200)) // "3m 200ms"
-												.build()
-										).build())
-								.build())
-						.build())
+	private static If getIfOnlyRequired() {
+		return If.builder()
+				.conditions(Arrays.asList(Condition
+						.builder()
+						.operand1("${variable}")
+						.operator(Condition.Operator.EQUALS)
+						.operand2("2")
+						.build(),Condition
+						.builder()
+						.operand1("operand1")
+						.operator(Condition.Operator.EQUALS)
+						.operand2("operand2")
+						.build()))
+				.then(Container.builder()
+						.name("container")
+						.addSteps(Delay
+								.builder()
+								.value(String.valueOf(3*60*1000+200)) // "3m 200ms"
+								.build()
+						).build())
 				.build();
-
-		final Project project = Project.builder()
-				.name("MyProject")
-				.addUserPaths(userPath)
-				.build();
-
-		return project;
 	}
 
-	private static Project getIfRequiredAndOptional() {
-		final UserPath userPath = UserPath.builder()
-				.name("MyUserPath")
-				.actions(Container.builder()
-						.name("actions")
-						.addSteps(If.builder()
-								.name("My If-Then-Else")
-								.description("My description")
-								.conditions(getConditions())
-								.match(Match.ANY)
-								.then(getThen())
-								.getElse(getElse())
-								.build())
-						.build())
+	private static If getIfRequiredAndOptional() {
+		return If.builder()
+				.name("MyIfThenElse")
+				.description("MyIfThenElseDescription")
+				.conditions(getConditions())
+				.match(Match.ALL)
+				.then(getThen())
+				.getElse(getElse())
 				.build();
-
-		final Project project = Project.builder()
-				.name("MyProject")
-				.addUserPaths(userPath)
-				.build();
-
-		return project;
 	}
 
-	private static final List<Condition> getConditions(){
+	private static List<Condition> getConditions(){
 		return Arrays.asList(
 				getCondition("operand1", Condition.Operator.EQUALS, "operand2"),
 				getCondition("0", Condition.Operator.EQUALS, "operand2"),
@@ -118,7 +92,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 		);
 	}
 
-	private static final Condition getCondition(final String operand1, final Condition.Operator operator, final String operand2){
+	private static Condition getCondition(final String operand1, final Condition.Operator operator, final String operand2){
 		return Condition
 				.builder()
 				.operand1(operand1)
@@ -127,7 +101,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 				.build();
 	}
 
-	private static final Condition getCondition(final String operand1, final Condition.Operator operator){
+	private static Condition getCondition(final String operand1, final Condition.Operator operator){
 		return Condition
 				.builder()
 				.operand1(operand1)
@@ -138,7 +112,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 	private static Container getThen() {
 		return Container.builder()
 				.name("container")
-				.description("My then description")
+				.description("MyThenDescription")
 				.slaProfile("MySLAProfile")
 				.addSteps(Request
 						.builder()
@@ -153,7 +127,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 	private static Container getElse() {
 		return Container.builder()
 				.name("container")
-				.description("My else description")
+				.description("MyElseDescription")
 				.slaProfile("MySLAProfile")
 				.addSteps(Delay
 						.builder()
@@ -167,7 +141,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readIfOnlyRequired() throws IOException {
-		final Project expectedProject = getIfOnlyRequired();
+		final Project expectedProject = buildProject(getIfOnlyRequired());
 		assertNotNull(expectedProject);
 
 		read("test-if-only-required", expectedProject);
@@ -175,9 +149,25 @@ public class IOIfTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readIfRequiredAndOptional() throws IOException {
-		final Project expectedProject = getIfRequiredAndOptional();
+		final Project expectedProject = buildProject(getIfRequiredAndOptional());
 		assertNotNull(expectedProject);
 
 		read("test-if-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void writeIfOnlyRequired() throws IOException {
+		final Project expectedProject = buildProject(getIfOnlyRequired());
+		assertNotNull(expectedProject);
+
+		write("test-if-only-required", expectedProject);
+	}
+
+	@Test
+	public void writeIfRequiredAndOptional() throws IOException {
+		final Project expectedProject = buildProject(getIfRequiredAndOptional());
+		assertNotNull(expectedProject);
+
+		write("test-if-required-and-optional", expectedProject);
 	}
 }

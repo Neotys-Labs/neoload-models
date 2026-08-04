@@ -4,12 +4,12 @@ user_paths:
   actions:
     steps:
     - switch:
-        value: '1'
+        value: "${MySwitchVariable}"
         case:
-        - value: '0'
+        - value: 0
           break: true
           steps:
-          - delay: 3ms
+          - delay: 1s
         default:
           steps:
-          - delay: 3ms
+          - delay: 3s

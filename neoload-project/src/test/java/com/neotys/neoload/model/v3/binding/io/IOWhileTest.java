@@ -9,37 +9,36 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
 
 public class IOWhileTest extends AbstractIOElementsTest {
 
-    private static Project getIfOnlyRequired() {
-        final UserPath userPath = UserPath.builder()
-                .name("MyUserPath")
-                .actions(Container.builder()
-                        .name("actions")
-                        .addSteps(While.builder()
-                                .name("My While")
-                                .description("My description")
-                                .conditions(getConditions())
-                                .addSteps(
-                                        Request.builder()
-                                                .url("http://www.neotys.com/select")
-                                                .build()
-                                ).build()
-                        ).build()
-                ).build();
-
-        final Project project = Project.builder()
-                .name("MyProject")
-                .addUserPaths(userPath)
-                .build();
-
-        return project;
+    private static While getWhileOnlyRequired() {
+        return While.builder()
+				.conditions(getConditions())
+				.addSteps(
+						Request.builder()
+								.url("http://www.neotys.com/select")
+								.build()
+				).build();
     }
 
-    private static final List<Condition> getConditions() {
+	private static While getWhileRequiredAndOptional() {
+		return While.builder()
+				.name("MyWhile")
+				.description("MyWhileDescription")
+				.conditions(getConditions())
+				.match(Match.ALL)
+				.addSteps(
+						Request.builder()
+								.url("http://www.neotys.com/select")
+								.build()
+				).build();
+	}
+
+	private static List<Condition> getConditions() {
         return Arrays.asList(
                 getCondition("operand1", Condition.Operator.EQUALS, "operand2"),
                 getCondition("0", Condition.Operator.EQUALS, "operand2"),
@@ -75,7 +74,7 @@ public class IOWhileTest extends AbstractIOElementsTest {
         );
     }
 
-    private static final Condition getCondition(final String operand1, final Condition.Operator operator, final String operand2) {
+    private static Condition getCondition(final String operand1, final Condition.Operator operator, final String operand2) {
         return Condition
                 .builder()
                 .operand1(operand1)
@@ -84,7 +83,7 @@ public class IOWhileTest extends AbstractIOElementsTest {
                 .build();
     }
 
-    private static final Condition getCondition(final String operand1, final Condition.Operator operator) {
+    private static Condition getCondition(final String operand1, final Condition.Operator operator) {
         return Condition
                 .builder()
                 .operand1(operand1)
@@ -93,10 +92,34 @@ public class IOWhileTest extends AbstractIOElementsTest {
     }
 
     @Test
-    public void readIfOnlyRequired() throws IOException {
-        final Project expectedProject = getIfOnlyRequired();
+    public void readWhileOnlyRequired() throws IOException {
+        final Project expectedProject = buildProject(getWhileOnlyRequired());
         assertNotNull(expectedProject);
 
-        read("test-while-only-required", expectedProject);
+        read("test-readonly-while-only-required", expectedProject);
     }
+
+	@Test
+	public void readWhileRequiredAndOptional() throws IOException {
+		final Project expectedProject = buildProject(getWhileRequiredAndOptional());
+		assertNotNull(expectedProject);
+
+		read("test-readonly-while-required-and-optional", expectedProject);
+	}
+
+	@Test
+    public void writeWhileOnlyRequired() throws IOException {
+        final Project expectedProject = buildProject(getWhileOnlyRequired());
+        assertNotNull(expectedProject);
+
+        write("test-while-only-required", expectedProject);
+    }
+
+	@Test
+	public void writeWhileRequiredAndOptional() throws IOException {
+		final Project expectedProject = buildProject(getWhileRequiredAndOptional());
+		assertNotNull(expectedProject);
+
+		write("test-while-required-and-optional", expectedProject);
+	}
 }

@@ -1,17 +1,16 @@
 name: MyProject
 scenarios:
-- name: MyScenario1
-  store_variables_for_raw_data: true
+- name: MyScenario
   populations:
-  - name: MyPopulation11
+  - name: MyPopulation1
     constant_load:
       users: 500
-  - name: MyPopulation12
+  - name: MyPopulation2
     rampup_load:
       min_users: 1
       increment_users: 10
       increment_every: 5s
-  - name: MyPopulation13
+  - name: MyPopulation3
     peaks_load:
       minimum:
         users: 100
@@ -20,7 +19,7 @@ scenarios:
         users: 500
         duration: 2m
       start: minimum
-  - name: MyPopulation14
+  - name: MyPopulation4
     custom_load:
       steps:
       - when: 1m40s
