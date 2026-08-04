@@ -302,7 +302,7 @@
 				"$id": "#/definitions/variables/list",
 				"title": "List",
 				"type": "object",
-				"xrequired": ["values"],
+				"xrequired": ["column_names", "values"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
@@ -317,7 +317,10 @@
 									"type": "array",
 									"items": { "type": "string" }
 								}
-							}
+							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"order": { "$ref": "#/definitions/common/var_order" },
+							"out_of_value": { "$ref": "#/definitions/common/var_out_of_value" }
 						}
 					}
 				],
