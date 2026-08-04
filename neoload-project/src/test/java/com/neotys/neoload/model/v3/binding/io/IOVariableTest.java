@@ -92,6 +92,17 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .order(SEQUENTIAL)
                 .build();
 
+        final Variable listVariable2 = ListVariable.builder()
+                .name("MyList2")
+                .description("list variable description")
+                .addColumnNames("city", "country")
+                .addValues(newArrayList("Paris", "France"), newArrayList("London", "UK"))
+                .changePolicy(EACH_USER)
+                .scope(UNIQUE)
+                .order(RANDOM)
+                .outOfValue(STOP)
+                .build();
+
         final JavaScriptVariable javaScriptVariable = JavaScriptVariable.builder()
                 .name("My JSVar")
                 .description("This is a js var")
@@ -107,7 +118,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, listVariable, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, listVariable, listVariable2, javaScriptVariable)
                 .build();
     }
 }
