@@ -31,6 +31,7 @@ variables:
     values:
     - ["Paris", "France"]
     - ["London", "UK"]
+    start_from_line: 1
     change_policy: each_iteration
     scope: global
     order: any
@@ -119,6 +120,7 @@ A list or table of values defined inline in the YAML file.
 | description   | The variable description      | -               | -        |       |
 | column_names  | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | -               | &#x2713; |       |
 | values        | The list of rows. Each row is a list of values, one per column of `column_names`. | -               | &#x2713; |       |
+| start_from_line | The first row of `values` to be used. The default value is "1". | -               | -        |       |
 | change_policy | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |       |
 | scope         | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        |       |
 | order         | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | -               | -        |       |
@@ -134,6 +136,7 @@ list:
   values:
   - ["Paris", "France"]
   - ["London", "UK"]
+  start_from_line: 1
   change_policy: each_iteration
   scope: global
   order: any

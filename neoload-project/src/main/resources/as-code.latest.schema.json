@@ -318,6 +318,10 @@
 									"items": { "type": "string" }
 								}
 							},
+							"start_from_line": {
+								"type": "integer",
+								"default": 1
+							},
 							"scope": { "$ref": "#/definitions/common/var_scope" },
 							"order": { "$ref": "#/definitions/common/var_order" },
 							"out_of_value": { "$ref": "#/definitions/common/var_out_of_value" }

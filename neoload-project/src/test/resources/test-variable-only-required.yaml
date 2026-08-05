@@ -53,6 +53,7 @@ variables:
       - France
     - - London
       - UK
+    start_from_line: 1
     order: sequential
 - list:
     name: MyList2
@@ -65,6 +66,7 @@ variables:
       - France
     - - London
       - UK
+    start_from_line: 2
     change_policy: each_user
     scope: unique
     order: random

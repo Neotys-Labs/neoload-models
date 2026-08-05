@@ -97,6 +97,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .description("list variable description")
                 .addColumnNames("city", "country")
                 .addValues(newArrayList("Paris", "France"), newArrayList("London", "UK"))
+                .startFromLine(2)
                 .changePolicy(EACH_USER)
                 .scope(UNIQUE)
                 .order(RANDOM)
