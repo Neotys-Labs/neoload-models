@@ -5,11 +5,9 @@ user_paths:
     steps:
     - try_catch:
         name: my_try_catch
-        policy: catch_errors
+        caught_exceptions:
+        - timeouts
         try:
+          name: container
           steps:
-          - delay: 1000
-          - delay: 2000
-        catch:
-          steps:
-          - delay: 500
+          - delay: 1s

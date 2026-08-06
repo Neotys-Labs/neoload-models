@@ -1,0 +1,11 @@
+name: MyProject
+user_paths:
+- name: user_path_1
+  actions:
+    steps:
+    - try_catch:
+        name: try_catch
+        try:
+          name: container
+          steps:
+          - delay: 1s
