@@ -1262,10 +1262,15 @@
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
-						"policy": {
-							"type": "string",
-							"enum": ["catch_all", "catch_errors", "catch_assertions"],
-							"default": "catch_all"
+						"caught_exceptions": {
+							"type": "array",
+							"minItems": 1,
+							"uniqueItems": true,
+							"items": {
+								"type": "string",
+								"enum": ["errors", "assertions"]
+							},
+							"default": ["errors"]
 						},
 						"try": { "$ref": "#/definitions/user_paths/container" },
 						"catch": { "$ref": "#/definitions/user_paths/container" }
