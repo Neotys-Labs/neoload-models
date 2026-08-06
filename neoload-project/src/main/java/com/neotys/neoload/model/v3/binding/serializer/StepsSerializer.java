@@ -3,15 +3,14 @@ package com.neotys.neoload.model.v3.binding.serializer;
 import static com.neotys.neoload.model.v3.binding.converter.TimeDurationInMsOrInVariableToStringConverter.TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING;
 import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.*;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class StepsSerializer extends StdSerializer<List<Step>> {
     private static final long serialVersionUID = -4569870233567503685L;
@@ -26,6 +25,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
     	builder.put(ImmutableLoop.class, LOOP);
     	builder.put(ImmutableWhile.class, WHILE);
     	builder.put(ImmutableSwitch.class, SWITCH);
+    	builder.put(ImmutableTryCatch.class, TRY_CATCH);
 		builder.put(ImmutableCustomAction.class, CUSTOM_ACTION);
     	builder.put(ImmutableHttpPage.class, HTTP_PAGE);
     	STEPS = builder.build();
