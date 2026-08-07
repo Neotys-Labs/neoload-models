@@ -1,57 +1,59 @@
 package com.neotys.neoload.model.v3.project.variable;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.constraints.StartDateMatchesPatternCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, DatePatternElement.PATTERN, DateVariable.START_DATE,
+		DatePatternElement.INCREMENT_VALUE, DatePatternElement.INCREMENT_TIMEUNIT, ChangePolicyElement.CHANGE_POLICY,
+		ScopeElement.SCOPE})
 @JsonDeserialize(as = ImmutableDateVariable.class)
-@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, DateVariable.PATTERN, DateVariable.START_DATE, DateVariable.INC_TYPE, DateVariable.INC_VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface DateVariable extends Variable {
+@StartDateMatchesPatternCheck(groups = {NeoLoad.class})
+public interface DateVariable extends Variable, DatePatternElement, ChangePolicyElement, ScopeElement {
 
-	String PATTERN = "pattern";
 	String START_DATE = "start_date";
-	String INC_TYPE = "inc_type";
-	String INC_VALUE = "inc_value";
 
-	enum IncType {
-		@JsonProperty("second") SECOND,
-		@JsonProperty("minute") MINUTE,
-		@JsonProperty("hour") HOUR,
-		@JsonProperty("day") DAY,
-		@JsonProperty("month") MONTH,
-		@JsonProperty("year") YEAR
-	}
-
-	@JsonProperty(PATTERN)
-	@RequiredCheck(groups = {NeoLoad.class})
-	String getPattern();
+	//default values:
+	ChangePolicy DEFAULT_CHANGE_POLICY = ChangePolicy.EACH_USE; //the default is not EACH_ITERATION
 
 	@JsonProperty(START_DATE)
-	Optional<String> getStartDate();
+	@RequiredCheck(groups = {NeoLoad.class})
+	String getStartDate();
 
-	@JsonProperty(INC_TYPE)
+	@JsonProperty(CHANGE_POLICY)
+	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultChangePolicyFilter.class)
 	@Value.Default
-	default IncType getIncType() {
-		return IncType.DAY;
-	}
-
-	@JsonProperty(INC_VALUE)
-	@Value.Default
-	default int getIncValue() {
-		return 1;
+	@Override
+	default ChangePolicy getChangePolicy() {
+		return DEFAULT_CHANGE_POLICY;
 	}
 
 	class Builder extends ImmutableDateVariable.Builder {}
 	static Builder builder() {
 		return new Builder();
 	}
+
+	// Jackson value filters excluding each property's default value from serialization:
+	// a property is omitted when the filter's equals(value) returns true.
+	class DefaultChangePolicyFilter {
+		@Override
+		public boolean equals(final Object value) {
+			return DEFAULT_CHANGE_POLICY.equals(value);
+		}
+
+		@Override
+		public int hashCode() {
+			return DEFAULT_CHANGE_POLICY.hashCode();
+		}
+	}
+
 }

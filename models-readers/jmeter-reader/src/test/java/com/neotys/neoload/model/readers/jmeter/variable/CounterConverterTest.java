@@ -3,6 +3,8 @@ package com.neotys.neoload.model.readers.jmeter.variable;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.variable.CounterVariable;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueElement;
+import com.neotys.neoload.model.v3.project.variable.ScopeElement;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.modifiers.CounterConfig;
 import org.junit.Before;
@@ -44,8 +46,8 @@ public class CounterConverterTest {
                 .increment(Integer.parseInt(counterConfig.getIncrementAsString()))
                 .end(Integer.parseInt(counterConfig.getEndAsString()))
                 .start(Integer.parseInt(counterConfig.getStartAsString()))
-                .scope(Variable.Scope.LOCAL)
-                .outOfValue(Variable.OutOfValue.CYCLE);
+                .scope(ScopeElement.Scope.LOCAL)
+                .outOfValue(OutOfValueElement.OutOfValue.CYCLE);
         expected.add(counterBuilder.build());
         assertEquals(result, expected);
     }
@@ -69,8 +71,8 @@ public class CounterConverterTest {
             .increment(Integer.parseInt(counterConfig.getIncrementAsString()))
             .end(Integer.parseInt(counterConfig.getEndAsString()))
             .start(Integer.parseInt(counterConfig.getStartAsString()))
-            .scope(Variable.Scope.GLOBAL)
-            .outOfValue(Variable.OutOfValue.CYCLE);
+            .scope(ScopeElement.Scope.GLOBAL)
+            .outOfValue(OutOfValueElement.OutOfValue.CYCLE);
     expected.add(counterBuilder.build());
     assertEquals(result, expected);
     }

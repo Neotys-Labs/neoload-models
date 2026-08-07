@@ -2,8 +2,8 @@ package com.neotys.neoload.model.readers.jmeter.variable;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.variable.ImmutableCSVDataSetModel.Builder;
-import com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue;
-import com.neotys.neoload.model.v3.project.variable.Variable.Scope;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueElement.OutOfValue;
+import com.neotys.neoload.model.v3.project.variable.ScopeElement.Scope;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,9 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.variable.ChangePolicyElement;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
-import com.neotys.neoload.model.v3.project.variable.Variable;
+import com.neotys.neoload.model.v3.project.variable.OrderElement;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueElement;
+import com.neotys.neoload.model.v3.project.variable.ScopeElement;
 import com.neotys.neoload.model.v3.util.Parameter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -417,12 +420,12 @@ public class WrittingTestUtils {
             .delimiter(",")
             .path("path_du_fichier")
             .startFromLine(2)
-            .order(Variable.Order.SEQUENTIAL)
-            .changePolicy(Variable.ChangePolicy.EACH_ITERATION)
+            .order(OrderElement.Order.SEQUENTIAL)
+            .changePolicy(ChangePolicyElement.ChangePolicy.EACH_ITERATION)
             .isFirstLineColumnNames(true)
-            .scope(Variable.Scope.GLOBAL)
+            .scope(ScopeElement.Scope.GLOBAL)
             .columnNames(COLUMNS)
-            .outOfValue(Variable.OutOfValue.CYCLE)
+            .outOfValue(OutOfValueElement.OutOfValue.CYCLE)
             .build();
 
     public static final FileVariable VARIABLE_TEST2 = FileVariable.builder()
@@ -430,12 +433,12 @@ public class WrittingTestUtils {
             .delimiter(",")
             .path("path_du_fichier")
             .startFromLine(2)
-            .order(Variable.Order.RANDOM)
-            .changePolicy(Variable.ChangePolicy.EACH_USE)
+            .order(OrderElement.Order.RANDOM)
+            .changePolicy(ChangePolicyElement.ChangePolicy.EACH_USE)
             .isFirstLineColumnNames(true)
-            .scope(Variable.Scope.LOCAL)
+            .scope(ScopeElement.Scope.LOCAL)
             .columnNames(COLUMNS)
-            .outOfValue(Variable.OutOfValue.STOP)
+            .outOfValue(OutOfValueElement.OutOfValue.STOP)
             .build();
 
     public static final FileVariable VARIABLE_TEST3 = FileVariable.builder()
@@ -443,12 +446,12 @@ public class WrittingTestUtils {
             .delimiter(",")
             .path("path_du_fichier")
             .startFromLine(2)
-            .order(Variable.Order.SEQUENTIAL)
-            .changePolicy(Variable.ChangePolicy.EACH_USER)
+            .order(OrderElement.Order.SEQUENTIAL)
+            .changePolicy(ChangePolicyElement.ChangePolicy.EACH_USER)
             .isFirstLineColumnNames(true)
-            .scope(Variable.Scope.UNIQUE)
+            .scope(ScopeElement.Scope.UNIQUE)
             .columnNames(COLUMNS)
-            .outOfValue(Variable.OutOfValue.CYCLE)
+            .outOfValue(OutOfValueElement.OutOfValue.CYCLE)
             .build();
 
     public static Document generateEmptyDocument() throws ParserConfigurationException {

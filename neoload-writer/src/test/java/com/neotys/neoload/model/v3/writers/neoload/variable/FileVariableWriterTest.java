@@ -1,7 +1,11 @@
 package com.neotys.neoload.model.v3.writers.neoload.variable;
 
 import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.project.variable.ChangePolicyElement;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
+import com.neotys.neoload.model.v3.project.variable.OrderElement;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueElement;
+import com.neotys.neoload.model.v3.project.variable.ScopeElement;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 import org.assertj.core.api.Assertions;
@@ -79,11 +83,11 @@ public class FileVariableWriterTest {
 				.delimiter(";")
 				.path("src/test/resources/com/neotys/neoload/model/v3/writers/neoload/filevariable.csv")
 				.startFromLine(1)
-				.order(Variable.Order.SEQUENTIAL)
-				.changePolicy(Variable.ChangePolicy.EACH_USER)
+				.order(OrderElement.Order.SEQUENTIAL)
+				.changePolicy(ChangePolicyElement.ChangePolicy.EACH_USER)
 				.isFirstLineColumnNames(true)
-				.scope(Variable.Scope.UNIQUE)
-				.outOfValue(Variable.OutOfValue.CYCLE)
+				.scope(ScopeElement.Scope.UNIQUE)
+				.outOfValue(OutOfValueElement.OutOfValue.CYCLE)
 				.build();
 
 		Document doc = WrittingTestUtils.generateEmptyDocument();
@@ -113,11 +117,11 @@ public class FileVariableWriterTest {
 				.delimiter(";")
 				.path("INVALIDFILE.csv")
 				.startFromLine(1)
-				.order(Variable.Order.SEQUENTIAL)
-				.changePolicy(Variable.ChangePolicy.EACH_USER)
+				.order(OrderElement.Order.SEQUENTIAL)
+				.changePolicy(ChangePolicyElement.ChangePolicy.EACH_USER)
 				.isFirstLineColumnNames(true)
-				.scope(Variable.Scope.UNIQUE)
-				.outOfValue(Variable.OutOfValue.CYCLE)
+				.scope(ScopeElement.Scope.UNIQUE)
+				.outOfValue(OutOfValueElement.OutOfValue.CYCLE)
 				.build();
 
 		Document doc = WrittingTestUtils.generateEmptyDocument();

@@ -9,8 +9,10 @@ import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
 
 import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.project.variable.ChangePolicyElement;
 import com.neotys.neoload.model.v3.project.variable.CounterVariable;
-import com.neotys.neoload.model.v3.project.variable.Variable;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueElement;
+import com.neotys.neoload.model.v3.project.variable.ScopeElement;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 
 public class CounterVariableTest {
@@ -21,10 +23,9 @@ public class CounterVariableTest {
             .start(7)
             .end(16)
             .increment(2)
-            .order(Variable.Order.SEQUENTIAL)
-            .scope(Variable.Scope.GLOBAL)
-            .changePolicy(Variable.ChangePolicy.EACH_USE)
-            .outOfValue(Variable.OutOfValue.STOP)
+            .scope(ScopeElement.Scope.GLOBAL)
+            .changePolicy(ChangePolicyElement.ChangePolicy.EACH_USE)
+            .outOfValue(OutOfValueElement.OutOfValue.STOP)
             .build();
 
     @Test
@@ -33,7 +34,7 @@ public class CounterVariableTest {
         Element root = WrittingTestUtils.generateTestRootElement(doc);
         String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
                 + "<test-root><variable-counter inc=\"2\" max=\"16\"" +
-                " name=\"CounterVariable\" order=\"1\" policy=\"1\" range=\"1\"" +
+                " name=\"CounterVariable\" policy=\"1\" range=\"1\"" +
                 " starting=\"7\" whenOutOfValues=\"STOP_TEST\">" +
                 "<description>Test decription</description>" +
                 "</variable-counter></test-root>";

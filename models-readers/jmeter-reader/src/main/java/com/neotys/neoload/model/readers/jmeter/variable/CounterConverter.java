@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.v3.project.variable.CounterVariable;
+import com.neotys.neoload.model.v3.project.variable.ScopeElement;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import org.apache.jmeter.modifiers.CounterConfig;
 import org.apache.jorphan.collections.HashTree;
@@ -89,9 +90,9 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
 
     private void checkScope(final CounterConfig counterConfig, final CounterVariable.Builder counterBuilder) {
         if (counterConfig.isPerUser()) {
-            counterBuilder.scope(Variable.Scope.LOCAL);
+            counterBuilder.scope(ScopeElement.Scope.LOCAL);
         } else {
-            counterBuilder.scope(Variable.Scope.GLOBAL);
+            counterBuilder.scope(ScopeElement.Scope.GLOBAL);
         }
     }
 

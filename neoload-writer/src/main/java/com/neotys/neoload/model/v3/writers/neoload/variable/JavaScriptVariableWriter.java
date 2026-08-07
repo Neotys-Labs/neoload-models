@@ -20,6 +20,14 @@ public class JavaScriptVariableWriter extends VariableWriter {
 	private static final String XML_ATTR_OFFSET = "offset";
 	private static final int DEFAULT_OFFSET_VALUE = 1;
 
+	// NeoLoad XML requires these attributes for all variable types; their values are fixed for JavaScript variables.
+	private static final String XML_ATTR_ORDER = "order";
+	private static final String XML_ATTR_RANGE = "range";
+	private static final String XML_ATTR_WHEN_OUT_OF_VALUES = "whenOutOfValues";
+	private static final String DEFAULT_ORDER = "2";        // non-sequential (ANY)
+	private static final String DEFAULT_RANGE = "1";        // GLOBAL
+	private static final String DEFAULT_WHEN_OUT = "CYCLE_VALUES";
+
     // element column
 	private static final String XML_TAG_COLUMN = "column";
 	private static final String XML_COLUMN_ATTR_NAME = "name";
@@ -51,6 +59,9 @@ public class JavaScriptVariableWriter extends VariableWriter {
         super.writeXML(xmlVariable);
 		super.writeXML(document, xmlVariable, outputFolder);
 
+        xmlVariable.setAttribute(XML_ATTR_ORDER, DEFAULT_ORDER);
+        xmlVariable.setAttribute(XML_ATTR_RANGE, DEFAULT_RANGE);
+        xmlVariable.setAttribute(XML_ATTR_WHEN_OUT_OF_VALUES, DEFAULT_WHEN_OUT);
         xmlVariable.setAttribute(XML_ATTR_OFFSET, Integer.toString(DEFAULT_OFFSET_VALUE));
 
         //generate Column node

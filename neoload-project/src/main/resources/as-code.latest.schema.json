@@ -310,12 +310,12 @@
 						"properties": {
 							"pattern": { "$ref": "#/definitions/common/text" },
 							"start_date": { "$ref": "#/definitions/common/text" },
-							"inc_type": {
+							"increment_timeunit": {
 								"type": "string",
 								"enum": ["second", "minute", "hour", "day", "month", "year"],
 								"default": "day"
 							},
-							"inc_value": {
+							"increment_value": {
 								"type": "number",
 								"default": 1
 							}
@@ -334,12 +334,12 @@
 					{
 						"properties": {
 							"pattern": { "$ref": "#/definitions/common/text" },
-							"inc_type": {
+							"increment_timeunit": {
 								"type": "string",
 								"enum": ["second", "minute", "hour", "day", "month", "year"],
 								"default": "second"
 							},
-							"inc_value": {
+							"increment_value": {
 								"type": "number",
 								"default": 0
 							}

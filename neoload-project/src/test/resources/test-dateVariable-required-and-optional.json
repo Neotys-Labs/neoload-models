@@ -1,0 +1,1 @@
+{"name":"MyProject","variables":[{"date":{"name":"MyDate","description":"MyDateDescription","pattern":"dd/MM/yyyy HH:mm:ss.S","start_date":"24/07/2026 17:55:30.500","increment_value":1,"increment_timeunit":"minute","change_policy":"each_iteration","scope":"local"}}]}

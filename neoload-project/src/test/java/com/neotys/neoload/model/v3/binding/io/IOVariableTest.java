@@ -8,10 +8,10 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.neotys.neoload.model.v3.project.variable.Variable.ChangePolicy.*;
-import static com.neotys.neoload.model.v3.project.variable.Variable.Order.*;
-import static com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue.*;
-import static com.neotys.neoload.model.v3.project.variable.Variable.Scope.*;
+import static com.neotys.neoload.model.v3.project.variable.ChangePolicyElement.ChangePolicy.*;
+import static com.neotys.neoload.model.v3.project.variable.OrderElement.Order.*;
+import static com.neotys.neoload.model.v3.project.variable.OutOfValueElement.OutOfValue.*;
+import static com.neotys.neoload.model.v3.project.variable.ScopeElement.Scope.*;
 import static junit.framework.TestCase.assertNotNull;
 
 
@@ -85,29 +85,6 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .changePolicy(EACH_REQUEST)
                 .build();
 
-        final Variable dateVariable = DateVariable.builder()
-                .name("MyDate")
-                .pattern("yyyy-MM-dd")
-                .startDate("2026-01-01")
-                .incType(DateVariable.IncType.DAY)
-                .incValue(1)
-                .changePolicy(EACH_ITERATION)
-                .build();
-
-        final Variable minimalCurrentDateVariable = CurrentDateVariable.builder()
-                .name("MyMinimalCurrentDate")
-                .pattern("yyyy-MM-dd")
-                .build();
-
-        final Variable fullCurrentDateVariable = CurrentDateVariable.builder()
-                .name("MyFullCurrentDate")
-                .description("now plus 5 minutes")
-                .pattern("yyyy-MM-dd'T'HH:mm:ss")
-                .incType(DateVariable.IncType.MINUTE)
-                .incValue(5)
-                .changePolicy(EACH_USE)
-                .build();
-
         final JavaScriptVariable javaScriptVariable = JavaScriptVariable.builder()
                 .name("My JSVar")
                 .description("This is a js var")
@@ -123,7 +100,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, dateVariable, minimalCurrentDateVariable, fullCurrentDateVariable, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, javaScriptVariable)
                 .build();
     }
 }

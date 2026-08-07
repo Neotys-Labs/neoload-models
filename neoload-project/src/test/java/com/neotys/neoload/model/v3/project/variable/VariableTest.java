@@ -1,10 +1,10 @@
 package com.neotys.neoload.model.v3.project.variable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.neotys.neoload.model.v3.project.variable.Variable.ChangePolicy;
-import com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue;
-import com.neotys.neoload.model.v3.project.variable.Variable.Order;
-import com.neotys.neoload.model.v3.project.variable.Variable.Scope;
+import com.neotys.neoload.model.v3.project.variable.ChangePolicyElement.ChangePolicy;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueElement.OutOfValue;
+import com.neotys.neoload.model.v3.project.variable.OrderElement.Order;
+import com.neotys.neoload.model.v3.project.variable.ScopeElement.Scope;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
