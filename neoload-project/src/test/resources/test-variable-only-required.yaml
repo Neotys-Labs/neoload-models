@@ -105,12 +105,11 @@ variables:
     description: A producer/consumer shared queue
     queue_size: 5000
     consumer_timeout: 2000
-    swap_activated: true
-    swap_file: data/my_queue_swap.csv
-    swap_loaded: true
-    swap_dump: false
-    delimiter: ","
-    change_policy: each_request
+    swap_file:
+      path: data/my_queue_swap.csv
+      delimiter: ","
+      load_from_file: true
+      save_to_file: false
 - secret_vault:
     name: db_password
     provider_id: 665f1a2b3c4d5e6f7a8b9c0d

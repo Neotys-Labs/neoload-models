@@ -228,6 +228,15 @@
 					"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 				}
 			},
+			"generic_no_policy": {
+				"$id": "#/definitions/variables/generic_no_policy",
+				"type": "object",
+				"xrequired": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" }
+				}
+			},
 			"constant": {
 				"$id": "#/definitions/variables/constant",
 				"title": "Constant",
@@ -501,7 +510,7 @@
 				"title": "Shared Queue",
 				"type": "object",
 				"allOf": [
-					{ "$ref": "#/definitions/variables/generic" },
+					{ "$ref": "#/definitions/variables/generic_no_policy" },
 					{
 						"properties": {
 							"queue_size": {
@@ -514,22 +523,24 @@
 								"minimum": 0,
 								"default": 5000
 							},
-							"swap_activated": {
-								"type": "boolean",
-								"default": false
-							},
-							"swap_file": { "$ref": "#/definitions/common/text" },
-							"swap_loaded": {
-								"type": "boolean",
-								"default": false
-							},
-							"swap_dump": {
-								"type": "boolean",
-								"default": true
-							},
-							"delimiter": {
-								"$ref": "#/definitions/common/text",
-								"default": ";"
+							"swap_file": {
+								"type": "object",
+								"required": ["path"],
+								"properties": {
+									"path": { "$ref": "#/definitions/common/text" },
+									"delimiter": {
+										"$ref": "#/definitions/common/text",
+										"default": ";"
+									},
+									"load_from_file": {
+										"type": "boolean",
+										"default": false
+									},
+									"save_to_file": {
+										"type": "boolean",
+										"default": true
+									}
+								}
 							}
 						}
 					}

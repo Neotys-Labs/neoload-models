@@ -1,12 +1,6 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
-import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.variable.*;
-import org.junit.Test;
-
-import java.io.IOException;
-
 import static com.google.common.collect.Lists.newArrayList;
 import static com.neotys.neoload.model.v3.project.variable.Variable.ChangePolicy.*;
 import static com.neotys.neoload.model.v3.project.variable.Variable.Order.*;
@@ -14,6 +8,10 @@ import static com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue.*
 import static com.neotys.neoload.model.v3.project.variable.Variable.Scope.*;
 import static junit.framework.TestCase.assertNotNull;
 
+import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.variable.*;
+import java.io.IOException;
+import org.junit.Test;
 
 public class IOVariableTest extends AbstractIOElementsTest {
 
@@ -166,12 +164,12 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .description("A producer/consumer shared queue")
                 .queueSize(5000)
                 .consumerTimeout(2000L)
-                .isSwapActivated(true)
-                .swapFile("data/my_queue_swap.csv")
-                .isSwapLoaded(true)
-                .isSwapDump(false)
-                .delimiter(",")
-                .changePolicy(EACH_REQUEST)
+                .swapFile(SharedQueueSwapFile.builder()
+                        .path("data/my_queue_swap.csv")
+                        .delimiter(",")
+                        .isLoadFromFile(true)
+                        .isSaveToFile(false)
+                        .build())
                 .build();
 
         final Variable secretVaultVariable = SecretVaultVariable.builder()

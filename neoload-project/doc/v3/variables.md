@@ -208,3 +208,34 @@ secret_vault:
   provider_id: 665f1a2b3c4d5e6f7a8b9c0d
   secret_identifier: my-app/db
 ```
+
+## Shared Queue variable
+A queue shared between virtual users, usable as a producer/consumer channel, with optional persistence to a file.
+
+| Name                    | Description                                                                 | Accept variable | Required | Since |
+|:----------------------- |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name                    | The variable name                                                           | -               | &#x2713; |       |
+| description             | The variable description                                                    | -               | -        |       |
+| queue_size              | The maximum number of elements the queue can hold.</br>The default value is `10000`. | -    | -        |       |
+| consumer_timeout        | The time, in milliseconds, a consumer waits for a value before giving up.</br>The default value is `5000`. | - | -   |       |
+| swap_file               | The file used to persist the queue content. See below. When absent, no file swap is used. | -   | -        |       |
+| swap_file.path          | The relative (compared to the NeoLoad project folder) or absolute path of the swap file. | -    | &#x2713; |       |
+| swap_file.delimiter     | The delimiter used to separate data columns in the swap file.</br>The default value is `;`. | -    | -        |       |
+| swap_file.load_from_file| If `true`, the queue is populated from the swap file at test start.</br>The default value is `false`. | -    | -        |       |
+| swap_file.save_to_file  | If `true`, the queue content is written to the swap file at test end.</br>The default value is `true`. | -    | -        |       |
+
+#### Example
+Defining a Shared Queue variable.
+
+```yaml
+shared_queue:
+  name: MySharedQueue
+  description: MySharedQueueDescription
+  queue_size: 5000
+  consumer_timeout: 2000
+  swap_file:
+    path: data/my_queue.csv
+    delimiter: ","
+    load_from_file: true
+    save_to_file: false
+```
