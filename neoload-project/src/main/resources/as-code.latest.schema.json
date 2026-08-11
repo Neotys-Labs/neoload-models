@@ -565,7 +565,7 @@
 					"oneOf": [
 						{
 							"type": "string",
-							"enum": ["go_to_next_iteration"]
+							"enum": ["go_to_next_iteration", "rendezvous"]
 						},
 						{
 							"type": "object",
@@ -581,7 +581,8 @@
 								"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
 								"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
 								"fork": { "$ref": "#/definitions/user_paths/actions/fork" },
-								"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" }
+								"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" },
+								"rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" }
 							},
 							"additionalProperties": false
 						}
@@ -807,6 +808,16 @@
 						},
 						"not": { "required": ["value"] }
 					}
+				},
+				"rendezvous": {
+					"$id": "#/definitions/user_paths/actions/rendezvous",
+					"title": "Action: Rendezvous",
+					"type": "object",
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
 				}
 			},
 			"extractor": {
