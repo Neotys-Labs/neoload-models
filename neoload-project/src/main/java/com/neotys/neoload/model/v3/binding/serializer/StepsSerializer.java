@@ -29,6 +29,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		builder.put(ImmutableGoToNextIteration.class, GO_TO_NEXT_ITERATION);
 		builder.put(ImmutableFork.class, FORK);
 		builder.put(ImmutableVariableModifier.class, VARIABLE_MODIFIER);
+		builder.put(ImmutableRendezvous.class, RENDEZVOUS);
     	STEPS = builder.build();
     }
 
@@ -54,6 +55,16 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 			// Since GoToNextIteration has no properties, we chose to serialize as a bare scalar string
 			else if (step instanceof GoToNextIteration) {
 				generator.writeString(GO_TO_NEXT_ITERATION);
+			}
+			else if (step instanceof Rendezvous) {
+				final Rendezvous rdv = (Rendezvous) step;
+				if (RENDEZVOUS.equals(rdv.getName()) && rdv.getDescription().isEmpty()) {
+					generator.writeString(RENDEZVOUS);
+				} else {
+					generator.writeStartObject();
+					generator.writeObjectField(RENDEZVOUS, rdv);
+					generator.writeEndObject();
+				}
 			}
 			else {
 				final String stepName = STEPS.get(step.getClass());
