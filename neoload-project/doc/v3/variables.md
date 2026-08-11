@@ -7,7 +7,7 @@ They may be combined with other variables or with static content (e.g. `${produc
 Variables that does not exist in the project will be added.
 
 #### Example
-Defining 5 variables: a Constant variable, a File variable, a Counter variable, a RandomNumber variable and a JavaScript variable.
+Defining 6 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable and a JavaScript variable.
 
 ```yaml
 variables:
@@ -21,6 +21,17 @@ variables:
     start_from_line: 1
     delimiter: ";"
     path: data/list_of_cities.csv
+    change_policy: each_iteration
+    scope: global
+    order: any
+    out_of_value: cycle
+- list:
+    name: cities_list
+    column_names: ["City", "Country"]
+    values:
+    - ["Paris", "France"]
+    - ["London", "UK"]
+    start_from_line: 1
     change_policy: each_iteration
     scope: global
     order: any
@@ -94,6 +105,38 @@ file:
   start_from_line: 1
   delimiter: ";"
   path: data/list_of_cities.csv
+  change_policy: each_iteration
+  scope: global
+  order: any
+  out_of_value: cycle
+```
+
+## List variable
+A list or table of values defined inline in the YAML file.
+
+| Name          | Description                   | Accept variable | Required | Since |
+|:------------- |:----------------------------- |:---------------:|:--------:|:-----:|
+| name          | The variable name             | -               | &#x2713; |       |
+| description   | The variable description      | -               | -        |       |
+| column_names  | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | -               | &#x2713; |       |
+| values        | The list of rows. Each row is a list of values, one per column of `column_names`. | -               | &#x2713; |       |
+| start_from_line | The first row of `values` to be used. The default value is "1". | -               | -        |       |
+| change_policy | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |       |
+| scope         | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        |       |
+| order         | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | -               | -        |       |
+| out_of_value  | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | -               | -        |       |
+
+#### Example
+Defining a List variable.
+
+```yaml
+list:
+  name: cities_list
+  column_names: ["City", "Country"]
+  values:
+  - ["Paris", "France"]
+  - ["London", "UK"]
+  start_from_line: 1
   change_policy: each_iteration
   scope: global
   order: any

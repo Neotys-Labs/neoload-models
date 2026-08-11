@@ -17,7 +17,8 @@ import org.immutables.value.Value;
 		@JsonSubTypes.Type(value = ImmutableCounterVariable.class, name = "counter"),
 		@JsonSubTypes.Type(value = ImmutableRandomNumberVariable.class, name = "random_number"),
 		@JsonSubTypes.Type(value = ImmutableJavaScriptVariable.class, name = "javascript"),
-		@JsonSubTypes.Type(value = ImmutableSharedQueueVariable.class, name = "shared_queue")
+		@JsonSubTypes.Type(value = ImmutableSharedQueueVariable.class, name = "shared_queue"),
+		@JsonSubTypes.Type(value = ImmutableListVariable.class, name = "list"),
 })
 // S2097 suppressed: the nested Jackson value-filter classes override equals(Object) to compare the
 // property value (not another filter instance), which is how the CUSTOM value filter selects the default
