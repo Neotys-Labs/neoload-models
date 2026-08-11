@@ -41,7 +41,8 @@
 					{ "$ref": "#/definitions/variables/file" },
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
-					{ "$ref": "#/definitions/variables/javascript" }
+					{ "$ref": "#/definitions/variables/javascript" },
+					{ "$ref": "#/definitions/variables/shared_queue" }
 				]
 			}
 		},
@@ -200,6 +201,15 @@
 					"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 				}
 			},
+			"generic_no_policy": {
+				"$id": "#/definitions/variables/generic_no_policy",
+				"type": "object",
+				"xrequired": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" }
+				}
+			},
 			"constant": {
 				"$id": "#/definitions/variables/constant",
 				"title": "Constant",
@@ -307,6 +317,48 @@
 					{
 						"properties": {
 							"script": { "$ref": "#/definitions/common/text" }
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"shared_queue": {
+				"$id": "#/definitions/variables/shared_queue",
+				"title": "Shared Queue",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic_no_policy" },
+					{
+						"properties": {
+							"queue_size": {
+								"type": "integer",
+								"minimum": 1,
+								"default": 10000
+							},
+							"consumer_timeout": {
+								"type": "integer",
+								"minimum": 0,
+								"default": 5000
+							},
+							"swap_file": {
+								"type": "object",
+								"required": ["path"],
+								"properties": {
+									"path": { "$ref": "#/definitions/common/text" },
+									"delimiter": {
+										"$ref": "#/definitions/common/text",
+										"default": ";"
+									},
+									"load_from_file": {
+										"type": "boolean",
+										"default": false
+									},
+									"save_to_file": {
+										"type": "boolean",
+										"default": true
+									}
+								}
+							}
 						}
 					}
 				],
