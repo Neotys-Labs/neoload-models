@@ -635,7 +635,8 @@
 								"try_catch": { "$ref": "#/definitions/user_paths/actions/try_catch" },
 								"fork": { "$ref": "#/definitions/user_paths/actions/fork" },
 								"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" },
-								"rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" }
+								"rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
+								"debug_logger": { "$ref": "#/definitions/user_paths/actions/debug_logger" }
 							},
 							"additionalProperties": false
 						}
@@ -892,6 +893,17 @@
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"debug_logger": {
+					"$id": "#/definitions/user_paths/actions/debug_logger",
+					"title": "Action: Debug Logger",
+					"type": "object",
+					"required": ["text"],
+					"properties": {
+						"text": { "$ref": "#/definitions/common/text" },
+						"file": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				}
