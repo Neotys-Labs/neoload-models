@@ -26,6 +26,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
     	builder.put(ImmutableWhile.class, WHILE);
     	builder.put(ImmutableSwitch.class, SWITCH);
 		builder.put(ImmutableCustomAction.class, CUSTOM_ACTION);
+		builder.put(ImmutableTryCatch.class, TRY_CATCH);
 		builder.put(ImmutableGoToNextIteration.class, GO_TO_NEXT_ITERATION);
 		builder.put(ImmutableFork.class, FORK);
 		builder.put(ImmutableVariableModifier.class, VARIABLE_MODIFIER);
