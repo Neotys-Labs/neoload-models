@@ -31,6 +31,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		builder.put(ImmutableFork.class, FORK);
 		builder.put(ImmutableVariableModifier.class, VARIABLE_MODIFIER);
 		builder.put(ImmutableRendezvous.class, RENDEZVOUS);
+		builder.put(ImmutableDebugLogger.class, DEBUG_LOGGER);
     	STEPS = builder.build();
     }
 
