@@ -34,6 +34,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 			builder.put(FORK, Fork.class);
 			builder.put(VARIABLE_MODIFIER, VariableModifier.class);
 			builder.put(RENDEZVOUS, Rendezvous.class);
+			builder.put(DEBUG_LOGGER, DebugLogger.class);
     	STEPS = builder.build();
     }
     
