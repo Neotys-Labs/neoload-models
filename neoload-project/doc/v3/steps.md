@@ -15,4 +15,5 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 | [custom_action](custom_action.md) | 2025.1 |
 | [fork](fork.md)                   | 2026.3 |
 | [variable_modifier](variable_modifier.md)      | 2026.3 |
+| [rendezvous](rendezvous.md)       | 2026.3 |
 | [go_to_next_iteration](go_to_next_iteration.md) | 2026.3 |
