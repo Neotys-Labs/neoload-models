@@ -13,8 +13,8 @@ import com.neotys.neoload.model.v3.project.Element;
 		@JsonSubTypes.Type(value = ImmutableFileVariable.class, name = "file"),
 		@JsonSubTypes.Type(value = ImmutableCounterVariable.class, name = "counter"),
 		@JsonSubTypes.Type(value = ImmutableRandomNumberVariable.class, name = "random_number"),
-		@JsonSubTypes.Type(value = ImmutableJavaScriptVariable.class, name = "javascript")
-
+		@JsonSubTypes.Type(value = ImmutableJavaScriptVariable.class, name = "javascript"),
+		@JsonSubTypes.Type(value = ImmutableSharedQueueVariable.class, name = "shared_queue")
 })
 public interface Variable extends Element {
 }
