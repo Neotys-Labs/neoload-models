@@ -1,0 +1,11 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - fork:
+        name: MyFork
+        description: MyForkDescription
+        copy_variables: true
+        steps:
+        - delay: 1s
