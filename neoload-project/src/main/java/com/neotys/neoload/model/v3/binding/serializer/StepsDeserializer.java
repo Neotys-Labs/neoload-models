@@ -3,12 +3,6 @@ package com.neotys.neoload.model.v3.binding.serializer;
 import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationInMsOrInVariableConverter.STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE;
 import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.*;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -16,6 +10,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class StepsDeserializer extends StdDeserializer<List<Step>> {
     private static final long serialVersionUID = -5696608939252369276L;
@@ -50,7 +49,11 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
             final JsonNode stepNode = iterator.next();
            
             Step step = null;
-            if (stepNode.has(DELAY)) {
+            if (stepNode.isTextual() && GO_TO_NEXT_ITERATION.equals(stepNode.asText())) {
+                step = GoToNextIteration.builder().build();
+            } else if (stepNode.has(GO_TO_NEXT_ITERATION)) {
+                step = GoToNextIteration.builder().build();
+            } else if (stepNode.has(DELAY)) {
                 final String delayValue = stepNode.get(DELAY).asText();
                 final String delay = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(delayValue);
                 step = Delay.builder().value(String.valueOf(delay)).build();
