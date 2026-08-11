@@ -18,3 +18,4 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 | [variable_modifier](variable_modifier.md)      | 2026.3 |
 | [rendezvous](rendezvous.md)       | 2026.3 |
 | [go_to_next_iteration](go_to_next_iteration.md) | 2026.3 |
+| [debug_logger](debug_logger.md)   | 2026.3 |
