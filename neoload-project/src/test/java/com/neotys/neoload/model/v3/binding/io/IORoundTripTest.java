@@ -67,6 +67,8 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-think-time-with-unit-only-required",
 			"test-transaction-only-required",
 			"test-transaction-required-and-optional",
+			"test-try-catch-only-required",
+			"test-try-catch-required-and-optional",
 			"test-userpaths-only-required",
 			"test-userpaths-required-and-optional",
 			"test-variable-extractor-only-required",
