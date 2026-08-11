@@ -53,38 +53,51 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
         final Iterator<JsonNode> iterator = jsonNode.elements();
         while (iterator.hasNext()) {
             final JsonNode stepNode = iterator.next();
-           
-            Step step = null;
-            if (stepNode.isTextual() && GO_TO_NEXT_ITERATION.equals(stepNode.asText())) {
-                step = GoToNextIteration.builder().build();
-            } else if (stepNode.has(GO_TO_NEXT_ITERATION)) {
-                step = GoToNextIteration.builder().build();
-            } else if (stepNode.has(DELAY)) {
-                final String delayValue = stepNode.get(DELAY).asText();
-                final String delay = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(delayValue);
-                step = Delay.builder().value(String.valueOf(delay)).build();
-            } else if (stepNode.has(THINK_TIME)) {
-                final String thinkTimeValue = stepNode.get(THINK_TIME).asText();
-                final String thinkTime = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(thinkTimeValue);
-                step = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
-            } else if (stepNode.isTextual() && RENDEZVOUS.equals(stepNode.asText())) {
-                step = Rendezvous.builder().build();
-            } else if (stepNode.isTextual() && STOP_VU.equals(stepNode.asText())) {
-                step = StopVU.builder().build();
-            } else {
-            	final String stepName = stepNode.fieldNames().next();
-            	final Class<? extends Step> stepClass = STEPS.get(stepName);
-            	if (stepClass != null) {
-            		final JsonNode stepValue = stepNode.get(stepName);
-            		step = codec.treeToValue(stepValue, stepClass);
-            	}
-            }
-
+            final Step step = parseStep(codec, stepNode);
             if (step != null) {
                 steps.add(step);
             }
         }
 
         return steps;
+    }
+
+    private Step parseStep(final ObjectCodec codec, final JsonNode stepNode) throws IOException {
+        final Step simpleStep = parseSimpleStep(stepNode);
+        if (simpleStep != null) {
+            return simpleStep;
+        }
+        return parseRegisteredStep(codec, stepNode);
+    }
+
+    private Step parseSimpleStep(final JsonNode stepNode) {
+        if (stepNode.isTextual() && GO_TO_NEXT_ITERATION.equals(stepNode.asText())) {
+            return GoToNextIteration.builder().build();
+        } else if (stepNode.has(GO_TO_NEXT_ITERATION)) {
+            return GoToNextIteration.builder().build();
+        } else if (stepNode.has(DELAY)) {
+            final String delayValue = stepNode.get(DELAY).asText();
+            final String delay = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(delayValue);
+            return Delay.builder().value(String.valueOf(delay)).build();
+        } else if (stepNode.has(THINK_TIME)) {
+            final String thinkTimeValue = stepNode.get(THINK_TIME).asText();
+            final String thinkTime = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(thinkTimeValue);
+            return ThinkTime.builder().value(String.valueOf(thinkTime)).build();
+        } else if (stepNode.isTextual() && RENDEZVOUS.equals(stepNode.asText())) {
+            return Rendezvous.builder().build();
+        } else if (stepNode.isTextual() && STOP_VU.equals(stepNode.asText())) {
+            return StopVU.builder().build();
+        }
+        return null;
+    }
+
+    private Step parseRegisteredStep(final ObjectCodec codec, final JsonNode stepNode) throws IOException {
+        final String stepName = stepNode.fieldNames().next();
+        final Class<? extends Step> stepClass = STEPS.get(stepName);
+        if (stepClass == null) {
+            return null;
+        }
+        final JsonNode stepValue = stepNode.get(stepName);
+        return codec.treeToValue(stepValue, stepClass);
     }
 }
