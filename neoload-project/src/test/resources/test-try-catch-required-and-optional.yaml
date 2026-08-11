@@ -1,0 +1,16 @@
+name: MyProject
+user_paths:
+- name: user_path_1
+  actions:
+    steps:
+    - try_catch:
+        name: my_try_catch
+        description: my_try_catch_description
+        caught_exceptions: assertions
+        try:
+          steps:
+          - delay: 1s
+          - delay: 2s
+        catch:
+          steps:
+          - delay: 500ms
