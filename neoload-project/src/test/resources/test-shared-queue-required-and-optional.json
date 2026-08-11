@@ -1,0 +1,1 @@
+{"name":"MyProject","variables":[{"shared_queue":{"name":"MySharedQueue","description":"A producer/consumer shared queue","queue_size":5000,"consumer_timeout":2000,"swap_file":{"path":"data/my_queue_swap.csv","delimiter":",","load_from_file":true,"save_to_file":false}}}]}
