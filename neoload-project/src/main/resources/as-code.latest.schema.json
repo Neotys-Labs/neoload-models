@@ -650,7 +650,7 @@
 					"oneOf": [
 						{
 							"type": "string",
-							"enum": ["go_to_next_iteration", "rendezvous"]
+							"enum": ["go_to_next_iteration", "rendezvous", "stop_vu"]
 						},
 						{
 							"type": "object",
@@ -669,7 +669,8 @@
 								"fork": { "$ref": "#/definitions/user_paths/actions/fork" },
 								"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" },
 								"rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
-								"debug_logger": { "$ref": "#/definitions/user_paths/actions/debug_logger" }
+								"debug_logger": { "$ref": "#/definitions/user_paths/actions/debug_logger" },
+								"stop_vu": { "$ref": "#/definitions/user_paths/actions/stop_vu" }
 							},
 							"additionalProperties": false
 						}
@@ -931,6 +932,18 @@
 					"properties": {
 						"text": { "$ref": "#/definitions/common/text" },
 						"file": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"stop_vu": {
+					"$id": "#/definitions/user_paths/actions/stop_vu",
+					"title": "Action: Stop Virtual User",
+					"type": "object",
+					"properties": {
+						"start_new_vu": {
+							"type": "boolean",
+							"default": true
+						}
 					},
 					"additionalProperties": false
 				}

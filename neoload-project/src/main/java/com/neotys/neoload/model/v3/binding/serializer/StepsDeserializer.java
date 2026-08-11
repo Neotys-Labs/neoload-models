@@ -35,6 +35,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 			builder.put(VARIABLE_MODIFIER, VariableModifier.class);
 			builder.put(RENDEZVOUS, Rendezvous.class);
 			builder.put(DEBUG_LOGGER, DebugLogger.class);
+			builder.put(STOP_VU, StopVU.class);
     	STEPS = builder.build();
     }
     
@@ -68,6 +69,8 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
                 step = ThinkTime.builder().value(String.valueOf(thinkTime)).build();
             } else if (stepNode.isTextual() && RENDEZVOUS.equals(stepNode.asText())) {
                 step = Rendezvous.builder().build();
+            } else if (stepNode.isTextual() && STOP_VU.equals(stepNode.asText())) {
+                step = StopVU.builder().build();
             } else {
             	final String stepName = stepNode.fieldNames().next();
             	final Class<? extends Step> stepClass = STEPS.get(stepName);
