@@ -36,6 +36,8 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 	private static final String[] ROUND_TRIP_FIXTURES = {
 			"test-custom-action-only-required",
 			"test-custom-action-required-and-optional",
+			"test-debug-logger-only-required",
+			"test-debug-logger-required-and-optional",
 			"test-delay-without-unit-only-required",
 			"test-delay-with-unit-only-required",
 			"test-descriptor-only-required",
