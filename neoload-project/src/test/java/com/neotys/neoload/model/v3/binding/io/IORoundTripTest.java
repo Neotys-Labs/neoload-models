@@ -77,7 +77,9 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-assert-content-only-required",
 			"test-assert-content-required-and-optional",
 			"test-fork-only-required",
-			"test-fork-required-and-optional"
+			"test-fork-required-and-optional",
+			"test-variable-modifier-only-required",
+			"test-variable-modifier-required-and-optional"
 	};
 
 	@Test
