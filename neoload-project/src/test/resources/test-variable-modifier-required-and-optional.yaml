@@ -1,0 +1,34 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - variable_modifier:
+        name: MyVariableModifier
+        description: MyVariableModifierDescription
+        mode: init_value
+        variable_name: MyVariableToModify
+    - variable_modifier:
+        name: MyVariableModifier
+        category: shared_queue
+        mode: add_shared_queue_value
+        variable_name: MyVariableToModify
+        value: HelloWorld
+    - variable_modifier:
+        name: MyVariableModifier
+        category: shared_queue
+        mode: add_shared_queue_value
+        variable_name: MyVariableToModify
+        value: "${MyVariable}"
+    - variable_modifier:
+        name: MyVariableModifier
+        category: shared_queue
+        mode: poll_shared_queue
+        variable_name: MyVariableToModify
+        value: MyVariable
+    - variable_modifier:
+        name: MyVariableModifier
+        category: shared_queue
+        mode: poll_shared_queue
+        variable_name: MyVariableToModify
+        value: MyVariableToCreate
