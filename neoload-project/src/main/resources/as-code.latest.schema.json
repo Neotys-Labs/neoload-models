@@ -579,7 +579,8 @@
 								"while": { "$ref": "#/definitions/user_paths/actions/while" },
 								"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
 								"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-								"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
+								"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" },
+								"fork": { "$ref": "#/definitions/user_paths/actions/fork" }
 							},
 							"additionalProperties": false
 						}
@@ -750,6 +751,22 @@
 					"title": "Action: Go to next iteration",
 					"type": "string",
 					"enum": ["go_to_next_iteration"]
+				},
+				"fork": {
+					"$id": "#/definitions/user_paths/actions/fork",
+					"title": "Action: Fork",
+					"type": "object",
+					"required": ["steps"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"copy_variables": {
+							"type": "boolean",
+							"default": false
+						},
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
+					},
+					"additionalProperties": false
 				}
 			},
 			"extractor": {
