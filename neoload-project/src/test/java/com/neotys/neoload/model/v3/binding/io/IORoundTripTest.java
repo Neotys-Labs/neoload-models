@@ -3,13 +3,10 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertEquals;
 
+import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import java.io.File;
 import java.io.IOException;
-
 import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.io.IO.Format;
-
 
 /**
  * Generic serialization round-trip test: for every supported fixture, reads the file, serializes
@@ -43,6 +40,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-delay-with-unit-only-required",
 			"test-descriptor-only-required",
 			"test-descriptor-required-and-optional",
+			"test-go-to-next-iteration",
 			"test-if-only-required",
 			"test-if-required-and-optional",
 			"test-javascript-only-required",
