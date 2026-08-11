@@ -68,6 +68,20 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 					generator.writeEndObject();
 				}
 			}
+			// A StopVU keeping the default start_new_vu is serialized as a bare scalar string
+			else if (step instanceof StopVU) {
+				final StopVU stopVU = (StopVU) step;
+				if (stopVU.getStartNewVU()) {
+					generator.writeString(STOP_VU);
+				}
+				else {
+					generator.writeStartObject();
+					generator.writeObjectFieldStart(STOP_VU);
+					generator.writeBooleanField(StopVU.START_NEW_VU, stopVU.getStartNewVU());
+					generator.writeEndObject();
+					generator.writeEndObject();
+				}
+			}
 			else {
 				final String stepName = STEPS.get(step.getClass());
 				if (stepName != null) {

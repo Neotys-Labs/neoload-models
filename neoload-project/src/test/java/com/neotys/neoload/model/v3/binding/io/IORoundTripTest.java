@@ -87,7 +87,9 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-rendezvous-only-required",
 			"test-rendezvous-required-and-optional",
 			"test-shared-queue-only-required",
-			"test-shared-queue-required-and-optional"
+			"test-shared-queue-required-and-optional",
+			"test-stop-vu-only-required",
+			"test-stop-vu-required-and-optional"
 	};
 
 	@Test
