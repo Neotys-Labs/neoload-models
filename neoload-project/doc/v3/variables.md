@@ -7,7 +7,7 @@ They may be combined with other variables or with static content (e.g. `${produc
 Variables that does not exist in the project will be added.
 
 #### Example
-Defining 5 variables: a Constant variable, a File variable, a Counter variable, a RandomNumber variable and a JavaScript variable.
+Defining 7 variables: a Constant variable, a File variable, a Counter variable, a RandomNumber variable, a Date variable, a CurrentDate variable and a JavaScript variable.
 
 ```yaml
 variables:
@@ -39,6 +39,19 @@ variables:
     max: 999
     predictable: false
     change_policy: each_request
+- date:
+    name: date_variable
+    pattern: dd/MM/yyyy
+    start_date: 01/01/2025
+    increment_value: 1
+    increment_timeunit: day
+    change_policy: each_iteration
+    scope: global
+- current_date:
+    name: current_date_variable
+    pattern: yyyy-MM-dd'T'HH:mm:ss
+    increment_value: 5
+    increment_timeunit: minute
 - javascript:
     name: My JSVar
     description: This is a js var
@@ -151,6 +164,84 @@ random_number:
   max: 999
   predictable: false
   change_policy: each_request
+```
+
+## Date variable
+A variable whose value is a date computed from a fixed start date, formatted according to a pattern and optionally incremented at each use.
+
+The `pattern` follows the Java [`SimpleDateFormat`](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) syntax (e.g. `dd/MM/yyyy HH:mm:ss`).
+Two special patterns are also accepted:
+- `milliseconds since the UNIX epoch` — value is the number of milliseconds since 1970-01-01T00:00:00Z; `start_date` must be a numeric timestamp.
+- `currentTimeMillis` — same encoding; `start_date` must be a numeric timestamp.
+
+The `start_date` value must be parseable against the chosen `pattern`.
+
+| Name                | Description                                                                                                                                                                                             | Accept variable | Required | Since |
+|:------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name                | The variable name                                                                                                                                                                                       | -               | &#x2713; |       |
+| description         | The variable description                                                                                                                                                                                | -               | -        |       |
+| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                                                   | -               | -        |       |
+| start_date          | The initial date value, expressed in the format defined by `pattern`.                                                                                                                                   | -               | &#x2713; |       |
+| increment_value     | The amount to add to the date at each change. The default value is `0`.                                                                                                                                 | -               | -        |       |
+| increment_timeunit  | The time unit of the increment. The value can be: `second`, `minute`, `hour`, `day`, `month`, `year`. The default value is `second`.                                                                   | -               | -        |       |
+| change_policy       | The policy when the value must change. The value can be: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_use`.                                      | -               | -        |       |
+| scope               | The value scope. The value can be: `local`, `global`, `unique`. The default value is `global`.                                                                                                          | -               | -        |       |
+
+#### Example
+Defining a minimal Date variable (only required fields).
+
+```yaml
+date:
+  name: date_variable
+  start_date: 24/07/2026 17:55:30
+```
+
+Defining a Date variable with all fields.
+
+```yaml
+date:
+  name: date_variable
+  description: Increments by one minute on each iteration
+  pattern: dd/MM/yyyy HH:mm:ss.S
+  start_date: 24/07/2026 17:55:30.500
+  increment_value: 1
+  increment_timeunit: minute
+  change_policy: each_iteration
+  scope: local
+```
+
+## Current Date variable
+A variable whose value is the current date/time at generation, formatted according to a pattern and optionally shifted by a fixed offset. Unlike the [Date variable](#date-variable), there is no fixed start date — the value is always derived from the wall clock at the moment it is evaluated.
+
+This variable has no `change_policy` or `scope` because its value is always the current timestamp.
+
+The `pattern` follows the Java [`SimpleDateFormat`](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) syntax.
+
+| Name                | Description                                                                                                                                                         | Accept variable | Required | Since |
+|:------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name                | The variable name                                                                                                                                                   | -               | &#x2713; |       |
+| description         | The variable description                                                                                                                                            | -               | -        |       |
+| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                               | -               | -        |       |
+| increment_value     | The amount to add to the current time. Useful to represent a date in the past (negative value) or in the future (positive value). The default value is `0`.        | -               | -        |       |
+| increment_timeunit  | The time unit of the increment. The value can be: `second`, `minute`, `hour`, `day`, `month`, `year`. The default value is `second`.                               | -               | -        |       |
+
+#### Example
+Defining a minimal Current Date variable (only required fields).
+
+```yaml
+current_date:
+  name: current_date_variable
+```
+
+Defining a Current Date variable that produces an ISO-8601 timestamp 5 minutes ahead of the current time.
+
+```yaml
+current_date:
+  name: current_date_variable
+  description: now plus 5 minutes
+  pattern: yyyy-MM-dd'T'HH:mm:ss
+  increment_value: 5
+  increment_timeunit: minute
 ```
 
 ## JavaScript variable
