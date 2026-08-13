@@ -41,6 +41,7 @@
 					{ "$ref": "#/definitions/variables/file" },
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
+					{ "$ref": "#/definitions/variables/random_string" },
 					{ "$ref": "#/definitions/variables/list" },
 					{ "$ref": "#/definitions/variables/javascript" },
 					{ "$ref": "#/definitions/variables/shared_queue" }
@@ -302,6 +303,33 @@
 							},
 							"predictable": {
 								"type": "boolean"
+							}
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"random_string": {
+				"$id": "#/definitions/variables/random_string",
+				"title": "Random String",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"min_length": {
+								"type": "integer",
+								"minimum": 1,
+								"default": 5
+							},
+							"max_length": {
+								"type": "integer",
+								"minimum": 1,
+								"default": 10
+							},
+							"predictable": {
+								"type": "boolean",
+								"default": false
 							}
 						}
 					}

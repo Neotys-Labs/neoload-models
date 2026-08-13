@@ -16,6 +16,7 @@ import org.immutables.value.Value;
 		@JsonSubTypes.Type(value = ImmutableFileVariable.class, name = "file"),
 		@JsonSubTypes.Type(value = ImmutableCounterVariable.class, name = "counter"),
 		@JsonSubTypes.Type(value = ImmutableRandomNumberVariable.class, name = "random_number"),
+		@JsonSubTypes.Type(value = ImmutableRandomStringVariable.class, name = "random_string"),
 		@JsonSubTypes.Type(value = ImmutableJavaScriptVariable.class, name = "javascript"),
 		@JsonSubTypes.Type(value = ImmutableSharedQueueVariable.class, name = "shared_queue"),
 		@JsonSubTypes.Type(value = ImmutableListVariable.class, name = "list"),
