@@ -39,13 +39,25 @@
 			"minItems": 1,
 			"additionalProperties": false,
 			"items": {
-				"anyOf": [
-					{ "$ref": "#/definitions/variables/constant" },
-					{ "$ref": "#/definitions/variables/file" },
-					{ "$ref": "#/definitions/variables/counter" },
-					{ "$ref": "#/definitions/variables/random_number" },
-					{ "$ref": "#/definitions/variables/javascript" }
-				]
+				"type": "object",
+				"additionalProperties": false,
+				"minProperties": 1,
+				"maxProperties": 1,
+				"properties": {
+					"constant": { "$ref": "#/definitions/variables/constant" },
+					"file": { "$ref": "#/definitions/variables/file" },
+					"counter": { "$ref": "#/definitions/variables/counter" },
+					"random_number": { "$ref": "#/definitions/variables/random_number" },
+					"random_string": { "$ref": "#/definitions/variables/random_string" },
+					"password": { "$ref": "#/definitions/variables/password" },
+					"date": { "$ref": "#/definitions/variables/date" },
+					"current_date": { "$ref": "#/definitions/variables/current_date" },
+					"list": { "$ref": "#/definitions/variables/list" },
+					"sql": { "$ref": "#/definitions/variables/sql" },
+					"random_uuid": { "$ref": "#/definitions/variables/random_uuid" },
+					"shared_queue": { "$ref": "#/definitions/variables/shared_queue" },
+					"javascript": { "$ref": "#/definitions/variables/javascript" }
+				}
 			}
 		},
 		"servers": {
@@ -77,6 +89,21 @@
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/user_paths/user_path" }
+		},
+		"frameworks": {
+			"title": "Frameworks",
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"type": "object",
+				"minProperties": 1,
+				"maxProperties": 1,
+				"properties": {
+					"builtin": { "$ref": "#/definitions/framework/builtin_framework_ref" },
+					"custom": { "$ref": "#/definitions/framework/custom_framework" }
+				},
+				"additionalProperties": false
+			}
 		},
 		"project_settings": {
 			"title": "Neoload_Project_settings",
@@ -135,7 +162,7 @@
 			"iterations": {
 				"title": "Iterations",
 				"type": "string",
-				"pattern": "^(\\d+ iterations)$"
+				"pattern": "^(\\d+ iterations?)$"
 			},
 			"conditions": {
 				"title": "Conditions list",
@@ -175,6 +202,15 @@
 				"type": "string",
 				"default": "global",
 				"enum": ["cycle", "stop_test", "no_value_code"]
+			},
+			"assertions": {
+				"type": "array",
+				"items": {
+					"oneOf": [
+						{ "$ref": "#/definitions/user_paths/content_assertion" },
+						{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
+					]
+				}
 			}
 		},
 		"variables": {
@@ -195,7 +231,7 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"value": { "$ref": "#/definitions/common/text" }
+							"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] }
 						}
 					}
 				],
@@ -280,6 +316,142 @@
 				],
 				"unevaluatedProperties": false
 			},
+			"random_string": {
+				"title": "Random String",
+				"type": "object",
+				"required": ["min_length", "max_length"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"min_length": {
+								"type": "number"
+							},
+							"max_length": {
+								"type": "number"
+							},
+							"predictable": {
+								"type": "boolean"
+							}
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"password": {
+				"title": "Password",
+				"type": "object",
+				"required": ["value"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"value": { "$ref": "#/definitions/common/text" }
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"date": {
+				"title": "Date",
+				"type": "object",
+				"required": ["start_date"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"pattern": { "$ref": "#/definitions/common/text" },
+							"start_date": { "$ref": "#/definitions/common/text" },
+							"increment_value": {
+								"type": "number",
+								"default": 0
+							},
+							"increment_timeunit": {
+								"type": "string",
+								"enum": ["millisecond","second", "minute", "hour", "day", "month", "year"],
+								"default": "second"
+							},
+							"scope": { "$ref": "#/definitions/common/var_scope" }
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"current_date": {
+				"title": "Current Date",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"pattern": { "$ref": "#/definitions/common/text" },
+							"increment_value": {
+								"type": "number",
+								"default": 0
+							},
+							"increment_timeunit": {
+								"type": "string",
+								"enum": ["millisecond","second", "minute", "hour", "day", "month", "year"],
+								"default": "second"
+							}
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"list": {
+				"title": "List",
+				"type": "object",
+				"required": ["column_names", "values"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"column_names": {
+								"type": "array",
+								"items": { "type": "string" }
+							},
+							"values": {
+								"type": "array",
+								"items": {
+									"type": "array",
+									"items": { "type": "string" }
+								}
+							},
+							"start_from_line": {
+								"type": "integer",
+								"default": 1
+							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"order": { "$ref": "#/definitions/common/var_order" },
+							"out_of_value": { "$ref": "#/definitions/common/var_out_of_value" }
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"sql": {
+				"title": "SQL",
+				"type": "object",
+				"required": ["query", "driver", "url"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"query": { "$ref": "#/definitions/common/text" },
+							"driver": { "$ref": "#/definitions/common/text" },
+							"url": { "$ref": "#/definitions/common/text" },
+							"login": { "$ref": "#/definitions/common/text" },
+							"password": { "$ref": "#/definitions/common/text" },
+							"column_names": {
+								"type": "array",
+								"items": { "type": "string" }
+							}
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
 			"javascript": {
 				"title": "Javascript",
 				"type": "object",
@@ -288,7 +460,68 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"script": { "$ref": "#/definitions/common/text" }
+							"script": { "$ref": "#/definitions/common/textblob" }
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"random_uuid": {
+				"title": "Random UUID",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"upper_case": {
+								"type": "boolean",
+								"default": false
+							},
+							"predictable": {
+								"type": "boolean",
+								"default": false
+							}
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"shared_queue": {
+				"title": "Shared Queue",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"queue_size": {
+								"type": "integer",
+								"minimum": 1,
+								"default": 10000
+							},
+							"consumer_timeout": {
+								"type": "integer",
+								"minimum": 0,
+								"default": 5000
+							},
+							"swap_file": {
+								"type": "object",
+								"required": ["path"],
+								"properties": {
+									"path": { "$ref": "#/definitions/common/text" },
+									"delimiter": {
+										"$ref": "#/definitions/common/text",
+										"default": ";"
+									},
+									"load_from_file": {
+										"type": "boolean",
+										"default": false
+									},
+									"save_to_file": {
+										"type": "boolean",
+										"default": true
+									}
+								}
+							}
 						}
 					}
 				],
@@ -308,7 +541,7 @@
 					"enum": ["http", "https"]
 				},
 				"port": {
-					"type": "integer"
+					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
 				},
 				"basic_authentication": { "$ref": "#/definitions/authentication/basic" },
 				"ntlm_authentication": { "$ref": "#/definitions/authentication/ntlm" },
@@ -430,7 +663,7 @@
 						"type": "integer",
 						"default": 1
 					},
-					"rampup": { "$ref": "#/definitions/common/time" }
+					"rampup": { "anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/positive_number" }] }
 				}
 			},
 			"rampup_load": {
@@ -479,6 +712,32 @@
 					"users": { "$ref": "#/definitions/common/positive_number" },
 					"duration": { "$ref": "#/definitions/common/duration" }
 				}
+			},
+			"custom_load": {
+				"title": "Custom Load",
+				"type": "object",
+				"required": ["steps"],
+				"properties": {
+					"steps": {
+						"type": "array",
+						"minItems": 1,
+						"items": { "$ref": "#/definitions/populations/custom_policy_step" }
+					},
+					"rampup": { "anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/positive_number" }] },
+					"start_after": { "$ref": "#/definitions/common/start_after_options" },
+					"stop_after": { "$ref": "#/definitions/common/stop_after_options" }
+				},
+				"additionalProperties": false
+			},
+			"custom_policy_step": {
+				"title": "Custom Policy Step",
+				"type": "object",
+				"required": ["when", "users"],
+				"properties": {
+					"when": { "$ref": "#/definitions/common/duration" },
+					"users": { "$ref": "#/definitions/common/positive_number" }
+				},
+				"additionalProperties": false
 			}
 		},
 		"scenario": {
@@ -518,7 +777,8 @@
 							"name": { "$ref": "#/definitions/common/text" },
 							"constant_load": { "$ref": "#/definitions/populations/constant_load" },
 							"rampup_load": { "$ref": "#/definitions/populations/rampup_load" },
-							"peaks_load": { "$ref": "#/definitions/populations/peaks_load" }
+							"peaks_load": { "$ref": "#/definitions/populations/peaks_load" },
+							"custom_load": { "$ref": "#/definitions/populations/custom_load" }
 						}
 					}
 				}
@@ -548,7 +808,7 @@
 						"type": "string",
 						"enum": ["ABOVE", "BELOW"]
 					},
-					"value": { "$ref": "#/definitions/common/text" },
+					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"severity": {
 						"type": "string",
 						"enum": ["AVAILABILITY", "CUSTOM_ALERT", "ERROR", "INFO", "PERFORMANCE", "RESOURCE_CONTENTION"]
@@ -571,8 +831,8 @@
 				"required": ["name"],
 				"properties": {
 					"name": { "$ref": "#/definitions/common/text" },
-					"when": { "$ref": "#/definitions/common/text" },
-					"timeout": { "$ref": "#/definitions/common/time" }
+					"when": { "anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }] },
+					"timeout": { "anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/positive_number" }] }
 				},
 				"additionalProperties": false
 			}
@@ -592,7 +852,8 @@
 					},
 					"init": { "$ref": "#/definitions/user_paths/container" },
 					"actions": { "$ref": "#/definitions/user_paths/container" },
-					"end": { "$ref": "#/definitions/user_paths/container" }
+					"end": { "$ref": "#/definitions/user_paths/container" },
+					"assertions": { "$ref": "#/definitions/common/assertions" }
 				}
 			},
 			"container": {
@@ -605,7 +866,8 @@
 					"sla_profile": {
 						"type": "string"
 					},
-					"steps": { "$ref": "#/definitions/user_paths/steps" }
+					"steps": { "$ref": "#/definitions/user_paths/steps" },
+					"assertions": { "$ref": "#/definitions/common/assertions" }
 				}
 			},
 			"steps": {
@@ -613,22 +875,38 @@
 				"type": "array",
 				"minItems": 1,
 				"items": {
-					"type": "object",
-					"minProperties": 1,
-					"maxProperties": 1,
-					"properties": {
-						"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
-						"request": { "$ref": "#/definitions/user_paths/actions/request" },
-						"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
-						"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
-						"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
-						"if": { "$ref": "#/definitions/user_paths/actions/if" },
-						"while": { "$ref": "#/definitions/user_paths/actions/while" },
-						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
-						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
-					},
-					"additionalProperties": false
+					"oneOf": [
+						{
+							"type": "string",
+							"enum": [
+								"go_to_next_iteration",
+								"stop_vu"
+							]
+						},
+						{
+							"type": "object",
+							"minProperties": 1,
+							"maxProperties": 1,
+							"properties": {
+								"transaction": {"$ref": "#/definitions/user_paths/actions/transaction"},
+								"request": {"$ref": "#/definitions/user_paths/actions/request"},
+								"delay": {"$ref": "#/definitions/user_paths/actions/delay"},
+								"think_time": {"$ref": "#/definitions/user_paths/actions/think_time"},
+								"javascript": {"$ref": "#/definitions/user_paths/actions/javascript"},
+								"if": {"$ref": "#/definitions/user_paths/actions/if"},
+								"while": {"$ref": "#/definitions/user_paths/actions/while"},
+								"loop": {"$ref": "#/definitions/user_paths/actions/loop"},
+								"switch": {"$ref": "#/definitions/user_paths/actions/switch"},
+								"custom_action": {"$ref": "#/definitions/user_paths/actions/custom_action"},
+								"try_catch": {"$ref": "#/definitions/user_paths/actions/try_catch"},
+								"fork": {"$ref": "#/definitions/user_paths/actions/fork"},
+								"variable_modifier": {"$ref": "#/definitions/user_paths/actions/variable_modifier"},
+								"debug_logger": {"$ref": "#/definitions/user_paths/actions/debug_logger"},
+								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"}
+							},
+							"additionalProperties": false
+						}
+					]
 				}
 			},
 			"actions": {
@@ -641,6 +919,36 @@
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
+						"steps": { "$ref": "#/definitions/user_paths/steps" },
+						"assertions": { "$ref": "#/definitions/common/assertions" }
+					},
+					"additionalProperties": false
+				},
+				"http_page": {
+					"name": "http_page",
+					"title": "Action: HTTP Page",
+					"type": "object",
+					"required": ["name", "steps"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"think_time": { "$ref": "#/definitions/common/text" },
+						"think_time_range": {
+							"type": "object",
+							"required": ["min", "max"],
+							"properties": {
+								"min": { "$ref": "#/definitions/common/text" },
+								"max": { "$ref": "#/definitions/common/text" }
+							},
+							"additionalProperties": false
+						},
+						"think_time_mode": {
+							"type": "string",
+							"enum": ["constant", "random"]
+						},
+						"screenshot": { "type": "boolean" },
+						"dynamic_action": { "type": "boolean" },
+						"force_encoding_for_dynamic_resources": { "type": "boolean" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
@@ -651,6 +959,7 @@
 					"required": ["url"],
 					"additionalProperties": false,
 					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
 						"url": { "$ref": "#/definitions/common/text" },
 						"server": { "$ref": "#/definitions/common/text" },
 						"method": {
@@ -672,21 +981,37 @@
 						},
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
+						"bodybinary": { "$ref": "#/definitions/common/textblob" },
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"followRedirects": {
+							"type": "boolean",
+							"default": false
+						},
+						"assertions": {
+							"type": "array",
+							"items": {
+								"oneOf": [
+									{ "$ref": "#/definitions/user_paths/content_assertion" },
+									{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
+								]
+							}
+						},
+						"parts": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/part" }
 						}
 					}
 				},
 				"delay": {
 					"title": "Action: Delay",
-					"type": "string",
-					"allOf": [{ "$ref": "#/definitions/common/text" }]
+					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
 				},
 				"think_time": {
 					"title": "Action: Think Time",
-					"type": "string",
-					"allOf": [{ "$ref": "#/definitions/common/text" }]
+					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
 				},
 				"javascript": {
 					"title": "Action: Javascript",
@@ -735,13 +1060,13 @@
 					"additionalProperties": false
 				},
 				"loop": {
-					"title": "Action: If",
+					"title": "Action: Loop",
 					"type": "object",
 					"required": ["count", "steps"],
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
-						"count": { "$ref": "#/definitions/common/positive_number" },
+						"count": { "anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }] },
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
@@ -779,6 +1104,112 @@
 							"default": false
 						},
 						"libraryPath": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"go_to_next_iteration": {
+					"title": "Action: Go to next iteration",
+					"type": "string",
+					"enum": ["go_to_next_iteration"]
+				},
+				"stop_vu": {
+					"title": "Action: Stop Virtual User",
+					"type": "object",
+					"properties": {
+						"start_new_vu": {
+							"type": "boolean",
+							"default": true
+						}
+					},
+					"additionalProperties": false
+				},
+				"fork": {
+					"title": "Action: Fork",
+					"type": "object",
+					"required": ["steps"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"copy_variables": {
+							"type": "boolean",
+							"default": true
+						},
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
+					},
+					"additionalProperties": false
+				},
+				"wait_until": {
+					"title": "Action: Wait Until",
+					"type": "object",
+					"required": ["conditions"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"conditions": { "$ref": "#/definitions/common/conditions" },
+						"match": {
+							"type": "string",
+							"enum": ["any", "all"],
+							"default": "any"
+						},
+						"timeout": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"variable_modifier": {
+					"title": "Action: Variable Modifier",
+					"type": "object",
+					"required": ["variable_name"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"category": {
+							"type": "string",
+							"enum": ["predefined", "shared_queue"],
+							"default": "predefined"
+						},
+						"variable_name": { "$ref": "#/definitions/common/text" },
+						"mode": {
+							"type": "string",
+							"enum": ["next_value", "init_value", "add_shared_queue_value", "poll_shared_queue"],
+							"default": "next_value"
+						},
+						"value": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"debug_logger": {
+					"title": "Action: Debug Logger",
+					"type": "object",
+					"required": ["text"],
+					"properties": {
+						"text": { "$ref": "#/definitions/common/text" },
+						"file": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"rendezvous": {
+					"title": "Action: Rendezvous",
+					"type": "object",
+					"required": ["name"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"try_catch": {
+					"title": "Action: Try Catch",
+					"type": "object",
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"caught_exceptions": {
+							"type": "string",
+							"enum": ["errors", "assertions", "all"],
+							"default": "errors"
+						},
+						"try": { "$ref": "#/definitions/user_paths/container" },
+						"catch": { "$ref": "#/definitions/user_paths/container" }
 					},
 					"additionalProperties": false
 				}
@@ -820,14 +1251,91 @@
 					}
 				}
 			},
+			"content_assertion": {
+				"title": "Content Assertion",
+				"type": "object",
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"xpath": { "$ref": "#/definitions/common/text" },
+					"jsonpath": { "$ref": "#/definitions/common/text" },
+					"not": {
+						"type": "boolean",
+						"default": false
+					},
+					"contains": { "$ref": "#/definitions/common/text" },
+					"regexp": {
+						"type": "boolean",
+						"default": false
+					}
+				},
+				"additionalProperties": false
+			},
+			"part": {
+				"title": "Multipart Part",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"contentType": { "$ref": "#/definitions/common/text" },
+					"charSet": { "$ref": "#/definitions/common/text" },
+					"transferEncoding": { "$ref": "#/definitions/common/text" },
+					"value": { "$ref": "#/definitions/common/text" },
+					"filename": { "$ref": "#/definitions/common/text" },
+					"sourceFilename": { "$ref": "#/definitions/common/text" }
+				},
+				"additionalProperties": false
+			},
+			"size_assertion": {
+				"title": "Size Assertion",
+				"type": "object",
+				"required": ["operator", "value"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"operator": {
+						"type": "string",
+						"enum": ["equals", "less_than", "greater_than"]
+					},
+					"value": {
+						"type": "integer",
+						"minimum": 0
+					}
+				},
+				"additionalProperties": false
+			},
+			"duration_assertion": {
+				"title": "Duration Assertion",
+				"type": "object",
+				"required": ["value"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"value": {
+						"type": "integer",
+						"minimum": 0
+					}
+				},
+				"additionalProperties": false
+			},
+			"assertion_wrapper": {
+				"title": "Assertion (wrapped)",
+				"type": "object",
+				"minProperties": 1,
+				"maxProperties": 1,
+				"properties": {
+					"content": { "$ref": "#/definitions/user_paths/content_assertion" },
+					"size": { "$ref": "#/definitions/user_paths/size_assertion" },
+					"duration": { "$ref": "#/definitions/user_paths/duration_assertion" }
+				},
+				"additionalProperties": false
+			},
 			"case": {
 				"type": "object",
 				"required": ["value"],
 				"properties": {
 					"description": { "$ref": "#/definitions/common/text" },
-					"value": { "$ref": "#/definitions/common/text" },
+					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": { "type": "boolean" },
-					"steps": { "$ref": "#/definitions/user_paths/steps" }
+					"steps": { "$ref": "#/definitions/user_paths/steps" },
+					"assertions": { "$ref": "#/definitions/common/assertions" }
 				},
 				"additionalProperties": false
 			},
@@ -841,6 +1349,67 @@
 						"type": "string",
 						"enum": ["TEXT", "PASSWORD"],
 						"default": "TEXT"
+					}
+				},
+				"additionalProperties": false
+			}
+		},
+		"framework": {
+			"builtin_framework_ref": {
+				"title": "Built-in Framework Reference",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"enabled": {
+						"type": "boolean",
+						"default": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"custom_framework": {
+				"title": "Custom Framework",
+				"type": "object",
+				"required": ["name", "parameters"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"enabled": {
+						"type": "boolean",
+						"default": true
+					},
+					"parameters": {
+						"type": "array",
+						"minItems": 1,
+						"items": { "$ref": "#/definitions/framework/dynamic_parameter" }
+					}
+				},
+				"additionalProperties": false
+			},
+			"dynamic_parameter": {
+				"title": "Dynamic Parameter",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"enabled": {
+						"type": "boolean",
+						"default": true
+					},
+					"extraction_source": {
+						"type": "string",
+						"enum": ["body", "headers", "all"],
+						"default": "body"
+					},
+					"xpath": { "$ref": "#/definitions/common/text" },
+					"jsonpath": { "$ref": "#/definitions/common/text" },
+					"regexp": { "$ref": "#/definitions/common/text" },
+					"template": {
+						"$ref": "#/definitions/common/text",
+						"default": "$1$"
 					}
 				},
 				"additionalProperties": false
