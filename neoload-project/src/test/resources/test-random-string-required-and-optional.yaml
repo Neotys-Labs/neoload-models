@@ -1,0 +1,9 @@
+name: MyProject
+variables:
+- random_string:
+    name: MyRandomString
+    description: MyRandomStringDescription
+    min_length: 10
+    max_length: 20
+    predictable: true
+    change_policy: each_use
