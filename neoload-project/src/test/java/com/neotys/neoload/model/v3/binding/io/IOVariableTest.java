@@ -83,6 +83,14 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .changePolicy(EACH_REQUEST)
                 .build();
 
+        final Variable randomStringVariable = RandomStringVariable.builder()
+                .name("MyRandomString")
+                .minLength(5)
+                .maxLength(20)
+                .isPredictable(false)
+                .changePolicy(EACH_USE)
+                .build();
+
         final Variable listVariable = ListVariable.builder()
                 .name("MyList")
                 .addColumnNames("city", "country")
@@ -117,7 +125,8 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, listVariable, listVariable2, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable,
+                        listVariable, listVariable2, javaScriptVariable)
                 .build();
     }
 }
