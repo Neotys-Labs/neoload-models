@@ -7,7 +7,7 @@ They may be combined with other variables or with static content (e.g. `${produc
 Variables that does not exist in the project will be added.
 
 #### Example
-Defining 6 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable and a JavaScript variable.
+Defining 7 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable and a JavaScript variable.
 
 ```yaml
 variables:
@@ -50,6 +50,12 @@ variables:
     max: 999
     predictable: false
     change_policy: each_request
+- random_string:
+    name: random_string_variable
+    min_length: 5
+    max_length: 10
+    predictable: false
+    change_policy: each_use
 - javascript:
     name: My JSVar
     description: This is a js var
@@ -194,6 +200,31 @@ random_number:
   max: 999
   predictable: false
   change_policy: each_request
+```
+
+## Random String variable
+A random alphanumeric string the length of which is within a length range.
+
+| Name         | Description                   | Accept variable | Required | Since |
+|:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
+| name         | The variable name             | -               | &#x2713; | 2026.3|
+| description  | The variable description      | -               | -        | 2026.3|
+| min_length   | The minimum number of characters of the generated value.</br>The default value is `5`. | -               | -        | 2026.3|
+| max_length   | The maximum number of characters of the generated value.</br>The default value is `10`. | -               | -        | 2026.3|
+| predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | -        | 2026.3|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
+
+#### Example
+Defining a Random String variable.
+
+```yaml
+random_string:
+  name: random_string_variable
+  description: MyRandomStringDescription
+  min_length: 10
+  max_length: 20
+  predictable: true
+  change_policy: each_use
 ```
 
 ## JavaScript variable

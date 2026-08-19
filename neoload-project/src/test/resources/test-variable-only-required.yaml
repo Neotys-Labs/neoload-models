@@ -43,6 +43,12 @@ variables:
     max: -1
     predictable: false
     change_policy: each_request
+- random_string:
+    name: MyRandomString
+    min_length: 5
+    max_length: 20
+    predictable: false
+    change_policy: each_use
 - list:
     name: MyList
     column_names:

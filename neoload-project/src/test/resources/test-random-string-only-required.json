@@ -1,0 +1,1 @@
+{"name":"MyProject","variables":[{"random_string":{"name":"MyRandomString","min_length":5,"max_length":10,"predictable":false}}]}
