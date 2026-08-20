@@ -5,13 +5,17 @@
 The Project section allows specifying the NeoLoad project definition.
 The Project definition can be declared with servers, variables, User Paths, Populations and Scenarios composing the project.
 
+The optional `schemaVersion` attribute at the root of an as-code file declares the schema contract the file is written for. It is available since NeoLoad **2026.3**. When the attribute is omitted, the file is interpreted as **3.0**. Product validation checks that the declared version is supported by the bundled `neoload-models` build. Cross-product compatibility is described in `schemas/compatibility.json` at the repository root.
+
+The JSON Schema for version 3.0 is published as `schemas/v3.0/as-code.schema.json`. The runtime copy of the latest schema also lives in `neoload-project/src/main/resources/as-code.latest.schema.json`.
+
 ## Definition
 
 Definition has several top-level keys:
 
 | Name                           | Description                                    | Accept variable | Required | Since |
 |:------------------------------ |:---------------------------------------------- |:---------------:|:--------:|:-----:|
-| schemaVersion                  | Schema contract version this file is written for. Defaults to `3.0` when absent. Must match a version this product supports (see `schemas/compatibility.json`). | - | - | |
+| schemaVersion                  | Schema contract version this file is written for. Defaults to `3.0` when absent. | - | - | 2026.3 |
 | name                           | The root key defining the name of the project  | -               | &#x2713; |       |
 | [includes](include.md)         | The definition of as-code files to be included | -               | -        | 6.10  |
 | [sla_profiles](sla-profile.md) | The definition of SLA profiles                 | -               | -        | 6.9   |
