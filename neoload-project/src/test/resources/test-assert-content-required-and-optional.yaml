@@ -4,6 +4,7 @@ user_paths:
   actions:
     steps:
     - request:
+        name: request
         url: http://www.neotys.com/select?name:neoload
         assertions:
         - name: assertion_1

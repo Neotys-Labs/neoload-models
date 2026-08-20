@@ -3,14 +3,17 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
+
+import org.junit.Test;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.ImmutableRequest;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-import java.io.IOException;
-import org.junit.Test;
+
 
 public class IOContentAssertionTest extends AbstractIOElementsTest {
 
@@ -50,6 +53,7 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 	private Project getAsertionsOnlyRequired() {
 
 		final ImmutableRequest request = Request.builder()
+				.name("request")
 				.url("http://www.neotys.com/select?name:neoload")
 				.addAssertions(ContentAssertion.builder()
 						.contains("DevOps and Automation")
@@ -104,6 +108,7 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 				.build();
 
 		final ImmutableRequest request = Request.builder()
+				.name("request")
 				.url("http://www.neotys.com/select?name:neoload")
 				.addAssertions(assertion1)
 				.addAssertions(assertion2)
