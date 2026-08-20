@@ -1,6 +1,6 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "https://raw.githubusercontent.com/Neotys-Labs/neoload-models/schema-v3.0/schemas/v3.0/as-code.schema.json",
+	"$id": "https://raw.githubusercontent.com/Neotys-Labs/neoload-models/refs/heads/v3/neoload-project/src/main/resources/as-code.latest.schema.json",
 	"title": "JSON Schema for NeoLoad as-code files",
 	"fileMatch": [
 		"*.nl.yaml",
@@ -22,7 +22,7 @@
 		"schemaVersion": {
 			"type": "string",
 			"pattern": "^3\\.[0-9]+$",
-			"description": "Schema contract version this file is written for. Defaults to '3.0' when absent. See https://tricentis.atlassian.net/wiki/spaces/NeoLoad/pages/3429171242 (RFC-3)."
+			"description": "Schema contract version this file is written for. Defaults to '3.0' when absent."
 		},
 		"name": { "$ref": "#/definitions/common/name" },
 		"includes": {
