@@ -11,6 +11,7 @@ Definition has several top-level keys:
 
 | Name                           | Description                                    | Accept variable | Required | Since |
 |:------------------------------ |:---------------------------------------------- |:---------------:|:--------:|:-----:|
+| schemaVersion                  | Schema contract version this file is written for. Defaults to `3.0` when absent. Must match a version this product supports (see `schemas/compatibility.json`). | - | - | |
 | name                           | The root key defining the name of the project  | -               | &#x2713; |       |
 | [includes](include.md)         | The definition of as-code files to be included | -               | -        | 6.10  |
 | [sla_profiles](sla-profile.md) | The definition of SLA profiles                 | -               | -        | 6.9   |
@@ -25,6 +26,7 @@ Definition has several top-level keys:
 Below is an example of a NeoLoad project:
 
 ```yaml
+schemaVersion: "3.0"
 name: MyProject
 sla_profiles:
 - name: MySlaProfile

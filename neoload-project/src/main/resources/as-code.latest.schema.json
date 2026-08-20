@@ -19,6 +19,11 @@
 	"required": ["name"],
 	"properties": {
 		"$schema": { "$ref": "#/definitions/common/full_url" },
+		"schemaVersion": {
+			"type": "string",
+			"pattern": "^3\\.[0-9]+$",
+			"description": "Schema contract version this file is written for. Defaults to '3.0' when absent. See https://tricentis.atlassian.net/wiki/spaces/NeoLoad/pages/3429171242 (RFC-3)."
+		},
 		"name": { "$ref": "#/definitions/common/name" },
 		"includes": {
 			"$id": "#root/includes",
