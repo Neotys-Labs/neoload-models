@@ -3,8 +3,10 @@ package com.neotys.neoload.model.v3.compatibility;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -41,12 +43,12 @@ public class SchemaSupportTest {
 	@Test
 	public void list_supported_is_immutable_view() {
 		final SchemaSupport instance = SchemaSupport.of(
-				new SupportedSchemas(Arrays.asList("3.0")));
+				new SupportedSchemas(List.of("3.0")));
 		try {
 			instance.listSupported().add("3.1");
-			throw new AssertionError("listSupported() must return an immutable set");
+			fail("listSupported() must return an immutable set");
 		} catch (final UnsupportedOperationException expected) {
-			// ok
+			assertEquals(UnsupportedOperationException.class, expected.getClass());
 		}
 	}
 }
