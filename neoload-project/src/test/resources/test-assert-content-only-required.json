@@ -1,1 +1,1 @@
-{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"request":{"url":"http://www.neotys.com/select?name:neoload","assertions":[{"contains":"DevOps and Automation"},{"xpath":"xpath","contains":"DevOps"},{"jsonpath":"jsonpath","contains":"Automation"}]}}]}}]}
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"request":{"name":"request","url":"http://www.neotys.com/select?name:neoload","assertions":[{"contains":"DevOps and Automation"},{"xpath":"xpath","contains":"DevOps"},{"jsonpath":"jsonpath","contains":"Automation"}]}}]}}]}
