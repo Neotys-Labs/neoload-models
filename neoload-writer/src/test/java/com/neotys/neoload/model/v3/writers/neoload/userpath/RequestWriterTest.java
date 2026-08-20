@@ -7,13 +7,12 @@ import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
+import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 public class RequestWriterTest {
 	
@@ -23,7 +22,7 @@ public class RequestWriterTest {
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><http-action actionType=\"1\" followRedirects=\"false\" "
-    			+ "method=\"GET\" name=\"request_test\" "
+    			+ "method=\"GET\" name=\"/test_path?param_name=param_value\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST2)+ "\">"
     			+ "<parameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
@@ -40,11 +39,11 @@ public class RequestWriterTest {
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><http-action actionType=\"1\" followRedirects=\"false\" "
-    			+ "method=\"GET\" name=\"request_test\" "
+    			+ "method=\"GET\" name=\"/test_path\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
     			+ "</test-root>";
-    	
+
     	(new RequestWriter(WrittingTestUtils.REQUEST_TEST)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
 
         XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
@@ -56,7 +55,7 @@ public class RequestWriterTest {
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><http-action actionType=\"1\" contentType=\"application/x-www-form-urlencoded\" followRedirects=\"false\" "
-    			+ "method=\"POST\" name=\"request_test\" "
+    			+ "method=\"POST\" name=\"/test_path?param_name=param_value\" "
     			+ "path=\"/test_path\" postType=\"1\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST3)+ "\">"
 				+ "<parameter name=\"post param_name\" separator=\"=\" value=\"post_param Value\"/>"
@@ -75,7 +74,7 @@ public class RequestWriterTest {
 		Element root = WrittingTestUtils.generateTestRootElement(doc);
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
 				+ "<test-root><http-action actionType=\"1\" contentType=\"application/x-www-form-urlencoded\" followRedirects=\"false\" "
-				+ "method=\"PUT\" name=\"request_test\" "
+				+ "method=\"PUT\" name=\"/test_path?param_name=param_value\" "
 				+ "path=\"/test_path\" postType=\"1\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
 				+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST3_PUT_METHOD)+ "\">"
 				+ "<parameter name=\"post param_name\" separator=\"=\" value=\"post_param Value\"/>"
@@ -94,7 +93,7 @@ public class RequestWriterTest {
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><http-action actionType=\"1\" contentType=\"text/plain\" followRedirects=\"false\" "
-    			+ "method=\"POST\" name=\"request_test\" "
+    			+ "method=\"POST\" name=\"/test_path?param_name=param_value\" "
     			+ "path=\"/test_path\" postType=\"4\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST4)+ "\">"
 				+ "<textPostContent><![CDATA[texte a convertir en binaire]]></textPostContent>"
@@ -114,7 +113,7 @@ public class RequestWriterTest {
 		Element root = WrittingTestUtils.generateTestRootElement(doc);
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
 				+ "<test-root><http-action actionType=\"1\" contentType=\"text/plain\" followRedirects=\"false\" "
-				+ "method=\"PUT\" name=\"request_test\" "
+				+ "method=\"PUT\" name=\"/test_path?param_name=param_value\" "
 				+ "path=\"/test_path\" postType=\"4\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
 				+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST4_PUT_METHOD)+ "\">"
 				+ "<textPostContent><![CDATA[texte a convertir en binaire]]></textPostContent>"
@@ -135,7 +134,7 @@ public class RequestWriterTest {
     	Element root = WrittingTestUtils.generateTestRootElement(doc);
     	String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><http-action actionType=\"1\" contentType=\"application/octet-stream\" followRedirects=\"false\" "
-    			+ "method=\"POST\" name=\"request_test\" "
+    			+ "method=\"POST\" name=\"/test_path?param_name=param_value\" "
     			+ "path=\"/test_path\" postType=\"2\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST5)+ "\">"
     			+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
@@ -154,7 +153,7 @@ public class RequestWriterTest {
 		Element root = WrittingTestUtils.generateTestRootElement(doc);
 
 		Request request = Request.builder()
-				.name("request_test")
+				
 				.url("/test_path?param_name=param_value")
 				.server("server_test")
 				.method("POST")
@@ -163,7 +162,7 @@ public class RequestWriterTest {
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
 				+ "<test-root><http-action actionType=\"1\" contentType=\"multipart/mixed\" followRedirects=\"false\" "
-				+ "method=\"POST\" name=\"request_test\" "
+				+ "method=\"POST\" name=\"/test_path?param_name=param_value\" "
 				+ "path=\"/test_path\" postType=\"3\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
 				+ "uid=\"" + WriterUtils.getElementUid(request)+ "\">"
 				+ "<urlPostParameter name=\"param_name\" separator=\"=\" value=\"param_value\"/>"
@@ -184,7 +183,7 @@ public class RequestWriterTest {
 		Part stringPart = Part.builder().value("My Part Value").name("myStringPart").build();
 
 		Request request = Request.builder()
-				.name("request_test")
+				
 				.url("/test_path?param_name=param_value")
 				.server("server_test")
 				.method("POST")
@@ -194,7 +193,7 @@ public class RequestWriterTest {
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
 				+ "<test-root><http-action actionType=\"1\" contentType=\"multipart/mixed\" followRedirects=\"false\" "
-				+ "method=\"POST\" name=\"request_test\" "
+				+ "method=\"POST\" name=\"/test_path?param_name=param_value\" "
 				+ "path=\"/test_path\" postType=\"3\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
 				+ "uid=\"" + WriterUtils.getElementUid(request)+ "\">"
 				+ "<multiparts>"
@@ -218,7 +217,7 @@ public class RequestWriterTest {
     	final Element root = WrittingTestUtils.generateTestRootElement(doc);
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><http-action actionType=\"1\" followRedirects=\"false\" method=\"GET\" "
-    			+ "name=\"GET_REQUEST_TEST\" path=\"/loadtest/\" "
+    			+ "name=\"/loadtest/\" path=\"/loadtest/\" "
     			+ "serverUid=\"jack\" slaProfileEnabled=\"false\" uid=\""
     			+ WriterUtils.getElementUid(WrittingTestUtils.GET_REQUEST_TEST)+ "\"/></test-root>";
     	
@@ -234,7 +233,7 @@ public class RequestWriterTest {
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root>"
     			+ "<http-action actionType=\"1\" followRedirects=\"false\" method=\"GET\" "
-    			+ "name=\"GET_REQUEST_TEST\" path=\"/loadtest/\" "
+    			+ "name=\"/loadtest/\" path=\"/loadtest/\" "
     			+ "serverUid=\"jack\" slaProfileEnabled=\"false\" uid=\""
     			+ WriterUtils.getElementUid(WrittingTestUtils.GET_REQUEST_WITH_ASSERTIONS_TEST)+ "\">"
     			+ "<assertions>"

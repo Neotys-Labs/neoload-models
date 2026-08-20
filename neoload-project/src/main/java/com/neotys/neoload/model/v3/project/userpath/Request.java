@@ -1,14 +1,6 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,13 +8,20 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_DEFAULT)
-@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
 @JsonSerialize(as = ImmutableRequest.class)
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
@@ -32,7 +31,6 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 // value to omit; a real class check would always be false and defeat the omission.
 @SuppressWarnings("java:S2097")
 public interface Request extends Step, SlaElement, AssertionsElement {
-	String NAME = "name";
 	String URL = "url";
 	String SERVER = "server";
 	String METHOD = "method";
@@ -41,9 +39,9 @@ public interface Request extends Step, SlaElement, AssertionsElement {
 	String BODYBINARY = "bodybinary";
 	String EXTRACTORS = "extractors";
 	String FOLLOW_REDIRECTS = "followRedirects";
-	
-	String DEFAULT_NAME = "#request#";
+
 	String DEFAULT_METHOD = Method.GET.name();
+	String DEFAULT_NAME = "request";
 
     enum Method {
         GET,
@@ -69,12 +67,17 @@ public interface Request extends Step, SlaElement, AssertionsElement {
     	}
     }
 
-    @JsonProperty(NAME)
-    @JsonInclude(value = Include.CUSTOM, valueFilter = DefaultNameFilter.class)
-    @RequiredCheck(groups={NeoLoad.class})
-	@Value.Default
+    @JsonIgnore
+	@Value.Auxiliary
 	default String getName() {
-		return DEFAULT_NAME;
+		return getUrl() == null || getUrl().trim().isEmpty() ? DEFAULT_NAME : getUrl();
+	}
+
+	/**
+	 * implemented because it's required from Element interface, redirect to withUrl.
+	 */
+	default Element withName(String of) {
+			return ImmutableRequest.copyOf(this).withUrl(of);
 	}
 
 	@JsonProperty(URL)
@@ -114,20 +117,8 @@ public interface Request extends Step, SlaElement, AssertionsElement {
 	@Value.Default
 	default Boolean getFollowRedirects() { return false; }
 
-	// Jackson value filters excluding the default name / method from serialization:
+	// Jackson value filter excluding the default method from serialization:
 	// a property is omitted when the filter's equals(value) returns true.
-	class DefaultNameFilter {
-		@Override
-		public boolean equals(final Object value) {
-			return DEFAULT_NAME.equals(value);
-		}
-
-		@Override
-		public int hashCode() {
-			return DEFAULT_NAME.hashCode();
-		}
-	}
-
 	class DefaultMethodFilter {
 		@Override
 		public boolean equals(final Object value) {

@@ -1,17 +1,15 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
+import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
+import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
-
-import com.google.common.io.Files;
-import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
-import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 
 public class ContainerWriterTest {
 	
@@ -26,7 +24,8 @@ public class ContainerWriterTest {
     			+ "<weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
     			+ "</basic-logical-action-container>"
     			+ "<http-action actionType=\"1\" followRedirects=\"false\" "
-    			+ "method=\"GET\" name=\"request_test\" "
+    			+ "method=\"GET\"  "
+    			+ "name=\"/test_path\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
     			+ "</test-root>";
@@ -50,7 +49,8 @@ public class ContainerWriterTest {
 		        + "</assertions>"
     			+ "</basic-logical-action-container>"
     			+ "<http-action actionType=\"1\" followRedirects=\"false\" "
-    			+ "method=\"GET\" name=\"request_test\" "
+    			+ "method=\"GET\" "
+    			+ "name=\"/test_path\" "
     			+ "path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
     			+ "uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)+ "\"/>"
     			+ "</test-root>";

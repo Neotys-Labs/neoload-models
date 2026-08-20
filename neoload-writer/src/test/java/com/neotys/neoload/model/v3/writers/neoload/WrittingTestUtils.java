@@ -8,9 +8,9 @@ import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.util.Parameter;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,9 +19,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class WrittingTestUtils {
     private WrittingTestUtils() {
@@ -35,7 +34,6 @@ public class WrittingTestUtils {
             .build();
 
     public static final Request REQUEST_TEST = Request.builder()
-            .name("request_test")
             .url("/test_path")
             .server(SERVER_TEST.getName())
             .method("GET")
@@ -61,14 +59,14 @@ public class WrittingTestUtils {
             .build();
 
     public static final Request REQUEST_TEST2 = Request.builder()
-            .name("request_test")
+            
             .url("/test_path?param_name=param_value")
             .server(SERVER_TEST.getName())
             .method("GET")
             .build();
 
     public static final Request REQUEST_TEST3 = Request.builder()
-            .name("request_test")
+            
             .url("/test_path?param_name=param_value")
             .server(SERVER_TEST.getName())
             .method("POST")
@@ -79,7 +77,7 @@ public class WrittingTestUtils {
 	public static final Request REQUEST_TEST3_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST3).withMethod("PUT");
 
     public static final Request REQUEST_TEST4 = Request.builder()
-            .name("request_test")
+            
             .url("/test_path?param_name=param_value")
             .server(SERVER_TEST.getName())
             .method("POST")
@@ -93,7 +91,7 @@ public class WrittingTestUtils {
     public static final byte[] BINARY_DATA_TEST = {116, 101, 120, 116, 101, 32, 97, 32, 99, 111, 110, 118, 101, 114, 116, 105, 114, 32, 101, 110, 32, 98, 105, 110, 97, 105, 114, 101};
 
     public static final Request REQUEST_TEST5 = Request.builder()
-            .name("request_test")
+            
             .url("/test_path?param_name=param_value")
             .server(SERVER_TEST.getName())
             .method("POST")
@@ -120,14 +118,14 @@ public class WrittingTestUtils {
             .build();
 
     public static final Request GET_REQUEST_TEST = Request.builder()
-            .name("GET_REQUEST_TEST")
+            
             .url("/loadtest/")
             .server(SERVER_JACK9090_TEST.getName())
             .method("GET")
             .build();
 
     public static final Request GET_REQUEST_WITH_ASSERTIONS_TEST = Request.builder()
-            .name("GET_REQUEST_TEST")
+
             .url("/loadtest/")
             .server(SERVER_JACK9090_TEST.getName())
             .method("GET")
@@ -139,7 +137,7 @@ public class WrittingTestUtils {
     public static final Request GET_REQUEST_WITH_RECORDED_FILES;
 
     static {
-        final Request.Builder builder = Request.builder().name("GET_REQUEST_TEST")
+        final Request.Builder builder = Request.builder()
                 .url("/loadtest/")
                 .server(SERVER_JACK9090_TEST.getName())
                 .method("GET");
@@ -186,7 +184,6 @@ public class WrittingTestUtils {
 			.build();*/
 
     public static final Request POST_SUBMIT_FORM_REQUEST_TEST = Request.builder()
-            .name("POST_SUBMIT_FORM_REQUEST_TEST")
             .server(SERVER_JACK9090_TEST.getName())
             .method("POST")
             .body("firstname=a&lastname=b&email=c@d.fr&address=e&sex=Male")

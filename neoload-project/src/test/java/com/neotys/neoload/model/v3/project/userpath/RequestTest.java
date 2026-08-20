@@ -5,15 +5,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
-
+import org.junit.Test;
 
 public class RequestTest {
 	@Test
 	public void constants() {
-		assertEquals("name", Request.NAME);
 		assertEquals("url", Request.URL);
 		assertEquals("server", Request.SERVER);
 		assertEquals("method", Request.METHOD);
@@ -21,10 +18,15 @@ public class RequestTest {
 		assertEquals("body", Request.BODY);
 		assertEquals("extractors", Request.EXTRACTORS);
 		assertEquals("assertions", Request.ASSERTIONS);
-		
-		assertEquals("#request#", Request.DEFAULT_NAME);
+
 		assertEquals("GET", Request.DEFAULT_METHOD);
 		assertEquals(Request.Method.GET.name(), Request.DEFAULT_METHOD);
+	}
+
+	@Test
+	public void defaultNameIsUrl() {
+		final Request request = Request.builder().url("http://example.com").build();
+		assertEquals("http://example.com", request.getName());
 	}
 	
 	@Test

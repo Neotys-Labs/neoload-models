@@ -3,13 +3,12 @@ package com.neotys.neoload.model.v3.writers.neoload.userpath;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
+import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 public class LoopWriterTest {
 	
@@ -26,7 +25,7 @@ public class LoopWriterTest {
 				"</loop-action>" +
 				"<basic-logical-action-container element-number=\"1\" execution-type=\"0\" name=\"Container_name\" slaProfileEnabled=\"false\" uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.CONTAINER_TEST)
 				+ "\" weightsEnabled=\"false\"><weighted-embedded-action uid=\"" + WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST)
-				+ "\"/></basic-logical-action-container><http-action actionType=\"1\" followRedirects=\"false\" method=\"GET\" name=\"request_test\" path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" uid=\""
+				+ "\"/></basic-logical-action-container><http-action actionType=\"1\" followRedirects=\"false\" method=\"GET\" name=\"/test_path\" path=\"/test_path\" serverUid=\"server_test\" slaProfileEnabled=\"false\" uid=\""
 				+ WriterUtils.getElementUid(WrittingTestUtils.REQUEST_TEST) +"\"/>"
 				+ "<delay-action duration=\"200\" isThinkTime=\"false\" name=\"Delay_name\" uid=\""+ WriterUtils.getElementUid(WrittingTestUtils.DELAY_TEST) +"\"/>"
     			+ "</test-root>";

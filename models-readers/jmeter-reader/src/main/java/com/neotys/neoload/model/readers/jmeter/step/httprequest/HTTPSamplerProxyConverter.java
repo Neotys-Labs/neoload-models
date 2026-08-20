@@ -8,6 +8,10 @@ import com.neotys.neoload.model.readers.jmeter.step.javascript.JavaScriptConvert
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
 import org.apache.jmeter.protocol.http.util.HTTPArgument;
 import org.apache.jmeter.testelement.property.CollectionProperty;
@@ -16,11 +20,6 @@ import org.apache.jmeter.testelement.property.TestElementProperty;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.BiFunction;
 
 /**
  * This class convert the HTTPSamplerProxy of JMeter into a HTTPRequest Step of Neoload
@@ -50,7 +49,6 @@ public class HTTPSamplerProxyConverter implements BiFunction<HTTPSamplerProxy, H
         httpSamplerProxy.setProtocol(protocol);
 
         final Request.Builder req = Request.builder()
-                .name(httpSamplerProxy.getName())
                 .method(httpSamplerProxy.getMethod())
                 .description(httpSamplerProxy.getComment())
                 .followRedirects(httpSamplerProxy.getFollowRedirects() || httpSamplerProxy.getAutoRedirects());

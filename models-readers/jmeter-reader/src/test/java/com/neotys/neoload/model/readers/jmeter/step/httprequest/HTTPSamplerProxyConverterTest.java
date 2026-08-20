@@ -1,10 +1,15 @@
 package com.neotys.neoload.model.readers.jmeter.step.httprequest;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jmeter.config.Argument;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.config.ConfigTestElement;
@@ -22,12 +27,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 
 public class HTTPSamplerProxyConverterTest {
 
@@ -78,7 +77,6 @@ public class HTTPSamplerProxyConverterTest {
                 .method("POST")
                 .server("")
                 .description("")
-                .name("")
                 .build();
 
         assertEquals(neoloadRequest, result.get(0));

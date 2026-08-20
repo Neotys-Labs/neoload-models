@@ -62,7 +62,6 @@ public class MainTest {
                                 )
                                 .addSteps(Request.builder()
                                         .method("GET")
-                                        .name("http request")
                                         .server("MyServer")
                                         .build())
                                 .build())
