@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>models-readers</artifactId>
+    <name>models-readers</name>
     <packaging>pom</packaging>
     <modules>
         <module>common-reader</module>
