@@ -42,6 +42,7 @@
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
 					{ "$ref": "#/definitions/variables/random_string" },
+					{ "$ref": "#/definitions/variables/random_uuid" },
 					{ "$ref": "#/definitions/variables/list" },
 					{ "$ref": "#/definitions/variables/javascript" },
 					{ "$ref": "#/definitions/variables/shared_queue" }
@@ -326,6 +327,27 @@
 								"type": "integer",
 								"minimum": 1,
 								"default": 10
+							},
+							"predictable": {
+								"type": "boolean",
+								"default": false
+							}
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"random_uuid": {
+				"$id": "#/definitions/variables/random_uuid",
+				"title": "Random UUID",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"upper_case": {
+								"type": "boolean",
+								"default": false
 							},
 							"predictable": {
 								"type": "boolean",

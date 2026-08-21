@@ -1,0 +1,8 @@
+name: MyProject
+variables:
+- random_uuid:
+    name: MyRandomUUID
+    description: MyRandomUUIDDescription
+    upper_case: true
+    predictable: true
+    change_policy: each_iteration
