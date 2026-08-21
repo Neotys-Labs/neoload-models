@@ -19,11 +19,6 @@
 	"required": ["name"],
 	"properties": {
 		"$schema": { "$ref": "#/definitions/common/full_url" },
-		"schemaVersion": {
-			"type": "string",
-			"pattern": "^3\\.[0-9]+$",
-			"description": "Schema contract version this file is written for. Defaults to '3.0' when absent."
-		},
 		"name": { "$ref": "#/definitions/common/name" },
 		"includes": {
 			"$id": "#root/includes",

@@ -13,8 +13,9 @@ import org.junit.Test;
 public class SchemaSupportTest {
 
 	@Test
-	public void default_instance_supports_3_0() {
+	public void default_instance_supported_versions() {
 		assertTrue(SchemaSupport.getDefault().isSupported("3.0"));
+		assertTrue(SchemaSupport.getDefault().isSupported("3.1"));
 	}
 
 	@Test

@@ -7,7 +7,10 @@ The Project definition can be declared with servers, variables, User Paths, Popu
 
 The optional `schemaVersion` attribute at the root of an as-code file declares the schema contract the file is written for. It is available since NeoLoad **2026.3**. When the attribute is omitted, the file is interpreted as **3.0**. Product validation checks that the declared version is supported by the bundled `neoload-models` build. Cross-product compatibility is described in `schemas/compatibility.json` at the repository root.
 
-The JSON Schema for version 3.0 is published as `schemas/v3.0/as-code.schema.json`. The runtime copy of the latest schema also lives in `neoload-project/src/main/resources/as-code.latest.schema.json`.
+Schema versions:
+- 3.0 is published as `schemas/v3.0/as-code.schema.json`
+- 3.1 is published as `schemas/v3.1/as-code.schema.json` (supported since NeoLoad 2026.3)
+- The runtime copy of the latest schema also lives in `neoload-project/src/main/resources/as-code.latest.schema.json`
 
 ## Definition
 

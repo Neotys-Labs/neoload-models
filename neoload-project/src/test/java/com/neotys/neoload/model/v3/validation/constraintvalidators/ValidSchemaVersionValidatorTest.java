@@ -18,6 +18,7 @@ public class ValidSchemaVersionValidatorTest {
 	@Test
 	public void supported_version_is_valid() {
 		assertTrue(validator.isValid("3.0", null));
+		assertTrue(validator.isValid("3.1", null));
 	}
 
 	@Test
