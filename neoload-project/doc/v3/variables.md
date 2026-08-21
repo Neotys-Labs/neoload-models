@@ -7,7 +7,7 @@ They may be combined with other variables or with static content (e.g. `${produc
 Variables that does not exist in the project will be added.
 
 #### Example
-Defining 7 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable and a JavaScript variable.
+Defining 8 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable, a RandomUUID variable and a JavaScript variable.
 
 ```yaml
 variables:
@@ -54,6 +54,11 @@ variables:
     name: random_string_variable
     min_length: 5
     max_length: 10
+    predictable: false
+    change_policy: each_use
+- random_uuid:
+    name: random_uuid_variable
+    upper_case: false
     predictable: false
     change_policy: each_use
 - javascript:
@@ -223,6 +228,29 @@ random_string:
   description: MyRandomStringDescription
   min_length: 10
   max_length: 20
+  predictable: true
+  change_policy: each_use
+```
+
+## Random UUID variable
+A random UUID value.
+
+| Name         | Description                   | Accept variable | Required | Since |
+|:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
+| name         | The variable name             | -               | &#x2713; | 2026.3|
+| description  | The variable description      | -               | -        | 2026.3|
+| upper_case   | When true, the generated UUID is uppercase.</br>The default value is `false`. | -               | -        | 2026.3|
+| predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | -        | 2026.3|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_use`. | -               | -        | 2026.3|
+
+#### Example
+Defining a Random UUID variable.
+
+```yaml
+random_uuid:
+  name: random_uuid_variable
+  description: MyRandomUUIDDescription
+  upper_case: true
   predictable: true
   change_policy: each_use
 ```
