@@ -91,7 +91,9 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-stop-vu-only-required",
 			"test-stop-vu-required-and-optional",
 			"test-random-string-only-required",
-			"test-random-string-required-and-optional"
+			"test-random-string-required-and-optional",
+			"test-random-uuid-only-required",
+			"test-random-uuid-required-and-optional"
 	};
 
 	@Test
