@@ -27,12 +27,13 @@ import com.neotys.neoload.model.v3.validation.constraints.ValidSchemaVersion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Project.SCHEMA_VERSION, Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
+@JsonPropertyOrder({Project.SCHEMA, Project.SCHEMA_VERSION, Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
 @JsonSerialize(as = ImmutableProject.class)
 @JsonDeserialize(as = ImmutableProject.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface Project {
+	String SCHEMA = "$schema";
 	String SCHEMA_VERSION = "schemaVersion";
 	String DEFAULT_SCHEMA_VERSION = "3.0";
 	String NAME = "name";
@@ -43,6 +44,9 @@ public interface Project {
 	String POPULATIONS = "populations";
 	String SCENARIOS = "scenarios";
 	String PROJECT_SETTINGS = "project_settings";
+
+	@JsonProperty(SCHEMA)
+	Optional<String> getSchema();
 
 	@JsonProperty(SCHEMA_VERSION)
 	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = SchemaVersionDefaultFilter.class)
