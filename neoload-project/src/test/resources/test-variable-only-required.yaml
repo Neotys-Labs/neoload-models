@@ -49,6 +49,8 @@ variables:
     max_length: 20
     predictable: false
     change_policy: each_use
+- random_uuid:
+    name: MyRandomUUID
 - list:
     name: MyList
     column_names:
