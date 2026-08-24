@@ -1,0 +1,17 @@
+name: MyProject
+variables:
+- sql:
+    name: MySql
+    description: MySqlDescription
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mydb
+    login: login_admin
+    password: password_admin
+    query: "SELECT username, email FROM users"
+    column_names:
+    - username
+    - email
+    change_policy: each_user
+    scope: unique
+    order: sequential
+    out_of_value: stop_test
