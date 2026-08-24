@@ -44,6 +44,7 @@
 					{ "$ref": "#/definitions/variables/random_string" },
 					{ "$ref": "#/definitions/variables/random_uuid" },
 					{ "$ref": "#/definitions/variables/list" },
+					{ "$ref": "#/definitions/variables/sql" },
 					{ "$ref": "#/definitions/variables/javascript" },
 					{ "$ref": "#/definitions/variables/shared_queue" }
 				]
@@ -381,6 +382,32 @@
 							"start_from_line": {
 								"type": "integer",
 								"default": 1
+							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"order": { "$ref": "#/definitions/common/var_order" },
+							"out_of_value": { "$ref": "#/definitions/common/var_out_of_value" }
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"sql": {
+				"$id": "#/definitions/variables/sql",
+				"title": "SQL",
+				"type": "object",
+				"xrequired": ["url", "query"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"driver": { "$ref": "#/definitions/common/text" },
+							"url": { "$ref": "#/definitions/common/text" },
+							"login": { "$ref": "#/definitions/common/text" },
+							"password": { "$ref": "#/definitions/common/text" },
+							"query": { "$ref": "#/definitions/common/text" },
+							"column_names": {
+								"type": "array",
+								"items": { "type": "string" }
 							},
 							"scope": { "$ref": "#/definitions/common/var_scope" },
 							"order": { "$ref": "#/definitions/common/var_order" },

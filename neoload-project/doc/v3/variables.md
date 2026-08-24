@@ -7,7 +7,7 @@ They may be combined with other variables or with static content (e.g. `${produc
 Variables that does not exist in the project will be added.
 
 #### Example
-Defining 8 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable, a RandomUUID variable and a JavaScript variable.
+Defining 9 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable, a RandomUUID variable, a SQL variable and a JavaScript variable.
 
 ```yaml
 variables:
@@ -61,6 +61,18 @@ variables:
     upper_case: false
     predictable: false
     change_policy: each_use
+- sql:
+    name: sql_variable
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mydb
+    login: login_admin
+    password: password_admin
+    query: "SELECT username, email FROM users"
+    column_names: ["username", "email"]
+    change_policy: each_iteration
+    scope: global
+    order: any
+    out_of_value: cycle
 - javascript:
     name: My JSVar
     description: This is a js var
@@ -253,6 +265,42 @@ random_uuid:
   upper_case: true
   predictable: true
   change_policy: each_use
+```
+
+## SQL variable
+A list or table of values loaded from the result of a SQL query executed on a database.
+
+| Name         | Description                   | Accept variable | Required | Since |
+|:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
+| name         | The variable name             | -               | &#x2713; | 2026.3|
+| description  | The variable description      | -               | -        | 2026.3|
+| driver       | The JDBC driver class name of the database.</br>When not specified, the driver is derived from `url`. | -               | -        | 2026.3|
+| url          | The JDBC connection url of the database. | -               | &#x2713; | 2026.3|
+| login        | The login used to connect to the database. | -               | -        | 2026.3|
+| password     | The password used to connect to the database. | -               | -        | 2026.3|
+| query        | The SQL query returning the variable values. | -               | &#x2713; | 2026.3|
+| column_names | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | -               | -        | 2026.3|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
+| scope        | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        | 2026.3|
+| order        | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | -               | -        | 2026.3|
+| out_of_value | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | -               | -        | 2026.3|
+
+#### Example
+Defining a SQL variable.
+
+```yaml
+sql:
+  name: sql_variable
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/mydb
+  login: login_admin
+  password: password_admin
+  query: "SELECT username, email FROM users"
+  column_names: ["username", "email"]
+  change_policy: each_iteration
+  scope: global
+  order: any
+  out_of_value: cycle
 ```
 
 ## JavaScript variable
