@@ -274,7 +274,7 @@ A list or table of values loaded from the result of a SQL query executed on a da
 |:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
 | name         | The variable name             | -               | &#x2713; | 2026.3|
 | description  | The variable description      | -               | -        | 2026.3|
-| driver       | The JDBC driver class name of the database.</br>When not specified, the driver is derived from `url`. | -               | -        | 2026.3|
+| driver       | The JDBC driver class name of the database.</br>When not specified, the driver is derived from `url`, and it is required when `url` does not match a database known to NeoLoad. | -               | -        | 2026.3|
 | url          | The JDBC connection url of the database. | -               | &#x2713; | 2026.3|
 | login        | The login used to connect to the database. | -               | -        | 2026.3|
 | password     | The password used to connect to the database. | -               | -        | 2026.3|

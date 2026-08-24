@@ -10,8 +10,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.constraints.SqlVariableCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
+@SqlVariableCheck(groups={NeoLoad.class})
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutableSqlVariable.class)
 @JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, SqlVariable.DRIVER, SqlVariable.URL, SqlVariable.LOGIN, SqlVariable.PASSWORD,
