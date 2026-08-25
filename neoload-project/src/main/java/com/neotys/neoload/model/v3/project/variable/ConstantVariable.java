@@ -13,7 +13,7 @@ import org.immutables.value.Value;
 @JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, ConstantVariable.VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface ConstantVariable extends Variable {
+public interface ConstantVariable extends PolicyVariable {
 
 	String VALUE = "value";
 

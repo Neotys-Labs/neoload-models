@@ -18,7 +18,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 	Variable.CHANGE_POLICY, Variable.SCOPE, Variable.ORDER, Variable.OUT_OF_VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface ListVariable extends Variable {
+public interface ListVariable extends PolicyVariable {
 
 	String COLUMN_NAMES 		= "column_names";
 	String VALUES 				= "values";

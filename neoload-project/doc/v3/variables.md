@@ -7,13 +7,16 @@ They may be combined with other variables or with static content (e.g. `${produc
 Variables that does not exist in the project will be added.
 
 #### Example
-Defining 8 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable, a RandomUUID variable and a JavaScript variable.
+Defining 9 variables: a Constant variable, a Password variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable, a RandomUUID variable and a JavaScript variable.
 
 ```yaml
 variables:
 - constant:
     name: constant_variable
     value: 12345
+- password:
+    name: password_variable
+    value: "s3cr3t"
 - file:
     name: cities_file
     column_names: ["City", "Country", "Population", "Longitude", "Latitude"]
@@ -86,6 +89,27 @@ Defining a Constant variable.
 constant:
   name: constant_variable
   value: 12345
+```
+
+## Password variable
+An alphanumerical string whose value is a secret. In as-code YAML the value is stored as authored plaintext; NeoLoad encrypts it when the project is imported. Double quotes are recommended so YAML special characters in the secret are not interpreted.
+
+Password variables do not support `change_policy`, `scope`, `order`, or `out_of_value`.
+
+| Name        | Description                   | Accept variable | Required | Since |
+|:----------- |:----------------------------- |:---------------:|:--------:|:-----:|
+| name        | The variable name             | -               | &#x2713; | 2026.3|
+| description | The variable description      | -               | -        | 2026.3|
+| value       | The variable value. Prefer double quotes. | -    | &#x2713; | 2026.3|
+
+#### Example
+Defining a Password variable.
+
+```yaml
+password:
+  name: password_variable
+  description: MyPasswordDescription
+  value: "s3cr3t"
 ```
 
 ## File variable

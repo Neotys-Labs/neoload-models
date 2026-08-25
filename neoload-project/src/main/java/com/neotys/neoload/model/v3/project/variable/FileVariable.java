@@ -22,7 +22,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 	FileVariable.DELIMITER, FileVariable.PATH, Variable.CHANGE_POLICY, Variable.SCOPE, Variable.ORDER, Variable.OUT_OF_VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface FileVariable extends Variable {
+public interface FileVariable extends PolicyVariable {
 
 	String COLUMN_NAMES 				= "column_names";
 	String IS_FIRST_LINE_COLUMN_NAMES 	= "is_first_line_column_names";

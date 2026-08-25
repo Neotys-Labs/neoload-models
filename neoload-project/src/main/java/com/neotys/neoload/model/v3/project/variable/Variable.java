@@ -1,11 +1,9 @@
 package com.neotys.neoload.model.v3.project.variable;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.neotys.neoload.model.v3.project.Element;
-import org.immutables.value.Value;
 
 // Subtypes are mapped to the generated Immutable* classes (not the interfaces) so that the
 // polymorphic type id can be resolved at serialization time from the runtime object, which is
@@ -13,6 +11,7 @@ import org.immutables.value.Value;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 @JsonSubTypes(value = {
 		@JsonSubTypes.Type(value = ImmutableConstantVariable.class, name = "constant"),
+		@JsonSubTypes.Type(value = ImmutablePasswordVariable.class, name = "password"),
 		@JsonSubTypes.Type(value = ImmutableFileVariable.class, name = "file"),
 		@JsonSubTypes.Type(value = ImmutableCounterVariable.class, name = "counter"),
 		@JsonSubTypes.Type(value = ImmutableRandomNumberVariable.class, name = "random_number"),
@@ -71,35 +70,6 @@ public interface Variable extends Element {
 		STOP,
 		@JsonProperty("no_value_code")
 		NO_VALUE
-	}
-
-	// Each of the four properties below is written only when it differs from its default value.
-	@JsonProperty(CHANGE_POLICY)
-	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultChangePolicyFilter.class)
-	@Value.Default
-	default ChangePolicy getChangePolicy() {
-		return ChangePolicy.EACH_ITERATION;
-	}
-
-	@JsonProperty(SCOPE)
-	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultScopeFilter.class)
-	@Value.Default
-	default Scope getScope() {
-		return Scope.GLOBAL;
-	}
-
-	@JsonProperty(ORDER)
-	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultOrderFilter.class)
-	@Value.Default
-	default Order getOrder() {
-		return Order.ANY;
-	}
-
-	@JsonProperty(OUT_OF_VALUE)
-	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultOutOfValueFilter.class)
-	@Value.Default
-	default OutOfValue getOutOfValue() {
-		return OutOfValue.CYCLE;
 	}
 
 	// Jackson value filters excluding each property's default value from serialization:

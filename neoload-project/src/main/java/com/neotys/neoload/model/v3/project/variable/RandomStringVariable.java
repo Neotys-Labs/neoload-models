@@ -14,7 +14,7 @@ import org.immutables.value.Value;
 		RandomStringVariable.PREDICTABLE, Variable.CHANGE_POLICY, Variable.SCOPE, Variable.ORDER, Variable.OUT_OF_VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface RandomStringVariable extends Variable {
+public interface RandomStringVariable extends PolicyVariable {
 
 	String MIN_LENGTH 			= "min_length";
 	String MAX_LENGTH 			= "max_length";

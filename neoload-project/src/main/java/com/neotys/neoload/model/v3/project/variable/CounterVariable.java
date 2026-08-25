@@ -13,7 +13,7 @@ import org.immutables.value.Value;
 @JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, CounterVariable.START, CounterVariable.END, CounterVariable.INCREMENT})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface CounterVariable extends Variable {
+public interface CounterVariable extends PolicyVariable {
 
 	String START = "start";
 	String END = "end";

@@ -16,7 +16,7 @@ import org.immutables.value.Value;
 @SuppressWarnings("java:S2097")
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface RandomUUIDVariable extends Variable {
+public interface RandomUUIDVariable extends PolicyVariable {
 
 	String UPPER_CASE 			= "upper_case";
 	String PREDICTABLE 			= "predictable";

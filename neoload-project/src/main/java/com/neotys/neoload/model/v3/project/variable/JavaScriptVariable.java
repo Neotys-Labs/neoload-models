@@ -13,7 +13,7 @@ import org.immutables.value.Value;
 @JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, JavaScriptVariable.SCRIPT})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface JavaScriptVariable extends Variable {
+public interface JavaScriptVariable extends PolicyVariable {
 
 	String SCRIPT = "script";
 

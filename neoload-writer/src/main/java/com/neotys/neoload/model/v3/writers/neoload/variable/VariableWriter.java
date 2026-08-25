@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload.variable;
 
+import com.neotys.neoload.model.v3.project.variable.PolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 
@@ -12,7 +13,7 @@ public abstract class VariableWriter extends ElementWriter {
     public static final String XML_ATTR_RANGE = "range";
     public static final String XML_ATTR_WHEN_OUT_OF_VALUE = "whenOutOfValues";
 
-    protected VariableWriter(Variable variable) {
+    protected VariableWriter(PolicyVariable variable) {
     	super(variable);
 	}
 
@@ -46,7 +47,7 @@ public abstract class VariableWriter extends ElementWriter {
 	}
 
 	public void writeXML(final org.w3c.dom.Element currentElement) {
-		final Variable variable = (Variable) element;
+		final PolicyVariable variable = (PolicyVariable) element;
 
     	currentElement.setAttribute(XML_ATTR_NAME, element.getName());
 		currentElement.setAttribute(XML_ATTR_ORDER, Integer.toString(variable.getOrder() == Variable.Order.SEQUENTIAL ? 1 : 2));

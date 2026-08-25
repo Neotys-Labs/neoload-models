@@ -9,33 +9,19 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@JsonDeserialize(as = ImmutableRandomNumberVariable.class)
-@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, RandomNumberVariable.MIN, RandomNumberVariable.MAX, RandomNumberVariable.PREDICTABLE})
+@JsonDeserialize(as = ImmutablePasswordVariable.class)
+@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, PasswordVariable.VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface RandomNumberVariable extends PolicyVariable {
+public interface PasswordVariable extends Variable {
 
-	String MIN = "min";
-	String MAX = "max";
-	String PREDICTABLE = "predictable";
+	String VALUE = "value";
 
-	@JsonProperty(MIN)
+	@JsonProperty(VALUE)
 	@RequiredCheck(groups = {NeoLoad.class})
-	int getMin();
+	String getValue();
 
-	@JsonProperty(MAX)
-	@RequiredCheck(groups = {NeoLoad.class})
-	int getMax();
-
-	@JsonProperty(PREDICTABLE)
-	@RequiredCheck(groups = {NeoLoad.class})
-	@Value.Default
-	default boolean isPredictable() {
-		return false;
-	}
-
-
-	class Builder extends ImmutableRandomNumberVariable.Builder {
+	class Builder extends ImmutablePasswordVariable.Builder {
 	}
 
 	static Builder builder() {
