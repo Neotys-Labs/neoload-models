@@ -5,8 +5,8 @@ import static java.util.Optional.of;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.variable.ImmutableCSVDataSetModel.Builder;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueVariable.OutOfValue;
 import com.neotys.neoload.model.v3.project.variable.ScopeVariable.Scope;
-import com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue;
 import java.util.Optional;
 import org.immutables.value.Value;
 import org.slf4j.Logger;

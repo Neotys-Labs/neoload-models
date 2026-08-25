@@ -3,9 +3,9 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable.ChangePolicy.*;
+import static com.neotys.neoload.model.v3.project.variable.OutOfValueVariable.OutOfValue.*;
 import static com.neotys.neoload.model.v3.project.variable.ScopeVariable.Scope.*;
 import static com.neotys.neoload.model.v3.project.variable.Variable.Order.*;
-import static com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue.*;
 import static junit.framework.TestCase.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
