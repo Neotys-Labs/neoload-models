@@ -1,14 +1,14 @@
 package com.neotys.neoload.model.v3.project.variable;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.neotys.neoload.model.v3.project.variable.Variable.ChangePolicy;
-import com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue;
-import com.neotys.neoload.model.v3.project.variable.Variable.Order;
-import com.neotys.neoload.model.v3.project.variable.Variable.Scope;
-import org.junit.Test;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable.ChangePolicy;
+import com.neotys.neoload.model.v3.project.variable.Variable.Order;
+import com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue;
+import com.neotys.neoload.model.v3.project.variable.Variable.Scope;
+import org.junit.Test;
 
 /**
  * Pins the accepted YAML/JSON vocabulary of the {@link Variable} enums: both the exact set of

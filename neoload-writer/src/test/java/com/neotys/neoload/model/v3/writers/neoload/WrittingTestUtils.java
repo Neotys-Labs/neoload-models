@@ -4,13 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.util.Parameter;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,9 +20,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class WrittingTestUtils {
     private WrittingTestUtils() {
@@ -418,7 +418,7 @@ public class WrittingTestUtils {
             .path("path_du_fichier")
             .startFromLine(2)
             .order(Variable.Order.SEQUENTIAL)
-            .changePolicy(Variable.ChangePolicy.EACH_ITERATION)
+            .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_ITERATION)
             .isFirstLineColumnNames(true)
             .scope(Variable.Scope.GLOBAL)
             .columnNames(COLUMNS)
@@ -431,7 +431,7 @@ public class WrittingTestUtils {
             .path("path_du_fichier")
             .startFromLine(2)
             .order(Variable.Order.RANDOM)
-            .changePolicy(Variable.ChangePolicy.EACH_USE)
+            .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USE)
             .isFirstLineColumnNames(true)
             .scope(Variable.Scope.LOCAL)
             .columnNames(COLUMNS)
@@ -444,7 +444,7 @@ public class WrittingTestUtils {
             .path("path_du_fichier")
             .startFromLine(2)
             .order(Variable.Order.SEQUENTIAL)
-            .changePolicy(Variable.ChangePolicy.EACH_USER)
+            .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USER)
             .isFirstLineColumnNames(true)
             .scope(Variable.Scope.UNIQUE)
             .columnNames(COLUMNS)

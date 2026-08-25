@@ -10,10 +10,11 @@ import org.immutables.value.Value;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutableRandomNumberVariable.class)
-@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, RandomNumberVariable.MIN, RandomNumberVariable.MAX, RandomNumberVariable.PREDICTABLE})
+@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, RandomNumberVariable.MIN, RandomNumberVariable.MAX, RandomNumberVariable.PREDICTABLE,
+	ChangePolicyVariable.CHANGE_POLICY})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface RandomNumberVariable extends Variable {
+public interface RandomNumberVariable extends ChangePolicyVariable {
 
 	String MIN = "min";
 	String MAX = "max";

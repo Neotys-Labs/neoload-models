@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload.variable;
 
 import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.CounterVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
@@ -20,7 +21,7 @@ public class CounterVariableTest {
             .end(16)
             .increment(2)
             .scope(Variable.Scope.GLOBAL)
-            .changePolicy(Variable.ChangePolicy.EACH_USE)
+            .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USE)
             .outOfValue(Variable.OutOfValue.STOP)
             .build();
 

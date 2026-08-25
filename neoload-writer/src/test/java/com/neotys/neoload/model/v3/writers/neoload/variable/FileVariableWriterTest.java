@@ -1,21 +1,20 @@
 package com.neotys.neoload.model.v3.writers.neoload.variable;
 
 import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+import javax.xml.parsers.ParserConfigurationException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
-
 
 public class FileVariableWriterTest {
 	
@@ -80,7 +79,7 @@ public class FileVariableWriterTest {
 				.path("src/test/resources/com/neotys/neoload/model/v3/writers/neoload/filevariable.csv")
 				.startFromLine(1)
 				.order(Variable.Order.SEQUENTIAL)
-				.changePolicy(Variable.ChangePolicy.EACH_USER)
+				.changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USER)
 				.isFirstLineColumnNames(true)
 				.scope(Variable.Scope.UNIQUE)
 				.outOfValue(Variable.OutOfValue.CYCLE)
@@ -114,7 +113,7 @@ public class FileVariableWriterTest {
 				.path("INVALIDFILE.csv")
 				.startFromLine(1)
 				.order(Variable.Order.SEQUENTIAL)
-				.changePolicy(Variable.ChangePolicy.EACH_USER)
+				.changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USER)
 				.isFirstLineColumnNames(true)
 				.scope(Variable.Scope.UNIQUE)
 				.outOfValue(Variable.OutOfValue.CYCLE)
