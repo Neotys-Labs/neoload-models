@@ -5,11 +5,9 @@ import com.neotys.neoload.model.v3.writers.neoload.population.PopulationWriter;
 import com.neotys.neoload.model.v3.writers.neoload.scenario.ScenarioWriter;
 import com.neotys.neoload.model.v3.writers.neoload.server.ServerWriter;
 import com.neotys.neoload.model.v3.writers.neoload.userpath.UserPathWriter;
-import com.neotys.neoload.model.v3.writers.neoload.variable.VariableWriter;
+import java.util.UUID;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.UUID;
 
 public class ProjectWriter {
 
@@ -41,7 +39,7 @@ public class ProjectWriter {
         repositoryDocument.appendChild(repositoryElement);
         project.getUserPaths().forEach(userPath -> UserPathWriter.of(userPath).writeXML(repositoryDocument, repositoryElement, outputFolder));
         project.getServers().forEach(serv -> ServerWriter.of(serv).writeXML(repositoryDocument, repositoryElement));
-        project.getVariables().forEach(var -> WriterUtils.<VariableWriter>getWriterFor(var).writeXML(repositoryDocument, repositoryElement, outputFolder));
+        project.getVariables().forEach(var -> WriterUtils.<ElementWriter>getWriterFor(var).writeXML(repositoryDocument, repositoryElement, outputFolder));
         project.getPopulations().forEach(pop -> PopulationWriter.of(pop).writeXML(repositoryDocument, repositoryElement));
         project.getDependencies().forEach(dependency -> DependencyWriter.of(dependency).writeXML(repositoryDocument, repositoryElement, outputFolder));
         writeZoneAndLG(repositoryDocument, repositoryElement);

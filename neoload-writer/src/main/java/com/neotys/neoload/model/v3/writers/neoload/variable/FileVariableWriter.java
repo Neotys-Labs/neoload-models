@@ -2,11 +2,9 @@ package com.neotys.neoload.model.v3.writers.neoload.variable;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
+import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.util.RegExpUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-
+import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,8 +15,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
-public class FileVariableWriter extends VariableWriter {
+public class FileVariableWriter extends ElementWriter {
 
 	private static final String VARIABLE_DIRECTORY = "variables";
 
@@ -32,20 +33,24 @@ public class FileVariableWriter extends VariableWriter {
 	private static final String XML_TAG_COLOMN = "column";
 	private static final String XML_COLOMN_ATTR_NAME = "name";
 	private static final String XML_COLOMN_ATTR_NUMBER = "number";
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(FileVariableWriter.class);
-    
+
 	public FileVariableWriter(FileVariable variable) {
 		super(variable);
 	}
-	
-	
+
+
 	@Override
 	public void writeXML(final Document document, final org.w3c.dom.Element currentElement, final String outputFolder) {
 		org.w3c.dom.Element xmlVariable = document.createElement(XML_TAG_NAME);
-		super.writeXML(xmlVariable) ;
 
 		FileVariable fileVariable = (FileVariable) element;
+		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_NAME, element.getName());
+		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_ORDER, Integer.toString(fileVariable.getOrder() == Variable.Order.SEQUENTIAL ? 1 : 2));
+		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_POLICY, Integer.toString(fileVariable.getChangePolicy().getPolicyCode()));
+		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_RANGE, Integer.toString(fileVariable.getScope().getScopeCode()));
+		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_WHEN_OUT_OF_VALUE, fileVariable.getOutOfValue().getWhenOutOfValuesCode());
 		xmlVariable.setAttribute(XML_ATTR_DELIMITER, fileVariable.getDelimiter());
 		xmlVariable.setAttribute(XML_ATTR_USE_FIRST_LINE, Boolean.toString(fileVariable.isFirstLineColumnNames()));
 		xmlVariable.setAttribute(XML_ATTR_OFFSET, Integer.toString(fileVariable.getStartFromLine()));

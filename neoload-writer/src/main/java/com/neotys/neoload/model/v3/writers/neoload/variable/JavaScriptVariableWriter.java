@@ -2,16 +2,16 @@ package com.neotys.neoload.model.v3.writers.neoload.variable;
 
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
+import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-
-public class JavaScriptVariableWriter extends VariableWriter {
+public class JavaScriptVariableWriter extends ElementWriter {
 
 	private static final String SCRIPTS_FOLDER = "scripts";
 
@@ -48,8 +48,10 @@ public class JavaScriptVariableWriter extends VariableWriter {
     public void writeXML(final Document document, final org.w3c.dom.Element currentElement, final String outputFolder) {
 
         org.w3c.dom.Element xmlVariable = document.createElement(XML_TAG_NAME);
-        super.writeXML(xmlVariable);
-		super.writeXML(document, xmlVariable, outputFolder);
+        super.writeXML(document, xmlVariable, outputFolder);
+
+        final JavaScriptVariable variable = (JavaScriptVariable) element;
+        xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_POLICY, Integer.toString(variable.getChangePolicy().getPolicyCode()));
 
         xmlVariable.setAttribute(XML_ATTR_OFFSET, Integer.toString(DEFAULT_OFFSET_VALUE));
 
@@ -61,8 +63,6 @@ public class JavaScriptVariableWriter extends VariableWriter {
 
 		//generate Script node
 		xmlVariable.appendChild(writeJSElement(document, outputFolder));
-
-		writeDescription(document, xmlVariable);
 
         currentElement.appendChild(xmlVariable);
     }
