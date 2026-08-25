@@ -1,17 +1,17 @@
 package com.neotys.neoload.model.readers.jmeter.variable;
 
 import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
+import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.variable.CounterVariable;
+import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
+import java.util.List;
+import java.util.function.BiFunction;
 import org.apache.jmeter.modifiers.CounterConfig;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.function.BiFunction;
 
 /**
  * This class convert CounterElement of JMeter into Counter Variable of Neoload
@@ -89,9 +89,9 @@ public class CounterConverter implements BiFunction<CounterConfig, HashTree, Lis
 
     private void checkScope(final CounterConfig counterConfig, final CounterVariable.Builder counterBuilder) {
         if (counterConfig.isPerUser()) {
-            counterBuilder.scope(Variable.Scope.LOCAL);
+            counterBuilder.scope(ScopeVariable.Scope.LOCAL);
         } else {
-            counterBuilder.scope(Variable.Scope.GLOBAL);
+            counterBuilder.scope(ScopeVariable.Scope.GLOBAL);
         }
     }
 

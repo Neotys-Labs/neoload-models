@@ -44,7 +44,7 @@ public class WriterUtilsTest {
                 .isFirstLineColumnNames(false)
                 .columnNames(ImmutableList.of("col1"))
                 .delimiter(",")
-                .scope(Variable.Scope.LOCAL)
+                .scope(ScopeVariable.Scope.LOCAL)
                 .startFromLine(0)
                 .build();
         assertThat(WriterUtils.<ElementWriter>getWriterFor(var).getClass().getSimpleName()).isEqualTo("FileVariableWriter");

@@ -7,6 +7,7 @@ import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
+import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.util.Parameter;
 import java.io.StringWriter;
@@ -420,7 +421,7 @@ public class WrittingTestUtils {
             .order(Variable.Order.SEQUENTIAL)
             .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_ITERATION)
             .isFirstLineColumnNames(true)
-            .scope(Variable.Scope.GLOBAL)
+            .scope(ScopeVariable.Scope.GLOBAL)
             .columnNames(COLUMNS)
             .outOfValue(Variable.OutOfValue.CYCLE)
             .build();
@@ -433,7 +434,7 @@ public class WrittingTestUtils {
             .order(Variable.Order.RANDOM)
             .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USE)
             .isFirstLineColumnNames(true)
-            .scope(Variable.Scope.LOCAL)
+            .scope(ScopeVariable.Scope.LOCAL)
             .columnNames(COLUMNS)
             .outOfValue(Variable.OutOfValue.STOP)
             .build();
@@ -446,7 +447,7 @@ public class WrittingTestUtils {
             .order(Variable.Order.SEQUENTIAL)
             .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USER)
             .isFirstLineColumnNames(true)
-            .scope(Variable.Scope.UNIQUE)
+            .scope(ScopeVariable.Scope.UNIQUE)
             .columnNames(COLUMNS)
             .outOfValue(Variable.OutOfValue.CYCLE)
             .build();

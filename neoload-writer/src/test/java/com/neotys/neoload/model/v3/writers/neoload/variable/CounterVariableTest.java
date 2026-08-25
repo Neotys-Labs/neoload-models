@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.writers.neoload.variable;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.CounterVariable;
+import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,7 +21,7 @@ public class CounterVariableTest {
             .start(7)
             .end(16)
             .increment(2)
-            .scope(Variable.Scope.GLOBAL)
+            .scope(ScopeVariable.Scope.GLOBAL)
             .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USE)
             .outOfValue(Variable.OutOfValue.STOP)
             .build();

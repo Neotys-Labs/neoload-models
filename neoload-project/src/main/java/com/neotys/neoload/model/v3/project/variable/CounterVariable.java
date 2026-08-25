@@ -11,10 +11,10 @@ import org.immutables.value.Value;
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutableCounterVariable.class)
 @JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, CounterVariable.START, CounterVariable.END, CounterVariable.INCREMENT,
-	ChangePolicyVariable.CHANGE_POLICY})
+	ChangePolicyVariable.CHANGE_POLICY, ScopeVariable.SCOPE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface CounterVariable extends ChangePolicyVariable {
+public interface CounterVariable extends ChangePolicyVariable, ScopeVariable {
 
 	String START = "start";
 	String END = "end";
