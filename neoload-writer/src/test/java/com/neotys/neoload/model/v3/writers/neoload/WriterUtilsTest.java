@@ -39,7 +39,7 @@ public class WriterUtilsTest {
         FileVariable var = new FileVariable.Builder()
                 .name("TEST")
                 .path("myfile")
-                .changePolicy(Variable.ChangePolicy.EACH_USE)
+                .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USE)
                 .order(Variable.Order.SEQUENTIAL)
                 .isFirstLineColumnNames(false)
                 .columnNames(ImmutableList.of("col1"))

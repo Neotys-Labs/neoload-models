@@ -25,35 +25,9 @@ import org.immutables.value.Value;
 @SuppressWarnings("java:S2097")
 public interface Variable extends Element {
 
-	String CHANGE_POLICY 				= "change_policy";
 	String SCOPE 						= "scope";
 	String ORDER 						= "order";
 	String OUT_OF_VALUE 				= "out_of_value";
-
-	enum ChangePolicy {
-		@JsonProperty("each_use")
-		EACH_USE,
-		@JsonProperty("each_request")
-		EACH_REQUEST,
-		@JsonProperty("each_page")
-		EACH_PAGE,
-		@JsonProperty("each_user")
-		EACH_USER,
-		@JsonProperty("each_iteration")
-		EACH_ITERATION;
-
-		// NeoLoad legacy XML "policy" attribute code for this change policy.
-		public int getPolicyCode() {
-			switch (this) {
-				case EACH_USE : return 1;
-				case EACH_REQUEST : return 2;
-				case EACH_PAGE : return 3;
-				case EACH_USER : return 4;
-				case EACH_ITERATION : return 5;
-				default : return 1;
-			}
-		}
-	}
 
 	enum Scope {
 		@JsonProperty("unique")
@@ -102,14 +76,7 @@ public interface Variable extends Element {
 		}
 	}
 
-	// Each of the four properties below is written only when it differs from its default value.
-	@JsonProperty(CHANGE_POLICY)
-	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultChangePolicyFilter.class)
-	@Value.Default
-	default ChangePolicy getChangePolicy() {
-		return ChangePolicy.EACH_ITERATION;
-	}
-
+	// Each of the three properties below is written only when it differs from its default value.
 	@JsonProperty(SCOPE)
 	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultScopeFilter.class)
 	@Value.Default
@@ -133,18 +100,6 @@ public interface Variable extends Element {
 
 	// Jackson value filters excluding each property's default value from serialization:
 	// a property is omitted when the filter's equals(value) returns true.
-	class DefaultChangePolicyFilter {
-		@Override
-		public boolean equals(final Object value) {
-			return ChangePolicy.EACH_ITERATION.equals(value);
-		}
-
-		@Override
-		public int hashCode() {
-			return ChangePolicy.EACH_ITERATION.hashCode();
-		}
-	}
-
 	class DefaultScopeFilter {
 		@Override
 		public boolean equals(final Object value) {

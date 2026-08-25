@@ -10,10 +10,10 @@ import org.immutables.value.Value;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutableJavaScriptVariable.class)
-@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, JavaScriptVariable.SCRIPT})
+@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, JavaScriptVariable.SCRIPT, ChangePolicyVariable.CHANGE_POLICY})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface JavaScriptVariable extends Variable {
+public interface JavaScriptVariable extends ChangePolicyVariable {
 
 	String SCRIPT = "script";
 

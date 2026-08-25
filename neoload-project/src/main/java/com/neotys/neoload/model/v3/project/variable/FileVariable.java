@@ -1,11 +1,5 @@
 package com.neotys.neoload.model.v3.project.variable;
 
-import java.util.List;
-
-import javax.validation.constraints.Size;
-
-import org.immutables.value.Value;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -14,15 +8,18 @@ import com.neotys.neoload.model.v3.validation.constraints.FileVariableCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
+import javax.validation.constraints.Size;
+import org.immutables.value.Value;
 
 @FileVariableCheck(groups={NeoLoad.class})
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutableFileVariable.class)
 @JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, FileVariable.COLUMN_NAMES, FileVariable.IS_FIRST_LINE_COLUMN_NAMES, FileVariable.START_FROM_LINE,
-	FileVariable.DELIMITER, FileVariable.PATH, Variable.CHANGE_POLICY, Variable.SCOPE, Variable.ORDER, Variable.OUT_OF_VALUE})
+	FileVariable.DELIMITER, FileVariable.PATH, ChangePolicyVariable.CHANGE_POLICY, Variable.SCOPE, Variable.ORDER, Variable.OUT_OF_VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface FileVariable extends Variable {
+public interface FileVariable extends ChangePolicyVariable {
 
 	String COLUMN_NAMES 				= "column_names";
 	String IS_FIRST_LINE_COLUMN_NAMES 	= "is_first_line_column_names";
