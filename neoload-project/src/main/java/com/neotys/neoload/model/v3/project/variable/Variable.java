@@ -40,7 +40,19 @@ public interface Variable extends Element {
 		@JsonProperty("each_user")
 		EACH_USER,
 		@JsonProperty("each_iteration")
-		EACH_ITERATION
+		EACH_ITERATION;
+
+		// NeoLoad legacy XML "policy" attribute code for this change policy.
+		public int getPolicyCode() {
+			switch (this) {
+				case EACH_USE : return 1;
+				case EACH_REQUEST : return 2;
+				case EACH_PAGE : return 3;
+				case EACH_USER : return 4;
+				case EACH_ITERATION : return 5;
+				default : return 1;
+			}
+		}
 	}
 
 	enum Scope {
@@ -49,7 +61,17 @@ public interface Variable extends Element {
 		@JsonProperty("global")
 		GLOBAL,
 		@JsonProperty("local")
-		LOCAL
+		LOCAL;
+
+		// NeoLoad legacy XML "range" attribute code for this scope.
+		public int getScopeCode() {
+			switch (this) {
+				case UNIQUE : return 4;
+				case GLOBAL : return 1;
+				case LOCAL : return 2;
+				default : return 1;
+			}
+		}
 	}
 
 	enum Order {
@@ -67,7 +89,17 @@ public interface Variable extends Element {
 		@JsonProperty("stop_test")
 		STOP,
 		@JsonProperty("no_value_code")
-		NO_VALUE
+		NO_VALUE;
+
+		// NeoLoad legacy XML "whenOutOfValues" attribute code for this behaviour.
+		public String getWhenOutOfValuesCode() {
+			switch (this) {
+				case CYCLE : return "CYCLE_VALUES";
+				case STOP : return "STOP_TEST";
+				case NO_VALUE : return "DEFAULT_VALUE";
+				default : return "CYCLE_VALUES";
+			}
+		}
 	}
 
 	// Each of the four properties below is written only when it differs from its default value.

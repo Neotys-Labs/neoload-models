@@ -1,19 +1,18 @@
 package com.neotys.neoload.model.v3.writers.neoload.variable;
 
-import com.google.common.io.Files;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils.*;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+
+import com.google.common.io.Files;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class JavaScriptVariableWriterTest {
 
@@ -50,9 +49,9 @@ public class JavaScriptVariableWriterTest {
         assertTrue(matcher.find());
         final String ts = matcher.group();
 
-        final String recomposedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><test-root><variable-javascript name=\"myVar\" offset=\"1\" order=\"2\" policy=\"5\" range=\"1\" uid=\""
+        final String recomposedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><test-root><variable-javascript name=\"myVar\" offset=\"1\" policy=\"5\" uid=\""
                 + uid0
-                + "\" whenOutOfValues=\"CYCLE_VALUES\"><column name=\"col_0\" number=\"0\"/><script filename=\"scripts/jsVariable_"
+                + "\"><column name=\"col_0\" number=\"0\"/><script filename=\"scripts/jsVariable_"
                 + uidjs
                 + ".js\" name=\"myVar\" ts=\""
                 + ts

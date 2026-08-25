@@ -1,15 +1,14 @@
 package com.neotys.neoload.model.v3.writers.neoload;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.server.ImmutableServer;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.variable.*;
 import com.neotys.neoload.model.v3.writers.neoload.server.ServerWriter;
-import com.neotys.neoload.model.v3.writers.neoload.variable.VariableWriter;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 public class WriterUtilsTest {
 
@@ -48,14 +47,11 @@ public class WriterUtilsTest {
                 .scope(Variable.Scope.LOCAL)
                 .startFromLine(0)
                 .build();
-        assertThat(WriterUtils.<VariableWriter>getWriterFor(var).getClass().getSimpleName()).isEqualTo("FileVariableWriter");
+        assertThat(WriterUtils.<ElementWriter>getWriterFor(var).getClass().getSimpleName()).isEqualTo("FileVariableWriter");
 
         ConstantVariable constantVariable = new ConstantVariable.Builder()
                 .name("TEST")
                 .value("3")
-                .changePolicy(Variable.ChangePolicy.EACH_USER)
-                .order(Variable.Order.SEQUENTIAL)
-                .scope(Variable.Scope.LOCAL)
                 .build();
         assertThat(WriterUtils.getWriterFor(constantVariable).getClass().getSimpleName()).isEqualTo("ConstantVariableWriter");
     }
