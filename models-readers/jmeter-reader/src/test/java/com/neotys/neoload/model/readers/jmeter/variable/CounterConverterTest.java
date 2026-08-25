@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.variable.CounterVariable;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueVariable;
 import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class CounterConverterTest {
                 .end(Integer.parseInt(counterConfig.getEndAsString()))
                 .start(Integer.parseInt(counterConfig.getStartAsString()))
                 .scope(ScopeVariable.Scope.LOCAL)
-                .outOfValue(Variable.OutOfValue.CYCLE);
+                .outOfValue(OutOfValueVariable.OutOfValue.CYCLE);
         expected.add(counterBuilder.build());
         assertEquals(result, expected);
     }
@@ -70,7 +71,7 @@ public class CounterConverterTest {
             .end(Integer.parseInt(counterConfig.getEndAsString()))
             .start(Integer.parseInt(counterConfig.getStartAsString()))
             .scope(ScopeVariable.Scope.GLOBAL)
-            .outOfValue(Variable.OutOfValue.CYCLE);
+            .outOfValue(OutOfValueVariable.OutOfValue.CYCLE);
     expected.add(counterBuilder.build());
     assertEquals(result, expected);
     }

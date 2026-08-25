@@ -7,6 +7,7 @@ import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueVariable;
 import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.util.Parameter;
@@ -423,7 +424,7 @@ public class WrittingTestUtils {
             .isFirstLineColumnNames(true)
             .scope(ScopeVariable.Scope.GLOBAL)
             .columnNames(COLUMNS)
-            .outOfValue(Variable.OutOfValue.CYCLE)
+            .outOfValue(OutOfValueVariable.OutOfValue.CYCLE)
             .build();
 
     public static final FileVariable VARIABLE_TEST2 = FileVariable.builder()
@@ -436,7 +437,7 @@ public class WrittingTestUtils {
             .isFirstLineColumnNames(true)
             .scope(ScopeVariable.Scope.LOCAL)
             .columnNames(COLUMNS)
-            .outOfValue(Variable.OutOfValue.STOP)
+            .outOfValue(OutOfValueVariable.OutOfValue.STOP)
             .build();
 
     public static final FileVariable VARIABLE_TEST3 = FileVariable.builder()
@@ -449,7 +450,7 @@ public class WrittingTestUtils {
             .isFirstLineColumnNames(true)
             .scope(ScopeVariable.Scope.UNIQUE)
             .columnNames(COLUMNS)
-            .outOfValue(Variable.OutOfValue.CYCLE)
+            .outOfValue(OutOfValueVariable.OutOfValue.CYCLE)
             .build();
 
     public static Document generateEmptyDocument() throws ParserConfigurationException {

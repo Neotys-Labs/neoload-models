@@ -19,14 +19,13 @@ import org.immutables.value.Value;
 		@JsonSubTypes.Type(value = ImmutableJavaScriptVariable.class, name = "javascript")
 
 })
-// S2097 suppressed: the nested Jackson value-filter classes override equals(Object) to compare the
-// property value (not another filter instance), which is how the CUSTOM value filter selects the default
-// value to omit; a real class check would always be false and defeat the omission.
+// S2097 suppressed: DefaultOrderFilter overrides equals(Object) to compare the property value
+// (not another filter instance), which is how the CUSTOM value filter selects the default value
+// to omit; a real class check would always be false and defeat the omission.
 @SuppressWarnings("java:S2097")
 public interface Variable extends Element {
 
-	String ORDER 						= "order";
-	String OUT_OF_VALUE 				= "out_of_value";
+	String ORDER = "order";
 
 	enum Order {
 		@JsonProperty("sequential")
@@ -37,26 +36,7 @@ public interface Variable extends Element {
 		ANY
 	}
 
-	enum OutOfValue {
-		@JsonProperty("cycle")
-		CYCLE,
-		@JsonProperty("stop_test")
-		STOP,
-		@JsonProperty("no_value_code")
-		NO_VALUE;
-
-		// NeoLoad legacy XML "whenOutOfValues" attribute code for this behaviour.
-		public String getWhenOutOfValuesCode() {
-			switch (this) {
-				case CYCLE : return "CYCLE_VALUES";
-				case STOP : return "STOP_TEST";
-				case NO_VALUE : return "DEFAULT_VALUE";
-				default : return "CYCLE_VALUES";
-			}
-		}
-	}
-
-	// Each of the two properties below is written only when it differs from its default value.
+	// Written only when it differs from its default value.
 	@JsonProperty(ORDER)
 	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultOrderFilter.class)
 	@Value.Default
@@ -64,15 +44,6 @@ public interface Variable extends Element {
 		return Order.ANY;
 	}
 
-	@JsonProperty(OUT_OF_VALUE)
-	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultOutOfValueFilter.class)
-	@Value.Default
-	default OutOfValue getOutOfValue() {
-		return OutOfValue.CYCLE;
-	}
-
-	// Jackson value filters excluding each property's default value from serialization:
-	// a property is omitted when the filter's equals(value) returns true.
 	class DefaultOrderFilter {
 		@Override
 		public boolean equals(final Object value) {
@@ -82,18 +53,6 @@ public interface Variable extends Element {
 		@Override
 		public int hashCode() {
 			return Order.ANY.hashCode();
-		}
-	}
-
-	class DefaultOutOfValueFilter {
-		@Override
-		public boolean equals(final Object value) {
-			return OutOfValue.CYCLE.equals(value);
-		}
-
-		@Override
-		public int hashCode() {
-			return OutOfValue.CYCLE.hashCode();
 		}
 	}
 }

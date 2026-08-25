@@ -5,9 +5,9 @@ import static org.junit.Assert.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable.ChangePolicy;
+import com.neotys.neoload.model.v3.project.variable.OutOfValueVariable.OutOfValue;
 import com.neotys.neoload.model.v3.project.variable.ScopeVariable.Scope;
 import com.neotys.neoload.model.v3.project.variable.Variable.Order;
-import com.neotys.neoload.model.v3.project.variable.Variable.OutOfValue;
 import org.junit.Test;
 
 /**
