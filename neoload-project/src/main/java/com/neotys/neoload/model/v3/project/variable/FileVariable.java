@@ -16,10 +16,10 @@ import org.immutables.value.Value;
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 @JsonDeserialize(as = ImmutableFileVariable.class)
 @JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, FileVariable.COLUMN_NAMES, FileVariable.IS_FIRST_LINE_COLUMN_NAMES, FileVariable.START_FROM_LINE,
-	FileVariable.DELIMITER, FileVariable.PATH, ChangePolicyVariable.CHANGE_POLICY, Variable.SCOPE, Variable.ORDER, Variable.OUT_OF_VALUE})
+	FileVariable.DELIMITER, FileVariable.PATH, ChangePolicyVariable.CHANGE_POLICY, ScopeVariable.SCOPE, Variable.ORDER, Variable.OUT_OF_VALUE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface FileVariable extends ChangePolicyVariable {
+public interface FileVariable extends ChangePolicyVariable, ScopeVariable {
 
 	String COLUMN_NAMES 				= "column_names";
 	String IS_FIRST_LINE_COLUMN_NAMES 	= "is_first_line_column_names";

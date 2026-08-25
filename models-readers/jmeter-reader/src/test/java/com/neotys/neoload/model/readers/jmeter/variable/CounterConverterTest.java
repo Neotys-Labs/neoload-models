@@ -1,18 +1,18 @@
 package com.neotys.neoload.model.readers.jmeter.variable;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.variable.CounterVariable;
+import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jmeter.modifiers.CounterConfig;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class CounterConverterTest {
     private TestEventListener spy;
@@ -44,7 +44,7 @@ public class CounterConverterTest {
                 .increment(Integer.parseInt(counterConfig.getIncrementAsString()))
                 .end(Integer.parseInt(counterConfig.getEndAsString()))
                 .start(Integer.parseInt(counterConfig.getStartAsString()))
-                .scope(Variable.Scope.LOCAL)
+                .scope(ScopeVariable.Scope.LOCAL)
                 .outOfValue(Variable.OutOfValue.CYCLE);
         expected.add(counterBuilder.build());
         assertEquals(result, expected);
@@ -69,7 +69,7 @@ public class CounterConverterTest {
             .increment(Integer.parseInt(counterConfig.getIncrementAsString()))
             .end(Integer.parseInt(counterConfig.getEndAsString()))
             .start(Integer.parseInt(counterConfig.getStartAsString()))
-            .scope(Variable.Scope.GLOBAL)
+            .scope(ScopeVariable.Scope.GLOBAL)
             .outOfValue(Variable.OutOfValue.CYCLE);
     expected.add(counterBuilder.build());
     assertEquals(result, expected);

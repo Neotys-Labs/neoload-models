@@ -25,28 +25,8 @@ import org.immutables.value.Value;
 @SuppressWarnings("java:S2097")
 public interface Variable extends Element {
 
-	String SCOPE 						= "scope";
 	String ORDER 						= "order";
 	String OUT_OF_VALUE 				= "out_of_value";
-
-	enum Scope {
-		@JsonProperty("unique")
-		UNIQUE,
-		@JsonProperty("global")
-		GLOBAL,
-		@JsonProperty("local")
-		LOCAL;
-
-		// NeoLoad legacy XML "range" attribute code for this scope.
-		public int getScopeCode() {
-			switch (this) {
-				case UNIQUE : return 4;
-				case GLOBAL : return 1;
-				case LOCAL : return 2;
-				default : return 1;
-			}
-		}
-	}
 
 	enum Order {
 		@JsonProperty("sequential")
@@ -76,14 +56,7 @@ public interface Variable extends Element {
 		}
 	}
 
-	// Each of the three properties below is written only when it differs from its default value.
-	@JsonProperty(SCOPE)
-	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultScopeFilter.class)
-	@Value.Default
-	default Scope getScope() {
-		return Scope.GLOBAL;
-	}
-
+	// Each of the two properties below is written only when it differs from its default value.
 	@JsonProperty(ORDER)
 	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultOrderFilter.class)
 	@Value.Default
@@ -100,18 +73,6 @@ public interface Variable extends Element {
 
 	// Jackson value filters excluding each property's default value from serialization:
 	// a property is omitted when the filter's equals(value) returns true.
-	class DefaultScopeFilter {
-		@Override
-		public boolean equals(final Object value) {
-			return Scope.GLOBAL.equals(value);
-		}
-
-		@Override
-		public int hashCode() {
-			return Scope.GLOBAL.hashCode();
-		}
-	}
-
 	class DefaultOrderFilter {
 		@Override
 		public boolean equals(final Object value) {

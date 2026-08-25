@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.writers.neoload.variable;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
+import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 import java.io.File;
@@ -81,7 +82,7 @@ public class FileVariableWriterTest {
 				.order(Variable.Order.SEQUENTIAL)
 				.changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USER)
 				.isFirstLineColumnNames(true)
-				.scope(Variable.Scope.UNIQUE)
+				.scope(ScopeVariable.Scope.UNIQUE)
 				.outOfValue(Variable.OutOfValue.CYCLE)
 				.build();
 
@@ -115,7 +116,7 @@ public class FileVariableWriterTest {
 				.order(Variable.Order.SEQUENTIAL)
 				.changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USER)
 				.isFirstLineColumnNames(true)
-				.scope(Variable.Scope.UNIQUE)
+				.scope(ScopeVariable.Scope.UNIQUE)
 				.outOfValue(Variable.OutOfValue.CYCLE)
 				.build();
 
