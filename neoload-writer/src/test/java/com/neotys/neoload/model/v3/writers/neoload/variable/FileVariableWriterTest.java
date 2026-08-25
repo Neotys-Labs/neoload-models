@@ -5,7 +5,6 @@ import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.OutOfValueVariable;
 import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
-import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +79,7 @@ public class FileVariableWriterTest {
 				.delimiter(";")
 				.path("src/test/resources/com/neotys/neoload/model/v3/writers/neoload/filevariable.csv")
 				.startFromLine(1)
-				.order(Variable.Order.SEQUENTIAL)
+				.order(FileVariable.Order.SEQUENTIAL)
 				.changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USER)
 				.isFirstLineColumnNames(true)
 				.scope(ScopeVariable.Scope.UNIQUE)
@@ -114,7 +113,7 @@ public class FileVariableWriterTest {
 				.delimiter(";")
 				.path("INVALIDFILE.csv")
 				.startFromLine(1)
-				.order(Variable.Order.SEQUENTIAL)
+				.order(FileVariable.Order.SEQUENTIAL)
 				.changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USER)
 				.isFirstLineColumnNames(true)
 				.scope(ScopeVariable.Scope.UNIQUE)

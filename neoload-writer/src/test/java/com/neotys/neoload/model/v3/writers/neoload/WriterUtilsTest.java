@@ -40,7 +40,7 @@ public class WriterUtilsTest {
                 .name("TEST")
                 .path("myfile")
                 .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USE)
-                .order(Variable.Order.SEQUENTIAL)
+                .order(FileVariable.Order.SEQUENTIAL)
                 .isFirstLineColumnNames(false)
                 .columnNames(ImmutableList.of("col1"))
                 .delimiter(",")
