@@ -9,7 +9,6 @@ import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
 import com.neotys.neoload.model.v3.project.variable.OutOfValueVariable;
 import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
-import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.util.Parameter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -419,7 +418,7 @@ public class WrittingTestUtils {
             .delimiter(",")
             .path("path_du_fichier")
             .startFromLine(2)
-            .order(Variable.Order.SEQUENTIAL)
+            .order(FileVariable.Order.SEQUENTIAL)
             .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_ITERATION)
             .isFirstLineColumnNames(true)
             .scope(ScopeVariable.Scope.GLOBAL)
@@ -432,7 +431,7 @@ public class WrittingTestUtils {
             .delimiter(",")
             .path("path_du_fichier")
             .startFromLine(2)
-            .order(Variable.Order.RANDOM)
+            .order(FileVariable.Order.RANDOM)
             .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USE)
             .isFirstLineColumnNames(true)
             .scope(ScopeVariable.Scope.LOCAL)
@@ -445,7 +444,7 @@ public class WrittingTestUtils {
             .delimiter(",")
             .path("path_du_fichier")
             .startFromLine(2)
-            .order(Variable.Order.SEQUENTIAL)
+            .order(FileVariable.Order.SEQUENTIAL)
             .changePolicy(ChangePolicyVariable.ChangePolicy.EACH_USER)
             .isFirstLineColumnNames(true)
             .scope(ScopeVariable.Scope.UNIQUE)

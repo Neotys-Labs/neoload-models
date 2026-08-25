@@ -2,7 +2,6 @@ package com.neotys.neoload.model.v3.writers.neoload.variable;
 
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
-import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.util.RegExpUtils;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import java.io.IOException;
@@ -47,7 +46,7 @@ public class FileVariableWriter extends ElementWriter {
 
 		FileVariable fileVariable = (FileVariable) element;
 		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_NAME, element.getName());
-		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_ORDER, Integer.toString(fileVariable.getOrder() == Variable.Order.SEQUENTIAL ? 1 : 2));
+		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_ORDER, Integer.toString(fileVariable.getOrder() == FileVariable.Order.SEQUENTIAL ? 1 : 2));
 		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_POLICY, Integer.toString(fileVariable.getChangePolicy().getPolicyCode()));
 		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_RANGE, Integer.toString(fileVariable.getScope().getScopeCode()));
 		xmlVariable.setAttribute(VariableWriterUtils.XML_ATTR_WHEN_OUT_OF_VALUE, fileVariable.getOutOfValue().getWhenOutOfValuesCode());
