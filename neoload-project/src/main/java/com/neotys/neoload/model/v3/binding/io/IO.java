@@ -18,6 +18,7 @@ import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -27,6 +28,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.compatibility.SchemaSupport;
+import com.neotys.neoload.model.v3.project.Project;
 import org.yaml.snakeyaml.LoaderOptions;
 
 
@@ -80,8 +83,28 @@ public final class IO {
 	private <T> T read(final String content, final Format format, final Class<T> type) throws IOException {
 		// Gets the mapper from the format
 		final ObjectMapper mapper = getMapper(format);
+		if (isProjectType(type)) {
+			final JsonNode root = mapper.readTree(content);
+			checkSchemaVersionSupported(root);
+			return mapper.treeToValue(root, type);
+		}
 		// Deserialize
 		return mapper.readValue(content, type);
+	}
+
+	private static boolean isProjectType(final Class<?> type) {
+		return Project.class.isAssignableFrom(type) || ProjectDescriptor.class.isAssignableFrom(type);
+	}
+
+	private static void checkSchemaVersionSupported(final JsonNode root) throws UnsupportedSchemaVersionException {
+		final JsonNode schemaVersionNode = root == null ? null : root.get(Project.SCHEMA_VERSION);
+		final String schemaVersion = schemaVersionNode == null
+				? Project.DEFAULT_SCHEMA_VERSION
+				: schemaVersionNode.asText();
+		final SchemaSupport support = SchemaSupport.getDefault();
+		if (!support.isSupported(schemaVersion)) {
+			throw new UnsupportedSchemaVersionException(schemaVersion, support.listSupported());
+		}
 	}
 
 	public String write(final Object value, final Format format) throws IOException {

@@ -1,0 +1,14 @@
+{
+	"3.0": {
+		"NeoLoad": "*",
+		"NeoLoad CheckVU CLI": "*",
+		"NeoLoad Web Onpremise": "*",
+		"NeoLoad Web Saas": "*"
+	},
+	"3.1": {
+		"NeoLoad": ">=2026.3",
+		"NeoLoad CheckVU CLI": ">=2026.3",
+		"NeoLoad Web Onpremise": ">=2026.3",
+		"NeoLoad Web Saas": "*"
+	}
+}
