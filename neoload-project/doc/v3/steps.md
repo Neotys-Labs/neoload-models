@@ -20,3 +20,4 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 | [go_to_next_iteration](go_to_next_iteration.md) | 2026.3 |
 | [debug_logger](debug_logger.md)   | 2026.3 |
 | [stop_vu](stop_vu.md)             | 2026.3 |
+| [wait_until](wait_until.md)        | 2026.3 |

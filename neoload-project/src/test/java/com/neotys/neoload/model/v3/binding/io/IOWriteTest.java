@@ -56,6 +56,8 @@ public class IOWriteTest extends AbstractIOElementsTest {
 			"test-variable-extractor-only-required",
 			"test-variable-extractor-required-and-optional",
 			"test-variable-only-required",
+			"test-waituntil-only-required",
+			"test-waituntil-required-and-optional",
 			"test-while-only-required",
 			"test-while-required-and-optional",
 			"test-assert-content-only-required",
