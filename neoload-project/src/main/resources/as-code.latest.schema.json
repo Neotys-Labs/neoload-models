@@ -720,7 +720,8 @@
 								"variable_modifier": { "$ref": "#/definitions/user_paths/actions/variable_modifier" },
 								"rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
 								"debug_logger": { "$ref": "#/definitions/user_paths/actions/debug_logger" },
-								"stop_vu": { "$ref": "#/definitions/user_paths/actions/stop_vu" }
+								"stop_vu": { "$ref": "#/definitions/user_paths/actions/stop_vu" },
+								"wait_until": { "$ref": "#/definitions/user_paths/actions/wait_until" }
 							},
 							"additionalProperties": false
 						}
@@ -994,6 +995,24 @@
 							"type": "boolean",
 							"default": true
 						}
+					},
+					"additionalProperties": false
+				},
+				"wait_until": {
+					"$id": "#/definitions/user_paths/actions/wait_until",
+					"title": "Action: Wait Until",
+					"type": "object",
+					"required": ["conditions"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/text" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"conditions": { "$ref": "#/definitions/common/conditions" },
+						"match": {
+							"type": "string",
+							"enum": ["any", "all"],
+							"default": "any"
+						},
+						"timeout": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				}
