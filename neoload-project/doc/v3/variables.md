@@ -94,6 +94,8 @@ constant:
 ## Password variable
 An alphanumerical string whose value is a secret. In as-code YAML the value is stored as authored plaintext; NeoLoad encrypts it when the project is imported. Double quotes are recommended so YAML special characters in the secret are not interpreted.
 
+When NeoLoad exports a project back to as-code, `value` is written in its NeoLoad-encrypted form rather than in clear text, so an export never reveals the secret. Importing that file again restores the very same secret, and exporting it once more writes back the very same encrypted text.
+
 Password variables do not support `change_policy`, `scope`, `order`, or `out_of_value`.
 
 | Name        | Description                   | Accept variable | Required | Since |
