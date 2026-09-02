@@ -1,14 +1,5 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,6 +11,12 @@ import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_DEFAULT)
 @JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
@@ -42,7 +39,7 @@ public interface Request extends Step, SlaElement, AssertionsElement {
 	String EXTRACTORS = "extractors";
 	String FOLLOW_REDIRECTS = "followRedirects";
 	
-	String DEFAULT_NAME = "#request#";
+	String DEFAULT_NAME = "request";
 	String DEFAULT_METHOD = Method.GET.name();
 
     enum Method {

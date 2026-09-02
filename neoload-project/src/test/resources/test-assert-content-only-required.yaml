@@ -4,7 +4,7 @@ user_paths:
   actions:
     steps:
     - request:
-        name: request
+        name: http_request
         url: http://www.neotys.com/select?name:neoload
         assertions:
         - contains: DevOps and Automation

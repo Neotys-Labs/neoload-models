@@ -1,17 +1,15 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
-
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public class UserPathWriterTest {
     @Test
@@ -40,7 +38,7 @@ public class UserPathWriterTest {
 				</actions-container>
 				<end-container element-number="1" execution-type="0" slaProfileEnabled="false" weightsEnabled="false" />
 			</virtual-user>
-			<delay-action duration="3000" isThinkTime="false" name="#duration#" uid="3d08d6f5-bd1e-4807-84f2-5ec1bad2b10d" />
+			<delay-action duration="3000" isThinkTime="false" name="duration" uid="3d08d6f5-bd1e-4807-84f2-5ec1bad2b10d" />
 		</test-root>
          */
         Assertions.assertThat(root.getChildNodes().getLength()).isEqualTo(2);
@@ -112,7 +110,7 @@ public class UserPathWriterTest {
 					<assertion-content name="assertion_1" notType="false" pattern="userpath_contains_1" />
 				</assertions>
 			</virtual-user>
-			<delay-action duration="3000" isThinkTime="false" name="#duration#" uid="f370617b-942e-42a7-a42d-a69c2a539186" />
+			<delay-action duration="3000" isThinkTime="false" name="duration" uid="f370617b-942e-42a7-a42d-a69c2a539186" />
 		</test-root>
          */
         Assertions.assertThat(root.getChildNodes().getLength()).isEqualTo(2);
