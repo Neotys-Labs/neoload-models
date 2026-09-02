@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"request":{"name":"request","url":"http://www.neotys.com/download","size_assertion":{"greater_than":1024}}}]}}]}

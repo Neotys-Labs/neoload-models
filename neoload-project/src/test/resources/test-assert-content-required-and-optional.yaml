@@ -7,20 +7,17 @@ user_paths:
         name: request
         url: http://www.neotys.com/select?name:neoload
         assertions:
-        - content:
-            name: assertion_1
-            not: true
-            contains: Design & Maintenance
-            regexp: true
-        - content:
-            name: assertion_2
-            xpath: xpath
-            not: true
-            contains: Analyze
-            regexp: true
-        - content:
-            name: assertion_3
-            jsonpath: jsonpath
-            not: true
-            contains: DevOps and Automation
-            regexp: true
+        - name: assertion_1
+          not: true
+          contains: Design & Maintenance
+          regexp: true
+        - name: assertion_2
+          xpath: xpath
+          not: true
+          contains: Analyze
+          regexp: true
+        - name: assertion_3
+          jsonpath: jsonpath
+          not: true
+          contains: DevOps and Automation
+          regexp: true

@@ -61,7 +61,10 @@ public class IOWriteTest extends AbstractIOElementsTest {
 			"test-while-only-required",
 			"test-while-required-and-optional",
 			"test-assert-content-only-required",
-			"test-assert-content-required-and-optional"
+			"test-assert-content-required-and-optional",
+			"test-assert-size-equals",
+			"test-assert-size-range",
+			"test-assert-size-single-bound"
 	};
 
 	@Test

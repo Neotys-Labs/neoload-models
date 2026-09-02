@@ -691,12 +691,7 @@
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"type": "array",
-						"items": {
-							"oneOf": [
-								{ "$ref": "#/definitions/user_paths/content_assertion" },
-								{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
-							]
-						}
+						"items": { "$ref": "#/definitions/user_paths/content_assertion" }
 					}
 				}
 			},
@@ -751,12 +746,7 @@
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": {
 							"type": "array",
-							"items": {
-								"oneOf": [
-									{ "$ref": "#/definitions/user_paths/content_assertion" },
-									{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
-								]
-							}
+							"items": { "$ref": "#/definitions/user_paths/content_assertion" }
 						}
 					},
 					"additionalProperties": false
@@ -794,13 +784,9 @@
 						},
 						"assertions": {
 							"type": "array",
-							"items": {
-								"oneOf": [
-									{ "$ref": "#/definitions/user_paths/content_assertion" },
-									{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
-								]
-							}
-						}
+							"items": { "$ref": "#/definitions/user_paths/content_assertion" }
+						},
+						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					}
 				},
 				"delay": {
@@ -910,7 +896,8 @@
 							"type": "boolean",
 							"default": false
 						},
-						"libraryPath": { "$ref": "#/definitions/common/text" }
+						"libraryPath": { "$ref": "#/definitions/common/text" },
+						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					},
 					"additionalProperties": false
 				},
@@ -1105,29 +1092,26 @@
 				"$id": "#/definitions/user_paths/size_assertion",
 				"title": "Size Assertion",
 				"type": "object",
-				"required": ["operator", "value"],
+				"minProperties": 1,
 				"properties": {
-					"name": { "$ref": "#/definitions/common/text" },
-					"operator": {
-						"type": "string",
-						"enum": ["equals", "less_than", "greater_than"]
-					},
-					"value": {
-						"type": "integer",
-						"minimum": 0
-					}
+					"equals": { "$ref": "#/definitions/user_paths/size_assertion_bound" },
+					"greater_than": { "$ref": "#/definitions/user_paths/size_assertion_bound" },
+					"less_than": { "$ref": "#/definitions/user_paths/size_assertion_bound" }
 				},
-				"additionalProperties": false
+				"additionalProperties": false,
+				"not": {
+					"required": ["equals"],
+					"anyOf": [
+						{ "required": ["greater_than"] },
+						{ "required": ["less_than"] }
+					]
+				}
 			},
-			"assertion_wrapper": {
-				"$id": "#/definitions/user_paths/assertion_wrapper",
-				"title": "Assertion (wrapped)",
-				"type": "object",
-				"properties": {
-					"content": { "$ref": "#/definitions/user_paths/content_assertion" },
-					"size": { "$ref": "#/definitions/user_paths/size_assertion" }
-				},
-				"additionalProperties": false
+			"size_assertion_bound": {
+				"$id": "#/definitions/user_paths/size_assertion_bound",
+				"title": "Size Assertion Bound",
+				"type": "integer",
+				"minimum": 0
 			},
 			"case": {
 				"type": "object",

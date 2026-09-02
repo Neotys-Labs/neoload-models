@@ -13,88 +13,76 @@ import com.neotys.neoload.model.v3.project.userpath.ImmutableRequest;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertion;
-import com.neotys.neoload.model.v3.project.userpath.assertion.SizeOperator;
 
 
 public class IOSizeAssertionTest extends AbstractIOElementsTest {
 
 	@Test
-	public void readSizeAssertionOnlyRequired() throws IOException {
-		final Project expectedProject = getSizeAssertionOnlyRequired();
+	public void readSizeAssertionEquals() throws IOException {
+		final Project expectedProject = getSizeAssertionEquals();
 		assertNotNull(expectedProject);
-		read("test-assert-size-only-required", expectedProject);
+		read("test-assert-size-equals", expectedProject);
 	}
 
 	@Test
-	public void readSizeAssertionRequiredAndOptional() throws IOException {
-		final Project expectedProject = getSizeAssertionRequiredAndOptional();
+	public void readSizeAssertionRange() throws IOException {
+		final Project expectedProject = getSizeAssertionRange();
 		assertNotNull(expectedProject);
-		read("test-assert-size-required-and-optional", expectedProject);
+		read("test-assert-size-range", expectedProject);
 	}
 
 	@Test
-	public void writeSizeAssertionOnlyRequired() throws IOException {
-		final Project expectedProject = getSizeAssertionOnlyRequired();
+	public void readSizeAssertionSingleBound() throws IOException {
+		final Project expectedProject = getSizeAssertionSingleBound();
 		assertNotNull(expectedProject);
-		write("test-assert-size-only-required", expectedProject);
+		read("test-assert-size-single-bound", expectedProject);
 	}
 
 	@Test
-	public void writeSizeAssertionRequiredAndOptional() throws IOException {
-		final Project expectedProject = getSizeAssertionRequiredAndOptional();
+	public void writeSizeAssertionEquals() throws IOException {
+		final Project expectedProject = getSizeAssertionEquals();
 		assertNotNull(expectedProject);
-		write("test-assert-size-required-and-optional", expectedProject);
+		write("test-assert-size-equals", expectedProject);
 	}
 
-	private Project getSizeAssertionOnlyRequired() {
-		final SizeAssertion assertion = SizeAssertion.builder()
-				.operator(SizeOperator.LESS_THAN)
-				.value(1048576)
-				.build();
+	@Test
+	public void writeSizeAssertionRange() throws IOException {
+		final Project expectedProject = getSizeAssertionRange();
+		assertNotNull(expectedProject);
+		write("test-assert-size-range", expectedProject);
+	}
 
+	@Test
+	public void writeSizeAssertionSingleBound() throws IOException {
+		final Project expectedProject = getSizeAssertionSingleBound();
+		assertNotNull(expectedProject);
+		write("test-assert-size-single-bound", expectedProject);
+	}
+
+	private Project getSizeAssertionEquals() {
+		return getProject(SizeAssertion.builder()
+				.equals(1024L)
+				.build());
+	}
+
+	private Project getSizeAssertionRange() {
+		return getProject(SizeAssertion.builder()
+				.greaterThan(1024L)
+				.lessThan(2048L)
+				.build());
+	}
+
+	private Project getSizeAssertionSingleBound() {
+		return getProject(SizeAssertion.builder()
+				.greaterThan(1024L)
+				.build());
+	}
+
+	private Project getProject(final SizeAssertion sizeAssertion) {
 		final ImmutableRequest request = Request.builder()
 				.name("request")
 				.url("http://www.neotys.com/download")
-				.addAssertions(assertion)
-				.build();
-
-		final UserPath userPath = UserPath.builder()
-				.name("MyUserPath")
-				.actions(Container.builder()
-						.name("actions")
-						.addSteps(request)
-						.build())
-				.build();
-
-		return Project.builder()
-				.name("MyProject")
-				.addUserPaths(userPath)
-				.build();
-	}
-
-	private Project getSizeAssertionRequiredAndOptional() {
-		final SizeAssertion a1 = SizeAssertion.builder()
-				.name("small_response")
-				.operator(SizeOperator.LESS_THAN)
-				.value(1024)
-				.build();
-		final SizeAssertion a2 = SizeAssertion.builder()
-				.name("exact_match")
-				.operator(SizeOperator.EQUALS)
-				.value(200)
-				.build();
-		final SizeAssertion a3 = SizeAssertion.builder()
-				.name("min_size")
-				.operator(SizeOperator.GREATER_THAN)
-				.value(100)
-				.build();
-
-		final ImmutableRequest request = Request.builder()
-				.name("request")
-				.url("http://www.neotys.com/download")
-				.addAssertions(a1)
-				.addAssertions(a2)
-				.addAssertions(a3)
+				.sizeAssertion(sizeAssertion)
 				.build();
 
 		final UserPath userPath = UserPath.builder()
