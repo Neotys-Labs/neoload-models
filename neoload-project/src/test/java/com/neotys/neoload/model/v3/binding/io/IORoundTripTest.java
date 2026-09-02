@@ -86,6 +86,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-assert-size-equals",
 			"test-assert-size-range",
 			"test-assert-size-single-bound",
+			"test-assert-size-custom-action",
 			"test-fork-only-required",
 			"test-fork-required-and-optional",
 			"test-variable-modifier-only-required",
