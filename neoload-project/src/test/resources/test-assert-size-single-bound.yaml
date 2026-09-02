@@ -6,8 +6,5 @@ user_paths:
     - request:
         name: request
         url: http://www.neotys.com/download
-        method: GET
-        assertions:
-        - size:
-            operator: less_than
-            value: 1048576
+        size_assertion:
+          greater_than: 1024
