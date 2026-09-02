@@ -1,16 +1,14 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
-import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.*;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Optional;
-
 import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
+import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.userpath.*;
+import java.io.IOException;
+import java.util.Optional;
+import org.junit.Test;
 
 public class IOVariableExtractorTest extends AbstractIOElementsTest {
 
@@ -48,7 +46,7 @@ public class IOVariableExtractorTest extends AbstractIOElementsTest {
 
 	private Request getRequestWithVariableExtractorsOnlyRequired() {
 		return Request.builder()
-				.name("request")
+				.name("http_request")
 				.url("http://www.neotys.com/select?name:neoload")
 				.addExtractors(
 						VariableExtractor.builder()
@@ -80,7 +78,7 @@ public class IOVariableExtractorTest extends AbstractIOElementsTest {
 				.build();
 
 		return Request.builder()
-				.name("request")
+				.name("http_request")
 				.url("http://www.neotys.com/select?name:neoload")
 				.addExtractors(variableExtractor)
 				.build();

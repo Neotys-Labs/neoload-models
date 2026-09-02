@@ -4,10 +4,8 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.w3c.dom.Document;
-
+import java.io.StringWriter;
+import java.io.Writer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -15,8 +13,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
-import java.io.Writer;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.w3c.dom.Document;
 
 public class ProjectWriterTest {
 
@@ -51,7 +50,7 @@ public class ProjectWriterTest {
               <weighted-embedded-action uid="a3416926-93a6-4af6-969d-89a20e44a453"/>
             </actions-container>
           </virtual-user>
-          <delay-action duration="3000" isThinkTime="false" name="#duration#" uid="a3416926-93a6-4af6-969d-89a20e44a453"/>
+          <delay-action duration="3000" isThinkTime="false" name="duration" uid="a3416926-93a6-4af6-969d-89a20e44a453"/>
           <zones defaultZoneUid="Default zone" dnsOverrideEnabled="false" dnsTtl="30"/>
           <zone dnsOverrideEnabled="false" uid="Default zone">
             <embedded-action>859077c6-e412-4094-9796-d612ecade975</embedded-action>

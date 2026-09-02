@@ -5,10 +5,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
-
+import org.junit.Test;
 
 public class RequestTest {
 	@Test
@@ -22,7 +20,7 @@ public class RequestTest {
 		assertEquals("extractors", Request.EXTRACTORS);
 		assertEquals("assertions", Request.ASSERTIONS);
 		
-		assertEquals("#request#", Request.DEFAULT_NAME);
+		assertEquals("request", Request.DEFAULT_NAME);
 		assertEquals("GET", Request.DEFAULT_METHOD);
 		assertEquals(Request.Method.GET.name(), Request.DEFAULT_METHOD);
 	}

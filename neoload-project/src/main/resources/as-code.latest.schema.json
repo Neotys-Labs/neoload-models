@@ -161,7 +161,8 @@
 			"name": {
 				"title": "Name",
 				"type": "string",
-				"pattern": "^.*$"
+				"pattern": "^[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\]*$",
+				"maxLength": 100
 			},
 			"full_url": {
 				"title": "Url",
@@ -320,7 +321,7 @@
 			"xrequired": ["name", "host"],
 			"additionalProperties": false,
 			"properties": {
-				"name": { "$ref": "#/definitions/common/text" },
+				"name": { "$ref": "#/definitions/common/name" },
 				"host": { "$ref": "#/definitions/common/text" },
 				"scheme": {
 					"$id": "#root/servers/items/scheme",
@@ -389,7 +390,7 @@
 			"type": "object",
 			"xrequired": ["name", "thresholds"],
 			"properties": {
-				"name": { "$ref": "#/definitions/common/text" },
+				"name": { "$ref": "#/definitions/common/name" },
 				"description": { "$ref": "#/definitions/common/text" },
 				"thresholds": {
 					"$id": "#/definitions/sla/thresholds",
@@ -413,7 +414,7 @@
 				"title": "Population",
 				"type": "object",
 				"properties": {
-					"name": { "$ref": "#/definitions/common/text" },
+					"name": { "$ref": "#/definitions/common/name" },
 					"description": { "$ref": "#/definitions/common/text" },
 					"xcomments": {
 						"value": "why do we need the substructure 'name' to denote a string list?"
@@ -426,7 +427,7 @@
 						"items": {
 							"type": "object",
 							"properties": {
-								"name": { "$ref": "#/definitions/common/text" }
+								"name": { "$ref": "#/definitions/common/name" }
 							}
 						}
 					}
@@ -503,7 +504,7 @@
 			"title": "Scenario",
 			"type": "object",
 			"properties": {
-				"name": { "$ref": "#/definitions/common/text" },
+				"name": { "$ref": "#/definitions/common/name" },
 				"description": { "$ref": "#/definitions/common/text" },
 				"populations": {
 					"$id": "#/definitions/scenario/populations",
@@ -517,7 +518,7 @@
 						"type": "object",
 						"required": ["name"],
 						"properties": {
-							"name": { "$ref": "#/definitions/common/text" },
+							"name": { "$ref": "#/definitions/common/name" },
 							"constant_load": { "$ref": "#/definitions/populations/constant_load" },
 							"rampup_load": { "$ref": "#/definitions/populations/rampup_load" },
 							"peaks_load": { "$ref": "#/definitions/populations/peaks_load" }
@@ -533,7 +534,7 @@
 				"type": "object",
 				"required": ["name", "actions"],
 				"properties": {
-					"name": { "$ref": "#/definitions/common/text" },
+					"name": { "$ref": "#/definitions/common/name" },
 					"description": { "$ref": "#/definitions/common/text" },
 					"user_session": {
 						"type": "string",
@@ -586,7 +587,7 @@
 					"type": "object",
 					"required": ["name", "steps"],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
+						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
@@ -644,7 +645,7 @@
 					"type": "object",
 					"xrequired": ["name", "script"],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
+						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"script": { "$ref": "#/definitions/common/textblob" }
 					}
@@ -655,7 +656,7 @@
 					"type": "object",
 					"required": ["then"],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
+						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"conditions": { "$ref": "#/definitions/common/conditions" },
 						"match": {
@@ -674,7 +675,7 @@
 					"type": "object",
 					"required": ["steps"],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
+						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"conditions": { "$ref": "#/definitions/common/conditions" },
 						"match": {
@@ -692,7 +693,7 @@
 					"type": "object",
 					"required": ["count", "steps"],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
+						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"count": { "$ref": "#/definitions/common/positive_number" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
@@ -705,7 +706,7 @@
 					"type": "object",
 					"required": ["value", "default"],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
+						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"value": { "$ref": "#/definitions/common/text" },
 						"case": {
@@ -722,7 +723,7 @@
 					"type": "object",
 					"required": ["name", "type"],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
+						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"type": { "$ref": "#/definitions/common/text" },
 						"parameters": {
@@ -742,7 +743,7 @@
 				"type": "object",
 				"xrequired": ["name"],
 				"properties": {
-					"name": { "$ref": "#/definitions/common/text" },
+					"name": { "$ref": "#/definitions/common/name" },
 					"from": {
 						"type": "string",
 						"default": "body",
