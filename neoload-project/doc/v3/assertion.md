@@ -3,6 +3,8 @@ Assertions allow checking the validity of the responses content returned by the 
 
 > Validation cannot be applied to failed requests (HTTP errors, network errors, and so on).
 
+> To validate the response length instead of its content, use [size_assertion](size_assertion.md).
+
 #### Available settings
 
 | Name                   | Description                                                                                                                                                                                            | Accept variable | Required | Since |
