@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"custom_action":{"name":"sql action","type":"SQL","size_assertion":{"less_than":2048}}}]}}]}
