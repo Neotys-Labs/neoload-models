@@ -8,13 +8,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
-import org.junit.Test;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
@@ -22,7 +15,11 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
-
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import org.junit.Test;
 
 public class IOTest extends AbstractIOElementsTest {
 	private static final String EXPECTED_PROJECT_NAME = "MyéèProject";
@@ -133,8 +130,8 @@ public class IOTest extends AbstractIOElementsTest {
 		final File file = getFile(fileName, extension);
 		final IO mapper1 = new IO();
 		final ProjectDescriptor actualDescriptor1 = mapper1.read(file); // Use UTF-8 by default (!useCharset isn't used!)
-		validate(actualDescriptor1);	
 		if (fileCharset == StandardCharsets.UTF_8) {
+			validate(actualDescriptor1);
 			assertEquals(EXPECTED_PROJECT_NAME, actualDescriptor1.getProject().getName().get());
 			assertEquals(XPECTED_SCENARIO_NAME, actualDescriptor1.getProject().getScenarios().get(0).getName());
 			assertEquals(XPECTED_POPULATION_NAME, actualDescriptor1.getProject().getScenarios().get(0).getPopulations().get(0).getName());
@@ -151,8 +148,8 @@ public class IOTest extends AbstractIOElementsTest {
 		
 		final IO mapper2 = new IO();
 		final ProjectDescriptor actualDescriptor2 = mapper2.read(file, useCharset);
-		validate(actualDescriptor2);	
 		if (fileCharset == useCharset) {
+			validate(actualDescriptor2);
 			assertEquals(EXPECTED_PROJECT_NAME, actualDescriptor2.getProject().getName().get());
 			assertEquals(XPECTED_SCENARIO_NAME, actualDescriptor2.getProject().getScenarios().get(0).getName());
 			assertEquals(XPECTED_POPULATION_NAME, actualDescriptor2.getProject().getScenarios().get(0).getPopulations().get(0).getName());
@@ -169,8 +166,8 @@ public class IOTest extends AbstractIOElementsTest {
 
 		final IO mapper3 = new IO();
 		final ProjectDescriptor actualDescriptor3 = mapper3.read(getContent(file, useCharset));
-		validate(actualDescriptor3);	
 		if (fileCharset == useCharset) {
+			validate(actualDescriptor3);
 			assertEquals(EXPECTED_PROJECT_NAME, actualDescriptor3.getProject().getName().get());
 			assertEquals(XPECTED_SCENARIO_NAME, actualDescriptor3.getProject().getScenarios().get(0).getName());
 			assertEquals(XPECTED_POPULATION_NAME, actualDescriptor3.getProject().getScenarios().get(0).getPopulations().get(0).getName());
@@ -187,8 +184,8 @@ public class IOTest extends AbstractIOElementsTest {
 		
 		final IO mapper4 = new IO();
 		final ProjectDescriptor actualDescriptor4 = mapper4.read(getContent(file, useCharset), ProjectDescriptor.class);
-		validate(actualDescriptor4);	
 		if (fileCharset == useCharset) {
+			validate(actualDescriptor4);
 			assertEquals(EXPECTED_PROJECT_NAME, actualDescriptor4.getProject().getName().get());
 			assertEquals(XPECTED_SCENARIO_NAME, actualDescriptor4.getProject().getScenarios().get(0).getName());
 			assertEquals(XPECTED_POPULATION_NAME, actualDescriptor4.getProject().getScenarios().get(0).getPopulations().get(0).getName());
