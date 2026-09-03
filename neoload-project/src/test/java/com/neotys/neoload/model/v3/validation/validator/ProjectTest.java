@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
 
+import static org.junit.Assert.*;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
@@ -16,11 +18,6 @@ import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.junit.Test;
-
-import java.util.Arrays;
-
-import static org.junit.Assert.*;
-
 
 public class ProjectTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -70,7 +67,7 @@ public class ProjectTest {
 		assertTrue(validation.isValid());
 		assertFalse(validation.getMessage().isPresent());
 
-		project = Project.builder().name("My Project").build();
+		project = Project.builder().name("MyProject").build();
 		validation = validator.validate(project, NeoLoad.class);
 		assertTrue(validation.isValid());
 		assertFalse(validation.getMessage().isPresent());

@@ -1,14 +1,5 @@
 package com.neotys.neoload.model.v3.project;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -22,9 +13,16 @@ import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.Variable;
+import com.neotys.neoload.model.v3.validation.constraints.ProjectNameCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
 import com.neotys.neoload.model.v3.validation.constraints.ValidSchemaVersion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.validation.Valid;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({Project.SCHEMA, Project.SCHEMA_VERSION, Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
@@ -57,6 +55,7 @@ public interface Project {
 	}
 
 	@JsonProperty(NAME)
+	@ProjectNameCheck(groups={NeoLoad.class})
 	Optional<String> getName();
 
 	@JsonProperty(SLA_PROFILES)

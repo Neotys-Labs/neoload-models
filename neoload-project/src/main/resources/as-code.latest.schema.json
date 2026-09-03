@@ -19,7 +19,7 @@
 	"required": ["name"],
 	"properties": {
 		"$schema": { "$ref": "#/definitions/common/full_url" },
-		"name": { "$ref": "#/definitions/common/name" },
+		"name": { "$ref": "#/definitions/common/project_name" },
 		"includes": {
 			"$id": "#root/includes",
 			"title": "Includes",
@@ -162,6 +162,12 @@
 				"title": "Name",
 				"type": "string",
 				"pattern": "^[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\]*$",
+				"maxLength": 100
+			},
+			"project_name": {
+				"title": "Project name",
+				"type": "string",
+				"pattern": "^[A-Za-z0-9_$]*$",
 				"maxLength": 100
 			},
 			"full_url": {
