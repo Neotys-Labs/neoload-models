@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable.ChangePolicy;
+import com.neotys.neoload.model.v3.project.variable.DatePatternVariable.IncrementTimeUnit;
 import com.neotys.neoload.model.v3.project.variable.FileVariable.Order;
 import com.neotys.neoload.model.v3.project.variable.OutOfValueVariable.OutOfValue;
 import com.neotys.neoload.model.v3.project.variable.ScopeVariable.Scope;
@@ -76,5 +77,24 @@ public class VariableTest {
         assertEquals("cycle", wire(OutOfValue.CYCLE));
         assertEquals("stop_test", wire(OutOfValue.STOP));
         assertEquals("no_value_code", wire(OutOfValue.NO_VALUE));
+    }
+
+    @Test
+    public void incrementTimeUnitValues() {
+        assertArrayEquals(new IncrementTimeUnit[]{
+                IncrementTimeUnit.MILLISECOND, IncrementTimeUnit.SECOND, IncrementTimeUnit.MINUTE,
+                IncrementTimeUnit.HOUR, IncrementTimeUnit.DAY, IncrementTimeUnit.MONTH, IncrementTimeUnit.YEAR
+        }, IncrementTimeUnit.values());
+    }
+
+    @Test
+    public void incrementTimeUnitWire() throws Exception {
+        assertEquals("millisecond", wire(IncrementTimeUnit.MILLISECOND));
+        assertEquals("second", wire(IncrementTimeUnit.SECOND));
+        assertEquals("minute", wire(IncrementTimeUnit.MINUTE));
+        assertEquals("hour", wire(IncrementTimeUnit.HOUR));
+        assertEquals("day", wire(IncrementTimeUnit.DAY));
+        assertEquals("month", wire(IncrementTimeUnit.MONTH));
+        assertEquals("year", wire(IncrementTimeUnit.YEAR));
     }
 }
