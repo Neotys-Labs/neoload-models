@@ -22,7 +22,7 @@
 		"schemaVersion": {
 			"type": "string",
 			"const": "3.0",
-			"description": "Schema contract version this file is written for. Must be '3.0' for this schema."
+			"description": "Schema contract version this file is written for. Must be '3.0' for this schema with NeoLoad >= 2026.3 Must be ommited for NeoLoad <= 2026.2."
 		},
 		"name": { "$ref": "#/definitions/common/name" },
 		"includes": {
