@@ -19,6 +19,11 @@
 	"required": ["name"],
 	"properties": {
 		"$schema": { "$ref": "#/definitions/common/full_url" },
+		"schemaVersion": {
+			"type": "string",
+			"const": "3.0",
+			"description": "Schema contract version this file is written for. Must be '3.0' for this schema."
+		},
 		"name": { "$ref": "#/definitions/common/name" },
 		"includes": {
 			"$id": "#root/includes",
