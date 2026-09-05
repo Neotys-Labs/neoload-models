@@ -1,0 +1,8 @@
+name: MyProject
+variables:
+- current_date:
+    name: MyCurrentDate
+    description: now plus 5 minutes
+    pattern: yyyy-MM-dd'T'HH:mm:ss
+    increment_value: 5
+    increment_timeunit: minute

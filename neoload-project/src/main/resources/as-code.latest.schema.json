@@ -41,7 +41,8 @@
 					{ "$ref": "#/definitions/variables/file" },
 					{ "$ref": "#/definitions/variables/counter" },
 					{ "$ref": "#/definitions/variables/random_number" },
-					{ "$ref": "#/definitions/variables/javascript" }
+					{ "$ref": "#/definitions/variables/javascript" },
+					{ "$ref": "#/definitions/variables/current_date" }
 				]
 			}
 		},
@@ -314,6 +315,32 @@
 					{
 						"properties": {
 							"script": { "$ref": "#/definitions/common/text" }
+						}
+					}
+				],
+				"x-d7nosupport-additionalProperties": false
+			},
+			"current_date": {
+				"$id": "#/definitions/variables/current_date",
+				"title": "Current Date",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"pattern": {
+								"$ref": "#/definitions/common/text",
+								"default": "dd/MM/yyyy HH:mm:ss"
+							},
+							"increment_value": {
+								"type": "integer",
+								"default": 0
+							},
+							"increment_timeunit": {
+								"type": "string",
+								"default": "second",
+								"enum": ["millisecond", "second", "minute", "hour", "day", "month", "year"]
+							}
 						}
 					}
 				],

@@ -153,6 +153,40 @@ random_number:
   change_policy: each_request
 ```
 
+## Current Date variable
+A variable whose value is the current date/time at generation, formatted according to a pattern and optionally shifted by a fixed offset. There is no fixed start date — the value is always derived from the wall clock at the moment it is evaluated.
+
+This variable has no `change_policy` or `scope` because its value is always the current timestamp.
+
+The `pattern` follows the Java [`SimpleDateFormat`](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) syntax.
+
+| Name                | Description                                                                                                                                                         | Accept variable | Required | Since |
+|:------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name                | The variable name                                                                                                                                                   | -               | &#x2713; |       |
+| description         | The variable description                                                                                                                                            | -               | -        |       |
+| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                               | -               | -        |       |
+| increment_value     | The amount to add to the current time. Useful to represent a date in the past (negative value) or in the future (positive value). The default value is `0`.        | -               | -        |       |
+| increment_timeunit  | The time unit of the increment. The value can be: `millisecond`, `second`, `minute`, `hour`, `day`, `month`, `year`. The default value is `second`.                | -               | -        |       |
+
+#### Example
+Defining a minimal Current Date variable (only required fields).
+
+```yaml
+current_date:
+  name: current_date_variable
+```
+
+Defining a Current Date variable that produces an ISO-8601 timestamp 5 minutes ahead of the current time.
+
+```yaml
+current_date:
+  name: current_date_variable
+  description: now plus 5 minutes
+  pattern: yyyy-MM-dd'T'HH:mm:ss
+  increment_value: 5
+  increment_timeunit: minute
+```
+
 ## JavaScript variable
 A variable whose value is the result of the execution of a JavaScript script.
 
