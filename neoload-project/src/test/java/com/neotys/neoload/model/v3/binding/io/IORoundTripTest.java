@@ -3,13 +3,10 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertEquals;
 
+import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import java.io.File;
 import java.io.IOException;
-
 import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.io.IO.Format;
-
 
 /**
  * Generic serialization round-trip test: for every supported fixture, reads the file, serializes
@@ -39,10 +36,13 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 	private static final String[] ROUND_TRIP_FIXTURES = {
 			"test-custom-action-only-required",
 			"test-custom-action-required-and-optional",
+			"test-debug-logger-only-required",
+			"test-debug-logger-required-and-optional",
 			"test-delay-without-unit-only-required",
 			"test-delay-with-unit-only-required",
 			"test-descriptor-only-required",
 			"test-descriptor-required-and-optional",
+			"test-go-to-next-iteration",
 			"test-if-only-required",
 			"test-if-required-and-optional",
 			"test-javascript-only-required",
@@ -53,6 +53,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-populations-required-and-optional",
 			"test-readonly-slaprofiles-only-required",
 			"test-readonly-slaprofiles-required-and-optional",
+			"test-readonly-while-required-and-optional",
 			"test-readonly-while-only-required",
 			"test-readonly-while-required-and-optional",
 			"test-request-only-required",
@@ -69,15 +70,33 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-think-time-with-unit-only-required",
 			"test-transaction-only-required",
 			"test-transaction-required-and-optional",
+			"test-try-catch-only-required",
+			"test-try-catch-required-and-optional",
 			"test-userpaths-only-required",
 			"test-userpaths-required-and-optional",
 			"test-variable-extractor-only-required",
 			"test-variable-extractor-required-and-optional",
 			"test-variable-only-required",
+			"test-waituntil-only-required",
+			"test-waituntil-required-and-optional",
 			"test-while-only-required",
 			"test-while-required-and-optional",
 			"test-assert-content-only-required",
-			"test-assert-content-required-and-optional"
+			"test-assert-content-required-and-optional",
+			"test-fork-only-required",
+			"test-fork-required-and-optional",
+			"test-variable-modifier-only-required",
+			"test-variable-modifier-required-and-optional",
+			"test-rendezvous-only-required",
+			"test-rendezvous-required-and-optional",
+			"test-shared-queue-only-required",
+			"test-shared-queue-required-and-optional",
+			"test-stop-vu-only-required",
+			"test-stop-vu-required-and-optional",
+			"test-random-string-only-required",
+			"test-random-string-required-and-optional",
+			"test-random-uuid-only-required",
+			"test-random-uuid-required-and-optional"
 	};
 
 	@Test

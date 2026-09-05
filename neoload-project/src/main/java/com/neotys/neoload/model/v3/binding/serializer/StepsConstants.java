@@ -11,6 +11,14 @@ class StepsConstants {
     protected static final String WHILE = "while";
     protected static final String SWITCH = "switch";
     protected static final String CUSTOM_ACTION = "custom_action";
+    protected static final String TRY_CATCH = "try_catch";
+    protected static final String GO_TO_NEXT_ITERATION = "go_to_next_iteration";
+    protected static final String FORK = "fork";
+    protected static final String VARIABLE_MODIFIER = "variable_modifier";
+    protected static final String RENDEZVOUS = "rendezvous";
+    protected static final String DEBUG_LOGGER = "debug_logger";
+    protected static final String STOP_VU = "stop_vu";
+    protected static final String WAIT_UNTIL = "wait_until";
 
     private StepsConstants() {
         super();

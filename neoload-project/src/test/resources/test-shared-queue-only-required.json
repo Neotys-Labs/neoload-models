@@ -1,0 +1,1 @@
+{"name":"MyProject","variables":[{"shared_queue":{"name":"MySharedQueue","queue_size":10000,"consumer_timeout":5000}}]}

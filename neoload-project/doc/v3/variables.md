@@ -7,7 +7,7 @@ They may be combined with other variables or with static content (e.g. `${produc
 Variables that does not exist in the project will be added.
 
 #### Example
-Defining 5 variables: a Constant variable, a File variable, a Counter variable, a RandomNumber variable and a JavaScript variable.
+Defining 8 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable, a RandomUUID variable and a JavaScript variable.
 
 ```yaml
 variables:
@@ -21,6 +21,17 @@ variables:
     start_from_line: 1
     delimiter: ";"
     path: data/list_of_cities.csv
+    change_policy: each_iteration
+    scope: global
+    order: any
+    out_of_value: cycle
+- list:
+    name: cities_list
+    column_names: ["City", "Country"]
+    values:
+    - ["Paris", "France"]
+    - ["London", "UK"]
+    start_from_line: 1
     change_policy: each_iteration
     scope: global
     order: any
@@ -39,6 +50,17 @@ variables:
     max: 999
     predictable: false
     change_policy: each_request
+- random_string:
+    name: random_string_variable
+    min_length: 5
+    max_length: 10
+    predictable: false
+    change_policy: each_use
+- random_uuid:
+    name: random_uuid_variable
+    upper_case: false
+    predictable: false
+    change_policy: each_use
 - javascript:
     name: My JSVar
     description: This is a js var
@@ -100,6 +122,38 @@ file:
   out_of_value: cycle
 ```
 
+## List variable
+A list or table of values defined inline in the YAML file.
+
+| Name          | Description                   | Accept variable | Required | Since |
+|:------------- |:----------------------------- |:---------------:|:--------:|:-----:|
+| name          | The variable name             | -               | &#x2713; |       |
+| description   | The variable description      | -               | -        |       |
+| column_names  | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | -               | &#x2713; |       |
+| values        | The list of rows. Each row is a list of values, one per column of `column_names`. | -               | &#x2713; |       |
+| start_from_line | The first row of `values` to be used. The default value is "1". | -               | -        |       |
+| change_policy | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |       |
+| scope         | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        |       |
+| order         | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | -               | -        |       |
+| out_of_value  | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | -               | -        |       |
+
+#### Example
+Defining a List variable.
+
+```yaml
+list:
+  name: cities_list
+  column_names: ["City", "Country"]
+  values:
+  - ["Paris", "France"]
+  - ["London", "UK"]
+  start_from_line: 1
+  change_policy: each_iteration
+  scope: global
+  order: any
+  out_of_value: cycle
+```
+
 ## Counter variable
 A numerical variable having a start value, an end value and an incremental value.
 
@@ -153,6 +207,54 @@ random_number:
   change_policy: each_request
 ```
 
+## Random String variable
+A random alphanumeric string the length of which is within a length range.
+
+| Name         | Description                   | Accept variable | Required | Since |
+|:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
+| name         | The variable name             | -               | &#x2713; | 2026.3|
+| description  | The variable description      | -               | -        | 2026.3|
+| min_length   | The minimum number of characters of the generated value.</br>The default value is `5`. | -               | -        | 2026.3|
+| max_length   | The maximum number of characters of the generated value.</br>The default value is `10`. | -               | -        | 2026.3|
+| predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | -        | 2026.3|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
+
+#### Example
+Defining a Random String variable.
+
+```yaml
+random_string:
+  name: random_string_variable
+  description: MyRandomStringDescription
+  min_length: 10
+  max_length: 20
+  predictable: true
+  change_policy: each_use
+```
+
+## Random UUID variable
+A random UUID value.
+
+| Name         | Description                   | Accept variable | Required | Since |
+|:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
+| name         | The variable name             | -               | &#x2713; | 2026.3|
+| description  | The variable description      | -               | -        | 2026.3|
+| upper_case   | When true, the generated UUID is uppercase.</br>The default value is `false`. | -               | -        | 2026.3|
+| predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | -        | 2026.3|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_use`. | -               | -        | 2026.3|
+
+#### Example
+Defining a Random UUID variable.
+
+```yaml
+random_uuid:
+  name: random_uuid_variable
+  description: MyRandomUUIDDescription
+  upper_case: true
+  predictable: true
+  change_policy: each_use
+```
+
 ## JavaScript variable
 A variable whose value is the result of the execution of a JavaScript script.
 
@@ -174,4 +276,35 @@ Defining a JavaScript variable.
       new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField =
       myLibraryFunction();\n\t};\n}"
     change_policy: each_iteration
+```
+
+## Shared Queue variable
+A queue shared between virtual users, usable as a producer/consumer channel, with optional persistence to a file.
+
+| Name                    | Description                                                                 | Accept variable | Required | Since |
+|:----------------------- |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name                    | The variable name                                                           | -               | &#x2713; | 2026.3|
+| description             | The variable description                                                    | -               | -        | 2026.3|
+| queue_size              | The maximum number of elements the queue can hold.</br>The default value is `10000`. | -    | -        | 2026.3|
+| consumer_timeout        | The time, in milliseconds, a consumer waits for a value before giving up.</br>The default value is `5000`. | - | -   | 2026.3|
+| swap_file               | The file used to persist the queue content. See below. When absent, no file swap is used. | -   | -        | 2026.3|
+| swap_file.path          | The relative (compared to the NeoLoad project folder) or absolute path of the swap file. | -    | &#x2713; | 2026.3|
+| swap_file.delimiter     | The delimiter used to separate data columns in the swap file.</br>The default value is `;`. | -    | -        | 2026.3|
+| swap_file.load_from_file| If `true`, the queue is populated from the swap file at test start.</br>The default value is `false`. | -    | -        | 2026.3|
+| swap_file.save_to_file  | If `true`, the queue content is written to the swap file at test end.</br>The default value is `true`. | -    | -        | 2026.3|
+
+#### Example
+Defining a Shared Queue variable.
+
+```yaml
+shared_queue:
+  name: MySharedQueue
+  description: MySharedQueueDescription
+  queue_size: 5000
+  consumer_timeout: 2000
+  swap_file:
+    path: data/my_queue.csv
+    delimiter: ","
+    load_from_file: true
+    save_to_file: false
 ```

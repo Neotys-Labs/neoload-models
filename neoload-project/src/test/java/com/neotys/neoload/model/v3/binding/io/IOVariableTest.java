@@ -3,7 +3,7 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable.ChangePolicy.*;
-import static com.neotys.neoload.model.v3.project.variable.FileVariable.Order.*;
+import static com.neotys.neoload.model.v3.project.variable.OrderVariable.Order.*;
 import static com.neotys.neoload.model.v3.project.variable.OutOfValueVariable.OutOfValue.*;
 import static com.neotys.neoload.model.v3.project.variable.ScopeVariable.Scope.*;
 import static junit.framework.TestCase.assertNotNull;
@@ -83,6 +83,37 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .changePolicy(EACH_REQUEST)
                 .build();
 
+        final Variable randomStringVariable = RandomStringVariable.builder()
+                .name("MyRandomString")
+                .minLength(5)
+                .maxLength(20)
+                .isPredictable(false)
+                .changePolicy(EACH_USE)
+                .build();
+
+        final Variable randomUUIDVariable = RandomUUIDVariable.builder()
+                .name("MyRandomUUID")
+                .build();
+
+        final Variable listVariable = ListVariable.builder()
+                .name("MyList")
+                .addColumnNames("city", "country")
+                .addValues(newArrayList("Paris", "France"), newArrayList("London", "UK"))
+                .order(SEQUENTIAL)
+                .build();
+
+        final Variable listVariable2 = ListVariable.builder()
+                .name("MyList2")
+                .description("list variable description")
+                .addColumnNames("city", "country")
+                .addValues(newArrayList("Paris", "France"), newArrayList("London", "UK"))
+                .startFromLine(2)
+                .changePolicy(EACH_USER)
+                .scope(UNIQUE)
+                .order(RANDOM)
+                .outOfValue(STOP)
+                .build();
+
         final JavaScriptVariable javaScriptVariable = JavaScriptVariable.builder()
                 .name("My JSVar")
                 .description("This is a js var")
@@ -98,7 +129,8 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, javaScriptVariable)
+                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable,
+                        randomUUIDVariable, listVariable, listVariable2, javaScriptVariable)
                 .build();
     }
 }
