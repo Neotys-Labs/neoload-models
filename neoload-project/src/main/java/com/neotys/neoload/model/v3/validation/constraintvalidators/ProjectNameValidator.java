@@ -2,6 +2,7 @@ package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
 import com.neotys.neoload.model.v3.validation.constraints.ProjectNameCheck;
 import java.util.Optional;
+import java.util.function.Function;
 import javax.validation.ConstraintValidatorContext;
 
 /**
@@ -13,10 +14,11 @@ public final class ProjectNameValidator extends AbstractConstraintValidator<Proj
 
 	@Override
 	public boolean isValid(final Optional<String> name, final ConstraintValidatorContext context) {
-		if ((name == null) || !name.isPresent()) {
+		final Optional<String> presentName = Optional.ofNullable(name).flatMap(Function.identity());
+		if (!presentName.isPresent()) {
 			return true;
 		}
-		final String value = name.get();
+		final String value = presentName.get();
 		if (value.length() > MAX_NAME_LENGTH) {
 			return false;
 		}
