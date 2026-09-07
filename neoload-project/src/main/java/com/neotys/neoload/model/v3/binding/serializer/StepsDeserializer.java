@@ -33,7 +33,6 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 			builder.put(TRY_CATCH, TryCatch.class);
 			builder.put(FORK, Fork.class);
 			builder.put(VARIABLE_MODIFIER, VariableModifier.class);
-			builder.put(RENDEZVOUS, Rendezvous.class);
 			builder.put(DEBUG_LOGGER, DebugLogger.class);
 			builder.put(STOP_VU, StopVU.class);
     	STEPS = builder.build();
@@ -83,9 +82,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
             final String thinkTimeValue = stepNode.get(THINK_TIME).asText();
             final String thinkTime = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(thinkTimeValue);
             return ThinkTime.builder().value(String.valueOf(thinkTime)).build();
-        } else if (stepNode.isTextual() && RENDEZVOUS.equals(stepNode.asText())) {
-            return Rendezvous.builder().build();
-        } else if (stepNode.isTextual() && STOP_VU.equals(stepNode.asText())) {
+        }  else if (stepNode.isTextual() && STOP_VU.equals(stepNode.asText())) {
             return StopVU.builder().build();
         }
         return null;
