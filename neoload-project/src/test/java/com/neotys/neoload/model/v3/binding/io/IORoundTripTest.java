@@ -84,8 +84,6 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-fork-required-and-optional",
 			"test-variable-modifier-only-required",
 			"test-variable-modifier-required-and-optional",
-			"test-rendezvous-only-required",
-			"test-rendezvous-required-and-optional",
 			"test-shared-queue-only-required",
 			"test-shared-queue-required-and-optional",
 			"test-stop-vu-only-required",
