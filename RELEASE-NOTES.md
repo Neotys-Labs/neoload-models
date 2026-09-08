@@ -27,11 +27,16 @@ The root of an as-code file now takes two optional keys. `schemaVersion` declare
 file targets, so a product can tell you up front that it is too old to read it. `$schema` points at
 the published JSON Schema so editors validate and autocomplete as you type.
 
+<details>
+<summary>YAML example</summary>
+
 ```yaml
 $schema: https://raw.githubusercontent.com/Neotys-Labs/neoload-models/refs/heads/v3/schemas/v3.1/as-code.schema.json
 schemaVersion: "3.1"
 name: MyProject
 ```
+
+</details>
 
 The schemas are published at the repository root — `schemas/v3.0/as-code.schema.json` and
 `schemas/v3.1/as-code.schema.json` — next to `schemas/compatibility.json`, which states the
@@ -43,6 +48,9 @@ Six logical actions that already existed in the NeoLoad GUI are now writable in 
 
 **`try_catch`** — runs the `try` container and, when a caught exception occurs, the `catch`
 container instead. `caught_exceptions` selects `errors` (default), `assertions` or `all`.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - try_catch:
@@ -56,8 +64,13 @@ container instead. `caught_exceptions` selects `errors` (default), `assertions` 
       - delay: 1s
 ```
 
+</details>
+
 **`fork`** — runs steps in a thread parallel to the Virtual User main chain. `copy_variables`
 isolates the variable values from the other threads.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - fork:
@@ -67,9 +80,14 @@ isolates the variable values from the other threads.
         url: https://www.tricentis.com/
 ```
 
+</details>
+
 **`variable_modifier`** — changes a variable value outside of its change policy. With
 `category: predefined` it takes `next_value` or `init_value`; with `category: shared_queue` it
 takes `add_shared_queue_value` or `poll_shared_queue`.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - variable_modifier:
@@ -82,15 +100,25 @@ takes `add_shared_queue_value` or `poll_shared_queue`.
     value: ${MyVariable}
 ```
 
+</details>
+
 **`go_to_next_iteration`** — interrupts the current iteration. It has no property, so it is written
 as a bare scalar.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - go_to_next_iteration
 ```
 
+</details>
+
 **`stop_vu`** — stops the current Virtual User. By default a replacement is started so the running
 Virtual User count stays stable; set `start_new_vu: false` to stop without a replacement.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - stop_vu
@@ -99,8 +127,13 @@ Virtual User count stays stable; set `start_new_vu: false` to stop without a rep
     start_new_vu: false
 ```
 
+</details>
+
 **`debug_logger`** — writes a line to a log file, `logs/runTimeLog.txt` unless `file` says
 otherwise.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - debug_logger:
@@ -108,12 +141,17 @@ otherwise.
     file: logs/custom.txt
 ```
 
+</details>
+
 #### Variables
 
 Four variable types that already existed in the NeoLoad GUI are now writable in as-code.
 
 **`list`** — a table of values written inline in the YAML, with the same distribution options as a
 file variable.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - list:
@@ -126,7 +164,12 @@ file variable.
     order: random
 ```
 
+</details>
+
 **`random_string`** — a random alphanumeric string whose length falls in a range.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - random_string:
@@ -135,7 +178,12 @@ file variable.
     max_length: 20
 ```
 
+</details>
+
 **`random_uuid`** — a random UUID, optionally uppercase.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - random_uuid:
@@ -143,8 +191,13 @@ file variable.
     upper_case: true
 ```
 
+</details>
+
 **`shared_queue`** — a producer/consumer queue shared between Virtual Users, driven by the
 `variable_modifier` step, with optional persistence to a swap file.
+
+<details>
+<summary>YAML example</summary>
 
 ```yaml
 - shared_queue:
@@ -157,6 +210,8 @@ file variable.
       load_from_file: true
       save_to_file: false
 ```
+
+</details>
 
 #### Validation
 
