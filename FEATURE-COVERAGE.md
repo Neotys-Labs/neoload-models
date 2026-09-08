@@ -2,7 +2,7 @@
 
 This document compares the NeoLoad as-code (YAML/JSON) DSL with the NeoLoad GUI project format
 (`.nlp` XML): what a GUI project can express that as-code **cannot** express yet, grouped by
-functional area. It is the reference for scoping the next as-code version.
+functional area.
 
 For what is new in each released as-code version, see [CHANGELOG.md](CHANGELOG.md).
 
@@ -14,9 +14,9 @@ who plan the next schema version.
 | Name | Meaning | Supported by | Reference |
 |:-----|:--------|:-------------|:----------|
 | as-code **3.0** | DSL as shipped up to NeoLoad 2026.2 | all NLG and all NLW versions | `neoload-models` release **3.3.7** (`dbf642b9`) |
-| as-code **3.1** | DSL as shipped with NeoLoad 2026.3 | NLG `>= 2026.3`, NLW `>= 2026.3` | `neoload-models` release **3.4.6** (`4493c0f3`), branch `v3` |
-| **gap closure** | Merged in neither of the above, in flight | not released | branch `featuregroup/as-code-gap-closure` |
-| **NLP** | NeoLoad GUI project, default XML format | - | `neoload-root`, branch `develop` |
+| as-code **3.1** | DSL as shipped with NeoLoad 2026.3 | NLG `>= 2026.3`, NLW `>= 2026.3` | `neoload-models` release **x.x.x**, branch `v3` |
+| **3.1 draft** | Implemented in the model, merged into neither of the above | not released | - |
+| **NLP** | NeoLoad GUI project, default XML format | - | - |
 
 The **Supported by** column mirrors `schemas/compatibility.json`, which is the source of truth and
 also covers the CheckVU CLI.
@@ -29,10 +29,10 @@ accepts every construct it knows about regardless of the declared version, and o
 declared version is one this build knows (`supported-schemas.json`). Version gating happens in the
 published JSON Schemas (`schemas/v3.0/`, `schemas/v3.1/`), which editors use.
 
-## In flight on `featuregroup/as-code-gap-closure`
+## In the 3.1 draft
 
-Implemented in the model but not merged into `v3`, therefore in neither 3.0 nor 3.1. Candidates
-for 3.2. None of them is documented in `neoload-project/doc/v3/` yet.
+Implemented in the model but not merged into `v3`, therefore in neither 3.0 nor 3.1. None of them
+is documented in `neoload-project/doc/v3/` yet.
 
 **Steps**
 
@@ -61,18 +61,18 @@ multipart `parts`; `assertions` on request, transaction and container; scenario 
 
 ## Reverted before release
 
-- **`rendezvous` step** — implemented under LOAD-38588 and reverted in `4239a72c` before 3.4.6.
+- **`rendezvous` step** — implemented under LOAD-38588 and reverted in `4239a72c` before x.x.x.
   It is **not** part of 3.1. The scenario-level
   [`rendezvous_policies`](neoload-project/doc/v3/rendezvous_policy.md), which already existed in
   3.0, is unaffected.
 - **Request `name` unbound from the YAML binding and defaulted to the URL** — implemented under
-  LOAD-39283 and reverted in `4ff8ee31` before 3.4.6. `name` behaves as it did in 3.0.
+  LOAD-39283 and reverted in `4ff8ee31` before x.x.x. `name` behaves as it did in 3.0.
 
 ---
 
 The tables below list, per functional area, what a `.nlp` project can express and where as-code
-stands. Legend: **3.0** / **3.1** = available in that contract; **gap** = implemented on
-`featuregroup/as-code-gap-closure`; **—** = not implemented anywhere.
+stands. Legend: **3.0** / **3.1** = available in that contract; **3.1 draft** = implemented in the
+model but not merged; **—** = not implemented anywhere.
 
 ## Project and settings
 
@@ -123,11 +123,11 @@ The GUI offers fourteen types (`VariablesPane#initialize`).
 | Random string | 3.1 |
 | Random UUID | 3.1 |
 | Shared queue | 3.1 |
-| Date | gap |
-| Current date | gap |
-| SQL | gap |
-| Password | gap |
-| Key vault / secret vault | gap |
+| Date | 3.1 draft |
+| Current date | 3.1 draft |
+| SQL | 3.1 draft |
+| Password | 3.1 draft |
+| Key vault / secret vault | 3.1 draft |
 
 ## User Path structure
 
@@ -164,8 +164,8 @@ and protocol action catalogues.
 | Stop Virtual User | 3.1 |
 | Fork | 3.1 |
 | Variable modifier | 3.1 |
-| Wait until | gap |
-| Rendezvous | gap (reverted from 3.1) |
+| Wait until | 3.1 draft |
+| Rendezvous | 3.1 draft (reverted) |
 
 ## User Path — requests and protocols
 
@@ -174,8 +174,8 @@ and protocol action catalogues.
 | HTTP/S request — URL, server, method, headers, text body, extractors | 3.0 |
 | Binary body | 3.0 (`bodybinary`, undeclared in the published schema) |
 | Follow redirects | 3.0 (`followRedirects`, undeclared in the published schema) |
-| HTTP Page (a page and its dynamic resources) | gap (`http_page`) |
-| Multipart / form-data body | gap (`parts` in the schema; the binding fix is on the branch) |
+| HTTP Page (a page and its dynamic resources) | 3.1 draft (`http_page`) |
+| Multipart / form-data body | 3.1 draft (`parts` in the schema, plus the Jackson binding fix) |
 | Keep-alive, charset, content-type override, referer | — |
 | Response storage to a file or a variable | — |
 | Static request optimisation | — |
@@ -192,8 +192,8 @@ and protocol action catalogues.
 |:------------|:--------|
 | Content assertion (`contains`, `regexp`, `xpath`, `jsonpath`, `not`) | 3.0 |
 | Assertions on request, transaction, container and User Path | 3.0 |
-| Size assertion | gap |
-| Duration assertion | gap |
+| Size assertion | 3.1 draft |
+| Duration assertion | 3.1 draft |
 | JSON assertions (`JsonContentAssertion`, `JsonResponseAssertion`) | — |
 | Plugin assertions (`PluginContentAssertion`, `PluginResponseAssertion`) | — |
 | Response assertion (`ResponseAssertion`) | — |
@@ -204,7 +204,7 @@ and protocol action catalogues.
 | NLP feature | as-code |
 |:------------|:--------|
 | Extractor — `from`, `xpath`, `jsonpath`, `regexp`, `match_number`, `template`, `decode`, `extract_once`, `default`, `throw_assertion_error` | 3.0 |
-| Frameworks / dynamic parameters (builtin and custom) | gap |
+| Frameworks / dynamic parameters (builtin and custom) | 3.1 draft |
 | Search and replace rules | — |
 
 ## Populations
