@@ -1,33 +1,12 @@
 # NeoLoad as-code — release notes
 
-All notable changes to the NeoLoad as-code (YAML/JSON) DSL, newest first.
+All notable changes to the **released** NeoLoad as-code (YAML/JSON) DSL, newest first. Work still on
+a feature branch does not belong here; it is tracked in [CHANGELOG.md](CHANGELOG.md), which also
+holds the feature-by-feature comparison against a NeoLoad GUI `.nlp` project.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions here are
 **as-code contract versions** (the `schemaVersion` root key), not `neoload-models` library
 versions — one contract version spans several library releases.
-
-For the feature-by-feature comparison against a NeoLoad GUI `.nlp` project, and for the list of
-what as-code still cannot express, see [CHANGELOG.md](CHANGELOG.md).
-
----
-
-## [Unreleased] — candidates for 3.2
-
-Implemented on `featuregroup/as-code-gap-closure`, not merged into `v3`, not documented yet.
-
-### Added
-
-- Step `http_page` — the GUI HTTP Page container, with `think_time`, `think_time_range`,
-  `think_time_mode`, `screenshot`, `dynamic_action` and `force_encoding_for_dynamic_resources`.
-- Step `wait_until` — waits for `conditions`, `timeout` defaults to 60 s.
-- Step `rendezvous` — the Rendezvous action inside a User Path.
-- Variables `date`, `current_date`, `sql`, `password` and `secret_vault`. With these, as-code
-  covers the fourteen variable types offered by the GUI.
-- Assertions `size` and `duration`; the `assertions` list becomes a `{content|size|duration}`
-  discriminated union.
-- Frameworks and dynamic parameters, in a builtin and a custom flavour.
-- Multipart request bodies (`parts`), including the Jackson binding fix that makes them
-  deserialisable.
 
 ---
 
