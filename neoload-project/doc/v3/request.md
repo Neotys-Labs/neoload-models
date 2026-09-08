@@ -18,8 +18,6 @@ A request defines a plain HTTP request.
 | followRedirects                     | When `true`, the HTTP redirections returned by the server are followed.</br>The default value is `false`. | -               | -        |       |
 | bodybinary                          | The request body as Base64-encoded binary content, used instead of `body` for a non-text payload. | -               | -        |       |
 
-> `followRedirects` and `bodybinary` are accepted by the model and are mainly produced by the JMeter and Postman converters. They are not declared in the published JSON Schema yet, so an editor validating against `as-code.schema.json` reports them as unknown properties.
-
 #### Example 1
 
 Defining an HTTP request with a GET method.
