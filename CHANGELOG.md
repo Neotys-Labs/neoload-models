@@ -1,8 +1,9 @@
 # NeoLoad as-code — changelog
 
 All notable changes to the **released** NeoLoad as-code (YAML/JSON) DSL, newest first. Work still on
-a feature branch does not belong here; it is tracked in [BACKLOG.md](BACKLOG.md), which also
-holds the feature-by-feature comparison against a NeoLoad GUI `.nlp` project.
+a feature branch does not belong here; it is tracked in
+[FEATURE-COVERAGE.md](FEATURE-COVERAGE.md), which also holds the feature-by-feature comparison
+against a NeoLoad GUI `.nlp` project.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions here are
 **as-code contract versions** (the `schemaVersion` root key), not `neoload-models` library

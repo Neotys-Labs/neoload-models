@@ -1,8 +1,8 @@
 See [Project](project.md)
 
 See the [changelog](../../../CHANGELOG.md) for what is new in each as-code version, and the
-[backlog](../../../BACKLOG.md) for the list of NeoLoad GUI features that as-code cannot
-express yet.
+[feature coverage](../../../FEATURE-COVERAGE.md) for the list of NeoLoad GUI features that as-code
+cannot express yet.
 
 ## Naming rules
 

@@ -7,7 +7,7 @@ See the [Script Converter project](https://github.com/Neotys-Labs/Script-Convert
 # As-code
 
 - [CHANGELOG.md](CHANGELOG.md) — what is new in each as-code version.
-- [BACKLOG.md](BACKLOG.md) — NeoLoad GUI features that as-code cannot express yet.
+- [FEATURE-COVERAGE.md](FEATURE-COVERAGE.md) — NeoLoad GUI features that as-code cannot express yet.
 - [neoload-project/doc/v3](neoload-project/doc/v3/README.md) — the as-code reference documentation.
 
 # Contributing

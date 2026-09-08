@@ -1,8 +1,8 @@
-# NeoLoad as-code — backlog
+# NeoLoad as-code — feature coverage
 
 This document compares the NeoLoad as-code (YAML/JSON) DSL with the NeoLoad GUI project format
 (`.nlp` XML): what a GUI project can express that as-code **cannot** express yet, grouped by
-functional area. It is the backlog to prioritise for as-code 3.2.
+functional area. It is the reference for scoping the next as-code version.
 
 For what is new in each released as-code version, see [CHANGELOG.md](CHANGELOG.md).
 
