@@ -258,14 +258,6 @@ project the GUI accepts.
 - The JSON Schema restricted `method` to a fixed enum and therefore rejected a custom HTTP method,
   which the model has always accepted. It now accepts any string, with `GET` as the default.
 
-### Not included
-
-- **The `rendezvous` step.** It was implemented under LOAD-38588 and reverted before the release,
-  so it is not part of 3.1. The scenario-level `rendezvous_policies`, which already existed in 3.0,
-  is unaffected.
-- **Unbinding the request `name` from the YAML binding** (LOAD-39283) was also implemented and
-  reverted; `name` behaves as it did in 3.0.
-
 ### Known issues
 
 - `schemas/v3.1/as-code.schema.json` was branched before this work landed and does **not** describe

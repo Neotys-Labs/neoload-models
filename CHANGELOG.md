@@ -109,6 +109,8 @@ and each type only exposes the ones that make sense:
   It is **not** part of 3.1. The scenario-level
   [`rendezvous_policies`](neoload-project/doc/v3/rendezvous_policy.md), which already existed in
   3.0, is unaffected.
+- **Request `name` unbound from the YAML binding and defaulted to the URL** — implemented under
+  LOAD-39283 and reverted in `4ff8ee31` before 3.4.6. `name` behaves as it did in 3.0.
 
 ## Known inconsistencies in 3.1
 
