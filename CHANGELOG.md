@@ -5,13 +5,9 @@ a feature branch does not belong here; it is tracked in
 [FEATURE-COVERAGE.md](FEATURE-COVERAGE.md), which also holds the feature-by-feature comparison
 against a NeoLoad GUI `.nlp` project.
 
-The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions here are
-**as-code contract versions** (the `schemaVersion` root key), not `neoload-models` library
-versions — one contract version spans several library releases.
-
 ---
 
-## [3.1] — 2026
+## [3.1] — Upcoming version in 2026
 
 Shipped in `neoload-models` **x.x.x**. Requires **NeoLoad 2026.3**, **CheckVU CLI 2026.3** and
 **NeoLoad Web On-premise 2026.3** or later; NeoLoad Web SaaS accepts it as soon as it is deployed.
