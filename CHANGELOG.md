@@ -1,17 +1,13 @@
 # NeoLoad as-code — coverage analysis
 
-This document is the **analysis** of the NeoLoad as-code (YAML/JSON) DSL against the NeoLoad GUI
-project format:
+This document compares the NeoLoad as-code (YAML/JSON) DSL with the NeoLoad GUI project format
+(`.nlp` XML): what a GUI project can express that as-code **cannot** express yet, grouped by
+functional area. It is the backlog to prioritise for as-code 3.2.
 
-- **Part 1** — what changed between as-code **3.0** and **3.1**, grouped by functional area.
-- **Part 2** — what a NeoLoad GUI project (`.nlp` XML) can express that as-code **cannot** yet,
-  grouped by functional area. This is the backlog to prioritise for 3.2.
+For what is new in each released as-code version, see [RELEASE-NOTES.md](RELEASE-NOTES.md).
 
-For the plain release notes — what is new in a version, with examples, in Keep a Changelog form —
-see [RELEASE-NOTES.md](RELEASE-NOTES.md).
-
-Keep it up to date with every DSL change: a feature that is not listed here is invisible to the
-people who plan the next schema version.
+Keep it up to date with every DSL change: a gap that is not listed here is invisible to the people
+who plan the next schema version.
 
 ## Reference points
 
@@ -32,102 +28,6 @@ tab is out of scope.
 accepts every construct it knows about regardless of the declared version, and only checks that the
 declared version is one this build knows (`supported-schemas.json`). Version gating happens in the
 published JSON Schemas (`schemas/v3.0/`, `schemas/v3.1/`), which editors use.
-
----
-
-# Part 1 — Changelog from as-code 3.0 to 3.1
-
-## Schema contract
-
-- **`schemaVersion`** — new optional root key declaring the schema contract the file targets.
-  Defaults to `3.0` when absent. Validated against the versions this build supports.
-- **`$schema`** — root key holding the URL of the JSON Schema, for editor validation.
-- **Published schemas** — `schemas/v3.0/as-code.schema.json` and `schemas/v3.1/as-code.schema.json`
-  at the repository root, plus `schemas/compatibility.json` describing which product version
-  accepts which contract (3.1 requires NeoLoad, CheckVU CLI and NeoLoad Web On-premise `>= 2026.3`).
-- **`supported-schemas.json`** — resource embedded in the build, listing the contracts this
-  `neoload-models` can parse.
-
-## User Path steps
-
-Six logical actions became available in as-code. All of them already existed in the GUI.
-
-| Step | Description |
-|:-----|:------------|
-| [`try_catch`](neoload-project/doc/v3/try_catch.md) | Runs the `try` container and, when a caught exception type occurs, the `catch` container. `caught_exceptions` selects `errors`, `assertions` or `all`. |
-| [`fork`](neoload-project/doc/v3/fork.md) | Runs `steps` in a thread parallel to the Virtual User main chain. `copy_variables` isolates variable values from the other threads. |
-| [`variable_modifier`](neoload-project/doc/v3/variable_modifier.md) | Changes a variable value outside its change policy. `category: predefined` supports `next_value` / `init_value`; `category: shared_queue` supports `add_shared_queue_value` / `poll_shared_queue`. |
-| [`go_to_next_iteration`](neoload-project/doc/v3/go_to_next_iteration.md) | Interrupts the current iteration. Serialised as a bare scalar since it has no property. |
-| [`debug_logger`](neoload-project/doc/v3/debug_logger.md) | Writes `text` to a log file, `logs/runTimeLog.txt` by default. |
-| [`stop_vu`](neoload-project/doc/v3/stop_vu.md) | Stops the current Virtual User. `start_new_vu` (default `true`) controls whether a replacement is started. Serialised as a bare scalar when it keeps the default. |
-
-## Variables
-
-Four variable types became available in as-code. All of them already existed in the GUI.
-
-| Type | Description |
-|:-----|:------------|
-| `list` | Table of values written inline in the YAML: `column_names` + `values`, plus `start_from_line`, `change_policy`, `scope`, `order`, `out_of_value`. |
-| `random_string` | Random alphanumeric string. `min_length` (5), `max_length` (10), `predictable` (`false`). |
-| `random_uuid` | Random UUID. `upper_case` (`false`), `predictable` (`false`). |
-| `shared_queue` | Producer/consumer queue shared between Virtual Users. `queue_size` (10000), `consumer_timeout` (5000 ms) and a nested `swap_file` (`path`, `delimiter`, `load_from_file`, `save_to_file`) for persistence. |
-
-**Behaviour change — variable traits are now per type.** In 3.0, `change_policy`, `scope`, `order`
-and `out_of_value` were declared on the common `Variable` base and were therefore accepted on every
-variable type, including the ones they do not apply to. In 3.1 they moved to dedicated interfaces
-and each type only exposes the ones that make sense:
-
-| Type | `change_policy` | `scope` | `order` | `out_of_value` |
-|:-----|:---------------:|:-------:|:-------:|:--------------:|
-| `constant` | - | - | - | - |
-| `file` | yes | yes | yes | yes |
-| `list` | yes | yes | yes | yes |
-| `counter` | yes | yes | - | yes |
-| `random_number` | yes | - | - | - |
-| `random_string` | yes | - | - | - |
-| `random_uuid` | yes | - | - | - |
-| `javascript` | yes | - | - | - |
-| `shared_queue` | - | - | - | - |
-
-## Naming and validation
-
-- **Project name** — only identifier characters (letters, digits, `$`, `_`), at most 100 characters.
-  Mirrors the GUI rule, with an added length cap.
-- **Element names** (populations, scenarios, User Paths, servers, variables, SLA profiles, and so
-  on) — at most 100 characters, and the forbidden character set listed in
-  [the naming rules](neoload-project/doc/v3/README.md#naming-rules) is rejected. Mirrors the GUI
-  `NameValidator`, with an added length cap.
-
-## Reverted before release
-
-- **`rendezvous` step** — implemented under LOAD-38588 and reverted in `4239a72c` before 3.4.6.
-  It is **not** part of 3.1. The scenario-level
-  [`rendezvous_policies`](neoload-project/doc/v3/rendezvous_policy.md), which already existed in
-  3.0, is unaffected.
-- **Request `name` unbound from the YAML binding and defaulted to the URL** — implemented under
-  LOAD-39283 and reverted in `4ff8ee31` before 3.4.6. `name` behaves as it did in 3.0.
-
-## Known inconsistencies in 3.1
-
-These are real defects in the shipped 3.1 surface. They should be fixed before or with 3.2.
-
-- **`schemas/v3.1/as-code.schema.json` does not describe the 3.1 features.** It was branched before
-  the 2026.3 work landed, so `try_catch`, `fork`, `variable_modifier`, `go_to_next_iteration`,
-  `debug_logger`, `stop_vu`, `list`, `random_string`, `random_uuid` and `shared_queue` are absent
-  from it. The runtime copy `neoload-project/src/main/resources/as-code.latest.schema.json` is the
-  one that reflects the model. An editor validating against the published v3.1 schema rejects
-  valid 3.1 files.
-- **`request.followRedirects` and `request.bodybinary`** are accepted by the model but are declared
-  in no published schema.
-- **NeoLoad GUI does not consume 3.1 yet.** `neoload-root` `develop` pins
-  `neoload-models.version = 3.4.5`, which predates all the features above. Its as-code readers
-  (`com.neotys.nl.api.converter.v3.functions.StepConverter` and `VariableConverter`) handle only
-  the 3.0 steps (container, request, delay, think_time, javascript, if, loop, while, switch,
-  custom_action) and five variable types (constant, file, counter, random_number, javascript), and
-  throw `IllegalStateException` on anything else. Its exporter
-  (`com.neotys.nl.api.converter.v3.toascode.ActionConverter`) covers even less. Bumping
-  `neoload-models` to 3.4.6 and extending both converters is a prerequisite for 3.1 to be usable
-  end to end from the GUI.
 
 ## In flight on `featuregroup/as-code-gap-closure`
 
@@ -159,11 +59,19 @@ multipart `parts`; `assertions` on request, transaction and container; scenario 
 
 **Binding fix** — `Part` bound to `ImmutablePart` so multipart bodies can be deserialised from YAML.
 
+## Reverted before release
+
+- **`rendezvous` step** — implemented under LOAD-38588 and reverted in `4239a72c` before 3.4.6.
+  It is **not** part of 3.1. The scenario-level
+  [`rendezvous_policies`](neoload-project/doc/v3/rendezvous_policy.md), which already existed in
+  3.0, is unaffected.
+- **Request `name` unbound from the YAML binding and defaulted to the URL** — implemented under
+  LOAD-39283 and reverted in `4ff8ee31` before 3.4.6. `name` behaves as it did in 3.0.
+
 ---
 
-# Part 2 — Backlog: NLP features not available in as-code
-
-Legend: **3.0** / **3.1** = available in that contract; **gap** = implemented on
+The tables below list, per functional area, what a `.nlp` project can express and where as-code
+stands. Legend: **3.0** / **3.1** = available in that contract; **gap** = implemented on
 `featuregroup/as-code-gap-closure`; **—** = not implemented anywhere.
 
 ## Project and settings
