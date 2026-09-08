@@ -22,13 +22,8 @@ people who plan the next schema version.
 | **gap closure** | Merged in neither of the above, in flight | not released | branch `featuregroup/as-code-gap-closure` |
 | **NLP** | NeoLoad GUI project, default XML format | - | `neoload-root`, branch `develop` |
 
-The **Supported by** column is a summary of `schemas/compatibility.json`, which is the source of
-truth and states the constraint per product:
-
-| Contract | NeoLoad (NLG) | NeoLoad CheckVU CLI | NeoLoad Web On-premise | NeoLoad Web SaaS |
-|:---------|:--------------|:--------------------|:-----------------------|:-----------------|
-| 3.0 | all | all | all | all |
-| 3.1 | `>= 2026.3` | `>= 2026.3` | `>= 2026.3` | all (always on the current version) |
+The **Supported by** column mirrors `schemas/compatibility.json`, which is the source of truth and
+also covers the CheckVU CLI.
 
 Scope for the NLP comparison: the **Design** and **Runtime** tabs of NeoLoad GUI. The **Results**
 tab is out of scope.
