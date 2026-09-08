@@ -192,10 +192,6 @@ project the GUI accepts.
   every property left at its default, so generated files are much shorter and a round trip no
   longer inflates them.
 
-### Removed
-
-- Nothing. Every 3.0 construct is still accepted.
-
 ### Fixed
 
 - YAML and JSON writing was broken for several elements and did not round-trip; a project written
