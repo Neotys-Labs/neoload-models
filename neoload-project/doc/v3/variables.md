@@ -192,7 +192,7 @@ A random numerical value within a value range.
 | description  | The variable description      | -               | -        | 6.10  |
 | min          | The variable min value        | -               | &#x2713; | 6.10  |
 | max          | The variable max value        | -               | &#x2713; | 6.10  |
-| predictable  | When true, randomly generated values will have comparable values for two identical tests.e            | -               | - |6.10|
+| predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | - |6.10|
 | change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |6.10|
 
 #### Example
@@ -241,7 +241,7 @@ A random UUID value.
 | description  | The variable description      | -               | -        | 2026.3|
 | upper_case   | When true, the generated UUID is uppercase.</br>The default value is `false`. | -               | -        | 2026.3|
 | predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | -        | 2026.3|
-| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_use`. | -               | -        | 2026.3|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
 
 #### Example
 Defining a Random UUID variable.

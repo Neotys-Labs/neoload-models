@@ -6,6 +6,7 @@ A request defines a plain HTTP request.
 
 | Name                                | Description                                                                   | Accept variable | Required | Since |
 |:----------------------------------- |:----------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name                                | The name of the request. The default value is `request`.                      | -               | -        |       |
 | [url](#url)                         | The URL to hit                                                                | &#x2713;        | &#x2713; |       |
 | [server](#server)                   | The server name to use                                                        | -               | -        |       |
 | [method](#method)                   | The request method                                                            | -               | -        |       |
@@ -14,6 +15,10 @@ A request defines a plain HTTP request.
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
+| followRedirects                     | When `true`, the HTTP redirections returned by the server are followed.</br>The default value is `false`. | -               | -        |       |
+| bodybinary                          | The request body as Base64-encoded binary content, used instead of `body` for a non-text payload. | -               | -        |       |
+
+> `followRedirects` and `bodybinary` are accepted by the model and are mainly produced by the JMeter and Postman converters. They are not declared in the published JSON Schema yet, so an editor validating against `as-code.schema.json` reports them as unknown properties.
 
 #### Example 1
 
@@ -170,7 +175,7 @@ Define the request body to use for the HTTP request. Variables can be used in th
 
 In using the `Content-Type` header with `application/x-www-form-urlencoded`, the variables can be used from the name/value pairs of the request body. To encode the evaluation of a variable from the name/value pairs, use convention: `__encodeURL(${my_variable})`.
 
-> The bodies containing a binary or multipart/form-data data are not yet supported. 
+> A binary body is defined with `bodybinary` (Base64-encoded) instead of `body`. The `multipart/form-data` bodies are not yet supported. 
 
 #### Example 1
 
