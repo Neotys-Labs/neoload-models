@@ -11,12 +11,20 @@ people who plan the next schema version.
 
 ## Reference points
 
-| Name | Meaning | Reference |
-|:-----|:--------|:----------|
-| as-code **3.0** | DSL as shipped up to NeoLoad 2026.2 | `neoload-models` release **3.3.7** (`dbf642b9`) |
-| as-code **3.1** | DSL as shipped with NeoLoad 2026.3 | `neoload-models` release **3.4.6** (`4493c0f3`), branch `v3` |
-| **gap closure** | Merged in neither of the above, in flight | branch `featuregroup/as-code-gap-closure` |
-| **NLP** | NeoLoad GUI project, default XML format | `neoload-root`, branch `develop` |
+| Name | Meaning | Supported by | Reference |
+|:-----|:--------|:-------------|:----------|
+| as-code **3.0** | DSL as shipped up to NeoLoad 2026.2 | all NLG and all NLW versions | `neoload-models` release **3.3.7** (`dbf642b9`) |
+| as-code **3.1** | DSL as shipped with NeoLoad 2026.3 | NLG `>= 2026.3`, NLW `>= 2026.3` | `neoload-models` release **3.4.6** (`4493c0f3`), branch `v3` |
+| **gap closure** | Merged in neither of the above, in flight | not released | branch `featuregroup/as-code-gap-closure` |
+| **NLP** | NeoLoad GUI project, default XML format | - | `neoload-root`, branch `develop` |
+
+The **Supported by** column is a summary of `schemas/compatibility.json`, which is the source of
+truth and states the constraint per product:
+
+| Contract | NeoLoad (NLG) | NeoLoad CheckVU CLI | NeoLoad Web On-premise | NeoLoad Web SaaS |
+|:---------|:--------------|:--------------------|:-----------------------|:-----------------|
+| 3.0 | all | all | all | all |
+| 3.1 | `>= 2026.3` | `>= 2026.3` | `>= 2026.3` | all (always on the current version) |
 
 Scope for the NLP comparison: the **Design** and **Runtime** tabs of NeoLoad GUI. The **Results**
 tab is out of scope.
