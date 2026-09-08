@@ -1,7 +1,8 @@
 See [Project](project.md)
 
-See the [changelog](../../../CHANGELOG.md) for what changed between as-code 3.0 and 3.1, and for the
-list of NeoLoad GUI features that as-code cannot express yet.
+See the [release notes](../../../RELEASE-NOTES.md) for what is new in each as-code version, and the
+[coverage analysis](../../../CHANGELOG.md) for the list of NeoLoad GUI features that as-code cannot
+express yet.
 
 ## Naming rules
 

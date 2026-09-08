@@ -1,10 +1,14 @@
-# NeoLoad as-code — changelog and NLP coverage
+# NeoLoad as-code — coverage analysis
 
-This document tracks the NeoLoad as-code (YAML/JSON) DSL:
+This document is the **analysis** of the NeoLoad as-code (YAML/JSON) DSL against the NeoLoad GUI
+project format:
 
 - **Part 1** — what changed between as-code **3.0** and **3.1**, grouped by functional area.
 - **Part 2** — what a NeoLoad GUI project (`.nlp` XML) can express that as-code **cannot** yet,
   grouped by functional area. This is the backlog to prioritise for 3.2.
+
+For the plain release notes — what is new in a version, with examples, in Keep a Changelog form —
+see [RELEASE-NOTES.md](RELEASE-NOTES.md).
 
 Keep it up to date with every DSL change: a feature that is not listed here is invisible to the
 people who plan the next schema version.
