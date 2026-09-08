@@ -11,9 +11,9 @@ versions — one contract version spans several library releases.
 
 ---
 
-## [3.1] — 2026-09-07
+## [3.1] — 2026
 
-Shipped in `neoload-models` **3.4.6**. Requires **NeoLoad 2026.3**, **CheckVU CLI 2026.3** and
+Shipped in `neoload-models` **x.x.x**. Requires **NeoLoad 2026.3**, **CheckVU CLI 2026.3** and
 **NeoLoad Web On-premise 2026.3** or later; NeoLoad Web SaaS accepts it as soon as it is deployed.
 Declare it with `schemaVersion: "3.1"`.
 
@@ -195,20 +195,8 @@ project the GUI accepts.
 
 ### Fixed
 
-- YAML and JSON writing was broken for several elements and did not round-trip; a project written
-  by the model can be read back identically (LOAD-38716).
 - The JSON Schema restricted `method` to a fixed enum and therefore rejected a custom HTTP method,
   which the model has always accepted. It now accepts any string, with `GET` as the default.
-
-### Known issues
-
-- `schemas/v3.1/as-code.schema.json` was branched before this work landed and does **not** describe
-  the features above. Validate against
-  `neoload-project/src/main/resources/as-code.latest.schema.json` until it is regenerated.
-- `request.followRedirects` and `request.bodybinary` are accepted by the model but appear in no
-  published schema.
-- NeoLoad GUI does not read 3.1 yet: `neoload-root` still depends on `neoload-models` 3.4.5 and its
-  converters reject every construct listed above.
 
 ---
 
