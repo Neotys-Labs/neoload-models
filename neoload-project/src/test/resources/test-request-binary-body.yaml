@@ -1,0 +1,20 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        url: /upload
+        server: neotys
+        method: POST
+        headers:
+        - Content-Type: application/octet-stream
+        bodybinary: SGVsbG8gYmluYXJ5IHdvcmxkIQ==
+    - request:
+        url: /upload-raw
+        server: neotys
+        method: PUT
+        headers:
+        - Content-Type: application/octet-stream
+        bodybinary: AAEC//4=
+        sla_profile: MySlaProfile

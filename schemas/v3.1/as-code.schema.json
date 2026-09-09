@@ -137,6 +137,12 @@
 				"type": "string",
 				"pattern": "((.|\n)*)"
 			},
+			"base64blob": {
+				"title": "Base64 Blob",
+				"type": "string",
+				"contentEncoding": "base64",
+				"pattern": "^[A-Za-z0-9+/\\s]*={0,2}\\s*$"
+			},
 			"positive_number": {
 				"title": "Positive Number",
 				"type": "integer",
@@ -988,7 +994,7 @@
 						},
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
-						"bodybinary": { "$ref": "#/definitions/common/textblob" },
+						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
@@ -1010,7 +1016,8 @@
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/part" }
 						}
-					}
+					},
+					"not": { "required": ["body", "bodybinary"] }
 				},
 				"delay": {
 					"title": "Action: Delay",
