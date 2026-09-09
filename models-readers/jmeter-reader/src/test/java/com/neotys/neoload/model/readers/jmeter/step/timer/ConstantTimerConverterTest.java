@@ -2,8 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.step.timer;
 
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.step.timer.ConstantTimerConverter;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.junit.Before;
@@ -31,7 +30,7 @@ public class ConstantTimerConverterTest {
         ConstantTimerConverter constantTimerConverter = new ConstantTimerConverter();
         List<Step> result = constantTimerConverter.apply(constantTimer, null);
         List<Step> expected = new ArrayList<>();
-        expected.add(Delay.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build());
+        expected.add(DelayConstant.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build());
         assertEquals(result,expected);
 
     }

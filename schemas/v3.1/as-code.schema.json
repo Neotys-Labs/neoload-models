@@ -142,6 +142,10 @@
 				"type": "integer",
 				"minimum": 0
 			},
+			"duration_value": {
+				"title": "Duration value",
+				"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
+			},
 			"duration": {
 				"title": "Duration",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
@@ -1014,11 +1018,57 @@
 				},
 				"delay": {
 					"title": "Action: Delay",
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
+					"oneOf": [
+						{ "$ref": "#/definitions/common/duration_value" },
+						{
+							"type": "object",
+							"required": ["value"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/text" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"value": { "$ref": "#/definitions/common/duration_value" }
+							}
+						},
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/text" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"min": { "$ref": "#/definitions/common/duration_value" },
+								"max": { "$ref": "#/definitions/common/duration_value" }
+							}
+						}
+					]
 				},
 				"think_time": {
 					"title": "Action: Think Time",
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
+					"oneOf": [
+						{ "$ref": "#/definitions/common/duration_value" },
+						{
+							"type": "object",
+							"required": ["value"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/text" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"value": { "$ref": "#/definitions/common/duration_value" }
+							}
+						},
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/text" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"min": { "$ref": "#/definitions/common/duration_value" },
+								"max": { "$ref": "#/definitions/common/duration_value" }
+							}
+						}
+					]
 				},
 				"javascript": {
 					"title": "Action: Javascript",

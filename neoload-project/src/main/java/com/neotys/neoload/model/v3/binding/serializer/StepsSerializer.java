@@ -43,14 +43,76 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		generator.writeStartArray();
 				
 		for (final Step step : steps) {
-			if (step instanceof Delay) {
+			if (step instanceof DelayConstant) {
+				final DelayConstant delay = (DelayConstant) step;
 				generator.writeStartObject();
-				generator.writeStringField(DELAY, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(((Delay)step).getValue()));
+				// Simplified scalar syntax when there is no name/description; expanded object otherwise.
+				if (Delay.DEFAULT_NAME.equals(delay.getName()) && delay.getDescription().isEmpty()) {
+					generator.writeStringField(DELAY, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(delay.getValue()));
+				} else {
+					generator.writeObjectFieldStart(DELAY);
+					if (!Delay.DEFAULT_NAME.equals(delay.getName())) {
+						generator.writeStringField("name", delay.getName());
+					}
+					if (delay.getDescription().isPresent()) {
+						generator.writeStringField("description", delay.getDescription().get());
+					}
+					generator.writeStringField("value", TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(delay.getValue()));
+					generator.writeEndObject();
+				}
 				generator.writeEndObject();
 			}
-			else if (step instanceof ThinkTime) {
+			else if (step instanceof DelayRandom) {
+				final DelayRandom delay = (DelayRandom) step;
 				generator.writeStartObject();
-				generator.writeStringField(THINK_TIME, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(((ThinkTime)step).getValue()));
+				generator.writeObjectFieldStart(DELAY);
+				if (!Delay.DEFAULT_NAME.equals(delay.getName())) {
+					generator.writeStringField("name", delay.getName());
+				}
+				if (delay.getDescription().isPresent()) {
+					generator.writeStringField("description", delay.getDescription().get());
+				}
+				if (!DelayRandom.DEFAULT_MIN.equals(delay.getMin())) {
+					generator.writeStringField(DelayRandom.MIN, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(delay.getMin()));
+				}
+				generator.writeStringField(DelayRandom.MAX, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(delay.getMax()));
+				generator.writeEndObject();
+				generator.writeEndObject();
+			}
+			else if (step instanceof ThinkTimeConstant) {
+				final ThinkTimeConstant thinkTime = (ThinkTimeConstant) step;
+				generator.writeStartObject();
+				// Simplified scalar syntax when there is no name/description; expanded object otherwise.
+				if (ThinkTime.DEFAULT_NAME.equals(thinkTime.getName()) && thinkTime.getDescription().isEmpty()) {
+					generator.writeStringField(THINK_TIME, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(thinkTime.getValue()));
+				} else {
+					generator.writeObjectFieldStart(THINK_TIME);
+					if (!ThinkTime.DEFAULT_NAME.equals(thinkTime.getName())) {
+						generator.writeStringField("name", thinkTime.getName());
+					}
+					if (thinkTime.getDescription().isPresent()) {
+						generator.writeStringField("description", thinkTime.getDescription().get());
+					}
+					generator.writeStringField("value", TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(thinkTime.getValue()));
+					generator.writeEndObject();
+				}
+				generator.writeEndObject();
+			}
+			else if (step instanceof ThinkTimeRandom) {
+				final ThinkTimeRandom thinkTime = (ThinkTimeRandom) step;
+				generator.writeStartObject();
+				generator.writeObjectFieldStart(THINK_TIME);
+				if (!ThinkTime.DEFAULT_NAME.equals(thinkTime.getName())) {
+					generator.writeStringField("name", thinkTime.getName());
+				}
+				if (thinkTime.getDescription().isPresent()) {
+					generator.writeStringField("description", thinkTime.getDescription().get());
+				}
+				if (!ThinkTimeRandom.DEFAULT_MIN.equals(thinkTime.getMin())) {
+					generator.writeStringField(ThinkTimeRandom.MIN, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(thinkTime.getMin()));
+				}
+				generator.writeStringField(ThinkTimeRandom.MAX, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(thinkTime.getMax()));
+				generator.writeEndObject();
 				generator.writeEndObject();
 			}
 			// Since GoToNextIteration has no properties, we chose to serialize as a bare scalar string

@@ -53,17 +53,25 @@ public class SwitchControllerConverterTest {
                 .description("Hunt or be hunted")
                 .value("Geralt")
                 .getDefault(Container.builder()
-                        .addSteps(Delay.builder().value("26081997").build())
+                        .addSteps(DelayConstant.builder().name("").value("26081997").build())
                         .build())
                 .addCases(Case.builder()
                         .value("Geralt")
                         .isBreak(true)
+						.steps(List.of(
+								Container.builder()
+										.name("Geralt")
+										.description("")
+										.addSteps(DelayConstant.builder().name("").value("26081997").build())
+										.build()
+								)
+						)
                         .build())
                 .build();
 
         expected.add(aSwitch);
 
-        assertEquals(result,result);
+        assertEquals(expected,result);
 
         verify(spy,times(1)).readUnsupportedAction("Element not tolerate at the first level of switch node");
     }

@@ -3,7 +3,7 @@ package com.neotys.neoload.model.v3.writers.neoload;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import org.assertj.core.api.Assertions;
@@ -22,7 +22,7 @@ public class NeoLoadWriterTest {
     private UserPath userPath = UserPath.builder()
             .name("my User")
             .actions(Container.builder()
-                    .addSteps(Delay.builder().value("3000").build())
+                    .addSteps(DelayConstant.builder().value("3000").build())
                     .build())
             .build();
 
@@ -136,7 +136,7 @@ public class NeoLoadWriterTest {
         UserPath myUserPath = UserPath.builder()
                 .name("myUser")
                 .actions(Container.builder()
-                        .addSteps(Delay.builder()
+                        .addSteps(DelayConstant.builder()
                                 .name("myDelay")
                                 .value("3000")
                                 .build())
