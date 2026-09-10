@@ -34,6 +34,8 @@ import org.junit.Test;
 public class IORoundTripTest extends AbstractIOElementsTest {
 
 	private static final String[] ROUND_TRIP_FIXTURES = {
+			"test-current-date-variable-only-required",
+			"test-current-date-variable-required-and-optional",
 			"test-custom-action-only-required",
 			"test-custom-action-required-and-optional",
 			"test-debug-logger-only-required",
