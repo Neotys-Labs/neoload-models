@@ -23,17 +23,17 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
  */
 @ValidSizeAssertionCheck(groups = {NeoLoad.class})
 @JsonInclude(value = Include.NON_EMPTY)
-@JsonPropertyOrder({SizeAssertion.EQUALS, SizeAssertion.GREATER_THAN, SizeAssertion.LESS_THAN})
+@JsonPropertyOrder({SizeAssertion.EQUALS_PROPERTY, SizeAssertion.GREATER_THAN, SizeAssertion.LESS_THAN})
 @JsonSerialize(as = ImmutableSizeAssertion.class)
 @JsonDeserialize(as = ImmutableSizeAssertion.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface SizeAssertion {
-	String EQUALS = "equals";
+	String EQUALS_PROPERTY = "equals";
 	String GREATER_THAN = "greater_than";
 	String LESS_THAN = "less_than";
 
-	@JsonProperty(EQUALS)
+	@JsonProperty(EQUALS_PROPERTY)
 	Optional<@PositiveOrZero(groups = {NeoLoad.class}) Long> getEquals();
 
 	@JsonProperty(GREATER_THAN)
