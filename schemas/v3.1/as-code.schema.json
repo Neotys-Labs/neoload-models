@@ -1025,7 +1025,7 @@
 							"required": ["value"],
 							"additionalProperties": false,
 							"properties": {
-								"name": { "$ref": "#/definitions/common/text" },
+								"name": { "$ref": "#/definitions/common/name" },
 								"description": { "$ref": "#/definitions/common/text" },
 								"value": { "$ref": "#/definitions/common/duration_value" }
 							}
@@ -1035,7 +1035,7 @@
 							"required": ["max"],
 							"additionalProperties": false,
 							"properties": {
-								"name": { "$ref": "#/definitions/common/text" },
+								"name": { "$ref": "#/definitions/common/name" },
 								"description": { "$ref": "#/definitions/common/text" },
 								"min": { "$ref": "#/definitions/common/duration_value" },
 								"max": { "$ref": "#/definitions/common/duration_value" }
@@ -1052,7 +1052,7 @@
 							"required": ["value"],
 							"additionalProperties": false,
 							"properties": {
-								"name": { "$ref": "#/definitions/common/text" },
+								"name": { "$ref": "#/definitions/common/name" },
 								"description": { "$ref": "#/definitions/common/text" },
 								"value": { "$ref": "#/definitions/common/duration_value" }
 							}
@@ -1062,7 +1062,7 @@
 							"required": ["max"],
 							"additionalProperties": false,
 							"properties": {
-								"name": { "$ref": "#/definitions/common/text" },
+								"name": { "$ref": "#/definitions/common/name" },
 								"description": { "$ref": "#/definitions/common/text" },
 								"min": { "$ref": "#/definitions/common/duration_value" },
 								"max": { "$ref": "#/definitions/common/duration_value" }
