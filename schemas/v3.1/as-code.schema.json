@@ -58,7 +58,8 @@
 					"sql": { "$ref": "#/definitions/variables/sql" },
 					"random_uuid": { "$ref": "#/definitions/variables/random_uuid" },
 					"shared_queue": { "$ref": "#/definitions/variables/shared_queue" },
-					"javascript": { "$ref": "#/definitions/variables/javascript" }
+					"javascript": { "$ref": "#/definitions/variables/javascript" },
+					"secret_vault": {"$ref": "#/definitions/variables/secret_vault"}
 				}
 			}
 		},
@@ -529,6 +530,21 @@
 								"type": "string",
 								"pattern": "^-?\\d+(ms|mo|s|m|h|d|y)$"
 							}
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"secret_vault": {
+				"title": "Secret Vault",
+				"type": "object",
+				"required": ["provider_id", "secret_id"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"provider_id": { "$ref": "#/definitions/common/text" },
+							"secret_id": { "$ref": "#/definitions/common/text" }
 						}
 					}
 				],
