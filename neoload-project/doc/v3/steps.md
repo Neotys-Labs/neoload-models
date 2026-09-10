@@ -4,6 +4,7 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 | Step                              | Since  |
 |:----------------------------------|:------:|
 | [transaction](transaction.md)     |        |
+| [web_page](web_page.md)           | 2026.3 |
 | [request](request.md)             |        |
 | [delay](delay.md)                 |        |
 | [think_time](think_time.md)       |        |

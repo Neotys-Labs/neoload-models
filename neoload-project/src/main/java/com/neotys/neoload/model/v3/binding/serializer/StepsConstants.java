@@ -17,6 +17,7 @@ class StepsConstants {
     protected static final String VARIABLE_MODIFIER = "variable_modifier";
     protected static final String DEBUG_LOGGER = "debug_logger";
     protected static final String STOP_VU = "stop_vu";
+    protected static final String WEB_PAGE = "web_page";
 
     private StepsConstants() {
         super();

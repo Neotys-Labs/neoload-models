@@ -1,0 +1,10 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - web_page:
+        steps:
+        - transaction:
+            steps:
+            - delay: 1s
