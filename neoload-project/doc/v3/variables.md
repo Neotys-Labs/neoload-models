@@ -279,7 +279,7 @@ A list or table of values loaded from the result of a SQL query executed on a da
 | login        | The login used to connect to the database. | -               | -        | 2026.3|
 | password     | The password used to connect to the database. | -               | -        | 2026.3|
 | query        | The SQL query returning the variable values. | -               | &#x2713; | 2026.3|
-| column_names | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | -               | -        | 2026.3|
+| column_names | Overrides the column names taken from the query result set. When omitted, NeoLoad names each column after the matching column of the result set. Use `${<variableName>.<columnName>}` to access variable values. | -               | -        | 2026.3|
 | change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
 | scope        | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        | 2026.3|
 | order        | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | -               | -        | 2026.3|
