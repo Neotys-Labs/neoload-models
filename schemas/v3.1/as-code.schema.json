@@ -20,9 +20,11 @@
 	"properties": {
 		"$schema": { "$ref": "#/definitions/common/full_url" },
 		"schemaVersion": {
-			"type": "string",
-			"const": "3.1",
-			"description": "Schema contract version this file is written for. Must be '3.1' for this schema."
+			"anyOf": [
+				{ "type": "string", "const": "3.1" },
+				{ "type": "number", "const": 3.1 }
+			],
+			"description": "Schema contract version this file is written for. Must be 3.1 as a string or number for this schema."
 		},
 		"name": { "$ref": "#/definitions/common/project_name" },
 		"includes": {
