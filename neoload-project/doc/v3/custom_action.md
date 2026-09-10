@@ -12,7 +12,7 @@ Custom actions are supported in NeoLoad from version 2025.1 onwards.
 | name          | The name of the Custom Action                                                       |        -        | &#x2713; |       |
 | description   | The description of the Custom Action                                                |        -        |    -     |       |
 | [type](#type) | The type of the Action                                                              |        -        | &#x2713; |       |
-| parameters    | The action parameter list                                                           |    &#x2713;     |    -     |       |
+| [parameters](#parameters) | The action parameter list                                                           |    &#x2713;     |    -     |       |
 | asRequest     | Consider the executions as requests in the calculation of the statistics and graphs |        -        |    -     |       |
 | libraryPath   | The path to the JAR file containing the Custom Advanced Action                      |        -        |    -     |       |
 
@@ -124,6 +124,16 @@ An RTE Action:
 
 This can also be the type of Custom Advanced Action, developed using Java.
 
+
+## parameters
+
+Each entry of the `parameters` list defines one action parameter.
+
+| Name  | Description                                                                                            | Accept variable | Required | Since |
+|:------|:--------------------------------------------------------------------------------------------------------|:---------------:|:--------:|:-----:|
+| name  | The name of the parameter, as expected by the action                                                    |        -        | &#x2713; |       |
+| value | The value of the parameter                                                                              |    &#x2713;     | &#x2713; |       |
+| type  | The kind of value. The available values are `TEXT` and `PASSWORD`.</br>The default value is `TEXT`. A `PASSWORD` parameter is stored encrypted in the NeoLoad project. |        -        |    -     |       |
 
 #### Example
 
