@@ -196,7 +196,7 @@ A random numerical value within a value range.
 | description  | The variable description      | -               | -        | 6.10  |
 | min          | The variable min value        | -               | &#x2713; | 6.10  |
 | max          | The variable max value        | -               | &#x2713; | 6.10  |
-| predictable  | When true, randomly generated values will have comparable values for two identical tests.e            | -               | - |6.10|
+| predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | - |6.10|
 | change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |6.10|
 
 #### Example
@@ -245,7 +245,7 @@ A random UUID value.
 | description  | The variable description      | -               | -        | 2026.3|
 | upper_case   | When true, the generated UUID is uppercase.</br>The default value is `false`. | -               | -        | 2026.3|
 | predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | -        | 2026.3|
-| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_use`. | -               | -        | 2026.3|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
 
 #### Example
 Defining a Random UUID variable.
@@ -257,6 +257,40 @@ random_uuid:
   upper_case: true
   predictable: true
   change_policy: each_use
+```
+
+## Current Date variable
+A variable whose value is the current date/time at generation, formatted according to a pattern and optionally shifted by a fixed offset. There is no fixed start date — the value is always derived from the wall clock at the moment it is evaluated.
+
+This variable has no `change_policy` or `scope` because its value is always the current timestamp.
+
+The `pattern` follows the [`SimpleDateFormat`](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) syntax. Two special values are also accepted, both producing the number of milliseconds since the UNIX epoch: `milliseconds since the UNIX epoch` and `currentTimeMillis`.
+
+The `offset` is a single amount and unit. Units are not combined, so that fixed-length units never mix with calendar units in the same value.
+
+| Name                | Description                                                                                                                                                              | Accept variable | Required | Since |
+|:------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |:---------------:|:--------:|:-----:|
+| name                | The variable name                                                                                                                                                        | -               | &#x2713; |       |
+| description         | The variable description                                                                                                                                                 | -               | -        |       |
+| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        |       |
+| offset              | The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Absent means no offset. | -               | -        |       |
+
+#### Example
+Defining a minimal Current Date variable (only required fields).
+
+```yaml
+current_date:
+  name: current_date_variable
+```
+
+Defining a Current Date variable that produces an ISO-8601 timestamp 5 minutes ahead of the current time.
+
+```yaml
+current_date:
+  name: current_date_variable
+  description: now plus 5 minutes
+  pattern: yyyy-MM-dd'T'HH:mm:ss
+  offset: 5m
 ```
 
 ## JavaScript variable
