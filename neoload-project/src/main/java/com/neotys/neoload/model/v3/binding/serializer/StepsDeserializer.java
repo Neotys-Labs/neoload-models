@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableMap;
+import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,64 +90,64 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
     // otherwise a DelayConstant (with its value under the `value` key). Both object forms may carry
     // an optional name/description.
     private Step parseDelay(final JsonNode node) {
-        if (node.isObject()) {
-            if (node.has(DelayRandom.MIN) || node.has(DelayRandom.MAX)) {
-                final DelayRandom.Builder builder = DelayRandom.builder();
-                applyNameDescription(node, builder::name, builder::description);
-                if (node.has(DelayRandom.MIN)) {
-                    builder.min(STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.get(DelayRandom.MIN).asText()));
-                }
-                if (node.has(DelayRandom.MAX)) {
-                    builder.max(STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.get(DelayRandom.MAX).asText()));
-                }
-                return builder.build();
-            }
-            final DelayConstant.Builder builder = DelayConstant.builder();
+        if (!node.isObject()) {
+            return DelayConstant.builder().value(convertDuration(node)).build();
+        }
+        if (node.has(DelayRandom.MIN) || node.has(DelayRandom.MAX)) {
+            final DelayRandom.Builder builder = DelayRandom.builder();
             applyNameDescription(node, builder::name, builder::description);
-            if (node.has("value")) {
-                builder.value(STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.get("value").asText()));
+            if (node.has(DelayRandom.MIN)) {
+                builder.min(convertDuration(node.get(DelayRandom.MIN)));
+            }
+            if (node.has(DelayRandom.MAX)) {
+                builder.max(convertDuration(node.get(DelayRandom.MAX)));
             }
             return builder.build();
         }
-        return DelayConstant.builder()
-                .value(STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.asText()))
-                .build();
+        final DelayConstant.Builder builder = DelayConstant.builder();
+        applyNameDescription(node, builder::name, builder::description);
+        if (node.has(DelayConstant.VALUE)) {
+            builder.value(convertDuration(node.get(DelayConstant.VALUE)));
+        }
+        return builder.build();
     }
 
     // think_time is polymorphic: a scalar is a ThinkTimeConstant; an object with min/max is a
     // ThinkTimeRandom, otherwise a ThinkTimeConstant (with its value under the `value` key). Both
     // object forms may carry an optional name/description.
     private Step parseThinkTime(final JsonNode node) {
-        if (node.isObject()) {
-            if (node.has(ThinkTimeRandom.MIN) || node.has(ThinkTimeRandom.MAX)) {
-                final ThinkTimeRandom.Builder builder = ThinkTimeRandom.builder();
-                applyNameDescription(node, builder::name, builder::description);
-                if (node.has(ThinkTimeRandom.MIN)) {
-                    builder.min(STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.get(ThinkTimeRandom.MIN).asText()));
-                }
-                if (node.has(ThinkTimeRandom.MAX)) {
-                    builder.max(STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.get(ThinkTimeRandom.MAX).asText()));
-                }
-                return builder.build();
-            }
-            final ThinkTimeConstant.Builder builder = ThinkTimeConstant.builder();
+        if (!node.isObject()) {
+            return ThinkTimeConstant.builder().value(convertDuration(node)).build();
+        }
+        if (node.has(ThinkTimeRandom.MIN) || node.has(ThinkTimeRandom.MAX)) {
+            final ThinkTimeRandom.Builder builder = ThinkTimeRandom.builder();
             applyNameDescription(node, builder::name, builder::description);
-            if (node.has("value")) {
-                builder.value(STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.get("value").asText()));
+            if (node.has(ThinkTimeRandom.MIN)) {
+                builder.min(convertDuration(node.get(ThinkTimeRandom.MIN)));
+            }
+            if (node.has(ThinkTimeRandom.MAX)) {
+                builder.max(convertDuration(node.get(ThinkTimeRandom.MAX)));
             }
             return builder.build();
         }
-        return ThinkTimeConstant.builder()
-                .value(STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.asText()))
-                .build();
+        final ThinkTimeConstant.Builder builder = ThinkTimeConstant.builder();
+        applyNameDescription(node, builder::name, builder::description);
+        if (node.has(ThinkTimeConstant.VALUE)) {
+            builder.value(convertDuration(node.get(ThinkTimeConstant.VALUE)));
+        }
+        return builder.build();
+    }
+
+    private static String convertDuration(final JsonNode node) {
+        return STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.asText());
     }
 
     private void applyNameDescription(final JsonNode node, final Consumer<String> nameSetter, final Consumer<String> descriptionSetter) {
-        if (node.has("name")) {
-            nameSetter.accept(node.get("name").asText());
+        if (node.has(Element.NAME)) {
+            nameSetter.accept(node.get(Element.NAME).asText());
         }
-        if (node.has("description")) {
-            descriptionSetter.accept(node.get("description").asText());
+        if (node.has(Element.DESCRIPTION)) {
+            descriptionSetter.accept(node.get(Element.DESCRIPTION).asText());
         }
     }
 

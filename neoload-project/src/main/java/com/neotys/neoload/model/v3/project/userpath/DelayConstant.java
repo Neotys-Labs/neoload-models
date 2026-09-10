@@ -16,6 +16,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 public interface DelayConstant extends Delay {
 
+	String VALUE = "value";
+
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Value.Default
 	default String getName() {

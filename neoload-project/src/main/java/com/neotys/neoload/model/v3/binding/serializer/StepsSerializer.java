@@ -7,10 +7,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.google.common.collect.ImmutableMap;
+import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class StepsSerializer extends StdSerializer<List<Step>> {
     private static final long serialVersionUID = -4569870233567503685L;
@@ -44,76 +46,16 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 				
 		for (final Step step : steps) {
 			if (step instanceof DelayConstant) {
-				final DelayConstant delay = (DelayConstant) step;
-				generator.writeStartObject();
-				// Simplified scalar syntax when there is no name/description; expanded object otherwise.
-				if (Delay.DEFAULT_NAME.equals(delay.getName()) && delay.getDescription().isEmpty()) {
-					generator.writeStringField(DELAY, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(delay.getValue()));
-				} else {
-					generator.writeObjectFieldStart(DELAY);
-					if (!Delay.DEFAULT_NAME.equals(delay.getName())) {
-						generator.writeStringField("name", delay.getName());
-					}
-					if (delay.getDescription().isPresent()) {
-						generator.writeStringField("description", delay.getDescription().get());
-					}
-					generator.writeStringField("value", TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(delay.getValue()));
-					generator.writeEndObject();
-				}
-				generator.writeEndObject();
+				writeDelayConstant(generator, (DelayConstant) step);
 			}
 			else if (step instanceof DelayRandom) {
-				final DelayRandom delay = (DelayRandom) step;
-				generator.writeStartObject();
-				generator.writeObjectFieldStart(DELAY);
-				if (!Delay.DEFAULT_NAME.equals(delay.getName())) {
-					generator.writeStringField("name", delay.getName());
-				}
-				if (delay.getDescription().isPresent()) {
-					generator.writeStringField("description", delay.getDescription().get());
-				}
-				if (!DelayRandom.DEFAULT_MIN.equals(delay.getMin())) {
-					generator.writeStringField(DelayRandom.MIN, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(delay.getMin()));
-				}
-				generator.writeStringField(DelayRandom.MAX, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(delay.getMax()));
-				generator.writeEndObject();
-				generator.writeEndObject();
+				writeDelayRandom(generator, (DelayRandom) step);
 			}
 			else if (step instanceof ThinkTimeConstant) {
-				final ThinkTimeConstant thinkTime = (ThinkTimeConstant) step;
-				generator.writeStartObject();
-				// Simplified scalar syntax when there is no name/description; expanded object otherwise.
-				if (ThinkTime.DEFAULT_NAME.equals(thinkTime.getName()) && thinkTime.getDescription().isEmpty()) {
-					generator.writeStringField(THINK_TIME, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(thinkTime.getValue()));
-				} else {
-					generator.writeObjectFieldStart(THINK_TIME);
-					if (!ThinkTime.DEFAULT_NAME.equals(thinkTime.getName())) {
-						generator.writeStringField("name", thinkTime.getName());
-					}
-					if (thinkTime.getDescription().isPresent()) {
-						generator.writeStringField("description", thinkTime.getDescription().get());
-					}
-					generator.writeStringField("value", TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(thinkTime.getValue()));
-					generator.writeEndObject();
-				}
-				generator.writeEndObject();
+				writeThinkTimeConstant(generator, (ThinkTimeConstant) step);
 			}
 			else if (step instanceof ThinkTimeRandom) {
-				final ThinkTimeRandom thinkTime = (ThinkTimeRandom) step;
-				generator.writeStartObject();
-				generator.writeObjectFieldStart(THINK_TIME);
-				if (!ThinkTime.DEFAULT_NAME.equals(thinkTime.getName())) {
-					generator.writeStringField("name", thinkTime.getName());
-				}
-				if (thinkTime.getDescription().isPresent()) {
-					generator.writeStringField("description", thinkTime.getDescription().get());
-				}
-				if (!ThinkTimeRandom.DEFAULT_MIN.equals(thinkTime.getMin())) {
-					generator.writeStringField(ThinkTimeRandom.MIN, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(thinkTime.getMin()));
-				}
-				generator.writeStringField(ThinkTimeRandom.MAX, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(thinkTime.getMax()));
-				generator.writeEndObject();
-				generator.writeEndObject();
+				writeThinkTimeRandom(generator, (ThinkTimeRandom) step);
 			}
 			// Since GoToNextIteration has no properties, we chose to serialize as a bare scalar string
 			else if (step instanceof GoToNextIteration) {
@@ -145,4 +87,71 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		
 		generator.writeEndArray();
     }
+
+	// A constant duration uses the simplified scalar syntax when it has no name/description,
+	// and the expanded object syntax (value under the `value` key) otherwise.
+	private void writeDelayConstant(final JsonGenerator generator, final DelayConstant delay) throws IOException {
+		generator.writeStartObject();
+		if (Delay.DEFAULT_NAME.equals(delay.getName()) && delay.getDescription().isEmpty()) {
+			generator.writeStringField(DELAY, toDuration(delay.getValue()));
+		} else {
+			generator.writeObjectFieldStart(DELAY);
+			writeNameAndDescription(generator, Delay.DEFAULT_NAME, delay.getName(), delay.getDescription());
+			generator.writeStringField(DelayConstant.VALUE, toDuration(delay.getValue()));
+			generator.writeEndObject();
+		}
+		generator.writeEndObject();
+	}
+
+	// A random duration is always an object with min/max (min omitted when it keeps its default).
+	private void writeDelayRandom(final JsonGenerator generator, final DelayRandom delay) throws IOException {
+		generator.writeStartObject();
+		generator.writeObjectFieldStart(DELAY);
+		writeNameAndDescription(generator, Delay.DEFAULT_NAME, delay.getName(), delay.getDescription());
+		if (!DelayRandom.DEFAULT_MIN.equals(delay.getMin())) {
+			generator.writeStringField(DelayRandom.MIN, toDuration(delay.getMin()));
+		}
+		generator.writeStringField(DelayRandom.MAX, toDuration(delay.getMax()));
+		generator.writeEndObject();
+		generator.writeEndObject();
+	}
+
+	private void writeThinkTimeConstant(final JsonGenerator generator, final ThinkTimeConstant thinkTime) throws IOException {
+		generator.writeStartObject();
+		if (ThinkTime.DEFAULT_NAME.equals(thinkTime.getName()) && thinkTime.getDescription().isEmpty()) {
+			generator.writeStringField(THINK_TIME, toDuration(thinkTime.getValue()));
+		} else {
+			generator.writeObjectFieldStart(THINK_TIME);
+			writeNameAndDescription(generator, ThinkTime.DEFAULT_NAME, thinkTime.getName(), thinkTime.getDescription());
+			generator.writeStringField(ThinkTimeConstant.VALUE, toDuration(thinkTime.getValue()));
+			generator.writeEndObject();
+		}
+		generator.writeEndObject();
+	}
+
+	private void writeThinkTimeRandom(final JsonGenerator generator, final ThinkTimeRandom thinkTime) throws IOException {
+		generator.writeStartObject();
+		generator.writeObjectFieldStart(THINK_TIME);
+		writeNameAndDescription(generator, ThinkTime.DEFAULT_NAME, thinkTime.getName(), thinkTime.getDescription());
+		if (!ThinkTimeRandom.DEFAULT_MIN.equals(thinkTime.getMin())) {
+			generator.writeStringField(ThinkTimeRandom.MIN, toDuration(thinkTime.getMin()));
+		}
+		generator.writeStringField(ThinkTimeRandom.MAX, toDuration(thinkTime.getMax()));
+		generator.writeEndObject();
+		generator.writeEndObject();
+	}
+
+	private static void writeNameAndDescription(final JsonGenerator generator, final String defaultName,
+			final String name, final Optional<String> description) throws IOException {
+		if (!defaultName.equals(name)) {
+			generator.writeStringField(Element.NAME, name);
+		}
+		if (description.isPresent()) {
+			generator.writeStringField(Element.DESCRIPTION, description.get());
+		}
+	}
+
+	private static String toDuration(final String valueInMs) {
+		return TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(valueInMs);
+	}
 }
