@@ -130,7 +130,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
         final Variable secretVaultVariable = SecretVaultVariable.builder()
                 .name("db_password")
                 .providerId("665f1a2b3c4d5e6f7a8b9c0d")
-                .secretIdentifier("my-app/db")
+                .secretId("my-app/db")
                 .build();
 
         return Project.builder()

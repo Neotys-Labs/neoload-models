@@ -459,15 +459,13 @@
 				"$id": "#/definitions/variables/secret_vault",
 				"title": "Secret Vault",
 				"type": "object",
-				"xrequired": ["provider_id", "secret_identifier"],
+				"xrequired": ["provider_id", "secret_id"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"provider_id": { "$ref": "#/definitions/common/text" },
-							"secret_identifier": { "$ref": "#/definitions/common/text" },
-							"scope": { "$ref": "#/definitions/common/var_scope" },
-							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
+							"secret_id": { "$ref": "#/definitions/common/text" }
 						}
 					}
 				],

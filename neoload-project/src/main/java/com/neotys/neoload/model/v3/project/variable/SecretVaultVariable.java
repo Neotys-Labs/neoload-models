@@ -12,33 +12,21 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableSecretVaultVariable.class)
 @JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION,
 		SecretVaultVariable.PROVIDER_ID,
-		SecretVaultVariable.SECRET_IDENTIFIER})
+		SecretVaultVariable.SECRET_ID})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 public interface SecretVaultVariable extends Variable {
 
 	String PROVIDER_ID = "provider_id";
-	String SECRET_IDENTIFIER = "secret_identifier";
+	String SECRET_ID = "secret_id";
 
 	@JsonProperty(PROVIDER_ID)
 	@RequiredCheck(groups = {NeoLoad.class})
 	String getProviderId();
 
-	@JsonProperty(SECRET_IDENTIFIER)
+	@JsonProperty(SECRET_ID)
 	@RequiredCheck(groups = {NeoLoad.class})
-	String getSecretIdentifier();
-
-	@Override
-	@Value.Default
-	default Scope getScope() {
-		return Scope.LOCAL;
-	}
-
-	@Override
-	@Value.Default
-	default ChangePolicy getChangePolicy() {
-		return ChangePolicy.EACH_USER;
-	}
+	String getSecretId();
 
 	class Builder extends ImmutableSecretVaultVariable.Builder {
 	}

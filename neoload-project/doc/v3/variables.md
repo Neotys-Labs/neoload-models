@@ -71,7 +71,7 @@ variables:
 - secret_vault:
     name: db_password
     provider_id: 665f1a2b3c4d5e6f7a8b9c0d
-    secret_identifier: my-app/db
+    secret_id: my-app/db
 ```
 
 ## Constant variable
@@ -321,11 +321,9 @@ A reference to a secret stored in an external vault provider configured in NeoLo
 | name               | The variable name                                                           | -               | &#x2713; |       |
 | description        | The variable description                                                    | -               | -        |       |
 | provider_id        | The opaque NeoLoad Web id of the configured vault provider                  | -               | &#x2713; |       |
-| secret_identifier  | The location of the secret within the provider (see mapping below). For HashiCorp Vault, this is the path within the mount — the mount itself (e.g. `secret`) is configured on the vault provider in NeoLoad Web, not in this field. | -               | &#x2713; |       |
-| change_policy      | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_user`. | -               | -        |       |
-| scope              | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `local`. | -               | -        |       |
+| secret_id          | The location of the secret within the provider (see mapping below). For HashiCorp Vault, this is the path within the mount — the mount itself (e.g. `secret`) is configured on the vault provider in NeoLoad Web, not in this field. | -               | &#x2713; |       |
 
-`secret_identifier` maps to a provider-specific concept:
+`secret_id` maps to a provider-specific concept:
 
 | Provider            | Maps to      | Example                          |
 |:------------------- |:------------ |:-------------------------------- |
@@ -339,5 +337,5 @@ Defining a Secret Vault variable.
 secret_vault:
   name: db_password
   provider_id: 665f1a2b3c4d5e6f7a8b9c0d
-  secret_identifier: my-app/db
+  secret_id: my-app/db
 ```
