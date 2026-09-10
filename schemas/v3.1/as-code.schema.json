@@ -367,16 +367,14 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"pattern": { "$ref": "#/definitions/common/text" },
-							"start_date": { "$ref": "#/definitions/common/text" },
-							"increment_value": {
-								"type": "number",
-								"default": 0
+							"pattern": {
+								"$ref": "#/definitions/common/text",
+								"default": "dd/MM/yyyy HH:mm:ss"
 							},
-							"increment_timeunit": {
+							"start_date": { "$ref": "#/definitions/common/text" },
+							"change_step": {
 								"type": "string",
-								"enum": ["millisecond","second", "minute", "hour", "day", "month", "year"],
-								"default": "second"
+								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$"
 							},
 							"scope": { "$ref": "#/definitions/common/var_scope" }
 						}
