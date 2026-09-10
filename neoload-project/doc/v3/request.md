@@ -6,7 +6,6 @@ A request defines a plain HTTP request.
 
 | Name                                | Description                                                                   | Accept variable | Required | Since |
 |:----------------------------------- |:----------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
-| name                                | The name of the request. The default value is `request`.                      | -               | -        |       |
 | [url](#url)                         | The URL to hit                                                                | &#x2713;        | &#x2713; |       |
 | [server](#server)                   | The server name to use                                                        | -               | -        |       |
 | [method](#method)                   | The request method                                                            | -               | -        |       |
