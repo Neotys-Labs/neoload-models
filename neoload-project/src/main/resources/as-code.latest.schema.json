@@ -620,6 +620,10 @@
 						},
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
+						"parts": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/part" }
+						},
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
@@ -737,6 +741,22 @@
 					},
 					"additionalProperties": false
 				}
+			},
+			"part": {
+				"$id": "#/definitions/user_paths/part",
+				"title": "Multipart Part",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"content_type": { "$ref": "#/definitions/common/text" },
+					"charset": { "$ref": "#/definitions/common/text" },
+					"transfer_encoding": { "$ref": "#/definitions/common/text" },
+					"value": { "$ref": "#/definitions/common/text" },
+					"filename": { "$ref": "#/definitions/common/text" },
+					"source_filename": { "$ref": "#/definitions/common/text" }
+				},
+				"additionalProperties": false
 			},
 			"extractor": {
 				"type": "object",

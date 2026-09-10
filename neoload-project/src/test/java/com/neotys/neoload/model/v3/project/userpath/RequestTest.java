@@ -17,6 +17,7 @@ public class RequestTest {
 		assertEquals("method", Request.METHOD);
 		assertEquals("headers", Request.HEADERS);
 		assertEquals("body", Request.BODY);
+		assertEquals("parts", Request.PARTS);
 		assertEquals("extractors", Request.EXTRACTORS);
 		assertEquals("assertions", Request.ASSERTIONS);
 		
