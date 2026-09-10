@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"request":{"url":"https://example.com/upload","method":"POST","parts":[{"name":"comment","content_type":"text/plain","charset":"UTF-8","transfer_encoding":"8bit","value":"hello"},{"name":"file","content_type":"image/jpeg","filename":"upload.jpg","source_filename":"upload.jpg"}]}}]}}]}

@@ -59,6 +59,8 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-readonly-while-required-and-optional",
 			"test-request-only-required",
 			"test-request-required-and-optional",
+			"test-request-parts-only-required",
+			"test-request-parts-required-and-optional",
 			"test-scenarios-only-required",
 			"test-scenarios-required-and-optional",
 			"test-servers-only-required",
