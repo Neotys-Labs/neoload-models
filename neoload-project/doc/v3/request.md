@@ -11,6 +11,7 @@ A request defines a plain HTTP request.
 | [method](#method)                   | The request method                                                            | -               | -        |       |
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
+| [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        |       |
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
@@ -170,7 +171,7 @@ Define the request body to use for the HTTP request. Variables can be used in th
 
 In using the `Content-Type` header with `application/x-www-form-urlencoded`, the variables can be used from the name/value pairs of the request body. To encode the evaluation of a variable from the name/value pairs, use convention: `__encodeURL(${my_variable})`.
 
-> The bodies containing a binary or multipart/form-data data are not yet supported. 
+> To send a binary body, use [bodybinary](#bodybinary) instead. The bodies containing a multipart/form-data data are not yet supported. 
 
 #### Example 1
 
@@ -216,6 +217,29 @@ request:
   - Content-Type: application/x-www-form-urlencoded
   body: |
     name=__encodeURL(${var_dog_name})&breed=__encodeURL(${var_dog_breed})
+```
+
+## bodybinary
+
+Define a binary request body, encoded in base64. Use it for payloads such as `application/octet-stream` or any other binary format.
+
+Variables cannot be used in `bodybinary`
+
+The `body` and `bodybinary` fields are mutually exclusive: a request must define at most one of them.
+
+Like `body`, `bodybinary` is only sent for the `POST` and `PUT` methods, and is ignored for the others.
+
+#### Example
+
+Defining an HTTP request sending the bytes of `Hello binary world!`.
+
+```yaml
+request:
+  url: https://www.compagny.com/upload
+  method: POST
+  headers:
+  - Content-Type: application/octet-stream
+  bodybinary: SGVsbG8gYmluYXJ5IHdvcmxkIQ==
 ```
 
 
