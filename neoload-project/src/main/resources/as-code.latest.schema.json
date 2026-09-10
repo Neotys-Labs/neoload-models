@@ -553,11 +553,7 @@
 					"sla_profile": {
 						"type": "string"
 					},
-					"steps": { "$ref": "#/definitions/user_paths/steps" },
-					"assertions": {
-						"type": "array",
-						"items": { "$ref": "#/definitions/user_paths/content_assertion" }
-					}
+					"steps": { "$ref": "#/definitions/user_paths/steps" }
 				}
 			},
 			"steps": {
@@ -593,11 +589,7 @@
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
-						"steps": { "$ref": "#/definitions/user_paths/steps" },
-						"assertions": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/content_assertion" }
-						}
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
 				},
@@ -631,12 +623,7 @@
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
-						},
-						"assertions": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/content_assertion" }
-						},
-						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
+						}
 					}
 				},
 				"delay": {
@@ -746,8 +733,7 @@
 							"type": "boolean",
 							"default": false
 						},
-						"libraryPath": { "$ref": "#/definitions/common/text" },
-						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
+						"libraryPath": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				}
@@ -787,51 +773,6 @@
 						"default": true
 					}
 				}
-			},
-			"content_assertion": {
-				"$id": "#/definitions/user_paths/content_assertion",
-				"title": "Content Assertion",
-				"type": "object",
-				"properties": {
-					"name": { "$ref": "#/definitions/common/text" },
-					"xpath": { "$ref": "#/definitions/common/text" },
-					"jsonpath": { "$ref": "#/definitions/common/text" },
-					"not": {
-						"type": "boolean",
-						"default": false
-					},
-					"contains": { "$ref": "#/definitions/common/text" },
-					"regexp": {
-						"type": "boolean",
-						"default": false
-					}
-				},
-				"additionalProperties": false
-			},
-			"size_assertion": {
-				"$id": "#/definitions/user_paths/size_assertion",
-				"title": "Size Assertion",
-				"type": "object",
-				"minProperties": 1,
-				"properties": {
-					"equals": { "$ref": "#/definitions/user_paths/size_assertion_bound" },
-					"greater_than": { "$ref": "#/definitions/user_paths/size_assertion_bound" },
-					"less_than": { "$ref": "#/definitions/user_paths/size_assertion_bound" }
-				},
-				"additionalProperties": false,
-				"not": {
-					"required": ["equals"],
-					"anyOf": [
-						{ "required": ["greater_than"] },
-						{ "required": ["less_than"] }
-					]
-				}
-			},
-			"size_assertion_bound": {
-				"$id": "#/definitions/user_paths/size_assertion_bound",
-				"title": "Size Assertion Bound",
-				"type": "integer",
-				"minimum": 0
 			},
 			"case": {
 				"type": "object",
