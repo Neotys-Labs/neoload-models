@@ -5,8 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.variable.CurrentDateVariable;
-import com.neotys.neoload.model.v3.project.variable.CurrentDateVariable.Offset;
 import com.neotys.neoload.model.v3.project.variable.IncrementTimeUnit;
+import com.neotys.neoload.model.v3.project.variable.Offset;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.Optional;
 import org.junit.Test;

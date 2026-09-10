@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.project.variable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -47,6 +48,11 @@ public interface DateVariable extends ChangePolicyVariable, ScopeVariable {
 	@JsonProperty(CHANGE_STEP)
 	@ChangeStepCheck(groups = {NeoLoad.class})
 	Optional<String> getChangeStep();
+
+	@JsonIgnore
+	default Optional<Offset> getParsedChangeStep() {
+		return getChangeStep().flatMap(Offset::parse);
+	}
 
 	class DefaultPatternFilter {
 		@Override
