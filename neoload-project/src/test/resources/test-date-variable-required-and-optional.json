@@ -1,0 +1,1 @@
+{"name":"MyProject","variables":[{"date":{"name":"MyDate","description":"start of year plus 5 minutes","pattern":"yyyy-MM-dd'T'HH:mm:ss","start_date":"2024-01-01T00:00:00","change_step":"5m","change_policy":"each_use","scope":"local"}}]}

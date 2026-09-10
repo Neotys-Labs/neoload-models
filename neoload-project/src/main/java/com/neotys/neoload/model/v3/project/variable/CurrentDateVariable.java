@@ -10,7 +10,6 @@ import com.neotys.neoload.model.v3.validation.constraints.OffsetCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.Optional;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.immutables.value.Value;
 
 // S2097 suppressed: the nested Jackson value-filter class overrides equals(Object) to compare the
@@ -47,57 +46,12 @@ public interface CurrentDateVariable extends Variable {
 		return getOffset().flatMap(Offset::parse);
 	}
 
-	enum OffsetUnit {
-		MILLISECOND("ms"),
-		SECOND("s"),
-		MINUTE("m"),
-		HOUR("h"),
-		DAY("d"),
-		MONTH("mo"),
-		YEAR("y");
-
-		private final String code;
-
-		OffsetUnit(final String code) {
-			this.code = code;
-		}
-
-		public String getCode() {
-			return code;
-		}
-
-		public static Optional<OffsetUnit> fromCode(final String code) {
-			for (final OffsetUnit unit : values()) {
-				if (unit.code.equals(code)) {
-					return Optional.of(unit);
-				}
-			}
-			return Optional.empty();
-		}
-
-		// NeoLoad legacy XML "inc-type" attribute code for this unit.
-		public int getDateIncrementTypeCode() {
-			switch (this) {
-				case MILLISECOND : return -1;
-				case SECOND : return 0;
-				case MINUTE : return 1;
-				case HOUR : return 2;
-				case DAY : return 3;
-				case MONTH : return 4;
-				case YEAR : return 5;
-				default : return 0;
-			}
-		}
-	}
-
 	final class Offset {
 
-		private static final Pattern OFFSET_PATTERN = Pattern.compile("^(-?\\d+)(ms|mo|s|m|h|d|y)$");
-
 		private final int amount;
-		private final OffsetUnit unit;
+		private final IncrementTimeUnit unit;
 
-		private Offset(final int amount, final OffsetUnit unit) {
+		private Offset(final int amount, final IncrementTimeUnit unit) {
 			this.amount = amount;
 			this.unit = unit;
 		}
@@ -106,7 +60,7 @@ public interface CurrentDateVariable extends Variable {
 			if (offset == null) {
 				return Optional.empty();
 			}
-			final Matcher matcher = OFFSET_PATTERN.matcher(offset);
+			final Matcher matcher = IncrementTimeUnit.PATTERN.matcher(offset);
 			if (!matcher.matches()) {
 				return Optional.empty();
 			}
@@ -117,14 +71,14 @@ public interface CurrentDateVariable extends Variable {
 				// The regex accepts any number of digits: an amount beyond int range is not a usable offset.
 				return Optional.empty();
 			}
-			return OffsetUnit.fromCode(matcher.group(2)).map(unit -> new Offset(amount, unit));
+			return IncrementTimeUnit.fromCode(matcher.group(2)).map(unit -> new Offset(amount, unit));
 		}
 
 		public int getAmount() {
 			return amount;
 		}
 
-		public OffsetUnit getUnit() {
+		public IncrementTimeUnit getUnit() {
 			return unit;
 		}
 	}
