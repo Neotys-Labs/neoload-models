@@ -18,6 +18,7 @@ import com.neotys.neoload.model.v3.project.Element;
 		@JsonSubTypes.Type(value = ImmutableJavaScriptVariable.class, name = "javascript"),
 		@JsonSubTypes.Type(value = ImmutableSharedQueueVariable.class, name = "shared_queue"),
 		@JsonSubTypes.Type(value = ImmutableListVariable.class, name = "list"),
+		@JsonSubTypes.Type(value = ImmutableCurrentDateVariable.class, name = "current_date")
 })
 public interface Variable extends Element {
 }

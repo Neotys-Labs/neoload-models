@@ -1,5 +1,7 @@
 package com.neotys.neoload.model.v3.binding.io;
 
+import static org.junit.Assert.fail;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
@@ -7,10 +9,6 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -22,8 +20,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.junit.Assert.fail;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Validates every YAML and JSON fixture in {@code neoload-project/src/test/resources} against the canonical
@@ -76,7 +75,8 @@ public class IOSchema3Dot1ValidationTest {
             "test-scenarios-iso-8859-1.yaml",
             "test-scenarios-iso-8859-1.json",
             // Voluntarily invalid files for unit-test:
-            "test-try-catch-invalid-caught-exceptions.yaml"
+            "test-try-catch-invalid-caught-exceptions.yaml",
+            "test-current-date-variable-offsets-invalid.yaml"
     );
 
     @BeforeClass

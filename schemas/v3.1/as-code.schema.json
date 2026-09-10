@@ -384,28 +384,6 @@
 				],
 				"unevaluatedProperties": false
 			},
-			"current_date": {
-				"title": "Current Date",
-				"type": "object",
-				"allOf": [
-					{ "$ref": "#/definitions/variables/generic" },
-					{
-						"properties": {
-							"pattern": { "$ref": "#/definitions/common/text" },
-							"increment_value": {
-								"type": "number",
-								"default": 0
-							},
-							"increment_timeunit": {
-								"type": "string",
-								"enum": ["millisecond","second", "minute", "hour", "day", "month", "year"],
-								"default": "second"
-							}
-						}
-					}
-				],
-				"unevaluatedProperties": false
-			},
 			"list": {
 				"title": "List",
 				"type": "object",
@@ -528,6 +506,26 @@
 										"default": true
 									}
 								}
+							}
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"current_date": {
+				"title": "Current Date",
+				"type": "object",
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"pattern": {
+								"$ref": "#/definitions/common/text",
+								"default": "dd/MM/yyyy HH:mm:ss"
+							},
+							"offset": {
+								"type": "string",
+								"pattern": "^-?\\d+(ms|mo|s|m|h|d|y)$"
 							}
 						}
 					}

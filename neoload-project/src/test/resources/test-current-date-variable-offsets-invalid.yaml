@@ -1,0 +1,35 @@
+name: MyProject
+variables:
+- current_date:
+    name: offset_empty
+    offset: ""
+- current_date:
+    name: offset_unknown_unit
+    offset: fortnight
+- current_date:
+    name: offset_without_unit
+    offset: 5
+- current_date:
+    name: offset_unit_without_amount
+    offset: d
+- current_date:
+    name: offset_reversed
+    offset: d5
+- current_date:
+    name: offset_uppercase_unit
+    offset: 5D
+- current_date:
+    name: offset_plus_sign
+    offset: +3h
+- current_date:
+    name: offset_fractional_amount
+    offset: 1.5h
+- current_date:
+    name: offset_separated_unit
+    offset: 5 d
+- current_date:
+    name: offset_combined_units
+    offset: 1h30m
+- current_date:
+    name: offset_beyond_int_range
+    offset: 99999999999d
