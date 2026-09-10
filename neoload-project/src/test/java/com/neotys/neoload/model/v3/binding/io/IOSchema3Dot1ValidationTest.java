@@ -78,7 +78,15 @@ public class IOSchema3Dot1ValidationTest {
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
             "test-date-variable-invalid-change-step.yaml",
-            "test-assert-duration-unknown-property.yaml"
+            "test-assert-duration-unknown-property.yaml",
+            "test-web_page-empty-steps.yaml",
+            "test-web_page-execute-resources-invalid.yaml",
+            "test-web_page-no-steps.yaml",
+            "test-web_page-playback-invalid.yaml",
+            "test-web_page-think-time-invalid-value.yaml",
+            "test-web_page-think-time-min-only.yaml",
+            "test-web_page-think-time-mixed.yaml",
+            "test-web_page-unsupported-step.yaml"
     );
 
     @BeforeClass
