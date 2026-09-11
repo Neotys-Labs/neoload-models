@@ -22,6 +22,7 @@ Switches are supported in NeoLoad from version 2025.1 onwards.
 | value             | The value of the case       |        -        | &#x2713; |       |
 | break             | Enable the break            |        -        |          |       |
 | description       | The description of the case |        -        |    -     |       |
+| [pacing](pacing.md) | The minimum duration enforced for the case | &#x2713; | - | 2026.3 |
 | [steps](steps.md) | The steps to be executed    |        -        | &#x2713; |       |
 
 #### Example

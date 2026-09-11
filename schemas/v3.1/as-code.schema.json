@@ -144,6 +144,11 @@
 				"type": "integer",
 				"minimum": 0
 			},
+			"pacing_value": {
+				"title": "Pacing value",
+				"type": "string",
+				"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
+			},
 			"duration": {
 				"title": "Duration",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
@@ -873,6 +878,7 @@
 					"sla_profile": {
 						"type": "string"
 					},
+					"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				}
@@ -926,6 +932,7 @@
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
+						"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": { "$ref": "#/definitions/common/assertions" }
 					},
@@ -1019,6 +1026,21 @@
 				"think_time": {
 					"title": "Action: Think Time",
 					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
+				},
+				"pacing": {
+					"title": "Action: Pacing",
+					"oneOf": [
+						{ "$ref": "#/definitions/common/pacing_value" },
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"min": { "$ref": "#/definitions/common/pacing_value" },
+								"max": { "$ref": "#/definitions/common/pacing_value" }
+							}
+						}
+					]
 				},
 				"javascript": {
 					"title": "Action: Javascript",
@@ -1341,6 +1363,7 @@
 					"description": { "$ref": "#/definitions/common/text" },
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": { "type": "boolean" },
+					"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				},
