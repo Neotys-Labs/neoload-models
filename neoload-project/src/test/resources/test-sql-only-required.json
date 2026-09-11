@@ -1,0 +1,1 @@
+{"name":"MyProject","variables":[{"sql":{"name":"MySql","url":"jdbc:mysql://localhost:3306/mydb","query":"SELECT username, email FROM users"}}]}

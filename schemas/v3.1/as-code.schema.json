@@ -420,20 +420,23 @@
 			"sql": {
 				"title": "SQL",
 				"type": "object",
-				"required": ["query", "driver", "url"],
+				"required": ["url", "query"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"query": { "$ref": "#/definitions/common/text" },
 							"driver": { "$ref": "#/definitions/common/text" },
 							"url": { "$ref": "#/definitions/common/text" },
 							"login": { "$ref": "#/definitions/common/text" },
 							"password": { "$ref": "#/definitions/common/text" },
+							"query": { "$ref": "#/definitions/common/text" },
 							"column_names": {
 								"type": "array",
 								"items": { "type": "string" }
-							}
+							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"order": { "$ref": "#/definitions/common/var_order" },
+							"out_of_value": { "$ref": "#/definitions/common/var_out_of_value" }
 						}
 					}
 				],
