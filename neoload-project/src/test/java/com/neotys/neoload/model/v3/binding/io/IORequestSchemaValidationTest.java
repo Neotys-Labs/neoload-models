@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -108,6 +110,40 @@ public class IORequestSchemaValidationTest {
                         + "        url: http://www.neotys.com/select\n"
                         + "        followRedirects: not-a-boolean\n");
         assertFalse("followRedirects must be a boolean", SCHEMA.validate(node).isEmpty());
+    }
+
+    @Test
+    public void schema3Dot1MethodEnumIncludesCustom() throws IOException, URISyntaxException {
+        URL testClassesUrl = IORequestSchemaValidationTest.class.getProtectionDomain().getCodeSource().getLocation();
+        Path moduleDir = Paths.get(testClassesUrl.toURI()).getParent().getParent();
+        Path schemaPath = moduleDir.resolve("../schemas/v3.1/as-code.schema.json").normalize();
+        JsonNode schema31 = JSON_MAPPER.readTree(schemaPath.toFile());
+
+        JsonNode method = schema31.at("/definitions/user_paths/actions/request/properties/method");
+        assertTrue("3.1 request.method must exist", method.isObject());
+        assertTrue("3.1 method enum must include CUSTOM", enumValues(method).anyMatch("CUSTOM"::equals));
+
+        JsonSchema schema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemaPath.toUri());
+        JsonNode valid = YAML_MAPPER.readTree(
+                "schemaVersion: \"3.1\"\n"
+                        + "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        name: MyNamedRequest\n"
+                        + "        url: http://www.neotys.com/select\n"
+                        + "        method: CUSTOM\n"
+                        + "        followRedirects: true\n");
+        Set<ValidationMessage> errors = schema.validate(valid);
+        if (!errors.isEmpty()) {
+            fail("3.1 schema rejected name/followRedirects/CUSTOM:\n  "
+                    + errors.stream()
+                            .map(ValidationMessage::getMessage)
+                            .sorted()
+                            .collect(Collectors.joining("\n  ")));
+        }
     }
 
     @Test
