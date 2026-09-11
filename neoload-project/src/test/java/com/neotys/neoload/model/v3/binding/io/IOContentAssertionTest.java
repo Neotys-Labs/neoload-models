@@ -46,20 +46,37 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 		write("test-assert-content-required-and-optional", expectedProject);
 	}
 
+	@Test
+	public void readLegacyAssertionsKey() throws IOException {
+		final Project expectedProject = getAsertionsOnlyRequired();
+		assertNotNull(expectedProject);
+
+		read("test-assert-content-legacy-key", expectedProject);
+	}
+
+	@Test
+	public void legacyAssertionsKeyReserializesUnderNewKey() throws IOException {
+		final Project expectedProject = getAsertionsOnlyRequired();
+		assertNotNull(expectedProject);
+
+		read("test-assert-content-legacy-key", expectedProject);
+		write("test-assert-content-only-required", expectedProject);
+	}
+
 
 	private Project getAsertionsOnlyRequired() {
 
 		final ImmutableRequest request = Request.builder()
 				.name("http_request")
 				.url("http://www.neotys.com/select?name:neoload")
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.contains("DevOps and Automation")
 						.build())
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.xPath("xpath")
 						.contains("DevOps")
 						.build())
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.jsonPath("jsonpath")
 						.contains("Automation")
 						.build())
@@ -107,9 +124,9 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 		final ImmutableRequest request = Request.builder()
 				.name("http_request")
 				.url("http://www.neotys.com/select?name:neoload")
-				.addAssertions(assertion1)
-				.addAssertions(assertion2)
-				.addAssertions(assertion3)
+				.addContentAssertions(assertion1)
+				.addContentAssertions(assertion2)
+				.addContentAssertions(assertion3)
 				.build();
 
 		final UserPath userPath = UserPath.builder()
