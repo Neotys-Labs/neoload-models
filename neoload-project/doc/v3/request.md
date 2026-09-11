@@ -13,6 +13,7 @@ A request defines a plain HTTP request.
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
+| [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration                 | -               | -        | 3.1   |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
 | followRedirects                     | When `true`, the HTTP redirections returned by the server are followed.</br>The default value is `false`. | -               | -        |       |
 | bodybinary                          | The request body as Base64-encoded binary content, used instead of `body` for a non-text payload. | -               | -        |       |

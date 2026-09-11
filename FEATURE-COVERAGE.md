@@ -45,8 +45,9 @@ is documented in `neoload-project/doc/v3/` yet.
 **Variables** — `date`, `current_date`, `sql`, `password`, `secret_vault`. With these five, the
 as-code variable catalogue matches the fourteen types offered by the GUI.
 
-**Assertions** — the `assertions` list becomes a `{content|size|duration}` discriminated union:
-`size` (with an `operator`) and `duration` join the existing content assertion.
+**Assertions** — the `assertions` list becomes a `{content|size}` discriminated union: `size`
+(with an `operator`) joins the existing content assertion. `duration_assertion` is a separate,
+single-value setting (`less_than`) on `request` and `custom_action`.
 
 **Frameworks** — a `framework` model (`enabled`, `parameters`) with dynamic parameters
 (`enabled`, `extraction_source`, `xpath`, `jsonpath`, `regexp`, `template`), covering the GUI
@@ -193,7 +194,7 @@ and protocol action catalogues.
 | Content assertion (`contains`, `regexp`, `xpath`, `jsonpath`, `not`) | 3.0 |
 | Assertions on request, transaction, container and User Path | 3.0 |
 | Size assertion | 3.1 draft |
-| Duration assertion | 3.1 draft |
+| Duration assertion (`duration_assertion`, `less_than`, on request and custom action) | 3.1 |
 | JSON assertions (`JsonContentAssertion`, `JsonResponseAssertion`) | — |
 | Plugin assertions (`PluginContentAssertion`, `PluginResponseAssertion`) | — |
 | Response assertion (`ResponseAssertion`) | — |
