@@ -1,11 +1,11 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
-import com.neotys.neoload.model.v3.project.variable.Offset;
-import com.neotys.neoload.model.v3.validation.constraints.OffsetCheck;
+import com.neotys.neoload.model.v3.project.variable.IncrementTimeUnit;
+import com.neotys.neoload.model.v3.validation.constraints.ChangeStepCheck;
 import java.util.Optional;
 import javax.validation.ConstraintValidatorContext;
 
-public final class OffsetValidator extends AbstractConstraintValidator<OffsetCheck, Object> {
+public final class ChangeStepValidator extends AbstractConstraintValidator<ChangeStepCheck, Object> {
 
 	@Override
 	public boolean isValid(final Object input, final ConstraintValidatorContext context) {
@@ -20,6 +20,6 @@ public final class OffsetValidator extends AbstractConstraintValidator<OffsetChe
 			return true;
 		}
 
-		return object instanceof String && Offset.parse((String) object).isPresent();
+		return object instanceof String && IncrementTimeUnit.PATTERN.matcher((String) object).matches();
 	}
 }
