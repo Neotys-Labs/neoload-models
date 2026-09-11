@@ -907,6 +907,7 @@
 								"custom_action": {"$ref": "#/definitions/user_paths/actions/custom_action"},
 								"try_catch": {"$ref": "#/definitions/user_paths/actions/try_catch"},
 								"fork": {"$ref": "#/definitions/user_paths/actions/fork"},
+								"wait_until": { "$ref": "#/definitions/user_paths/actions/wait_until" },
 								"variable_modifier": {"$ref": "#/definitions/user_paths/actions/variable_modifier"},
 								"debug_logger": {"$ref": "#/definitions/user_paths/actions/debug_logger"},
 								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"}
