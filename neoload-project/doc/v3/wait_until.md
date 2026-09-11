@@ -20,9 +20,9 @@ Use the following syntax to define condition: `"'operand1 (operator) (operand2)?
 Operator value can be: <ul><li>`equals`</li><li>`==`</li><li>`not_equals`</li><li>`!=`</li><li>`contains`</li><li>`not_contains`</li><li>`starts_with`</li><li>`not_starts_with`</li><li>`ends_with`</li><li>`not_ends_with`</li><li>`match_regexp`</li><li>`not_match_regexp`</li><li>`greater`</li><li>`>`</li><li>`greater_equal`</li><li>`>=`</li><li>`less`</li><li>`<`</li><li>`less_equal`</li><li>`<=`</li><li>`exists`</li><li>`not_exists`</li></ul>
 
 #### Timeout value
-The timeout duration format is the same as the [Think time](think_time.md) duration format (expressed in hours, minutes, seconds, milliseconds). A NeoLoad variable can also be used.
+The timeout duration is expressed in hours, minutes, seconds, milliseconds.
 
-We recommend using the `h m s ms` format (for example `15m 500ms`) rather than a plain integer representing a duration in milliseconds. The integer format (a duration in milliseconds) is nonetheless still accepted.
+We recommend using the duration format consisting of `hours (h), minutes (m), seconds (s) and milliseconds (ms)` (for example `15m 500ms`) rather than a plain integer representing a duration in milliseconds. The integer format (a duration in milliseconds) is nonetheless still accepted. A NeoLoad variable can also be used.
 
 Some valid examples of timeout durations:
 
