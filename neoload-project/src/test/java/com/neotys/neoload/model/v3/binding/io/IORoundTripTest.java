@@ -93,7 +93,9 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-random-string-only-required",
 			"test-random-string-required-and-optional",
 			"test-random-uuid-only-required",
-			"test-random-uuid-required-and-optional"
+			"test-random-uuid-required-and-optional",
+			"test-password-only-required",
+			"test-password-required-and-optional"
 	};
 
 	@Test

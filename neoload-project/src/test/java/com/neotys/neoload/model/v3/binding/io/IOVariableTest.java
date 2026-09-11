@@ -43,6 +43,11 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .value("118218")
                 .build();
 
+        final Variable passwordVariable = PasswordVariable.builder()
+                .name("MyPassword")
+                .value("s3cr3t")
+                .build();
+
         final Variable fileVariable = FileVariable.builder()
                 .name("cities_file")
                 .description("cities variable file description")
@@ -134,7 +139,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable,
+                .addVariables(constantVariable, passwordVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable,
                         randomUUIDVariable, listVariable, listVariable2, javaScriptVariable)
                 .build();
     }
