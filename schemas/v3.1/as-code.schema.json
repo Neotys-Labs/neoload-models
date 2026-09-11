@@ -1009,7 +1009,8 @@
 						"parts": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/part" }
-						}
+						},
+						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					}
 				},
 				"delay": {
@@ -1110,7 +1111,8 @@
 							"type": "boolean",
 							"default": false
 						},
-						"libraryPath": { "$ref": "#/definitions/common/text" }
+						"libraryPath": { "$ref": "#/definitions/common/text" },
+						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					},
 					"additionalProperties": false
 				},
@@ -1295,19 +1297,25 @@
 			"size_assertion": {
 				"title": "Size Assertion",
 				"type": "object",
-				"required": ["operator", "value"],
+				"minProperties": 1,
 				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"operator": {
-						"type": "string",
-						"enum": ["equals", "less_than", "greater_than"]
-					},
-					"value": {
-						"type": "integer",
-						"minimum": 0
-					}
+					"equals": { "$ref": "#/definitions/user_paths/size_assertion_bound" },
+					"greater_than": { "$ref": "#/definitions/user_paths/size_assertion_bound" },
+					"less_than": { "$ref": "#/definitions/user_paths/size_assertion_bound" }
 				},
-				"additionalProperties": false
+				"additionalProperties": false,
+				"not": {
+					"required": ["equals"],
+					"anyOf": [
+						{ "required": ["greater_than"] },
+						{ "required": ["less_than"] }
+					]
+				}
+			},
+			"size_assertion_bound": {
+				"title": "Size Assertion Bound",
+				"type": "integer",
+				"minimum": 0
 			},
 			"duration_assertion": {
 				"title": "Duration Assertion",
