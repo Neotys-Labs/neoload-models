@@ -30,6 +30,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		builder.put(ImmutableGoToNextIteration.class, GO_TO_NEXT_ITERATION);
 		builder.put(ImmutableFork.class, FORK);
 		builder.put(ImmutableVariableModifier.class, VARIABLE_MODIFIER);
+		builder.put(ImmutableRendezvous.class, RENDEZVOUS);
 		builder.put(ImmutableDebugLogger.class, DEBUG_LOGGER);
     	STEPS = builder.build();
     }
@@ -41,46 +42,59 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 	@Override
 	public void serialize(final List<Step> steps, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		generator.writeStartArray();
-				
 		for (final Step step : steps) {
-			if (step instanceof Delay) {
+			serializeStep(step, generator);
+		}
+		generator.writeEndArray();
+	}
+
+	private void serializeStep(final Step step, final JsonGenerator generator) throws IOException {
+		if (step instanceof Delay) {
+			generator.writeStartObject();
+			generator.writeStringField(DELAY, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(((Delay) step).getValue()));
+			generator.writeEndObject();
+		} else if (step instanceof ThinkTime) {
+			generator.writeStartObject();
+			generator.writeStringField(THINK_TIME, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(((ThinkTime) step).getValue()));
+			generator.writeEndObject();
+		} else if (step instanceof GoToNextIteration) {
+			// GoToNextIteration has no properties, serialized as a bare scalar string
+			generator.writeString(GO_TO_NEXT_ITERATION);
+		} else if (step instanceof Rendezvous) {
+			serializeRendezvous((Rendezvous) step, generator);
+		} else if (step instanceof StopVU) {
+			serializeStopVU((StopVU) step, generator);
+		} else {
+			final String stepName = STEPS.get(step.getClass());
+			if (stepName != null) {
 				generator.writeStartObject();
-				generator.writeStringField(DELAY, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(((Delay)step).getValue()));
+				generator.writeObjectField(stepName, step);
 				generator.writeEndObject();
-			}
-			else if (step instanceof ThinkTime) {
-				generator.writeStartObject();
-				generator.writeStringField(THINK_TIME, TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(((ThinkTime)step).getValue()));
-				generator.writeEndObject();
-			}
-			// Since GoToNextIteration has no properties, we chose to serialize as a bare scalar string
-			else if (step instanceof GoToNextIteration) {
-				generator.writeString(GO_TO_NEXT_ITERATION);
-			}
-			// A StopVU keeping the default start_new_vu is serialized as a bare scalar string
-			else if (step instanceof StopVU) {
-				final StopVU stopVU = (StopVU) step;
-				if (stopVU.getStartNewVU()) {
-					generator.writeString(STOP_VU);
-				}
-				else {
-					generator.writeStartObject();
-					generator.writeObjectFieldStart(STOP_VU);
-					generator.writeBooleanField(StopVU.START_NEW_VU, stopVU.getStartNewVU());
-					generator.writeEndObject();
-					generator.writeEndObject();
-				}
-			}
-			else {
-				final String stepName = STEPS.get(step.getClass());
-				if (stepName != null) {
-					generator.writeStartObject();
-					generator.writeObjectField(stepName, step);
-					generator.writeEndObject();
-				} 
 			}
 		}
-		
-		generator.writeEndArray();
-    }
+	}
+
+	private void serializeRendezvous(final Rendezvous rdv, final JsonGenerator generator) throws IOException {
+		final boolean isDefault = RENDEZVOUS.equals(rdv.getName()) && rdv.getDescription().isEmpty();
+		if (isDefault) {
+			generator.writeString(RENDEZVOUS);
+		} else {
+			generator.writeStartObject();
+			generator.writeObjectField(RENDEZVOUS, rdv);
+			generator.writeEndObject();
+		}
+	}
+
+	private void serializeStopVU(final StopVU stopVU, final JsonGenerator generator) throws IOException {
+		// A StopVU keeping the default start_new_vu is serialized as a bare scalar string
+		if (stopVU.getStartNewVU()) {
+			generator.writeString(STOP_VU);
+		} else {
+			generator.writeStartObject();
+			generator.writeObjectFieldStart(STOP_VU);
+			generator.writeBooleanField(StopVU.START_NEW_VU, stopVU.getStartNewVU());
+			generator.writeEndObject();
+			generator.writeEndObject();
+		}
+	}
 }

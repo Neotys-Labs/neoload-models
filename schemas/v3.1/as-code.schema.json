@@ -887,6 +887,7 @@
 							"type": "string",
 							"enum": [
 								"go_to_next_iteration",
+                                "rendezvous",
 								"stop_vu"
 							]
 						},
@@ -909,6 +910,7 @@
 								"fork": {"$ref": "#/definitions/user_paths/actions/fork"},
 								"variable_modifier": {"$ref": "#/definitions/user_paths/actions/variable_modifier"},
 								"debug_logger": {"$ref": "#/definitions/user_paths/actions/debug_logger"},
+                                "rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
 								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"}
 							},
 							"additionalProperties": false
@@ -1111,6 +1113,15 @@
 							"default": false
 						},
 						"libraryPath": { "$ref": "#/definitions/common/text" }
+					},
+					"additionalProperties": false
+				},
+				"rendezvous": {
+					"title": "Action: Rendezvous",
+					"type": "object",
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				},
