@@ -105,6 +105,18 @@ otherwise.
     file: logs/custom.txt
 ```
 
+#### Assertions
+
+**`duration_assertion`** — checks that a `request` or `custom_action` completed within
+`less_than` milliseconds.
+
+```yaml
+- request:
+    url: https://www.tricentis.com/
+    duration_assertion:
+      less_than: 2048
+```
+
 #### Variables
 
 Four variable types that already existed in the NeoLoad GUI are now writable in as-code.
