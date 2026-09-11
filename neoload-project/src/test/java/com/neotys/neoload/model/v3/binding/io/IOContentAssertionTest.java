@@ -14,6 +14,8 @@ import org.junit.Test;
 
 public class IOContentAssertionTest extends AbstractIOElementsTest {
 
+	// Legacy `assertions:` key (pre-LOAD-39357 fixtures, unchanged): still readable.
+
 	@Test
 	public void readAsertionsOnlyRequired() throws IOException {
 		final Project expectedProject = getAsertionsOnlyRequired();
@@ -31,36 +33,55 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void writeAsertionsOnlyRequired() throws IOException {
+	public void legacyOnlyRequiredReserializesUnderNewKey() throws IOException {
 		final Project expectedProject = getAsertionsOnlyRequired();
 		assertNotNull(expectedProject);
 
-		write("test-assert-content-only-required", expectedProject);
+		read("test-assert-content-only-required", expectedProject);
+		write("test-content-assertions-only-required", expectedProject);
 	}
 
 	@Test
-	public void writeAsertionsRequiredAndOptional() throws IOException {
+	public void legacyRequiredAndOptionalReserializesUnderNewKey() throws IOException {
 		final Project expectedProject = getAsertionsRequiredAndOptional();
 		assertNotNull(expectedProject);
 
-		write("test-assert-content-required-and-optional", expectedProject);
+		read("test-assert-content-required-and-optional", expectedProject);
+		write("test-content-assertions-required-and-optional", expectedProject);
 	}
 
+	// New `content_assertions:` key: read and written.
+
 	@Test
-	public void readLegacyAssertionsKey() throws IOException {
+	public void readContentAssertionsOnlyRequired() throws IOException {
 		final Project expectedProject = getAsertionsOnlyRequired();
 		assertNotNull(expectedProject);
 
-		read("test-assert-content-legacy-key", expectedProject);
+		read("test-content-assertions-only-required", expectedProject);
 	}
 
 	@Test
-	public void legacyAssertionsKeyReserializesUnderNewKey() throws IOException {
+	public void readContentAssertionsRequiredAndOptional() throws IOException {
+		final Project expectedProject = getAsertionsRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		read("test-content-assertions-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void writeContentAssertionsOnlyRequired() throws IOException {
 		final Project expectedProject = getAsertionsOnlyRequired();
 		assertNotNull(expectedProject);
 
-		read("test-assert-content-legacy-key", expectedProject);
-		write("test-assert-content-only-required", expectedProject);
+		write("test-content-assertions-only-required", expectedProject);
+	}
+
+	@Test
+	public void writeContentAssertionsRequiredAndOptional() throws IOException {
+		final Project expectedProject = getAsertionsRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		write("test-content-assertions-required-and-optional", expectedProject);
 	}
 
 
@@ -96,7 +117,7 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 				.build();
 
 	}
-	
+
 	private Project getAsertionsRequiredAndOptional() {
 		final ContentAssertion assertion1 = ContentAssertion.builder()
 				.name("assertion_1")
@@ -104,7 +125,7 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 				.contains("Design & Maintenance")
 				.regexp(true)
 				.build();
-		
+
 		final ContentAssertion assertion2 = ContentAssertion.builder()
 				.name("assertion_2")
 				.xPath("xpath")
@@ -112,7 +133,7 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 				.contains("Analyze")
 				.regexp(true)
 				.build();
-		
+
 		final ContentAssertion assertion3 = ContentAssertion.builder()
 				.name("assertion_3")
 				.jsonPath("jsonpath")

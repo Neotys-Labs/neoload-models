@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"switch":{"value":"${MySwitchVariable}","case":[{"value":1,"break":false,"steps":[{"delay":"1s"}],"assertions":[{"contains":"MyCase1Assertion on Content"}]}],"default":{"steps":[{"delay":"3s"}]}}}]}}]}

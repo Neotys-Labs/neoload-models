@@ -124,4 +124,27 @@ public class IORequestTest extends AbstractIOElementsTest {
 
 		write("test-request-required-and-optional", expectedProject);
 	}
+
+	@Test
+	public void readRequestAssertionsLegacyKey() throws IOException {
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(Request.builder()
+								.url("http://www.neotys.com/select?name:neoload")
+								.addContentAssertions(ContentAssertion.builder()
+										.contains("MyUserPath_actions_request_1")
+										.build())
+								.build())
+						.build())
+				.build();
+		final Project expectedProject = Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
+		assertNotNull(expectedProject);
+
+		read("test-request-legacy-key", expectedProject);
+	}
 }

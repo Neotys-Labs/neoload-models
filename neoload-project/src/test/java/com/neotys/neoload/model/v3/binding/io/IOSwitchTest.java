@@ -93,4 +93,30 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
         write("test-switch-required-and-optional", expectedProject);
     }
 
+    @Test
+    public void readSwitchAssertionsLegacyKey() throws IOException {
+        final Switch switchElement = Switch.builder()
+                .value("${MySwitchVariable}")
+                .addCases(Case.builder()
+                        .value("1")
+                        .isBreak(false)
+                        .addSteps(Delay.builder()
+                                .value("1000")
+                                .build())
+                        .addContentAssertions(ContentAssertion.builder()
+                                .contains("MyCase1Assertion on Content")
+                                .build())
+                        .build())
+                .getDefault(Container.builder()
+                        .addSteps(Delay.builder()
+                                .value("3000")
+                                .build())
+                        .build())
+                .build();
+        final Project expectedProject = buildProject(switchElement);
+        assertNotNull(expectedProject);
+
+        read("test-switch-legacy-key", expectedProject);
+    }
+
 }

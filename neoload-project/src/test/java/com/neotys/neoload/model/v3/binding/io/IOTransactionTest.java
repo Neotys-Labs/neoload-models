@@ -66,4 +66,20 @@ public class IOTransactionTest extends AbstractIOElementsTest {
 
 		write("test-transaction-required-and-optional", expectedProject);
 	}
+
+	@Test
+	public void readTransactionAssertionsLegacyKey() throws IOException {
+		final Step transaction = Container.builder()
+				.name("MyTransaction")
+				.addSteps(Delay.builder().value("1000")
+						.build())
+				.addContentAssertions(ContentAssertion.builder()
+						.contains("MyUserPath_actions_MyTransaction")
+						.build())
+				.build();
+		final Project expectedProject = buildProject(transaction);
+		assertNotNull(expectedProject);
+
+		read("test-transaction-legacy-key", expectedProject);
+	}
 }

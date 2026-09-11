@@ -167,4 +167,37 @@ public class IOIfTest extends AbstractIOElementsTest {
 
 		write("test-if-required-and-optional", expectedProject);
 	}
+
+	@Test
+	public void readIfAssertionsLegacyKey() throws IOException {
+		final If ifElement = If.builder()
+				.conditions(Arrays.asList(Condition.builder()
+						.operand1("operand1")
+						.operator(Condition.Operator.EQUALS)
+						.operand2("operand2")
+						.build()))
+				.then(Container.builder()
+						.name("container")
+						.addSteps(Request.builder()
+								.url("http://www.neotys.com/select")
+								.build())
+						.addContentAssertions(ContentAssertion.builder()
+								.contains("ThenAssertion")
+								.build())
+						.build())
+				.getElse(Container.builder()
+						.name("container")
+						.addSteps(Delay.builder()
+								.value(String.valueOf(3*60*1000+200)) // "3m 200ms"
+								.build())
+						.addContentAssertions(ContentAssertion.builder()
+								.contains("ElseAssertion")
+								.build())
+						.build())
+				.build();
+		final Project expectedProject = buildProject(ifElement);
+		assertNotNull(expectedProject);
+
+		read("test-if-legacy-key", expectedProject);
+	}
 }
