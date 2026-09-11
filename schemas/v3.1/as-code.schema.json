@@ -147,7 +147,7 @@
 			"pacing_value": {
 				"title": "Pacing value",
 				"type": "string",
-				"pattern": "^(\\d+(\\.\\d+)?(h|ms|m|s)?|(\\d+(h|ms|m|s)){2,}|\\$\\{[^}]+\\})$"
+				"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
 			},
 			"duration": {
 				"title": "Duration",

@@ -189,7 +189,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 		assertFalse(validation.isValid());
 
 		final String message = validation.getMessage().get();
-		assertTrue(message, message.contains("Violation Number: 2."));
+		assertTrue(message, message.contains("Violation Number: 3."));
 	}
 
 	@Test

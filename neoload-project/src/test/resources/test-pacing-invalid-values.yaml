@@ -13,3 +13,8 @@ user_paths:
         pacing: -5s
         steps:
         - delay: 100
+    - transaction:
+        name: MyTransaction3
+        pacing: 1.5s
+        steps:
+        - delay: 100
