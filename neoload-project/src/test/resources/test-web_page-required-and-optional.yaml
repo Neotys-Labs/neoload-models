@@ -1,0 +1,22 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - web_page:
+        name: MyWebPage
+        description: My Web Page
+        sla_profile: MySlaProfile
+        think_time:
+          value: 2s
+        playback: sequential
+        execute_resources: dynamic
+        steps:
+        - request:
+            url: http://host:80/
+        - request:
+            url: http://host:80/resource
+    - web_page:
+        steps:
+        - request:
+            url: http://host:80/

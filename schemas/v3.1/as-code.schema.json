@@ -909,7 +909,8 @@
 								"fork": {"$ref": "#/definitions/user_paths/actions/fork"},
 								"variable_modifier": {"$ref": "#/definitions/user_paths/actions/variable_modifier"},
 								"debug_logger": {"$ref": "#/definitions/user_paths/actions/debug_logger"},
-								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"}
+								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"},
+								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"}
 							},
 							"additionalProperties": false
 						}
@@ -1219,6 +1220,53 @@
 						"catch": { "$ref": "#/definitions/user_paths/container" }
 					},
 					"additionalProperties": false
+				},
+				"web_page": {
+					"title": "Action: Web Page",
+					"type": "object",
+					"required": ["steps"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"sla_profile": { "$ref": "#/definitions/common/text" },
+						"think_time": {
+							"title": "Web Page Think Time",
+							"oneOf": [
+								{
+									"type": "object",
+									"required": ["value"],
+									"properties": {
+										"value": { "$ref": "#/definitions/user_paths/actions/web_page_think_time_value" }
+									},
+									"additionalProperties": false
+								},
+								{
+									"type": "object",
+									"required": ["max"],
+									"properties": {
+										"min": { "$ref": "#/definitions/user_paths/actions/web_page_think_time_value" },
+										"max": { "$ref": "#/definitions/user_paths/actions/web_page_think_time_value" }
+									},
+									"additionalProperties": false
+								}
+							]
+						},
+						"playback": {
+							"type": "string",
+							"enum": ["parallel", "sequential"]
+						},
+						"execute_resources": {
+							"type": "string",
+							"enum": ["static", "dynamic", "dynamic_forced_encoding"]
+						},
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
+					},
+					"additionalProperties": false
+				},
+				"web_page_think_time_value": {
+					"title": "Web Page Think Time Value",
+					"type": "string",
+					"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
 				}
 			},
 			"extractor": {

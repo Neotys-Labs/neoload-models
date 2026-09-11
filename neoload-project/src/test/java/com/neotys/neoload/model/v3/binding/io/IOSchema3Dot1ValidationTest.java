@@ -76,7 +76,15 @@ public class IOSchema3Dot1ValidationTest {
             "test-scenarios-iso-8859-1.json",
             // Voluntarily invalid files for unit-test:
             "test-try-catch-invalid-caught-exceptions.yaml",
-            "test-current-date-variable-offsets-invalid.yaml"
+            "test-current-date-variable-offsets-invalid.yaml",
+            "test-web_page-empty-steps.yaml",
+            "test-web_page-execute-resources-invalid.yaml",
+            "test-web_page-no-steps.yaml",
+            "test-web_page-playback-invalid.yaml",
+            "test-web_page-think-time-invalid-value.yaml",
+            "test-web_page-think-time-min-only.yaml",
+            "test-web_page-think-time-mixed.yaml",
+            "test-web_page-unsupported-step.yaml"
     );
 
     @BeforeClass
