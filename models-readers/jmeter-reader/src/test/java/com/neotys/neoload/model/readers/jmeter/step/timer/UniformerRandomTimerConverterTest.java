@@ -2,8 +2,8 @@ package com.neotys.neoload.model.readers.jmeter.step.timer;
 
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.readers.jmeter.step.timer.UniformerRandomTimerConverter;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.timers.UniformRandomTimer;
 import org.junit.Before;
@@ -43,7 +43,7 @@ public class UniformerRandomTimerConverterTest {
         uniformRandomTimer.setProperty("RandomTimer.range", "0");
 
         List<Step> result = new UniformerRandomTimerConverter().apply(uniformRandomTimer,null);
-        Delay delay = Delay.builder()
+        Delay delay = DelayConstant.builder()
                 .name(uniformRandomTimer.getName())
                 .description(uniformRandomTimer.getComment())
                 .value("69")

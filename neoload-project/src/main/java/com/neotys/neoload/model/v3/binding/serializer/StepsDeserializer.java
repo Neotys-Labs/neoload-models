@@ -9,12 +9,14 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableMap;
+import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class StepsDeserializer extends StdDeserializer<List<Step>> {
     private static final long serialVersionUID = -5696608939252369276L;
@@ -75,17 +77,78 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
         } else if (stepNode.has(GO_TO_NEXT_ITERATION)) {
             return GoToNextIteration.builder().build();
         } else if (stepNode.has(DELAY)) {
-            final String delayValue = stepNode.get(DELAY).asText();
-            final String delay = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(delayValue);
-            return Delay.builder().value(String.valueOf(delay)).build();
+            return parseDelay(stepNode.get(DELAY));
         } else if (stepNode.has(THINK_TIME)) {
-            final String thinkTimeValue = stepNode.get(THINK_TIME).asText();
-            final String thinkTime = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(thinkTimeValue);
-            return ThinkTime.builder().value(String.valueOf(thinkTime)).build();
-        }  else if (stepNode.isTextual() && STOP_VU.equals(stepNode.asText())) {
+            return parseThinkTime(stepNode.get(THINK_TIME));
+		} else if (stepNode.isTextual() && STOP_VU.equals(stepNode.asText())) {
             return StopVU.builder().build();
         }
         return null;
+    }
+
+    // delay is polymorphic: a scalar is a DelayConstant; an object with min/max is a DelayRandom,
+    // otherwise a DelayConstant (with its value under the `value` key). Both object forms may carry
+    // an optional name/description.
+    private Step parseDelay(final JsonNode node) {
+        if (!node.isObject()) {
+            return DelayConstant.builder().value(convertDuration(node)).build();
+        }
+        if (node.has(DelayRandom.MIN) || node.has(DelayRandom.MAX)) {
+            final DelayRandom.Builder builder = DelayRandom.builder();
+            applyNameDescription(node, builder::name, builder::description);
+            if (node.has(DelayRandom.MIN)) {
+                builder.min(convertDuration(node.get(DelayRandom.MIN)));
+            }
+            if (node.has(DelayRandom.MAX)) {
+                builder.max(convertDuration(node.get(DelayRandom.MAX)));
+            }
+            return builder.build();
+        }
+        final DelayConstant.Builder builder = DelayConstant.builder();
+        applyNameDescription(node, builder::name, builder::description);
+        if (node.has(DelayConstant.VALUE)) {
+            builder.value(convertDuration(node.get(DelayConstant.VALUE)));
+        }
+        return builder.build();
+    }
+
+    // think_time is polymorphic: a scalar is a ThinkTimeConstant; an object with min/max is a
+    // ThinkTimeRandom, otherwise a ThinkTimeConstant (with its value under the `value` key). Both
+    // object forms may carry an optional name/description.
+    private Step parseThinkTime(final JsonNode node) {
+        if (!node.isObject()) {
+            return ThinkTimeConstant.builder().value(convertDuration(node)).build();
+        }
+        if (node.has(ThinkTimeRandom.MIN) || node.has(ThinkTimeRandom.MAX)) {
+            final ThinkTimeRandom.Builder builder = ThinkTimeRandom.builder();
+            applyNameDescription(node, builder::name, builder::description);
+            if (node.has(ThinkTimeRandom.MIN)) {
+                builder.min(convertDuration(node.get(ThinkTimeRandom.MIN)));
+            }
+            if (node.has(ThinkTimeRandom.MAX)) {
+                builder.max(convertDuration(node.get(ThinkTimeRandom.MAX)));
+            }
+            return builder.build();
+        }
+        final ThinkTimeConstant.Builder builder = ThinkTimeConstant.builder();
+        applyNameDescription(node, builder::name, builder::description);
+        if (node.has(ThinkTimeConstant.VALUE)) {
+            builder.value(convertDuration(node.get(ThinkTimeConstant.VALUE)));
+        }
+        return builder.build();
+    }
+
+    private static String convertDuration(final JsonNode node) {
+        return STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.asText());
+    }
+
+    private void applyNameDescription(final JsonNode node, final Consumer<String> nameSetter, final Consumer<String> descriptionSetter) {
+        if (node.has(Element.NAME)) {
+            nameSetter.accept(node.get(Element.NAME).asText());
+        }
+        if (node.has(Element.DESCRIPTION)) {
+            descriptionSetter.accept(node.get(Element.DESCRIPTION).asText());
+        }
     }
 
     private Step parseRegisteredStep(final ObjectCodec codec, final JsonNode stepNode) throws IOException {

@@ -4,7 +4,20 @@ user_paths:
   actions:
     steps:
     - delay: 3790200
+    - delay:
+        max: 3790200
     - delay: 3600000
+    - delay:
+        max: 3600000
     - delay: 180000
+    - delay:
+        max: 180000
     - delay: 10000
+    - delay:
+        max: 10000
     - delay: 200
+    - delay:
+        max: 200
+    - delay: "${delay}"
+    - delay:
+        max: "${max_delay}"
