@@ -1,0 +1,26 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - wait_until:
+        name: MyWaitUntil0
+        description: MyWaitUntil0Description
+        conditions:
+        - "'${status_code}' == '200'"
+        match: all
+        timeout: 30000
+    - wait_until:
+        name: MyWaitUntil1
+        description: MyWaitUntil1Description
+        conditions:
+        - "'${status_code}' == '200'"
+        match: all
+        timeout: 30s
+    - wait_until:
+        name: MyWaitUntil2
+        description: MyWaitUntil2Description
+        conditions:
+        - "'${status_code}' == '200'"
+        match: all
+        timeout: "${timeout}"
