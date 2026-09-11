@@ -5,9 +5,7 @@ user_paths:
     steps:
     - transaction:
         name: MyTransaction
-        description: My Transaction
-        sla_profile: MySlaProfile
         steps:
-        - delay: 1s
-        content_assertions:
+        - delay: "1000"
+        assertions:
         - contains: MyUserPath_actions_MyTransaction

@@ -4,20 +4,13 @@ user_paths:
   actions:
     steps:
     - switch:
-        name: MySwitch
-        description: MySwitchDescription
         value: "${MySwitchVariable}"
         case:
-        - value: 0
-          break: true
-          steps:
-          - delay: 1s
-        - description: MyCase1Description
-          value: 1
+        - value: 1
           break: false
           steps:
           - delay: 1s
-          content_assertions:
+          assertions:
           - contains: MyCase1Assertion on Content
         default:
           steps:

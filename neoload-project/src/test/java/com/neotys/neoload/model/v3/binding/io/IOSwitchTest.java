@@ -1,15 +1,13 @@
 package com.neotys.neoload.model.v3.binding.io;
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
+import static org.junit.Assert.assertNotNull;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-
-import org.junit.Test;
-
 import java.io.IOException;
-
-import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 public class IOSwitchTest extends AbstractIOElementsTest  {
 
@@ -50,7 +48,7 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
 						.addSteps(Delay.builder()
 								.value("1000")
 								.build())
-						.addAssertions(ContentAssertion.builder()
+						.addContentAssertions(ContentAssertion.builder()
 								.contains("MyCase1Assertion on Content")
 								.build())
 						.build())
@@ -93,6 +91,32 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
         assertNotNull(expectedProject);
 
         write("test-switch-required-and-optional", expectedProject);
+    }
+
+    @Test
+    public void readSwitchAssertionsLegacyKey() throws IOException {
+        final Switch switchElement = Switch.builder()
+                .value("${MySwitchVariable}")
+                .addCases(Case.builder()
+                        .value("1")
+                        .isBreak(false)
+                        .addSteps(Delay.builder()
+                                .value("1000")
+                                .build())
+                        .addContentAssertions(ContentAssertion.builder()
+                                .contains("MyCase1Assertion on Content")
+                                .build())
+                        .build())
+                .getDefault(Container.builder()
+                        .addSteps(Delay.builder()
+                                .value("3000")
+                                .build())
+                        .build())
+                .build();
+        final Project expectedProject = buildProject(switchElement);
+        assertNotNull(expectedProject);
+
+        read("test-switch-legacy-key", expectedProject);
     }
 
 }

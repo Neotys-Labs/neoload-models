@@ -4,16 +4,13 @@ package com.neotys.neoload.model.v3.binding.io;
 import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
-
-import com.neotys.neoload.model.v3.project.userpath.Step;
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-
+import java.io.IOException;
+import org.junit.Test;
 
 public class IOTransactionTest extends AbstractIOElementsTest {
 
@@ -32,7 +29,7 @@ public class IOTransactionTest extends AbstractIOElementsTest {
 				.slaProfile("MySlaProfile")
 				.addSteps(Delay.builder().value("1000")
 						.build())
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.contains("MyUserPath_actions_MyTransaction")
 						.build())
 				.build();
@@ -68,5 +65,21 @@ public class IOTransactionTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		write("test-transaction-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void readTransactionAssertionsLegacyKey() throws IOException {
+		final Step transaction = Container.builder()
+				.name("MyTransaction")
+				.addSteps(Delay.builder().value("1000")
+						.build())
+				.addContentAssertions(ContentAssertion.builder()
+						.contains("MyUserPath_actions_MyTransaction")
+						.build())
+				.build();
+		final Project expectedProject = buildProject(transaction);
+		assertNotNull(expectedProject);
+
+		read("test-transaction-legacy-key", expectedProject);
 	}
 }

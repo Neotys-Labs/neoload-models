@@ -12,14 +12,13 @@ import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.immutables.value.Value;
-
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Stream;
+import javax.validation.Valid;
+import org.immutables.value.Value;
 
 @JsonInclude(value= JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, Case.VALUE, Case.BREAK, Case.STEPS, AssertionsElement.ASSERTIONS})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, Case.VALUE, Case.BREAK, Case.STEPS, AssertionsElement.CONTENT_ASSERTIONS})
 @JsonSerialize(as = ImmutableCase.class)
 @JsonDeserialize(as = ImmutableCase.class)
 @Value.Immutable

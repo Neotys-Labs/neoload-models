@@ -3,14 +3,11 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertEquals;
 
+import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-
 import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.io.IO.Format;
-
 
 /**
  * Verifies the exact textual output of {@code write} (field order and formatting) for every
@@ -58,8 +55,8 @@ public class IOWriteTest extends AbstractIOElementsTest {
 			"test-variable-only-required",
 			"test-while-only-required",
 			"test-while-required-and-optional",
-			"test-assert-content-only-required",
-			"test-assert-content-required-and-optional"
+			"test-content-assertions-only-required",
+			"test-content-assertions-required-and-optional"
 	};
 
 	@Test

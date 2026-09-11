@@ -1,25 +1,21 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath.assertion;
 
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
 import java.util.List;
-
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.google.common.collect.ImmutableList;
-import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
-import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
-
 public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforContentAssertionTest() throws ParserConfigurationException {
-    	final List<Assertion> assertions = ImmutableList.of(
+    	final List<ContentAssertion> assertions = ImmutableList.of(
     			ContentAssertion.builder()
     					.contains("contains_1")
     					.build(),   
@@ -52,7 +48,7 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforPluginContentAssertionTest() throws ParserConfigurationException {
-    	final List<Assertion> assertions = ImmutableList.of(
+    	final List<ContentAssertion> assertions = ImmutableList.of(
     			ContentAssertion.builder()
     					.xPath("xpath_1")
     					.contains("contains_1")
@@ -91,7 +87,7 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforJsonContentAssertionTest() throws ParserConfigurationException {
-    	final List<Assertion> assertions = ImmutableList.of(
+    	final List<ContentAssertion> assertions = ImmutableList.of(
     			ContentAssertion.builder()
     					.jsonPath("jsonpath_1")
     					.contains("contains_1")
@@ -130,7 +126,7 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforResponseAssertionTest() throws ParserConfigurationException {
-    	final List<Assertion> assertions = ImmutableList.of(
+    	final List<ContentAssertion> assertions = ImmutableList.of(
     			ContentAssertion.builder()
     					.contains("contains_1")
     					.regexp(true)
@@ -170,7 +166,7 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforPluginResponseAssertionTest() throws ParserConfigurationException {
-    	final List<Assertion> assertions = ImmutableList.of(
+    	final List<ContentAssertion> assertions = ImmutableList.of(
     			ContentAssertion.builder()
     					.xPath("xpath_1")
     					.contains("contains_1")
@@ -216,7 +212,7 @@ public class AssertionsWriterTest {
 
     @Test
     public void writeXmlFforJsonResponseAssertionTest() throws ParserConfigurationException {
-    	final List<Assertion> assertions = ImmutableList.of(
+    	final List<ContentAssertion> assertions = ImmutableList.of(
     			ContentAssertion.builder()
     					.jsonPath("jsonpath_1")
     					.contains("contains_1")
