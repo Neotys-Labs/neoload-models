@@ -1159,7 +1159,7 @@
 							"enum": ["any", "all"],
 							"default": "any"
 						},
-						"timeout": { "$ref": "#/definitions/common/text" }
+						"timeout": { "anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }] }
 					},
 					"additionalProperties": false
 				},
