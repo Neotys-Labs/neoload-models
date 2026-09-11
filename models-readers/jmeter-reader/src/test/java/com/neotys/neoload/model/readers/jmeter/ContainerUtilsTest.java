@@ -2,6 +2,8 @@ package com.neotys.neoload.model.readers.jmeter;
 
 import com.neotys.neoload.model.v3.project.variable.ConstantVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -10,6 +12,12 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class ContainerUtilsTest {
+
+    @Before
+    @After
+    public void clearContainerUtils() {
+        ContainerUtils.clearAll();
+    }
 
     @Test
     public void testGetterValue(){
