@@ -15,6 +15,7 @@ class StepsConstants {
     protected static final String GO_TO_NEXT_ITERATION = "go_to_next_iteration";
     protected static final String FORK = "fork";
     protected static final String VARIABLE_MODIFIER = "variable_modifier";
+    protected static final String RENDEZVOUS = "rendezvous";
     protected static final String DEBUG_LOGGER = "debug_logger";
     protected static final String STOP_VU = "stop_vu";
 
