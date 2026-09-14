@@ -72,7 +72,6 @@
 		<developerConnection>scm:git:ssh://github.com:Neotys-Labs/neoload-models.git</developerConnection>
 		<url>https://github.com/Neotys-Labs/neoload-models/tree/master</url>
 	</scm>
-
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -370,7 +369,6 @@
 		</dependencies>
 
 	</dependencyManagement>
-
 
 	<build>
 		<pluginManagement>
