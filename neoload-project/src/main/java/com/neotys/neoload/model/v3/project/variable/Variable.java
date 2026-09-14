@@ -10,6 +10,7 @@ import com.neotys.neoload.model.v3.project.Element;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 @JsonSubTypes(value = {
 		@JsonSubTypes.Type(value = ImmutableConstantVariable.class, name = "constant"),
+		@JsonSubTypes.Type(value = ImmutablePasswordVariable.class, name = "password"),
 		@JsonSubTypes.Type(value = ImmutableFileVariable.class, name = "file"),
 		@JsonSubTypes.Type(value = ImmutableCounterVariable.class, name = "counter"),
 		@JsonSubTypes.Type(value = ImmutableRandomNumberVariable.class, name = "random_number"),
