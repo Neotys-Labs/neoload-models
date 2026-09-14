@@ -201,6 +201,24 @@ public final class IO {
 		jdk8Module.configureAbsentsAsNulls(true);
         objectMapper.registerModule(jdk8Module);
         objectMapper.registerModule(newPathModule());
+        objectMapper.registerModule(newBinaryModule());
+	}
+
+	/**
+	 * Serializes a byte[] as a base64 string, instead of Jackson's default writeBinary()
+	 * YAML parser resolves !!binary to bytes, would reject the schema's string type, and JSON Schema has no binary type
+	 * Reading is compatible with both.
+	 */
+	private static SimpleModule newBinaryModule() {
+		final SimpleModule module = new SimpleModule();
+		module.addSerializer(byte[].class, new JsonSerializer<>() {
+			@Override
+			public void serialize(final byte[] value, final JsonGenerator gen,
+					final SerializerProvider provider) throws IOException {
+				gen.writeString(provider.getConfig().getBase64Variant().encode(value));
+			}
+		});
+		return module;
 	}
 
 	/**
