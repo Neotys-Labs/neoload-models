@@ -1,6 +1,8 @@
 # Rendezvous policy
 The Rendezvous policy to be applied on the already defined Rendezvous in the User Path.
 
+> **Note:** A `rendezvous_policy` entry must reference an existing Rendezvous defined in a User Path. Declaring a policy whose `name` does not match any Rendezvous, or declaring two policies with the same `name` in the same scenario, will cause the project import to fail with an error.
+
 #### Available settings
 
 | Name                                                   | Description                                   | Accept variable | Required | Since |
@@ -25,3 +27,33 @@ rendezvous_policies:
     when: 10
     timeout: 1h
 ```
+
+#### Complete example
+
+The following shows the full picture: a User Path declares a [Rendezvous](rendezvous.md) action, and the Scenario references it via a `rendezvous_policy`.
+
+```yaml
+user_paths:
+  - name: MyUserPath
+    actions:
+      steps:
+        - request:
+            url: /login
+        - rendezvous:
+            name: BeforeCheckout
+        - request:
+            url: /checkout
+
+scenarios:
+  - name: MyScenario
+    populations:
+      - name: MyPopulation
+        constant_load:
+          users: 50
+    rendezvous_policies:
+      - name: BeforeCheckout
+        when: 50%
+        timeout: 30s
+```
+
+All 50 Virtual Users will wait at `BeforeCheckout` until at least 50 % of them have arrived (or 30 s have elapsed since the last arrival), then all proceed to `/checkout` simultaneously.
