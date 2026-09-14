@@ -193,6 +193,26 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	}
 
 	@Test
+	public void readPacingRandomRangesWhereMaxIsGreaterThanMinAreAccepted() throws IOException {
+		final ProjectDescriptor descriptor = new IO().read(getFile("test-pacing-random-valid-ranges", "yaml"));
+		assertNotNull(descriptor);
+
+		final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
+		assertTrue(validation.getMessage().orElse(""), validation.isValid());
+	}
+
+	@Test
+	public void readPacingRandomRangesWhereMaxIsNotGreaterThanMinAreRejected() throws IOException {
+		final ProjectDescriptor descriptor = new IO().read(getFile("test-pacing-random-invalid-ranges", "yaml"));
+
+		final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
+		assertFalse(validation.isValid());
+
+		final String message = validation.getMessage().get();
+		assertTrue(message, message.contains("Violation Number: 3."));
+	}
+
+	@Test
 	public void readMixedConstantAndRangePacingFailsDeserialization() {
 		final IO io = new IO();
 		final File file = getFile("test-pacing-mixed", "yaml");

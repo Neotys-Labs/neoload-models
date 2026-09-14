@@ -20,7 +20,7 @@ cannot be both a constant value and an object at the same time.
 | Name       | Description                                                    | Accept variable | Required | Since  |
 |:---------- |:---------------------------------------------------------------|:----------------:|:--------:|:------:|
 | pacing.min | The minimum duration of a random pacing range. Defaults to `0`  | &#x2713;          | -        | 2026.3 |
-| pacing.max | The maximum duration of a random pacing range                  | &#x2713;          | &#x2713; | 2026.3 |
+| pacing.max | The maximum duration of a random pacing range. Must be strictly greater than `pacing.min` | &#x2713;          | &#x2713; | 2026.3 |
 
 #### Duration value
 The pacing duration is expressed in hours, minutes, seconds and milliseconds, as a plain number, or as a

@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
+import com.neotys.neoload.model.v3.validation.constraints.PacingRandomMaxGreaterThanMinCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import javax.validation.constraints.Pattern;
@@ -7,6 +8,7 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
+@PacingRandomMaxGreaterThanMinCheck(groups = {NeoLoad.class})
 public interface PacingRandom extends Pacing {
 	String MIN = "min";
 	String MAX = "max";
