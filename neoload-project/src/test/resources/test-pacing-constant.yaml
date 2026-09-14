@@ -1,0 +1,40 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  init:
+    pacing: 30s
+    steps:
+    - delay: 100
+  actions:
+    pacing: 30s
+    steps:
+    - transaction:
+        name: MyTransaction
+        pacing: 30s
+        steps:
+        - delay: 100
+    - try_catch:
+        try:
+          pacing: 30s
+          steps:
+          - delay: 100
+        catch:
+          pacing: 30s
+          steps:
+          - delay: 100
+    - switch:
+        value: "${MySwitchVar}"
+        case:
+        - value: 0
+          break: true
+          pacing: 30s
+          steps:
+          - delay: 100
+        default:
+          pacing: 30s
+          steps:
+          - delay: 100
+  end:
+    pacing: 30s
+    steps:
+    - delay: 100
