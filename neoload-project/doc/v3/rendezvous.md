@@ -8,10 +8,10 @@ A rendezvous point is identified by its **name**. Multiple rendezvous actions th
 
 #### Available settings
 
-| Name        | Description                                                     | Accept variable | Required | Since |
-|:----------- |:--------------------------------------------------------------- |:---------------:|:--------:|:-----:|
-| name        | Name of the rendezvous point. Defaults to `rendezvous`.         | &#x2718;        |          |       |
-| description | An optional description, for information purposes only.         | &#x2718;        |          |       |
+| Name        | Description                                                     | Accept variable | Required | Since  |
+|:----------- |:--------------------------------------------------------------- |:---------------:|:--------:|:------:|
+| name        | Name of the rendezvous point. Defaults to `rendezvous`.         |        -        |    -     | 2026.3 |
+| description | An optional description, for information purposes only.         |        -        |    -     | 2026.3 |
 
 > **Note:** Several rendezvous actions may use the same name. They all refer to the single rendezvous point identified by that name, and lined-up users are released in arrival order.
 
