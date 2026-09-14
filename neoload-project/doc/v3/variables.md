@@ -352,10 +352,10 @@ A reference to a secret stored in an external vault provider configured in NeoLo
 
 | Name               | Description                                                                 | Accept variable | Required | Since |
 |:------------------ |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
-| name               | The variable name                                                           | -               | &#x2713; |       |
-| description        | The variable description                                                    | -               | -        |       |
-| provider_id        | The opaque NeoLoad Web id of the configured vault provider                  | -               | &#x2713; |       |
-| secret_id          | The location of the secret within the provider (see mapping below). For HashiCorp Vault, this is the path within the mount — the mount itself (e.g. `secret`) is configured on the vault provider in NeoLoad Web, not in this field. | -               | &#x2713; |       |
+| name               | The variable name                                                           | -               | &#x2713; | 2026.3|
+| description        | The variable description                                                    | -               | -        | 2026.3|
+| provider_id        | The opaque NeoLoad Web id of the configured vault provider                  | -               | &#x2713; | 2026.3|
+| secret_id          | The location of the secret within the provider (see mapping below). For HashiCorp Vault, this is the path within the mount — the mount itself (e.g. `secret`) is configured on the vault provider in NeoLoad Web, not in this field. | -               | &#x2713; | 2026.3|
 
 `secret_id` maps to a provider-specific concept:
 
