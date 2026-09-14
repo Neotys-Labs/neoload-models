@@ -289,6 +289,45 @@ current_date:
   offset: 5m
 ```
 
+## Date variable
+A variable whose value is a fixed date, formatted according to a pattern and optionally shifted at each change by a fixed step.
+
+The `pattern` follows the [`SimpleDateFormat`](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) syntax. `start_date` must match that pattern.
+
+The `change_step` is a single amount and unit. Units are not combined, so that fixed-length units never mix with calendar units in the same value.
+
+| Name                | Description                                                                                                                                                              | Accept variable | Required | Since |
+|:------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |:---------------:|:--------:|:-----:|
+| name                | The variable name                                                                                                                                                        | -               | &#x2713; |       |
+| description         | The variable description                                                                                                                                                 | -               | -        |       |
+| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        |       |
+| start_date          | The starting date, formatted according to `pattern`.                                                                                                                     | -               | &#x2713; |       |
+| change_step         | The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes. | -               | -        |       |
+| change_policy       | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |       |
+| scope               | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        |       |
+
+#### Example
+Defining a minimal Date variable (only required fields).
+
+```yaml
+date:
+  name: date_variable
+  start_date: 01/01/2024 00:00:00
+```
+
+Defining a Date variable that starts on a fixed date and moves back 5 days at each iteration.
+
+```yaml
+date:
+  name: date_variable
+  description: 5 days before the new year, once per iteration
+  pattern: yyyy-MM-dd'T'HH:mm:ss
+  start_date: 2024-01-01T00:00:00
+  change_step: -5d
+  change_policy: each_iteration
+  scope: global
+```
+
 ## JavaScript variable
 A variable whose value is the result of the execution of a JavaScript script.
 

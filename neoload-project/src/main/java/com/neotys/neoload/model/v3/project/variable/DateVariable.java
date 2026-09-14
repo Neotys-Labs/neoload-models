@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.neotys.neoload.model.v3.validation.constraints.ChangeStepCheck;
 import com.neotys.neoload.model.v3.validation.constraints.DatePatternCheck;
-import com.neotys.neoload.model.v3.validation.constraints.OffsetCheck;
+import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.constraints.StartDateMatchesPatternCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.Optional;
 import org.immutables.value.Value;
@@ -16,16 +18,23 @@ import org.immutables.value.Value;
 // value to omit; a real class check would always be false and defeat the omission.
 @SuppressWarnings("java:S2097")
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-@JsonDeserialize(as = ImmutableCurrentDateVariable.class)
-@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, CurrentDateVariable.PATTERN, CurrentDateVariable.OFFSET})
+@JsonDeserialize(as = ImmutableDateVariable.class)
+@JsonPropertyOrder({Variable.NAME, Variable.DESCRIPTION, DateVariable.PATTERN, DateVariable.START_DATE, DateVariable.CHANGE_STEP,
+	ChangePolicyVariable.CHANGE_POLICY, ScopeVariable.SCOPE})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface CurrentDateVariable extends Variable {
+@StartDateMatchesPatternCheck(groups = {NeoLoad.class})
+public interface DateVariable extends ChangePolicyVariable, ScopeVariable {
 
 	String PATTERN = "pattern";
-	String OFFSET = "offset";
+	String START_DATE = "start_date";
+	String CHANGE_STEP = "change_step";
 
 	String DEFAULT_PATTERN = "dd/MM/yyyy HH:mm:ss";
+
+	@JsonProperty(START_DATE)
+	@RequiredCheck(groups = {NeoLoad.class})
+	String getStartDate();
 
 	// Written only when it differs from its default value.
 	@JsonProperty(PATTERN)
@@ -36,13 +45,13 @@ public interface CurrentDateVariable extends Variable {
 		return DEFAULT_PATTERN;
 	}
 
-	@JsonProperty(OFFSET)
-	@OffsetCheck(groups = {NeoLoad.class})
-	Optional<String> getOffset();
+	@JsonProperty(CHANGE_STEP)
+	@ChangeStepCheck(groups = {NeoLoad.class})
+	Optional<String> getChangeStep();
 
 	@JsonIgnore
-	default Optional<Offset> getParsedOffset() {
-		return getOffset().flatMap(Offset::parse);
+	default Optional<Offset> getParsedChangeStep() {
+		return getChangeStep().flatMap(Offset::parse);
 	}
 
 	class DefaultPatternFilter {
@@ -57,7 +66,7 @@ public interface CurrentDateVariable extends Variable {
 		}
 	}
 
-	class Builder extends ImmutableCurrentDateVariable.Builder {
+	class Builder extends ImmutableDateVariable.Builder {
 	}
 
 	static Builder builder() {
