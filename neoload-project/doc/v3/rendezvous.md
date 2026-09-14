@@ -17,7 +17,7 @@ A rendezvous point is identified by its **name**. Multiple rendezvous actions th
 
 #### Examples
 
-Minimal form ? uses the default rendezvous name `rendezvous`:
+Minimal form - uses the default rendezvous name `rendezvous`:
 ```yaml
 steps:
 - rendezvous
