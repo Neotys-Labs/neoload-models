@@ -48,12 +48,17 @@ as-code variable catalogue matches the fourteen types offered by the GUI.
 **Assertions** — the `assertions` list becomes a `{content|size|duration}` discriminated union:
 `size` (with an `operator`) and `duration` join the existing content assertion.
 
+**`content_assertions`** — content assertions on request, transaction, container and User Path move
+from `assertions` to `content_assertions`, so the key stays free for the `{content|size|duration}`
+union above. Files written with `assertions` still load and are re-serialized under
+`content_assertions`.
+
 **Frameworks** — a `framework` model (`enabled`, `parameters`) with dynamic parameters
 (`enabled`, `extraction_source`, `xpath`, `jsonpath`, `regexp`, `template`), covering the GUI
 Frameworks / dynamic parameters feature, in a builtin and a custom flavour.
 
 **JSON Schema completeness** — request `name`, `followRedirects`, custom method, `bodybinary`,
-multipart `parts`; `assertions` on request, transaction and container; scenario `sla_profile`,
+multipart `parts`; `content_assertions` on request, transaction and container; scenario `sla_profile`,
 `store_variables_for_raw_data`, `excluded_urls`, `apm_configuration`, `monitoring`,
 `rendezvous_policies`; `custom_load` policy.
 

@@ -212,8 +212,13 @@
 				"default": "global",
 				"enum": ["cycle", "stop_test", "no_value_code"]
 			},
+			"content_assertions": {
+				"type": "array",
+				"items": { "$ref": "#/definitions/user_paths/content_assertion" }
+			},
 			"assertions": {
 				"type": "array",
+				"description": "Deprecated. Use content_assertions.",
 				"items": {
 					"oneOf": [
 						{ "$ref": "#/definitions/user_paths/content_assertion" },
@@ -860,6 +865,7 @@
 					"init": { "$ref": "#/definitions/user_paths/container" },
 					"actions": { "$ref": "#/definitions/user_paths/container" },
 					"end": { "$ref": "#/definitions/user_paths/container" },
+					"content_assertions": { "$ref": "#/definitions/common/content_assertions" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				}
 			},
@@ -874,6 +880,7 @@
 						"type": "string"
 					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
+					"content_assertions": { "$ref": "#/definitions/common/content_assertions" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				}
 			},
@@ -927,6 +934,7 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
+						"content_assertions": { "$ref": "#/definitions/common/content_assertions" },
 						"assertions": { "$ref": "#/definitions/common/assertions" }
 					},
 					"additionalProperties": false
@@ -997,8 +1005,13 @@
 							"type": "boolean",
 							"default": false
 						},
+						"content_assertions": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/content_assertion" }
+						},
 						"assertions": {
 							"type": "array",
+							"description": "Deprecated. Use content_assertions.",
 							"items": {
 								"oneOf": [
 									{ "$ref": "#/definitions/user_paths/content_assertion" },
@@ -1342,6 +1355,7 @@
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": { "type": "boolean" },
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
+					"content_assertions": { "$ref": "#/definitions/common/content_assertions" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				},
 				"additionalProperties": false

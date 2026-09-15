@@ -1,15 +1,13 @@
 package com.neotys.neoload.model.v3.binding.io;
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
+import static org.junit.Assert.assertNotNull;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-
-import org.junit.Test;
-
 import java.io.IOException;
-
-import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 public class IOSwitchTest extends AbstractIOElementsTest  {
 
@@ -50,7 +48,7 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
 						.addSteps(Delay.builder()
 								.value("1000")
 								.build())
-						.addAssertions(ContentAssertion.builder()
+						.addContentAssertions(ContentAssertion.builder()
 								.contains("MyCase1Assertion on Content")
 								.build())
 						.build())
@@ -87,12 +85,22 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
         write("test-switch-only-required", expectedProject);
     }
 
+    // The write test targets the content_assertions:-keyed sibling fixture: write always emits
+    // the new key, so the legacy-keyed fixture above can only be reused for read.
     @Test
     public void writeSwitchRequiredAndOptional() throws IOException {
         final Project expectedProject = buildProject(getSwitchRequiredAndOptional());
         assertNotNull(expectedProject);
 
-        write("test-switch-required-and-optional", expectedProject);
+        write("test-switch-required-and-optional-content-assertions", expectedProject);
+    }
+
+    @Test
+    public void readSwitchRequiredAndOptionalContentAssertions() throws IOException {
+        final Project expectedProject = buildProject(getSwitchRequiredAndOptional());
+        assertNotNull(expectedProject);
+
+        read("test-switch-required-and-optional-content-assertions", expectedProject);
     }
 
 }

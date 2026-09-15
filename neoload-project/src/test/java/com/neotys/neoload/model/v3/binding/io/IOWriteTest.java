@@ -3,14 +3,11 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertEquals;
 
+import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-
 import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.io.IO.Format;
-
 
 /**
  * Verifies the exact textual output of {@code write} (field order and formatting) for every
@@ -31,7 +28,7 @@ public class IOWriteTest extends AbstractIOElementsTest {
 			"test-descriptor-only-required",
 			"test-descriptor-required-and-optional",
 			"test-if-only-required",
-			"test-if-required-and-optional",
+			"test-if-required-and-optional-content-assertions",
 			"test-javascript-only-required",
 			"test-javascript-required-and-optional",
 			"test-loop-only-required",
@@ -39,7 +36,7 @@ public class IOWriteTest extends AbstractIOElementsTest {
 			"test-populations-only-required",
 			"test-populations-required-and-optional",
 			"test-request-only-required",
-			"test-request-required-and-optional",
+			"test-request-required-and-optional-content-assertions",
 			"test-scenarios-only-required",
 			"test-scenarios-required-and-optional",
 			"test-servers-only-required",
@@ -47,19 +44,19 @@ public class IOWriteTest extends AbstractIOElementsTest {
 			"test-slaprofiles-only-required",
 			"test-slaprofiles-required-and-optional",
 			"test-switch-only-required",
-			"test-switch-required-and-optional",
+			"test-switch-required-and-optional-content-assertions",
 			"test-think-time-with-unit-only-required",
 			"test-transaction-only-required",
-			"test-transaction-required-and-optional",
+			"test-transaction-required-and-optional-content-assertions",
 			"test-userpaths-only-required",
-			"test-userpaths-required-and-optional",
+			"test-userpaths-required-and-optional-content-assertions",
 			"test-variable-extractor-only-required",
 			"test-variable-extractor-required-and-optional",
 			"test-variable-only-required",
 			"test-while-only-required",
 			"test-while-required-and-optional",
-			"test-assert-content-only-required",
-			"test-assert-content-required-and-optional"
+			"test-content-assertions-only-required",
+			"test-content-assertions-required-and-optional"
 	};
 
 	@Test

@@ -1,0 +1,23 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        name: http_request
+        url: http://www.neotys.com/select?name:neoload
+        content_assertions:
+        - name: assertion_1
+          not: true
+          contains: Design & Maintenance
+          regexp: true
+        - name: assertion_2
+          xpath: xpath
+          not: true
+          contains: Analyze
+          regexp: true
+        - name: assertion_3
+          jsonpath: jsonpath
+          not: true
+          contains: DevOps and Automation
+          regexp: true

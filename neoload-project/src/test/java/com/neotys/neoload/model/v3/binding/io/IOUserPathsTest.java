@@ -3,17 +3,14 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath.UserSession;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-
+import java.io.IOException;
+import org.junit.Test;
 
 public class IOUserPathsTest extends AbstractIOElementsTest {
 
@@ -52,7 +49,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 								.addSteps(Delay.builder().value("1000")
 										.build())
 								.build())
-						.addAssertions(ContentAssertion.builder()
+						.addContentAssertions(ContentAssertion.builder()
 								.contains("MyUserPath1_init")
 								.build())
 						.build())
@@ -64,11 +61,11 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 								.name("MyTransaction")
 								.addSteps(Delay.builder().value("1000")
 										.build())
-								.addAssertions(ContentAssertion.builder()
+								.addContentAssertions(ContentAssertion.builder()
 										.contains("MyUserPath1_actions_MyTransaction")
 										.build())
 								.build())
-						.addAssertions(ContentAssertion.builder()
+						.addContentAssertions(ContentAssertion.builder()
 								.contains("MyUserPath1_actions")
 								.build())
 						.build())
@@ -81,11 +78,11 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 								.addSteps(Delay.builder().value("1000")
 										.build())
 								.build())
-						.addAssertions(ContentAssertion.builder()
+						.addContentAssertions(ContentAssertion.builder()
 								.contains("MyUserPath1_end")
 								.build())
 						.build())
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.contains("MyUserPath1")
 						.build())
 				.build();
@@ -196,11 +193,23 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 		write("test-userpaths-only-required", expectedProject);
 	}
 
+	// The write test targets the content_assertions:-keyed sibling fixture: write always emits
+	// the new key, so the legacy-keyed fixture above (whose UserPath1 exercises the hand-written
+	// UserPathSerializer/Deserializer fallback, not the generic @JsonAlias binding used by
+	// Request/Transaction/Container/Case) can only be reused for read.
 	@Test
 	public void writeUserPathsRequiredAndOptional() throws IOException {
 		final Project expectedProject = getUserPathsRequiredAndOptional();
 		assertNotNull(expectedProject);
 
-		write("test-userpaths-required-and-optional", expectedProject);
+		write("test-userpaths-required-and-optional-content-assertions", expectedProject);
+	}
+
+	@Test
+	public void readUserPathsRequiredAndOptionalContentAssertions() throws IOException {
+		final Project expectedProject = getUserPathsRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		read("test-userpaths-required-and-optional-content-assertions", expectedProject);
 	}
 }

@@ -3,10 +3,6 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Header;
@@ -15,7 +11,8 @@ import com.neotys.neoload.model.v3.project.userpath.Request.Method;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-
+import java.io.IOException;
+import org.junit.Test;
 
 public class IORequestTest extends AbstractIOElementsTest {
 
@@ -59,7 +56,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.name("MyVariable1")
 										.jsonPath("MyJsonPath")
 										.build())
-								.addAssertions(ContentAssertion.builder()
+								.addContentAssertions(ContentAssertion.builder()
 										.contains("MyUserPath_actions_request_1")
 										.build())
 								.slaProfile("MySlaProfile")
@@ -81,7 +78,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.name("MyVariable1")
 										.jsonPath("MyJsonPath")
 										.build())
-								.addAssertions(ContentAssertion.builder()
+								.addContentAssertions(ContentAssertion.builder()
 										.contains("MyUserPath_actions_request_2")
 										.build())
 								.slaProfile("MySlaProfile")
@@ -120,11 +117,21 @@ public class IORequestTest extends AbstractIOElementsTest {
 		read("test-request-required-and-optional", expectedProject);
 	}
 
+	// The write test targets the content_assertions:-keyed sibling fixture: write always emits
+	// the new key, so the legacy-keyed fixture above can only be reused for read.
 	@Test
 	public void writeRequestRequiredAndOptional() throws IOException {
 		final Project expectedProject = getRequestRequiredAndOptional();
 		assertNotNull(expectedProject);
 
-		write("test-request-required-and-optional", expectedProject);
+		write("test-request-required-and-optional-content-assertions", expectedProject);
+	}
+
+	@Test
+	public void readRequestRequiredAndOptionalContentAssertions() throws IOException {
+		final Project expectedProject = getRequestRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		read("test-request-required-and-optional-content-assertions", expectedProject);
 	}
 }
