@@ -52,7 +52,7 @@ public class RequestWriter extends ElementWriter {
 		fillXML(document, xmlRequest, theRequest);
 		SlaElementWriter.of(theRequest).writeXML(xmlRequest);
 		// write assertions
-        final List<Assertion> assertions = theRequest.getAssertions();
+        final List<Assertion> assertions = theRequest.getContentAssertions();
         if ((assertions != null && (!assertions.isEmpty()))) {
         	AssertionsWriter.of(assertions).writeXML(document, xmlRequest);	
         } 
