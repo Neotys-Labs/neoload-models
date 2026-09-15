@@ -44,10 +44,16 @@ public class IOSizeAssertionTest extends AbstractIOElementsTest {
 				.sizeAssertion(SizeAssertion.builder().greaterThan(1024L).lessThan(2048L).build())
 				.build();
 
-		final Request requestSingleBound = Request.builder()
-				.name("request_size_single_bound")
+		final Request requestGreaterThanOnly = Request.builder()
+				.name("request_size_greater_than_only")
 				.url("http://www.neotys.com/download")
 				.sizeAssertion(SizeAssertion.builder().greaterThan(1024L).build())
+				.build();
+
+		final Request requestLessThanOnly = Request.builder()
+				.name("request_size_less_than_only")
+				.url("http://www.neotys.com/download")
+				.sizeAssertion(SizeAssertion.builder().lessThan(2048L).build())
 				.build();
 
 		final CustomAction customAction = CustomAction.builder()
@@ -60,7 +66,7 @@ public class IOSizeAssertionTest extends AbstractIOElementsTest {
 				.name("MyUserPath")
 				.actions(Container.builder()
 						.name("actions")
-						.addSteps(requestEquals, requestRange, requestSingleBound, customAction)
+						.addSteps(requestEquals, requestRange, requestGreaterThanOnly, requestLessThanOnly, customAction)
 						.build())
 				.build();
 

@@ -15,10 +15,15 @@ user_paths:
           greater_than: 1024
           less_than: 2048
     - request:
-        name: request_size_single_bound
+        name: request_size_greater_than_only
         url: http://www.neotys.com/download
         size_assertion:
           greater_than: 1024
+    - request:
+        name: request_size_less_than_only
+        url: http://www.neotys.com/download
+        size_assertion:
+          less_than: 2048
     - custom_action:
         name: sql action
         type: SQL
