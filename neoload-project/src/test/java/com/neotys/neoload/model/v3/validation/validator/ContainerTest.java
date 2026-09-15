@@ -32,6 +32,14 @@ public class ContainerTest {
 		CONSTRAINTS_CONTAINER_ASSERTIONS_NAMES = sb.toString();
 	}
 
+	private static final String CONSTRAINTS_CONTAINER_CONTENT_ASSERTIONS_NAMES;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		CONSTRAINTS_CONTAINER_CONTENT_ASSERTIONS_NAMES = sb.toString();
+	}
+
 	private static final String CONSTRAINTS_CONTAINER_ASSERTION_REQUIRED_FILEDS;
 	static {
 		final StringBuilder sb = new StringBuilder();
@@ -130,9 +138,26 @@ public class ContainerTest {
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());
-		assertFalse(validation.getMessage().isPresent());	
+		assertFalse(validation.getMessage().isPresent());
 	}
-	
+
+	@Test
+	public void validateContentAssertionsNames() {
+		final Validator validator = new Validator();
+
+		final Container container = Container.builder()
+				.name("container")
+				.addSteps(Request.builder()
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").xPath("xpath").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").jsonPath("jsonpath").build())
+				.build();
+		final Validation validation = validator.validate(container, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_CONTAINER_CONTENT_ASSERTIONS_NAMES, validation.getMessage().get());
+	}
+
 	@Test
 	public void validateAssertionRequiredFields() {
 		final Validator validator = new Validator();

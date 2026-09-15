@@ -17,10 +17,10 @@ user_paths:
         extractors:
         - name: MyVariable1
           jsonpath: MyJsonPath
-        assertions:
-        - contains: MyUserPath_actions_request_1
         _internal_recorded_id: r0001
         sla_profile: MySlaProfile
+        content_assertions:
+        - contains: MyUserPath_actions_request_1
     - request:
         url: /select?name=neoload
         server: neotys
@@ -32,6 +32,6 @@ user_paths:
         extractors:
         - name: MyVariable1
           jsonpath: MyJsonPath
-        assertions:
-        - contains: MyUserPath_actions_request_2
         sla_profile: MySlaProfile
+        content_assertions:
+        - contains: MyUserPath_actions_request_2
