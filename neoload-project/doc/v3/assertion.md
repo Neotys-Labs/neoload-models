@@ -3,6 +3,8 @@ Assertions allow checking the validity of the responses content returned by the 
 
 > Validation cannot be applied to failed requests (HTTP errors, network errors, and so on).
 
+> The `content_assertions` key is the canonical way to declare these assertions. `assertions` is a deprecated, read-only alias kept for backward compatibility with existing project files.
+
 #### Available settings
 
 | Name                   | Description                                                                                                                                                                                            | Accept variable | Required | Since |
@@ -23,7 +25,7 @@ Assertions allow checking the validity of the responses content returned by the 
 Defining a validation to check if the response body contains the specified regular expression.
 
 ```yaml
-assertions:
+content_assertions:
 - contains: https?://www\.neotys\.com/solutions/.*
   regexp: true
 ```
@@ -33,7 +35,7 @@ assertions:
 Defining a validation to check if the response body contains the specified regular expression in using a variable.
 
 ```yaml
-assertions:
+content_assertions:
 - contains: <a href="${UrlToValidate}">.*</a>
   regexp: true
 ```
@@ -43,7 +45,7 @@ assertions:
 Defining a validation to check if the response body contains the specified JSON node.
 
 ```yaml
-assertions:
+content_assertions:
 - jsonpath: $.payload.success
 ```
 
@@ -52,7 +54,7 @@ assertions:
 Defining a validation to check if the response body doesn't contain the specified text from a specified XML node.
 
 ```yaml
-assertions:
+content_assertions:
 - xpath: html/body[1]/script[1]
   not: true
   contains: Error
