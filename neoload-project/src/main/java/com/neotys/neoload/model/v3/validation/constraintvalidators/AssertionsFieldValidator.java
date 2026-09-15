@@ -38,7 +38,7 @@ public final class AssertionsFieldValidator extends AbstractConstraintValidator<
 		context.disableDefaultConstraintViolation();
 
 		if (!NAME_VALIDATOR.isValid(effective, null)) {
-			context.buildConstraintViolationWithTemplate("{" + UniqueContentAssertionNameCheck.class.getName() + ".message}")
+			context.buildConstraintViolationWithTemplate(messageTemplate(UniqueContentAssertionNameCheck.class))
 					.addPropertyNode(fieldName)
 					.addConstraintViolation();
 			valid = false;
@@ -52,7 +52,7 @@ public final class AssertionsFieldValidator extends AbstractConstraintValidator<
 			final ContentAssertion contentAssertion = (ContentAssertion) assertion;
 
 			if (!REQUIRED_VALIDATOR.isValid(contentAssertion, null)) {
-				context.buildConstraintViolationWithTemplate("{" + RequiredContentAssertionCheck.class.getName() + ".message}")
+				context.buildConstraintViolationWithTemplate(messageTemplate(RequiredContentAssertionCheck.class))
 						.addPropertyNode(fieldName)
 							.addBeanNode()
 								.inContainer(List.class, 0)
@@ -62,7 +62,7 @@ public final class AssertionsFieldValidator extends AbstractConstraintValidator<
 			}
 
 			if (!PATH_VALIDATOR.isValid(contentAssertion, null)) {
-				context.buildConstraintViolationWithTemplate("{" + UniqueContentAssertionPathCheck.class.getName() + ".message}")
+				context.buildConstraintViolationWithTemplate(messageTemplate(UniqueContentAssertionPathCheck.class))
 						.addPropertyNode(fieldName)
 							.addBeanNode()
 								.inContainer(List.class, 0)
@@ -73,5 +73,9 @@ public final class AssertionsFieldValidator extends AbstractConstraintValidator<
 		}
 
 		return valid;
+	}
+
+	private static String messageTemplate(final Class<?> constraintClass) {
+		return "{" + constraintClass.getName() + ".message}";
 	}
 }
