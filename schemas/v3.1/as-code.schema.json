@@ -307,6 +307,15 @@
 						{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
 					]
 				}
+			},
+			"content_assertions": {
+				"type": "array",
+				"items": {
+					"oneOf": [
+						{ "$ref": "#/definitions/user_paths/content_assertion" },
+						{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
+					]
+				}
 			}
 		},
 		"variables": {
@@ -1163,7 +1172,8 @@
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
 						"description": "The list of assertions to validate the response content of all requests matching criteria within the User Path. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
-					}
+					},
+					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 				}
 			},
 			"container": {
@@ -1185,7 +1195,8 @@
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
 						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
-					}
+					},
+					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 				}
 			},
 			"steps": {
@@ -1310,7 +1321,8 @@
 						"assertions": {
 							"$ref": "#/definitions/common/assertions",
 							"description": "The list of assertions to validate the response content of all requests matching criteria within the Transaction. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
-						}
+						},
+						"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 					},
 					"additionalProperties": false,
 					"description": "The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics."
@@ -1386,12 +1398,22 @@
 							"$ref": "#/definitions/user_paths/duration_assertion",
 							"description": "Checks that the request completed within a given duration"
 						},
+						"content_assertions": {
+							"type": "array",
+							"items": {
+								"oneOf": [
+									{ "$ref": "#/definitions/user_paths/content_assertion" },
+									{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
+								]
+							}
+						},
 						"size_assertion": {
 							"$ref": "#/definitions/user_paths/size_assertion",
 							"description": "Checks the length of the response content, in bytes."
 						}
 					},
 					"allOf": [
+						{ "not": { "required": ["assertions", "content_assertions"] } },
 						{ "not": { "required": ["body", "bodybinary"] } },
 						{ "not": { "required": ["body", "binary_source_file"] } },
 						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
@@ -2027,7 +2049,8 @@
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
 						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
-					}
+					},
+					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 				},
 				"additionalProperties": false
 			},
