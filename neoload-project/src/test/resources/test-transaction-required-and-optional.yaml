@@ -9,5 +9,5 @@ user_paths:
         sla_profile: MySlaProfile
         steps:
         - delay: 1s
-        assertions:
+        content_assertions:
         - contains: MyUserPath_actions_MyTransaction
