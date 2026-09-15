@@ -19,7 +19,7 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_DEFAULT)
-@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.PARTS, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
 @JsonSerialize(as = ImmutableRequest.class)
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
@@ -36,6 +36,7 @@ public interface Request extends Step, SlaElement, AssertionsElement {
 	String HEADERS = "headers";
 	String BODY = "body";
 	String BODYBINARY = "bodybinary";
+	String PARTS = "parts";
 	String EXTRACTORS = "extractors";
 	String FOLLOW_REDIRECTS = "followRedirects";
 	
@@ -100,6 +101,8 @@ public interface Request extends Step, SlaElement, AssertionsElement {
 	@JsonProperty(BODYBINARY)
 	Optional<byte[]> getBodyBinary();
 
+	@JsonProperty(PARTS)
+	@Valid
 	Optional<List<Part>> getParts();
 	
 	@JsonProperty(EXTRACTORS)
