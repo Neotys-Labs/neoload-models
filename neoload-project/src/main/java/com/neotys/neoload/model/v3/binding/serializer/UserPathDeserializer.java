@@ -10,10 +10,7 @@ import static com.neotys.neoload.model.v3.project.userpath.UserPath.END;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.INIT;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.USER_SESSION;
 import static com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement.ASSERTIONS;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import static com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement.CONTENT_ASSERTIONS;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,6 +22,9 @@ import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 	private static final long serialVersionUID = -9100000271338565024L;
@@ -60,6 +60,14 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		return ImmutableList.of();
 	}
 
+	protected static Optional<List<Assertion>> asContentAssertions(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
+		final JsonNode contentAssertionsNode = node.get(CONTENT_ASSERTIONS);
+		if (contentAssertionsNode != null) {
+			return Optional.of(AssertionsDeserializer.deserialize(codec, contentAssertionsNode));
+		}
+		return Optional.empty();
+	}
+
 	@Override
 	public UserPath deserialize(final JsonParser parser, final DeserializationContext ctx) throws IOException {
 		final ObjectCodec codec = parser.getCodec();
@@ -72,15 +80,17 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		final Container actions = asContainer(codec, node, ACTIONS);
 		final Container end = asContainer(codec, node, END);
 		final List<Assertion> assertions = asAssertions(codec, node);
+		final Optional<List<Assertion>> contentAssertions = asContentAssertions(codec, node);
 
-		return UserPath.builder()
+		final UserPath.Builder builder = UserPath.builder()
 				.name(name)
 				.description(Optional.ofNullable(description))
 				.userSession(userSession)
 				.init(Optional.ofNullable(init))
 				.actions(actions)
 				.end(Optional.ofNullable(end))
-				.addAllAssertions(assertions)
-				.build();
+				.addAllAssertions(assertions);
+		contentAssertions.ifPresent(builder::addAllContentAssertions);
+		return builder.build();
 	}
 }

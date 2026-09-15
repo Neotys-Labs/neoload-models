@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-
 public class AssertionsElementTest {
 	@Test
 	public void constants() {
 		assertEquals("assertions", AssertionsElement.ASSERTIONS);
+		assertEquals("content_assertions", AssertionsElement.CONTENT_ASSERTIONS);
 	}
 }

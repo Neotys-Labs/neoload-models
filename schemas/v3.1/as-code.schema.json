@@ -227,6 +227,15 @@
 						{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
 					]
 				}
+			},
+			"content_assertions": {
+				"type": "array",
+				"items": {
+					"oneOf": [
+						{ "$ref": "#/definitions/user_paths/content_assertion" },
+						{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
+					]
+				}
 			}
 		},
 		"variables": {
@@ -883,7 +892,8 @@
 					"init": { "$ref": "#/definitions/user_paths/container" },
 					"actions": { "$ref": "#/definitions/user_paths/container" },
 					"end": { "$ref": "#/definitions/user_paths/container" },
-					"assertions": { "$ref": "#/definitions/common/assertions" }
+					"assertions": { "$ref": "#/definitions/common/assertions" },
+					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 				}
 			},
 			"container": {
@@ -897,7 +907,8 @@
 						"type": "string"
 					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
-					"assertions": { "$ref": "#/definitions/common/assertions" }
+					"assertions": { "$ref": "#/definitions/common/assertions" },
+					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 				}
 			},
 			"steps": {
@@ -953,7 +964,8 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
-						"assertions": { "$ref": "#/definitions/common/assertions" }
+						"assertions": { "$ref": "#/definitions/common/assertions" },
+						"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 					},
 					"additionalProperties": false
 				},
@@ -1036,9 +1048,21 @@
 							}
 						},
 						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" },
+						"content_assertions": {
+							"type": "array",
+							"items": {
+								"oneOf": [
+									{ "$ref": "#/definitions/user_paths/content_assertion" },
+									{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
+								]
+							}
+						},
 						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					},
-					"not": { "required": ["body", "bodybinary"] }
+					"allOf": [
+						{ "not": { "required": ["assertions", "content_assertions"] } },
+						{ "not": { "required": ["body", "bodybinary"] } }
+					]
 				},
 				"delay": {
 					"title": "Action: Delay",
@@ -1433,7 +1457,8 @@
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": { "type": "boolean" },
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
-					"assertions": { "$ref": "#/definitions/common/assertions" }
+					"assertions": { "$ref": "#/definitions/common/assertions" },
+					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 				},
 				"additionalProperties": false
 			},
