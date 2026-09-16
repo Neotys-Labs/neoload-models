@@ -1,0 +1,9 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    pacing:
+      min: "${min_pacing}"
+      max: "${max_pacing}"
+    steps:
+    - delay: 100

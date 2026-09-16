@@ -6,6 +6,7 @@ A container only contains steps to be executed.
 | Name                                | Description                                                                                         | Accept variable | Required | Since |
 |:----------------------------------- |:--------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | sla_profile                         | The name of the SLA profile to apply to the Container (will not be applied to children)             | -               | -        | 6.9   |
+| [pacing](pacing.md)                 | The minimum duration enforced for the Container                                                     | &#x2713;        | -        | 2026.3 |
 | [steps](steps.md)                   | The steps to be executed                                                                            | -               | &#x2713; |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project). | -               | -        | 7.6   |
 
