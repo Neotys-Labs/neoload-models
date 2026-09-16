@@ -1,0 +1,20 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - if:
+        conditions:
+        - "'${MyVar}' == 'x'"
+        then:
+          pacing:
+            min: 1s
+            max: 3s
+          steps:
+          - delay: 100
+        else:
+          pacing:
+            min: 1s
+            max: 3s
+          steps:
+          - delay: 100

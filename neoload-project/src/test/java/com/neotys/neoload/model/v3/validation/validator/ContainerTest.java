@@ -5,13 +5,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.PacingConstant;
+import com.neotys.neoload.model.v3.project.userpath.PacingRandom;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-
+import org.junit.Test;
 
 public class ContainerTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -216,6 +216,39 @@ public class ContainerTest {
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());
-		assertFalse(validation.getMessage().isPresent());	
+		assertFalse(validation.getMessage().isPresent());
+	}
+
+	@Test
+	public void validatePacing() {
+		final Validator validator = new Validator();
+
+		Container container = Container.builder()
+				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
+				.pacing(PacingConstant.builder().value("30s").build())
+				.build();
+		Validation validation = validator.validate(container, NeoLoad.class);
+		assertTrue(validation.getMessage().orElse(""), validation.isValid());
+
+		container = Container.builder()
+				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
+				.pacing(PacingConstant.builder().value("abc").build())
+				.build();
+		validation = validator.validate(container, NeoLoad.class);
+		assertFalse(validation.isValid());
+
+		container = Container.builder()
+				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
+				.pacing(PacingRandom.builder().max("3s").build())
+				.build();
+		validation = validator.validate(container, NeoLoad.class);
+		assertTrue(validation.getMessage().orElse(""), validation.isValid());
+
+		container = Container.builder()
+				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
+				.pacing(PacingRandom.builder().max("abc").build())
+				.build();
+		validation = validator.validate(container, NeoLoad.class);
+		assertFalse(validation.isValid());
 	}
 }
