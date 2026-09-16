@@ -35,51 +35,51 @@ public class IORequestSchemaValidationTest {
     private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
-    private static JsonSchema SCHEMA_3_0;
-    private static JsonNode SCHEMA_3_0_TREE;
-    private static JsonSchema SCHEMA_3_1;
-    private static JsonNode SCHEMA_3_1_TREE;
-    private static JsonNode ALL_METHODS_DOCUMENT;
+    private static JsonSchema schema30;
+    private static JsonNode schema30Tree;
+    private static JsonSchema schema31;
+    private static JsonNode schema31Tree;
+    private static JsonNode allMethodsDocument;
 
     @BeforeClass
     public static void loadSchemas() throws IOException, URISyntaxException {
         Path schemasDir = locateSchemasDir();
         Path schema30Path = schemasDir.resolve("v3.0/as-code.schema.json");
         Path schema31Path = schemasDir.resolve("v3.1/as-code.schema.json");
-        SCHEMA_3_0_TREE = JSON_MAPPER.readTree(schema30Path.toFile());
-        SCHEMA_3_1_TREE = JSON_MAPPER.readTree(schema31Path.toFile());
-        SCHEMA_3_0 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(schema30Path.toUri());
-        SCHEMA_3_1 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schema31Path.toUri());
+        schema30Tree = JSON_MAPPER.readTree(schema30Path.toFile());
+        schema31Tree = JSON_MAPPER.readTree(schema31Path.toFile());
+        schema30 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(schema30Path.toUri());
+        schema31 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schema31Path.toUri());
 
         URL fixtureUrl = IORequestSchemaValidationTest.class.getClassLoader().getResource(ALL_METHODS_FIXTURE);
         assertNotNull("Missing classpath resource " + ALL_METHODS_FIXTURE, fixtureUrl);
-        ALL_METHODS_DOCUMENT = YAML_MAPPER.readTree(new File(fixtureUrl.toURI()));
+        allMethodsDocument = YAML_MAPPER.readTree(new File(fixtureUrl.toURI()));
     }
 
     @Test
     public void requestSchemaDoesNotDeclareName() {
         assertFalse("3.0 request must not declare name (ignored by NLG)",
-                requestProperties(SCHEMA_3_0_TREE).has("name"));
+                requestProperties(schema30Tree).has("name"));
         assertFalse("3.1 request must not declare name (ignored by NLG)",
-                requestProperties(SCHEMA_3_1_TREE).has("name"));
+                requestProperties(schema31Tree).has("name"));
     }
 
     @Test
     public void requestMethodHasNoEnum() {
-        assertMethodIsOpenString(SCHEMA_3_0_TREE, "3.0");
-        assertMethodIsOpenString(SCHEMA_3_1_TREE, "3.1");
+        assertMethodIsOpenString(schema30Tree, "3.0");
+        assertMethodIsOpenString(schema31Tree, "3.1");
     }
 
     @Test
     public void requestSchemaDeclaresFollowRedirects() {
-        assertFollowRedirects(SCHEMA_3_0_TREE);
-        assertFollowRedirects(SCHEMA_3_1_TREE);
+        assertFollowRedirects(schema30Tree);
+        assertFollowRedirects(schema31Tree);
     }
 
     @Test
     public void allHttpMethodsFixtureIsValidAgainst3Dot0And3Dot1() {
-        assertValid("3.0", SCHEMA_3_0, ALL_METHODS_DOCUMENT);
-        assertValid("3.1", SCHEMA_3_1, ALL_METHODS_DOCUMENT);
+        assertValid("3.0", schema30, allMethodsDocument);
+        assertValid("3.1", schema31, allMethodsDocument);
     }
 
     @Test
@@ -93,8 +93,8 @@ public class IORequestSchemaValidationTest {
                         + "    - request:\n"
                         + "        url: http://www.neotys.com/select\n"
                         + "        followRedirects: not-a-boolean\n");
-        assertFalse("followRedirects must be a boolean in 3.0", SCHEMA_3_0.validate(node).isEmpty());
-        assertFalse("followRedirects must be a boolean in 3.1", SCHEMA_3_1.validate(node).isEmpty());
+        assertFalse("followRedirects must be a boolean in 3.0", schema30.validate(node).isEmpty());
+        assertFalse("followRedirects must be a boolean in 3.1", schema31.validate(node).isEmpty());
     }
 
     private static JsonNode requestProperties(JsonNode schemaTree) {
