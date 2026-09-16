@@ -630,6 +630,10 @@
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"followRedirects": {
+							"type": "boolean",
+							"default": false
 						}
 					}
 				},

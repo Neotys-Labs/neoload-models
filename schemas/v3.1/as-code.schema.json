@@ -968,7 +968,6 @@
 					"required": ["url"],
 					"additionalProperties": false,
 					"properties": {
-						"name": { "$ref": "#/definitions/common/name" },
 						"url": { "$ref": "#/definitions/common/text" },
 						"server": { "$ref": "#/definitions/common/text" },
 						"method": {
