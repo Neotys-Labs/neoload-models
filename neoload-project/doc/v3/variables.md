@@ -280,6 +280,8 @@ random_uuid:
 ```
 
 ## Current Date variable
+Supported only from version 2026.3 onwards.
+
 A variable whose value is the current date/time at generation, formatted according to a pattern and optionally shifted by a fixed offset. There is no fixed start date — the value is always derived from the wall clock at the moment it is evaluated.
 
 This variable has no `change_policy` or `scope` because its value is always the current timestamp.
@@ -290,10 +292,10 @@ The `offset` is a single amount and unit. Units are not combined, so that fixed-
 
 | Name                | Description                                                                                                                                                              | Accept variable | Required | Since |
 |:------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |:---------------:|:--------:|:-----:|
-| name                | The variable name                                                                                                                                                        | -               | &#x2713; |       |
-| description         | The variable description                                                                                                                                                 | -               | -        |       |
-| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        |       |
-| offset              | The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Absent means no offset. | -               | -        |       |
+| name                | The variable name                                                                                                                                                        | -               | &#x2713; | 2026.3|
+| description         | The variable description                                                                                                                                                 | -               | -        | 2026.3|
+| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        | 2026.3|
+| offset              | The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Absent means no offset. | -               | -        | 2026.3|
 
 #### Example
 Defining a minimal Current Date variable (only required fields).
