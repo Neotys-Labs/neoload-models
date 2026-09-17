@@ -9,7 +9,6 @@ import com.neotys.neoload.model.v3.validation.constraints.DatePatternCheck;
 import com.neotys.neoload.model.v3.validation.constraints.OffsetCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import org.immutables.value.Value;
 
 // S2097 suppressed: the nested Jackson value-filter class overrides equals(Object) to compare the
@@ -44,43 +43,6 @@ public interface CurrentDateVariable extends Variable {
 	@JsonIgnore
 	default Optional<Offset> getParsedOffset() {
 		return getOffset().flatMap(Offset::parse);
-	}
-
-	final class Offset {
-
-		private final int amount;
-		private final IncrementTimeUnit unit;
-
-		private Offset(final int amount, final IncrementTimeUnit unit) {
-			this.amount = amount;
-			this.unit = unit;
-		}
-
-		public static Optional<Offset> parse(final String offset) {
-			if (offset == null) {
-				return Optional.empty();
-			}
-			final Matcher matcher = IncrementTimeUnit.PATTERN.matcher(offset);
-			if (!matcher.matches()) {
-				return Optional.empty();
-			}
-			final int amount;
-			try {
-				amount = Integer.parseInt(matcher.group(1));
-			} catch (final NumberFormatException e) {
-				// The regex accepts any number of digits: an amount beyond int range is not a usable offset.
-				return Optional.empty();
-			}
-			return IncrementTimeUnit.fromCode(matcher.group(2)).map(unit -> new Offset(amount, unit));
-		}
-
-		public int getAmount() {
-			return amount;
-		}
-
-		public IncrementTimeUnit getUnit() {
-			return unit;
-		}
 	}
 
 	class DefaultPatternFilter {
