@@ -1005,6 +1005,7 @@
 								]
 							}
 						},
+						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" },
 						"parts": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/part" }
@@ -1109,7 +1110,8 @@
 							"type": "boolean",
 							"default": false
 						},
-						"libraryPath": { "$ref": "#/definitions/common/text" }
+						"libraryPath": { "$ref": "#/definitions/common/text" },
+						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" }
 					},
 					"additionalProperties": false
 				},
@@ -1320,10 +1322,9 @@
 			"duration_assertion": {
 				"title": "Duration Assertion",
 				"type": "object",
-				"required": ["value"],
+				"required": ["less_than"],
 				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"value": {
+					"less_than": {
 						"type": "integer",
 						"minimum": 0
 					}

@@ -77,7 +77,8 @@ public class IOSchema3Dot1ValidationTest {
             // Voluntarily invalid files for unit-test:
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
-            "test-date-variable-invalid-change-step.yaml"
+            "test-date-variable-invalid-change-step.yaml",
+            "test-assert-duration-unknown-property.yaml"
     );
 
     @BeforeClass
