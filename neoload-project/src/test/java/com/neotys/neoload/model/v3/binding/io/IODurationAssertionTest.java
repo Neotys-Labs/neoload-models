@@ -2,7 +2,7 @@ package com.neotys.neoload.model.v3.binding.io;
 
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThrows;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.neotys.neoload.model.v3.project.Project;
@@ -57,13 +57,7 @@ public class IODurationAssertionTest extends AbstractIOElementsTest {
 	@Test
 	public void readDurationAssertionWithUnknownPropertyFails() {
 		final File file = getFile("test-assert-duration-unknown-property", "yaml");
-		try {
-			new IO().read(file);
-			fail("Expected UnrecognizedPropertyException for unknown property 'name' on duration_assertion");
-		} catch (final UnrecognizedPropertyException e) {
-		} catch (final IOException e) {
-			fail("Expected UnrecognizedPropertyException, got " + e);
-		}
+		assertThrows(UnrecognizedPropertyException.class, () -> new IO().read(file));
 	}
 
 	private Project getProjectWithRequestDurationAssertion() {
