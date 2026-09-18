@@ -894,7 +894,8 @@
 					"end": { "$ref": "#/definitions/user_paths/container" },
 					"assertions": { "$ref": "#/definitions/common/assertions" },
 					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
-				}
+				},
+				"not": { "required": ["assertions", "content_assertions"] }
 			},
 			"container": {
 				"title": "Containers",
@@ -909,7 +910,8 @@
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": { "$ref": "#/definitions/common/assertions" },
 					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
-				}
+				},
+				"not": { "required": ["assertions", "content_assertions"] }
 			},
 			"steps": {
 				"title": "Steps",
@@ -967,6 +969,7 @@
 						"assertions": { "$ref": "#/definitions/common/assertions" },
 						"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 					},
+					"not": { "required": ["assertions", "content_assertions"] },
 					"additionalProperties": false
 				},
 				"http_page": {
@@ -1460,6 +1463,7 @@
 					"assertions": { "$ref": "#/definitions/common/assertions" },
 					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 				},
+				"not": { "required": ["assertions", "content_assertions"] },
 				"additionalProperties": false
 			},
 			"custom-action-parameter": {

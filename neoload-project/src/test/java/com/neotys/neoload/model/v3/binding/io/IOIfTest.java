@@ -4,12 +4,6 @@ package com.neotys.neoload.model.v3.binding.io;
 import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Condition;
 import com.neotys.neoload.model.v3.project.userpath.Container;
@@ -18,7 +12,10 @@ import com.neotys.neoload.model.v3.project.userpath.If;
 import com.neotys.neoload.model.v3.project.userpath.Match;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Test;
 
 public class IOIfTest extends AbstractIOElementsTest {
 
@@ -118,7 +115,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 						.builder()
 						.url("http://www.neotys.com/select")
 						.build())
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.contains("ThenAssertion")
 						.build())
 				.build();
@@ -133,7 +130,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 						.builder()
 						.value(String.valueOf(3*60*1000+200)) // "3m 200ms"
 						.build())
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.contains("ElseAssertion")
 						.build())
 				.build();
