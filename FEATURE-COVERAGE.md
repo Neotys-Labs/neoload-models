@@ -53,12 +53,10 @@ single-value setting (`less_than`) on `request` and `custom_action`.
 (`enabled`, `extraction_source`, `xpath`, `jsonpath`, `regexp`, `template`), covering the GUI
 Frameworks / dynamic parameters feature, in a builtin and a custom flavour.
 
-**JSON Schema completeness** — request `name`, `followRedirects`, custom method, `bodybinary`,
-multipart `parts`; `assertions` on request, transaction and container; scenario `sla_profile`,
+**JSON Schema completeness** — request `name`, `followRedirects`, custom method, `bodybinary`;
+`assertions` on request, transaction and container; scenario `sla_profile`,
 `store_variables_for_raw_data`, `excluded_urls`, `apm_configuration`, `monitoring`,
 `rendezvous_policies`; `custom_load` policy.
-
-**Binding fix** — `Part` bound to `ImmutablePart` so multipart bodies can be deserialised from YAML.
 
 ## Reverted before release
 
@@ -176,7 +174,7 @@ and protocol action catalogues.
 | Binary body | 3.0 (`bodybinary`, undeclared in the published schema) |
 | Follow redirects | 3.0 (`followRedirects`, undeclared in the published schema) |
 | HTTP Page (a page and its dynamic resources) | 3.1 draft (`http_page`) |
-| Multipart / form-data body | 3.1 draft (`parts` in the schema, plus the Jackson binding fix) |
+| Multipart / form-data body | 3.1 (`parts`) |
 | Keep-alive, charset, content-type override, referer | — |
 | Response storage to a file or a variable | — |
 | Static request optimisation | — |

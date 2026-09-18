@@ -12,12 +12,12 @@ A request defines a plain HTTP request.
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
 | [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        |       |
+| [parts](#parts)                     | The multipart/form-data parts                                                 | &#x2713;        | -        | 2026.3|
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
 | [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration                 | -               | -        | 2026.3 |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
 | followRedirects                     | When `true`, the HTTP redirections returned by the server are followed.</br>The default value is `false`. | -               | -        |       |
-| bodybinary                          | The request body as Base64-encoded binary content, used instead of `body` for a non-text payload. | -               | -        |       |
 
 #### Example 1
 
@@ -174,7 +174,7 @@ Define the request body to use for the HTTP request. Variables can be used in th
 
 In using the `Content-Type` header with `application/x-www-form-urlencoded`, the variables can be used from the name/value pairs of the request body. To encode the evaluation of a variable from the name/value pairs, use convention: `__encodeURL(${my_variable})`.
 
-> A binary body is defined with `bodybinary` (Base64-encoded) instead of `body`. The `multipart/form-data` bodies are not yet supported. 
+> Multipart/form-data is defined with [`parts`](#parts), not `body`. A binary body is defined with `bodybinary` (Base64-encoded) instead of `body`.
 
 #### Example 1
 
@@ -245,5 +245,43 @@ request:
   bodybinary: SGVsbG8gYmluYXJ5IHdvcmxkIQ==
 ```
 
+## parts
 
+Define the multipart/form-data parts of the HTTP request. Use `parts` instead of `body` for multipart uploads.
+
+Each part requires a `name`. A text part uses `value`. A file part uses `source_filename` (file on disk, relative to the NeoLoad project folder) and optionally `filename` (name sent to the server).
+
+In CheckVU CLI, `source_filename` must stay inside the project folder: absolute paths and `../` traversal are rejected.
+
+#### Available settings are
+
+| Name              | Description                                                                 | Accept variable | Required | Since |
+|:----------------- |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name              | The form field name                                                         | &#x2713;        | &#x2713; | 2026.3|
+| content_type      | The part Content-Type                                                       | &#x2713;        | -        | 2026.3|
+| charset           | The part charset                                                            | &#x2713;        | -        | 2026.3|
+| transfer_encoding | The part Content-Transfer-Encoding                                          | &#x2713;        | -        | 2026.3|
+| value             | The text content of the part                                                | &#x2713;        | -        | 2026.3|
+| filename          | The file name sent to the server                                            | &#x2713;        | -        | 2026.3|
+| source_filename   | The path of the file used as part content, relative to the project folder   | &#x2713;        | -        | 2026.3|
+
+#### Example
+
+Defining an HTTP request with a text part and a file part.
+
+```yaml
+request:
+  url: https://example.com/upload
+  method: POST
+  parts:
+  - name: comment
+    content_type: text/plain
+    charset: UTF-8
+    transfer_encoding: 8bit
+    value: hello
+  - name: file
+    content_type: image/jpeg
+    filename: upload.jpg
+    source_filename: upload.jpg
+```
 
