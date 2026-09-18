@@ -78,7 +78,8 @@ public class IOSchema3Dot1ValidationTest {
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
             "test-date-variable-invalid-change-step.yaml",
-            "test-assert-duration-unknown-property.yaml"
+            "test-assert-duration-unknown-property.yaml",
+            "test-assertions-mutually-exclusive.yaml"
     );
 
     @BeforeClass

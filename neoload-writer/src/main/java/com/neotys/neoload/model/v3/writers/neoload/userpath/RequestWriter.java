@@ -3,7 +3,7 @@ package com.neotys.neoload.model.v3.writers.neoload.userpath;
 import com.google.common.net.MediaType;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
-import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.util.Parameter;
 import com.neotys.neoload.model.v3.util.RequestUtils;
 import com.neotys.neoload.model.v3.util.URL;
@@ -52,7 +52,7 @@ public class RequestWriter extends ElementWriter {
 		fillXML(document, xmlRequest, theRequest);
 		SlaElementWriter.of(theRequest).writeXML(xmlRequest);
 		// write assertions
-        final List<Assertion> assertions = theRequest.getContentAssertions();
+        final List<ContentAssertion> assertions = theRequest.getContentAssertions();
         if ((assertions != null && (!assertions.isEmpty()))) {
         	AssertionsWriter.of(assertions).writeXML(document, xmlRequest);	
         } 
