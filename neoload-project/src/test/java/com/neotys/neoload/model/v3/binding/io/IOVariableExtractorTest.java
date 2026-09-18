@@ -46,7 +46,6 @@ public class IOVariableExtractorTest extends AbstractIOElementsTest {
 
 	private Request getRequestWithVariableExtractorsOnlyRequired() {
 		return Request.builder()
-				.name("http_request")
 				.url("http://www.neotys.com/select?name:neoload")
 				.addExtractors(
 						VariableExtractor.builder()
@@ -78,7 +77,6 @@ public class IOVariableExtractorTest extends AbstractIOElementsTest {
 				.build();
 
 		return Request.builder()
-				.name("http_request")
 				.url("http://www.neotys.com/select?name:neoload")
 				.addExtractors(variableExtractor)
 				.build();
