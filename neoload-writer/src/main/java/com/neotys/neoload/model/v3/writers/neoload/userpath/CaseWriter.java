@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.neotys.neoload.model.v3.project.userpath.Case;
-import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
@@ -61,7 +61,7 @@ public class CaseWriter extends ElementWriter {
         );
         
 		// write assertions
-        final List<Assertion> assertions = aCase.getContentAssertions();
+        final List<ContentAssertion> assertions = aCase.getContentAssertions();
         if ((assertions != null && (!assertions.isEmpty()))) {
         	AssertionsWriter.of(assertions).writeXML(document, caseElement);	
         } 

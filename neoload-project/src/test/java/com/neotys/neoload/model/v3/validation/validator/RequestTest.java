@@ -63,7 +63,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_ASSERTIONS_NAMES = sb.toString();
 	}
 
@@ -71,7 +71,7 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.steps[0].content_assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_REQUEST_ASSERTIONS_REQUIRED_FIELDS = sb.toString();
 	}
 
@@ -79,9 +79,9 @@ public class RequestTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 6.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions.steps[0].assertions': must contain only unique names.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'user_paths[0].actions.steps[0].assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'user_paths[0].actions.steps[0].assertions[1]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions.steps[0].content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'user_paths[0].actions.steps[0].content_assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value for 'user_paths[0].actions.steps[0].content_assertions[1]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
 		sb.append("Violation 4 - Incorrect value for 'user_paths[0].actions.steps[0].method': missing value or value is empty.").append(LINE_SEPARATOR);
 		sb.append("Violation 5 - Incorrect value for 'user_paths[0].actions.steps[0].name': missing value or value is empty.").append(LINE_SEPARATOR);
 		sb.append("Violation 6 - Incorrect value for 'user_paths[0].actions.steps[0].url': missing value or value is empty.").append(LINE_SEPARATOR);
@@ -263,8 +263,8 @@ public class RequestTest {
 						.name("actions")
 						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
-								.addAssertions(ContentAssertion.builder().name("assertion").contains("contains").build())
-								.addAssertions(ContentAssertion.builder().name("assertion").contains("contains").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion").contains("contains").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion").contains("contains").build())
 								.build())
 						.build())
 				.build();
@@ -278,7 +278,7 @@ public class RequestTest {
 						.name("actions")
 						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
-								.addAssertions(ContentAssertion.builder().name("assertion").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion").build())
 								.build())
 						.build())
 				.build();
@@ -292,8 +292,8 @@ public class RequestTest {
 						.name("actions")
 						.addSteps(Request.builder()
 								.url("http://www.neotys.com:80/select?name=neoload")
-								.addAssertions(ContentAssertion.builder().name("assertion1").contains("contains").build())
-								.addAssertions(ContentAssertion.builder().name("assertion2").contains("contains").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion1").contains("contains").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion2").contains("contains").build())
 								.build())
 						.build())
 				.build();
@@ -313,8 +313,8 @@ public class RequestTest {
 						.addSteps(Request.builder()
 								.name("")
 								.method("")
-								.addAssertions(ContentAssertion.builder().name("assertion").build())
-								.addAssertions(ContentAssertion.builder().name("assertion").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion").build())
 								.build())
 						.build())
 				.build();
