@@ -50,7 +50,6 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 	private Project getAsertionsOnlyRequired() {
 
 		final ImmutableRequest request = Request.builder()
-				.name("http_request")
 				.url("http://www.neotys.com/select?name:neoload")
 				.addAssertions(ContentAssertion.builder()
 						.contains("DevOps and Automation")
@@ -105,7 +104,6 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 				.build();
 
 		final ImmutableRequest request = Request.builder()
-				.name("http_request")
 				.url("http://www.neotys.com/select?name:neoload")
 				.addAssertions(assertion1)
 				.addAssertions(assertion2)
