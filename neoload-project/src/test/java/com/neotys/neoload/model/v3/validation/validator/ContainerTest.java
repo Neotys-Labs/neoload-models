@@ -5,13 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-
+import org.junit.Test;
 
 public class ContainerTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -28,15 +26,23 @@ public class ContainerTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
 		CONSTRAINTS_CONTAINER_ASSERTIONS_NAMES = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_CONTAINER_CONTENT_ASSERTIONS_NAMES;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		CONSTRAINTS_CONTAINER_CONTENT_ASSERTIONS_NAMES = sb.toString();
 	}
 
 	private static final String CONSTRAINTS_CONTAINER_ASSERTION_REQUIRED_FILEDS;
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'content_assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
 		CONSTRAINTS_CONTAINER_ASSERTION_REQUIRED_FILEDS = sb.toString();
 	}
 
@@ -112,8 +118,8 @@ public class ContainerTest {
 				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
-				.addAssertions(ContentAssertion.builder().name("assertion").xPath("xpath").build())
-				.addAssertions(ContentAssertion.builder().name("assertion").jsonPath("jsonpath").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").xPath("xpath").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").jsonPath("jsonpath").build())
 				.build();
 		Validation validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -124,15 +130,32 @@ public class ContainerTest {
 				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
-				.addAssertions(ContentAssertion.builder().name("assertion1").xPath("xpath").build())
-				.addAssertions(ContentAssertion.builder().name("assertion2").jsonPath("jsonpath").build())
-				.addAssertions(ContentAssertion.builder().name("assertion3").contains("contains").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion1").xPath("xpath").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion2").jsonPath("jsonpath").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion3").contains("contains").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());
-		assertFalse(validation.getMessage().isPresent());	
+		assertFalse(validation.getMessage().isPresent());
 	}
-	
+
+	@Test
+	public void validateContentAssertionsNames() {
+		final Validator validator = new Validator();
+
+		final Container container = Container.builder()
+				.name("container")
+				.addSteps(Request.builder()
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").xPath("xpath").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").jsonPath("jsonpath").build())
+				.build();
+		final Validation validation = validator.validate(container, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_CONTAINER_CONTENT_ASSERTIONS_NAMES, validation.getMessage().get());
+	}
+
 	@Test
 	public void validateAssertionRequiredFields() {
 		final Validator validator = new Validator();
@@ -142,7 +165,7 @@ public class ContainerTest {
 				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
-				.addAssertions(ContentAssertion.builder().name("assertion").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").build())
 				.build();
 		Validation validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -153,7 +176,7 @@ public class ContainerTest {
 				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
-				.addAssertions(ContentAssertion.builder().name("assertion").xPath("").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").xPath("").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -164,7 +187,7 @@ public class ContainerTest {
 				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
-				.addAssertions(ContentAssertion.builder().name("assertion").xPath("xpath").contains("").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").xPath("xpath").contains("").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -175,7 +198,7 @@ public class ContainerTest {
 				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
-				.addAssertions(ContentAssertion.builder().name("assertion").jsonPath("").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").jsonPath("").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -186,7 +209,7 @@ public class ContainerTest {
 				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
-				.addAssertions(ContentAssertion.builder().name("assertion").jsonPath("jsonpath").contains("").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").jsonPath("jsonpath").contains("").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -197,7 +220,7 @@ public class ContainerTest {
 				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
-				.addAssertions(ContentAssertion.builder().name("assertion").contains("").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion").contains("").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -208,11 +231,11 @@ public class ContainerTest {
 				.addSteps(Request.builder()
 						.url("http://www.neotys.com:80/select?name=neoload")
 						.build())
-				.addAssertions(ContentAssertion.builder().name("assertion1").xPath("xpath").build())
-				.addAssertions(ContentAssertion.builder().name("assertion2").xPath("xpath").contains("contains").build())
-				.addAssertions(ContentAssertion.builder().name("assertion3").jsonPath("jsonpath").build())
-				.addAssertions(ContentAssertion.builder().name("assertion4").jsonPath("jsonpath").contains("contains").build())
-				.addAssertions(ContentAssertion.builder().name("assertion5").contains("contains").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion1").xPath("xpath").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion2").xPath("xpath").contains("contains").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion3").jsonPath("jsonpath").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion4").jsonPath("jsonpath").contains("contains").build())
+				.addContentAssertions(ContentAssertion.builder().name("assertion5").contains("contains").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.isValid());
