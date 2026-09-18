@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
@@ -59,7 +59,7 @@ public class ContainerWriter extends ElementWriter {
 		writeEmbeddedActions(document, outputFolder, xmlContainerElement, theContainer);
 		
 		// write assertions
-        final List<Assertion> assertions = theContainer.getContentAssertions();
+        final List<ContentAssertion> assertions = theContainer.getContentAssertions();
         if ((assertions != null && (!assertions.isEmpty()))) {
         	AssertionsWriter.of(assertions).writeXML(document, xmlContainerElement);	
         } 

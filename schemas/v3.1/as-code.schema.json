@@ -1174,7 +1174,8 @@
 						"description": "The list of assertions to validate the response content of all requests matching criteria within the User Path. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
 					},
 					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
-				}
+				},
+				"not": { "required": ["assertions", "content_assertions"] }
 			},
 			"container": {
 				"title": "Containers",
@@ -1197,7 +1198,8 @@
 						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
 					},
 					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
-				}
+				},
+				"not": { "required": ["assertions", "content_assertions"] }
 			},
 			"steps": {
 				"title": "Steps",
@@ -1324,6 +1326,7 @@
 						},
 						"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 					},
+					"not": { "required": ["assertions", "content_assertions"] },
 					"additionalProperties": false,
 					"description": "The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics."
 				},
@@ -2052,6 +2055,7 @@
 					},
 					"content_assertions": { "$ref": "#/definitions/common/content_assertions" }
 				},
+				"not": { "required": ["assertions", "content_assertions"] },
 				"additionalProperties": false
 			},
 			"custom-action-parameter": {

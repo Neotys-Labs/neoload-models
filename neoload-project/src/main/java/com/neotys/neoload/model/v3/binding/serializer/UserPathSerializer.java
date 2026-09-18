@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -54,9 +54,9 @@ public final class UserPathSerializer extends StdSerializer<UserPath> {
         	generator.writeObjectField(END, Container.builder().from(end.get()).name("").build());
         }
         
-        final List<Assertion> contentAssertions = userPath.getContentAssertions();
+        final List<ContentAssertion> contentAssertions = userPath.getContentAssertions();
         if ((contentAssertions != null) && (!contentAssertions.isEmpty())) {
-        	AssertionsSerializer.serialize(generator, CONTENT_ASSERTIONS, contentAssertions);
+        	generator.writeObjectField(CONTENT_ASSERTIONS, contentAssertions);
         }
         
         generator.writeEndObject();		

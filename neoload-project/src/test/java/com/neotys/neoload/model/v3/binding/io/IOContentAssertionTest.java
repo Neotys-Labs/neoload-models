@@ -51,14 +51,14 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 
 		final ImmutableRequest request = Request.builder()
 				.url("http://www.neotys.com/select?name:neoload")
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.contains("DevOps and Automation")
 						.build())
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.xPath("xpath")
 						.contains("DevOps")
 						.build())
-				.addAssertions(ContentAssertion.builder()
+				.addContentAssertions(ContentAssertion.builder()
 						.jsonPath("jsonpath")
 						.contains("Automation")
 						.build())
@@ -105,9 +105,9 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 
 		final ImmutableRequest request = Request.builder()
 				.url("http://www.neotys.com/select?name:neoload")
-				.addAssertions(assertion1)
-				.addAssertions(assertion2)
-				.addAssertions(assertion3)
+				.addContentAssertions(assertion1)
+				.addContentAssertions(assertion2)
+				.addContentAssertions(assertion3)
 				.build();
 
 		final UserPath userPath = UserPath.builder()
