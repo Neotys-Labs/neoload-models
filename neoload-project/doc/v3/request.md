@@ -11,6 +11,7 @@ A request defines a plain HTTP request.
 | [method](#method)                   | The request method                                                            | -               | -        |       |
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
+| [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        |       |
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
 | [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration                 | -               | -        | 2026.3 |
@@ -219,6 +220,29 @@ request:
   - Content-Type: application/x-www-form-urlencoded
   body: |
     name=__encodeURL(${var_dog_name})&breed=__encodeURL(${var_dog_breed})
+```
+
+## bodybinary
+
+Define a binary request body, encoded in base64. Use it for payloads such as `application/octet-stream` or any other binary format.
+
+Variables cannot be used in `bodybinary`
+
+The `body` and `bodybinary` fields are mutually exclusive: a request must define at most one of them.
+
+Like `body`, `bodybinary` is only sent for the `POST` and `PUT` methods, and is ignored for the others.
+
+#### Example
+
+Defining an HTTP request sending the bytes of `Hello binary world!`.
+
+```yaml
+request:
+  url: https://www.compagny.com/upload
+  method: POST
+  headers:
+  - Content-Type: application/octet-stream
+  bodybinary: SGVsbG8gYmluYXJ5IHdvcmxkIQ==
 ```
 
 

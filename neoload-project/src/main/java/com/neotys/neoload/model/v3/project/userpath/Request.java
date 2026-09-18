@@ -20,7 +20,7 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_DEFAULT)
-@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.BODYBINARY, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
 @JsonSerialize(as = ImmutableRequest.class)
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
