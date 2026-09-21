@@ -3,6 +3,9 @@ variables:
 - constant:
     name: constant_variable
     value: 118218
+- password:
+    name: MyPassword
+    value: s3cr3t
 - file:
     name: cities_file
     description: cities variable file description

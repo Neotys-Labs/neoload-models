@@ -20,9 +20,11 @@
 	"properties": {
 		"$schema": { "$ref": "#/definitions/common/full_url" },
 		"schemaVersion": {
-			"type": "string",
-			"const": "3.1",
-			"description": "Schema contract version this file is written for. Must be '3.1' for this schema."
+			"anyOf": [
+				{ "type": "string", "const": "3.1" },
+				{ "type": "number", "const": 3.1 }
+			],
+			"description": "Schema contract version this file is written for. Must be 3.1 as a string or number for this schema."
 		},
 		"name": { "$ref": "#/definitions/common/project_name" },
 		"includes": {
@@ -136,6 +138,12 @@
 				"title": "Blob",
 				"type": "string",
 				"pattern": "((.|\n)*)"
+			},
+			"base64blob": {
+				"title": "Base64 Blob",
+				"type": "string",
+				"contentEncoding": "base64",
+				"pattern": "^[A-Za-z0-9+/\\s]*={0,2}\\s*$"
 			},
 			"positive_number": {
 				"title": "Positive Number",
@@ -367,16 +375,14 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"pattern": { "$ref": "#/definitions/common/text" },
-							"start_date": { "$ref": "#/definitions/common/text" },
-							"increment_value": {
-								"type": "number",
-								"default": 0
+							"pattern": {
+								"$ref": "#/definitions/common/text",
+								"default": "dd/MM/yyyy HH:mm:ss"
 							},
-							"increment_timeunit": {
+							"start_date": { "$ref": "#/definitions/common/text" },
+							"change_step": {
 								"type": "string",
-								"enum": ["millisecond","second", "minute", "hour", "day", "month", "year"],
-								"default": "second"
+								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$"
 							},
 							"scope": { "$ref": "#/definitions/common/var_scope" }
 						}
@@ -888,6 +894,7 @@
 							"type": "string",
 							"enum": [
 								"go_to_next_iteration",
+                                "rendezvous",
 								"stop_vu"
 							]
 						},
@@ -910,7 +917,9 @@
 								"fork": {"$ref": "#/definitions/user_paths/actions/fork"},
 								"variable_modifier": {"$ref": "#/definitions/user_paths/actions/variable_modifier"},
 								"debug_logger": {"$ref": "#/definitions/user_paths/actions/debug_logger"},
-								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"}
+                                "rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
+								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"},
+								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"}
 							},
 							"additionalProperties": false
 						}
@@ -967,7 +976,6 @@
 					"required": ["url"],
 					"additionalProperties": false,
 					"properties": {
-						"name": { "$ref": "#/definitions/common/name" },
 						"url": { "$ref": "#/definitions/common/text" },
 						"server": { "$ref": "#/definitions/common/text" },
 						"method": {
@@ -989,7 +997,11 @@
 						},
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
-						"bodybinary": { "$ref": "#/definitions/common/textblob" },
+						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
+						"parts": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/part" }
+						},
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
@@ -1007,11 +1019,9 @@
 								]
 							}
 						},
-						"parts": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/part" }
-						}
-					}
+						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" }
+					},
+					"not": { "required": ["body", "bodybinary"] }
 				},
 				"delay": {
 					"title": "Action: Delay",
@@ -1111,7 +1121,17 @@
 							"type": "boolean",
 							"default": false
 						},
-						"libraryPath": { "$ref": "#/definitions/common/text" }
+						"libraryPath": { "$ref": "#/definitions/common/text" },
+						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" }
+					},
+					"additionalProperties": false
+				},
+				"rendezvous": {
+					"title": "Action: Rendezvous",
+					"type": "object",
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				},
@@ -1220,7 +1240,69 @@
 						"catch": { "$ref": "#/definitions/user_paths/container" }
 					},
 					"additionalProperties": false
+				},
+				"web_page": {
+					"title": "Action: Web Page",
+					"type": "object",
+					"required": ["steps"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"sla_profile": { "$ref": "#/definitions/common/text" },
+						"think_time": {
+							"title": "Web Page Think Time",
+							"oneOf": [
+								{
+									"type": "object",
+									"required": ["value"],
+									"properties": {
+										"value": { "$ref": "#/definitions/user_paths/actions/web_page_think_time_value" }
+									},
+									"additionalProperties": false
+								},
+								{
+									"type": "object",
+									"required": ["max"],
+									"properties": {
+										"min": { "$ref": "#/definitions/user_paths/actions/web_page_think_time_value" },
+										"max": { "$ref": "#/definitions/user_paths/actions/web_page_think_time_value" }
+									},
+									"additionalProperties": false
+								}
+							]
+						},
+						"playback": {
+							"type": "string",
+							"enum": ["parallel", "sequential"]
+						},
+						"execute_resources": {
+							"type": "string",
+							"enum": ["static", "dynamic", "dynamic_forced_encoding"]
+						},
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
+					},
+					"additionalProperties": false
+				},
+				"web_page_think_time_value": {
+					"title": "Web Page Think Time Value",
+					"type": "string",
+					"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
 				}
+			},
+			"part": {
+				"title": "Multipart Part",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"content_type": { "$ref": "#/definitions/common/text" },
+					"charset": { "$ref": "#/definitions/common/text" },
+					"transfer_encoding": { "$ref": "#/definitions/common/text" },
+					"value": { "$ref": "#/definitions/common/text" },
+					"filename": { "$ref": "#/definitions/common/text" },
+					"source_filename": { "$ref": "#/definitions/common/text" }
+				},
+				"additionalProperties": false
 			},
 			"extractor": {
 				"type": "object",
@@ -1278,21 +1360,6 @@
 				},
 				"additionalProperties": false
 			},
-			"part": {
-				"title": "Multipart Part",
-				"type": "object",
-				"required": ["name"],
-				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"contentType": { "$ref": "#/definitions/common/text" },
-					"charSet": { "$ref": "#/definitions/common/text" },
-					"transferEncoding": { "$ref": "#/definitions/common/text" },
-					"value": { "$ref": "#/definitions/common/text" },
-					"filename": { "$ref": "#/definitions/common/text" },
-					"sourceFilename": { "$ref": "#/definitions/common/text" }
-				},
-				"additionalProperties": false
-			},
 			"size_assertion": {
 				"title": "Size Assertion",
 				"type": "object",
@@ -1313,10 +1380,9 @@
 			"duration_assertion": {
 				"title": "Duration Assertion",
 				"type": "object",
-				"required": ["value"],
+				"required": ["less_than"],
 				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"value": {
+					"less_than": {
 						"type": "integer",
 						"minimum": 0
 					}

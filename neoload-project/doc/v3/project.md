@@ -18,6 +18,7 @@ Definition has several top-level keys:
 
 | Name                           | Description                                    | Accept variable | Required | Since |
 |:------------------------------ |:---------------------------------------------- |:---------------:|:--------:|:-----:|
+| $schema                        | Optional URL of the JSON Schema used by editors to validate the file. It is ignored when the project is loaded. | -               | -        |       |
 | schemaVersion                  | Schema contract version this file is written for. Defaults to `3.0` when absent. | - | - | 2026.3 |
 | name                           | The root key defining the name of the project. See [Naming rules](README.md#naming-rules). | -               | &#x2713; |       |
 | [includes](include.md)         | The definition of as-code files to be included | -               | -        | 6.10  |

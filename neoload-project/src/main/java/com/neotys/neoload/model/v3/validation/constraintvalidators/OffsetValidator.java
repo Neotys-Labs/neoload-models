@@ -1,6 +1,6 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
-import com.neotys.neoload.model.v3.project.variable.CurrentDateVariable.Offset;
+import com.neotys.neoload.model.v3.project.variable.Offset;
 import com.neotys.neoload.model.v3.validation.constraints.OffsetCheck;
 import java.util.Optional;
 import javax.validation.ConstraintValidatorContext;

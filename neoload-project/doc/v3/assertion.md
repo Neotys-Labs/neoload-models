@@ -1,6 +1,8 @@
 # Assertion on response content
 Assertions allow checking the validity of the responses content returned by the server. Checks whether or not the server response contains a certain content. The server response is considered valid if all the content conditions are satisfied.
 
+> For checking the response time instead of its content, see [duration_assertion](duration_assertion.md).
+
 > Validation cannot be applied to failed requests (HTTP errors, network errors, and so on).
 
 #### Available settings
