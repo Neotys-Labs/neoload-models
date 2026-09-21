@@ -11,7 +11,8 @@ A request defines a plain HTTP request.
 | [method](#method)                   | The request method                                                            | -               | -        |       |
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
-| [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        |       |
+| [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        | 2026.3|
+| [binarySourceFile](#binarysourcefile) | Path of a file used as the binary request body, relative to the project folder | -               | -        | 2026.3|
 | [parts](#parts)                     | The multipart/form-data parts                                                 | &#x2713;        | -        | 2026.3|
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
@@ -174,7 +175,7 @@ Define the request body to use for the HTTP request. Variables can be used in th
 
 In using the `Content-Type` header with `application/x-www-form-urlencoded`, the variables can be used from the name/value pairs of the request body. To encode the evaluation of a variable from the name/value pairs, use convention: `__encodeURL(${my_variable})`.
 
-> Multipart/form-data is defined with [`parts`](#parts), not `body`. A binary body is defined with `bodybinary` (Base64-encoded) instead of `body`.
+> Multipart/form-data is defined with [`parts`](#parts), not `body`. A binary body is defined with `bodybinary` (Base64-encoded) or [`binarySourceFile`](#binarysourcefile) instead of `body`.
 
 #### Example 1
 
@@ -228,7 +229,7 @@ Define a binary request body, encoded in base64. Use it for payloads such as `ap
 
 Variables cannot be used in `bodybinary`
 
-The `body` and `bodybinary` fields are mutually exclusive: a request must define at most one of them.
+The `body`, `bodybinary` and `binarySourceFile` fields are mutually exclusive: a request must define at most one of them.
 
 Like `body`, `bodybinary` is only sent for the `POST` and `PUT` methods, and is ignored for the others.
 
@@ -243,6 +244,31 @@ request:
   headers:
   - Content-Type: application/octet-stream
   bodybinary: SGVsbG8gYmluYXJ5IHdvcmxkIQ==
+```
+
+## binarySourceFile
+
+Define a binary request body from a file on disk. Use it when the payload should not be inlined as Base64 in the YAML.
+
+The path is relative to the as-code project folder. Variables cannot be used in `binarySourceFile`.
+
+The `body`, `bodybinary` and `binarySourceFile` fields are mutually exclusive: a request must define at most one of them.
+
+Like `body`, `binarySourceFile` is only sent for the `POST` and `PUT` methods, and is ignored for the others.
+
+When converting to a NeoLoad project, the file is copied into `binary-bodies/` so CheckVU and Load Generators include it.
+
+#### Example
+
+Defining an HTTP request whose body is the contents of `payloads/hello.bin`.
+
+```yaml
+request:
+  url: https://www.compagny.com/upload
+  method: POST
+  headers:
+  - Content-Type: application/octet-stream
+  binarySourceFile: payloads/hello.bin
 ```
 
 ## parts

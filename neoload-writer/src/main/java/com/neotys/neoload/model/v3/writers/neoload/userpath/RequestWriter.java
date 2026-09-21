@@ -1,9 +1,16 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,6 +29,7 @@ import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.Assertions
 
 public class RequestWriter extends ElementWriter {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(RequestWriter.class);
 
 	public static final String XML_TAG_NAME = "http-action";
 	public static final String XML_ATTR_METHOD = "method";
@@ -32,10 +40,15 @@ public class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_FOLLOW_REDIRECTS = "followRedirects";
 
 	public static final String XML_ATTR_POST_TYPE = "postType";
+	public static final String XML_ATTR_BINARY_TYPE = "binaryType";
+	public static final String XML_ATTR_BINARY_FILENAME = "binaryFileName";
 	public static final String XML_URL_PARAMETER_TAG_NAME = "urlPostParameter";
 	public static final String XML_STRING_DATA_TAG_NAME = "textPostContent";
 	public static final String XML_BINARY_DATA_TAG_NAME = "binaryPostContentBase64";
 	public static final String XML_PARTS_TAG_NAME = "multiparts";
+
+	static final String BINARY_CONTENT_TYPE_FILE = "FILE";
+	static final String BINARY_BODIES_DIRECTORY = "binary-bodies";
 
 	public static final int FORM_CONTENT = 1;
 	public static final int RAW_CONTENT = 2;
@@ -52,7 +65,7 @@ public class RequestWriter extends ElementWriter {
 		final Element xmlRequest = document.createElement(XML_TAG_NAME);
 		final Request theRequest = (Request) this.element;
 		super.writeXML(document, xmlRequest, outputFolder);
-		fillXML(document, xmlRequest, theRequest);
+		fillXML(document, xmlRequest, theRequest, outputFolder);
 		SlaElementWriter.of(theRequest).writeXML(xmlRequest);
 		// write assertions
         final List<Assertion> assertions = theRequest.getAssertions();
@@ -62,7 +75,7 @@ public class RequestWriter extends ElementWriter {
 		currentElement.appendChild(xmlRequest);
 	}
 
-	protected void fillXML(final Document document, final Element xmlRequest, final Request theRequest) {
+	protected void fillXML(final Document document, final Element xmlRequest, final Request theRequest, final String outputFolder) {
 		xmlRequest.setAttribute(XML_ATTR_METHOD, theRequest.getMethod());
 		getContentType(theRequest).ifPresent(c -> xmlRequest.setAttribute(XML_ATTR_CONTENT_TYPE, c));
 		theRequest.getServer().ifPresent(server -> xmlRequest.setAttribute(XML_ATTR_SERV_UID, server));
@@ -75,7 +88,9 @@ public class RequestWriter extends ElementWriter {
 		if(bodySupportedByMethod) {
 			int postType = getPostType(theRequest);
 			xmlRequest.setAttribute(XML_ATTR_POST_TYPE, String.valueOf(postType));
-			if (theRequest.getBodyBinary().isPresent()) {
+			if (theRequest.getBinarySourceFile().isPresent()) {
+				writeBinarySourceFile(theRequest.getBinarySourceFile().get(), xmlRequest, outputFolder);
+			} else if (theRequest.getBodyBinary().isPresent()) {
 				writePostRawBody(theRequest.getBodyBinary().get(), document, xmlRequest);
 			} else {
 				theRequest.getBody().ifPresent(s -> {
@@ -97,6 +112,7 @@ public class RequestWriter extends ElementWriter {
 	}
 
 	protected int getPostType(final Request request) {
+		if(request.getBinarySourceFile().isPresent()) return RAW_CONTENT;
 		if(request.getBodyBinary().isPresent()) return RAW_CONTENT;
 		if(request.getParts().isPresent()) return MULTIPART_CONTENT;
 
@@ -124,6 +140,31 @@ public class RequestWriter extends ElementWriter {
 
 		// write also in the binary content in case of conversion
 		writePostRawBody(body.getBytes(), document, xmlRequest);
+	}
+
+	public void writeBinarySourceFile(final String sourcePath, final Element xmlRequest, final String outputFolder) {
+		xmlRequest.setAttribute(XML_ATTR_BINARY_TYPE, BINARY_CONTENT_TYPE_FILE);
+		xmlRequest.setAttribute(XML_ATTR_BINARY_FILENAME, copyBinarySourceFile(sourcePath, outputFolder));
+	}
+
+	static String copyBinarySourceFile(final String sourcePath, final String outputFolder) {
+		final Path source = Paths.get(sourcePath);
+		final Path filename = source.getFileName();
+		if (outputFolder == null || filename == null || !Files.exists(source)) {
+			return sourcePath;
+		}
+		try {
+			final Path destinationDir = Paths.get(outputFolder).resolve(BINARY_BODIES_DIRECTORY);
+			final Path destination = destinationDir.resolve(filename);
+			if (!destination.equals(source)) {
+				Files.createDirectories(destinationDir);
+				Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+				return BINARY_BODIES_DIRECTORY + "/" + filename;
+			}
+		} catch (IOException e) {
+			LOGGER.error("Error occurred when copying binary source file " + sourcePath + " to " + BINARY_BODIES_DIRECTORY, e);
+		}
+		return sourcePath;
 	}
 
 	public void writePostRawBody(final byte[] body, final Document document, Element xmlRequest) {
