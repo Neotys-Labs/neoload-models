@@ -9,6 +9,7 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -77,6 +78,10 @@ public class IOSchema3Dot1ValidationTest {
             // Voluntarily invalid files for unit-test:
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
+            "test-pacing-invalid-values.yaml",
+            "test-pacing-mixed.yaml",
+            "test-pacing-on-loop.yaml",
+            "test-pacing-on-while.yaml",
             "test-date-variable-invalid-change-step.yaml",
             "test-assert-duration-unknown-property.yaml",
             "test-web_page-empty-steps.yaml",
@@ -137,5 +142,23 @@ public class IOSchema3Dot1ValidationTest {
             fail(failures.size() + " fixture(s) failed schema validation:\n\n"
                     + String.join("\n\n", failures));
         }
+    }
+
+    private Set<ValidationMessage> validate(final String fixture) throws IOException {
+        final File file = new File(getClass().getClassLoader().getResource(fixture + ".yaml").getFile());
+        final JsonNode node = YAML_MAPPER.readTree(file);
+        return SCHEMA.validate(node);
+    }
+
+    @Test
+    public void pacingOnLoopFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected 'pacing' on a loop step to fail schema validation",
+                validate("test-pacing-on-loop").isEmpty());
+    }
+
+    @Test
+    public void pacingOnWhileFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected 'pacing' on a while step to fail schema validation",
+                validate("test-pacing-on-while").isEmpty());
     }
 }
