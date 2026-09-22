@@ -16,24 +16,41 @@
 	"type": "object",
 	"additionalProperties": false,
 	"minProperties": 1,
-	"required": ["name"],
+	"required": [
+		"name"
+	],
 	"properties": {
-		"$schema": { "$ref": "#/definitions/common/full_url" },
+		"$schema": {
+			"$ref": "#/definitions/common/full_url",
+			"description": "Optional URL of the JSON Schema used by editors to validate the file. It is ignored when the project is loaded."
+		},
 		"schemaVersion": {
 			"anyOf": [
-				{ "type": "string", "const": "3.0" },
-				{ "type": "number", "const": 3.0 }
+				{
+					"type": "string",
+					"const": "3.0"
+				},
+				{
+					"type": "number",
+					"const": 3.0
+				}
 			],
 			"description": "Schema contract version this file is written for. Must be 3.0 as a string or number for this schema with NeoLoad >= 2026.3. Must be ommited for NeoLoad <= 2026.2."
 		},
-		"name": { "$ref": "#/definitions/common/name" },
+		"name": {
+			"$ref": "#/definitions/common/name",
+			"description": "The root key defining the name of the project. See Naming rules."
+		},
 		"includes": {
 			"$id": "#root/includes",
 			"title": "Includes",
 			"type": "array",
 			"minItems": 1,
 			"additionalProperties": false,
-			"items": { "$ref": "#/definitions/common/text" }
+			"items": {
+				"$ref": "#/definitions/common/text"
+			},
+			"description": "The definition of as-code files to be included"
 		},
 		"variables": {
 			"$id": "#root/variables",
@@ -44,48 +61,74 @@
 			"additionalProperties": false,
 			"items": {
 				"anyOf": [
-					{ "$ref": "#/definitions/variables/constant" },
-					{ "$ref": "#/definitions/variables/file" },
-					{ "$ref": "#/definitions/variables/counter" },
-					{ "$ref": "#/definitions/variables/random_number" },
-					{ "$ref": "#/definitions/variables/javascript" }
+					{
+						"$ref": "#/definitions/variables/constant"
+					},
+					{
+						"$ref": "#/definitions/variables/file"
+					},
+					{
+						"$ref": "#/definitions/variables/counter"
+					},
+					{
+						"$ref": "#/definitions/variables/random_number"
+					},
+					{
+						"$ref": "#/definitions/variables/javascript"
+					}
 				]
-			}
+			},
+			"description": "The definition of variables"
 		},
 		"servers": {
 			"$id": "#root/servers",
 			"title": "Servers",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/server" }
+			"items": {
+				"$ref": "#/definitions/server"
+			},
+			"description": "The definition of servers"
 		},
 		"sla_profiles": {
 			"$id": "#root/sla_profiles",
 			"title": "SLA Profiles",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/sla" }
+			"items": {
+				"$ref": "#/definitions/sla"
+			},
+			"description": "The definition of SLA profiles"
 		},
 		"populations": {
 			"$id": "#root/populations",
 			"title": "Populations",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/populations/population" }
+			"items": {
+				"$ref": "#/definitions/populations/population"
+			},
+			"description": "The definition of Populations"
 		},
 		"scenarios": {
 			"$id": "#root/scenarios",
 			"title": "Scenarios",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/scenario" }
+			"items": {
+				"$ref": "#/definitions/scenario"
+			},
+			"description": "The definition of Scenarios"
 		},
 		"user_paths": {
 			"$id": "#root/user_paths",
 			"title": "User_paths",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/user_paths/user_path" }
+			"items": {
+				"$ref": "#/definitions/user_paths/user_path"
+			},
+			"description": "The definition of virtual User Paths"
 		},
 		"project_settings": {
 			"$id": "#root/project_settings",
@@ -93,19 +136,60 @@
 			"type": "object",
 			"additionalProperties": false,
 			"properties": {
-				"dynatrace.enabled": { "type": "boolean" },
-				"dynatrace.url": { "$ref": "#/definitions/common/text" },
-				"dynatrace.token": { "$ref": "#/definitions/common/text" },
-				"qtest.enabled": { "type": "boolean" },
-				"qtest.url": { "$ref": "#/definitions/common/text" },
-				"qtest.token": { "$ref": "#/definitions/common/text" },
-				"qtest.username": { "$ref": "#/definitions/common/text" },
-				"qtest.password": { "$ref": "#/definitions/common/text" },
-				"qtest.auth_method": { "type": "string", "enum": ["TOKEN", "LOGIN_PWD"] },
-				"qtest.project_id": { "type": "integer" },
-				"qtest.create_defects": { "type": "boolean" },
-				"qtest.cycle_id": { "type": "integer" }
-			}
+				"dynatrace.enabled": {
+					"type": "boolean",
+					"description": "Enable Dynatrace integration (a monitor must be defined)"
+				},
+				"dynatrace.url": {
+					"$ref": "#/definitions/common/text",
+					"description": "The URL of the Dynatrace server"
+				},
+				"dynatrace.token": {
+					"$ref": "#/definitions/common/text",
+					"description": "The API token of the Dynatrace server as clear text or encrypted by Neoload"
+				},
+				"qtest.enabled": {
+					"type": "boolean",
+					"description": "Enable qTest integration"
+				},
+				"qtest.url": {
+					"$ref": "#/definitions/common/text",
+					"description": "The URL of the qTest server"
+				},
+				"qtest.token": {
+					"$ref": "#/definitions/common/text",
+					"description": "The API token of the qTest server as clear text or encrypted by Neoload"
+				},
+				"qtest.username": {
+					"$ref": "#/definitions/common/text",
+					"description": "The username to log into qTest"
+				},
+				"qtest.password": {
+					"$ref": "#/definitions/common/text",
+					"description": "The password to log into qTest as clear text or encrypted by Neoload"
+				},
+				"qtest.auth_method": {
+					"type": "string",
+					"enum": [
+						"TOKEN",
+						"LOGIN_PWD"
+					],
+					"description": "The way to authenticate to the qTest server. Allowed values are \"TOKEN\" and \"LOGIN_PWD\""
+				},
+				"qtest.project_id": {
+					"type": "integer",
+					"description": "The qTest unique identifier of the qTest project in which the result will be transferred"
+				},
+				"qtest.create_defects": {
+					"type": "boolean",
+					"description": "Enable automatic creation of Defects on failed and warning SLAs"
+				},
+				"qtest.cycle_id": {
+					"type": "integer",
+					"description": "The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier."
+				}
+			},
+			"description": "The definition of project preferences"
 		}
 	},
 	"definitions": {
@@ -131,17 +215,41 @@
 			"duration": {
 				"$id": "#/definitions/common/duration",
 				"title": "Duration",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
+				"anyOf": [
+					{
+						"$ref": "#/definitions/common/time"
+					},
+					{
+						"$ref": "#/definitions/common/iterations"
+					}
+				]
 			},
 			"stop_after_options": {
 				"$id": "#/definitions/common/stop_after_options",
 				"title": "variation_policy.stop_after values",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "type": "string", "enum": ["current_iteration"] }]
+				"anyOf": [
+					{
+						"$ref": "#/definitions/common/time"
+					},
+					{
+						"type": "string",
+						"enum": [
+							"current_iteration"
+						]
+					}
+				]
 			},
 			"start_after_options": {
 				"$id": "#/definitions/common/start_after",
 				"title": "Start after",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/text" }]
+				"anyOf": [
+					{
+						"$ref": "#/definitions/common/time"
+					},
+					{
+						"$ref": "#/definitions/common/text"
+					}
+				]
 			},
 			"time": {
 				"$id": "#/definitions/common/time",
@@ -178,45 +286,80 @@
 			"var_change_policy": {
 				"type": "string",
 				"default": "each_iteration",
-				"enum": ["each_use", "each_request", "each_page", "each_iteration", "each_user"]
+				"enum": [
+					"each_use",
+					"each_request",
+					"each_page",
+					"each_iteration",
+					"each_user"
+				]
 			},
 			"var_scope": {
 				"type": "string",
 				"default": "global",
-				"enum": ["local", "global", "unique"]
+				"enum": [
+					"local",
+					"global",
+					"unique"
+				]
 			},
 			"var_order": {
 				"type": "string",
 				"default": "global",
-				"enum": ["sequential", "random", "any"]
+				"enum": [
+					"sequential",
+					"random",
+					"any"
+				]
 			},
 			"var_out_of_value": {
 				"type": "string",
 				"default": "global",
-				"enum": ["cycle", "stop_test", "no_value_code"]
+				"enum": [
+					"cycle",
+					"stop_test",
+					"no_value_code"
+				]
 			}
 		},
 		"variables": {
 			"generic": {
 				"$id": "#/definitions/variables/generic",
 				"type": "object",
-				"xrequired": ["name"],
+				"xrequired": [
+					"name"
+				],
 				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"descrption": { "$ref": "#/definitions/common/text" },
-					"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
+					"name": {
+						"$ref": "#/definitions/common/name",
+						"description": "The variable name"
+					},
+					"descrption": {
+						"$ref": "#/definitions/common/text"
+					},
+					"change_policy": {
+						"$ref": "#/definitions/common/var_change_policy",
+						"description": "The policy when the value must change. The \"change_policy\" value can be: `each_use` `each_request` `each_page` `each_iteration` `each_user` The default value is `each_iteration`."
+					}
 				}
 			},
 			"constant": {
 				"$id": "#/definitions/variables/constant",
 				"title": "Constant",
 				"type": "object",
-				"xrequired": ["value"],
+				"xrequired": [
+					"value"
+				],
 				"allOf": [
-					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"$ref": "#/definitions/variables/generic"
+					},
 					{
 						"properties": {
-							"value": { "$ref": "#/definitions/common/text" }
+							"value": {
+								"$ref": "#/definitions/common/text",
+								"description": "The variable value"
+							}
 						}
 					}
 				],
@@ -226,31 +369,55 @@
 				"$id": "#/definitions/variables/file",
 				"title": "File",
 				"type": "object",
-				"xrequired": ["path"],
+				"xrequired": [
+					"path"
+				],
 				"allOf": [
-					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"$ref": "#/definitions/variables/generic"
+					},
 					{
 						"properties": {
 							"column_names": {
 								"type": "array",
-								"items": [{ "type": "string" }]
+								"items": [
+									{
+										"type": "string"
+									}
+								],
+								"description": "The list of column names. Use `${<variableName>.<columnName>}` to access variable values."
 							},
 							"is_first_line_column_names": {
 								"type": "boolean",
-								"default": false
+								"default": false,
+								"description": "If `true`, the first line of the file can be used as column headers name. The value of this parameter is ignored if `column_names` parameter is specified. The default value is `false`."
 							},
 							"start_from_line": {
 								"type": "integer",
-								"default": 1
+								"default": 1,
+								"description": "The default value is \"1\"."
 							},
 							"delimiter": {
 								"$ref": "#/definitions/common/text",
-								"default": ","
+								"default": ",",
+								"description": "The delimiter is used to separate data columns. The default value is \",\"."
 							},
-							"path": { "$ref": "#/definitions/common/text" },
-							"scope": { "$ref": "#/definitions/common/var_scope" },
-							"order": { "$ref": "#/definitions/common/var_order" },
-							"out_of_value": { "$ref": "#/definitions/common/var_out_of_value" }
+							"path": {
+								"$ref": "#/definitions/common/text",
+								"description": "The relative (compared to the NeoLoad project folder) or absolute path of the source file."
+							},
+							"scope": {
+								"$ref": "#/definitions/common/var_scope",
+								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
+							},
+							"order": {
+								"$ref": "#/definitions/common/var_order",
+								"description": "The values can be distributed in a set order. The value of order can be: `sequential` `random` `any` The default value is `any`."
+							},
+							"out_of_value": {
+								"$ref": "#/definitions/common/var_out_of_value",
+								"description": "When no values are left, several policies can be applied. The value of \"out_of_value\" can be: `cycle` `stop_test` `no_value_code` The default value is `cycle`."
+							}
 						}
 					}
 				],
@@ -260,22 +427,37 @@
 				"$id": "#/definitions/variables/counter",
 				"title": "Counter",
 				"type": "object",
-				"xrequired": ["start", "end", "increment"],
+				"xrequired": [
+					"start",
+					"end",
+					"increment"
+				],
 				"allOf": [
-					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"$ref": "#/definitions/variables/generic"
+					},
 					{
 						"properties": {
 							"start": {
-								"type": "number"
+								"type": "number",
+								"description": "The variable start value"
 							},
 							"end": {
-								"type": "number"
+								"type": "number",
+								"description": "The variable end value"
 							},
 							"increment": {
-								"type": "number"
+								"type": "number",
+								"description": "The variable increment value"
 							},
-							"scope": { "$ref": "#/definitions/common/var_scope" },
-							"out_of_value": { "$ref": "#/definitions/common/var_out_of_value" }
+							"scope": {
+								"$ref": "#/definitions/common/var_scope",
+								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
+							},
+							"out_of_value": {
+								"$ref": "#/definitions/common/var_out_of_value",
+								"description": "When no values are left, several policies can be applied. The value of \"out_of_value\" can be: `cycle` `stop_test` `no_value_code` The default value is `cycle`."
+							}
 						}
 					}
 				],
@@ -285,19 +467,27 @@
 				"$id": "#/definitions/variables/random_number",
 				"title": "Random Number",
 				"type": "object",
-				"xrequired": ["min", "max"],
+				"xrequired": [
+					"min",
+					"max"
+				],
 				"allOf": [
-					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"$ref": "#/definitions/variables/generic"
+					},
 					{
 						"properties": {
 							"min": {
-								"type": "number"
+								"type": "number",
+								"description": "The variable min value"
 							},
 							"max": {
-								"type": "number"
+								"type": "number",
+								"description": "The variable max value"
 							},
 							"predictable": {
-								"type": "boolean"
+								"type": "boolean",
+								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
 							}
 						}
 					}
@@ -308,58 +498,103 @@
 				"$id": "#/definitions/variables/javascript",
 				"title": "Javascript",
 				"type": "object",
-				"xrequired": ["script"],
+				"xrequired": [
+					"script"
+				],
 				"allOf": [
-					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"$ref": "#/definitions/variables/generic"
+					},
 					{
 						"properties": {
-							"script": { "$ref": "#/definitions/common/text" }
+							"script": {
+								"$ref": "#/definitions/common/text",
+								"description": "The JavaScript script"
+							}
 						}
 					}
 				],
-				"x-d7nosupport-additionalProperties": false
+				"x-d7nosupport-additionalProperties": false,
+				"description": "Execution of a Javascript script."
 			}
 		},
 		"server": {
 			"$id": "#/definitions/server",
 			"title": "Server",
 			"type": "object",
-			"xrequired": ["name", "host"],
+			"xrequired": [
+				"name",
+				"host"
+			],
 			"additionalProperties": false,
 			"properties": {
-				"name": { "$ref": "#/definitions/common/text" },
-				"host": { "$ref": "#/definitions/common/text" },
+				"name": {
+					"$ref": "#/definitions/common/text",
+					"description": "The name of the server"
+				},
+				"host": {
+					"$ref": "#/definitions/common/text",
+					"description": "The host of the server"
+				},
 				"scheme": {
 					"$id": "#root/servers/items/scheme",
 					"type": "string",
-					"enum": ["http", "https"]
+					"enum": [
+						"http",
+						"https"
+					],
+					"description": "The scheme of the server. The available values are \"http\" and \"https\". The default value is \"http\"."
 				},
 				"port": {
-					"type": "integer"
+					"type": "integer",
+					"description": "The port of the server. The default value is \"80\" (for http scheme) or \"443\" (for https scheme)."
 				},
-				"basic_authentication": { "$ref": "#/definitions/authentication/basic" },
-				"ntlm_authentication": { "$ref": "#/definitions/authentication/ntlm" },
-				"negotiate_authentication": { "$ref": "#/definitions/authentication/basic" }
+				"basic_authentication": {
+					"$ref": "#/definitions/authentication/basic",
+					"description": "The Basic Authentication used to authenticate on the server."
+				},
+				"ntlm_authentication": {
+					"$ref": "#/definitions/authentication/ntlm",
+					"description": "The NTLM Authentication used to authenticate on the server."
+				},
+				"negotiate_authentication": {
+					"$ref": "#/definitions/authentication/basic",
+					"description": "The Negotiate Authentication used to authenticate on the server."
+				}
 			}
 		},
 		"authentication": {
 			"auth-generic": {
 				"$id": "#/definitions/authentication/auth-generic",
 				"type": "object",
-				"xrequired": ["login", "password"],
+				"xrequired": [
+					"login",
+					"password"
+				],
 				"properties": {
-					"login": { "$ref": "#/definitions/common/text" },
-					"password": { "$ref": "#/definitions/common/text" }
+					"login": {
+						"$ref": "#/definitions/common/text",
+						"description": "The login of the user account used to authenticate on the server"
+					},
+					"password": {
+						"$ref": "#/definitions/common/text",
+						"description": "The password of the user account used to authenticate on the server"
+					}
 				}
 			},
 			"auth-generic-domain": {
 				"$id": "#/definitions/authentication/auth-generic-domain",
 				"type": "object",
 				"allOf": [
-					{ "$ref": "#/definitions/authentication/auth-generic" },
+					{
+						"$ref": "#/definitions/authentication/auth-generic"
+					},
 					{
 						"properties": {
-							"domain": { "$ref": "#/definitions/common/text" }
+							"domain": {
+								"$ref": "#/definitions/common/text",
+								"description": "The domain"
+							}
 						}
 					}
 				]
@@ -369,10 +604,15 @@
 				"title": "Basic Authentication",
 				"type": "object",
 				"allOf": [
-					{ "$ref": "#/definitions/authentication/auth-generic" },
+					{
+						"$ref": "#/definitions/authentication/auth-generic"
+					},
 					{
 						"properties": {
-							"realm": { "$ref": "#/definitions/common/text" }
+							"realm": {
+								"$ref": "#/definitions/common/text",
+								"description": "The realm"
+							}
 						}
 					}
 				]
@@ -381,30 +621,50 @@
 				"$id": "#/definitions/authentication/ntlm",
 				"title": "NTLM Authentication",
 				"type": "object",
-				"allOf": [{ "$ref": "#/definitions/authentication/auth-generic-domain" }]
+				"allOf": [
+					{
+						"$ref": "#/definitions/authentication/auth-generic-domain"
+					}
+				]
 			},
 			"negotiate": {
 				"$id": "#/definitions/authentication/negotiate",
 				"title": "Negotiate Authentication",
 				"type": "object",
-				"allOf": [{ "$ref": "#/definitions/authentication/auth-generic-domain" }]
+				"allOf": [
+					{
+						"$ref": "#/definitions/authentication/auth-generic-domain"
+					}
+				]
 			}
 		},
 		"sla": {
 			"$id": "#/definitions/sla",
 			"title": "SLA Profile",
 			"type": "object",
-			"xrequired": ["name", "thresholds"],
+			"xrequired": [
+				"name",
+				"thresholds"
+			],
 			"properties": {
-				"name": { "$ref": "#/definitions/common/text" },
-				"description": { "$ref": "#/definitions/common/text" },
+				"name": {
+					"$ref": "#/definitions/common/text",
+					"description": "The name of the SLA Profile"
+				},
+				"description": {
+					"$ref": "#/definitions/common/text",
+					"description": "The description of the SLA Profile"
+				},
 				"thresholds": {
 					"$id": "#/definitions/sla/thresholds",
 					"title": "Thresholds",
 					"type": "array",
 					"minItems": 1,
 					"additionalProperties": false,
-					"items": { "$ref": "#/definitions/sla/threshold" }
+					"items": {
+						"$ref": "#/definitions/sla/threshold"
+					},
+					"description": "The definition of KPI thresholds"
 				}
 			},
 			"threshold": {
@@ -420,8 +680,14 @@
 				"title": "Population",
 				"type": "object",
 				"properties": {
-					"name": { "$ref": "#/definitions/common/text" },
-					"description": { "$ref": "#/definitions/common/text" },
+					"name": {
+						"$ref": "#/definitions/common/text",
+						"description": "The name of the Population"
+					},
+					"description": {
+						"$ref": "#/definitions/common/text",
+						"description": "The description of the Population"
+					},
 					"xcomments": {
 						"value": "why do we need the substructure 'name' to denote a string list?"
 					},
@@ -433,9 +699,13 @@
 						"items": {
 							"type": "object",
 							"properties": {
-								"name": { "$ref": "#/definitions/common/text" }
+								"name": {
+									"$ref": "#/definitions/common/text",
+									"description": "The name of the existing User Path"
+								}
 							}
-						}
+						},
+						"description": "The list of User Path distributions"
 					}
 				}
 			},
@@ -443,35 +713,76 @@
 				"$id": "#/definitions/populations/constant_load",
 				"title": "Constant Load",
 				"type": "object",
-				"required": ["users"],
+				"required": [
+					"users"
+				],
 				"properties": {
-					"duration": { "$ref": "#/definitions/common/duration" },
-					"start_after": { "$ref": "#/definitions/common/start_after_options" },
-					"stop_after": { "$ref": "#/definitions/common/stop_after_options" },
+					"duration": {
+						"$ref": "#/definitions/common/duration",
+						"description": "The duration of the load policy: unlimited (the default value), time length or number of iterations."
+					},
+					"start_after": {
+						"$ref": "#/definitions/common/start_after_options",
+						"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population."
+					},
+					"stop_after": {
+						"$ref": "#/definitions/common/stop_after_options",
+						"description": "Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset delay to finish the current iteration or allow the population to end the current iteration for each Virtual User."
+					},
 					"users": {
 						"type": "integer",
-						"default": 1
+						"default": 1,
+						"description": "The fixed number of Virtual Users"
 					},
-					"rampup": { "$ref": "#/definitions/common/time" }
+					"rampup": {
+						"$ref": "#/definitions/common/time",
+						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay."
+					}
 				}
 			},
 			"rampup_load": {
 				"$id": "#/definitions/populations/rampup_load",
 				"title": "Ramp-up Load",
 				"type": "object",
-				"required": ["min_users", "increment_users", "increment_every"],
+				"required": [
+					"min_users",
+					"increment_users",
+					"increment_every"
+				],
 				"properties": {
-					"duration": { "$ref": "#/definitions/common/duration" },
-					"start_after": { "$ref": "#/definitions/common/start_after_options" },
-					"stop_after": { "$ref": "#/definitions/common/stop_after_options" },
-					"min_users": { "$ref": "#/definitions/common/positive_number" },
-					"max_users": { "$ref": "#/definitions/common/positive_number" },
+					"duration": {
+						"$ref": "#/definitions/common/duration",
+						"description": "The duration of the load policy: unlimited, time length or number of iterations."
+					},
+					"start_after": {
+						"$ref": "#/definitions/common/start_after_options",
+						"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population."
+					},
+					"stop_after": {
+						"$ref": "#/definitions/common/stop_after_options",
+						"description": "Define how Virtual Users should be started: the population immediately stop the executing of the current iteration, give a preset delay to finish the current iteration or allow the population to end the current iteration for each Virtual User."
+					},
+					"min_users": {
+						"$ref": "#/definitions/common/positive_number",
+						"description": "The initial number of Virtual Users"
+					},
+					"max_users": {
+						"$ref": "#/definitions/common/positive_number",
+						"description": "The maximum number of Virtual Users"
+					},
 					"increment_users": {
 						"type": "integer",
-						"default": 1
+						"default": 1,
+						"description": "The number of Virtual Users to increment"
 					},
-					"increment_every": { "$ref": "#/definitions/common/duration" },
-					"increment_rampup": { "$ref": "#/definitions/common/time" }
+					"increment_every": {
+						"$ref": "#/definitions/common/duration",
+						"description": "The incrementation frequency: time length or number of iterations."
+					},
+					"increment_rampup": {
+						"$ref": "#/definitions/common/time",
+						"description": "Define how Virtual Users start: simultaneously or with a preset delay. This rule is used each time new Virtual Users are created, at each load increase for a ramp-up load policy."
+					}
 				},
 				"additionalProperties": false
 			},
@@ -479,18 +790,44 @@
 				"$id": "#/definitions/populations/peaks_load",
 				"title": "Peaks Load",
 				"type": "object",
-				"required": ["minimum", "maximum", "start"],
+				"required": [
+					"minimum",
+					"maximum",
+					"start"
+				],
 				"properties": {
-					"minimum": { "$ref": "#/definitions/populations/peaks_phase" },
-					"maximum": { "$ref": "#/definitions/populations/peaks_phase" },
+					"minimum": {
+						"$ref": "#/definitions/populations/peaks_phase",
+						"description": "The phase of low load"
+					},
+					"maximum": {
+						"$ref": "#/definitions/populations/peaks_phase",
+						"description": "The phase of high load"
+					},
 					"start": {
 						"type": "string",
-						"enum": ["minimum", "maximum"]
+						"enum": [
+							"minimum",
+							"maximum"
+						],
+						"description": "Select the phase to start"
 					},
-					"duration": { "$ref": "#/definitions/common/duration" },
-					"start_after": { "$ref": "#/definitions/common/start_after_options" },
-					"step_rampup": { "$ref": "#/definitions/common/text" },
-					"stop_after": { "$ref": "#/definitions/common/stop_after_options" }
+					"duration": {
+						"$ref": "#/definitions/common/duration",
+						"description": "The duration of the load policy: unlimited, time length or number of iterations."
+					},
+					"start_after": {
+						"$ref": "#/definitions/common/start_after_options",
+						"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population."
+					},
+					"step_rampup": {
+						"$ref": "#/definitions/common/text",
+						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay. This rule is used each time new Virtual Users are created, at each load peak for a peak load policy."
+					},
+					"stop_after": {
+						"$ref": "#/definitions/common/stop_after_options",
+						"description": "Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset delay to finish the current iteration or allow the population to end the current iteration for each Virtual User."
+					}
 				},
 				"additionalProperties": false
 			},
@@ -498,10 +835,19 @@
 				"$id": "#/definitions/populations/peaks_phase",
 				"title": "Peak Phase",
 				"type": "object",
-				"required": ["users", "duration"],
+				"required": [
+					"users",
+					"duration"
+				],
 				"properties": {
-					"users": { "$ref": "#/definitions/common/positive_number" },
-					"duration": { "$ref": "#/definitions/common/duration" }
+					"users": {
+						"$ref": "#/definitions/common/positive_number",
+						"description": "The fixed number of Virtual Users"
+					},
+					"duration": {
+						"$ref": "#/definitions/common/duration",
+						"description": "The duration of the phase: time length or number of iterations."
+					}
 				}
 			}
 		},
@@ -510,8 +856,14 @@
 			"title": "Scenario",
 			"type": "object",
 			"properties": {
-				"name": { "$ref": "#/definitions/common/text" },
-				"description": { "$ref": "#/definitions/common/text" },
+				"name": {
+					"$ref": "#/definitions/common/text",
+					"description": "The name of the scenario"
+				},
+				"description": {
+					"$ref": "#/definitions/common/text",
+					"description": "The description of the scenario"
+				},
 				"populations": {
 					"$id": "#/definitions/scenario/populations",
 					"title": "Scenario Populations",
@@ -522,14 +874,29 @@
 					"items": {
 						"$id": "#/definitions/scenario/populations/items",
 						"type": "object",
-						"required": ["name"],
+						"required": [
+							"name"
+						],
 						"properties": {
-							"name": { "$ref": "#/definitions/common/text" },
-							"constant_load": { "$ref": "#/definitions/populations/constant_load" },
-							"rampup_load": { "$ref": "#/definitions/populations/rampup_load" },
-							"peaks_load": { "$ref": "#/definitions/populations/peaks_load" }
+							"name": {
+								"$ref": "#/definitions/common/text",
+								"description": "The name of the population from NeoLoad project"
+							},
+							"constant_load": {
+								"$ref": "#/definitions/populations/constant_load",
+								"description": "A load that generates a fixed number of Virtual Users."
+							},
+							"rampup_load": {
+								"$ref": "#/definitions/populations/rampup_load",
+								"description": "A load that generates a number of Virtual Users that increases throughout the test. Useful for checking the server behavior under an increasing load."
+							},
+							"peaks_load": {
+								"$ref": "#/definitions/populations/peaks_load",
+								"description": "A load that generates a fixed number of Virtual Users with periodic phases of high load. Useful for checking whether the server recovers its normal behavior after a load peak."
+							}
 						}
-					}
+					},
+					"description": "The list of runtime settings per population"
 				}
 			}
 		},
@@ -538,29 +905,58 @@
 				"$id": "#/definitions/user_paths/user_path",
 				"title": "User Path",
 				"type": "object",
-				"required": ["name", "actions"],
+				"required": [
+					"name",
+					"actions"
+				],
 				"properties": {
-					"name": { "$ref": "#/definitions/common/text" },
-					"description": { "$ref": "#/definitions/common/text" },
+					"name": {
+						"$ref": "#/definitions/common/text",
+						"description": "The name of the User Path"
+					},
+					"description": {
+						"$ref": "#/definitions/common/text",
+						"description": "The description of the User Path"
+					},
 					"user_session": {
 						"type": "string",
-						"enum": ["reset_on", "reset_off", "reset_auto"]
+						"enum": [
+							"reset_on",
+							"reset_off",
+							"reset_auto"
+						],
+						"description": "The \"user_session\" value can be: `reset_on` `reset_off` `reset_auto` The default value is `reset_auto`."
 					},
-					"init": { "$ref": "#/definitions/user_paths/container" },
-					"actions": { "$ref": "#/definitions/user_paths/container" },
-					"end": { "$ref": "#/definitions/user_paths/container" }
+					"init": {
+						"$ref": "#/definitions/user_paths/container",
+						"description": "The init container"
+					},
+					"actions": {
+						"$ref": "#/definitions/user_paths/container",
+						"description": "The actions container"
+					},
+					"end": {
+						"$ref": "#/definitions/user_paths/container",
+						"description": "The end container"
+					}
 				}
 			},
 			"container": {
 				"$id": "#/definitions/user_paths/container",
 				"title": "Containers",
 				"type": "object",
-				"required": ["steps"],
+				"required": [
+					"steps"
+				],
 				"properties": {
 					"sla_profile": {
-						"type": "string"
+						"type": "string",
+						"description": "The name of the SLA profile to apply to the Container (will not be applied to children)"
 					},
-					"steps": { "$ref": "#/definitions/user_paths/steps" }
+					"steps": {
+						"$ref": "#/definitions/user_paths/steps",
+						"description": "The steps to be executed"
+					}
 				}
 			},
 			"steps": {
@@ -571,16 +967,46 @@
 				"items": {
 					"type": "object",
 					"properties": {
-						"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
-						"request": { "$ref": "#/definitions/user_paths/actions/request" },
-						"delay": { "$ref": "#/definitions/user_paths/actions/delay" },
-						"think_time": { "$ref": "#/definitions/user_paths/actions/think_time" },
-						"javascript": { "$ref": "#/definitions/user_paths/actions/javascript" },
-						"if": { "$ref": "#/definitions/user_paths/actions/if" },
-						"while": { "$ref": "#/definitions/user_paths/actions/while" },
-						"loop": { "$ref": "#/definitions/user_paths/actions/loop" },
-						"switch": { "$ref": "#/definitions/user_paths/actions/switch" },
-						"custom_action": { "$ref": "#/definitions/user_paths/actions/custom_action" }
+						"transaction": {
+							"$ref": "#/definitions/user_paths/actions/transaction",
+							"description": "The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics."
+						},
+						"request": {
+							"$ref": "#/definitions/user_paths/actions/request",
+							"description": "A request defines a plain HTTP request."
+						},
+						"delay": {
+							"$ref": "#/definitions/user_paths/actions/delay",
+							"description": "The Delay Action pauses the Virtual User for a specified duration. This duration always applies and is not impacted by thinktime overriding."
+						},
+						"think_time": {
+							"$ref": "#/definitions/user_paths/actions/think_time",
+							"description": "Think time is the time the user normally takes to make a decision to do the next task."
+						},
+						"javascript": {
+							"$ref": "#/definitions/user_paths/actions/javascript",
+							"description": "Execution of a Javascript script."
+						},
+						"if": {
+							"$ref": "#/definitions/user_paths/actions/if",
+							"description": "A conditional structure \"If - Then - Else\". If the conditions are true, the Then container is executed, otherwise, the Else container is executed."
+						},
+						"while": {
+							"$ref": "#/definitions/user_paths/actions/while",
+							"description": "A repetition structure \"While - do\". The steps contained in the structure are executed in sequence until the condition is not verified any more."
+						},
+						"loop": {
+							"$ref": "#/definitions/user_paths/actions/loop",
+							"description": "A repetition structure which executes steps sequentially a specific number of times."
+						},
+						"switch": {
+							"$ref": "#/definitions/user_paths/actions/switch",
+							"description": "The Switch action is used to execute conditional actions based on a selection control mechanism. It allows the Switch value to change the control flow of the User Path execution via a multiway branch, named Case statements. The Switch action is fall-through, which means that if a Break flag is disabled on a Case, then the next Case statement is executed."
+						},
+						"custom_action": {
+							"$ref": "#/definitions/user_paths/actions/custom_action",
+							"description": "Custom action can be an Advanced Action, a SAP GUI Action, a Citrix Action, a RealBrowser Action or an RTE Action. A Custom Advanced action can also be developed using Java."
+						}
 					},
 					"additionalProperties": false
 				}
@@ -591,26 +1017,51 @@
 					"name": "transaction",
 					"title": "Action: Transaction",
 					"type": "object",
-					"required": ["name", "steps"],
+					"required": [
+						"name",
+						"steps"
+					],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"sla_profile": { "$ref": "#/definitions/common/text" },
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"name": {
+							"$ref": "#/definitions/common/text",
+							"description": "The Transaction name"
+						},
+						"description": {
+							"$ref": "#/definitions/common/text",
+							"description": "The Transaction description"
+						},
+						"sla_profile": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of the SLA profile to apply to the Transaction (will not be applied to children)"
+						},
+						"steps": {
+							"$ref": "#/definitions/user_paths/steps",
+							"description": "Steps of the Transaction"
+						}
 					},
-					"additionalProperties": false
+					"additionalProperties": false,
+					"description": "The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics."
 				},
 				"request": {
 					"$id": "#/definitions/user_paths/actions/request",
 					"title": "Action: HTTP/s Request",
 					"type": "object",
-					"required": ["url"],
+					"required": [
+						"url"
+					],
 					"properties": {
-						"url": { "$ref": "#/definitions/common/text" },
-						"server": { "$ref": "#/definitions/common/text" },
+						"url": {
+							"$ref": "#/definitions/common/text",
+							"description": "The URL to hit"
+						},
+						"server": {
+							"$ref": "#/definitions/common/text",
+							"description": "The server name to use"
+						},
 						"method": {
 							"type": "string",
-							"default": "GET"
+							"default": "GET",
+							"description": "The request method"
 						},
 						"headers": {
 							"type": "array",
@@ -620,192 +1071,383 @@
 									"/": {}
 								},
 								"patternProperties": {
-									".*": { "type": "string" }
+									".*": {
+										"type": "string"
+									}
 								},
 								"additionalProperties": false
-							}
+							},
+							"description": "The request header list"
 						},
-						"sla_profile": { "$ref": "#/definitions/common/text" },
-						"body": { "$ref": "#/definitions/common/textblob" },
+						"sla_profile": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of the SLA profile to apply to the request"
+						},
+						"body": {
+							"$ref": "#/definitions/common/textblob",
+							"description": "The request body"
+						},
 						"extractors": {
 							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/extractor" }
+							"items": {
+								"$ref": "#/definitions/user_paths/extractor"
+							},
+							"description": "The extractor list"
 						},
 						"followRedirects": {
 							"type": "boolean",
-							"default": false
+							"default": false,
+							"description": "When `true`, the HTTP redirections returned by the server are followed. The default value is `false`."
 						}
-					}
+					},
+					"description": "A request defines a plain HTTP request."
 				},
 				"delay": {
 					"$id": "#/definitions/user_paths/actions/delay",
 					"title": "Action: Delay",
 					"type": "string",
-					"allOf": [{ "$ref": "#/definitions/common/text" }]
+					"allOf": [
+						{
+							"$ref": "#/definitions/common/text"
+						}
+					],
+					"description": "The Delay Action pauses the Virtual User for a specified duration. This duration always applies and is not impacted by thinktime overriding."
 				},
 				"think_time": {
 					"$id": "#/definitions/user_paths/actions/think_time",
 					"title": "Action: Think Time",
 					"type": "string",
-					"allOf": [{ "$ref": "#/definitions/common/text" }]
+					"allOf": [
+						{
+							"$ref": "#/definitions/common/text"
+						}
+					],
+					"description": "Think time is the time the user normally takes to make a decision to do the next task."
 				},
 				"javascript": {
 					"$id": "#/definitions/user_paths/actions/javascript",
 					"title": "Action: Javascript",
 					"type": "object",
-					"xrequired": ["name", "script"],
+					"xrequired": [
+						"name",
+						"script"
+					],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"script": { "$ref": "#/definitions/common/textblob" }
-					}
+						"name": {
+							"$ref": "#/definitions/common/text",
+							"description": "The Javascript name"
+						},
+						"description": {
+							"$ref": "#/definitions/common/text",
+							"description": "The Javascript description"
+						},
+						"script": {
+							"$ref": "#/definitions/common/textblob",
+							"description": "The Javascript script"
+						}
+					},
+					"description": "Execution of a Javascript script."
 				},
 				"if": {
 					"$id": "#/definitions/user_paths/actions/if",
 					"title": "Action: If",
 					"type": "object",
-					"required": ["then"],
+					"required": [
+						"then"
+					],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"conditions": { "$ref": "#/definitions/common/conditions" },
+						"name": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of the If"
+						},
+						"description": {
+							"$ref": "#/definitions/common/text",
+							"description": "The description of the If"
+						},
+						"conditions": {
+							"$ref": "#/definitions/common/conditions",
+							"description": "The list of conditions to evaluate"
+						},
 						"match": {
 							"type": "string",
-							"enum": ["any", "all"],
-							"default": "any"
+							"enum": [
+								"any",
+								"all"
+							],
+							"default": "any",
+							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
 						},
-						"then": { "$ref": "#/definitions/user_paths/container" },
-						"else": { "$ref": "#/definitions/user_paths/container" }
+						"then": {
+							"$ref": "#/definitions/user_paths/container",
+							"description": "The Then container"
+						},
+						"else": {
+							"$ref": "#/definitions/user_paths/container",
+							"description": "The Else container"
+						}
 					},
-					"additionalProperties": false
+					"additionalProperties": false,
+					"description": "A conditional structure \"If - Then - Else\". If the conditions are true, the Then container is executed, otherwise, the Else container is executed."
 				},
 				"while": {
 					"$id": "#/definitions/user_paths/actions/while",
 					"title": "Action: While",
 					"type": "object",
-					"required": ["steps"],
+					"required": [
+						"steps"
+					],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"conditions": { "$ref": "#/definitions/common/conditions" },
+						"name": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of the While"
+						},
+						"description": {
+							"$ref": "#/definitions/common/text",
+							"description": "The description of the While"
+						},
+						"conditions": {
+							"$ref": "#/definitions/common/conditions",
+							"description": "The list of conditions to evaluate"
+						},
 						"match": {
 							"type": "string",
-							"enum": ["any", "all"],
-							"default": "any"
+							"enum": [
+								"any",
+								"all"
+							],
+							"default": "any",
+							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
 						},
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": {
+							"$ref": "#/definitions/user_paths/steps",
+							"description": "The steps to be executed"
+						}
 					},
-					"additionalProperties": false
+					"additionalProperties": false,
+					"description": "A repetition structure \"While - do\". The steps contained in the structure are executed in sequence until the condition is not verified any more."
 				},
 				"loop": {
 					"$id": "#/definitions/user_paths/actions/loop",
 					"title": "Action: If",
 					"type": "object",
-					"required": ["count", "steps"],
+					"required": [
+						"count",
+						"steps"
+					],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"count": { "$ref": "#/definitions/common/positive_number" },
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"name": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of the Loop"
+						},
+						"description": {
+							"$ref": "#/definitions/common/text",
+							"description": "The description of the Loop"
+						},
+						"count": {
+							"$ref": "#/definitions/common/positive_number",
+							"description": "The number of times to execute"
+						},
+						"steps": {
+							"$ref": "#/definitions/user_paths/steps",
+							"description": "The steps to be executed"
+						}
 					},
-					"additionalProperties": false
+					"additionalProperties": false,
+					"description": "A repetition structure which executes steps sequentially a specific number of times."
 				},
 				"switch": {
 					"$id": "#/definitions/user_paths/actions/switch",
 					"title": "Action: Switch",
 					"type": "object",
-					"required": ["value", "default"],
+					"required": [
+						"value",
+						"default"
+					],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"value": { "$ref": "#/definitions/common/text" },
+						"name": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of the Switch"
+						},
+						"description": {
+							"$ref": "#/definitions/common/text",
+							"description": "The description of the Switch"
+						},
+						"value": {
+							"$ref": "#/definitions/common/text",
+							"description": "The value of the Switch"
+						},
 						"case": {
 							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/case" }
+							"items": {
+								"$ref": "#/definitions/user_paths/case"
+							},
+							"description": "The case statement list"
 						},
-						"default": { "$ref": "#/definitions/user_paths/container" }
+						"default": {
+							"$ref": "#/definitions/user_paths/container",
+							"description": "The default statement container"
+						}
 					},
-					"additionalProperties": false
+					"additionalProperties": false,
+					"description": "The Switch action is used to execute conditional actions based on a selection control mechanism. It allows the Switch value to change the control flow of the User Path execution via a multiway branch, named Case statements. The Switch action is fall-through, which means that if a Break flag is disabled on a Case, then the next Case statement is executed."
 				},
 				"custom_action": {
 					"$id": "#/definitions/user_paths/actions/custom_action",
 					"title": "Action: Custom Action",
 					"type": "object",
-					"required": ["name", "type"],
+					"required": [
+						"name",
+						"type"
+					],
 					"properties": {
-						"name": { "$ref": "#/definitions/common/text" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"type": { "$ref": "#/definitions/common/text" },
+						"name": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of the Custom Action"
+						},
+						"description": {
+							"$ref": "#/definitions/common/text",
+							"description": "The description of the Custom Action"
+						},
+						"type": {
+							"$ref": "#/definitions/common/text",
+							"description": "The type of the Action"
+						},
 						"parameters": {
 							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/custom-action-parameter" }
+							"items": {
+								"$ref": "#/definitions/user_paths/custom-action-parameter"
+							},
+							"description": "The action parameter list"
 						},
 						"asRequest": {
 							"type": "boolean",
-							"default": false
+							"default": false,
+							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
 						},
-						"libraryPath": { "$ref": "#/definitions/common/text" }
+						"libraryPath": {
+							"$ref": "#/definitions/common/text",
+							"description": "The path to the JAR file containing the Custom Advanced Action"
+						}
 					},
-					"additionalProperties": false
+					"additionalProperties": false,
+					"description": "Custom action can be an Advanced Action, a SAP GUI Action, a Citrix Action, a RealBrowser Action or an RTE Action. A Custom Advanced action can also be developed using Java."
 				}
 			},
 			"extractor": {
 				"type": "object",
-				"xrequired": ["name"],
+				"xrequired": [
+					"name"
+				],
 				"properties": {
-					"name": { "$ref": "#/definitions/common/text" },
+					"name": {
+						"$ref": "#/definitions/common/text",
+						"description": "The name of the extractor"
+					},
 					"from": {
 						"type": "string",
 						"default": "body",
-						"enum": ["header", "body", "both"]
+						"enum": [
+							"header",
+							"body",
+							"both"
+						],
+						"description": "The response part where to extract value. The available values are \"header\", \"body\" and \"both\". The default value is \"body\"."
 					},
-					"xpath": { "$ref": "#/definitions/common/text" },
-					"jsonpath": { "$ref": "#/definitions/common/text" },
-					"regexp": { "$ref": "#/definitions/common/text" },
+					"xpath": {
+						"$ref": "#/definitions/common/text",
+						"description": "The XPath expression where to extract value. Only available when \"from\" value is \"body\"."
+					},
+					"jsonpath": {
+						"$ref": "#/definitions/common/text",
+						"description": "The JSONPath expression where to extract value. Only available when \"from\" value is \"body\"."
+					},
+					"regexp": {
+						"$ref": "#/definitions/common/text",
+						"description": "The regular expression applies on \"from\" value. If \"Body\" and \"xpath\" or \"jsonpath\" is specified, then the extraction is done on the result of the xpath or jsonpath. The default value is \"(.*)\"."
+					},
 					"match_number": {
 						"type": "integer",
-						"default": 1
+						"default": 1,
+						"description": "If multiple values have matched \"regexp\", the match number defines which match to use. Value \"-1\" is to extract all occurrences, \"0\" to randomly extract one occurence and \"N\" to extract the Nth occurrence. The default value is \"1\"."
 					},
-					"template": { "$ref": "#/definitions/common/text" },
+					"template": {
+						"$ref": "#/definitions/common/text",
+						"description": "The template used to construct the value. This is an arbitrary string containing special elements that refer to groups within the regular expression (a group is a dynamic portion of the regular expression set within brackets): $0$ refers to the entire text matching the expression, $1$ refers to group 1, $2$ refers to group 2, and so on. The default value is $1$."
+					},
 					"decode": {
 						"type": "string",
-						"enum": ["html", "url"]
+						"enum": [
+							"html",
+							"url"
+						],
+						"description": "The decoder to apply on the value. The available values are \"html\" and \"url\"."
 					},
 					"extract_once": {
 						"type": "boolean",
-						"default": false
+						"default": false,
+						"description": "This option allows considering only the first value extracted. The available values are \"true\" and \"false\". The default value is \"false\"."
 					},
 					"default": {
 						"type": "string",
-						"default": ""
+						"default": "",
+						"description": "The value to return when not extracted. The default value is \"<NOT FOUND>\"."
 					},
 					"throw_assertion_error": {
 						"type": "boolean",
-						"default": true
+						"default": true,
+						"description": "Raises an assertion error when no match found. The default value is \"true\"."
 					}
-				}
+				},
+				"description": "Extractors allow chaining several API calls where the argument of a call can be extracted from a previous call."
 			},
 			"case": {
 				"type": "object",
-				"required": ["value"],
+				"required": [
+					"value"
+				],
 				"properties": {
-					"description": { "$ref": "#/definitions/common/text" },
-					"value": { "$ref": "#/definitions/common/text" },
-					"break": { "type": "boolean" },
-					"steps": { "$ref": "#/definitions/user_paths/steps" }
+					"description": {
+						"$ref": "#/definitions/common/text",
+						"description": "The description of the case"
+					},
+					"value": {
+						"$ref": "#/definitions/common/text",
+						"description": "The value of the case"
+					},
+					"break": {
+						"type": "boolean",
+						"description": "Enable the break"
+					},
+					"steps": {
+						"$ref": "#/definitions/user_paths/steps",
+						"description": "The steps to be executed"
+					}
 				},
 				"additionalProperties": false
 			},
 			"custom-action-parameter": {
 				"type": "object",
-				"required": ["name", "value"],
+				"required": [
+					"name",
+					"value"
+				],
 				"properties": {
-					"name": { "$ref": "#/definitions/common/text" },
-					"value": { "$ref": "#/definitions/common/text" },
+					"name": {
+						"$ref": "#/definitions/common/text",
+						"description": "The name of the parameter, as expected by the action"
+					},
+					"value": {
+						"$ref": "#/definitions/common/text",
+						"description": "The value of the parameter"
+					},
 					"type": {
 						"type": "string",
-						"enum": ["TEXT", "PASSWORD"],
-						"default": "TEXT"
+						"enum": [
+							"TEXT",
+							"PASSWORD"
+						],
+						"default": "TEXT",
+						"description": "The kind of value. The available values are `TEXT` and `PASSWORD`. The default value is `TEXT`. A `PASSWORD` parameter is stored encrypted in the NeoLoad project."
 					}
 				},
 				"additionalProperties": false
