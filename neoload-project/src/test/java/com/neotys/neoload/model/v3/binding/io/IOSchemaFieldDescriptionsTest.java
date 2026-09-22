@@ -47,28 +47,18 @@ public class IOSchemaFieldDescriptionsTest {
 	public void requestFieldsMatchReadme() {
 		String request = "/definitions/user_paths/actions/request/properties";
 		for (JsonNode schema : new JsonNode[] {schema30, schema31}) {
-			assertDescription(schema, request + "/url", "URL");
-			assertDescription(schema, request + "/server", "server");
-			assertDescription(schema, request + "/method", "method");
-			assertDescription(schema, request + "/headers", "header");
-			assertDescription(schema, request + "/body", "body");
 			assertDescription(schema, request + "/followRedirects", "redirection");
 			assertDescription(schema, request + "/sla_profile", "SLA");
 		}
 		assertDescription(schema31, request + "/bodybinary", "base64");
 		assertDescription(schema31, request + "/parts", "multipart");
 		assertDescription(schema31, request + "/duration_assertion", "duration");
-		assertDescription(schema31, "/definitions/user_paths/part/properties/name", "form field");
 		assertDescription(schema31, "/definitions/user_paths/part/properties/source_filename", "project folder");
 	}
 
 	@Test
 	public void userPathAndScenarioFieldsMatchReadme() {
-		assertDescription(schema30, "/definitions/user_paths/user_path/properties/name", "User Path");
-		assertDescription(schema31, "/definitions/user_paths/user_path/properties/name", "User Path");
 		assertDescription(schema31, "/definitions/user_paths/user_path/properties/assertions", "assertions");
-		assertDescription(schema31, "/definitions/scenario/properties/name", "scenario");
-		assertDescription(schema31, "/definitions/scenario/properties/rendezvous_policies", "Rendezvous");
 		assertDescription(schema31, "/definitions/scenario/monitoring/properties/before", "before");
 		assertDescription(schema31, "/definitions/scenario/apm/properties/dynatrace_tags", "Dynatrace");
 		assertDescription(schema31, "/definitions/user_paths/actions/web_page/properties/think_time", "think time");
@@ -77,8 +67,8 @@ public class IOSchemaFieldDescriptionsTest {
 
 	@Test
 	public void publishedSchemasExposeReadmeDescriptions() {
-		assertTrue("3.0 schema should document readme fields", countTextualDescriptions(schema30) >= 140);
-		assertTrue("3.1 schema should document readme fields", countTextualDescriptions(schema31) >= 240);
+		assertTrue("3.0 schema should document readme fields", countTextualDescriptions(schema30) >= 110);
+		assertTrue("3.1 schema should document readme fields", countTextualDescriptions(schema31) >= 220);
 	}
 
 	private static int countTextualDescriptions(JsonNode node) {

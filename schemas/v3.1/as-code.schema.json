@@ -312,14 +312,8 @@
 				"type": "object",
 				"required": ["name"],
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name",
-						"description": "The variable name"
-					},
-					"description": {
-						"$ref": "#/definitions/common/text",
-						"description": "The variable description"
-					},
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
 					"change_policy": {
 						"$ref": "#/definitions/common/var_change_policy",
 						"description": "The policy when the value must change. The \"change_policy\" value can be: `each_use` `each_request` `each_page` `each_iteration` `each_user` The default value is `each_iteration`."
@@ -334,10 +328,7 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"value": {
-								"anyOf": [{ "$ref": "#/definitions/common/text" }, "number"],
-								"description": "The variable value"
-							}
+							"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] }
 						}
 					}
 				],
@@ -401,16 +392,13 @@
 					{
 						"properties": {
 							"start": {
-								"type": "number",
-								"description": "The variable start value"
+								"type": "number"
 							},
 							"end": {
-								"type": "number",
-								"description": "The variable end value"
+								"type": "number"
 							},
 							"increment": {
-								"type": "number",
-								"description": "The variable increment value"
+								"type": "number"
 							},
 							"scope": {
 								"$ref": "#/definitions/common/var_scope",
@@ -434,12 +422,10 @@
 					{
 						"properties": {
 							"min": {
-								"type": "number",
-								"description": "The variable min value"
+								"type": "number"
 							},
 							"max": {
-								"type": "number",
-								"description": "The variable max value"
+								"type": "number"
 							},
 							"predictable": {
 								"type": "boolean",
@@ -596,10 +582,7 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"script": {
-								"$ref": "#/definitions/common/textblob",
-								"description": "The JavaScript script"
-							}
+							"script": { "$ref": "#/definitions/common/textblob" }
 						}
 					}
 				],
@@ -707,14 +690,8 @@
 			"required": ["name", "host"],
 			"additionalProperties": false,
 			"properties": {
-				"name": {
-					"$ref": "#/definitions/common/name",
-					"description": "The name of the server"
-				},
-				"host": {
-					"$ref": "#/definitions/common/text",
-					"description": "The host of the server"
-				},
+				"name": { "$ref": "#/definitions/common/name" },
+				"host": { "$ref": "#/definitions/common/text" },
 				"scheme": {
 					"type": "string",
 					"enum": ["http", "https"],
@@ -759,10 +736,7 @@
 					{ "$ref": "#/definitions/authentication/auth-generic" },
 					{
 						"properties": {
-							"domain": {
-								"$ref": "#/definitions/common/text",
-								"description": "The domain"
-							}
+							"domain": { "$ref": "#/definitions/common/text" }
 						}
 					}
 				],
@@ -775,10 +749,7 @@
 					{ "$ref": "#/definitions/authentication/auth-generic" },
 					{
 						"properties": {
-							"realm": {
-								"$ref": "#/definitions/common/text",
-								"description": "The realm"
-							}
+							"realm": { "$ref": "#/definitions/common/text" }
 						}
 					}
 				],
@@ -803,14 +774,8 @@
 			"required": ["name", "thresholds"],
 			"additionalProperties": false,
 			"properties": {
-				"name": {
-					"$ref": "#/definitions/common/name",
-					"description": "The name of the SLA Profile"
-				},
-				"description": {
-					"$ref": "#/definitions/common/text",
-					"description": "The description of the SLA Profile"
-				},
+				"name": { "$ref": "#/definitions/common/name" },
+				"description": { "$ref": "#/definitions/common/text" },
 				"thresholds": {
 					"title": "Thresholds",
 					"type": "array",
@@ -832,14 +797,8 @@
 				"required": ["name"],
 				"additionalProperties": false,
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name",
-						"description": "The name of the Population"
-					},
-					"description": {
-						"$ref": "#/definitions/common/text",
-						"description": "The description of the Population"
-					},
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
 					"xcomments": {
 						"value": "why do we need the substructure 'name' to denote a string list?"
 					},
@@ -852,10 +811,7 @@
 							"required": ["name"],
 							"additionalProperties": false,
 							"properties": {
-								"name": {
-									"$ref": "#/definitions/common/name",
-									"description": "The name of the existing User Path"
-								},
+								"name": { "$ref": "#/definitions/common/name" },
 								"distribution": {
 									"anyOf": [
 										{ "type": "string", "pattern": "^\\d{1,3}(\\.\\d)?%?$" },
@@ -1041,14 +997,8 @@
 			"required": ["name"],
 			"additionalProperties": false,
 			"properties": {
-				"name": {
-					"$ref": "#/definitions/common/name",
-					"description": "The name of the scenario"
-				},
-				"description": {
-					"$ref": "#/definitions/common/text",
-					"description": "The description of the scenario"
-				},
+				"name": { "$ref": "#/definitions/common/name" },
+				"description": { "$ref": "#/definitions/common/text" },
 				"sla_profile": {
 					"$ref": "#/definitions/common/text",
 					"description": "The name of the SLA profile to apply to the Scenario (will not be applied to children)"
@@ -1073,8 +1023,7 @@
 				},
 				"rendezvous_policies": {
 					"type": "array",
-					"items": { "$ref": "#/definitions/scenario/rendezvous_policy" },
-					"description": "The list of the Rendezvous"
+					"items": { "$ref": "#/definitions/scenario/rendezvous_policy" }
 				},
 				"populations": {
 					"title": "Scenario Populations",
@@ -1143,10 +1092,7 @@
 						"enum": ["ABOVE", "BELOW"],
 						"description": "The operator. Two possible values: BELOW ABOVE"
 					},
-					"value": {
-						"anyOf": [{ "$ref": "#/definitions/common/text" }, "number"],
-						"description": "The value of the threshold."
-					},
+					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"severity": {
 						"type": "string",
 						"enum": ["AVAILABILITY", "CUSTOM_ALERT", "ERROR", "INFO", "PERFORMANCE", "RESOURCE_CONTENTION"],
@@ -1175,10 +1121,7 @@
 				"type": "object",
 				"required": ["name"],
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name",
-						"description": "The name of the Rendezvous."
-					},
+					"name": { "$ref": "#/definitions/common/name" },
 					"when": {
 						"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
 						"description": "When to release the Rendezvous. Possible values are: \"manual\", percentage or positive number. The default value is 100%."
@@ -1198,14 +1141,8 @@
 				"required": ["name", "actions"],
 				"additionalProperties": false,
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name",
-						"description": "The name of the User Path"
-					},
-					"description": {
-						"$ref": "#/definitions/common/text",
-						"description": "The description of the User Path"
-					},
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
 					"user_session": {
 						"type": "string",
 						"enum": ["reset_on", "reset_off", "reset_auto"],
@@ -1235,18 +1172,12 @@
 				"required": ["steps"],
 				"additionalProperties": false,
 				"properties": {
-					"description": {
-						"$ref": "#/definitions/common/text",
-						"description": "The description of the container"
-					},
+					"description": { "$ref": "#/definitions/common/text" },
 					"sla_profile": {
 						"type": "string",
 						"description": "The name of the SLA profile to apply to the Container (will not be applied to children)"
 					},
-					"steps": {
-						"$ref": "#/definitions/user_paths/steps",
-						"description": "The steps to be executed"
-					},
+					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
 						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
@@ -1353,14 +1284,8 @@
 					"type": "object",
 					"required": ["name", "steps"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The Transaction name"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The Transaction description"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": {
 							"$ref": "#/definitions/common/text",
 							"description": "The name of the SLA profile to apply to the Transaction (will not be applied to children)"
@@ -1387,7 +1312,7 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"think_time": {
 							"$ref": "#/definitions/common/text",
-							"description": "The Think time duration"
+							"description": "Think time is the time the user normally takes to make a decision to do the next task."
 						},
 						"think_time_range": {
 							"type": "object",
@@ -1415,18 +1340,11 @@
 					"required": ["url"],
 					"additionalProperties": false,
 					"properties": {
-						"url": {
-							"$ref": "#/definitions/common/text",
-							"description": "The URL to hit"
-						},
-						"server": {
-							"$ref": "#/definitions/common/text",
-							"description": "The server name to use"
-						},
+						"url": { "$ref": "#/definitions/common/text" },
+						"server": { "$ref": "#/definitions/common/text" },
 						"method": {
 							"type": "string",
-							"default": "GET",
-							"description": "The request method"
+							"default": "GET"
 						},
 						"headers": {
 							"type": "array",
@@ -1439,17 +1357,13 @@
 									".*": { "type": "string" }
 								},
 								"additionalProperties": false
-							},
-							"description": "The request header list"
+							}
 						},
 						"sla_profile": {
 							"$ref": "#/definitions/common/text",
 							"description": "The name of the SLA profile to apply to the request"
 						},
-						"body": {
-							"$ref": "#/definitions/common/textblob",
-							"description": "The request body"
-						},
+						"body": { "$ref": "#/definitions/common/textblob" },
 						"bodybinary": {
 							"$ref": "#/definitions/common/base64blob",
 							"description": "The request body, as a base64-encoded binary payload"
@@ -1461,8 +1375,7 @@
 						},
 						"extractors": {
 							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/extractor" },
-							"description": "The extractor list"
+							"items": { "$ref": "#/definitions/user_paths/extractor" }
 						},
 						"followRedirects": {
 							"type": "boolean",
@@ -1503,18 +1416,9 @@
 					"required": ["name", "script"],
 					"additionalProperties": false,
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The Javascript name"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The Javascript description"
-						},
-						"script": {
-							"$ref": "#/definitions/common/textblob",
-							"description": "The Javascript script"
-						}
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"script": { "$ref": "#/definitions/common/textblob" }
 					},
 					"description": "Execution of a Javascript script."
 				},
@@ -1523,14 +1427,8 @@
 					"type": "object",
 					"required": ["then"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the If"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The description of the If"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
 						"conditions": {
 							"$ref": "#/definitions/common/conditions",
 							"description": "The list of conditions to evaluate"
@@ -1558,14 +1456,8 @@
 					"type": "object",
 					"required": ["steps"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the While"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The description of the While"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
 						"conditions": {
 							"$ref": "#/definitions/common/conditions",
 							"description": "The list of conditions to evaluate"
@@ -1576,10 +1468,7 @@
 							"default": "any",
 							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
 						},
-						"steps": {
-							"$ref": "#/definitions/user_paths/steps",
-							"description": "The steps to be executed"
-						}
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false,
 					"description": "A repetition structure \"While - do\". The steps contained in the structure are executed in sequence until the condition is not verified any more."
@@ -1589,22 +1478,13 @@
 					"type": "object",
 					"required": ["count", "steps"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the Loop"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The description of the Loop"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
 						"count": {
 							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
 							"description": "The number of times to execute"
 						},
-						"steps": {
-							"$ref": "#/definitions/user_paths/steps",
-							"description": "The steps to be executed"
-						}
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false,
 					"description": "A repetition structure which executes steps sequentially a specific number of times."
@@ -1614,22 +1494,12 @@
 					"type": "object",
 					"required": ["value", "default"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the Switch"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The description of the Switch"
-						},
-						"value": {
-							"$ref": "#/definitions/common/text",
-							"description": "The value of the Switch"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"value": { "$ref": "#/definitions/common/text" },
 						"case": {
 							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/case" },
-							"description": "The case statement list"
+							"items": { "$ref": "#/definitions/user_paths/case" }
 						},
 						"default": {
 							"$ref": "#/definitions/user_paths/container",
@@ -1644,22 +1514,12 @@
 					"type": "object",
 					"required": ["name", "type"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the Custom Action"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The description of the Custom Action"
-						},
-						"type": {
-							"$ref": "#/definitions/common/text",
-							"description": "The type of the Action"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"type": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/custom-action-parameter" },
-							"description": "The action parameter list"
+							"items": { "$ref": "#/definitions/user_paths/custom-action-parameter" }
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -1717,14 +1577,8 @@
 					"type": "object",
 					"required": ["steps"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the Fork"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The description of the Fork"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
 						"copy_variables": {
 							"type": "boolean",
 							"default": true,
@@ -1760,14 +1614,8 @@
 					"type": "object",
 					"required": ["variable_name"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The Variable Modifier name"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The Variable Modifier description"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
 						"category": {
 							"type": "string",
 							"enum": ["predefined", "shared_queue"],
@@ -1834,10 +1682,7 @@
 							"$ref": "#/definitions/common/name",
 							"description": "The name of the Try Catch. Defaults to `try_catch`."
 						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The description of the Try Catch"
-						},
+						"description": { "$ref": "#/definitions/common/text" },
 						"caught_exceptions": {
 							"type": "string",
 							"enum": ["errors", "assertions", "all"],
@@ -1865,10 +1710,7 @@
 							"$ref": "#/definitions/common/name",
 							"description": "The Web Page name. Defaults to `web_page`"
 						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "The Web Page description"
-						},
+						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": {
 							"$ref": "#/definitions/common/text",
 							"description": "The name of the SLA profile to apply to the Web Page (will not be applied to children)"
@@ -1934,10 +1776,7 @@
 				"type": "object",
 				"required": ["name"],
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/text",
-						"description": "The form field name"
-					},
+					"name": { "$ref": "#/definitions/common/text" },
 					"content_type": {
 						"$ref": "#/definitions/common/text",
 						"description": "The part Content-Type"
@@ -1970,10 +1809,7 @@
 				"required": ["name"],
 				"additionalProperties": false,
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name",
-						"description": "The name of the extractor"
-					},
+					"name": { "$ref": "#/definitions/common/name" },
 					"from": {
 						"type": "string",
 						"default": "body",
@@ -2028,10 +1864,7 @@
 				"title": "Content Assertion",
 				"type": "object",
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name",
-						"description": "The name of the assertion."
-					},
+					"name": { "$ref": "#/definitions/common/name" },
 					"xpath": {
 						"$ref": "#/definitions/common/text",
 						"description": "The validation check will be carried out on one of the nodes in the response body. This node is defined using XPath expression."
@@ -2104,22 +1937,13 @@
 				"type": "object",
 				"required": ["value"],
 				"properties": {
-					"description": {
-						"$ref": "#/definitions/common/text",
-						"description": "The description of the case"
-					},
-					"value": {
-						"anyOf": [{ "$ref": "#/definitions/common/text" }, "number"],
-						"description": "The value of the case"
-					},
+					"description": { "$ref": "#/definitions/common/text" },
+					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": {
 						"type": "boolean",
 						"description": "Enable the break"
 					},
-					"steps": {
-						"$ref": "#/definitions/user_paths/steps",
-						"description": "The steps to be executed"
-					},
+					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
 						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
@@ -2135,10 +1959,7 @@
 						"$ref": "#/definitions/common/name",
 						"description": "The name of the parameter, as expected by the action"
 					},
-					"value": {
-						"$ref": "#/definitions/common/text",
-						"description": "The value of the parameter"
-					},
+					"value": { "$ref": "#/definitions/common/text" },
 					"type": {
 						"type": "string",
 						"enum": ["TEXT", "PASSWORD"],
