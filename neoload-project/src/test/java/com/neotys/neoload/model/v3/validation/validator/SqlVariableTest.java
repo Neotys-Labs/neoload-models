@@ -5,15 +5,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable;
 import com.neotys.neoload.model.v3.project.variable.OrderVariable;
 import com.neotys.neoload.model.v3.project.variable.OutOfValueVariable;
 import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
 import com.neotys.neoload.model.v3.project.variable.SqlVariable;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-
+import org.junit.Test;
 
 public class SqlVariableTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");

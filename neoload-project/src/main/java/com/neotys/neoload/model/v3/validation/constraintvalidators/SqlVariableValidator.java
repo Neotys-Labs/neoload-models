@@ -2,9 +2,8 @@ package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
 import com.neotys.neoload.model.v3.project.variable.SqlVariable;
 import com.neotys.neoload.model.v3.validation.constraints.SqlVariableCheck;
-
-import javax.validation.ConstraintValidatorContext;
 import java.util.Optional;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * Checks the driver of a sql variable against its url: the driver is mandatory when the database

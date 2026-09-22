@@ -1,10 +1,5 @@
 package com.neotys.neoload.model.v3.project.variable;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.immutables.value.Value;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -12,6 +7,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SqlVariableCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
+import java.util.Optional;
+import org.immutables.value.Value;
 
 @SqlVariableCheck(groups={NeoLoad.class})
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)

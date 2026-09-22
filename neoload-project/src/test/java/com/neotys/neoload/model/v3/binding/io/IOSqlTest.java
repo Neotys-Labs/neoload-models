@@ -7,12 +7,10 @@ import static com.neotys.neoload.model.v3.project.variable.OutOfValueVariable.Ou
 import static com.neotys.neoload.model.v3.project.variable.ScopeVariable.Scope.UNIQUE;
 import static junit.framework.TestCase.assertNotNull;
 
-import java.io.IOException;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.variable.SqlVariable;
+import java.io.IOException;
+import org.junit.Test;
 
 public class IOSqlTest extends AbstractIOElementsTest {
 

@@ -21,7 +21,8 @@ import com.neotys.neoload.model.v3.project.Element;
 		@JsonSubTypes.Type(value = ImmutableListVariable.class, name = "list"),
 		@JsonSubTypes.Type(value = ImmutableSqlVariable.class, name = "sql"),
 		@JsonSubTypes.Type(value = ImmutableCurrentDateVariable.class, name = "current_date"),
-		@JsonSubTypes.Type(value = ImmutableDateVariable.class, name = "date")
+		@JsonSubTypes.Type(value = ImmutableDateVariable.class, name = "date"),
+		@JsonSubTypes.Type(value = ImmutableSecretVaultVariable.class, name = "secret_vault")
 })
 public interface Variable extends Element {
 }
