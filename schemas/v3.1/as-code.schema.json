@@ -52,51 +52,18 @@
 				"minProperties": 1,
 				"maxProperties": 1,
 				"properties": {
-					"constant": {
-						"$ref": "#/definitions/variables/constant",
-						"description": "Constant variable"
-					},
-					"file": {
-						"$ref": "#/definitions/variables/file",
-						"description": "File variable"
-					},
-					"counter": {
-						"$ref": "#/definitions/variables/counter",
-						"description": "Counter variable"
-					},
-					"random_number": {
-						"$ref": "#/definitions/variables/random_number",
-						"description": "Random Number variable"
-					},
-					"random_string": {
-						"$ref": "#/definitions/variables/random_string",
-						"description": "Random String variable"
-					},
-					"password": {
-						"$ref": "#/definitions/variables/password",
-						"description": "Password variable"
-					},
-					"date": {
-						"$ref": "#/definitions/variables/date",
-						"description": "Date variable"
-					},
-					"current_date": {
-						"$ref": "#/definitions/variables/current_date",
-						"description": "Current Date variable"
-					},
-					"list": {
-						"$ref": "#/definitions/variables/list",
-						"description": "List variable"
-					},
+					"constant": { "$ref": "#/definitions/variables/constant" },
+					"file": { "$ref": "#/definitions/variables/file" },
+					"counter": { "$ref": "#/definitions/variables/counter" },
+					"random_number": { "$ref": "#/definitions/variables/random_number" },
+					"random_string": { "$ref": "#/definitions/variables/random_string" },
+					"password": { "$ref": "#/definitions/variables/password" },
+					"date": { "$ref": "#/definitions/variables/date" },
+					"current_date": { "$ref": "#/definitions/variables/current_date" },
+					"list": { "$ref": "#/definitions/variables/list" },
 					"sql": { "$ref": "#/definitions/variables/sql" },
-					"random_uuid": {
-						"$ref": "#/definitions/variables/random_uuid",
-						"description": "Random UUID variable"
-					},
-					"shared_queue": {
-						"$ref": "#/definitions/variables/shared_queue",
-						"description": "Shared Queue variable"
-					},
+					"random_uuid": { "$ref": "#/definitions/variables/random_uuid" },
+					"shared_queue": { "$ref": "#/definitions/variables/shared_queue" },
 					"javascript": {
 						"$ref": "#/definitions/variables/javascript",
 						"description": "Execution of a Javascript script."
