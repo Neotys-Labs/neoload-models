@@ -10,10 +10,7 @@ import static com.neotys.neoload.model.v3.project.userpath.UserPath.END;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.INIT;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.USER_SESSION;
 import static com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement.ASSERTIONS;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import static com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement.CONTENT_ASSERTIONS;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,7 +21,10 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 	private static final long serialVersionUID = -9100000271338565024L;
@@ -52,12 +52,28 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		return container;
 	}
 	
-	protected static List<Assertion> asAssertions(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
+	private static List<ContentAssertion> asContentAssertionList(final ObjectCodec codec, final JsonNode assertionsNode) throws JsonProcessingException {
+		final ImmutableList.Builder<ContentAssertion> assertions = new ImmutableList.Builder<>();
+		for (final JsonNode assertionNode : assertionsNode) {
+			assertions.add(codec.treeToValue(assertionNode, ContentAssertion.class));
+		}
+		return assertions.build();
+	}
+
+	protected static List<ContentAssertion> asLegacyAssertions(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
 		final JsonNode assertionsNode = node.get(ASSERTIONS);
 		if (assertionsNode != null) {
-	    	return AssertionsDeserializer.deserialize(codec, assertionsNode);
-	    }		
+			return asContentAssertionList(codec, assertionsNode);
+		}
 		return ImmutableList.of();
+	}
+
+	protected static Optional<List<ContentAssertion>> asContentAssertions(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
+		final JsonNode contentAssertionsNode = node.get(CONTENT_ASSERTIONS);
+		if (contentAssertionsNode != null) {
+			return Optional.of(asContentAssertionList(codec, contentAssertionsNode));
+		}
+		return Optional.empty();
 	}
 
 	@Override
@@ -71,16 +87,18 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		final Container init = asContainer(codec, node, INIT);
 		final Container actions = asContainer(codec, node, ACTIONS);
 		final Container end = asContainer(codec, node, END);
-		final List<Assertion> assertions = asAssertions(codec, node);
+		final List<ContentAssertion> legacyAssertions = asLegacyAssertions(codec, node);
+		final Optional<List<ContentAssertion>> contentAssertions = asContentAssertions(codec, node);
 
-		return UserPath.builder()
+		final UserPath.Builder builder = UserPath.builder()
 				.name(name)
 				.description(Optional.ofNullable(description))
 				.userSession(userSession)
 				.init(Optional.ofNullable(init))
 				.actions(actions)
 				.end(Optional.ofNullable(end))
-				.addAllAssertions(assertions)
-				.build();
+				.addAllLegacyAssertions(legacyAssertions);
+		contentAssertions.ifPresent(builder::addAllContentAssertions);
+		return builder.build();
 	}
 }
