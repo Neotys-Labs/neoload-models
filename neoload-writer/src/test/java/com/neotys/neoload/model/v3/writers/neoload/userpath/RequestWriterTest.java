@@ -7,13 +7,12 @@ import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
+import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 public class RequestWriterTest {
 	
@@ -147,6 +146,34 @@ public class RequestWriterTest {
 
         XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
     }
+
+	@Test
+	public void writePostRequestBodyBinaryTest() throws ParserConfigurationException {
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+
+		Request request = Request.builder()
+				.name("request_test")
+				.url("/upload")
+				.server("server_test")
+				.method("POST")
+				.bodyBinary(WrittingTestUtils.BINARY_DATA_TEST)
+				.addHeaders(Header.builder().name("Content-Type").value("application/octet-stream").build())
+				.build();
+
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><http-action actionType=\"1\" contentType=\"application/octet-stream\" followRedirects=\"false\" "
+				+ "method=\"POST\" name=\"request_test\" "
+				+ "path=\"/upload\" postType=\"2\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
+				+ "uid=\"" + WriterUtils.getElementUid(request)+ "\">"
+				+ "<binaryPostContentBase64><![CDATA[dGV4dGUgYSBjb252ZXJ0aXIgZW4gYmluYWlyZQ==]]></binaryPostContentBase64>"
+				+ "<header name=\"Content-Type\" value=\"application/octet-stream\"/>"
+				+ "</http-action></test-root>";
+
+		(new RequestWriter(request)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
 
 	@Test
 	public void writePostRequestMultipartContentTypeTest() throws ParserConfigurationException {

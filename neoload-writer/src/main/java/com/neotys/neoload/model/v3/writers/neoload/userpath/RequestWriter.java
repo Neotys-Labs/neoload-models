@@ -1,13 +1,5 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import com.google.common.net.MediaType;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
@@ -18,7 +10,12 @@ import com.neotys.neoload.model.v3.util.URL;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
-
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class RequestWriter extends ElementWriter {
 
@@ -75,12 +72,15 @@ public class RequestWriter extends ElementWriter {
 		if(bodySupportedByMethod) {
 			int postType = getPostType(theRequest);
 			xmlRequest.setAttribute(XML_ATTR_POST_TYPE, String.valueOf(postType));
-			theRequest.getBody().ifPresent(s -> {
-				if(postType==FORM_CONTENT) writeParameters(RequestUtils.getParameters(s), Optional.empty(), document, xmlRequest);
-				if(postType==TEXT_CONTENT) writePostTextBody(s, document, xmlRequest);
-				if(postType==RAW_CONTENT) writePostRawBody(s.getBytes(), document, xmlRequest);
-			});
-			theRequest.getBodyBinary().ifPresent(s -> writePostRawBody(s, document, xmlRequest));
+			if (theRequest.getBodyBinary().isPresent()) {
+				writePostRawBody(theRequest.getBodyBinary().get(), document, xmlRequest);
+			} else {
+				theRequest.getBody().ifPresent(s -> {
+					if(postType==FORM_CONTENT) writeParameters(RequestUtils.getParameters(s), Optional.empty(), document, xmlRequest);
+					if(postType==TEXT_CONTENT) writePostTextBody(s, document, xmlRequest);
+					if(postType==RAW_CONTENT) writePostRawBody(s.getBytes(), document, xmlRequest);
+				});
+			}
 			theRequest.getParts().ifPresent(s -> writeParts(s, document, xmlRequest));
 		}
 		final Optional<String> parameterTag = bodySupportedByMethod ? Optional.of(XML_URL_PARAMETER_TAG_NAME) : Optional.empty();

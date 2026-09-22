@@ -4,7 +4,7 @@
 
 	<groupId>com.neotys.neoload</groupId>
 	<artifactId>neoload-models</artifactId>
-	<version>3.4.7-SNAPSHOT</version>
+	<version>3.4.13-SNAPSHOT</version>
 	<modules>
 		<module>neoload-project</module>
 		<module>neoload-project-model</module>
@@ -72,7 +72,6 @@
 		<developerConnection>scm:git:ssh://github.com:Neotys-Labs/neoload-models.git</developerConnection>
 		<url>https://github.com/Neotys-Labs/neoload-models/tree/master</url>
 	</scm>
-
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -370,7 +369,6 @@
 		</dependencies>
 
 	</dependencyManagement>
-
 
 	<build>
 		<pluginManagement>
