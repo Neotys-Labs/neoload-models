@@ -7,13 +7,16 @@ They may be combined with other variables or with static content (e.g. `${produc
 Variables that does not exist in the project will be added.
 
 #### Example
-Defining 9 variables: a Constant variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable, a RandomUUID variable, a JavaScript variable and a Secret Vault variable.
+Defining 11 variables: a Constant variable, a Password variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable, a RandomUUID variable, a SQL variable, a JavaScript variable and a Secret Vault variable.
 
 ```yaml
 variables:
 - constant:
     name: constant_variable
     value: 12345
+- password:
+    name: password_variable
+    value: "s3cr3t"
 - file:
     name: cities_file
     column_names: ["City", "Country", "Population", "Longitude", "Latitude"]
@@ -61,6 +64,18 @@ variables:
     upper_case: false
     predictable: false
     change_policy: each_use
+- sql:
+    name: sql_variable
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mydb
+    login: login_admin
+    password: password_admin
+    query: "SELECT username, email FROM users"
+    column_names: ["username", "email"]
+    change_policy: each_iteration
+    scope: global
+    order: any
+    out_of_value: cycle
 - javascript:
     name: My JSVar
     description: This is a js var
@@ -90,6 +105,27 @@ Defining a Constant variable.
 constant:
   name: constant_variable
   value: 12345
+```
+
+## Password variable
+An alphanumerical string whose value is a secret. In as-code YAML the value is stored as authored plaintext; NeoLoad encrypts it when the project is imported. Double quotes are recommended so YAML special characters in the secret are not interpreted.
+
+When NeoLoad exports a project back to as-code, `value` is written in its NeoLoad-encrypted form rather than in clear text, so an export never reveals the secret. Importing that file again restores the very same secret, and exporting it once more writes back the very same encrypted text.
+
+| Name        | Description                   | Accept variable | Required | Since |
+|:----------- |:----------------------------- |:---------------:|:--------:|:-----:|
+| name        | The variable name             | -               | &#x2713; | 2026.3|
+| description | The variable description      | -               | -        | 2026.3|
+| value       | The variable value. Prefer double quotes. | -    | &#x2713; | 2026.3|
+
+#### Example
+Defining a Password variable.
+
+```yaml
+password:
+  name: password_variable
+  description: MyPasswordDescription
+  value: "s3cr3t"
 ```
 
 ## File variable
@@ -259,7 +295,45 @@ random_uuid:
   change_policy: each_use
 ```
 
+## SQL variable
+A list or table of values loaded from the result of a SQL query executed on a database.
+
+| Name         | Description                   | Accept variable | Required | Since |
+|:------------ |:----------------------------- |:---------------:|:--------:|:-----:|
+| name         | The variable name             | -               | &#x2713; | 2026.3|
+| description  | The variable description      | -               | -        | 2026.3|
+| driver       | The JDBC driver class name of the database.</br>When not specified, the driver is derived from `url`, and it is required when `url` does not match a database known to NeoLoad. | -               | -        | 2026.3|
+| url          | The JDBC connection url of the database. | -               | &#x2713; | 2026.3|
+| login        | The login used to connect to the database. | -               | -        | 2026.3|
+| password     | The password used to connect to the database. | -               | -        | 2026.3|
+| query        | The SQL query returning the variable values. | -               | &#x2713; | 2026.3|
+| column_names | Overrides the column names taken from the query result set. When omitted, NeoLoad names each column after the matching column of the result set. Use `${<variableName>.<columnName>}` to access variable values. | -               | -        | 2026.3|
+| change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
+| scope        | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        | 2026.3|
+| order        | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | -               | -        | 2026.3|
+| out_of_value | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | -               | -        | 2026.3|
+
+#### Example
+Defining a SQL variable.
+
+```yaml
+sql:
+  name: sql_variable
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/mydb
+  login: login_admin
+  password: password_admin
+  query: "SELECT username, email FROM users"
+  column_names: ["username", "email"]
+  change_policy: each_iteration
+  scope: global
+  order: any
+  out_of_value: cycle
+```
+
 ## Current Date variable
+Supported only from version 2026.3 onwards.
+
 A variable whose value is the current date/time at generation, formatted according to a pattern and optionally shifted by a fixed offset. There is no fixed start date — the value is always derived from the wall clock at the moment it is evaluated.
 
 This variable has no `change_policy` or `scope` because its value is always the current timestamp.
@@ -270,10 +344,10 @@ The `offset` is a single amount and unit. Units are not combined, so that fixed-
 
 | Name                | Description                                                                                                                                                              | Accept variable | Required | Since |
 |:------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |:---------------:|:--------:|:-----:|
-| name                | The variable name                                                                                                                                                        | -               | &#x2713; |       |
-| description         | The variable description                                                                                                                                                 | -               | -        |       |
-| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        |       |
-| offset              | The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Absent means no offset. | -               | -        |       |
+| name                | The variable name                                                                                                                                                        | -               | &#x2713; | 2026.3|
+| description         | The variable description                                                                                                                                                 | -               | -        | 2026.3|
+| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        | 2026.3|
+| offset              | The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Absent means no offset. | -               | -        | 2026.3|
 
 #### Example
 Defining a minimal Current Date variable (only required fields).
@@ -291,6 +365,47 @@ current_date:
   description: now plus 5 minutes
   pattern: yyyy-MM-dd'T'HH:mm:ss
   offset: 5m
+```
+
+## Date variable
+Supported only from version 2026.3 onwards.
+
+A variable whose value is a fixed date, formatted according to a pattern and optionally shifted at each change by a fixed step.
+
+The `pattern` follows the [`SimpleDateFormat`](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) syntax. `start_date` must match that pattern.
+
+The `change_step` is a single amount and unit. Units are not combined, so that fixed-length units never mix with calendar units in the same value.
+
+| Name                | Description                                                                                                                                                              | Accept variable | Required | Since |
+|:------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |:---------------:|:--------:|:-----:|
+| name                | The variable name                                                                                                                                                        | -               | &#x2713; | 2026.3|
+| description         | The variable description                                                                                                                                                 | -               | -        | 2026.3|
+| pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        | 2026.3|
+| start_date          | The starting date, formatted according to `pattern`.                                                                                                                     | -               | &#x2713; | 2026.3|
+| change_step         | The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes. | -               | -        | 2026.3|
+| change_policy       | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
+| scope               | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        | 2026.3|
+
+#### Example
+Defining a minimal Date variable (only required fields).
+
+```yaml
+date:
+  name: date_variable
+  start_date: 01/01/2024 00:00:00
+```
+
+Defining a Date variable that starts on a fixed date and moves back 5 days at each iteration.
+
+```yaml
+date:
+  name: date_variable
+  description: 5 days before the new year, once per iteration
+  pattern: yyyy-MM-dd'T'HH:mm:ss
+  start_date: 2024-01-01T00:00:00
+  change_step: -5d
+  change_policy: each_iteration
+  scope: global
 ```
 
 ## JavaScript variable

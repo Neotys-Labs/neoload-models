@@ -10,6 +10,7 @@ import com.neotys.neoload.model.v3.project.Element;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 @JsonSubTypes(value = {
 		@JsonSubTypes.Type(value = ImmutableConstantVariable.class, name = "constant"),
+		@JsonSubTypes.Type(value = ImmutablePasswordVariable.class, name = "password"),
 		@JsonSubTypes.Type(value = ImmutableFileVariable.class, name = "file"),
 		@JsonSubTypes.Type(value = ImmutableCounterVariable.class, name = "counter"),
 		@JsonSubTypes.Type(value = ImmutableRandomNumberVariable.class, name = "random_number"),
@@ -18,8 +19,10 @@ import com.neotys.neoload.model.v3.project.Element;
 		@JsonSubTypes.Type(value = ImmutableJavaScriptVariable.class, name = "javascript"),
 		@JsonSubTypes.Type(value = ImmutableSharedQueueVariable.class, name = "shared_queue"),
 		@JsonSubTypes.Type(value = ImmutableListVariable.class, name = "list"),
-		@JsonSubTypes.Type(value = ImmutableSecretVaultVariable.class, name = "secret_vault"),
-		@JsonSubTypes.Type(value = ImmutableCurrentDateVariable.class, name = "current_date")
+		@JsonSubTypes.Type(value = ImmutableSqlVariable.class, name = "sql"),
+		@JsonSubTypes.Type(value = ImmutableCurrentDateVariable.class, name = "current_date"),
+		@JsonSubTypes.Type(value = ImmutableDateVariable.class, name = "date"),
+		@JsonSubTypes.Type(value = ImmutableSecretVaultVariable.class, name = "secret_vault")
 })
 public interface Variable extends Element {
 }

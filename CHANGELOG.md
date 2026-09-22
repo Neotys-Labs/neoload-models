@@ -105,6 +105,40 @@ otherwise.
     file: logs/custom.txt
 ```
 
+#### Requests
+
+**`parts`** — a multipart/form-data body on an HTTP request, as in the NeoLoad GUI. Use `parts`
+instead of `body`. Each part requires a `name`. A text part uses `value`; a file part uses
+`source_filename` (path relative to the project folder) and optionally `filename` (name sent to
+the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
+
+```yaml
+- request:
+    url: https://example.com/upload
+    method: POST
+    parts:
+    - name: comment
+      content_type: text/plain
+      charset: UTF-8
+      value: hello
+    - name: file
+      content_type: image/jpeg
+      filename: upload.jpg
+      source_filename: upload.jpg
+```
+
+#### Assertions
+
+**`duration_assertion`** — checks that a `request` or `custom_action` completed within
+`less_than` milliseconds.
+
+```yaml
+- request:
+    url: https://www.tricentis.com/
+    duration_assertion:
+      less_than: 2048
+```
+
 #### Variables
 
 Four variable types that already existed in the NeoLoad GUI are now writable in as-code.
