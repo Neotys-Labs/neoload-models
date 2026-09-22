@@ -33,26 +33,22 @@ public class IOSizeAssertionTest extends AbstractIOElementsTest {
 
 	private Project getSizeAssertionProject() {
 		final Request requestEquals = Request.builder()
-				.name("request_size_equals")
-				.url("http://www.neotys.com/download")
+				.url("http://www.neotys.com/download/equals")
 				.sizeAssertion(SizeAssertion.builder().equals(1024L).build())
 				.build();
 
 		final Request requestRange = Request.builder()
-				.name("request_size_range")
-				.url("http://www.neotys.com/download")
+				.url("http://www.neotys.com/download/range")
 				.sizeAssertion(SizeAssertion.builder().greaterThan(1024L).lessThan(2048L).build())
 				.build();
 
 		final Request requestGreaterThanOnly = Request.builder()
-				.name("request_size_greater_than_only")
-				.url("http://www.neotys.com/download")
+				.url("http://www.neotys.com/download/greater-than-only")
 				.sizeAssertion(SizeAssertion.builder().greaterThan(1024L).build())
 				.build();
 
 		final Request requestLessThanOnly = Request.builder()
-				.name("request_size_less_than_only")
-				.url("http://www.neotys.com/download")
+				.url("http://www.neotys.com/download/less-than-only")
 				.sizeAssertion(SizeAssertion.builder().lessThan(2048L).build())
 				.build();
 

@@ -4,24 +4,20 @@ user_paths:
   actions:
     steps:
     - request:
-        name: request_size_equals
-        url: http://www.neotys.com/download
+        url: http://www.neotys.com/download/equals
         size_assertion:
           equals: 1024
     - request:
-        name: request_size_range
-        url: http://www.neotys.com/download
+        url: http://www.neotys.com/download/range
         size_assertion:
           greater_than: 1024
           less_than: 2048
     - request:
-        name: request_size_greater_than_only
-        url: http://www.neotys.com/download
+        url: http://www.neotys.com/download/greater-than-only
         size_assertion:
           greater_than: 1024
     - request:
-        name: request_size_less_than_only
-        url: http://www.neotys.com/download
+        url: http://www.neotys.com/download/less-than-only
         size_assertion:
           less_than: 2048
     - custom_action:
