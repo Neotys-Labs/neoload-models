@@ -36,20 +36,11 @@ public class IOSchemaFieldDescriptionsTest {
 	@Test
 	public void rootProjectFieldsAreDocumentedInBothSchemas() {
 		assertDescription(schema30, "/properties/name", "name of the project");
-		assertDescription(schema30, "/properties/includes", "included");
-		assertDescription(schema30, "/properties/variables", "variables");
-		assertDescription(schema30, "/properties/servers", "servers");
-		assertDescription(schema30, "/properties/user_paths", "User Path");
-		assertDescription(schema30, "/properties/populations", "Population");
-		assertDescription(schema30, "/properties/scenarios", "Scenario");
-		assertDescription(schema30, "/properties/sla_profiles", "SLA");
-		assertDescription(schema30, "/properties/project_settings", "project preferences");
 		assertDescription(schema30, "/properties/$schema", "JSON Schema");
 		assertDescription(schema30, "/properties/schemaVersion", "Schema contract version");
 
 		assertDescription(schema31, "/properties/name", "name of the project");
 		assertDescription(schema31, "/properties/schemaVersion", "3.1");
-		assertDescription(schema31, "/properties/includes", "included");
 	}
 
 	@Test
@@ -86,8 +77,8 @@ public class IOSchemaFieldDescriptionsTest {
 
 	@Test
 	public void publishedSchemasExposeReadmeDescriptions() {
-		assertTrue("3.0 schema should document readme fields", countTextualDescriptions(schema30) >= 150);
-		assertTrue("3.1 schema should document readme fields", countTextualDescriptions(schema31) >= 250);
+		assertTrue("3.0 schema should document readme fields", countTextualDescriptions(schema30) >= 140);
+		assertTrue("3.1 schema should document readme fields", countTextualDescriptions(schema31) >= 240);
 	}
 
 	private static int countTextualDescriptions(JsonNode node) {

@@ -39,8 +39,7 @@
 			"type": "array",
 			"minItems": 1,
 			"additionalProperties": false,
-			"items": { "$ref": "#/definitions/common/text" },
-			"description": "The definition of as-code files to be included"
+			"items": { "$ref": "#/definitions/common/text" }
 		},
 		"variables": {
 			"$id": "#root/variables",
@@ -49,48 +48,50 @@
 			"additionalItems": false,
 			"minItems": 1,
 			"additionalProperties": false,
-			"items": { "anyOf": [{ "$ref": "#/definitions/variables/constant" }, { "$ref": "#/definitions/variables/file" }, { "$ref": "#/definitions/variables/counter" }, { "$ref": "#/definitions/variables/random_number" }, { "$ref": "#/definitions/variables/javascript" }] },
-			"description": "The definition of variables"
+			"items": {
+				"anyOf": [
+					{ "$ref": "#/definitions/variables/constant" },
+					{ "$ref": "#/definitions/variables/file" },
+					{ "$ref": "#/definitions/variables/counter" },
+					{ "$ref": "#/definitions/variables/random_number" },
+					{ "$ref": "#/definitions/variables/javascript" }
+				]
+			}
 		},
 		"servers": {
 			"$id": "#root/servers",
 			"title": "Servers",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/server" },
-			"description": "The definition of servers"
+			"items": { "$ref": "#/definitions/server" }
 		},
 		"sla_profiles": {
 			"$id": "#root/sla_profiles",
 			"title": "SLA Profiles",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/sla" },
-			"description": "The definition of SLA profiles"
+			"items": { "$ref": "#/definitions/sla" }
 		},
 		"populations": {
 			"$id": "#root/populations",
 			"title": "Populations",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/populations/population" },
-			"description": "The definition of Populations"
+			"items": { "$ref": "#/definitions/populations/population" }
 		},
 		"scenarios": {
 			"$id": "#root/scenarios",
 			"title": "Scenarios",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/scenario" },
-			"description": "The definition of Scenarios"
+			"items": { "$ref": "#/definitions/scenario" }
 		},
 		"user_paths": {
 			"$id": "#root/user_paths",
 			"title": "User_paths",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/user_paths/user_path" },
-			"description": "The definition of virtual User Paths"
+			"items": { "$ref": "#/definitions/user_paths/user_path" }
 		},
 		"project_settings": {
 			"$id": "#root/project_settings",
@@ -147,8 +148,7 @@
 					"type": "integer",
 					"description": "The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier."
 				}
-			},
-			"description": "The definition of project preferences"
+			}
 		}
 	},
 	"definitions": {
@@ -174,26 +174,17 @@
 			"duration": {
 				"$id": "#/definitions/common/duration",
 				"title": "Duration",
-				"anyOf": [
-					{ "$ref": "#/definitions/common/time" },
-					{ "$ref": "#/definitions/common/iterations" }
-				]
+				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
 			},
 			"stop_after_options": {
 				"$id": "#/definitions/common/stop_after_options",
 				"title": "variation_policy.stop_after values",
-				"anyOf": [
-					{ "$ref": "#/definitions/common/time" },
-					{ "type": "string", "enum": ["current_iteration"] }
-				]
+				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "type": "string", "enum": ["current_iteration"] }]
 			},
 			"start_after_options": {
 				"$id": "#/definitions/common/start_after",
 				"title": "Start after",
-				"anyOf": [
-					{ "$ref": "#/definitions/common/time" },
-					{ "$ref": "#/definitions/common/text" }
-				]
+				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/text" }]
 			},
 			"time": {
 				"$id": "#/definitions/common/time",
@@ -294,9 +285,7 @@
 						"properties": {
 							"column_names": {
 								"type": "array",
-								"items": [
-									{ "type": "string" }
-								],
+								"items": [{ "type": "string" }],
 								"description": "The list of column names. Use `${<variableName>.<columnName>}` to access variable values."
 							},
 							"is_first_line_column_names": {
@@ -505,17 +494,13 @@
 				"$id": "#/definitions/authentication/ntlm",
 				"title": "NTLM Authentication",
 				"type": "object",
-				"allOf": [
-					{ "$ref": "#/definitions/authentication/auth-generic-domain" }
-				]
+				"allOf": [{ "$ref": "#/definitions/authentication/auth-generic-domain" }]
 			},
 			"negotiate": {
 				"$id": "#/definitions/authentication/negotiate",
 				"title": "Negotiate Authentication",
 				"type": "object",
-				"allOf": [
-					{ "$ref": "#/definitions/authentication/auth-generic-domain" }
-				]
+				"allOf": [{ "$ref": "#/definitions/authentication/auth-generic-domain" }]
 			}
 		},
 		"sla": {
@@ -538,8 +523,7 @@
 					"type": "array",
 					"minItems": 1,
 					"additionalProperties": false,
-					"items": { "$ref": "#/definitions/sla/threshold" },
-					"description": "The definition of KPI thresholds"
+					"items": { "$ref": "#/definitions/sla/threshold" }
 				}
 			},
 			"threshold": {
@@ -945,18 +929,14 @@
 					"$id": "#/definitions/user_paths/actions/delay",
 					"title": "Action: Delay",
 					"type": "string",
-					"allOf": [
-						{ "$ref": "#/definitions/common/text" }
-					],
+					"allOf": [{ "$ref": "#/definitions/common/text" }],
 					"description": "The Delay Action pauses the Virtual User for a specified duration. This duration always applies and is not impacted by thinktime overriding."
 				},
 				"think_time": {
 					"$id": "#/definitions/user_paths/actions/think_time",
 					"title": "Action: Think Time",
 					"type": "string",
-					"allOf": [
-						{ "$ref": "#/definitions/common/text" }
-					],
+					"allOf": [{ "$ref": "#/definitions/common/text" }],
 					"description": "Think time is the time the user normally takes to make a decision to do the next task."
 				},
 				"javascript": {
