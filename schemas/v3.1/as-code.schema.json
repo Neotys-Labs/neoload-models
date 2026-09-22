@@ -16,9 +16,7 @@
 	"type": "object",
 	"additionalProperties": false,
 	"minProperties": 1,
-	"required": [
-		"name"
-	],
+	"required": ["name"],
 	"properties": {
 		"$schema": {
 			"$ref": "#/definitions/common/full_url",
@@ -26,14 +24,8 @@
 		},
 		"schemaVersion": {
 			"anyOf": [
-				{
-					"type": "string",
-					"const": "3.1"
-				},
-				{
-					"type": "number",
-					"const": 3.1
-				}
+				{ "type": "string", "const": "3.1" },
+				{ "type": "number", "const": 3.1 }
 			],
 			"description": "Schema contract version this file is written for. Must be 3.1 as a string or number for this schema."
 		},
@@ -46,9 +38,7 @@
 			"type": "array",
 			"minItems": 1,
 			"additionalProperties": false,
-			"items": {
-				"$ref": "#/definitions/common/text"
-			},
+			"items": { "$ref": "#/definitions/common/text" },
 			"description": "The definition of as-code files to be included"
 		},
 		"variables": {
@@ -99,9 +89,7 @@
 						"$ref": "#/definitions/variables/list",
 						"description": "List variable"
 					},
-					"sql": {
-						"$ref": "#/definitions/variables/sql"
-					},
+					"sql": { "$ref": "#/definitions/variables/sql" },
 					"random_uuid": {
 						"$ref": "#/definitions/variables/random_uuid",
 						"description": "Random UUID variable"
@@ -122,45 +110,35 @@
 			"title": "Servers",
 			"type": "array",
 			"minItems": 1,
-			"items": {
-				"$ref": "#/definitions/server"
-			},
+			"items": { "$ref": "#/definitions/server" },
 			"description": "The definition of servers"
 		},
 		"sla_profiles": {
 			"title": "SLA Profiles",
 			"type": "array",
 			"minItems": 1,
-			"items": {
-				"$ref": "#/definitions/sla"
-			},
+			"items": { "$ref": "#/definitions/sla" },
 			"description": "The definition of SLA profiles"
 		},
 		"populations": {
 			"title": "Populations",
 			"type": "array",
 			"minItems": 1,
-			"items": {
-				"$ref": "#/definitions/populations/population"
-			},
+			"items": { "$ref": "#/definitions/populations/population" },
 			"description": "The definition of Populations"
 		},
 		"scenarios": {
 			"title": "Scenarios",
 			"type": "array",
 			"minItems": 1,
-			"items": {
-				"$ref": "#/definitions/scenario"
-			},
+			"items": { "$ref": "#/definitions/scenario" },
 			"description": "The definition of Scenarios"
 		},
 		"user_paths": {
 			"title": "User_paths",
 			"type": "array",
 			"minItems": 1,
-			"items": {
-				"$ref": "#/definitions/user_paths/user_path"
-			},
+			"items": { "$ref": "#/definitions/user_paths/user_path" },
 			"description": "The definition of virtual User Paths"
 		},
 		"frameworks": {
@@ -172,12 +150,8 @@
 				"minProperties": 1,
 				"maxProperties": 1,
 				"properties": {
-					"builtin": {
-						"$ref": "#/definitions/framework/builtin_framework_ref"
-					},
-					"custom": {
-						"$ref": "#/definitions/framework/custom_framework"
-					}
+					"builtin": { "$ref": "#/definitions/framework/builtin_framework_ref" },
+					"custom": { "$ref": "#/definitions/framework/custom_framework" }
 				},
 				"additionalProperties": false
 			}
@@ -221,10 +195,7 @@
 				},
 				"qtest.auth_method": {
 					"type": "string",
-					"enum": [
-						"TOKEN",
-						"LOGIN_PWD"
-					],
+					"enum": ["TOKEN", "LOGIN_PWD"],
 					"description": "The way to authenticate to the qTest server. Allowed values are \"TOKEN\" and \"LOGIN_PWD\""
 				},
 				"qtest.project_id": {
@@ -269,37 +240,22 @@
 			"duration": {
 				"title": "Duration",
 				"anyOf": [
-					{
-						"$ref": "#/definitions/common/time"
-					},
-					{
-						"$ref": "#/definitions/common/iterations"
-					}
+					{ "$ref": "#/definitions/common/time" },
+					{ "$ref": "#/definitions/common/iterations" }
 				]
 			},
 			"stop_after_options": {
 				"title": "variation_policy.stop_after values",
 				"anyOf": [
-					{
-						"$ref": "#/definitions/common/time"
-					},
-					{
-						"type": "string",
-						"enum": [
-							"current_iteration"
-						]
-					}
+					{ "$ref": "#/definitions/common/time" },
+					{ "type": "string", "enum": ["current_iteration"] }
 				]
 			},
 			"start_after_options": {
 				"title": "Start after",
 				"anyOf": [
-					{
-						"$ref": "#/definitions/common/time"
-					},
-					{
-						"$ref": "#/definitions/common/text"
-					}
+					{ "$ref": "#/definitions/common/time" },
+					{ "$ref": "#/definitions/common/text" }
 				]
 			},
 			"time": {
@@ -341,51 +297,29 @@
 			"var_change_policy": {
 				"type": "string",
 				"default": "each_iteration",
-				"enum": [
-					"each_use",
-					"each_request",
-					"each_page",
-					"each_iteration",
-					"each_user"
-				]
+				"enum": ["each_use", "each_request", "each_page", "each_iteration", "each_user"]
 			},
 			"var_scope": {
 				"type": "string",
 				"default": "global",
-				"enum": [
-					"local",
-					"global",
-					"unique"
-				]
+				"enum": ["local", "global", "unique"]
 			},
 			"var_order": {
 				"type": "string",
 				"default": "global",
-				"enum": [
-					"sequential",
-					"random",
-					"any"
-				]
+				"enum": ["sequential", "random", "any"]
 			},
 			"var_out_of_value": {
 				"type": "string",
 				"default": "global",
-				"enum": [
-					"cycle",
-					"stop_test",
-					"no_value_code"
-				]
+				"enum": ["cycle", "stop_test", "no_value_code"]
 			},
 			"assertions": {
 				"type": "array",
 				"items": {
 					"oneOf": [
-						{
-							"$ref": "#/definitions/user_paths/content_assertion"
-						},
-						{
-							"$ref": "#/definitions/user_paths/assertion_wrapper"
-						}
+						{ "$ref": "#/definitions/user_paths/content_assertion" },
+						{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
 					]
 				}
 			}
@@ -393,9 +327,7 @@
 		"variables": {
 			"generic": {
 				"type": "object",
-				"required": [
-					"name"
-				],
+				"required": ["name"],
 				"properties": {
 					"name": {
 						"$ref": "#/definitions/common/name",
@@ -414,20 +346,14 @@
 			"constant": {
 				"title": "Constant",
 				"type": "object",
-				"required": [
-					"value"
-				],
+				"required": ["value"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"value": {
 								"anyOf": [
-									{
-										"$ref": "#/definitions/common/text"
-									},
+									{ "$ref": "#/definitions/common/text" },
 									"number"
 								],
 								"description": "The variable value"
@@ -440,21 +366,15 @@
 			"file": {
 				"title": "File",
 				"type": "object",
-				"required": [
-					"path"
-				],
+				"required": ["path"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"column_names": {
 								"type": "array",
 								"items": [
-									{
-										"type": "string"
-									}
+									{ "type": "string" }
 								],
 								"description": "The list of column names. Use `${<variableName>.<columnName>}` to access variable values."
 							},
@@ -497,15 +417,9 @@
 			"counter": {
 				"title": "Counter",
 				"type": "object",
-				"required": [
-					"start",
-					"end",
-					"increment"
-				],
+				"required": ["start", "end", "increment"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"start": {
@@ -536,14 +450,9 @@
 			"random_number": {
 				"title": "Random Number",
 				"type": "object",
-				"required": [
-					"min",
-					"max"
-				],
+				"required": ["min", "max"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"min": {
@@ -566,14 +475,9 @@
 			"random_string": {
 				"title": "Random String",
 				"type": "object",
-				"required": [
-					"min_length",
-					"max_length"
-				],
+				"required": ["min_length", "max_length"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"min_length": {
@@ -596,13 +500,9 @@
 			"password": {
 				"title": "Password",
 				"type": "object",
-				"required": [
-					"value"
-				],
+				"required": ["value"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"value": {
@@ -617,13 +517,9 @@
 			"date": {
 				"title": "Date",
 				"type": "object",
-				"required": [
-					"start_date"
-				],
+				"required": ["start_date"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"pattern": {
@@ -652,30 +548,21 @@
 			"list": {
 				"title": "List",
 				"type": "object",
-				"required": [
-					"column_names",
-					"values"
-				],
+				"required": ["column_names", "values"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"column_names": {
 								"type": "array",
-								"items": {
-									"type": "string"
-								},
+								"items": { "type": "string" },
 								"description": "The list of column names. Use `${<variableName>.<columnName>}` to access variable values."
 							},
 							"values": {
 								"type": "array",
 								"items": {
 									"type": "array",
-									"items": {
-										"type": "string"
-									}
+									"items": { "type": "string" }
 								},
 								"description": "The list of rows. Each row is a list of values, one per column of `column_names`."
 							},
@@ -704,37 +591,19 @@
 			"sql": {
 				"title": "SQL",
 				"type": "object",
-				"required": [
-					"query",
-					"driver",
-					"url"
-				],
+				"required": ["query", "driver", "url"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"query": {
-								"$ref": "#/definitions/common/text"
-							},
-							"driver": {
-								"$ref": "#/definitions/common/text"
-							},
-							"url": {
-								"$ref": "#/definitions/common/text"
-							},
-							"login": {
-								"$ref": "#/definitions/common/text"
-							},
-							"password": {
-								"$ref": "#/definitions/common/text"
-							},
+							"query": { "$ref": "#/definitions/common/text" },
+							"driver": { "$ref": "#/definitions/common/text" },
+							"url": { "$ref": "#/definitions/common/text" },
+							"login": { "$ref": "#/definitions/common/text" },
+							"password": { "$ref": "#/definitions/common/text" },
 							"column_names": {
 								"type": "array",
-								"items": {
-									"type": "string"
-								}
+								"items": { "type": "string" }
 							}
 						}
 					}
@@ -744,13 +613,9 @@
 			"javascript": {
 				"title": "Javascript",
 				"type": "object",
-				"required": [
-					"script"
-				],
+				"required": ["script"],
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"script": {
@@ -767,9 +632,7 @@
 				"title": "Random UUID",
 				"type": "object",
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"upper_case": {
@@ -791,9 +654,7 @@
 				"title": "Shared Queue",
 				"type": "object",
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"queue_size": {
@@ -810,9 +671,7 @@
 							},
 							"swap_file": {
 								"type": "object",
-								"required": [
-									"path"
-								],
+								"required": ["path"],
 								"properties": {
 									"path": {
 										"$ref": "#/definitions/common/text",
@@ -845,9 +704,7 @@
 				"title": "Current Date",
 				"type": "object",
 				"allOf": [
-					{
-						"$ref": "#/definitions/variables/generic"
-					},
+					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
 							"pattern": {
@@ -869,10 +726,7 @@
 		"server": {
 			"title": "Server",
 			"type": "object",
-			"required": [
-				"name",
-				"host"
-			],
+			"required": ["name", "host"],
 			"additionalProperties": false,
 			"properties": {
 				"name": {
@@ -885,20 +739,13 @@
 				},
 				"scheme": {
 					"type": "string",
-					"enum": [
-						"http",
-						"https"
-					],
+					"enum": ["http", "https"],
 					"description": "The scheme of the server. The available values are \"http\" and \"https\". The default value is \"http\"."
 				},
 				"port": {
 					"anyOf": [
-						{
-							"$ref": "#/definitions/common/text"
-						},
-						{
-							"$ref": "#/definitions/common/positive_number"
-						}
+						{ "$ref": "#/definitions/common/text" },
+						{ "$ref": "#/definitions/common/positive_number" }
 					],
 					"description": "The port of the server. The default value is \"80\" (for http scheme) or \"443\" (for https scheme)."
 				},
@@ -919,10 +766,7 @@
 		"authentication": {
 			"auth-generic": {
 				"type": "object",
-				"required": [
-					"login",
-					"password"
-				],
+				"required": ["login", "password"],
 				"properties": {
 					"login": {
 						"$ref": "#/definitions/common/text",
@@ -937,9 +781,7 @@
 			"auth-generic-domain": {
 				"type": "object",
 				"allOf": [
-					{
-						"$ref": "#/definitions/authentication/auth-generic"
-					},
+					{ "$ref": "#/definitions/authentication/auth-generic" },
 					{
 						"properties": {
 							"domain": {
@@ -955,9 +797,7 @@
 				"title": "Basic Authentication",
 				"type": "object",
 				"allOf": [
-					{
-						"$ref": "#/definitions/authentication/auth-generic"
-					},
+					{ "$ref": "#/definitions/authentication/auth-generic" },
 					{
 						"properties": {
 							"realm": {
@@ -973,9 +813,7 @@
 				"title": "NTLM Authentication",
 				"type": "object",
 				"allOf": [
-					{
-						"$ref": "#/definitions/authentication/auth-generic-domain"
-					}
+					{ "$ref": "#/definitions/authentication/auth-generic-domain" }
 				],
 				"unevaluatedProperties": false
 			},
@@ -983,9 +821,7 @@
 				"title": "Negotiate Authentication",
 				"type": "object",
 				"allOf": [
-					{
-						"$ref": "#/definitions/authentication/auth-generic-domain"
-					}
+					{ "$ref": "#/definitions/authentication/auth-generic-domain" }
 				],
 				"unevaluatedProperties": false
 			}
@@ -993,10 +829,7 @@
 		"sla": {
 			"title": "SLA Profile",
 			"type": "object",
-			"required": [
-				"name",
-				"thresholds"
-			],
+			"required": ["name", "thresholds"],
 			"additionalProperties": false,
 			"properties": {
 				"name": {
@@ -1012,9 +845,7 @@
 					"type": "array",
 					"minItems": 1,
 					"additionalProperties": false,
-					"items": {
-						"$ref": "#/definitions/sla/threshold"
-					},
+					"items": { "$ref": "#/definitions/sla/threshold" },
 					"description": "The definition of KPI thresholds"
 				}
 			},
@@ -1028,9 +859,7 @@
 			"population": {
 				"title": "Population",
 				"type": "object",
-				"required": [
-					"name"
-				],
+				"required": ["name"],
 				"additionalProperties": false,
 				"properties": {
 					"name": {
@@ -1050,9 +879,7 @@
 						"additionalItems": false,
 						"items": {
 							"type": "object",
-							"required": [
-								"name"
-							],
+							"required": ["name"],
 							"additionalProperties": false,
 							"properties": {
 								"name": {
@@ -1082,9 +909,7 @@
 			"constant_load": {
 				"title": "Constant Load",
 				"type": "object",
-				"required": [
-					"users"
-				],
+				"required": ["users"],
 				"additionalProperties": false,
 				"properties": {
 					"duration": {
@@ -1106,12 +931,8 @@
 					},
 					"rampup": {
 						"anyOf": [
-							{
-								"$ref": "#/definitions/common/time"
-							},
-							{
-								"$ref": "#/definitions/common/positive_number"
-							}
+							{ "$ref": "#/definitions/common/time" },
+							{ "$ref": "#/definitions/common/positive_number" }
 						],
 						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay."
 					}
@@ -1120,11 +941,7 @@
 			"rampup_load": {
 				"title": "Ramp-up Load",
 				"type": "object",
-				"required": [
-					"min_users",
-					"increment_users",
-					"increment_every"
-				],
+				"required": ["min_users", "increment_users", "increment_every"],
 				"properties": {
 					"duration": {
 						"$ref": "#/definitions/common/duration",
@@ -1165,11 +982,7 @@
 			"peaks_load": {
 				"title": "Peaks Load",
 				"type": "object",
-				"required": [
-					"minimum",
-					"maximum",
-					"start"
-				],
+				"required": ["minimum", "maximum", "start"],
 				"properties": {
 					"minimum": {
 						"$ref": "#/definitions/populations/peaks_phase",
@@ -1181,10 +994,7 @@
 					},
 					"start": {
 						"type": "string",
-						"enum": [
-							"minimum",
-							"maximum"
-						],
+						"enum": ["minimum", "maximum"],
 						"description": "Select the phase to start"
 					},
 					"duration": {
@@ -1209,10 +1019,7 @@
 			"peaks_phase": {
 				"title": "Peak Phase",
 				"type": "object",
-				"required": [
-					"users",
-					"duration"
-				],
+				"required": ["users", "duration"],
 				"additionalProperties": false,
 				"properties": {
 					"users": {
@@ -1228,26 +1035,18 @@
 			"custom_load": {
 				"title": "Custom Load",
 				"type": "object",
-				"required": [
-					"steps"
-				],
+				"required": ["steps"],
 				"properties": {
 					"steps": {
 						"type": "array",
 						"minItems": 1,
-						"items": {
-							"$ref": "#/definitions/populations/custom_policy_step"
-						},
+						"items": { "$ref": "#/definitions/populations/custom_policy_step" },
 						"description": "Steps to define the Virtual Users count for a specific period"
 					},
 					"rampup": {
 						"anyOf": [
-							{
-								"$ref": "#/definitions/common/time"
-							},
-							{
-								"$ref": "#/definitions/common/positive_number"
-							}
+							{ "$ref": "#/definitions/common/time" },
+							{ "$ref": "#/definitions/common/positive_number" }
 						],
 						"description": "Simultaneously or with a preset delay.There are different behaviours depending on duration mode (unlimited, time length, iterations) - unlimited/time length: This rule is used each time Virtual Users count is updated - iterations: This rule is used each time a new step starts"
 					},
@@ -1265,10 +1064,7 @@
 			"custom_policy_step": {
 				"title": "Custom Policy Step",
 				"type": "object",
-				"required": [
-					"when",
-					"users"
-				],
+				"required": ["when", "users"],
 				"properties": {
 					"when": {
 						"$ref": "#/definitions/common/duration",
@@ -1285,9 +1081,7 @@
 		"scenario": {
 			"title": "Scenario",
 			"type": "object",
-			"required": [
-				"name"
-			],
+			"required": ["name"],
 			"additionalProperties": false,
 			"properties": {
 				"name": {
@@ -1309,9 +1103,7 @@
 				},
 				"excluded_urls": {
 					"type": "array",
-					"items": {
-						"$ref": "#/definitions/common/text"
-					},
+					"items": { "$ref": "#/definitions/common/text" },
 					"description": "The regular expressions to ignore matching Requests from the scenario during the test playback"
 				},
 				"apm_configuration": {
@@ -1324,9 +1116,7 @@
 				},
 				"rendezvous_policies": {
 					"type": "array",
-					"items": {
-						"$ref": "#/definitions/scenario/rendezvous_policy"
-					},
+					"items": { "$ref": "#/definitions/scenario/rendezvous_policy" },
 					"description": "The list of the Rendezvous"
 				},
 				"populations": {
@@ -1337,9 +1127,7 @@
 					"additionalProperties": false,
 					"items": {
 						"type": "object",
-						"required": [
-							"name"
-						],
+						"required": ["name"],
 						"additionalProperties": false,
 						"properties": {
 							"name": {
@@ -1373,16 +1161,12 @@
 				"properties": {
 					"dynatrace_tags": {
 						"type": "array",
-						"items": {
-							"$ref": "#/definitions/common/text"
-						},
+						"items": { "$ref": "#/definitions/common/text" },
 						"description": "The list of Dynatrace services tags to monitor"
 					},
 					"dynatrace_anomaly_rules": {
 						"type": "array",
-						"items": {
-							"$ref": "#/definitions/scenario/dynatrace_anomaly_rule"
-						},
+						"items": { "$ref": "#/definitions/scenario/dynatrace_anomaly_rule" },
 						"description": "The list of rules watched by Dyatrace. A Dynatrace Problem is raised if the value is reached."
 					}
 				},
@@ -1391,12 +1175,7 @@
 			"dynatrace_anomaly_rule": {
 				"title": "Dynatrace Anomaly Rule",
 				"type": "object",
-				"required": [
-					"metric_id",
-					"operator",
-					"value",
-					"severity"
-				],
+				"required": ["metric_id", "operator", "value", "severity"],
 				"properties": {
 					"metric_id": {
 						"$ref": "#/definitions/common/text",
@@ -1404,31 +1183,19 @@
 					},
 					"operator": {
 						"type": "string",
-						"enum": [
-							"ABOVE",
-							"BELOW"
-						],
+						"enum": ["ABOVE", "BELOW"],
 						"description": "The operator. Two possible values: BELOW ABOVE"
 					},
 					"value": {
 						"anyOf": [
-							{
-								"$ref": "#/definitions/common/text"
-							},
+							{ "$ref": "#/definitions/common/text" },
 							"number"
 						],
 						"description": "The value of the threshold."
 					},
 					"severity": {
 						"type": "string",
-						"enum": [
-							"AVAILABILITY",
-							"CUSTOM_ALERT",
-							"ERROR",
-							"INFO",
-							"PERFORMANCE",
-							"RESOURCE_CONTENTION"
-						],
+						"enum": ["AVAILABILITY", "CUSTOM_ALERT", "ERROR", "INFO", "PERFORMANCE", "RESOURCE_CONTENTION"],
 						"description": "The severity of the problem. Six possible values: AVAILABILITY CUSTOM_ALERT ERROR INFO PERFORMANCE RESOURCE_CONTENTION"
 					}
 				},
@@ -1452,9 +1219,7 @@
 			"rendezvous_policy": {
 				"title": "Rendezvous Policy",
 				"type": "object",
-				"required": [
-					"name"
-				],
+				"required": ["name"],
 				"properties": {
 					"name": {
 						"$ref": "#/definitions/common/name",
@@ -1462,23 +1227,15 @@
 					},
 					"when": {
 						"anyOf": [
-							{
-								"$ref": "#/definitions/common/text"
-							},
-							{
-								"$ref": "#/definitions/common/positive_number"
-							}
+							{ "$ref": "#/definitions/common/text" },
+							{ "$ref": "#/definitions/common/positive_number" }
 						],
 						"description": "When to release the Rendezvous. Possible values are: \"manual\", percentage or positive number. The default value is 100%."
 					},
 					"timeout": {
 						"anyOf": [
-							{
-								"$ref": "#/definitions/common/time"
-							},
-							{
-								"$ref": "#/definitions/common/positive_number"
-							}
+							{ "$ref": "#/definitions/common/time" },
+							{ "$ref": "#/definitions/common/positive_number" }
 						],
 						"description": "The timeout between Virtual Users. Timeout duration is expressed in hours (h), minutes (m), seconds (s). The default value is 300s."
 					}
@@ -1490,10 +1247,7 @@
 			"user_path": {
 				"title": "User Path",
 				"type": "object",
-				"required": [
-					"name",
-					"actions"
-				],
+				"required": ["name", "actions"],
 				"additionalProperties": false,
 				"properties": {
 					"name": {
@@ -1506,11 +1260,7 @@
 					},
 					"user_session": {
 						"type": "string",
-						"enum": [
-							"reset_on",
-							"reset_off",
-							"reset_auto"
-						],
+						"enum": ["reset_on", "reset_off", "reset_auto"],
 						"description": "The \"user_session\" value can be: `reset_on` `reset_off` `reset_auto` The default value is `reset_auto`."
 					},
 					"init": {
@@ -1534,9 +1284,7 @@
 			"container": {
 				"title": "Containers",
 				"type": "object",
-				"required": [
-					"steps"
-				],
+				"required": ["steps"],
 				"additionalProperties": false,
 				"properties": {
 					"description": {
@@ -1563,14 +1311,7 @@
 				"minItems": 1,
 				"items": {
 					"oneOf": [
-						{
-							"type": "string",
-							"enum": [
-								"go_to_next_iteration",
-								"rendezvous",
-								"stop_vu"
-							]
-						},
+						{ "type": "string", "enum": ["go_to_next_iteration", "rendezvous", "stop_vu"] },
 						{
 							"type": "object",
 							"minProperties": 1,
@@ -1655,10 +1396,7 @@
 					"name": "transaction",
 					"title": "Action: Transaction",
 					"type": "object",
-					"required": [
-						"name",
-						"steps"
-					],
+					"required": ["name", "steps"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -1688,65 +1426,35 @@
 					"name": "http_page",
 					"title": "Action: HTTP Page",
 					"type": "object",
-					"required": [
-						"name",
-						"steps"
-					],
+					"required": ["name", "steps"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
 						"think_time": {
 							"$ref": "#/definitions/common/text",
 							"description": "The Think time duration"
 						},
 						"think_time_range": {
 							"type": "object",
-							"required": [
-								"min",
-								"max"
-							],
+							"required": ["min", "max"],
 							"properties": {
-								"min": {
-									"$ref": "#/definitions/common/text"
-								},
-								"max": {
-									"$ref": "#/definitions/common/text"
-								}
+								"min": { "$ref": "#/definitions/common/text" },
+								"max": { "$ref": "#/definitions/common/text" }
 							},
 							"additionalProperties": false
 						},
-						"think_time_mode": {
-							"type": "string",
-							"enum": [
-								"constant",
-								"random"
-							]
-						},
-						"screenshot": {
-							"type": "boolean"
-						},
-						"dynamic_action": {
-							"type": "boolean"
-						},
-						"force_encoding_for_dynamic_resources": {
-							"type": "boolean"
-						},
-						"steps": {
-							"$ref": "#/definitions/user_paths/steps"
-						}
+						"think_time_mode": { "type": "string", "enum": ["constant", "random"] },
+						"screenshot": { "type": "boolean" },
+						"dynamic_action": { "type": "boolean" },
+						"force_encoding_for_dynamic_resources": { "type": "boolean" },
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
 				},
 				"request": {
 					"title": "Action: HTTP/s Request",
 					"type": "object",
-					"required": [
-						"url"
-					],
+					"required": ["url"],
 					"additionalProperties": false,
 					"properties": {
 						"url": {
@@ -1770,9 +1478,7 @@
 									"/": {}
 								},
 								"patternProperties": {
-									".*": {
-										"type": "string"
-									}
+									".*": { "type": "string" }
 								},
 								"additionalProperties": false
 							},
@@ -1792,16 +1498,12 @@
 						},
 						"parts": {
 							"type": "array",
-							"items": {
-								"$ref": "#/definitions/user_paths/part"
-							},
+							"items": { "$ref": "#/definitions/user_paths/part" },
 							"description": "The multipart/form-data parts"
 						},
 						"extractors": {
 							"type": "array",
-							"items": {
-								"$ref": "#/definitions/user_paths/extractor"
-							},
+							"items": { "$ref": "#/definitions/user_paths/extractor" },
 							"description": "The extractor list"
 						},
 						"followRedirects": {
@@ -1813,12 +1515,8 @@
 							"type": "array",
 							"items": {
 								"oneOf": [
-									{
-										"$ref": "#/definitions/user_paths/content_assertion"
-									},
-									{
-										"$ref": "#/definitions/user_paths/assertion_wrapper"
-									}
+									{ "$ref": "#/definitions/user_paths/content_assertion" },
+									{ "$ref": "#/definitions/user_paths/assertion_wrapper" }
 								]
 							},
 							"description": "The list of assertions to validate the response content"
@@ -1829,44 +1527,30 @@
 						}
 					},
 					"not": {
-						"required": [
-							"body",
-							"bodybinary"
-						]
+						"required": ["body", "bodybinary"]
 					},
 					"description": "A request defines a plain HTTP request."
 				},
 				"delay": {
 					"title": "Action: Delay",
 					"anyOf": [
-						{
-							"$ref": "#/definitions/common/text"
-						},
-						{
-							"$ref": "#/definitions/common/positive_number"
-						}
+						{ "$ref": "#/definitions/common/text" },
+						{ "$ref": "#/definitions/common/positive_number" }
 					],
 					"description": "The Delay Action pauses the Virtual User for a specified duration. This duration always applies and is not impacted by thinktime overriding."
 				},
 				"think_time": {
 					"title": "Action: Think Time",
 					"anyOf": [
-						{
-							"$ref": "#/definitions/common/text"
-						},
-						{
-							"$ref": "#/definitions/common/positive_number"
-						}
+						{ "$ref": "#/definitions/common/text" },
+						{ "$ref": "#/definitions/common/positive_number" }
 					],
 					"description": "Think time is the time the user normally takes to make a decision to do the next task."
 				},
 				"javascript": {
 					"title": "Action: Javascript",
 					"type": "object",
-					"required": [
-						"name",
-						"script"
-					],
+					"required": ["name", "script"],
 					"additionalProperties": false,
 					"properties": {
 						"name": {
@@ -1887,9 +1571,7 @@
 				"if": {
 					"title": "Action: If",
 					"type": "object",
-					"required": [
-						"then"
-					],
+					"required": ["then"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -1905,10 +1587,7 @@
 						},
 						"match": {
 							"type": "string",
-							"enum": [
-								"any",
-								"all"
-							],
+							"enum": ["any", "all"],
 							"default": "any",
 							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
 						},
@@ -1927,9 +1606,7 @@
 				"while": {
 					"title": "Action: While",
 					"type": "object",
-					"required": [
-						"steps"
-					],
+					"required": ["steps"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -1945,10 +1622,7 @@
 						},
 						"match": {
 							"type": "string",
-							"enum": [
-								"any",
-								"all"
-							],
+							"enum": ["any", "all"],
 							"default": "any",
 							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
 						},
@@ -1963,10 +1637,7 @@
 				"loop": {
 					"title": "Action: Loop",
 					"type": "object",
-					"required": [
-						"count",
-						"steps"
-					],
+					"required": ["count", "steps"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -1978,12 +1649,8 @@
 						},
 						"count": {
 							"anyOf": [
-								{
-									"$ref": "#/definitions/common/text"
-								},
-								{
-									"$ref": "#/definitions/common/positive_number"
-								}
+								{ "$ref": "#/definitions/common/text" },
+								{ "$ref": "#/definitions/common/positive_number" }
 							],
 							"description": "The number of times to execute"
 						},
@@ -1998,10 +1665,7 @@
 				"switch": {
 					"title": "Action: Switch",
 					"type": "object",
-					"required": [
-						"value",
-						"default"
-					],
+					"required": ["value", "default"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -2017,9 +1681,7 @@
 						},
 						"case": {
 							"type": "array",
-							"items": {
-								"$ref": "#/definitions/user_paths/case"
-							},
+							"items": { "$ref": "#/definitions/user_paths/case" },
 							"description": "The case statement list"
 						},
 						"default": {
@@ -2033,10 +1695,7 @@
 				"custom_action": {
 					"title": "Action: Custom Action",
 					"type": "object",
-					"required": [
-						"name",
-						"type"
-					],
+					"required": ["name", "type"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -2052,9 +1711,7 @@
 						},
 						"parameters": {
 							"type": "array",
-							"items": {
-								"$ref": "#/definitions/user_paths/custom-action-parameter"
-							},
+							"items": { "$ref": "#/definitions/user_paths/custom-action-parameter" },
 							"description": "The action parameter list"
 						},
 						"asRequest": {
@@ -2077,9 +1734,7 @@
 				"rendezvous": {
 					"title": "Action: Rendezvous",
 					"type": "object",
-					"required": [
-						"name"
-					],
+					"required": ["name"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -2096,9 +1751,7 @@
 				"go_to_next_iteration": {
 					"title": "Action: Go to next iteration",
 					"type": "string",
-					"enum": [
-						"go_to_next_iteration"
-					]
+					"enum": ["go_to_next_iteration"]
 				},
 				"stop_vu": {
 					"title": "Action: Stop Virtual User",
@@ -2116,9 +1769,7 @@
 				"fork": {
 					"title": "Action: Fork",
 					"type": "object",
-					"required": [
-						"steps"
-					],
+					"required": ["steps"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -2144,39 +1795,24 @@
 				"wait_until": {
 					"title": "Action: Wait Until",
 					"type": "object",
-					"required": [
-						"conditions"
-					],
+					"required": ["conditions"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name"
-						},
-						"description": {
-							"$ref": "#/definitions/common/text"
-						},
-						"conditions": {
-							"$ref": "#/definitions/common/conditions"
-						},
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"conditions": { "$ref": "#/definitions/common/conditions" },
 						"match": {
 							"type": "string",
-							"enum": [
-								"any",
-								"all"
-							],
+							"enum": ["any", "all"],
 							"default": "any"
 						},
-						"timeout": {
-							"$ref": "#/definitions/common/text"
-						}
+						"timeout": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				},
 				"variable_modifier": {
 					"title": "Action: Variable Modifier",
 					"type": "object",
-					"required": [
-						"variable_name"
-					],
+					"required": ["variable_name"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -2188,10 +1824,7 @@
 						},
 						"category": {
 							"type": "string",
-							"enum": [
-								"predefined",
-								"shared_queue"
-							],
+							"enum": ["predefined", "shared_queue"],
 							"default": "predefined",
 							"description": "The category of the variable. The available values are `predefined` and `shared_queue`."
 						},
@@ -2201,12 +1834,7 @@
 						},
 						"mode": {
 							"type": "string",
-							"enum": [
-								"next_value",
-								"init_value",
-								"add_shared_queue_value",
-								"poll_shared_queue"
-							],
+							"enum": ["next_value", "init_value", "add_shared_queue_value", "poll_shared_queue"],
 							"default": "next_value",
 							"description": "The operation to apply. Available values depend on `category`: - `predefined`: `next_value` (take next value), `init_value` (reset to first value) - `shared_queue`: `add_shared_queue_value` (add a value to the queue), `poll_shared_queue` (consume a value from the queue into the variable)"
 						},
@@ -2221,9 +1849,7 @@
 				"debug_logger": {
 					"title": "Action: Debug Logger",
 					"type": "object",
-					"required": [
-						"text"
-					],
+					"required": ["text"],
 					"properties": {
 						"text": {
 							"$ref": "#/definitions/common/text",
@@ -2251,11 +1877,7 @@
 						},
 						"caught_exceptions": {
 							"type": "string",
-							"enum": [
-								"errors",
-								"assertions",
-								"all"
-							],
+							"enum": ["errors", "assertions", "all"],
 							"default": "errors",
 							"description": "Exception types to catch: `errors`, `assertions`, `all`. Defaults to `errors`."
 						},
@@ -2274,9 +1896,7 @@
 				"web_page": {
 					"title": "Action: Web Page",
 					"type": "object",
-					"required": [
-						"steps"
-					],
+					"required": ["steps"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -2295,9 +1915,7 @@
 							"oneOf": [
 								{
 									"type": "object",
-									"required": [
-										"value"
-									],
+									"required": ["value"],
 									"properties": {
 										"value": {
 											"$ref": "#/definitions/user_paths/actions/web_page_think_time_value",
@@ -2308,9 +1926,7 @@
 								},
 								{
 									"type": "object",
-									"required": [
-										"max"
-									],
+									"required": ["max"],
 									"properties": {
 										"min": {
 											"$ref": "#/definitions/user_paths/actions/web_page_think_time_value",
@@ -2328,19 +1944,12 @@
 						},
 						"playback": {
 							"type": "string",
-							"enum": [
-								"parallel",
-								"sequential"
-							],
+							"enum": ["parallel", "sequential"],
 							"description": "How the Web Page's steps are played: `parallel` (default) or `sequential`"
 						},
 						"execute_resources": {
 							"type": "string",
-							"enum": [
-								"static",
-								"dynamic",
-								"dynamic_forced_encoding"
-							],
+							"enum": ["static", "dynamic", "dynamic_forced_encoding"],
 							"description": "How the Web Page's resources are executed: `static` (default), `dynamic` or `dynamic_forced_encoding`"
 						},
 						"steps": {
@@ -2360,9 +1969,7 @@
 			"part": {
 				"title": "Multipart Part",
 				"type": "object",
-				"required": [
-					"name"
-				],
+				"required": ["name"],
 				"properties": {
 					"name": {
 						"$ref": "#/definitions/common/text",
@@ -2397,9 +2004,7 @@
 			},
 			"extractor": {
 				"type": "object",
-				"required": [
-					"name"
-				],
+				"required": ["name"],
 				"additionalProperties": false,
 				"properties": {
 					"name": {
@@ -2409,11 +2014,7 @@
 					"from": {
 						"type": "string",
 						"default": "body",
-						"enum": [
-							"header",
-							"body",
-							"both"
-						],
+						"enum": ["header", "body", "both"],
 						"description": "The response part where to extract value. The available values are \"header\", \"body\" and \"both\". The default value is \"body\"."
 					},
 					"xpath": {
@@ -2439,10 +2040,7 @@
 					},
 					"decode": {
 						"type": "string",
-						"enum": [
-							"html",
-							"url"
-						],
+						"enum": ["html", "url"],
 						"description": "The decoder to apply on the value. The available values are \"html\" and \"url\"."
 					},
 					"extract_once": {
@@ -2499,22 +2097,10 @@
 			"size_assertion": {
 				"title": "Size Assertion",
 				"type": "object",
-				"required": [
-					"operator",
-					"value"
-				],
+				"required": ["operator", "value"],
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name"
-					},
-					"operator": {
-						"type": "string",
-						"enum": [
-							"equals",
-							"less_than",
-							"greater_than"
-						]
-					},
+					"name": { "$ref": "#/definitions/common/name" },
+					"operator": { "type": "string", "enum": ["equals", "less_than", "greater_than"] },
 					"value": {
 						"type": "integer",
 						"minimum": 0
@@ -2525,9 +2111,7 @@
 			"duration_assertion": {
 				"title": "Duration Assertion",
 				"type": "object",
-				"required": [
-					"less_than"
-				],
+				"required": ["less_than"],
 				"properties": {
 					"less_than": {
 						"type": "integer",
@@ -2544,23 +2128,15 @@
 				"minProperties": 1,
 				"maxProperties": 1,
 				"properties": {
-					"content": {
-						"$ref": "#/definitions/user_paths/content_assertion"
-					},
-					"size": {
-						"$ref": "#/definitions/user_paths/size_assertion"
-					},
-					"duration": {
-						"$ref": "#/definitions/user_paths/duration_assertion"
-					}
+					"content": { "$ref": "#/definitions/user_paths/content_assertion" },
+					"size": { "$ref": "#/definitions/user_paths/size_assertion" },
+					"duration": { "$ref": "#/definitions/user_paths/duration_assertion" }
 				},
 				"additionalProperties": false
 			},
 			"case": {
 				"type": "object",
-				"required": [
-					"value"
-				],
+				"required": ["value"],
 				"properties": {
 					"description": {
 						"$ref": "#/definitions/common/text",
@@ -2568,9 +2144,7 @@
 					},
 					"value": {
 						"anyOf": [
-							{
-								"$ref": "#/definitions/common/text"
-							},
+							{ "$ref": "#/definitions/common/text" },
 							"number"
 						],
 						"description": "The value of the case"
@@ -2592,10 +2166,7 @@
 			},
 			"custom-action-parameter": {
 				"type": "object",
-				"required": [
-					"name",
-					"value"
-				],
+				"required": ["name", "value"],
 				"properties": {
 					"name": {
 						"$ref": "#/definitions/common/name",
@@ -2607,10 +2178,7 @@
 					},
 					"type": {
 						"type": "string",
-						"enum": [
-							"TEXT",
-							"PASSWORD"
-						],
+						"enum": ["TEXT", "PASSWORD"],
 						"default": "TEXT",
 						"description": "The kind of value. The available values are `TEXT` and `PASSWORD`. The default value is `TEXT`. A `PASSWORD` parameter is stored encrypted in the NeoLoad project."
 					}
@@ -2622,16 +2190,10 @@
 			"builtin_framework_ref": {
 				"title": "Built-in Framework Reference",
 				"type": "object",
-				"required": [
-					"name"
-				],
+				"required": ["name"],
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name"
-					},
-					"description": {
-						"$ref": "#/definitions/common/text"
-					},
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
 					"enabled": {
 						"type": "boolean",
 						"default": true
@@ -2642,17 +2204,10 @@
 			"custom_framework": {
 				"title": "Custom Framework",
 				"type": "object",
-				"required": [
-					"name",
-					"parameters"
-				],
+				"required": ["name", "parameters"],
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name"
-					},
-					"description": {
-						"$ref": "#/definitions/common/text"
-					},
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
 					"enabled": {
 						"type": "boolean",
 						"default": true
@@ -2660,9 +2215,7 @@
 					"parameters": {
 						"type": "array",
 						"minItems": 1,
-						"items": {
-							"$ref": "#/definitions/framework/dynamic_parameter"
-						}
+						"items": { "$ref": "#/definitions/framework/dynamic_parameter" }
 					}
 				},
 				"additionalProperties": false
@@ -2670,38 +2223,22 @@
 			"dynamic_parameter": {
 				"title": "Dynamic Parameter",
 				"type": "object",
-				"required": [
-					"name"
-				],
+				"required": ["name"],
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name"
-					},
-					"description": {
-						"$ref": "#/definitions/common/text"
-					},
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
 					"enabled": {
 						"type": "boolean",
 						"default": true
 					},
 					"extraction_source": {
 						"type": "string",
-						"enum": [
-							"body",
-							"headers",
-							"all"
-						],
+						"enum": ["body", "headers", "all"],
 						"default": "body"
 					},
-					"xpath": {
-						"$ref": "#/definitions/common/text"
-					},
-					"jsonpath": {
-						"$ref": "#/definitions/common/text"
-					},
-					"regexp": {
-						"$ref": "#/definitions/common/text"
-					},
+					"xpath": { "$ref": "#/definitions/common/text" },
+					"jsonpath": { "$ref": "#/definitions/common/text" },
+					"regexp": { "$ref": "#/definitions/common/text" },
 					"template": {
 						"$ref": "#/definitions/common/text",
 						"default": "$1$"
