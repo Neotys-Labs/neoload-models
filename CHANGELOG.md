@@ -228,6 +228,12 @@ project the GUI accepts.
 - The JSON Schema restricted `method` to a fixed enum and therefore rejected a custom HTTP method,
   which the model has always accepted. It now accepts any string, with `GET` as the default.
 
+- **A project still being designed can be written and read back.** A user path with no step yet and
+  a scenario with no population yet were rejected on load, so a file NeoLoad had just written could
+  not be reopened. `steps` and a scenario's `populations` are now optional, and an empty step list
+  is omitted on write instead of being serialised as `[]`. `while`, `loop`, `fork` and `web_page`
+  still require at least one step.
+
 ---
 
 ## [3.0] — up to NeoLoad 2026.2

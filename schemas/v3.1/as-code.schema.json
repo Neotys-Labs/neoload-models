@@ -796,7 +796,6 @@
 				"populations": {
 					"title": "Scenario Populations",
 					"type": "array",
-					"minItems": 1,
 					"additionalItems": false,
 					"additionalProperties": false,
 					"items": {
@@ -889,7 +888,6 @@
 			"container": {
 				"title": "Containers",
 				"type": "object",
-				"required": ["steps"],
 				"additionalProperties": false,
 				"properties": {
 					"description": { "$ref": "#/definitions/common/text" },
@@ -903,7 +901,6 @@
 			"steps": {
 				"title": "Steps",
 				"type": "array",
-				"minItems": 1,
 				"items": {
 					"oneOf": [
 						{
@@ -947,7 +944,7 @@
 					"name": "transaction",
 					"title": "Action: Transaction",
 					"type": "object",
-					"required": ["name", "steps"],
+					"required": ["name"],
 					"properties": {
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
@@ -1090,7 +1087,10 @@
 							"enum": ["any", "all"],
 							"default": "any"
 						},
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": {
+							"allOf": [{ "$ref": "#/definitions/user_paths/steps" }],
+							"minItems": 1
+						}
 					},
 					"additionalProperties": false
 				},
@@ -1102,7 +1102,10 @@
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"count": { "anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }] },
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": {
+							"allOf": [{ "$ref": "#/definitions/user_paths/steps" }],
+							"minItems": 1
+						}
 					},
 					"additionalProperties": false
 				},
@@ -1180,7 +1183,10 @@
 							"type": "boolean",
 							"default": true
 						},
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": {
+							"allOf": [{ "$ref": "#/definitions/user_paths/steps" }],
+							"minItems": 1
+						}
 					},
 					"additionalProperties": false
 				},
@@ -1297,7 +1303,10 @@
 							"type": "string",
 							"enum": ["static", "dynamic", "dynamic_forced_encoding"]
 						},
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": {
+							"allOf": [{ "$ref": "#/definitions/user_paths/steps" }],
+							"minItems": 1
+						}
 					},
 					"additionalProperties": false
 				},

@@ -19,8 +19,6 @@ import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
-import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
-import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Container.STEPS, AssertionsElement.ASSERTIONS})
@@ -43,7 +41,6 @@ public interface Container extends Step, SlaElement, AssertionsElement {
 		return DEFAULT_NAME;
 	}
 
-	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
 	@JsonSerialize(using = StepsSerializer.class)
 	@JsonDeserialize(using = StepsDeserializer.class)
