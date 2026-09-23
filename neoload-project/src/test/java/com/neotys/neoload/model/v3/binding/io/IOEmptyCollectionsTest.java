@@ -16,8 +16,9 @@ import com.neotys.neoload.model.v3.project.userpath.UserPath;
 
 
 /**
- * A project being designed can hold a user path with no step yet and a scenario with no population yet.
- * Such a project must round-trip: the export omits the empty collections and the loader accepts the result.
+ * A project being designed can hold user path containers and transactions with no step yet, and a scenario
+ * with no population yet. Such a project must round-trip: the export omits the empty collections and the
+ * loader accepts the result.
  */
 public class IOEmptyCollectionsTest extends AbstractIOElementsTest {
 
@@ -45,6 +46,22 @@ public class IOEmptyCollectionsTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
+		final UserPath userPathWithEmptyContainers = UserPath.builder()
+				.name("MyUserPathWithEmptyContainers")
+				.init(Container.builder()
+						.name("init")
+						.build())
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(Container.builder()
+								.name("MyTransaction")
+								.build())
+						.build())
+				.end(Container.builder()
+						.name("end")
+						.build())
+				.build();
+
 		final Population population = Population.builder()
 				.name("MyPopulation")
 				.addUserPaths(UserPathPolicy.builder()
@@ -58,7 +75,7 @@ public class IOEmptyCollectionsTest extends AbstractIOElementsTest {
 
 		return Project.builder()
 				.name("MyProject")
-				.addUserPaths(userPath)
+				.addUserPaths(userPath, userPathWithEmptyContainers)
 				.addPopulations(population)
 				.addScenarios(scenario)
 				.build();
