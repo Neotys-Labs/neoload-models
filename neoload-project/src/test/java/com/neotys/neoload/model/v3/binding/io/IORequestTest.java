@@ -1,17 +1,15 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
+import static org.junit.Assert.assertNotNull;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.assertNotNull;
-
+import org.junit.Test;
 
 public class IORequestTest extends AbstractIOElementsTest {
 

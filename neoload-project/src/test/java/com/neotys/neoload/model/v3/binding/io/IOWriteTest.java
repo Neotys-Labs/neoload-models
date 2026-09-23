@@ -58,7 +58,8 @@ public class IOWriteTest extends AbstractIOElementsTest {
 			"test-assert-content-only-required",
 			"test-assert-content-required-and-optional",
 			"test-assert-duration-request",
-			"test-assert-duration-custom-action"
+			"test-assert-duration-custom-action",
+			"test-assert-size-custom-action"
 	};
 
 	@Test

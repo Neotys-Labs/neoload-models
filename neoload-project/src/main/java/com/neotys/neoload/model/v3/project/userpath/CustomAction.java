@@ -8,18 +8,19 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertionElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertionElement;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import org.immutables.value.Value;
 
 @JsonInclude(value = Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, CustomAction.TYPE, CustomAction.PARAMETERS, CustomAction.AS_REQUEST, CustomAction.LIBRARY_PATH, DurationAssertionElement.DURATION_ASSERTION})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, CustomAction.TYPE, CustomAction.PARAMETERS, CustomAction.AS_REQUEST, CustomAction.LIBRARY_PATH, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION})
 @JsonSerialize(as = ImmutableCustomAction.class)
 @JsonDeserialize(as = ImmutableCustomAction.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface CustomAction extends Step, DurationAssertionElement {
+public interface CustomAction extends Step, DurationAssertionElement, SizeAssertionElement {
 	String TYPE = "type";
 	String PARAMETERS = "parameters";
 	String AS_REQUEST = "asRequest";

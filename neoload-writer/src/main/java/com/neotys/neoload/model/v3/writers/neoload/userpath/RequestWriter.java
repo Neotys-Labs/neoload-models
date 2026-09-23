@@ -1,13 +1,5 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import com.google.common.net.MediaType;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
@@ -18,7 +10,12 @@ import com.neotys.neoload.model.v3.util.URL;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
-
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class RequestWriter extends ElementWriter {
 

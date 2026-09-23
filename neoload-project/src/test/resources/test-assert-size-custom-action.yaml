@@ -1,0 +1,27 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        url: http://www.neotys.com/download/equals
+        size_assertion:
+          equals: 1024
+    - request:
+        url: http://www.neotys.com/download/range
+        size_assertion:
+          greater_than: 1024
+          less_than: 2048
+    - request:
+        url: http://www.neotys.com/download/greater-than-only
+        size_assertion:
+          greater_than: 1024
+    - request:
+        url: http://www.neotys.com/download/less-than-only
+        size_assertion:
+          less_than: 2048
+    - custom_action:
+        name: sql action
+        type: SQL
+        size_assertion:
+          less_than: 2048

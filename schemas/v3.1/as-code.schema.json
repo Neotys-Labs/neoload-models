@@ -61,12 +61,19 @@
 					"date": { "$ref": "#/definitions/variables/date" },
 					"current_date": { "$ref": "#/definitions/variables/current_date" },
 					"list": { "$ref": "#/definitions/variables/list" },
-					"sql": { "$ref": "#/definitions/variables/sql" },
+					"sql": {
+						"$ref": "#/definitions/variables/sql",
+						"description": "A list or table of values loaded from the result of a SQL query executed on a database."
+					},
 					"random_uuid": { "$ref": "#/definitions/variables/random_uuid" },
 					"shared_queue": { "$ref": "#/definitions/variables/shared_queue" },
 					"javascript": {
 						"$ref": "#/definitions/variables/javascript",
 						"description": "Execution of a Javascript script."
+					},
+					"secret_vault": {
+						"$ref": "#/definitions/variables/secret_vault",
+						"description": "A reference to a secret stored in an external vault provider configured in NeoLoad Web (HashiCorp Vault or AWS Secrets Manager). The provider type is resolved server-side from provider_id; it is not stored in the as-code file."
 					}
 				}
 			}
@@ -521,19 +528,47 @@
 			"sql": {
 				"title": "SQL",
 				"type": "object",
-				"required": ["query", "driver", "url"],
+				"required": ["url", "query"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"query": { "$ref": "#/definitions/common/text" },
-							"driver": { "$ref": "#/definitions/common/text" },
-							"url": { "$ref": "#/definitions/common/text" },
-							"login": { "$ref": "#/definitions/common/text" },
-							"password": { "$ref": "#/definitions/common/text" },
+							"driver": {
+								"$ref": "#/definitions/common/text",
+								"description": "The JDBC driver class name of the database. When not specified, the driver is derived from url, and it is required when url does not match a database known to NeoLoad."
+							},
+							"url": {
+								"$ref": "#/definitions/common/text",
+								"description": "The JDBC connection url of the database."
+							},
+							"login": {
+								"$ref": "#/definitions/common/text",
+								"description": "The login used to connect to the database."
+							},
+							"password": {
+								"$ref": "#/definitions/common/text",
+								"description": "The password used to connect to the database."
+							},
+							"query": {
+								"$ref": "#/definitions/common/text",
+								"description": "The SQL query returning the variable values."
+							},
 							"column_names": {
 								"type": "array",
-								"items": { "type": "string" }
+								"items": { "type": "string" },
+								"description": "Overrides the column names taken from the query result set. When omitted, NeoLoad names each column after the matching column of the result set. Use `${<variableName>.<columnName>}` to access variable values."
+							},
+							"scope": {
+								"$ref": "#/definitions/common/var_scope",
+								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
+							},
+							"order": {
+								"$ref": "#/definitions/common/var_order",
+								"description": "The values can be distributed in a set order. The value of order can be: `sequential` `random` `any` The default value is `any`."
+							},
+							"out_of_value": {
+								"$ref": "#/definitions/common/var_out_of_value",
+								"description": "When no values are left, several policies can be applied. The value of \"out_of_value\" can be: `cycle` `stop_test` `no_value_code` The default value is `cycle`."
 							}
 						}
 					}
@@ -648,6 +683,28 @@
 					}
 				],
 				"unevaluatedProperties": false
+			},
+			"secret_vault": {
+				"title": "Secret Vault",
+				"type": "object",
+				"required": ["provider_id", "secret_id"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"provider_id": {
+								"$ref": "#/definitions/common/text",
+								"description": "The opaque NeoLoad Web id of the configured vault provider"
+							},
+							"secret_id": {
+								"$ref": "#/definitions/common/text",
+								"description": "The location of the secret within the provider. For HashiCorp Vault, the path within the mount (the mount is configured on the vault provider in NeoLoad Web). For AWS Secrets Manager, the secret name or ARN."
+							}
+						}
+					}
+				],
+				"unevaluatedProperties": false,
+				"description": "A reference to a secret stored in an external vault provider configured in NeoLoad Web (HashiCorp Vault or AWS Secrets Manager). The provider type is resolved server-side from provider_id; it is not stored in the as-code file."
 			}
 		},
 		"server": {
@@ -1339,6 +1396,10 @@
 						"duration_assertion": {
 							"$ref": "#/definitions/user_paths/duration_assertion",
 							"description": "Checks that the request completed within a given duration"
+						},
+						"size_assertion": {
+							"$ref": "#/definitions/user_paths/size_assertion",
+							"description": "Checks the length of the response content, in bytes."
 						}
 					},
 					"not": { "required": ["body", "bodybinary"] },
@@ -1468,6 +1529,10 @@
 						"duration_assertion": {
 							"$ref": "#/definitions/user_paths/duration_assertion",
 							"description": "Checks that the action completed within a given duration"
+						},
+						"size_assertion": {
+							"$ref": "#/definitions/user_paths/size_assertion",
+							"description": "Checks the length of the response content, in bytes."
 						}
 					},
 					"additionalProperties": false,
@@ -1822,19 +1887,34 @@
 			"size_assertion": {
 				"title": "Size Assertion",
 				"type": "object",
-				"required": ["operator", "value"],
+				"minProperties": 1,
 				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"operator": {
-						"type": "string",
-						"enum": ["equals", "less_than", "greater_than"]
+					"equals": {
+						"$ref": "#/definitions/user_paths/size_assertion_bound",
+						"description": "The response size must be exactly this number of bytes"
 					},
-					"value": {
-						"type": "integer",
-						"minimum": 0
+					"greater_than": {
+						"$ref": "#/definitions/user_paths/size_assertion_bound",
+						"description": "The response size must be strictly greater than this size, in bytes"
+					},
+					"less_than": {
+						"$ref": "#/definitions/user_paths/size_assertion_bound",
+						"description": "The response size must be strictly lower than this size, in bytes"
 					}
 				},
-				"additionalProperties": false
+				"additionalProperties": false,
+				"not": {
+					"required": ["equals"],
+					"anyOf": [
+						{ "required": ["greater_than"] },
+						{ "required": ["less_than"] }
+					]
+				}
+			},
+			"size_assertion_bound": {
+				"title": "Size Assertion Bound",
+				"type": "integer",
+				"minimum": 0
 			},
 			"duration_assertion": {
 				"title": "Duration Assertion",

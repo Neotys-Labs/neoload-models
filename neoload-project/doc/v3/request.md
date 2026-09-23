@@ -16,6 +16,7 @@ A request defines a plain HTTP request.
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
 | [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration                 | -               | -        | 2026.3 |
+| [size_assertion](size_assertion.md) | The assertion to validate the response size                                   | -               | -        | 2026.3 |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
 | followRedirects                     | When `true`, the HTTP redirections returned by the server are followed.</br>The default value is `false`. | -               | -        |       |
 
