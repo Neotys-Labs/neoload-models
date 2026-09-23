@@ -256,8 +256,6 @@ The `body`, `bodybinary` and `binarySourceFile` fields are mutually exclusive: a
 
 Like `body`, `binarySourceFile` is only sent for the `POST` and `PUT` methods, and is ignored for the others.
 
-When converting to a NeoLoad project, the file is copied into `binary-bodies/` so CheckVU and Load Generators include it.
-
 #### Example
 
 Defining an HTTP request whose body is the contents of `payloads/hello.bin`.

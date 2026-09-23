@@ -14,11 +14,6 @@ import org.xmlunit.assertj.XmlAssert;
 import org.xmlunit.builder.Input;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.assertTrue;
 
 public class RequestWriterTest {
 	
@@ -182,41 +177,7 @@ public class RequestWriterTest {
 	}
 
 	@Test
-	public void writePostRequestBinarySourceFileTest() throws ParserConfigurationException, IOException {
-		Document doc = WrittingTestUtils.generateEmptyDocument();
-		Element root = WrittingTestUtils.generateTestRootElement(doc);
-
-		File outputFolder = Files.createTempDir();
-		File sourceFile = File.createTempFile("payload", ".bin");
-		java.nio.file.Files.write(sourceFile.toPath(), "Hello binary file".getBytes(StandardCharsets.UTF_8));
-
-		Request request = Request.builder()
-				.name("request_test")
-				.url("/upload")
-				.server("server_test")
-				.method("POST")
-				.binarySourceFile(sourceFile.getAbsolutePath())
-				.addHeaders(Header.builder().name("Content-Type").value("application/octet-stream").build())
-				.build();
-
-		String expectedFileName = RequestWriter.BINARY_BODIES_DIRECTORY + "/" + sourceFile.getName();
-		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><http-action actionType=\"1\" binaryFileName=\"" + expectedFileName
-				+ "\" binaryType=\"FILE\" contentType=\"application/octet-stream\" followRedirects=\"false\" "
-				+ "method=\"POST\" name=\"request_test\" "
-				+ "path=\"/upload\" postType=\"2\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
-				+ "uid=\"" + WriterUtils.getElementUid(request)+ "\">"
-				+ "<header name=\"Content-Type\" value=\"application/octet-stream\"/>"
-				+ "</http-action></test-root>";
-
-		(new RequestWriter(request)).writeXML(doc, root, outputFolder.getAbsolutePath());
-
-		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
-		assertTrue(new File(outputFolder, expectedFileName).exists());
-	}
-
-	@Test
-	public void writePostRequestBinarySourceFileKeepsMissingPathTest() throws ParserConfigurationException {
+	public void writePostRequestBinarySourceFileTest() throws ParserConfigurationException {
 		Document doc = WrittingTestUtils.generateEmptyDocument();
 		Element root = WrittingTestUtils.generateTestRootElement(doc);
 
@@ -225,12 +186,12 @@ public class RequestWriterTest {
 				.url("/upload")
 				.server("server_test")
 				.method("POST")
-				.binarySourceFile("payloads/missing.bin")
+				.binarySourceFile("payloads/hello.bin")
 				.addHeaders(Header.builder().name("Content-Type").value("application/octet-stream").build())
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<test-root><http-action actionType=\"1\" binaryFileName=\"payloads/missing.bin\""
+				+ "<test-root><http-action actionType=\"1\" binaryFileName=\"payloads/hello.bin\""
 				+ " binaryType=\"FILE\" contentType=\"application/octet-stream\" followRedirects=\"false\" "
 				+ "method=\"POST\" name=\"request_test\" "
 				+ "path=\"/upload\" postType=\"2\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
