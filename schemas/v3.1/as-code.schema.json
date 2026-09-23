@@ -31,7 +31,7 @@
 		},
 		"name": {
 			"$ref": "#/definitions/common/project_name",
-			"description": "The root key defining the name of the project. See Naming rules."
+			"description": "The root key defining the name of the project."
 		},
 		"includes": {
 			"title": "Includes",
@@ -321,8 +321,7 @@
 							},
 							"start_from_line": {
 								"type": "integer",
-								"default": 1,
-								"description": "The default value is \"1\"."
+								"default": 1
 							},
 							"delimiter": {
 								"$ref": "#/definitions/common/text",
@@ -621,7 +620,7 @@
 										"description": "If `true`, the queue content is written to the swap file at test end. The default value is `true`."
 									}
 								},
-								"description": "The file used to persist the queue content. See below. When absent, no file swap is used."
+								"description": "The file used to persist the queue content. When absent, no file swap is used."
 							}
 						}
 					}
@@ -867,18 +866,11 @@
 				"type": "object",
 				"required": ["minimum", "maximum", "start"],
 				"properties": {
-					"minimum": {
-						"$ref": "#/definitions/populations/peaks_phase",
-						"description": "The phase of low load"
-					},
-					"maximum": {
-						"$ref": "#/definitions/populations/peaks_phase",
-						"description": "The phase of high load"
-					},
+					"minimum": { "$ref": "#/definitions/populations/peaks_phase" },
+					"maximum": { "$ref": "#/definitions/populations/peaks_phase" },
 					"start": {
 						"type": "string",
-						"enum": ["minimum", "maximum"],
-						"description": "Select the phase to start"
+						"enum": ["minimum", "maximum"]
 					},
 					"duration": {
 						"$ref": "#/definitions/common/duration",
@@ -984,10 +976,7 @@
 					"$ref": "#/definitions/scenario/apm",
 					"description": "The APM configuration for the monitoring with Dynatrace"
 				},
-				"monitoring": {
-					"$ref": "#/definitions/scenario/monitoring",
-					"description": "The monitoring parameters"
-				},
+				"monitoring": { "$ref": "#/definitions/scenario/monitoring" },
 				"rendezvous_policies": {
 					"type": "array",
 					"items": { "$ref": "#/definitions/scenario/rendezvous_policy" }
@@ -1115,18 +1104,9 @@
 						"enum": ["reset_on", "reset_off", "reset_auto"],
 						"description": "The \"user_session\" value can be: `reset_on` `reset_off` `reset_auto` The default value is `reset_auto`."
 					},
-					"init": {
-						"$ref": "#/definitions/user_paths/container",
-						"description": "The init container"
-					},
-					"actions": {
-						"$ref": "#/definitions/user_paths/container",
-						"description": "The actions container"
-					},
-					"end": {
-						"$ref": "#/definitions/user_paths/container",
-						"description": "The end container"
-					},
+					"init": { "$ref": "#/definitions/user_paths/container" },
+					"actions": { "$ref": "#/definitions/user_paths/container" },
+					"end": { "$ref": "#/definitions/user_paths/container" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
 						"description": "The list of assertions to validate the response content of all requests matching criteria within the User Path. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
@@ -1257,10 +1237,7 @@
 							"$ref": "#/definitions/common/text",
 							"description": "The name of the SLA profile to apply to the Transaction (will not be applied to children)"
 						},
-						"steps": {
-							"$ref": "#/definitions/user_paths/steps",
-							"description": "Steps of the Transaction"
-						},
+						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": {
 							"$ref": "#/definitions/common/assertions",
 							"description": "The list of assertions to validate the response content of all requests matching criteria within the Transaction. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
@@ -1406,14 +1383,8 @@
 							"default": "any",
 							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
 						},
-						"then": {
-							"$ref": "#/definitions/user_paths/container",
-							"description": "The Then container"
-						},
-						"else": {
-							"$ref": "#/definitions/user_paths/container",
-							"description": "The Else container"
-						}
+						"then": { "$ref": "#/definitions/user_paths/container" },
+						"else": { "$ref": "#/definitions/user_paths/container" }
 					},
 					"additionalProperties": false,
 					"description": "A conditional structure \"If - Then - Else\". If the conditions are true, the Then container is executed, otherwise, the Else container is executed."
@@ -1468,10 +1439,7 @@
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/case" }
 						},
-						"default": {
-							"$ref": "#/definitions/user_paths/container",
-							"description": "The default statement container"
-						}
+						"default": { "$ref": "#/definitions/user_paths/container" }
 					},
 					"additionalProperties": false,
 					"description": "The Switch action is used to execute conditional actions based on a selection control mechanism. It allows the Switch value to change the control flow of the User Path execution via a multiway branch, named Case statements. The Switch action is fall-through, which means that if a Break flag is disabled on a Case, then the next Case statement is executed."
@@ -1656,14 +1624,8 @@
 							"default": "errors",
 							"description": "Exception types to catch: `errors`, `assertions`, `all`. Defaults to `errors`."
 						},
-						"try": {
-							"$ref": "#/definitions/user_paths/container",
-							"description": "The Try container"
-						},
-						"catch": {
-							"$ref": "#/definitions/user_paths/container",
-							"description": "The Catch container"
-						}
+						"try": { "$ref": "#/definitions/user_paths/container" },
+						"catch": { "$ref": "#/definitions/user_paths/container" }
 					},
 					"additionalProperties": false,
 					"description": "A logical action that executes a Try container and, if one of the caught exception types occurs while running it, executes the Catch container."

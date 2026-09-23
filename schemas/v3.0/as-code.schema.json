@@ -31,7 +31,7 @@
 		},
 		"name": {
 			"$ref": "#/definitions/common/name",
-			"description": "The root key defining the name of the project. See Naming rules."
+			"description": "The root key defining the name of the project."
 		},
 		"includes": {
 			"$id": "#root/includes",
@@ -289,8 +289,7 @@
 							},
 							"start_from_line": {
 								"type": "integer",
-								"default": 1,
-								"description": "The default value is \"1\"."
+								"default": 1
 							},
 							"delimiter": {
 								"$ref": "#/definitions/common/text",
@@ -604,18 +603,11 @@
 				"type": "object",
 				"required": ["minimum", "maximum", "start"],
 				"properties": {
-					"minimum": {
-						"$ref": "#/definitions/populations/peaks_phase",
-						"description": "The phase of low load"
-					},
-					"maximum": {
-						"$ref": "#/definitions/populations/peaks_phase",
-						"description": "The phase of high load"
-					},
+					"minimum": { "$ref": "#/definitions/populations/peaks_phase" },
+					"maximum": { "$ref": "#/definitions/populations/peaks_phase" },
 					"start": {
 						"type": "string",
-						"enum": ["minimum", "maximum"],
-						"description": "Select the phase to start"
+						"enum": ["minimum", "maximum"]
 					},
 					"duration": {
 						"$ref": "#/definitions/common/duration",
@@ -708,18 +700,9 @@
 						"enum": ["reset_on", "reset_off", "reset_auto"],
 						"description": "The \"user_session\" value can be: `reset_on` `reset_off` `reset_auto` The default value is `reset_auto`."
 					},
-					"init": {
-						"$ref": "#/definitions/user_paths/container",
-						"description": "The init container"
-					},
-					"actions": {
-						"$ref": "#/definitions/user_paths/container",
-						"description": "The actions container"
-					},
-					"end": {
-						"$ref": "#/definitions/user_paths/container",
-						"description": "The end container"
-					}
+					"init": { "$ref": "#/definitions/user_paths/container" },
+					"actions": { "$ref": "#/definitions/user_paths/container" },
+					"end": { "$ref": "#/definitions/user_paths/container" }
 				}
 			},
 			"container": {
@@ -801,10 +784,7 @@
 							"$ref": "#/definitions/common/text",
 							"description": "The name of the SLA profile to apply to the Transaction (will not be applied to children)"
 						},
-						"steps": {
-							"$ref": "#/definitions/user_paths/steps",
-							"description": "Steps of the Transaction"
-						}
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false,
 					"description": "The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics."
@@ -895,14 +875,8 @@
 							"default": "any",
 							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
 						},
-						"then": {
-							"$ref": "#/definitions/user_paths/container",
-							"description": "The Then container"
-						},
-						"else": {
-							"$ref": "#/definitions/user_paths/container",
-							"description": "The Else container"
-						}
+						"then": { "$ref": "#/definitions/user_paths/container" },
+						"else": { "$ref": "#/definitions/user_paths/container" }
 					},
 					"additionalProperties": false,
 					"description": "A conditional structure \"If - Then - Else\". If the conditions are true, the Then container is executed, otherwise, the Else container is executed."
@@ -960,10 +934,7 @@
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/case" }
 						},
-						"default": {
-							"$ref": "#/definitions/user_paths/container",
-							"description": "The default statement container"
-						}
+						"default": { "$ref": "#/definitions/user_paths/container" }
 					},
 					"additionalProperties": false,
 					"description": "The Switch action is used to execute conditional actions based on a selection control mechanism. It allows the Switch value to change the control flow of the User Path execution via a multiway branch, named Case statements. The Switch action is fall-through, which means that if a Break flag is disabled on a Case, then the next Case statement is executed."
