@@ -23,3 +23,5 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 | [stop_vu](stop_vu.md)             | 2026.3 |
 | [shared_element](shared_elements.md) | 2026.3 |
 | [wait_until](wait_until.md)       | 2026.3 |
+| [websocket_channel](websocket_channel.md) | 2026.3 |
+| [websocket_request](websocket_request.md) | 2026.3 |

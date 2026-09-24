@@ -1,0 +1,19 @@
+name: MyProject
+schemaVersion: "3.1"
+user_paths:
+- name: ChatUser
+  init:
+    steps:
+    - shared_element: OpenChat
+    - websocket_channel:
+        name: own_socket
+        url: https://host:443/own
+  actions:
+    steps:
+    - shared_element: SendInline
+    - websocket_request:
+        name: login
+        channel: shared_elements>OpenChat>chat_socket
+        synchronous: true
+        mapping_id: m1
+        body: login

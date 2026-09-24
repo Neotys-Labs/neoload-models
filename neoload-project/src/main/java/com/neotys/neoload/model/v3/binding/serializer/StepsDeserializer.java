@@ -22,18 +22,18 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class StepsDeserializer extends StdDeserializer<List<Step>> {
-	private static final long serialVersionUID = -5696608939252369276L;
-
-	private static final Map<String, Class<? extends Step>> STEPS;
-	static {
-		final ImmutableMap.Builder<String, Class<? extends Step>> builder = new ImmutableMap.Builder<>();
-		builder.put(TRANSACTION, Container.class);
-		builder.put(REQUEST, Request.class);
-		builder.put(JAVASCRIPT, JavaScript.class);
-		builder.put(IF, If.class);
-		builder.put(LOOP, Loop.class);
-		builder.put(WHILE, While.class);
-		builder.put(SWITCH, Switch.class);
+    private static final long serialVersionUID = -5696608939252369276L;
+    
+    private static final Map<String, Class<? extends Step>> STEPS;
+    static {
+    	final ImmutableMap.Builder<String, Class<? extends Step>> builder = new ImmutableMap.Builder<>();
+    	builder.put(TRANSACTION, Container.class);
+    	builder.put(REQUEST, Request.class);
+    	builder.put(JAVASCRIPT, JavaScript.class);
+    	builder.put(IF, If.class);
+    	builder.put(LOOP, Loop.class);
+    	builder.put(WHILE, While.class);
+    	builder.put(SWITCH, Switch.class);
 		builder.put(CUSTOM_ACTION, CustomAction.class);
 		builder.put(TRY_CATCH, TryCatch.class);
 		builder.put(FORK, Fork.class);
@@ -43,6 +43,8 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		builder.put(STOP_VU, StopVU.class);
 		builder.put(WEB_PAGE, WebPage.class);
 		builder.put(WAIT_UNTIL, WaitUntil.class);
+		builder.put(WEBSOCKET_CHANNEL, WebSocketChannel.class);
+		builder.put(WEBSOCKET_REQUEST, WebSocketRequest.class);
 		STEPS = builder.build();
 	}
 
