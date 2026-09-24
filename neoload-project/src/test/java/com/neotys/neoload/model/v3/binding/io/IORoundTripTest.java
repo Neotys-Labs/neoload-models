@@ -88,6 +88,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-assert-content-required-and-optional",
 			"test-assert-duration-request",
 			"test-assert-duration-custom-action",
+			"test-assert-size-custom-action",
 			"test-fork-only-required",
 			"test-fork-required-and-optional",
 			"test-variable-modifier-only-required",
@@ -103,7 +104,9 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-random-uuid-only-required",
 			"test-random-uuid-required-and-optional",
 			"test-password-only-required",
-			"test-password-required-and-optional"
+			"test-password-required-and-optional",
+			"test-sql-only-required",
+			"test-sql-required-and-optional"
 	};
 
 	@Test

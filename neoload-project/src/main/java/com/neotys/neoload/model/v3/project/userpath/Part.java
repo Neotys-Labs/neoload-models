@@ -7,10 +7,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
-import org.immutables.value.Value;
-
 import java.util.Optional;
-
+import org.immutables.value.Value;
 
 @JsonInclude(value = Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, Part.CONTENT_TYPE, Part.CHARSET, Part.TRANSFER_ENCODING, Part.VALUE, Part.FILENAME, Part.SOURCE_FILENAME})
