@@ -20,6 +20,7 @@ class StepsConstants {
     protected static final String STOP_VU = "stop_vu";
     protected static final String WEB_PAGE = "web_page";
     protected static final String SHARED_ELEMENT = "shared_element";
+    protected static final String WEBSOCKET_CHANNEL = "websocket_channel";
 
     private StepsConstants() {
         super();

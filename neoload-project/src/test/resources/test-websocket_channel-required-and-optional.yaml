@@ -1,0 +1,26 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: full_channel
+        id: ws_full
+        description: a channel using every setting
+        url: /socket
+        server: myserver
+        headers:
+        - Origin: https://host
+        extractors:
+        - name: session_id
+          regexp: "session=([0-9]+)"
+        messages_mapping:
+          jsonpath: $.correlationId
+        push_messages:
+        - name: pong
+          conditions:
+          - "'${msg_type}' == 'pong'"
+        - name: broadcast
+          charset: UTF-8
+          extractors:
+          - name: payload

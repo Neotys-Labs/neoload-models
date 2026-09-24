@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"websocket_channel":{"name":"my_channel","id":"ws_main","url":"wss://host:443/socket"}}]}}]}
