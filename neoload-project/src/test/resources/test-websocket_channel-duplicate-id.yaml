@@ -1,0 +1,13 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: first_channel
+        id: ws_main
+        url: wss://host:443/first
+    - websocket_channel:
+        name: second_channel
+        id: ws_main
+        url: wss://host:443/second

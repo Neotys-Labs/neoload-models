@@ -1,0 +1,15 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: xpath_channel
+        id: ws_xpath
+        url: ws://host:80/socket
+        messages_mapping:
+          xpath: /message/@id
+          template: $2$
+          decode: custom
+          custom_decoder: com.example.MyDecoder
+          encoding: UTF-8
