@@ -251,7 +251,7 @@ request:
 
 Define a binary request body from a file on disk. Use it when the payload should not be inlined as Base64 in the YAML.
 
-The path is relative to the as-code project folder. Variables cannot be used in `binarySourceFile`.
+The path is relative to the as-code project folder. Variables can be used in the `binarySourceFile` path, but not in the file content: the file is sent as-is.
 
 The `body`, `bodybinary` and `binarySourceFile` fields are mutually exclusive: a request must define at most one of them.
 
