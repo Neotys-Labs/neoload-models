@@ -99,27 +99,27 @@ public class IORequestSchemaValidationTest {
 
     @Test
     public void binarySourceFileIsDeclaredOnlyIn3Dot1() {
-        assertFalse("3.0 request must not declare binarySourceFile",
-                requestProperties(schema30Tree).has("binarySourceFile"));
-        JsonNode binarySourceFile = requestProperties(schema31Tree).get("binarySourceFile");
-        assertNotNull("3.1 request must declare binarySourceFile", binarySourceFile);
+        assertFalse("3.0 request must not declare binary_source_file",
+                requestProperties(schema30Tree).has("binary_source_file"));
+        JsonNode binarySourceFile = requestProperties(schema31Tree).get("binary_source_file");
+        assertNotNull("3.1 request must declare binary_source_file", binarySourceFile);
         assertEquals("#/definitions/common/text", binarySourceFile.get("$ref").asText());
     }
 
     @Test
     public void binarySourceFileFixtureIsValidAgainst3Dot1() throws IOException {
-        JsonNode node = requestWithBodyFields("binarySourceFile: payloads/hello.bin\n");
+        JsonNode node = requestWithBodyFields("binary_source_file: payloads/hello.bin\n");
         assertValid("3.1", schema31, node);
     }
 
     @Test
     public void binarySourceFileIsMutuallyExclusiveWithBodyAndBodybinary() throws IOException {
-        assertFalse("3.1 must reject body + binarySourceFile",
+        assertFalse("3.1 must reject body + binary_source_file",
                 schema31.validate(requestWithBodyFields(
-                        "body: hello\n        binarySourceFile: payloads/hello.bin\n")).isEmpty());
-        assertFalse("3.1 must reject bodybinary + binarySourceFile",
+                        "body: hello\n        binary_source_file: payloads/hello.bin\n")).isEmpty());
+        assertFalse("3.1 must reject bodybinary + binary_source_file",
                 schema31.validate(requestWithBodyFields(
-                        "bodybinary: SGVsbG8=\n        binarySourceFile: payloads/hello.bin\n")).isEmpty());
+                        "bodybinary: SGVsbG8=\n        binary_source_file: payloads/hello.bin\n")).isEmpty());
         assertFalse("3.1 must reject body + bodybinary",
                 schema31.validate(requestWithBodyFields(
                         "body: hello\n        bodybinary: SGVsbG8=\n")).isEmpty());

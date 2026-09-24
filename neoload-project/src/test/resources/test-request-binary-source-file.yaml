@@ -9,12 +9,12 @@ user_paths:
         method: POST
         headers:
         - Content-Type: application/octet-stream
-        binarySourceFile: payloads/hello.bin
+        binary_source_file: payloads/hello.bin
     - request:
         url: /upload-raw
         server: neotys
         method: PUT
         headers:
         - Content-Type: application/octet-stream
-        binarySourceFile: payload.bin
+        binary_source_file: payload.bin
         sla_profile: MySlaProfile

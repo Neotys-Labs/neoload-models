@@ -1014,7 +1014,7 @@
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
 						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
-						"binarySourceFile": { "$ref": "#/definitions/common/text" },
+						"binary_source_file": { "$ref": "#/definitions/common/text" },
 						"parts": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/part" }
@@ -1041,8 +1041,8 @@
 					},
 					"allOf": [
 						{ "not": { "required": ["body", "bodybinary"] } },
-						{ "not": { "required": ["body", "binarySourceFile"] } },
-						{ "not": { "required": ["bodybinary", "binarySourceFile"] } }
+						{ "not": { "required": ["body", "binary_source_file"] } },
+						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
 					]
 				},
 				"delay": {

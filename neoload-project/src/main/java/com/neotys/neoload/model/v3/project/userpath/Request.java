@@ -38,7 +38,7 @@ public interface Request extends Step, SlaElement, AssertionsElement, DurationAs
 	String HEADERS = "headers";
 	String BODY = "body";
 	String BODYBINARY = "bodybinary";
-	String BINARY_SOURCE_FILE = "binarySourceFile";
+	String BINARY_SOURCE_FILE = "binary_source_file";
 	String PARTS = "parts";
 	String EXTRACTORS = "extractors";
 	String FOLLOW_REDIRECTS = "followRedirects";
