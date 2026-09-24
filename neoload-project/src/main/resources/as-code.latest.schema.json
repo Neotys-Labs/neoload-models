@@ -509,7 +509,6 @@
 					"$id": "#/definitions/scenario/populations",
 					"title": "Scenario Populations",
 					"type": "array",
-					"minItems": 1,
 					"additionalItems": false,
 					"additionalProperties": false,
 					"items": {
@@ -548,7 +547,6 @@
 				"$id": "#/definitions/user_paths/container",
 				"title": "Containers",
 				"type": "object",
-				"required": ["steps"],
 				"properties": {
 					"sla_profile": {
 						"type": "string"
@@ -556,11 +554,16 @@
 					"steps": { "$ref": "#/definitions/user_paths/steps" }
 				}
 			},
+			"non_empty_steps": {
+				"$id": "#/definitions/user_paths/non_empty_steps",
+				"title": "Non-empty Steps",
+				"allOf": [{ "$ref": "#/definitions/user_paths/steps" }],
+				"minItems": 1
+			},
 			"steps": {
 				"$id": "#/definitions/user_paths/steps",
 				"title": "Steps",
 				"type": "array",
-				"minItems": 1,
 				"items": {
 					"type": "object",
 					"properties": {
@@ -584,7 +587,7 @@
 					"name": "transaction",
 					"title": "Action: Transaction",
 					"type": "object",
-					"required": ["name", "steps"],
+					"required": ["name"],
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
@@ -682,7 +685,7 @@
 							"enum": ["any", "all"],
 							"default": "any"
 						},
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
 					},
 					"additionalProperties": false
 				},
@@ -695,7 +698,7 @@
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"count": { "$ref": "#/definitions/common/positive_number" },
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
 					},
 					"additionalProperties": false
 				},
@@ -781,7 +784,7 @@
 					"description": { "$ref": "#/definitions/common/text" },
 					"value": { "$ref": "#/definitions/common/text" },
 					"break": { "type": "boolean" },
-					"steps": { "$ref": "#/definitions/user_paths/steps" }
+					"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
 				},
 				"additionalProperties": false
 			},

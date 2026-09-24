@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{}},{"name":"MyUserPathWithEmptyContainers","init":{},"actions":{"steps":[{"transaction":{"name":"MyTransaction"}}]},"end":{}}],"populations":[{"name":"MyPopulation","user_paths":[{"name":"MyUserPath"}]}],"scenarios":[{"name":"MyScenario"}]}

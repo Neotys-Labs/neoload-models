@@ -48,14 +48,6 @@ public class ScenarioTest {
 		CONSTRAINTS_SCENARIO_NAME_BLANK = sb.toString();
 	}
 
-	private static final String CONSTRAINTS_SCENARIO_POPULATIONS;
-	static {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'populations': missing value or value is empty.").append(LINE_SEPARATOR);
-		CONSTRAINTS_SCENARIO_POPULATIONS = sb.toString();
-	}
-
 	private static final String CONSTRAINTS_SCENARIO_POPULATIONS_NAMES;
 	static {
 		final StringBuilder sb = new StringBuilder();
@@ -153,8 +145,8 @@ public class ScenarioTest {
 				.name("MyScenario")
 				.build();
 		Validation validation = validator.validate(scenario, NeoLoad.class);
-		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_SCENARIO_POPULATIONS, validation.getMessage().get());	
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());
 
 		scenario = Scenario.builder()
 				.name("MyScenario")
