@@ -1,0 +1,12 @@
+name: MyProject
+shared_elements:
+- transaction:
+    name: Login
+    steps:
+    - request:
+        url: http://www.neotys.com/login
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - shared_element: Login

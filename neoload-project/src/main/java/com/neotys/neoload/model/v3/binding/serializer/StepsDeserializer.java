@@ -12,9 +12,12 @@ import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 public class StepsDeserializer extends StdDeserializer<List<Step>> {
     private static final long serialVersionUID = -5696608939252369276L;
@@ -71,23 +74,65 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
         return parseRegisteredStep(codec, stepNode);
     }
 
+    private static final List<Function<JsonNode, Step>> SIMPLE_STEP_PARSERS = Arrays.asList(
+            StepsDeserializer::parseGoToNextIteration,
+            StepsDeserializer::parseDelay,
+            StepsDeserializer::parseThinkTime,
+            StepsDeserializer::parseRendezvous,
+            StepsDeserializer::parseStopVU,
+            StepsDeserializer::parseSharedElementRef
+    );
+
     private Step parseSimpleStep(final JsonNode stepNode) {
-        if (stepNode.isTextual() && GO_TO_NEXT_ITERATION.equals(stepNode.asText())) {
+        return SIMPLE_STEP_PARSERS.stream()
+                .map(parser -> parser.apply(stepNode))
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static Step parseGoToNextIteration(final JsonNode stepNode) {
+        if ((stepNode.isTextual() && GO_TO_NEXT_ITERATION.equals(stepNode.asText())) || stepNode.has(GO_TO_NEXT_ITERATION)) {
             return GoToNextIteration.builder().build();
-        } else if (stepNode.has(GO_TO_NEXT_ITERATION)) {
-            return GoToNextIteration.builder().build();
-        } else if (stepNode.has(DELAY)) {
+        }
+        return null;
+    }
+
+    private static Step parseDelay(final JsonNode stepNode) {
+        if (stepNode.has(DELAY)) {
             final String delayValue = stepNode.get(DELAY).asText();
             final String delay = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(delayValue);
             return Delay.builder().value(String.valueOf(delay)).build();
-        } else if (stepNode.has(THINK_TIME)) {
+        }
+        return null;
+    }
+
+    private static Step parseThinkTime(final JsonNode stepNode) {
+        if (stepNode.has(THINK_TIME)) {
             final String thinkTimeValue = stepNode.get(THINK_TIME).asText();
             final String thinkTime = STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(thinkTimeValue);
             return ThinkTime.builder().value(String.valueOf(thinkTime)).build();
-        } else if (stepNode.isTextual() && RENDEZVOUS.equals(stepNode.asText())) {
+        }
+        return null;
+    }
+
+    private static Step parseRendezvous(final JsonNode stepNode) {
+        if (stepNode.isTextual() && RENDEZVOUS.equals(stepNode.asText())) {
             return Rendezvous.builder().build();
-        } else if (stepNode.isTextual() && STOP_VU.equals(stepNode.asText())) {
+        }
+        return null;
+    }
+
+    private static Step parseStopVU(final JsonNode stepNode) {
+        if (stepNode.isTextual() && STOP_VU.equals(stepNode.asText())) {
             return StopVU.builder().build();
+        }
+        return null;
+    }
+
+    private static Step parseSharedElementRef(final JsonNode stepNode) {
+        if (stepNode.has(SHARED_ELEMENT)) {
+            return SharedElementRef.builder().name(stepNode.get(SHARED_ELEMENT).asText()).build();
         }
         return null;
     }

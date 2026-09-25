@@ -141,7 +141,7 @@ The GUI offers fourteen types (`VariablesPane#initialize`).
 | Failed-assertion policy per User Path (`getFailedAssertionPolicy`) | — |
 | Action enabled / disabled flag | — |
 | Breakpoints | — |
-| Shared elements (`SharedElementsContainer`) | — |
+| Shared elements (`SharedElementsContainer`) | 3.1 (`shared_elements` / `shared_element`) |
 
 ## User Path — logical actions
 

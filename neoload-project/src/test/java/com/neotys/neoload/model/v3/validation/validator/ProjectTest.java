@@ -15,6 +15,7 @@ import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Severity;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Request;
+import com.neotys.neoload.model.v3.project.userpath.SharedElementRef;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.junit.Test;
@@ -56,6 +57,141 @@ public class ProjectTest {
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'scenarios': must contain only unique names.").append(LINE_SEPARATOR);
 		CONSTRAINTS_PROJECT_SCENARIOS_NAMES = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_PROJECT_SHARED_ELEMENTS_NAMES;
+
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'shared_elements': must contain only unique names.").append(LINE_SEPARATOR);
+		CONSTRAINTS_PROJECT_SHARED_ELEMENTS_NAMES = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_PROJECT_SHARED_ELEMENT_MISSING_NAME;
+
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'shared_elements[0].name': missing value or value is empty.").append(LINE_SEPARATOR);
+		CONSTRAINTS_PROJECT_SHARED_ELEMENT_MISSING_NAME = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_PROJECT_SHARED_ELEMENT_CYCLE;
+
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'shared_elements': must not contain a shared_elements reference cycle: RetryLogin -> Login -> RetryLogin.").append(LINE_SEPARATOR);
+		CONSTRAINTS_PROJECT_SHARED_ELEMENT_CYCLE = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_PROJECT_SHARED_ELEMENT_INVALID_STEP_TYPE;
+
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'shared_elements': must have a 'transaction', 'loop', 'while' or 'fork' step; invalid step type for: Login.").append(LINE_SEPARATOR);
+		CONSTRAINTS_PROJECT_SHARED_ELEMENT_INVALID_STEP_TYPE = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_PROJECT_SHARED_ELEMENT_DEFAULT_NAME;
+
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'shared_elements': must have an explicit name; entries left with their step's default name are not allowed: container.").append(LINE_SEPARATOR);
+		CONSTRAINTS_PROJECT_SHARED_ELEMENT_DEFAULT_NAME = sb.toString();
+	}
+
+	private static Container.Builder loginSharedElement() {
+		return Container.builder()
+				.name("Login")
+				.addSteps(Request.builder()
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build());
+	}
+
+	@Test
+	public void validateSharedElementsNames() {
+		final Validator validator = new Validator();
+
+		Project project = Project.builder()
+				.addSharedElements(loginSharedElement().build())
+				.build();
+		Validation validation = validator.validate(project, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());
+
+		project = Project.builder()
+				.addSharedElements(loginSharedElement().build())
+				.addSharedElements(loginSharedElement().build())
+				.build();
+		validation = validator.validate(project, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_PROJECT_SHARED_ELEMENTS_NAMES, validation.getMessage().get());
+	}
+
+	@Test
+	public void validateSharedElementRequiresName() {
+		final Validator validator = new Validator();
+
+		final Project project = Project.builder()
+				.addSharedElements(loginSharedElement().name("").build())
+				.build();
+		final Validation validation = validator.validate(project, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_PROJECT_SHARED_ELEMENT_MISSING_NAME, validation.getMessage().get());
+	}
+
+	@Test
+	public void validateSharedElementRejectsDefaultName() {
+		final Validator validator = new Validator();
+
+		final Project project = Project.builder()
+				.addSharedElements(Container.builder()
+						.addSteps(Request.builder()
+								.url("http://www.neotys.com:80/select?name=neoload")
+								.build())
+						.build())
+				.build();
+		final Validation validation = validator.validate(project, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_PROJECT_SHARED_ELEMENT_DEFAULT_NAME, validation.getMessage().get());
+	}
+
+	@Test
+	public void validateSharedElementReferenceCycle() {
+		final Validator validator = new Validator();
+
+		final Project project = Project.builder()
+				.addSharedElements(Container.builder()
+						.name("RetryLogin")
+						.addSteps(SharedElementRef.builder().name("Login").build())
+						.build())
+				.addSharedElements(Container.builder()
+						.name("Login")
+						.addSteps(SharedElementRef.builder().name("RetryLogin").build())
+						.build())
+				.build();
+		final Validation validation = validator.validate(project, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_PROJECT_SHARED_ELEMENT_CYCLE, validation.getMessage().get());
+	}
+
+	@Test
+	public void validateSharedElementStepType() {
+		final Validator validator = new Validator();
+
+		final Project project = Project.builder()
+				.addSharedElements(Request.builder()
+						.name("Login")
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build())
+				.build();
+		final Validation validation = validator.validate(project, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_PROJECT_SHARED_ELEMENT_INVALID_STEP_TYPE, validation.getMessage().get());
 	}
 
 	@Test

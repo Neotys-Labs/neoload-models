@@ -86,7 +86,13 @@ public class IOSchema3Dot1ValidationTest {
             "test-web_page-think-time-invalid-value.yaml",
             "test-web_page-think-time-min-only.yaml",
             "test-web_page-think-time-mixed.yaml",
-            "test-web_page-unsupported-step.yaml"
+            "test-web_page-unsupported-step.yaml",
+            "test-shared-elements-unsupported-type.yaml",
+            "test-shared-elements-missing-name-loop.yaml",
+            "test-shared-elements-missing-name-while.yaml",
+            "test-shared-elements-missing-name-fork.yaml",
+            "test-shared-elements-rejected-below-3-1.yaml",
+            "test-shared-element-reference-step-rejected-below-3-1.yaml"
     );
 
     @BeforeClass

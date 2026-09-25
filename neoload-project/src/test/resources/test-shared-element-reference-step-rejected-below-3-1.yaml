@@ -1,0 +1,7 @@
+schemaVersion: "3.0"
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - shared_element: Login
