@@ -1,6 +1,6 @@
 # WebSocket Channel
 
-The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping` and `push_messages` it is defined like a [request](request.md): `url`, `server`, `headers` and `extractors`.
+The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping` it is defined like a [request](request.md): `url`, `server`, `headers` and `extractors`.
 
 The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no `method`, `body` or `parts` settings.
 
@@ -17,7 +17,6 @@ The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no
 | headers                             | The headers of the upgrade request                                                                    | &#x2713;        | -        | 2026.3 |
 | extractors                          | Variable extractors applied to the channel response                                                   | -               | -        | 2026.3 |
 | messages_mapping                    | How to extract the correlation id from an inbound frame. Mandatory as soon as a synchronous `websocket_request` uses the channel | - | - | 2026.3 |
-| push_messages                       | The inbound messages the channel expects to receive                                                   | -               | -        | 2026.3 |
 
 NeoLoad stores a channel URL with the `http`/`https` scheme, derived from whether the server uses SSL. `ws` and `wss` are accepted here for convenience when writing as-code by hand, so a project exported from NeoLoad is not necessarily textually identical to one you wrote yourself.
 
@@ -40,20 +39,9 @@ messages_mapping:
   jsonpath: $.correlationId
 ```
 
-#### push_messages
-
-| Name        | Description                                                                                  | Required |
-|:----------- |:-------------------------------------------------------------------------------------------- |:--------:|
-| name        | The push message name. Defaults to `push_message`                                             | -        |
-| description | The push message description                                                                  | -        |
-| conditions  | Conditions identifying the message. When empty, the message matches every inbound frame        | -        |
-| match       | How `conditions` are combined: `any` (default) or `all`                                        | -        |
-| charset     | Charset used to decode the inbound message content                                             | -        |
-| extractors  | Variable extractors applied to the inbound message                                             | -        |
-
 #### Example
 
-Defining MyChannel with a correlation-id mapping and two expected inbound messages.
+Defining MyChannel with a correlation-id mapping.
 
 ```yaml
 - websocket_channel:
@@ -68,10 +56,4 @@ Defining MyChannel with a correlation-id mapping and two expected inbound messag
       jsonpath: $.session
     messages_mapping:
       jsonpath: $.correlationId
-    push_messages:
-    - name: pong
-      conditions:
-      - "'${msg_type}' == 'pong'"
-    - name: broadcast
-      charset: UTF-8
 ```

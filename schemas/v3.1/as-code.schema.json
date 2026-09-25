@@ -1340,11 +1340,7 @@
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
 						},
-						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" },
-						"push_messages": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/websocket_push_message" }
-						}
+						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" }
 					}
 				}
 			},
@@ -1369,26 +1365,6 @@
 					},
 					"custom_decoder": { "$ref": "#/definitions/common/text" },
 					"encoding": { "$ref": "#/definitions/common/text" }
-				}
-			},
-			"websocket_push_message": {
-				"title": "WebSocket Push Message",
-				"type": "object",
-				"additionalProperties": false,
-				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"description": { "$ref": "#/definitions/common/text" },
-					"conditions": { "$ref": "#/definitions/common/conditions" },
-					"match": {
-						"type": "string",
-						"enum": ["any", "all"],
-						"default": "any"
-					},
-					"charset": { "$ref": "#/definitions/common/text" },
-					"extractors": {
-						"type": "array",
-						"items": { "$ref": "#/definitions/user_paths/extractor" }
-					}
 				}
 			},
 			"part": {
