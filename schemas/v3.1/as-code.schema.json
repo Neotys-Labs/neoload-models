@@ -997,6 +997,11 @@
 							"type": "boolean",
 							"default": false
 						},
+						"_internalRecordedId": {
+							"title": "Internal recorded request id",
+							"description": "Optional id of the recorded HAR entry this request was converted from (for example r0001). Omit when the project was not produced from a recording.",
+							"$ref": "#/definitions/common/text"
+						},
 						"assertions": {
 							"type": "array",
 							"items": {
