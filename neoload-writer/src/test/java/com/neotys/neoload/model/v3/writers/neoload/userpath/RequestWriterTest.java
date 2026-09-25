@@ -176,6 +176,34 @@ public class RequestWriterTest {
 	}
 
 	@Test
+	public void writePostRequestBinarySourceFileTest() throws ParserConfigurationException {
+		Document doc = WrittingTestUtils.generateEmptyDocument();
+		Element root = WrittingTestUtils.generateTestRootElement(doc);
+
+		Request request = Request.builder()
+				.name("request_test")
+				.url("/upload")
+				.server("server_test")
+				.method("POST")
+				.binarySourceFile("payloads/hello.bin")
+				.addHeaders(Header.builder().name("Content-Type").value("application/octet-stream").build())
+				.build();
+
+		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<test-root><http-action actionType=\"1\" binaryFileName=\"payloads/hello.bin\""
+				+ " binaryType=\"FILE\" contentType=\"application/octet-stream\" followRedirects=\"false\" "
+				+ "method=\"POST\" name=\"request_test\" "
+				+ "path=\"/upload\" postType=\"2\" serverUid=\"server_test\" slaProfileEnabled=\"false\" "
+				+ "uid=\"" + WriterUtils.getElementUid(request)+ "\">"
+				+ "<header name=\"Content-Type\" value=\"application/octet-stream\"/>"
+				+ "</http-action></test-root>";
+
+		(new RequestWriter(request)).writeXML(doc, root, null);
+
+		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
+	}
+
+	@Test
 	public void writePostRequestMultipartContentTypeTest() throws ParserConfigurationException {
 		Document doc = WrittingTestUtils.generateEmptyDocument();
 		Element root = WrittingTestUtils.generateTestRootElement(doc);

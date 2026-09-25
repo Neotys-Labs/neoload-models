@@ -29,10 +29,14 @@ public class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_FOLLOW_REDIRECTS = "followRedirects";
 
 	public static final String XML_ATTR_POST_TYPE = "postType";
+	public static final String XML_ATTR_BINARY_TYPE = "binaryType";
+	public static final String XML_ATTR_BINARY_FILENAME = "binaryFileName";
 	public static final String XML_URL_PARAMETER_TAG_NAME = "urlPostParameter";
 	public static final String XML_STRING_DATA_TAG_NAME = "textPostContent";
 	public static final String XML_BINARY_DATA_TAG_NAME = "binaryPostContentBase64";
 	public static final String XML_PARTS_TAG_NAME = "multiparts";
+
+	static final String BINARY_CONTENT_TYPE_FILE = "FILE";
 
 	public static final int FORM_CONTENT = 1;
 	public static final int RAW_CONTENT = 2;
@@ -72,7 +76,9 @@ public class RequestWriter extends ElementWriter {
 		if(bodySupportedByMethod) {
 			int postType = getPostType(theRequest);
 			xmlRequest.setAttribute(XML_ATTR_POST_TYPE, String.valueOf(postType));
-			if (theRequest.getBodyBinary().isPresent()) {
+			if (theRequest.getBinarySourceFile().isPresent()) {
+				writeBinarySourceFile(theRequest.getBinarySourceFile().get(), xmlRequest);
+			} else if (theRequest.getBodyBinary().isPresent()) {
 				writePostRawBody(theRequest.getBodyBinary().get(), document, xmlRequest);
 			} else {
 				theRequest.getBody().ifPresent(s -> {
@@ -94,6 +100,7 @@ public class RequestWriter extends ElementWriter {
 	}
 
 	protected int getPostType(final Request request) {
+		if(request.getBinarySourceFile().isPresent()) return RAW_CONTENT;
 		if(request.getBodyBinary().isPresent()) return RAW_CONTENT;
 		if(request.getParts().isPresent()) return MULTIPART_CONTENT;
 
@@ -121,6 +128,11 @@ public class RequestWriter extends ElementWriter {
 
 		// write also in the binary content in case of conversion
 		writePostRawBody(body.getBytes(), document, xmlRequest);
+	}
+
+	public void writeBinarySourceFile(final String sourcePath, final Element xmlRequest) {
+		xmlRequest.setAttribute(XML_ATTR_BINARY_TYPE, BINARY_CONTENT_TYPE_FILE);
+		xmlRequest.setAttribute(XML_ATTR_BINARY_FILENAME, sourcePath);
 	}
 
 	public void writePostRawBody(final byte[] body, final Document document, Element xmlRequest) {

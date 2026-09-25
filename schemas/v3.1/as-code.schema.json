@@ -1014,6 +1014,7 @@
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
 						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
+						"binary_source_file": { "$ref": "#/definitions/common/text" },
 						"parts": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/part" }
@@ -1038,7 +1039,11 @@
 						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" },
 						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					},
-					"not": { "required": ["body", "bodybinary"] }
+					"allOf": [
+						{ "not": { "required": ["body", "bodybinary"] } },
+						{ "not": { "required": ["body", "binary_source_file"] } },
+						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
+					]
 				},
 				"delay": {
 					"title": "Action: Delay",

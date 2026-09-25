@@ -97,6 +97,47 @@ public class IORequestSchemaValidationTest {
         assertFalse("followRedirects must be a boolean in 3.1", schema31.validate(node).isEmpty());
     }
 
+    @Test
+    public void binarySourceFileIsDeclaredOnlyIn3Dot1() {
+        assertFalse("3.0 request must not declare binary_source_file",
+                requestProperties(schema30Tree).has("binary_source_file"));
+        JsonNode binarySourceFile = requestProperties(schema31Tree).get("binary_source_file");
+        assertNotNull("3.1 request must declare binary_source_file", binarySourceFile);
+        assertEquals("#/definitions/common/text", binarySourceFile.get("$ref").asText());
+    }
+
+    @Test
+    public void binarySourceFileFixtureIsValidAgainst3Dot1() throws IOException {
+        JsonNode node = requestWithBodyFields("binary_source_file: payloads/hello.bin\n");
+        assertValid("3.1", schema31, node);
+    }
+
+    @Test
+    public void binarySourceFileIsMutuallyExclusiveWithBodyAndBodybinary() throws IOException {
+        assertFalse("3.1 must reject body + binary_source_file",
+                schema31.validate(requestWithBodyFields(
+                        "body: hello\n        binary_source_file: payloads/hello.bin\n")).isEmpty());
+        assertFalse("3.1 must reject bodybinary + binary_source_file",
+                schema31.validate(requestWithBodyFields(
+                        "bodybinary: SGVsbG8=\n        binary_source_file: payloads/hello.bin\n")).isEmpty());
+        assertFalse("3.1 must reject body + bodybinary",
+                schema31.validate(requestWithBodyFields(
+                        "body: hello\n        bodybinary: SGVsbG8=\n")).isEmpty());
+    }
+
+    private static JsonNode requestWithBodyFields(String extraFields) throws IOException {
+        return YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/upload\n"
+                        + "        method: POST\n"
+                        + "        " + extraFields);
+    }
+
     private static JsonNode requestProperties(JsonNode schemaTree) {
         JsonNode properties = schemaTree.at("/definitions/user_paths/actions/request/properties");
         assertTrue("request.properties must exist", properties.isObject());
