@@ -13,14 +13,11 @@ public class WebSocketChannelTest {
 		assertEquals("id", WebSocketChannel.ID);
 		assertEquals("url", WebSocketChannel.URL);
 		assertEquals("server", WebSocketChannel.SERVER);
-		assertEquals("method", WebSocketChannel.METHOD);
 		assertEquals("headers", WebSocketChannel.HEADERS);
 		assertEquals("extractors", WebSocketChannel.EXTRACTORS);
 		assertEquals("messages_mapping", WebSocketChannel.MESSAGES_MAPPING);
 		assertEquals("push_messages", WebSocketChannel.PUSH_MESSAGES);
 
-		assertEquals("GET", WebSocketChannel.DEFAULT_METHOD);
-		assertEquals(Request.DEFAULT_METHOD, WebSocketChannel.DEFAULT_METHOD);
 	}
 
 	@Test

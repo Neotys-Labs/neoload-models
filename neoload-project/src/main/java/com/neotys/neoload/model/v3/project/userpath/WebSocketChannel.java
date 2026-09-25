@@ -26,26 +26,19 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * {@code channel} property; it must be unique within a {@link UserPath}.</p>
  */
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, WebSocketChannel.ID, Element.DESCRIPTION, WebSocketChannel.URL, WebSocketChannel.SERVER, WebSocketChannel.METHOD, WebSocketChannel.HEADERS, WebSocketChannel.EXTRACTORS, WebSocketChannel.MESSAGES_MAPPING, WebSocketChannel.PUSH_MESSAGES})
+@JsonPropertyOrder({Element.NAME, WebSocketChannel.ID, Element.DESCRIPTION, WebSocketChannel.URL, WebSocketChannel.SERVER, WebSocketChannel.HEADERS, WebSocketChannel.EXTRACTORS, WebSocketChannel.MESSAGES_MAPPING, WebSocketChannel.PUSH_MESSAGES})
 @JsonSerialize(as = ImmutableWebSocketChannel.class)
 @JsonDeserialize(as = ImmutableWebSocketChannel.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-// S2097 suppressed: the nested Jackson value-filter class overrides equals(Object) to compare the
-// property value (not another filter instance), which is how the CUSTOM value filter selects the
-// default value to omit; a real class check would always be false and defeat the omission.
-@SuppressWarnings("java:S2097")
 public interface WebSocketChannel extends Step {
 	String ID = "id";
 	String URL = "url";
 	String SERVER = "server";
-	String METHOD = "method";
 	String HEADERS = "headers";
 	String EXTRACTORS = "extractors";
 	String MESSAGES_MAPPING = "messages_mapping";
 	String PUSH_MESSAGES = "push_messages";
-
-	String DEFAULT_METHOD = Request.DEFAULT_METHOD;
 
 	/**
 	 * Identifiers stay free of variables and whitespace so that a {@code channel} reference can be
@@ -72,14 +65,6 @@ public interface WebSocketChannel extends Step {
 	@JsonProperty(SERVER)
 	Optional<String> getServer();
 
-	@JsonProperty(METHOD)
-	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultMethodFilter.class)
-	@RequiredCheck(groups={NeoLoad.class})
-	@Value.Default
-	default String getMethod() {
-		return DEFAULT_METHOD;
-	}
-
 	@JsonProperty(HEADERS)
 	@Valid
 	List<Header> getHeaders();
@@ -99,20 +84,6 @@ public interface WebSocketChannel extends Step {
 	@Override
 	default Stream<Element> flattened() {
 		return Stream.concat(Stream.of(this), getPushMessages().stream().map(Element.class::cast));
-	}
-
-	// Jackson value filter excluding the default method from serialization:
-	// the property is omitted when the filter's equals(value) returns true.
-	class DefaultMethodFilter {
-		@Override
-		public boolean equals(final Object value) {
-			return DEFAULT_METHOD.equals(value);
-		}
-
-		@Override
-		public int hashCode() {
-			return DEFAULT_METHOD.hashCode();
-		}
 	}
 
 	class Builder extends ImmutableWebSocketChannel.Builder {}

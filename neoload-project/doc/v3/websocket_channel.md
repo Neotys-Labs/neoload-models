@@ -1,6 +1,8 @@
 # WebSocket Channel
 
-The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping` and `push_messages` it is defined exactly like a [request](request.md): `url`, `server`, `method`, `headers` and `extractors`.
+The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping` and `push_messages` it is defined like a [request](request.md): `url`, `server`, `headers` and `extractors`.
+
+The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no `method`, `body` or `parts` settings.
 
 `id` is the handle a `websocket_request` points at through its `channel` property. It must be unique within a User Path, and it is deliberately restricted to letters, digits, `.`, `_` and `-` so that a reference stays unquoted in YAML and can be compared literally. It is not the same thing as `name`: renaming a channel does not break the requests that use it.
 
@@ -12,7 +14,6 @@ The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrad
 | description                         | The WebSocket Channel description                                                                     | -               | -        | 2026.3 |
 | url                                 | The channel URL. Accepts the `ws`/`wss` schemes as well as `http`/`https`, or a path relative to `server` | &#x2713;    | &#x2713; | 2026.3 |
 | server                              | The name of the server to use when `url` is a relative path                                           | -               | -        | 2026.3 |
-| method                              | The HTTP method of the upgrade request. Defaults to `GET`                                             | -               | -        | 2026.3 |
 | headers                             | The headers of the upgrade request                                                                    | &#x2713;        | -        | 2026.3 |
 | extractors                          | Variable extractors applied to the channel response                                                   | -               | -        | 2026.3 |
 | messages_mapping                    | How to extract the correlation id from an inbound frame. Mandatory as soon as a synchronous `websocket_request` uses the channel | - | - | 2026.3 |
