@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.binding.serializer;
 class StepsConstants {
     protected static final String TRANSACTION = "transaction";
     protected static final String REQUEST = "request";
+    protected static final String SOAP_REQUEST = "soap_request";
     protected static final String DELAY = "delay";
     protected static final String THINK_TIME = "think_time";
     protected static final String JAVASCRIPT = "javascript";
