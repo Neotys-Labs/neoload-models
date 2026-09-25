@@ -199,6 +199,16 @@
 				"type": "string",
 				"pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
 			},
+			"url": {
+				"title": "Url",
+				"type": "string",
+				"pattern": "^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)"
+			},
+			"file_path": {
+				"title": "File path",
+				"type": "string",
+				"pattern": "^[^<>\"|?*\\x00-\\x1F]*$"
+			},
 			"var_change_policy": {
 				"type": "string",
 				"default": "each_iteration",
@@ -921,6 +931,7 @@
 							"properties": {
 								"transaction": {"$ref": "#/definitions/user_paths/actions/transaction"},
 								"request": {"$ref": "#/definitions/user_paths/actions/request"},
+								"soap_request": {"$ref": "#/definitions/user_paths/actions/soap_request"},
 								"delay": {"$ref": "#/definitions/user_paths/actions/delay"},
 								"think_time": {"$ref": "#/definitions/user_paths/actions/think_time"},
 								"javascript": {"$ref": "#/definitions/user_paths/actions/javascript"},
@@ -1039,6 +1050,26 @@
 						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					},
 					"not": { "required": ["body", "bodybinary"] }
+				},
+				"soap_request": {
+					"title": "Action: SOAP Request",
+					"type": "object",
+					"required": ["url", "content"],
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"url": { "$ref": "#/definitions/common/url" },
+						"server": { "$ref": "#/definitions/common/name" },
+						"content": {
+							"type": "object",
+							"required": ["path"],
+							"properties": {
+								"path": { "$ref": "#/definitions/common/file_path" }
+							},
+							"additionalProperties": false
+						}
+					}
 				},
 				"delay": {
 					"title": "Action: Delay",

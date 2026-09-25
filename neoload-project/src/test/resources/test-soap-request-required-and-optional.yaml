@@ -1,0 +1,12 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - soap_request:
+        name: MySoapRequest
+        description: My SOAP request
+        url: /soap
+        server: myServer
+        content:
+          path: ./requests/mySOAPRequest.xml

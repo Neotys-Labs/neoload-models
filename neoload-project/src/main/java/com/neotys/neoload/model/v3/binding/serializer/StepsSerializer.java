@@ -20,6 +20,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
     	final ImmutableMap.Builder<Class<? extends Step>, String> builder = new ImmutableMap.Builder<>();
     	builder.put(ImmutableContainer.class, TRANSACTION);
     	builder.put(ImmutableRequest.class, REQUEST);
+    	builder.put(ImmutableSoapRequest.class, SOAP_REQUEST);
     	builder.put(ImmutableJavaScript.class, JAVASCRIPT);
     	builder.put(ImmutableIf.class, IF);
     	builder.put(ImmutableLoop.class, LOOP);

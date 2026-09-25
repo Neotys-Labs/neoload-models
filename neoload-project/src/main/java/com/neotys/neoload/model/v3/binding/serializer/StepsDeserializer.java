@@ -24,6 +24,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
     	final ImmutableMap.Builder<String, Class<? extends Step>> builder = new ImmutableMap.Builder<>();
     	builder.put(TRANSACTION, Container.class);
     	builder.put(REQUEST, Request.class);
+    	builder.put(SOAP_REQUEST, SoapRequest.class);
     	builder.put(JAVASCRIPT, JavaScript.class);
     	builder.put(IF, If.class);
     	builder.put(LOOP, Loop.class);

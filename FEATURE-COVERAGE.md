@@ -179,7 +179,8 @@ and protocol action catalogues.
 | Response storage to a file or a variable | — |
 | Static request optimisation | — |
 | Raw request | — |
-| SOAP and Silverlight SOAP requests | — |
+| SOAP request | 3.1 (`soap_request`) |
+| Silverlight SOAP request | — |
 | WebSocket channel, WebSocket request, push message | — |
 | Media / RTMP, RTMPT requests | — |
 | Siebel request | — |

@@ -36,7 +36,7 @@ product version each contract needs.
 
 #### Steps
 
-Six logical actions that already existed in the NeoLoad GUI are now writable in as-code.
+Seven logical actions that already existed in the NeoLoad GUI are now writable in as-code.
 
 **`try_catch`** — runs the `try` container and, when a caught exception occurs, the `catch`
 container instead. `caught_exceptions` selects `errors` (default), `assertions` or `all`.
@@ -103,6 +103,16 @@ otherwise.
 - debug_logger:
     text: "Current user: ${user_id}"
     file: logs/custom.txt
+```
+
+**`soap_request`** — a SOAP request. Its body is read from an external XML file referenced by
+`content.path`. Like `request`, `url` is required, absolute or relative to `server`.
+
+```yaml
+- soap_request:
+    url: http://petstore.swagger.io:80/
+    content:
+      path: ./requests/mySOAPRequest.xml
 ```
 
 #### Requests
