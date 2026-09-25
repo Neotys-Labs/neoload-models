@@ -279,6 +279,16 @@
 				"type": "string",
 				"pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
 			},
+			"url": {
+				"title": "Url",
+				"type": "string",
+				"pattern": "^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)"
+			},
+			"file_path": {
+				"title": "File path",
+				"type": "string",
+				"pattern": "^[^<>\"|?*\\x00-\\x1F]*$"
+			},
 			"var_change_policy": {
 				"type": "string",
 				"default": "each_iteration",
@@ -1228,6 +1238,10 @@
 									"$ref": "#/definitions/user_paths/actions/request",
 									"description": "A request defines a plain HTTP request."
 								},
+								"soap_request": {
+									"$ref": "#/definitions/user_paths/actions/soap_request",
+									"description": "A SOAP request. Its body is read from an external XML file referenced by content.path."
+								},
 								"delay": {
 									"$ref": "#/definitions/user_paths/actions/delay",
 									"description": "The Delay Action pauses the Virtual User for a specified duration. This duration always applies and is not impacted by thinktime overriding."
@@ -1422,6 +1436,26 @@
 						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
 					],
 					"description": "A request defines a plain HTTP request."
+				},
+				"soap_request": {
+					"title": "Action: SOAP Request",
+					"type": "object",
+					"required": ["url", "content"],
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"url": { "$ref": "#/definitions/common/url" },
+						"server": { "$ref": "#/definitions/common/name" },
+						"content": {
+							"type": "object",
+							"required": ["path"],
+							"properties": {
+								"path": { "$ref": "#/definitions/common/file_path" }
+							},
+							"additionalProperties": false
+						}
+					}
 				},
 				"delay": {
 					"title": "Action: Delay",
