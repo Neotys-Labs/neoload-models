@@ -19,6 +19,7 @@ user_paths:
           jsonpath: MyJsonPath
         assertions:
         - contains: MyUserPath_actions_request_1
+        _internalRecordedId: r0001
         sla_profile: MySlaProfile
     - request:
         url: /select?name=neoload

@@ -60,6 +60,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.contains("MyUserPath_actions_request_1")
 										.build())
 								.slaProfile("MySlaProfile")
+								.internalRecordedId("r0001")
 								.build())
 						.addSteps(Request.builder()
 								.url("/select?name=neoload")
