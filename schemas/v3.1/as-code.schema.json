@@ -1347,10 +1347,6 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"url": { "$ref": "#/definitions/common/text" },
 						"server": { "$ref": "#/definitions/common/text" },
-						"method": {
-							"type": "string",
-							"default": "GET"
-						},
 						"headers": {
 							"type": "array",
 							"items": {
