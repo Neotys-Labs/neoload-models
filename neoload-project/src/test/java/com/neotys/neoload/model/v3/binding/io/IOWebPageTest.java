@@ -11,6 +11,8 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.ExecuteResources;
 import com.neotys.neoload.model.v3.project.userpath.Playback;
 import com.neotys.neoload.model.v3.project.userpath.Request;
+import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
+import com.neotys.neoload.model.v3.project.userpath.SoapRequestContent;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.WebPage;
 import com.neotys.neoload.model.v3.project.userpath.WebPageThinkTimeConstant;
@@ -196,6 +198,19 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 		} catch (final IOException e) {
 			assertTrue(e.getMessage().contains("fastest"));
 		}
+	}
+
+	@Test
+	public void readWebPageWithSoapRequestChild() throws IOException {
+		final Project expectedProject = buildProject(WebPage.builder()
+				.addSteps(SoapRequest.builder()
+						.url("http://host:80/")
+						.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+						.build())
+				.build());
+		assertNotNull(expectedProject);
+
+		read("test-web_page-soap-request", expectedProject);
 	}
 
 	@Test
