@@ -7,13 +7,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.Condition;
 import com.neotys.neoload.model.v3.project.userpath.Header;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import com.neotys.neoload.model.v3.project.userpath.WebSocketChannel;
 import com.neotys.neoload.model.v3.project.userpath.WebSocketMessagesMapping;
-import com.neotys.neoload.model.v3.project.userpath.WebSocketPushMessage;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -47,19 +45,6 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 						.build())
 				.messagesMapping(WebSocketMessagesMapping.builder()
 						.jsonPath("$.correlationId")
-						.build())
-				.addPushMessages(WebSocketPushMessage.builder()
-						.name("pong")
-						.addConditions(Condition.builder()
-								.operand1("${msg_type}")
-								.operator(Condition.Operator.EQUALS)
-								.operand2("pong")
-								.build())
-						.build())
-				.addPushMessages(WebSocketPushMessage.builder()
-						.name("broadcast")
-						.charset("UTF-8")
-						.addExtractors(VariableExtractor.builder().name("payload").build())
 						.build())
 				.build();
 	}

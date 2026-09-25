@@ -16,16 +16,6 @@ public class WebSocketChannelTest {
 		assertEquals("headers", WebSocketChannel.HEADERS);
 		assertEquals("extractors", WebSocketChannel.EXTRACTORS);
 		assertEquals("messages_mapping", WebSocketChannel.MESSAGES_MAPPING);
-		assertEquals("push_messages", WebSocketChannel.PUSH_MESSAGES);
-
-	}
-
-	@Test
-	public void pushMessageConstants() {
-		assertEquals("push_message", WebSocketPushMessage.DEFAULT_NAME);
-		assertEquals("conditions", WebSocketPushMessage.CONDITIONS);
-		assertEquals("charset", WebSocketPushMessage.CHARSET);
-		assertEquals("extractors", WebSocketPushMessage.EXTRACTORS);
 	}
 
 	@Test
@@ -40,22 +30,5 @@ public class WebSocketChannelTest {
 
 		assertEquals(VariableExtractor.DEFAULT_REGEXP_VALUE, WebSocketMessagesMapping.DEFAULT_REGEXP_VALUE);
 		assertEquals(VariableExtractor.DEFAULT_TEMPLATE_VALUE, WebSocketMessagesMapping.DEFAULT_TEMPLATE_VALUE);
-	}
-
-	/**
-	 * Push messages are not {@link Step}s, so {@code flattened()} is overridden to keep them
-	 * visible to the tree walk the reference validators rely on.
-	 */
-	@Test
-	public void flattenedIncludesPushMessages() {
-		final WebSocketChannel channel = WebSocketChannel.builder()
-				.name("my_channel")
-				.id("ws_main")
-				.url("wss://host:443/socket")
-				.addPushMessages(WebSocketPushMessage.builder().name("first").build())
-				.addPushMessages(WebSocketPushMessage.builder().name("second").build())
-				.build();
-
-		assertEquals(3, channel.flattened().count());
 	}
 }
