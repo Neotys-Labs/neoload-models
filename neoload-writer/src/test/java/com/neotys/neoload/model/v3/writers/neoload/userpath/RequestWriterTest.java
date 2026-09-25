@@ -198,7 +198,7 @@ public class RequestWriterTest {
 				+ "<header name=\"Content-Type\" value=\"application/octet-stream\"/>"
 				+ "</http-action></test-root>";
 
-		(new RequestWriter(request)).writeXML(doc, root, Files.createTempDir().getAbsolutePath());
+		(new RequestWriter(request)).writeXML(doc, root, null);
 
 		XmlAssert.assertThat(Input.fromDocument(doc)).and(Input.fromString(expectedResult)).areSimilar();
 	}
