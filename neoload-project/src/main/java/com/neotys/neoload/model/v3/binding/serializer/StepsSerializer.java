@@ -41,6 +41,11 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
     }
 
 	@Override
+	public boolean isEmpty(final SerializerProvider provider, final List<Step> steps) {
+		return steps == null || steps.isEmpty();
+	}
+
+	@Override
 	public void serialize(final List<Step> steps, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		generator.writeStartArray();
 		for (final Step step : steps) {
@@ -65,6 +70,10 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 			serializeRendezvous((Rendezvous) step, generator);
 		} else if (step instanceof StopVU) {
 			serializeStopVU((StopVU) step, generator);
+		} else if (step instanceof SharedElementRef) {
+			generator.writeStartObject();
+			generator.writeStringField(SHARED_ELEMENT, step.getName());
+			generator.writeEndObject();
 		} else {
 			final String stepName = STEPS.get(step.getClass());
 			if (stepName != null) {

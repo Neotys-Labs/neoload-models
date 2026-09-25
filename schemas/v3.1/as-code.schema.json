@@ -87,6 +87,12 @@
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/scenario" }
 		},
+		"shared_elements": {
+			"title": "Shared_elements",
+			"type": "array",
+			"minItems": 1,
+			"items": { "$ref": "#/definitions/shared_element" }
+		},
 		"user_paths": {
 			"title": "User_paths",
 			"type": "array",
@@ -935,7 +941,8 @@
 								"debug_logger": {"$ref": "#/definitions/user_paths/actions/debug_logger"},
                                 "rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
 								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"},
-								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"}
+								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"},
+								"shared_element": { "$ref": "#/definitions/common/name" }
 							},
 							"additionalProperties": false
 						}
@@ -1450,6 +1457,34 @@
 					}
 				},
 				"additionalProperties": false
+			}
+		},
+		"shared_element": {
+			"title": "Shared Element",
+			"type": "object",
+			"minProperties": 1,
+			"maxProperties": 1,
+			"additionalProperties": false,
+			"properties": {
+				"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
+				"loop": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/loop" },
+						{ "required": ["name"] }
+					]
+				},
+				"while": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/while" },
+						{ "required": ["name"] }
+					]
+				},
+				"fork": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/fork" },
+						{ "required": ["name"] }
+					]
+				}
 			}
 		},
 		"framework": {

@@ -1,0 +1,8 @@
+schemaVersion: "3.0"
+name: MyProject
+shared_elements:
+- transaction:
+    name: Login
+    steps:
+    - request:
+        url: http://www.neotys.com/login
