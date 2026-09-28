@@ -7,6 +7,7 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequestContent;
+import com.neotys.neoload.model.v3.project.userpath.SoapRequestWsdl;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import java.io.IOException;
 import org.junit.Test;
@@ -52,6 +53,25 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 				.build();
 	}
 
+	private static Project getSoapRequestWithWsdl() {
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(SoapRequest.builder()
+								.url("http://host:80/")
+								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+								.wsdl(SoapRequestWsdl.builder().path("./requests/myService.wsdl").build())
+								.build())
+						.build())
+				.build();
+
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
+	}
+
 	@Test
 	public void readSoapRequestOnlyRequired() throws IOException {
 		final Project expectedProject = getSoapRequestOnlyRequired();
@@ -82,5 +102,21 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		write("test-soap-request-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void readSoapRequestWithWsdl() throws IOException {
+		final Project expectedProject = getSoapRequestWithWsdl();
+		assertNotNull(expectedProject);
+
+		read("test-soap-request-with-wsdl", expectedProject);
+	}
+
+	@Test
+	public void writeSoapRequestWithWsdl() throws IOException {
+		final Project expectedProject = getSoapRequestWithWsdl();
+		assertNotNull(expectedProject);
+
+		write("test-soap-request-with-wsdl", expectedProject);
 	}
 }

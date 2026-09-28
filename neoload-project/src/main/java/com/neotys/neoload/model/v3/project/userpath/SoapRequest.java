@@ -9,12 +9,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_DEFAULT)
-@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.CONTENT})
+@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.CONTENT, SoapRequest.WSDL})
 @JsonSerialize(as = ImmutableSoapRequest.class)
 @JsonDeserialize(as = ImmutableSoapRequest.class)
 @Value.Immutable
@@ -23,6 +24,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 public interface SoapRequest extends Step, UrlServerElement {
 	String NAME = "name";
 	String CONTENT = "content";
+	String WSDL = "wsdl";
 
 	String DEFAULT_NAME = "soap_request";
 
@@ -38,6 +40,10 @@ public interface SoapRequest extends Step, UrlServerElement {
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Valid
 	SoapRequestContent getContent();
+
+	@JsonProperty(WSDL)
+	@Valid
+	Optional<SoapRequestWsdl> getWsdl();
 
 	class DefaultNameFilter {
 		@Override

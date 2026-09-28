@@ -12,6 +12,7 @@ external XML file referenced by `content.path`.
 | [url](#url)              | The URL to hit                                                       | &#x2713;        | &#x2713; | 2026.3|
 | [server](#server)        | The server name to use                                               | -               | -        | 2026.3|
 | [content](#content)      | The external XML file used as the request body                      | -               | &#x2713; | 2026.3|
+| [wsdl](#wsdl)             | The WSDL file the request originates from, for reference only       | -               | -        | 2026.3|
 
 #### Example 1
 
@@ -38,6 +39,20 @@ soap_request:
     path: ./requests/mySOAPRequest.xml
 ```
 
+#### Example 3
+
+Defining a SOAP request with a WSDL reference.
+
+```yaml
+soap_request:
+  name: MySoapRequest
+  url: http://petstore.swagger.io:80/
+  content:
+    path: ./requests/mySOAPRequest.xml
+  wsdl:
+    path: ./requests/myService.wsdl
+```
+
 ## url
 
 Define the URL of the SOAP request. A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.
@@ -53,3 +68,12 @@ Define the external XML file used as the SOAP request body.
 | Name              | Description                                                                 | Accept variable | Required | Since |
 |:----------------- |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | path              | The path of the XML file used as the request body, relative to the project folder | -         | &#x2713; | 2026.3|
+
+## wsdl
+
+Define the WSDL file this SOAP request originates from. This reference is purely informative: the request
+actually sent is always the content of the `content` XML file, never rebuilt from the WSDL.
+
+| Name              | Description                                                                 | Accept variable | Required | Since |
+|:----------------- |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| path              | The path of the WSDL file, relative to the project folder                  | -                | &#x2713; | 2026.3|
