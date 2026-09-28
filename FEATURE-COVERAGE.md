@@ -49,10 +49,6 @@ as-code variable catalogue matches the fourteen types offered by the GUI.
 (with an `operator`) joins the existing content assertion. `duration_assertion` is a separate,
 single-value setting (`less_than`) on `request` and `custom_action`.
 
-**Frameworks** — a `framework` model (`enabled`, `parameters`) with dynamic parameters
-(`enabled`, `extraction_source`, `xpath`, `jsonpath`, `regexp`, `template`), covering the GUI
-Frameworks / dynamic parameters feature, in a builtin and a custom flavour.
-
 **JSON Schema completeness** — request `name`, `followRedirects`, custom method, `bodybinary`;
 `assertions` on request, transaction and container; scenario `sla_profile`,
 `store_variables_for_raw_data`, `excluded_urls`, `apm_configuration`, `monitoring`,
