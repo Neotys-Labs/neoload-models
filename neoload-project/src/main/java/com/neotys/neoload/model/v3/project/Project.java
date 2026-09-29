@@ -7,13 +7,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.sla.SlaProfile;
+import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.validation.constraints.ProjectNameCheck;
+import com.neotys.neoload.model.v3.validation.constraints.SharedElementCycleCheck;
+import com.neotys.neoload.model.v3.validation.constraints.SharedElementDefaultNameCheck;
+import com.neotys.neoload.model.v3.validation.constraints.SharedElementStepTypeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
 import com.neotys.neoload.model.v3.validation.constraints.ValidSchemaVersion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -25,7 +31,7 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Project.SCHEMA, Project.SCHEMA_VERSION, Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
+@JsonPropertyOrder({Project.SCHEMA, Project.SCHEMA_VERSION, Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.SHARED_ELEMENTS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
 @JsonSerialize(as = ImmutableProject.class)
 @JsonDeserialize(as = ImmutableProject.class)
 @Value.Immutable
@@ -38,6 +44,7 @@ public interface Project {
 	String SLA_PROFILES = "sla_profiles";
 	String VARIABLES = "variables";
 	String SERVERS = "servers";
+	String SHARED_ELEMENTS = "shared_elements";
 	String USER_PATHS = "user_paths";
 	String POPULATIONS = "populations";
 	String SCENARIOS = "scenarios";
@@ -72,6 +79,16 @@ public interface Project {
 	@UniqueElementNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<Server> getServers();
+
+	@JsonProperty(SHARED_ELEMENTS)
+	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@SharedElementStepTypeCheck(groups = {NeoLoad.class})
+	@SharedElementDefaultNameCheck(groups = {NeoLoad.class})
+	@SharedElementCycleCheck(groups = {NeoLoad.class})
+	@Valid
+	@JsonSerialize(using = StepsSerializer.class)
+	@JsonDeserialize(using = StepsDeserializer.class)
+	List<Step> getSharedElements();
 
 	@JsonProperty(USER_PATHS)
 	@UniqueElementNameCheck(groups={NeoLoad.class})
