@@ -4,8 +4,12 @@ package com.neotys.neoload.model.v3.binding.io;
 import static org.junit.Assert.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.Header;
+import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
+import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -56,7 +60,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.name("MyVariable1")
 										.jsonPath("MyJsonPath")
 										.build())
-								.addAssertions(ContentAssertion.builder()
+								.addContentAssertions(ContentAssertion.builder()
 										.contains("MyUserPath_actions_request_1")
 										.build())
 								.slaProfile("MySlaProfile")
@@ -78,7 +82,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.name("MyVariable1")
 										.jsonPath("MyJsonPath")
 										.build())
-								.addAssertions(ContentAssertion.builder()
+								.addContentAssertions(ContentAssertion.builder()
 										.contains("MyUserPath_actions_request_2")
 										.build())
 								.slaProfile("MySlaProfile")

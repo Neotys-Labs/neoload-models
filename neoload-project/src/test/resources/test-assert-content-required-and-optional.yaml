@@ -5,7 +5,7 @@ user_paths:
     steps:
     - request:
         url: http://www.neotys.com/select?name:neoload
-        assertions:
+        content_assertions:
         - name: assertion_1
           not: true
           contains: Design & Maintenance
