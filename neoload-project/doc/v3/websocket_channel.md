@@ -4,7 +4,7 @@ The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrad
 
 The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no `method`, `body` or `parts` settings.
 
-A channel has no identifier of its own: it is designated by its complete path, from where it is declared down to its `name`. Two channels may therefore share a `name` as long as they are in different containers.
+A channel has no identifier of its own: it is designated by its complete path, from where it is declared down to its `name` (see [Referencing a channel](websocket_request.md#referencing-a-channel)). Two channels may therefore share a `name` as long as they are in different containers.
 
 #### Available settings
 | Name                                | Description                                                                                           | Accept variable | Required | Since |
