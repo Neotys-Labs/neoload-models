@@ -5,4 +5,3 @@ user_paths:
     steps:
     - websocket_channel:
         name: my_channel
-        id: ws_main

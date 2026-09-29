@@ -98,9 +98,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-shared-elements-missing-name-fork.yaml",
             "test-shared-elements-rejected-below-3-1.yaml",
             "test-shared-element-reference-step-rejected-below-3-1.yaml",
-            "test-websocket_channel-no-id.yaml",
-            "test-websocket_channel-no-url.yaml",
-            "test-websocket_channel-invalid-id.yaml"
+            "test-websocket_channel-no-url.yaml"
     );
 
     @BeforeClass

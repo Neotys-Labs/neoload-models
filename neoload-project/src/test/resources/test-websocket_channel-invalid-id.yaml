@@ -1,9 +1,0 @@
-name: MyProject
-user_paths:
-- name: MyUserPath
-  actions:
-    steps:
-    - websocket_channel:
-        name: my_channel
-        id: "-not a valid id"
-        url: wss://host:443/socket

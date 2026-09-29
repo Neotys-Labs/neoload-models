@@ -4,13 +4,12 @@ The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrad
 
 The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no `method`, `body` or `parts` settings.
 
-`id` is the handle a `websocket_request` points at through its `channel` property. It must be unique within a User Path, and it is deliberately restricted to letters, digits, `.`, `_` and `-` so that a reference stays unquoted in YAML and can be compared literally. It is not the same thing as `name`: renaming a channel does not break the requests that use it.
+A channel has no identifier of its own: it is designated by its complete path, from where it is declared down to its `name`. Two channels may therefore share a `name` as long as they are in different containers.
 
 #### Available settings
 | Name                                | Description                                                                                           | Accept variable | Required | Since |
 |:----------------------------------- |:----------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | name                                | The WebSocket Channel name                                                                            | -               | &#x2713; | 2026.3 |
-| id                                  | The handle a `websocket_request` references through `channel`. Unique within the User Path. Matches `^[A-Za-z0-9][A-Za-z0-9._-]*$` | - | &#x2713; | 2026.3 |
 | description                         | The WebSocket Channel description                                                                     | -               | -        | 2026.3 |
 | url                                 | The channel URL. Accepts the `ws`/`wss` schemes as well as `http`/`https`, or a path relative to `server` | &#x2713;    | &#x2713; | 2026.3 |
 | server                              | The name of the server to use when `url` is a relative path                                           | -               | -        | 2026.3 |
@@ -46,7 +45,6 @@ Defining MyChannel with a correlation-id mapping.
 ```yaml
 - websocket_channel:
     name: MyChannel
-    id: ws_main
     description: My first WebSocket channel
     url: wss://host:443/socket
     headers:

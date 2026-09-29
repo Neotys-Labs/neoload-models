@@ -21,17 +21,17 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * iteration. Apart from {@link #getMessagesMapping()} it is defined
  * like a {@link Request}: url, server, headers and extractors.
  *
- * <p>{@link #getId()} is the handle a {@link WebSocketRequest} points at through its
- * {@code channel} property; it must be unique within a {@link UserPath}.</p>
+ * <p>A channel has no identifier of its own: it is designated by its complete path, from
+ * where it is declared down to its {@link #getName()}. Two channels may therefore share a
+ * name as long as their paths differ.</p>
  */
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, WebSocketChannel.ID, Element.DESCRIPTION, WebSocketChannel.URL, WebSocketChannel.SERVER, WebSocketChannel.HEADERS, WebSocketChannel.EXTRACTORS, WebSocketChannel.MESSAGES_MAPPING})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketChannel.URL, WebSocketChannel.SERVER, WebSocketChannel.HEADERS, WebSocketChannel.EXTRACTORS, WebSocketChannel.MESSAGES_MAPPING})
 @JsonSerialize(as = ImmutableWebSocketChannel.class)
 @JsonDeserialize(as = ImmutableWebSocketChannel.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 public interface WebSocketChannel extends Step {
-	String ID = "id";
 	String URL = "url";
 	String SERVER = "server";
 	String HEADERS = "headers";
@@ -39,21 +39,10 @@ public interface WebSocketChannel extends Step {
 	String MESSAGES_MAPPING = "messages_mapping";
 
 	/**
-	 * Identifiers stay free of variables and whitespace so that a {@code channel} reference can be
-	 * compared literally and written unquoted in YAML.
-	 */
-	String ID_PATTERN = "^[A-Za-z0-9][A-Za-z0-9._-]*$";
-
-	/**
 	 * The {@link Request#URL} pattern widened to the WebSocket schemes. A relative path is still
 	 * accepted, for use together with {@link #getServer()}.
 	 */
 	String URL_PATTERN = "^((http[s]?|ws[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)";
-
-	@JsonProperty(ID)
-	@RequiredCheck(groups={NeoLoad.class})
-	@Pattern(regexp=ID_PATTERN, groups={NeoLoad.class})
-	String getId();
 
 	@JsonProperty(URL)
 	@RequiredCheck(groups={NeoLoad.class})
