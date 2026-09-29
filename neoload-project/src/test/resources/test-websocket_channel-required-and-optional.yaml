@@ -5,7 +5,6 @@ user_paths:
     steps:
     - websocket_channel:
         name: full_channel
-        id: ws_full
         description: a channel using every setting
         url: /socket
         server: myserver

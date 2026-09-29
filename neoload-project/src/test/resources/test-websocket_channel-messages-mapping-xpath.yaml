@@ -5,7 +5,6 @@ user_paths:
     steps:
     - websocket_channel:
         name: xpath_channel
-        id: ws_xpath
         url: ws://host:80/socket
         messages_mapping:
           xpath: /message/@id

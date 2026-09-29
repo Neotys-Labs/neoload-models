@@ -26,7 +26,6 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 	private static Step getWebSocketChannelOnlyRequired() {
 		return WebSocketChannel.builder()
 				.name("my_channel")
-				.id("ws_main")
 				.url("wss://host:443/socket")
 				.build();
 	}
@@ -34,7 +33,6 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 	private static Step getWebSocketChannelRequiredAndOptional() {
 		return WebSocketChannel.builder()
 				.name("full_channel")
-				.id("ws_full")
 				.description("a channel using every setting")
 				.url("/socket")
 				.server("myserver")
@@ -52,7 +50,6 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 	private static Step getWebSocketChannelMessagesMappingXpath() {
 		return WebSocketChannel.builder()
 				.name("xpath_channel")
-				.id("ws_xpath")
 				.url("ws://host:80/socket")
 				.messagesMapping(WebSocketMessagesMapping.builder()
 						.xpath("/message/@id")
@@ -113,23 +110,15 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readWebSocketChannelNoIdRejected() throws IOException {
-		assertInvalid("test-websocket_channel-no-id", "id");
-	}
-
-	@Test
 	public void readWebSocketChannelNoUrlRejected() throws IOException {
 		assertInvalid("test-websocket_channel-no-url", "url");
 	}
 
 	@Test
-	public void readWebSocketChannelInvalidIdRejected() throws IOException {
-		assertInvalid("test-websocket_channel-invalid-id", "id");
-	}
-
-	@Test
-	public void readWebSocketChannelDuplicateIdRejected() throws IOException {
-		assertInvalid("test-websocket_channel-duplicate-id", "websocket_channel 'id' must be unique");
+	public void readWebSocketChannelsWithSameNameInDifferentContainersAccepted() throws IOException {
+		// A channel is designated by its complete path, so only the path has to be unique
+		final Validation validation = validate("test-websocket_channel-same-name-different-paths");
+		assertTrue("unexpected message: " + validation.getMessage().orElse(""), validation.isValid());
 	}
 
 	@Test
@@ -138,12 +127,16 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 				"xpath and jsonpath cannot be used simultaneously");
 	}
 
-	private void assertInvalid(final String fileName, final String expectedInMessage) throws IOException {
+	private Validation validate(final String fileName) throws IOException {
 		final IO io = new IO();
 		final File file = getFile(fileName, "yaml");
 		final ProjectDescriptor descriptor = io.read(file);
 
-		final Validation validation = VALIDATOR.validate(descriptor, NeoLoad.class);
+		return VALIDATOR.validate(descriptor, NeoLoad.class);
+	}
+
+	private void assertInvalid(final String fileName, final String expectedInMessage) throws IOException {
+		final Validation validation = validate(fileName);
 		assertFalse(validation.isValid());
 		assertTrue(validation.getMessage().isPresent());
 		assertTrue("unexpected message: " + validation.getMessage().get(),

@@ -1315,11 +1315,10 @@
 				"websocket_channel": {
 					"title": "Action: WebSocket Channel",
 					"type": "object",
-					"required": ["name", "id", "url"],
+					"required": ["name", "url"],
 					"additionalProperties": false,
 					"properties": {
 						"name": { "$ref": "#/definitions/common/name" },
-						"id": { "$ref": "#/definitions/user_paths/websocket_channel_id" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"url": { "$ref": "#/definitions/common/text" },
 						"server": { "$ref": "#/definitions/common/text" },
@@ -1343,12 +1342,6 @@
 						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" }
 					}
 				}
-			},
-			"websocket_channel_id": {
-				"title": "WebSocket Channel Id",
-				"type": "string",
-				"pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
-				"maxLength": 100
 			},
 			"websocket_messages_mapping": {
 				"title": "WebSocket Messages Mapping",

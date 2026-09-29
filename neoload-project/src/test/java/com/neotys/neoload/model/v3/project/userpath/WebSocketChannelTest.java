@@ -10,7 +10,6 @@ public class WebSocketChannelTest {
 	public void constants() {
 		assertEquals("name", WebSocketChannel.NAME);
 		assertEquals("description", WebSocketChannel.DESCRIPTION);
-		assertEquals("id", WebSocketChannel.ID);
 		assertEquals("url", WebSocketChannel.URL);
 		assertEquals("server", WebSocketChannel.SERVER);
 		assertEquals("headers", WebSocketChannel.HEADERS);
