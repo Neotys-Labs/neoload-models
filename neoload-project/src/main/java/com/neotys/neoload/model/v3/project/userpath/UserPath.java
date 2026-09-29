@@ -19,6 +19,8 @@ import com.neotys.neoload.model.v3.binding.serializer.UserPathSerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.constraints.WebSocketChannelMessagesMappingCheck;
+import com.neotys.neoload.model.v3.validation.constraints.WebSocketChannelReferenceCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
@@ -26,6 +28,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(using = UserPathDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@WebSocketChannelReferenceCheck(groups={NeoLoad.class})
+@WebSocketChannelMessagesMappingCheck(groups={NeoLoad.class})
 public interface UserPath extends Element, AssertionsElement {
 	String USER_SESSION = "user_session";
 	String RESET_ON = "reset_on";

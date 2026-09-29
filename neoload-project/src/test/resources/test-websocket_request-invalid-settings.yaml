@@ -1,0 +1,44 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: chat_socket
+        url: wss://host:443/chat
+        messages_mapping:
+          jsonpath: $.id
+    - websocket_request:
+        name: close_sync
+        channel: actions>chat_socket
+        message_type: close
+        synchronous: true
+        mapping_id: m1
+    - websocket_request:
+        name: sync_no_mapping_id
+        channel: actions>chat_socket
+        synchronous: true
+    - websocket_request:
+        name: async_mapping_id
+        channel: actions>chat_socket
+        mapping_id: m1
+    - websocket_request:
+        name: async_extractors
+        channel: actions>chat_socket
+        extractors:
+        - name: session_id
+          jsonpath: $.session
+    - websocket_request:
+        name: async_assertions
+        channel: actions>chat_socket
+        assertions:
+        - contains: ok
+    - websocket_request:
+        name: text_status_code
+        channel: actions>chat_socket
+        status_code: "1001"
+    - websocket_request:
+        name: both_bodies
+        channel: actions>chat_socket
+        body: hello
+        bodybinary: AAEC

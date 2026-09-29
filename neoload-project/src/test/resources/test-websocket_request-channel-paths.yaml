@@ -1,0 +1,107 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  init:
+    steps:
+    - websocket_channel:
+        name: init_socket
+        url: wss://host:443/init
+  actions:
+    steps:
+    - transaction:
+        name: Login
+        steps:
+        - websocket_channel:
+            name: login_socket
+            url: wss://host:443/login
+    - if:
+        name: has_notifications
+        conditions:
+        - "'${notifications}' == 'on'"
+        then:
+          steps:
+          - websocket_channel:
+              name: notify_socket
+              url: wss://host:443/notify
+        else:
+          steps:
+          - websocket_channel:
+              name: notify_socket
+              url: wss://host:443/notify-legacy
+    - switch:
+        name: router
+        value: "${room}"
+        case:
+        - name: vip
+          value: vip
+          break: true
+          steps:
+          - websocket_channel:
+              name: vip_socket
+              url: wss://host:443/vip
+        default:
+          steps:
+          - websocket_channel:
+              name: lobby_socket
+              url: wss://host:443/lobby
+    - try_catch:
+        name: safe
+        try:
+          steps:
+          - websocket_channel:
+              name: try_socket
+              url: wss://host:443/try
+        catch:
+          steps:
+          - websocket_channel:
+              name: catch_socket
+              url: wss://host:443/catch
+    - loop:
+        name: retry
+        count: 2
+        steps:
+        - while:
+            name: waiting
+            conditions:
+            - "'${ready}' == 'false'"
+            steps:
+            - fork:
+                name: background
+                steps:
+                - websocket_channel:
+                    name: deep_socket
+                    url: wss://host:443/deep
+    - websocket_request:
+        name: in_init
+        channel: init>init_socket
+    - websocket_request:
+        name: in_transaction
+        channel: actions>Login>login_socket
+    - websocket_request:
+        name: in_then
+        channel: actions>has_notifications>then>notify_socket
+    - websocket_request:
+        name: in_else
+        channel: actions>has_notifications>else>notify_socket
+    - websocket_request:
+        name: in_case
+        channel: actions>router>vip>vip_socket
+    - websocket_request:
+        name: in_default
+        channel: actions>router>default>lobby_socket
+    - websocket_request:
+        name: in_try
+        channel: actions>safe>try>try_socket
+    - websocket_request:
+        name: in_catch
+        channel: actions>safe>catch>catch_socket
+    - websocket_request:
+        name: nested
+        channel: actions>retry>waiting>background>deep_socket
+  end:
+    steps:
+    - websocket_request:
+        name: close_login
+        channel: actions>Login>login_socket
+        message_type: close
+        status_code: 4000

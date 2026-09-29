@@ -949,7 +949,8 @@
 								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"},
 								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"},
 								"shared_element": { "$ref": "#/definitions/common/name" },
-								"websocket_channel": {"$ref": "#/definitions/user_paths/actions/websocket_channel"}
+								"websocket_channel": {"$ref": "#/definitions/user_paths/actions/websocket_channel"},
+								"websocket_request": {"$ref": "#/definitions/user_paths/actions/websocket_request"}
 							},
 							"additionalProperties": false
 						}
@@ -1341,7 +1342,65 @@
 						},
 						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" }
 					}
+				},
+				"websocket_request": {
+					"title": "Action: WebSocket Request",
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"channel": { "$ref": "#/definitions/user_paths/websocket_channel_reference" },
+						"message_type": {
+							"type": "string",
+							"enum": ["text", "binary", "close"],
+							"default": "text"
+						},
+						"synchronous": {
+							"type": "boolean",
+							"default": false
+						},
+						"mapping_id": { "$ref": "#/definitions/common/text" },
+						"status_code": {
+							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"default": "1000"
+						},
+						"body": { "$ref": "#/definitions/common/textblob" },
+						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
+						"extractors": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"assertions": { "$ref": "#/definitions/common/assertions" }
+					},
+					"not": { "required": ["body", "bodybinary"] },
+					"allOf": [
+						{
+							"$comment": "Only a synchronous request has a response: it needs mapping_id, and only it may carry mapping_id, extractors and assertions",
+							"if": { "required": ["synchronous"], "properties": { "synchronous": { "const": true } } },
+							"then": { "required": ["mapping_id"] },
+							"else": {
+								"properties": {
+									"mapping_id": false,
+									"extractors": { "maxItems": 0 },
+									"assertions": { "maxItems": 0 }
+								}
+							}
+						},
+						{
+							"$comment": "A close cannot be synchronous, and only a close may set a status_code other than the default",
+							"if": { "required": ["message_type"], "properties": { "message_type": { "const": "close" } } },
+							"then": { "properties": { "synchronous": { "const": false } } },
+							"else": { "properties": { "status_code": { "enum": ["1000", 1000] } } }
+						}
+					]
 				}
+			},
+			"websocket_channel_reference": {
+				"title": "WebSocket Channel Reference",
+				"description": "The complete path of the channel: init, actions or end, then each step name down to the channel's name, joined with '>'",
+				"type": "string",
+				"pattern": "^(init|actions|end)(>[^>]+)+$"
 			},
 			"websocket_messages_mapping": {
 				"title": "WebSocket Messages Mapping",
@@ -1482,6 +1541,7 @@
 				"type": "object",
 				"required": ["value"],
 				"properties": {
+					"name": { "$ref": "#/definitions/common/name" },
 					"description": { "$ref": "#/definitions/common/text" },
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": { "type": "boolean" },
