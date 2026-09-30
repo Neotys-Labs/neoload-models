@@ -251,7 +251,11 @@ request:
 
 Define a binary request body from a file on disk. Use it when the payload should not be inlined as Base64 in the YAML.
 
-The path is relative to the as-code project folder. Variables can be used in the `binary_source_file` path, but not in the file content: the file is sent as-is.
+The path is relative to the as-code project folder. The file is sent as-is: variables are not evaluated in its content.
+
+Use a literal path. A path containing a variable is resolved at runtime only, so CheckVU cannot include the file in the project it runs.
+
+If the file is not found, the project still loads and a warning is reported, but the request is sent with an empty body.
 
 The `body`, `bodybinary` and `binary_source_file` fields are mutually exclusive: a request must define at most one of them.
 
