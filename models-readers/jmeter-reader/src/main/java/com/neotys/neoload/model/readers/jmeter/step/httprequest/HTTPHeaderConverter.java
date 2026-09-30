@@ -2,6 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.step.httprequest;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.userpath.Request;
+import java.util.Optional;
 import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
 import org.apache.jmeter.testelement.property.CollectionProperty;
@@ -44,7 +45,7 @@ class HTTPHeaderConverter {
                 final Object objectHeader = tep.getObjectValue();
                 if(objectHeader instanceof Header) {
                     final Header header = (Header) objectHeader;
-                    request.addHeaders(com.neotys.neoload.model.v3.project.userpath.Header.builder().name(header.getName()).value(header.getValue()).build());
+                    request.putHeaders(header.getName(), Optional.ofNullable(header.getValue()));
                 }
             }
         }
