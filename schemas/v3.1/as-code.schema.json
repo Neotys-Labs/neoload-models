@@ -807,6 +807,7 @@
 				"populations": {
 					"title": "Scenario Populations",
 					"type": "array",
+					"minItems": 1,
 					"additionalItems": false,
 					"additionalProperties": false,
 					"items": {
@@ -899,6 +900,7 @@
 			"container": {
 				"title": "Containers",
 				"type": "object",
+				"required": ["steps"],
 				"additionalProperties": false,
 				"properties": {
 					"description": { "$ref": "#/definitions/common/text" },
@@ -962,7 +964,7 @@
 					"name": "transaction",
 					"title": "Action: Transaction",
 					"type": "object",
-					"required": ["name"],
+					"required": ["name", "steps"],
 					"properties": {
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },

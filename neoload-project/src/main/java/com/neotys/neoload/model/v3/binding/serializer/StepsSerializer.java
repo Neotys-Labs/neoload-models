@@ -40,10 +40,6 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
         super(List.class, false);
     }
 
-	/**
-	 * Lets the {@code NON_EMPTY} inclusion of the owning property omit an empty step list instead of
-	 * writing {@code steps: []}. {@code StdSerializer} only treats {@code null} as empty.
-	 */
 	@Override
 	public boolean isEmpty(final SerializerProvider provider, final List<Step> steps) {
 		return steps == null || steps.isEmpty();

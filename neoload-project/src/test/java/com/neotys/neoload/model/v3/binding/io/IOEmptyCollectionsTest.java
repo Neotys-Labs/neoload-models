@@ -10,15 +10,13 @@ import org.junit.Test;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
-import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 
 
 /**
- * A project being designed can hold user path containers and transactions with no step yet, and a scenario
- * with no population yet. Such a project must round-trip: the export omits the empty collections and the
- * loader accepts the result.
+ * A project being designed can hold user path containers and transactions with no step yet. Such a project
+ * must round-trip: the export writes {@code steps: []} and the loader accepts the result.
  */
 public class IOEmptyCollectionsTest extends AbstractIOElementsTest {
 
@@ -69,15 +67,10 @@ public class IOEmptyCollectionsTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		final Scenario scenario = Scenario.builder()
-				.name("MyScenario")
-				.build();
-
 		return Project.builder()
 				.name("MyProject")
 				.addUserPaths(userPath, userPathWithEmptyContainers)
 				.addPopulations(population)
-				.addScenarios(scenario)
 				.build();
 	}
 }

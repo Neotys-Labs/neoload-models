@@ -509,6 +509,7 @@
 					"$id": "#/definitions/scenario/populations",
 					"title": "Scenario Populations",
 					"type": "array",
+					"minItems": 1,
 					"additionalItems": false,
 					"additionalProperties": false,
 					"items": {
@@ -547,6 +548,7 @@
 				"$id": "#/definitions/user_paths/container",
 				"title": "Containers",
 				"type": "object",
+				"required": ["steps"],
 				"properties": {
 					"sla_profile": {
 						"type": "string"
@@ -587,7 +589,7 @@
 					"name": "transaction",
 					"title": "Action: Transaction",
 					"type": "object",
-					"required": ["name"],
+					"required": ["name", "steps"],
 					"properties": {
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },

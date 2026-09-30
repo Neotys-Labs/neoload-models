@@ -23,8 +23,9 @@ import com.networknt.schema.ValidationMessage;
 
 /**
  * Keeps the published v3.1 schema and the runtime copy aligned with the model on empty collections:
- * a container, a transaction and a scenario may be empty while a project is designed, whereas the
- * step lists the model still requires (loop, while, fork, web_page, switch case) must hold at least one step.
+ * a container and a transaction may hold {@code steps: []} while a project is designed, but must still
+ * declare the field; the step lists the model still requires (loop, while, fork, web_page, switch case)
+ * and a scenario's populations must hold at least one item.
  */
 public class IOSchemaEmptyCollectionsTest {
 
@@ -46,11 +47,25 @@ public class IOSchemaEmptyCollectionsTest {
 	}
 
 	@Test
-	public void emptyContainersAreAccepted() throws IOException {
+	public void emptyStepListsAreAccepted() throws IOException {
 		for (final JsonSchema schema : new JsonSchema[] {schema31, latestSchema}) {
-			assertValid(schema, "{\"name\":\"P\",\"user_paths\":[{\"name\":\"U\",\"init\":{},\"actions\":{},\"end\":{}}]}");
-			assertValid(schema, userPathWithStep("{\"transaction\":{\"name\":\"T\"}}"));
-			assertValid(schema, "{\"name\":\"P\",\"scenarios\":[{\"name\":\"S\"}]}");
+			assertValid(schema, "{\"name\":\"P\",\"user_paths\":[{\"name\":\"U\",\"init\":{\"steps\":[]},\"actions\":{\"steps\":[]},\"end\":{\"steps\":[]}}]}");
+			assertValid(schema, userPathWithStep("{\"transaction\":{\"name\":\"T\",\"steps\":[]}}"));
+		}
+	}
+
+	@Test
+	public void missingStepsAreRejected() throws IOException {
+		for (final JsonSchema schema : new JsonSchema[] {schema31, latestSchema}) {
+			assertInvalid(schema, "{\"name\":\"P\",\"user_paths\":[{\"name\":\"U\",\"actions\":{}}]}");
+			assertInvalid(schema, userPathWithStep("{\"transaction\":{\"name\":\"T\"}}"));
+		}
+	}
+
+	@Test
+	public void emptyPopulationsAreRejected() throws IOException {
+		for (final JsonSchema schema : new JsonSchema[] {schema31, latestSchema}) {
+			assertInvalid(schema, "{\"name\":\"P\",\"scenarios\":[{\"name\":\"S\",\"populations\":[]}]}");
 		}
 	}
 
@@ -71,12 +86,15 @@ public class IOSchemaEmptyCollectionsTest {
 
 	private static void assertRequiresOneStep(final JsonSchema schema, final UnaryOperator<String> stepWithSteps) throws IOException {
 		assertValid(schema, userPathWithStep(stepWithSteps.apply(ONE_STEP)));
-		final String emptyDocument = userPathWithStep(stepWithSteps.apply(NO_STEP));
-		assertFalse("Expected a violation for " + emptyDocument, validate(schema, emptyDocument).isEmpty());
+		assertInvalid(schema, userPathWithStep(stepWithSteps.apply(NO_STEP)));
 	}
 
 	private static void assertValid(final JsonSchema schema, final String document) throws IOException {
 		assertEquals("Unexpected violations for " + document, Collections.emptySet(), validate(schema, document));
+	}
+
+	private static void assertInvalid(final JsonSchema schema, final String document) throws IOException {
+		assertFalse("Expected a violation for " + document, validate(schema, document).isEmpty());
 	}
 
 	private static Set<ValidationMessage> validate(final JsonSchema schema, final String document) throws IOException {

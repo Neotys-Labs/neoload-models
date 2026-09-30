@@ -1,17 +1,19 @@
 name: MyProject
 user_paths:
 - name: MyUserPath
-  actions: {}
+  actions:
+    steps: []
 - name: MyUserPathWithEmptyContainers
-  init: {}
+  init:
+    steps: []
   actions:
     steps:
     - transaction:
         name: MyTransaction
-  end: {}
+        steps: []
+  end:
+    steps: []
 populations:
 - name: MyPopulation
   user_paths:
   - name: MyUserPath
-scenarios:
-- name: MyScenario

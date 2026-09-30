@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.SlaElement;
+import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
@@ -37,6 +38,7 @@ public interface Scenario extends Element, SlaElement {
 	String MONITORING = "monitoring";
 
 	@JsonProperty(POPULATIONS)
+	@RequiredCheck(groups = {NeoLoad.class})
 	@UniqueElementNameCheck(groups = {NeoLoad.class})
 	@Valid
 	List<PopulationPolicy> getPopulations();

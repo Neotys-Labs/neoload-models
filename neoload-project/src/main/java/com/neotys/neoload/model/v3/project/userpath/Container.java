@@ -38,7 +38,12 @@ public interface Container extends Step, SlaElement, PacingElement, AssertionsEl
 		return DEFAULT_NAME;
 	}
 
+	/**
+	 * May be empty while the container is being designed. Always written, as {@code steps: []} when empty,
+	 * because the schema requires the field.
+	 */
 	@Valid
+	@JsonInclude(Include.ALWAYS)
 	@JsonSerialize(using = StepsSerializer.class)
 	@JsonDeserialize(using = StepsDeserializer.class)
 	@JsonProperty(STEPS)

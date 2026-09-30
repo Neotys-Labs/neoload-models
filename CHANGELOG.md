@@ -251,11 +251,12 @@ project the GUI accepts.
 - The JSON Schema restricted `method` to a fixed enum and therefore rejected a custom HTTP method,
   which the model has always accepted. It now accepts any string, with `GET` as the default.
 
-- **A project still being designed can be written and read back.** A user path with no step yet and
-  a scenario with no population yet were rejected on load, so a file NeoLoad had just written could
-  not be reopened. `steps` and a scenario's `populations` are now optional, and an empty step list
-  is omitted on write instead of being serialised as `[]`. `while`, `loop`, `fork`, `web_page` and
-  a `switch` case still require at least one step.
+- **A user path with no step yet can be written and read back.** An empty step list was rejected on
+  load, so a file NeoLoad had just written could not be reopened. The `steps` of a user path
+  container (`init`, `actions`, `end`), a transaction and an `if` / `switch` / `try_catch` branch may
+  now be an empty list, and it is always written, as `steps: []` when empty. The field itself stays
+  required by the JSON Schema. `while`, `loop`, `fork`, `web_page` and a `switch` case still require
+  at least one step, and a scenario still requires at least one population.
 
 ---
 
