@@ -106,11 +106,16 @@ otherwise.
 ```
 
 **`soap_request`** — a SOAP request. Its body is read from an external XML file referenced by
-`content.path`. Like `request`, `url` is required, absolute or relative to `server`.
+`content.path`. Like `request`, `url` is required, absolute or relative to `server`. Optional
+`parameters` (query string) and `headers` each take a list of single-key maps, name to value.
 
 ```yaml
 - soap_request:
     url: http://petstore.swagger.io:80/
+    parameters:
+    - id: "42"
+    headers:
+    - SOAPAction: http://example.com/action
     content:
       path: ./requests/mySOAPRequest.xml
 ```

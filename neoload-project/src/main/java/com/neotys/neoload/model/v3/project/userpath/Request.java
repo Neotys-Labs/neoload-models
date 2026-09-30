@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
+import com.google.common.collect.Multimap;
+import com.neotys.neoload.model.v3.binding.serializer.MultimapDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.MultimapSerializer;
 import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertionElement;
@@ -83,8 +86,10 @@ public interface Request extends Step, UrlServerElement, SlaElement, AssertionsE
 	}
 	
 	@JsonProperty(HEADERS)
-	@Valid
-	List<Header> getHeaders();
+	@JsonInclude(Include.NON_EMPTY)
+	@JsonSerialize(using = MultimapSerializer.class)
+	@JsonDeserialize(using = MultimapDeserializer.class)
+	Multimap<String, Optional<String>> getHeaders();
 	
 	@JsonProperty(BODY)
 	Optional<String> getBody();

@@ -1,23 +1,21 @@
 package com.neotys.neoload.model.v3.util;
 
-import com.google.common.base.Strings;
-import com.neotys.neoload.model.v3.project.server.Server;
-import com.neotys.neoload.model.v3.project.server.Server.Scheme;
-import com.neotys.neoload.model.v3.project.userpath.Header;
-import com.neotys.neoload.model.v3.project.userpath.Request.Method;
-import org.slf4j.LoggerFactory;
-
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTPS_PORT;
 import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTP_PORT;
 import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
+
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.Multimap;
+import com.neotys.neoload.model.v3.project.server.Server;
+import com.neotys.neoload.model.v3.project.server.Server.Scheme;
+import com.neotys.neoload.model.v3.project.userpath.Request.Method;
+import java.net.MalformedURLException;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.slf4j.LoggerFactory;
 
 public class RequestUtils {
 
@@ -99,34 +97,28 @@ public class RequestUtils {
 	 * Gets the parameters from URL query or form body (<name>=<value>&<name>=<value>).
 	 *
 	 * @param query the part of the URL or the form body that contains all the parameters
-	 * @return list
+	 * @return parameters by name, in query order
 	 */
-	public static List<Parameter> getParameters(final String query) {
-		final List<Parameter> urlParameters = new ArrayList<>();
-		if (Strings.isNullOrEmpty(query)) {
-			return urlParameters;
+	public static Multimap<String, Optional<String>> getParameters(final String query) {
+		final ImmutableListMultimap.Builder<String, Optional<String>> urlParameters = ImmutableListMultimap.builder();
+		if (Strings.isNullOrEmpty(query) || query.trim().isEmpty()) {
+			return urlParameters.build();
 		}
-		final String cleanedQuery = query.trim();
-		if (cleanedQuery.isEmpty()) {
-			return urlParameters;
-		}		
 		for (String param : query.split("&")) {
-			final Parameter.Builder parameterBuilder = Parameter.builder();
 			if (param.contains("=")) {
 				final String[] pair = param.split("=");
 				if (pair.length > 1) {
-					parameterBuilder.name(pair[0]).value(pair[1]);
+					urlParameters.put(pair[0], Optional.of(pair[1]));
 				} else if (pair.length == 1) {
-					parameterBuilder.name(pair[0]).value("");
-				} else{
-					parameterBuilder.name("").value("");
+					urlParameters.put(pair[0], Optional.of(""));
+				} else {
+					urlParameters.put("", Optional.of(""));
 				}
 			} else {
-				parameterBuilder.name(param);
+				urlParameters.put(param, Optional.empty());
 			}
-			urlParameters.add(parameterBuilder.build());
 		}
-		return urlParameters;
+		return urlParameters.build();
 	}
 
 	public static Optional<String> getEncodeUrlValue(final String syntax) {
@@ -188,17 +180,12 @@ public class RequestUtils {
 		}
 	}
 
-	public static boolean containFormHeader(final List<Header> headers) {
-		final Optional<Header> contentType = findHeader(headers, RequestUtils.HEADER_CONTENT_TYPE);
-		return contentType.filter(header -> isForm(header.getValue().orElse(null))).isPresent();
-	}
-
-	public static Optional<Header> findHeader(final List<Header> headers, final String name) {
-		if ((headers == null) || (headers.isEmpty())) return Optional.empty();
-		if (Strings.isNullOrEmpty(name)) return Optional.empty();
-		return headers.stream()
-				.filter(header -> name.trim().equals(header.getName()))
-				.findFirst();
+	public static boolean containFormHeader(final Multimap<String, Optional<String>> headers) {
+		if (headers == null) return false;
+		return headers.get(HEADER_CONTENT_TYPE).stream()
+				.findFirst()
+				.filter(value -> isForm(value.orElse(null)))
+				.isPresent();
 	}
 
 	public static boolean isBinary(final String contentType) {
