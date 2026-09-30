@@ -8,5 +8,11 @@ user_paths:
         description: My SOAP request
         url: /soap
         server: myServer
+        parameters:
+        - param1: value1
+        - param2: value2
+        headers:
+        - SOAPAction: http://example.com/action
+        - Content-Type: text/xml; charset=utf-8
         content:
           path: ./requests/mySOAPRequest.xml
