@@ -1,22 +1,18 @@
 package com.neotys.neoload.model.v3.util;
 
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-
+import com.google.common.collect.ImmutableListMultimap;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
-import com.neotys.neoload.model.v3.project.userpath.Header;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
+import java.util.Optional;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
 
 public class RequestUtilsTest {
 	@Test
@@ -206,47 +202,27 @@ public class RequestUtilsTest {
 		assertNotNull(RequestUtils.getParameters(" \t \r\n "));
 		assertEquals(0, RequestUtils.getParameters(" \t \r\n ").size());
 		
-		Parameter parameter = Parameter.builder()
-				.name("name")
-				.build();
-		assertEquals(singletonList(parameter), RequestUtils.getParameters("name"));
-		parameter = Parameter.builder()
-				.name("name")
-				.value("")
-				.build();
-		assertEquals(singletonList(parameter), RequestUtils.getParameters("name="));
-		parameter = Parameter.builder()
-				.name("")
-				.value("")
-				.build();
-		assertEquals(singletonList(parameter), RequestUtils.getParameters("="));
-		parameter = Parameter.builder()
-				.name("")
-				.value("value")
-				.build();
-		assertEquals(singletonList(parameter), RequestUtils.getParameters("=value"));
-		parameter = Parameter.builder()
-				.name("name")
-				.value("value")
-				.build();
-		assertEquals(singletonList(parameter), RequestUtils.getParameters("name=value"));
-
-		final Parameter parameter1 = Parameter.builder()
-				.name("name1")
-				.value("value1")
-				.build();
-		final Parameter parameter2 = Parameter.builder()
-				.name("name2")
-				.build();
-		final Parameter parameter3 = Parameter.builder()
-				.name("name3")
-				.value("")
-				.build();
-		final Parameter parameter4 = Parameter.builder()
-				.name("name4")
-				.value("value4")
-				.build();
-		assertEquals(Arrays.asList(parameter1, parameter2, parameter3, parameter4), RequestUtils.getParameters("name1=value1&name2&name3=&name4=value4"));
+		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("name", Optional.empty())
+				.build(), RequestUtils.getParameters("name"));
+		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("name", Optional.of(""))
+				.build(), RequestUtils.getParameters("name="));
+		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("", Optional.of(""))
+				.build(), RequestUtils.getParameters("="));
+		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("", Optional.of("value"))
+				.build(), RequestUtils.getParameters("=value"));
+		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("name", Optional.of("value"))
+				.build(), RequestUtils.getParameters("name=value"));
+		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("name1", Optional.of("value1"))
+				.put("name2", Optional.empty())
+				.put("name3", Optional.of(""))
+				.put("name4", Optional.of("value4"))
+				.build(), RequestUtils.getParameters("name1=value1&name2&name3=&name4=value4"));
 	}
 	
 	@Test
@@ -319,128 +295,35 @@ public class RequestUtilsTest {
 	@Test
 	public void containFormHeader() {
 		assertFalse(RequestUtils.containFormHeader(null));
-		assertFalse(RequestUtils.containFormHeader(Arrays.asList()));
-		
-		List<Header> headers = Arrays.asList(
-				Header.builder()
-					.name("name1")
-					.build(),
-				Header.builder()
-					.name("name2")
-					.build(),
-				Header.builder()
-					.name("name3")
-					.build()				
-		);
-		assertFalse(RequestUtils.containFormHeader(headers));
-		
-		headers = Arrays.asList(
-				Header.builder()
-					.name("name")
-					.value("value")
-					.build(),
-				Header.builder()
-					.name("Content-Type")
-					.build(),
-				Header.builder()
-					.name("name")
-					.value("value")
-					.build()				
-		);
-		assertFalse(RequestUtils.containFormHeader(headers));
+		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.of()));
 
-		headers = Arrays.asList(
-				Header.builder()
-					.name("name")
-					.value("value")
-					.build(),
-				Header.builder()
-					.name("Content-Type")
-					.value("")
-					.build(),
-				Header.builder()
-					.name("name")
-					.value("value")
-					.build()				
-		);
-		assertFalse(RequestUtils.containFormHeader(headers));
-
-		headers = Arrays.asList(
-				Header.builder()
-					.name("name")
-					.value("value")
-					.build(),
-				Header.builder()
-					.name("Content-Type")
-					.value("value")
-					.build(),
-				Header.builder()
-					.name("name")
-					.value("value")
-					.build()				
-		);
-		assertFalse(RequestUtils.containFormHeader(headers));
-
-		headers = Arrays.asList(
-				Header.builder()
-					.name("name")
-					.value("value")
-					.build(),
-				Header.builder()
-					.name("Content-Type")
-					.value("application/x-www-form-urlencoded")
-					.build(),
-				Header.builder()
-					.name("name")
-					.value("value")
-					.build()				
-		);
-		assertTrue(RequestUtils.containFormHeader(headers));
+		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("name1", Optional.empty())
+				.put("name2", Optional.empty())
+				.put("name3", Optional.empty())
+				.build()));
+		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("name", Optional.of("value"))
+				.put("Content-Type", Optional.empty())
+				.put("name", Optional.of("value"))
+				.build()));
+		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("name", Optional.of("value"))
+				.put("Content-Type", Optional.of(""))
+				.put("name", Optional.of("value"))
+				.build()));
+		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("name", Optional.of("value"))
+				.put("Content-Type", Optional.of("value"))
+				.put("name", Optional.of("value"))
+				.build()));
+		assertTrue(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
+				.put("name", Optional.of("value"))
+				.put("Content-Type", Optional.of("application/x-www-form-urlencoded"))
+				.put("name", Optional.of("value"))
+				.build()));
 	}
 
-	@Test
-	public void findHeader() {
-		assertFalse(RequestUtils.findHeader(null, "name").isPresent());
-		assertFalse(RequestUtils.findHeader(Arrays.asList(), "name").isPresent());
-		
-		assertFalse(RequestUtils.findHeader(Arrays.asList(Header.builder().name("name").build()), null).isPresent());
-		assertFalse(RequestUtils.findHeader(Arrays.asList(Header.builder().name("name").build()), "").isPresent());
-		assertFalse(RequestUtils.findHeader(Arrays.asList(Header.builder().name("name").build()), " \t \r\n ").isPresent());
-
-		List<Header> headers = Arrays.asList(
-				Header.builder()
-					.name("name1")
-					.build(),
-				Header.builder()
-					.name("name2")
-					.build(),
-				Header.builder()
-					.name("name3")
-					.build()				
-		);
-		assertFalse(RequestUtils.findHeader(headers, "name").isPresent());
-		assertTrue(RequestUtils.findHeader(headers, "name1").isPresent());
-		assertTrue(RequestUtils.findHeader(headers, "name2").isPresent());
-		assertTrue(RequestUtils.findHeader(headers, "name3").isPresent());
-		
-		
-		headers = Arrays.asList(
-				Header.builder()
-					.name("name")
-					.value("value1")
-					.build(),
-				Header.builder()
-					.name("name")
-					.value("value2")
-					.build(),
-				Header.builder()
-					.name("name")
-					.value("value3")
-					.build()				
-		);
-		assertEquals(Header.builder().name("name").value("value1").build(), RequestUtils.findHeader(headers, "name").get());
-	}
-	
 	@Test
 	public void isBinary() {
 		assertFalse(RequestUtils.isBinary(null));

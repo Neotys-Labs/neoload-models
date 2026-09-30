@@ -1009,19 +1009,7 @@
 							"type": "string",
 							"default": "GET"
 						},
-						"headers": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"/": {}
-								},
-								"patternProperties": {
-									".*": { "type": "string" }
-								},
-								"additionalProperties": false
-							}
-						},
+						"headers": { "$ref": "#/definitions/user_paths/name_value_map_list" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
 						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
@@ -1336,6 +1324,23 @@
 					"title": "Web Page Think Time Value",
 					"type": "string",
 					"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
+				}
+			},
+			"name_value_map_list": {
+				"title": "Name/Value Map List",
+				"type": "array",
+				"items": {
+					"oneOf": [
+						{ "type": "string" },
+						{
+							"type": "object",
+							"minProperties": 1,
+							"maxProperties": 1,
+							"patternProperties": {
+								".*": { "type": "string" }
+							}
+						}
+					]
 				}
 			},
 			"part": {
