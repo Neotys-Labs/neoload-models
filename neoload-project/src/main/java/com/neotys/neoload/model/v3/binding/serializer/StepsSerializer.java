@@ -74,6 +74,10 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 			serializeRendezvous((Rendezvous) step, generator);
 		} else if (step instanceof StopVU) {
 			serializeStopVU((StopVU) step, generator);
+		} else if (step instanceof SharedElementRef) {
+			generator.writeStartObject();
+			generator.writeStringField(SHARED_ELEMENT, step.getName());
+			generator.writeEndObject();
 		} else {
 			final String stepName = STEPS.get(step.getClass());
 			if (stepName != null) {

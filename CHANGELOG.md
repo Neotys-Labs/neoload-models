@@ -105,6 +105,29 @@ otherwise.
     file: logs/custom.txt
 ```
 
+#### Shared elements
+
+**`shared_elements`** — a top-level, project-wide list of named, reusable steps: each entry is an
+ordinary `transaction`, `loop`, `while` or `fork` step. A **`shared_element`** step, usable
+anywhere a step is valid, resolves to one of these by name instead of inlining it; writing a
+project never inlines the definition at the reference site.
+
+```yaml
+shared_elements:
+- transaction:
+    name: Login
+    steps:
+    - request:
+        url: https://www.tricentis.com/login
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - shared_element: Login
+```
+
+See [shared_elements](neoload-project/doc/v3/shared_elements.md) for the full reference.
+
 #### Requests
 
 **`parts`** — a multipart/form-data body on an HTTP request, as in the NeoLoad GUI. Use `parts`
