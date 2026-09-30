@@ -4,13 +4,7 @@ user_paths:
   actions:
     steps:
     - soap_request:
-        name: MySoapRequest
-        description: My SOAP request
-        url: /soap
-        server: myServer
-        parameters:
-        - param1: value1
-        - param2: value2
+        url: http://host:80/
         headers:
         - SOAPAction: http://example.com/action
         - Content-Type: text/xml; charset=utf-8

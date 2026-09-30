@@ -1049,6 +1049,8 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"url": { "$ref": "#/definitions/common/url" },
 						"server": { "$ref": "#/definitions/common/name" },
+						"parameters": { "$ref": "#/definitions/user_paths/name_value_map_list" },
+						"headers": { "$ref": "#/definitions/user_paths/name_value_map_list" },
 						"content": {
 							"type": "object",
 							"required": ["path"],
