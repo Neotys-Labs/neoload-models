@@ -912,10 +912,14 @@
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				}
 			},
+			"non_empty_steps": {
+				"title": "Non-empty Steps",
+				"allOf": [{ "$ref": "#/definitions/user_paths/steps" }],
+				"minItems": 1
+			},
 			"steps": {
 				"title": "Steps",
 				"type": "array",
-				"minItems": 1,
 				"items": {
 					"oneOf": [
 						{
@@ -1095,7 +1099,7 @@
 							"enum": ["any", "all"],
 							"default": "any"
 						},
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
 					},
 					"additionalProperties": false
 				},
@@ -1107,7 +1111,7 @@
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"count": { "anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }] },
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
 					},
 					"additionalProperties": false
 				},
@@ -1185,7 +1189,7 @@
 							"type": "boolean",
 							"default": true
 						},
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
 					},
 					"additionalProperties": false
 				},
@@ -1302,7 +1306,7 @@
 							"type": "string",
 							"enum": ["static", "dynamic", "dynamic_forced_encoding"]
 						},
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
+						"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
 					},
 					"additionalProperties": false
 				},
@@ -1438,7 +1442,7 @@
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": { "type": "boolean" },
 					"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
-					"steps": { "$ref": "#/definitions/user_paths/steps" },
+					"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				},
 				"additionalProperties": false

@@ -11,8 +11,6 @@ import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
-import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
-import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.validation.Valid;
@@ -40,8 +38,12 @@ public interface Container extends Step, SlaElement, PacingElement, AssertionsEl
 		return DEFAULT_NAME;
 	}
 
-	@RequiredCheck(groups={NeoLoad.class})
+	/**
+	 * May be empty while the container is being designed. Always written, as {@code steps: []} when empty,
+	 * because the schema requires the field.
+	 */
 	@Valid
+	@JsonInclude(Include.ALWAYS)
 	@JsonSerialize(using = StepsSerializer.class)
 	@JsonDeserialize(using = StepsDeserializer.class)
 	@JsonProperty(STEPS)
