@@ -1,0 +1,6 @@
+schemaVersion: "3.1"
+name: MyProject
+shared_elements:
+- request:
+    name: NotAContainer
+    url: http://www.neotys.com/login
