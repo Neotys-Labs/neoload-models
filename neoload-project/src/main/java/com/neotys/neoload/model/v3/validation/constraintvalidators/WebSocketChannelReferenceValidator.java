@@ -18,17 +18,17 @@ public final class WebSocketChannelReferenceValidator extends AbstractConstraint
 		if (userPath == null) {
 			return true;
 		}
-		final List<WebSocketRequest> requests = WebSocketChannelPaths.requestsWithChannel(userPath);
-		if (requests.isEmpty()) {
+		final List<WebSocketRequest> webSocketRequests = WebSocketChannelPaths.webSocketRequestsWithChannel(userPath);
+		if (webSocketRequests.isEmpty()) {
 			return true;
 		}
 		final WebSocketChannelPaths paths = WebSocketChannelPaths.of(userPath);
 		final List<String> problems = new ArrayList<>();
-		for (final WebSocketRequest request : requests) {
-			request.getChannel()
+		for (final WebSocketRequest webSocketRequest : webSocketRequests) {
+			webSocketRequest.getChannel()
 					.map(paths::resolve)
 					.flatMap(WebSocketChannelPaths.Resolution::getProblem)
-					.ifPresent(problem -> problems.add(WebSocketChannelPaths.prefix(request) + problem));
+					.ifPresent(problem -> problems.add(WebSocketChannelPaths.prefix(webSocketRequest) + problem));
 		}
 		return WebSocketChannelPaths.report(context, problems);
 	}
