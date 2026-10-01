@@ -167,13 +167,42 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 				"websocket_request 'both_bodies': 'body' and 'bodybinary' cannot be used simultaneously.");
 	}
 
-	private Validation validate(final String fileName) throws IOException {
+	@Test
+	public void readProjectSplitAcrossFilesAccepted() throws IOException {
+		// One file holds the user paths, the other the shared elements, and the requests of each
+		// use channels of the other, as in a project loaded with includes. Each file is validated
+		// alone, before the merge: the references between them are left to the converter, and
+		// neither file may be rejected since the merged project is valid.
+		final ProjectDescriptor userPaths = readDescriptor("test-websocket_request-split-user-paths");
+		final ProjectDescriptor sharedElements = readDescriptor("test-websocket_request-split-shared-elements");
+		assertValid(userPaths);
+		assertValid(sharedElements);
+
+		// The merge concatenates the lists of every file, as ConfigurationManager.mergeAsCodeProject does
+		final Project merged = Project.builder()
+				.name("MyProject")
+				.schemaVersion("3.1")
+				.addAllSharedElements(sharedElements.getProject().getSharedElements())
+				.addAllUserPaths(userPaths.getProject().getUserPaths())
+				.build();
+		assertValid(ProjectDescriptor.builder().project(merged).build());
+	}
+
+	private static void assertValid(final ProjectDescriptor descriptor) {
+		final Validation validation = VALIDATOR.validate(descriptor, NeoLoad.class);
+		assertTrue("unexpected message: " + validation.getMessage().orElse(""), validation.isValid());
+	}
+
+	private ProjectDescriptor readDescriptor(final String fileName) throws IOException {
 		final IO io = new IO();
 		final File file = getFile(fileName, "yaml");
 		final ProjectDescriptor descriptor = io.read(file, StandardCharsets.UTF_8);
 		assertNotNull(descriptor);
+		return descriptor;
+	}
 
-		return VALIDATOR.validate(descriptor, NeoLoad.class);
+	private Validation validate(final String fileName) throws IOException {
+		return VALIDATOR.validate(readDescriptor(fileName), NeoLoad.class);
 	}
 
 	private void assertInvalid(final String fileName, final String... expectedInMessage) throws IOException {
