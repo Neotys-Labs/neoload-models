@@ -89,6 +89,23 @@ public class IOWebSocketRequestSchemaValidationTest {
 						+ "        status_code: \"1000\"\n"));
 	}
 
+	@Test
+	public void channelPathPatternAcceptsUserPathAndSharedElementRoots() throws IOException {
+		assertValid(projectWithChannelReference("actions>my_channel"));
+		assertValid(projectWithChannelReference("shared_elements>OpenChat>chat_socket"));
+		assertValid(projectWithChannelReference("shared_elements>OpenChat>Login>chat_socket"));
+		for (final String reference : new String[] {"my_channel", "shared_elements>OpenChat", "Listener>init>my_channel", "actions>", "actions>>my_channel"}) {
+			assertFalse("the 3.1 schema must reject channel '" + reference + "'",
+					schema31.validate(projectWithChannelReference(reference)).isEmpty());
+		}
+	}
+
+	private static JsonNode projectWithChannelReference(final String reference) throws IOException {
+		final JsonNode request = YAML_MAPPER.readTree("websocket_request:\n  body: hello\n");
+		((ObjectNode) request.get("websocket_request")).put("channel", reference);
+		return projectWith(YAML_MAPPER.readTree("delay: 1s\n"), request);
+	}
+
 	private static JsonNode projectWith(final JsonNode channel, final JsonNode request) {
 		final ObjectNode project = YAML_MAPPER.createObjectNode().put("name", "MyProject");
 		final ObjectNode userPath = project.putArray("user_paths").addObject().put("name", "MyUserPath");

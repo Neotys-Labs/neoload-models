@@ -28,9 +28,6 @@ user_paths:
         name: ambiguous
         channel: actions>Twin>twin_socket
     - websocket_request:
-        name: shared_root
-        channel: shared_elements>OpenChat>chat_socket
-    - websocket_request:
         name: with_variable
         channel: actions>${channel}
     - websocket_request:

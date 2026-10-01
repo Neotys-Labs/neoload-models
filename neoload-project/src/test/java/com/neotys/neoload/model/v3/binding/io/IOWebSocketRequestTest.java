@@ -125,12 +125,34 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 				"websocket_request 'bare_name': 'chat_socket' is not a channel path: it must start with init, actions, end",
 				"websocket_request 'wrong_path': no websocket_channel at 'actions>Login>chat_socket'; use 'actions>chat_socket'.",
 				"websocket_request 'ambiguous': 'actions>Twin>twin_socket' designates 2 channels: two sibling steps on this path share a name.",
-				"websocket_request 'shared_root': 'shared_elements>OpenChat>chat_socket' is not a channel path",
 				// The reference is user text: it must reach the message as written, not be interpolated
 				"websocket_request 'with_variable': no websocket_channel at 'actions>${channel}'.",
 				"websocket_request 'no_messages_mapping': a synchronous request needs its channel 'actions>chat_socket' to declare 'messages_mapping'."
 				);
 
+	}
+
+	@Test
+	public void readSharedElementsExampleAccepted() throws IOException {
+		// The complete example of LOAD-40148: channels in a user path and in shared elements, reached
+		// from user paths and from other shared elements, and a shared element only declared in the .nlp
+		final Validation validation = validate("test-websocket_request-shared-elements");
+		assertTrue("unexpected message: " + validation.getMessage().orElse(""), validation.isValid());
+	}
+
+	@Test
+	public void readInvalidSharedElementReferencesRejected() throws IOException {
+		// declared_elsewhere (a shared element this file does not declare) and unused_shared_element
+		// (a shared element no user path of this file uses) must not be reported
+		assertInvalid("test-websocket_request-invalid-shared-references",
+				"websocket_request 'not_used_here' in user path 'Standalone': shared element 'OpenChat' is not used in user path 'Standalone', so this channel is never opened there.",
+				"websocket_request 'wrong_inner_path' in user path 'ChatUser': no websocket_channel at 'shared_elements>OpenChat>Sub>chat_socket'; use 'shared_elements>OpenChat>chat_socket'.",
+				"websocket_request 'too_short' in user path 'ChatUser': 'shared_elements>OpenChat' is not a channel path",
+				"websocket_request 'ambiguous_inside' in shared element 'Twins': 'shared_elements>Twins>Twin>twin_socket' designates 2 channels: two sibling steps on this path share a name.",
+				"websocket_request 'different_channels' in shared element 'SendInline': 'init>own_socket' designates a different channel in each user path using this shared element (ChatUser, Listener), but a request can only have one channel.",
+				"websocket_request 'missing_in_one_user_path' in shared element 'SendMissing': in user path 'Listener', no websocket_channel at 'init>solo_socket'.",
+				"websocket_request 'bare_inside' in shared element 'SendBare': 'chat_socket' is not a channel path",
+				"websocket_request 'sync_without_mapping' in shared element 'OpenNoMapping': a synchronous request needs its channel 'shared_elements>OpenNoMapping>raw_socket' to declare 'messages_mapping'.");
 	}
 
 	@Test

@@ -23,7 +23,7 @@ A request is asynchronous unless `synchronous` is set: it sends its frame and mo
 
 `channel` is the complete path of the channel, from where it is declared down to its `name`, joined with `>`:
 
-- it starts with the part of the User Path the channel is in: `init`, `actions` or `end`;
+- it starts with where the channel is declared: `init`, `actions` or `end` for a channel declared in a User Path, `shared_elements>SharedElementName` for a channel declared inside a [shared element](shared_elements.md);
 - then comes the `name` of each step on the way, for instance a transaction, a loop or a fork;
 - the branches of an `if` are `then` and `else`, those of a `try_catch` are `try` and `catch`, and the default branch of a `switch` is `default`. A `switch` case is designated by its `name`;
 - the last part is the channel's `name`.
@@ -60,7 +60,47 @@ actions:
           body: hello
 ```
 
-A reference is rejected when it does not start with `init`, `actions` or `end`, when no channel has that path (the message then names the paths of the channels with the same `name`), or when two sibling steps on the path share a name.
+##### Channels inside a shared element
+
+A `shared_element` step is not part of a path: a channel declared inside a shared element is always designated from the shared element itself, however many times and wherever the shared element is used. A request inside a shared element uses the same paths as any other request.
+
+```yaml
+shared_elements:
+- transaction:
+    name: OpenChat
+    steps:
+    - websocket_channel:
+        name: chat_socket                            # shared_elements>OpenChat>chat_socket
+        url: wss://host:443/chat
+- transaction:
+    name: SendChat
+    steps:
+    - websocket_request:
+        channel: shared_elements>OpenChat>chat_socket
+        body: hello
+user_paths:
+- name: ChatUser
+  init:
+    steps:
+    - shared_element: OpenChat                       # opens shared_elements>OpenChat>chat_socket
+  actions:
+    steps:
+    - shared_element: SendChat
+    - websocket_request:
+        channel: shared_elements>OpenChat>chat_socket
+        message_type: close
+```
+
+A request runs in every User Path that uses it, directly or through another shared element, so:
+
+- a `shared_elements>SharedElementName>...` channel must be opened by each of these User Paths: they must use that shared element too;
+- an `init`, `actions` or `end` reference from inside a shared element is looked up in each of these User Paths, and must designate the same channel in all of them. In practice this only works when a single User Path uses the shared element.
+
+A shared element that is not declared in the file, for instance one that only exists in the NeoLoad project the file is applied to, is not checked: its channels are resolved when the file is merged into the project.
+
+##### Rejected references
+
+A reference is rejected when it does not start with `init`, `actions`, `end` or `shared_elements>SharedElementName`, when no channel has that path (the message then names the paths of the channels with the same `name`), when two sibling steps on the path share a name, when its shared element is not used by a User Path that runs the request, or when it designates a different channel in each User Path that runs it.
 
 #### Example
 

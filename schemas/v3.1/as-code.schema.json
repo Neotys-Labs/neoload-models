@@ -1398,9 +1398,9 @@
 			},
 			"websocket_channel_reference": {
 				"title": "WebSocket Channel Reference",
-				"description": "The complete path of the channel: init, actions or end, then each step name down to the channel's name, joined with '>'",
+				"description": "The complete path of the channel, joined with '>': init, actions or end for a channel declared in a user path, or shared_elements>SharedElementName for one declared inside a shared element, then each step name down to the channel's name",
 				"type": "string",
-				"pattern": "^(init|actions|end)(>[^>]+)+$"
+				"pattern": "^((init|actions|end)(>[^>]+)+|shared_elements(>[^>]+){2,})$"
 			},
 			"websocket_messages_mapping": {
 				"title": "WebSocket Messages Mapping",
