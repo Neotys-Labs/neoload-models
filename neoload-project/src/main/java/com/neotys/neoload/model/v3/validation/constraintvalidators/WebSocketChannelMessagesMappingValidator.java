@@ -28,14 +28,16 @@ public final class WebSocketChannelMessagesMappingValidator extends AbstractCons
 			if (!webSocketRequest.isSynchronous()) {
 				continue;
 			}
-			// reference is a channel path, e.g. "actions>has_notifications>then>notify_socket"
-			webSocketRequest.getChannel().ifPresent(reference ->
-					paths.resolve(reference)
-							.getChannel()
-							.filter(channel -> channel.getMessagesMapping().isEmpty())
-							.ifPresent(channel ->
-									problems.add(WebSocketChannelPaths.prefix(webSocketRequest) + "a synchronous request needs its channel '"
-									+ WebSocketChannelPaths.escape(reference) + "' to declare 'messages_mapping'.")));
+			// reference is a channel path, e.g. "actions>has_notifications>then>notify_socket"; a channel
+			// inside a shared element is left to WebSocketSharedChannelReferenceValidator
+			webSocketRequest.getChannel()
+					.filter(reference -> !WebSocketChannelPaths.isSharedElementReference(reference))
+					.ifPresent(reference ->
+							paths.resolve(reference)
+									.getChannel()
+									.filter(channel -> channel.getMessagesMapping().isEmpty())
+									.ifPresent(channel -> problems.add(WebSocketChannelPaths.prefix(webSocketRequest)
+											+ WebSocketChannelPaths.missingMessagesMapping(reference))));
 		}
 		return WebSocketChannelPaths.report(context, problems);
 	}

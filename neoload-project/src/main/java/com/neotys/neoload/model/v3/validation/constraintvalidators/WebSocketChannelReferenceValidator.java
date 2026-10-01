@@ -26,6 +26,8 @@ public final class WebSocketChannelReferenceValidator extends AbstractConstraint
 		final List<String> problems = new ArrayList<>();
 		for (final WebSocketRequest webSocketRequest : webSocketRequests) {
 			webSocketRequest.getChannel()
+					// a channel inside a shared element needs the project's shared_elements: WebSocketSharedChannelReferenceValidator
+					.filter(reference -> !WebSocketChannelPaths.isSharedElementReference(reference))
 					.map(paths::resolve)
 					.flatMap(WebSocketChannelPaths.Resolution::getProblem)
 					.ifPresent(problem -> problems.add(WebSocketChannelPaths.prefix(webSocketRequest) + problem));

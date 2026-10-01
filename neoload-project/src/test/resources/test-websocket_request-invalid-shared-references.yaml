@@ -1,0 +1,107 @@
+name: MyProject
+schemaVersion: "3.1"
+shared_elements:
+- transaction:
+    name: OpenChat
+    steps:
+    - websocket_channel:
+        name: chat_socket
+        url: wss://host:443/chat
+        messages_mapping:
+          jsonpath: $.id
+- transaction:
+    name: Twins
+    steps:
+    - transaction:
+        name: Twin
+        steps:
+        - websocket_channel:
+            name: twin_socket
+            url: wss://host:443/twin1
+    - transaction:
+        name: Twin
+        steps:
+        - websocket_channel:
+            name: twin_socket
+            url: wss://host:443/twin2
+    - websocket_request:
+        name: ambiguous_inside
+        channel: shared_elements>Twins>Twin>twin_socket
+- transaction:
+    name: SendInline
+    steps:
+    - websocket_request:
+        name: different_channels
+        channel: init>own_socket
+- transaction:
+    name: SendMissing
+    steps:
+    - websocket_request:
+        name: missing_in_one_user_path
+        channel: init>solo_socket
+- transaction:
+    name: SendBare
+    steps:
+    - websocket_request:
+        name: bare_inside
+        channel: chat_socket
+- transaction:
+    name: OpenNoMapping
+    steps:
+    - websocket_channel:
+        name: raw_socket
+        url: wss://host:443/raw
+    - websocket_request:
+        name: sync_without_mapping
+        channel: shared_elements>OpenNoMapping>raw_socket
+        synchronous: true
+        mapping_id: m1
+- transaction:
+    name: Orphan
+    steps:
+    - websocket_request:
+        name: unused_shared_element
+        channel: init>whatever
+user_paths:
+- name: ChatUser
+  init:
+    steps:
+    - shared_element: OpenChat
+    - websocket_channel:
+        name: own_socket
+        url: wss://host:443/own1
+    - websocket_channel:
+        name: solo_socket
+        url: wss://host:443/solo
+  actions:
+    steps:
+    - shared_element: Twins
+    - shared_element: SendInline
+    - shared_element: SendMissing
+    - shared_element: SendBare
+    - shared_element: OpenNoMapping
+    - websocket_request:
+        name: wrong_inner_path
+        channel: shared_elements>OpenChat>Sub>chat_socket
+    - websocket_request:
+        name: too_short
+        channel: shared_elements>OpenChat
+    - websocket_request:
+        name: declared_elsewhere
+        channel: shared_elements>NlpChat>Primary>chat_socket
+- name: Listener
+  init:
+    steps:
+    - websocket_channel:
+        name: own_socket
+        url: wss://host:443/own2
+  actions:
+    steps:
+    - shared_element: SendInline
+    - shared_element: SendMissing
+- name: Standalone
+  actions:
+    steps:
+    - websocket_request:
+        name: not_used_here
+        channel: shared_elements>OpenChat>chat_socket

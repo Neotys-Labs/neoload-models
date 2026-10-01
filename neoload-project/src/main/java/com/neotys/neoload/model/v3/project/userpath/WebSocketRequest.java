@@ -21,8 +21,9 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * A frame sent on a {@link WebSocketChannel}, or the closing of that channel.
  *
  * <p>{@link #getChannel()} is the complete path of the channel, from where it is declared down to
- * its name, e.g. {@code actions>Login>chat_socket}. It is resolved within the enclosing
- * {@link UserPath}.</p>
+ * its name: {@code actions>Login>chat_socket} for a channel declared in a {@link UserPath},
+ * {@code shared_elements>OpenChat>chat_socket} for one declared inside a shared element. A request
+ * can only use a channel opened by the user path running it.</p>
  *
  * <p>Only a synchronous request waits for a response: it is paired with the inbound frame whose
  * correlation id, extracted by the channel's messages mapping, equals {@link #getMappingId()}.

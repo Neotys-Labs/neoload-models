@@ -1,0 +1,297 @@
+# =====================================================================================
+# websocket_request.channel: how a request refers to its channel
+# Rule: always the COMPLETE path of the channel, starting from where it is DECLARED.
+#
+#   Channel declared inline in a user path      init>...   actions>...   end>...
+#   Channel declared inside a shared element    shared_elements>SharedElementName>...
+#
+# Every channel has exactly ONE valid path. The user path's own name is never part of it.
+#
+# Segments after the root:
+#   step name    transaction, loop, while, fork, web_page, if, switch, case,
+#                try_catch, and finally the channel's own name
+#   fixed key    then | else (if)      try | catch (try_catch)      default (switch)
+#
+# A "shared_element: X" step is NOT a segment. A channel inside X is always written
+# shared_elements>X>..., however many times and wherever X is used.
+#
+# A shared_elements>X>... reference is only valid in a user path that uses X, directly
+# or through other shared elements. Otherwise the virtual user running the request never
+# opens that channel.
+#
+# Syntax: '>' is the separator (it is forbidden in names). No leading '>' (YAML would
+# read a block scalar) and no spaces around '>' (spaces are part of names).
+# Duplicate channel names are legal as long as their complete paths differ.
+#
+# websocket_request properties follow the LOAD-40294 PR 2 plan.
+# =====================================================================================
+name: ChatProject
+schemaVersion: "3.1"
+
+shared_elements:
+
+# A shared container that declares a channel.
+# Its only valid path is: shared_elements>OpenChat>chat_socket
+- transaction:
+    name: OpenChat
+    steps:
+    - websocket_channel:
+        name: chat_socket
+        url: wss://chat.example.com:443/ws
+        messages_mapping:                     # required as soon as one synchronous
+          jsonpath: $.correlationId           # request uses this channel
+    - websocket_request:
+        name: hello
+        # CASE: a request in the SAME shared element as its channel. It uses the same
+        # complete path as every other reference; there is no local shortcut.
+        channel: shared_elements>OpenChat>chat_socket
+        message_type: text
+        body: '{"op":"hello"}'
+
+# A shared container with no channel of its own.
+- transaction:
+    name: SendChat
+    steps:
+    - websocket_request:
+        name: send_chat
+        # CASE: a request in ANOTHER shared element. Valid because every user path that
+        # uses SendChat (ChatUser and Listener) also uses OpenChat, so the channel is
+        # open whenever send_chat runs. The path is the same in every user path, so it
+        # always targets the same channel (as an .nlp shared container, whose request
+        # holds a single channel uid).
+        channel: shared_elements>OpenChat>chat_socket
+        message_type: text
+        body: '{"op":"msg","text":"hi"}'
+
+# A shared element that contains another shared element.
+- transaction:
+    name: Reconnect
+    steps:
+    - delay: 1s
+    - shared_element: OpenChat                # NOT a segment: the channel inside is still
+                                              # shared_elements>OpenChat>chat_socket
+
+user_paths:
+
+# -------------------------------------------------------------------------------------
+- name: ChatUser                              # never part of a path: renaming or copying
+                                              # this user path breaks no reference
+  init:
+    steps:
+    - shared_element: OpenChat                # opens shared_elements>OpenChat>chat_socket
+  actions:
+    steps:
+
+    - transaction:
+        name: Login
+        steps:
+        - websocket_request:
+            name: login
+            # CASE: a user path request to a channel declared in a shared element. The
+            # path says where the channel is DECLARED, not where OpenChat is used here.
+            channel: shared_elements>OpenChat>chat_socket
+            message_type: text
+            synchronous: true                 # waits for the reply whose correlation id
+            mapping_id: "444-555-1234"        # (via messages_mapping) equals mapping_id
+            body: '{"op":"login","correlationId":"444-555-1234"}'
+
+    - if:
+        name: has_notifications
+        conditions:
+        - "'${notifications}' == 'on'"
+        then:
+          steps:
+          # CASE: DUPLICATE CHANNEL NAMES ARE LEGAL: the two notify_socket channels have
+          # different complete paths (then / else).
+          - websocket_channel:
+              name: notify_socket             # actions>has_notifications>then>notify_socket
+              url: wss://chat.example.com:443/notify
+          - websocket_request:
+              name: subscribe
+              # CASE: an if branch. 'then' is the fixed key of the if's first branch.
+              channel: actions>has_notifications>then>notify_socket
+              message_type: text
+              body: '{"op":"subscribe"}'
+        else:
+          steps:
+          - websocket_channel:
+              name: notify_socket             # actions>has_notifications>else>notify_socket
+              url: wss://chat.example.com:443/notify-legacy
+          - websocket_request:
+              name: subscribe_legacy
+              channel: actions>has_notifications>else>notify_socket
+              message_type: text
+              body: '{"op":"subscribe","v":1}'
+
+    - switch:
+        name: room_router
+        value: "${room}"
+        case:
+        - name: vip                           # a case on a path needs a name;
+          value: vip                          # unnamed cases would all be called "case"
+          break: true
+          steps:
+          - websocket_channel:
+              name: vip_socket
+              url: wss://chat.example.com:443/vip
+          - websocket_request:
+              name: join_vip
+              # CASE: a switch case: the case's name is the segment.
+              channel: actions>room_router>vip>vip_socket
+              message_type: text
+              body: '{"op":"join","room":"vip"}'
+        default:
+          steps:
+          - websocket_channel:
+              name: lobby_socket
+              url: wss://chat.example.com:443/lobby
+          - websocket_request:
+              name: join_lobby
+              # CASE: a switch's default branch: 'default' is its fixed key.
+              channel: actions>room_router>default>lobby_socket
+              message_type: text
+              body: '{"op":"join","room":"lobby"}'
+
+    - try_catch:
+        name: safe_send
+        try:
+          steps:
+          - websocket_request:
+              name: send_safe
+              channel: shared_elements>OpenChat>chat_socket   # same path from any depth
+              message_type: text
+              body: '{"op":"msg","text":"important"}'
+        catch:
+          steps:
+          - websocket_channel:
+              name: recovery_socket
+              url: wss://chat.example.com:443/recovery
+          - websocket_request:
+              name: resend
+              # CASE: a try_catch branch: 'catch' is its fixed key.
+              channel: actions>safe_send>catch>recovery_socket
+              message_type: text
+              body: '{"op":"msg","text":"important","retry":true}'
+
+    - shared_element: SendChat
+
+    - shared_element: Reconnect               # CASE: THE SAME CHANNEL USED TWICE.
+                                              # OpenChat now runs in init and inside
+                                              # Reconnect: still ONE channel, with ONE
+                                              # path, shared_elements>OpenChat>chat_socket
+
+  end:
+    steps:
+    - websocket_request:
+        name: close_chat
+        channel: shared_elements>OpenChat>chat_socket
+        message_type: close
+        status_code: "1000"
+
+# -------------------------------------------------------------------------------------
+- name: Listener
+  init:
+    steps:
+    - shared_element: OpenChat                # Listener's own connection: each virtual
+                                              # user opens its own connection when it runs
+                                              # the channel step
+  actions:
+    steps:
+    - shared_element: SendChat                # valid here too: Listener also uses OpenChat
+    - websocket_request:
+        name: poll
+        channel: shared_elements>OpenChat>chat_socket
+        message_type: text
+        synchronous: true
+        mapping_id: ${poll_id}
+        body: '{"op":"poll","correlationId":"${poll_id}"}'
+
+# -------------------------------------------------------------------------------------
+- name: Standalone
+  init:
+    steps:
+    # CASE: the simplest form, a channel declared inline in the user path.
+    - websocket_channel:
+        name: solo_socket                     # init>solo_socket
+        url: wss://chat.example.com:443/solo
+  actions:
+    steps:
+    - transaction:
+        name: Talk
+        steps:
+        - websocket_request:
+            name: talk
+            channel: init>solo_socket
+            message_type: text
+            body: '{"op":"msg"}'
+
+# -------------------------------------------------------------------------------------
+# CASE: OVERLAY ON AN .nlp PROJECT. This user path uses a shared container that exists
+# ONLY in the .nlp, where it legally holds two channels with the same name:
+#
+#   NlpOpenChat              (.nlp shared container, not declared in this file)
+#   ├── Primary  > chat_socket
+#   └── Fallback > chat_socket
+#
+- name: LegacyOverlay                         # replaces the .nlp user path of the same name
+  init:
+    steps:
+    - shared_element: NlpOpenChat
+  actions:
+    steps:
+    - websocket_request:
+        name: send_primary
+        # The complete path picks one of the two without renaming anything in the .nlp.
+        # This file alone cannot see inside NlpOpenChat, so it is NOT reported as
+        # "not found"; it is checked when the file is merged into the .nlp project.
+        channel: shared_elements>NlpOpenChat>Primary>chat_socket
+        message_type: text
+        body: '{"op":"msg"}'
+
+# =====================================================================================
+# INVALID REFERENCES (each on its own would be rejected)
+# Since every channel has one path, each error can state the exact path to use.
+#
+# In ChatUser:
+#   channel: chat_socket
+#     -> must start with init, actions, end or shared_elements
+#        (use shared_elements>OpenChat>chat_socket)
+#
+#   channel: init>OpenChat>chat_socket
+#     -> not found: a shared_element step is not a segment
+#        (use shared_elements>OpenChat>chat_socket)
+#
+#   channel: actions>has_notifications>notify_socket
+#     -> not found: the if's branch key is missing (use
+#        actions>has_notifications>then>notify_socket or ...>else>notify_socket)
+#
+#   channel: Listener>init>OpenChat>chat_socket
+#     -> must start with init, actions, end or shared_elements: the user path name is
+#        never part of a path. A request cannot use another user path's channel (it
+#        would fail at runtime: a virtual user only has the connections it opened).
+#
+#   channel: init > solo_socket
+#     -> must start with init, actions, end or shared_elements ('init ' is not 'init')
+#
+#   channel: >init>solo_socket
+#     -> YAML parse error: a leading '>' starts a block scalar
+#
+# In Standalone (which does not use OpenChat):
+#   channel: shared_elements>OpenChat>chat_socket
+#     -> error: OpenChat is not used in Standalone, so this channel is never opened
+#
+# In SendChat (used by ChatUser and Listener):
+#   channel: init>solo_socket
+#     -> error: not found in ChatUser nor in Listener. A reference from a shared element
+#        to a user path's INLINE channel only works if every user path using the shared
+#        element resolves it to the SAME channel, i.e. when only one user path uses it.
+#
+# Two sibling steps with the same name on a path (e.g. two transactions named Login
+# side by side, or two unnamed ones, both called "container"):
+#   -> ambiguous: rename one of them
+#
+# PR 2 request checks, unchanged by this proposal:
+#   synchronous: true without mapping_id                  -> error
+#   synchronous request on a channel with no
+#     messages_mapping (e.g. vip_socket)                  -> error
+# =====================================================================================
