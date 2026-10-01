@@ -16,6 +16,9 @@ public final class StartDateMatchesPatternValidator extends AbstractConstraintVa
 	@Override
 	public boolean isValid(final DateVariable variable, final ConstraintValidatorContext context) {
 		final String pattern = variable.getPattern();
+		if (pattern == null || variable.getStartDate() == null) {
+			return true;
+		}
 		if (PATTERN_MILLIS.equals(pattern) || PATTERN_MILLIS_LEGACY.equals(pattern)) {
 			return true;
 		}
