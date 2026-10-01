@@ -1,0 +1,22 @@
+name: MyProject
+schemaVersion: "3.1"
+shared_elements:
+- transaction:
+    name: OpenChat
+    steps:
+    - websocket_channel:
+        name: chat_socket
+        url: wss://host:443/chat
+        messages_mapping:
+          jsonpath: $.id
+    - websocket_request:
+        name: hello
+        channel: shared_elements>OpenChat>chat_socket
+        body: hello
+- transaction:
+    name: SendInline
+    steps:
+    - websocket_request:
+        name: send_on_user_path_channel
+        channel: init>own_socket
+        body: hi
