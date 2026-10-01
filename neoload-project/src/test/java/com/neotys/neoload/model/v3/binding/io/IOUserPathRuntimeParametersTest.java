@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -75,22 +76,34 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readRuntimeParameters() throws IOException {
-		read("test-userpaths-runtime-parameters", getRuntimeParameters());
+		final Project expectedProject = getRuntimeParameters();
+		assertNotNull(expectedProject);
+
+		read("test-userpaths-runtime-parameters", expectedProject);
 	}
 
 	@Test
 	public void writeRuntimeParameters() throws IOException {
-		write("test-userpaths-runtime-parameters", getRuntimeParameters());
+		final Project expectedProject = getRuntimeParameters();
+		assertNotNull(expectedProject);
+
+		write("test-userpaths-runtime-parameters", expectedProject);
 	}
 
 	@Test
 	public void readRuntimeParametersAsVariables() throws IOException {
-		read("test-userpaths-runtime-parameters-variables", getRuntimeParametersAsVariables());
+		final Project expectedProject = getRuntimeParametersAsVariables();
+		assertNotNull(expectedProject);
+
+		read("test-userpaths-runtime-parameters-variables", expectedProject);
 	}
 
 	@Test
 	public void writeRuntimeParametersAsVariables() throws IOException {
-		write("test-userpaths-runtime-parameters-variables", getRuntimeParametersAsVariables());
+		final Project expectedProject = getRuntimeParametersAsVariables();
+		assertNotNull(expectedProject);
+
+		write("test-userpaths-runtime-parameters-variables", expectedProject);
 	}
 
 	@Test

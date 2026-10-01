@@ -46,18 +46,7 @@ public final class UserPathSerializer extends StdSerializer<UserPath> {
         	generator.writeObjectField(USER_SESSION, userSession);
         }
 
-        final Optional<UserPath.FailurePolicy> onError = userPath.getOnError();
-        if (onError.isPresent()) {
-        	generator.writeObjectField(ON_ERROR, onError.get());
-        }
-        final Optional<UserPath.FailurePolicy> onAssertionFailure = userPath.getOnAssertionFailure();
-        if (onAssertionFailure.isPresent()) {
-        	generator.writeObjectField(ON_ASSERTION_FAILURE, onAssertionFailure.get());
-        }
-        final Optional<UserPathThinkTime> thinkTime = userPath.getThinkTime();
-        if (thinkTime.isPresent()) {
-        	generator.writeObjectField(THINK_TIME, thinkTime.get());
-        }
+        writeRuntimeParameters(userPath, generator);
     	
         final Optional<Container> init = userPath.getInit();
         if (init.isPresent()) {
@@ -78,5 +67,20 @@ public final class UserPathSerializer extends StdSerializer<UserPath> {
         }        
         
         generator.writeEndObject();		
+	}
+
+	private static void writeRuntimeParameters(final UserPath userPath, final JsonGenerator generator) throws IOException {
+		final Optional<UserPath.FailurePolicy> onError = userPath.getOnError();
+		if (onError.isPresent()) {
+			generator.writeObjectField(ON_ERROR, onError.get());
+		}
+		final Optional<UserPath.FailurePolicy> onAssertionFailure = userPath.getOnAssertionFailure();
+		if (onAssertionFailure.isPresent()) {
+			generator.writeObjectField(ON_ASSERTION_FAILURE, onAssertionFailure.get());
+		}
+		final Optional<UserPathThinkTime> thinkTime = userPath.getThinkTime();
+		if (thinkTime.isPresent()) {
+			generator.writeObjectField(THINK_TIME, thinkTime.get());
+		}
 	}
 }
