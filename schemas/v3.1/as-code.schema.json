@@ -69,6 +69,7 @@
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/server" }
 		},
+		"web_services_security": { "$ref": "#/definitions/web_services_security" },
 		"sla_profiles": {
 			"title": "SLA Profiles",
 			"type": "array",
@@ -566,6 +567,100 @@
 					}
 				],
 				"unevaluatedProperties": false
+			}
+		},
+		"web_services_security": {
+			"title": "Web Services Security",
+			"type": "object",
+			"minProperties": 1,
+			"additionalProperties": false,
+			"properties": {
+				"keystores": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"type": "object",
+						"required": ["name", "path"],
+						"additionalProperties": false,
+						"properties": {
+							"name": { "$ref": "#/definitions/common/name" },
+							"path": { "$ref": "#/definitions/common/file_path" },
+							"password": { "$ref": "#/definitions/common/text" }
+						}
+					}
+				},
+				"request_profiles": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"type": "object",
+						"required": ["name"],
+						"additionalProperties": false,
+						"properties": {
+							"name": { "$ref": "#/definitions/common/name" },
+							"headers": {
+								"type": "array",
+								"minItems": 1,
+								"items": {
+									"type": "object",
+									"additionalProperties": false,
+									"properties": {
+										"actor": { "$ref": "#/definitions/common/text" },
+										"must_understand": { "type": "boolean" },
+										"tokens": {
+											"type": "array",
+											"minItems": 1,
+											"items": {
+												"type": "object",
+												"minProperties": 1,
+												"maxProperties": 1,
+												"additionalProperties": false,
+												"properties": {
+													"username_token": {
+														"type": "object",
+														"required": ["username"],
+														"additionalProperties": false,
+														"properties": {
+															"username": { "$ref": "#/definitions/common/text" },
+															"password": { "$ref": "#/definitions/common/text" },
+															"password_type": { "type": "string", "enum": ["text", "digest", "derived"] },
+															"nonce": { "type": "boolean" },
+															"created": { "type": "boolean" },
+															"salt": { "$ref": "#/definitions/common/text" },
+															"iteration": { "$ref": "#/definitions/common/positive_number" }
+														}
+													},
+													"timestamp": {
+														"type": "object",
+														"additionalProperties": false,
+														"properties": {
+															"id": { "$ref": "#/definitions/common/text" },
+															"time_to_live": { "$ref": "#/definitions/common/positive_number" },
+															"milliseconds": { "type": "boolean" }
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"response_profiles": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"type": "object",
+						"required": ["name"],
+						"additionalProperties": false,
+						"properties": {
+							"name": { "$ref": "#/definitions/common/name" },
+							"keystore": { "$ref": "#/definitions/common/name" }
+						}
+					}
+				}
 			}
 		},
 		"server": {
@@ -1068,7 +1163,9 @@
 								"path": { "$ref": "#/definitions/common/file_path" }
 							},
 							"additionalProperties": false
-						}
+						},
+						"request_security_profile": { "$ref": "#/definitions/common/name" },
+						"response_security_profile": { "$ref": "#/definitions/common/name" }
 					}
 				},
 				"delay": {

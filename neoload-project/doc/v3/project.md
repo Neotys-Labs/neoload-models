@@ -25,6 +25,7 @@ Definition has several top-level keys:
 | [sla_profiles](sla-profile.md) | The definition of SLA profiles                 | -               | -        | 6.9   |
 | [variables](variables.md)      | The definition of variables                    | -               | -        |       |
 | [servers](server.md)           | The definition of servers                      | -               | -        |       |
+| [web_services_security](web_services_security.md) | The definition of Web Services Security keystores and profiles | - | - | 2026.3 |
 | [user_paths](user-paths.md)    | The definition of virtual User Paths           | -               | -        |       |
 | [populations](population.md)   | The definition of Populations                  | -               | -        |       |
 | [scenarios](scenario.md)       | The definition of Scenarios                    | -               | -        |       |

@@ -137,6 +137,32 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
       source_filename: upload.jpg
 ```
 
+#### Web Services Security
+
+A new root key, `web_services_security`, declares WS-Security keystores, request profiles
+(`username_token` and `timestamp` tokens) and response profiles. A `soap_request` selects them by
+name with `request_security_profile` and `response_security_profile`. Both are optional, and the
+section is absent from files that do not use it.
+
+```yaml
+web_services_security:
+  keystores:
+  - name: ServerKeystore
+    path: ./wss-keystores/server.p12
+    password: secret
+  request_profiles:
+  - name: MyRequestProfile
+    headers:
+    - tokens:
+      - username_token:
+          username: user
+          password: secret
+          password_type: digest
+  response_profiles:
+  - name: MyResponseProfile
+    keystore: ServerKeystore
+```
+
 #### Assertions
 
 **`duration_assertion`** — checks that a `request` or `custom_action` completed within
