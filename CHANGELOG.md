@@ -128,6 +128,34 @@ user_paths:
 
 See [shared_elements](neoload-project/doc/v3/shared_elements.md) for the full reference.
 
+#### User paths
+
+The runtime parameters of a User Path, set in the "Runtime parameters" panel of the NeoLoad GUI, are
+now writable in as-code as three optional User Path keys.
+
+- **`on_error`** and **`on_assertion_failure`** — what the Virtual User does when an error occurs
+  or an assertion fails: `do_nothing`, `go_to_next_iteration` or `stop_and_start_new_vu`. When
+  omitted, the NeoLoad default applies.
+- **`think_time`** — replaces (`override`) or scales (`factor`) all the think times of the User
+  Path, optionally adding a `random` delay of +/- a percentage. It applies to the web pages and the
+  `think_time` steps of the User Path; `delay` steps are not affected.
+
+```yaml
+user_paths:
+- name: MyUserPath
+  on_error: go_to_next_iteration
+  on_assertion_failure: stop_and_start_new_vu
+  think_time:
+    override: 5s
+    random: 10%
+  actions:
+    steps:
+    - request:
+        url: https://www.tricentis.com/
+```
+
+See [User Paths](neoload-project/doc/v3/user-paths.md) for the full reference.
+
 #### Requests
 
 **`parts`** — a multipart/form-data body on an HTTP request, as in the NeoLoad GUI. Use `parts`

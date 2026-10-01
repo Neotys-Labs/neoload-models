@@ -1,0 +1,7 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  on_error: restart_vu
+  actions:
+    steps:
+    - delay: 1s

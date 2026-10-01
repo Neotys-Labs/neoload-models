@@ -11,6 +11,7 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
@@ -40,6 +41,31 @@ public class UserPathTest {
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'actions': missing value or value is empty.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_ACTIONS = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_USER_PATH_THINK_TIME_OVERRIDE_AND_FACTOR;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'think_time': invalid attributes usage (override and factor cannot be used simultaneously).").append(LINE_SEPARATOR);
+		CONSTRAINTS_USER_PATH_THINK_TIME_OVERRIDE_AND_FACTOR = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_USER_PATH_THINK_TIME_EMPTY;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'think_time': invalid attributes usage (at least one of override, factor or random is required).").append(LINE_SEPARATOR);
+		CONSTRAINTS_USER_PATH_THINK_TIME_EMPTY = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_USER_PATH_THINK_TIME_VALUES;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'think_time.override': must be a non-negative duration (e.g. 100 for 100 milliseconds, 5s, 1m 30s) or a variable.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'think_time.random': must be a non-negative integer percentage (e.g. 150%) or a variable.").append(LINE_SEPARATOR);
+		CONSTRAINTS_USER_PATH_THINK_TIME_VALUES = sb.toString();
 	}
 
 	private static final String CONSTRAINTS_USER_PATH_ASSERTIONS_NAMES;
@@ -196,7 +222,7 @@ public class UserPathTest {
 				.build();
 		Validation validation = validator.validate(userPath, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_USER_PATH_ACTIONS, validation.getMessage().get());	
+		assertEquals(CONSTRAINTS_USER_PATH_ACTIONS, validation.getMessage().get());
 
 		userPath = UserPath.builder()
 				.name("MyUserPath")
@@ -209,7 +235,65 @@ public class UserPathTest {
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
 		assertTrue(validation.isValid());
-		assertFalse(validation.getMessage().isPresent());	
+		assertFalse(validation.getMessage().isPresent());
+	}
+
+	@Test
+	public void validateThinkTime() {
+		final Validator validator = new Validator();
+		final Container actions = Container.builder()
+				.name("actions")
+				.addSteps(Request.builder()
+						.url("http://www.neotys.com:80/select?name=neoload")
+						.build())
+				.build();
+
+		UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.thinkTime(UserPathThinkTime.builder().override("5s").factor("150%").build())
+				.actions(actions)
+				.build();
+		Validation validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_THINK_TIME_OVERRIDE_AND_FACTOR, validation.getMessage().get());
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.thinkTime(UserPathThinkTime.builder().build())
+				.actions(actions)
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_THINK_TIME_EMPTY, validation.getMessage().get());
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.thinkTime(UserPathThinkTime.builder().override("-5s").random("abc").build())
+				.actions(actions)
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_USER_PATH_THINK_TIME_VALUES, validation.getMessage().get());
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.onError(UserPath.FailurePolicy.GO_TO_NEXT_ITERATION)
+				.onAssertionFailure(UserPath.FailurePolicy.STOP_AND_START_NEW_VU)
+				.thinkTime(UserPathThinkTime.builder().override("${my_think_time}").random("10%").build())
+				.actions(actions)
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());
+
+		userPath = UserPath.builder()
+				.name("MyUserPath")
+				.thinkTime(UserPathThinkTime.builder().factor("150").random("${my_random_delay}").build())
+				.actions(actions)
+				.build();
+		validation = validator.validate(userPath, NeoLoad.class);
+		assertTrue(validation.isValid());
+		assertFalse(validation.getMessage().isPresent());
 	}
 	
 	@Test

@@ -6,6 +6,9 @@ import static com.neotys.neoload.model.v3.project.userpath.UserPath.ACTIONS;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.DEFAULT_USER_SESSION;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.END;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.INIT;
+import static com.neotys.neoload.model.v3.project.userpath.UserPath.ON_ASSERTION_FAILURE;
+import static com.neotys.neoload.model.v3.project.userpath.UserPath.ON_ERROR;
+import static com.neotys.neoload.model.v3.project.userpath.UserPath.THINK_TIME;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.USER_SESSION;
 import static com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement.ASSERTIONS;
 
@@ -18,6 +21,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
 import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 
 public final class UserPathSerializer extends StdSerializer<UserPath> {
@@ -41,6 +45,8 @@ public final class UserPathSerializer extends StdSerializer<UserPath> {
         if (userSession != DEFAULT_USER_SESSION) {
         	generator.writeObjectField(USER_SESSION, userSession);
         }
+
+        writeRuntimeParameters(userPath, generator);
     	
         final Optional<Container> init = userPath.getInit();
         if (init.isPresent()) {
@@ -61,5 +67,20 @@ public final class UserPathSerializer extends StdSerializer<UserPath> {
         }        
         
         generator.writeEndObject();		
+	}
+
+	private static void writeRuntimeParameters(final UserPath userPath, final JsonGenerator generator) throws IOException {
+		final Optional<UserPath.FailurePolicy> onError = userPath.getOnError();
+		if (onError.isPresent()) {
+			generator.writeObjectField(ON_ERROR, onError.get());
+		}
+		final Optional<UserPath.FailurePolicy> onAssertionFailure = userPath.getOnAssertionFailure();
+		if (onAssertionFailure.isPresent()) {
+			generator.writeObjectField(ON_ASSERTION_FAILURE, onAssertionFailure.get());
+		}
+		final Optional<UserPathThinkTime> thinkTime = userPath.getThinkTime();
+		if (thinkTime.isPresent()) {
+			generator.writeObjectField(THINK_TIME, thinkTime.get());
+		}
 	}
 }

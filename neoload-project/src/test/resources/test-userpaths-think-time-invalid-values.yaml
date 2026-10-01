@@ -1,0 +1,80 @@
+name: MyProject
+user_paths:
+- name: OverrideNegative
+  think_time:
+    override: -100
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideNegativeWithUnit
+  think_time:
+    override: -5s
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideUnknownUnit
+  think_time:
+    override: 5d
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideDecimal
+  think_time:
+    override: 1.5s
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideSpaceBeforeUnit
+  think_time:
+    override: 5 s
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideUnitsOutOfOrder
+  think_time:
+    override: 30s 1m
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideText
+  think_time:
+    override: abc
+  actions:
+    steps:
+    - delay: 1s
+- name: FactorNegative
+  think_time:
+    factor: -10%
+  actions:
+    steps:
+    - delay: 1s
+- name: FactorDecimal
+  think_time:
+    factor: 1.5
+  actions:
+    steps:
+    - delay: 1s
+- name: FactorPercentAfterVariable
+  think_time:
+    factor: "${my_factor}%"
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomNegative
+  think_time:
+    random: -1
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomDoublePercent
+  think_time:
+    random: 10%%
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomText
+  think_time:
+    random: abc
+  actions:
+    steps:
+    - delay: 1s

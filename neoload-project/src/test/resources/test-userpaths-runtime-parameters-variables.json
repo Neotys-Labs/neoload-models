@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath1","think_time":{"override":"${my_think_time}","random":"${my_random_delay}"},"actions":{"steps":[{"delay":"1s"}]}},{"name":"MyUserPath2","think_time":{"factor":"${my_think_time_factor}"},"actions":{"steps":[{"delay":"1s"}]}}]}

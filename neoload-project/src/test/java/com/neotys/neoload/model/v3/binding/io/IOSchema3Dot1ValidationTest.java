@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
@@ -97,7 +98,12 @@ public class IOSchema3Dot1ValidationTest {
             "test-shared-elements-missing-name-while.yaml",
             "test-shared-elements-missing-name-fork.yaml",
             "test-shared-elements-rejected-below-3-1.yaml",
-            "test-shared-element-reference-step-rejected-below-3-1.yaml"
+            "test-shared-element-reference-step-rejected-below-3-1.yaml",
+            "test-userpaths-invalid-on-error.yaml",
+            "test-userpaths-invalid-on-assertion-failure.yaml",
+            "test-userpaths-think-time-invalid-usage.yaml",
+            "test-userpaths-think-time-invalid-values.yaml",
+            "test-userpaths-think-time-unknown-key.yaml"
     );
 
     @BeforeClass
@@ -166,5 +172,35 @@ public class IOSchema3Dot1ValidationTest {
     public void pacingOnWhileFailsSchemaValidation() throws IOException {
         Assert.assertFalse("Expected 'pacing' on a while step to fail schema validation",
                 validate("test-pacing-on-while").isEmpty());
+    }
+
+    @Test
+    public void unknownUserPathFailurePoliciesFailSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected an unknown 'on_error' value to fail schema validation",
+                validate("test-userpaths-invalid-on-error").isEmpty());
+        Assert.assertFalse("Expected an unknown 'on_assertion_failure' value to fail schema validation",
+                validate("test-userpaths-invalid-on-assertion-failure").isEmpty());
+    }
+
+    @Test
+    public void unknownUserPathThinkTimeSettingFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected an unknown user path 'think_time' setting to fail schema validation",
+                validate("test-userpaths-think-time-unknown-key").isEmpty());
+    }
+
+    @Test
+    public void eachInvalidUserPathThinkTimeFailsSchemaValidation() throws IOException {
+        assertEachUserPathFailsSchemaValidation("test-userpaths-think-time-invalid-usage");
+        assertEachUserPathFailsSchemaValidation("test-userpaths-think-time-invalid-values");
+    }
+
+    private void assertEachUserPathFailsSchemaValidation(final String fixture) throws IOException {
+        final File file = new File(getClass().getClassLoader().getResource(fixture + ".yaml").getFile());
+        for (final JsonNode userPath : YAML_MAPPER.readTree(file).get("user_paths")) {
+            final ObjectNode project = YAML_MAPPER.createObjectNode().put("name", "MyProject");
+            project.putArray("user_paths").add(userPath);
+            Assert.assertFalse("Expected user path '" + userPath.get("name").asText() + "' of " + fixture + " to fail schema validation",
+                    SCHEMA.validate(project).isEmpty());
+        }
     }
 }

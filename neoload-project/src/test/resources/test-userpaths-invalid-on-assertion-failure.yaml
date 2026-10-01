@@ -1,0 +1,7 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  on_assertion_failure: Do_Nothing
+  actions:
+    steps:
+    - delay: 1s
