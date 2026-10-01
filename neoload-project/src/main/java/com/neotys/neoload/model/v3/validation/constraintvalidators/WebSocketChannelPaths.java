@@ -140,17 +140,35 @@ final class WebSocketChannelPaths {
 	private void walkStep(final Step step, final List<String> path) {
 		if (step instanceof WebSocketChannel) {
 			channels.computeIfAbsent(path, key -> new ArrayList<>()).add((WebSocketChannel) step);
-		} else if (step instanceof Container) {
-			walkSteps(((Container) step).getSteps(), path);
-		} else if (step instanceof Loop) {
-			walkSteps(((Loop) step).getSteps(), path);
-		} else if (step instanceof While) {
-			walkSteps(((While) step).getSteps(), path);
-		} else if (step instanceof Fork) {
-			walkSteps(((Fork) step).getSteps(), path);
-		} else if (step instanceof WebPage) {
-			walkSteps(((WebPage) step).getSteps(), path);
-		} else if (step instanceof If) {
+			return;
+		}
+		walkSteps(childSteps(step), path);
+		walkBranches(step, path);
+	}
+
+	/** The steps directly inside a step that holds a plain list of them, or none for any other step. */
+	private static List<Step> childSteps(final Step step) {
+		if (step instanceof Container) {
+			return ((Container) step).getSteps();
+		}
+		if (step instanceof Loop) {
+			return ((Loop) step).getSteps();
+		}
+		if (step instanceof While) {
+			return ((While) step).getSteps();
+		}
+		if (step instanceof Fork) {
+			return ((Fork) step).getSteps();
+		}
+		if (step instanceof WebPage) {
+			return ((WebPage) step).getSteps();
+		}
+		return List.of();
+	}
+
+	/** The branches of an {@code if}, a {@code try_catch} or a {@code switch}, designated by their YAML key or case name. */
+	private void walkBranches(final Step step, final List<String> path) {
+		if (step instanceof If) {
 			final If ifStep = (If) step;
 			walkContainer(ifStep.getThen(), child(path, If.THEN));
 			ifStep.getElse().ifPresent(elseContainer -> walkContainer(elseContainer, child(path, If.ELSE)));

@@ -85,32 +85,50 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readWebSocketRequestMinimal() throws IOException {
-		read("test-websocket_request-minimal", getWebSocketRequestMinimal());
+		final Project expectedProject = getWebSocketRequestMinimal();
+		assertNotNull(expectedProject);
+
+		read("test-websocket_request-minimal", expectedProject);
 	}
 
 	@Test
 	public void writeWebSocketRequestMinimal() throws IOException {
-		write("test-websocket_request-minimal", getWebSocketRequestMinimal());
+		final Project expectedProject = getWebSocketRequestMinimal();
+		assertNotNull(expectedProject);
+
+		write("test-websocket_request-minimal", expectedProject);
 	}
 
 	@Test
 	public void readWebSocketRequestRequiredAndOptional() throws IOException {
-		read("test-websocket_request-required-and-optional", getWebSocketRequestRequiredAndOptional());
+		final Project expectedProject = getWebSocketRequestRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		read("test-websocket_request-required-and-optional", expectedProject);
 	}
 
 	@Test
 	public void writeWebSocketRequestRequiredAndOptional() throws IOException {
-		write("test-websocket_request-required-and-optional", getWebSocketRequestRequiredAndOptional());
+		final Project expectedProject = getWebSocketRequestRequiredAndOptional();
+		assertNotNull(expectedProject);
+
+		write("test-websocket_request-required-and-optional", expectedProject);
 	}
 
 	@Test
 	public void readWebSocketRequestCloseAndBinary() throws IOException {
-		read("test-websocket_request-close-and-binary", getWebSocketRequestCloseAndBinary());
+		final Project expectedProject = getWebSocketRequestCloseAndBinary();
+		assertNotNull(expectedProject);
+
+		read("test-websocket_request-close-and-binary", expectedProject);
 	}
 
 	@Test
 	public void writeWebSocketRequestCloseAndBinary() throws IOException {
-		write("test-websocket_request-close-and-binary", getWebSocketRequestCloseAndBinary());
+		final Project expectedProject = getWebSocketRequestCloseAndBinary();
+		assertNotNull(expectedProject);
+
+		write("test-websocket_request-close-and-binary", expectedProject);
 	}
 
 	@Test
