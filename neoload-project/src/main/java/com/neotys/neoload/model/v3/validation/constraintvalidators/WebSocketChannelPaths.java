@@ -32,7 +32,7 @@ import javax.validation.ConstraintValidatorContext;
  */
 final class WebSocketChannelPaths {
 	static final String SEPARATOR = ">";
-	private static final List<String> ROOTS = ImmutableList.of(UserPath.INIT, UserPath.ACTIONS, UserPath.END);
+	private static final List<String> ROOTS = List.of(UserPath.INIT, UserPath.ACTIONS, UserPath.END);
 
 	private final Map<List<String>, List<WebSocketChannel>> channels = new LinkedHashMap<>();
 
@@ -41,14 +41,14 @@ final class WebSocketChannelPaths {
 
 	static WebSocketChannelPaths of(final UserPath userPath) {
 		final WebSocketChannelPaths paths = new WebSocketChannelPaths();
-		userPath.getInit().ifPresent(init -> paths.walkContainer(init, ImmutableList.of(UserPath.INIT)));
-		paths.walkContainer(userPath.getActions(), ImmutableList.of(UserPath.ACTIONS));
-		userPath.getEnd().ifPresent(end -> paths.walkContainer(end, ImmutableList.of(UserPath.END)));
+		userPath.getInit().ifPresent(init -> paths.walkContainer(init, List.of(UserPath.INIT)));
+		paths.walkContainer(userPath.getActions(), List.of(UserPath.ACTIONS));
+		userPath.getEnd().ifPresent(end -> paths.walkContainer(end, List.of(UserPath.END)));
 		return paths;
 	}
 
-	/** The requests of a user path that name a channel. */
-	static List<WebSocketRequest> requestsWithChannel(final UserPath userPath) {
+	/** The WebSocketRequests of a user path where the channel attribute is present. */
+	static List<WebSocketRequest> webSocketRequestsWithChannel(final UserPath userPath) {
 		return userPath.flattened()
 				.filter(WebSocketRequest.class::isInstance)
 				.map(WebSocketRequest.class::cast)
@@ -57,7 +57,7 @@ final class WebSocketChannelPaths {
 	}
 
 	/**
-	 * @return the channel the reference designates, or why it designates none
+	 * @return the WebSocketChannel the reference designates, or why it designates none
 	 */
 	Resolution resolve(final String reference) {
 		final List<String> segments = Arrays.asList(reference.split(SEPARATOR, -1));
@@ -65,7 +65,7 @@ final class WebSocketChannelPaths {
 			return Resolution.problem("'" + escape(reference) + "' is not a channel path: it must start with "
 					+ String.join(", ", ROOTS) + " and name each step down to the channel, e.g. 'actions>my_transaction>my_channel'.");
 		}
-		final List<WebSocketChannel> found = channels.getOrDefault(segments, ImmutableList.of());
+		final List<WebSocketChannel> found = channels.getOrDefault(segments, List.of());
 		if (found.size() == 1) {
 			return Resolution.channel(found.get(0));
 		}

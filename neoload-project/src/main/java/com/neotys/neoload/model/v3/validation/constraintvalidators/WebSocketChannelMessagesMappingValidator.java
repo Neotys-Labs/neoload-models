@@ -18,20 +18,24 @@ public final class WebSocketChannelMessagesMappingValidator extends AbstractCons
 		if (userPath == null) {
 			return true;
 		}
-		final List<WebSocketRequest> requests = WebSocketChannelPaths.requestsWithChannel(userPath);
-		if (requests.stream().noneMatch(WebSocketRequest::isSynchronous)) {
+		final List<WebSocketRequest> webSocketRequests = WebSocketChannelPaths.webSocketRequestsWithChannel(userPath);
+		if (webSocketRequests.stream().noneMatch(WebSocketRequest::isSynchronous)) {
 			return true;
 		}
 		final WebSocketChannelPaths paths = WebSocketChannelPaths.of(userPath);
 		final List<String> problems = new ArrayList<>();
-		for (final WebSocketRequest request : requests) {
-			if (!request.isSynchronous()) {
+		for (final WebSocketRequest webSocketRequest : webSocketRequests) {
+			if (!webSocketRequest.isSynchronous()) {
 				continue;
 			}
-			request.getChannel().ifPresent(reference -> paths.resolve(reference).getChannel()
-					.filter(channel -> !channel.getMessagesMapping().isPresent())
-					.ifPresent(channel -> problems.add(WebSocketChannelPaths.prefix(request) + "a synchronous request needs its channel '"
-							+ WebSocketChannelPaths.escape(reference) + "' to declare 'messages_mapping'.")));
+			// reference is a channel path, e.g. "actions>has_notifications>then>notify_socket"
+			webSocketRequest.getChannel().ifPresent(reference ->
+					paths.resolve(reference)
+							.getChannel()
+							.filter(channel -> channel.getMessagesMapping().isEmpty())
+							.ifPresent(channel ->
+									problems.add(WebSocketChannelPaths.prefix(webSocketRequest) + "a synchronous request needs its channel '"
+									+ WebSocketChannelPaths.escape(reference) + "' to declare 'messages_mapping'.")));
 		}
 		return WebSocketChannelPaths.report(context, problems);
 	}
