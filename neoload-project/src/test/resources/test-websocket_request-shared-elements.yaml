@@ -37,7 +37,7 @@ shared_elements:
     steps:
     - websocket_channel:
         name: chat_socket
-        url: wss://chat.example.com:443/ws
+        url: https://chat.example.com:443/ws
         messages_mapping:                     # required as soon as one synchronous
           jsonpath: $.correlationId           # request uses this channel
     - websocket_request:
@@ -105,7 +105,7 @@ user_paths:
           # different complete paths (then / else).
           - websocket_channel:
               name: notify_socket             # actions>has_notifications>then>notify_socket
-              url: wss://chat.example.com:443/notify
+              url: https://chat.example.com:443/notify
           - websocket_request:
               name: subscribe
               # CASE: an if branch. 'then' is the fixed key of the if's first branch.
@@ -116,7 +116,7 @@ user_paths:
           steps:
           - websocket_channel:
               name: notify_socket             # actions>has_notifications>else>notify_socket
-              url: wss://chat.example.com:443/notify-legacy
+              url: https://chat.example.com:443/notify-legacy
           - websocket_request:
               name: subscribe_legacy
               channel: actions>has_notifications>else>notify_socket
@@ -133,7 +133,7 @@ user_paths:
           steps:
           - websocket_channel:
               name: vip_socket
-              url: wss://chat.example.com:443/vip
+              url: https://chat.example.com:443/vip
           - websocket_request:
               name: join_vip
               # CASE: a switch case: the case's name is the segment.
@@ -144,7 +144,7 @@ user_paths:
           steps:
           - websocket_channel:
               name: lobby_socket
-              url: wss://chat.example.com:443/lobby
+              url: https://chat.example.com:443/lobby
           - websocket_request:
               name: join_lobby
               # CASE: a switch's default branch: 'default' is its fixed key.
@@ -165,7 +165,7 @@ user_paths:
           steps:
           - websocket_channel:
               name: recovery_socket
-              url: wss://chat.example.com:443/recovery
+              url: https://chat.example.com:443/recovery
           - websocket_request:
               name: resend
               # CASE: a try_catch branch: 'catch' is its fixed key.
@@ -213,7 +213,7 @@ user_paths:
     # CASE: the simplest form, a channel declared inline in the user path.
     - websocket_channel:
         name: solo_socket                     # init>solo_socket
-        url: wss://chat.example.com:443/solo
+        url: https://chat.example.com:443/solo
   actions:
     steps:
     - transaction:

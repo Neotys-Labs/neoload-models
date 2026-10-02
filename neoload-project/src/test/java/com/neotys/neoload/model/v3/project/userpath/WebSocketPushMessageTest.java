@@ -42,11 +42,11 @@ public class WebSocketPushMessageTest {
 	@Test
 	public void theChannelFlattensItsPushMessagesAndTheirSteps() {
 		final WebSocketRequest reply = WebSocketRequest.builder().name("reply").channel("actions>chat_socket").build();
-		final WebSocketChannel inner = WebSocketChannel.builder().name("inner_socket").url("wss://host/inner").build();
+		final WebSocketChannel inner = WebSocketChannel.builder().name("inner_socket").url("https://host/inner").build();
 		final WebSocketPushMessage pushMessage = WebSocketPushMessage.builder().name("on_ping").addSteps(reply, inner).build();
 		final WebSocketChannel channel = WebSocketChannel.builder()
 				.name("chat_socket")
-				.url("wss://host/chat")
+				.url("https://host/chat")
 				.addPushMessages(pushMessage)
 				.build();
 

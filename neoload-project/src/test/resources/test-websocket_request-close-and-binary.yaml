@@ -5,7 +5,7 @@ user_paths:
     steps:
     - websocket_channel:
         name: my_channel
-        url: wss://host:443/socket
+        url: https://host:443/socket
     - websocket_request:
         name: send_binary
         channel: actions>my_channel

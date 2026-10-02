@@ -38,7 +38,7 @@ init:
   steps:
   - websocket_channel:
       name: chat_socket                              # init>chat_socket
-      url: wss://host:443/chat
+      url: https://host:443/chat
 actions:
   steps:
   - if:
@@ -49,7 +49,7 @@ actions:
         steps:
         - websocket_channel:
             name: notify_socket                      # actions>has_notifications>then>notify_socket
-            url: wss://host:443/notify
+            url: https://host:443/notify
         - websocket_request:
             channel: actions>has_notifications>then>notify_socket
             body: subscribe
@@ -70,7 +70,7 @@ actions:
   steps:
   - websocket_channel:
       name: chat_socket                              # actions>chat_socket
-      url: wss://host:443/chat
+      url: https://host:443/chat
       push_messages:
       - name: on_ping
         conditions:
@@ -85,7 +85,7 @@ actions:
         steps:
         - websocket_channel:
             name: room_socket                        # actions>chat_socket>on_redirect>room_socket
-            url: wss://host:443/room
+            url: https://host:443/room
   - websocket_request:
       channel: actions>chat_socket>on_redirect>room_socket   # only open once on_redirect has run
       body: hello room
@@ -102,7 +102,7 @@ shared_elements:
     steps:
     - websocket_channel:
         name: chat_socket                            # shared_elements>OpenChat>chat_socket
-        url: wss://host:443/chat
+        url: https://host:443/chat
 - transaction:
     name: SendChat
     steps:
@@ -140,7 +140,7 @@ Sending a message and waiting for its reply, then closing the channel.
 ```yaml
 - websocket_channel:
     name: MyChannel
-    url: wss://host:443/socket
+    url: https://host:443/socket
     messages_mapping:
       jsonpath: $.correlationId
 - websocket_request:

@@ -11,14 +11,14 @@ A channel has no identifier of its own: it is designated by its complete path, f
 |:----------------------------------- |:----------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | name                                | The WebSocket Channel name                                                                            | -               | &#x2713; | 2026.3 |
 | description                         | The WebSocket Channel description                                                                     | -               | -        | 2026.3 |
-| url                                 | The channel URL. Accepts the `ws`/`wss` schemes as well as `http`/`https`, or a path relative to `server` | &#x2713;    | &#x2713; | 2026.3 |
+| url                                 | The channel URL, with the `http` or `https` scheme, or a path relative to `server`                    | &#x2713;        | &#x2713; | 2026.3 |
 | server                              | The name of the server to use when `url` is a relative path                                           | -               | -        | 2026.3 |
 | headers                             | The headers of the upgrade request                                                                    | &#x2713;        | -        | 2026.3 |
 | extractors                          | Variable extractors applied to the channel response                                                   | -               | -        | 2026.3 |
 | messages_mapping                    | How to extract the correlation id from an inbound frame. Mandatory as soon as a synchronous `websocket_request` uses the channel | - | - | 2026.3 |
 | push_messages                       | The handlers of the frames the channel receives, see [push_messages](#push_messages)                   | -               | -        | 2026.3 |
 
-NeoLoad stores a channel URL with the `http`/`https` scheme, derived from whether the server uses SSL. `ws` and `wss` are accepted here for convenience when writing as-code by hand, so a project exported from NeoLoad is not necessarily textually identical to one you wrote yourself.
+NeoLoad stores a channel URL with the `http`/`https` scheme, derived from whether the server uses SSL, so `ws` and `wss` are not accepted: write `http://` for `ws://` and `https://` for `wss://`.
 
 #### messages_mapping
 
@@ -108,7 +108,7 @@ Defining MyChannel with a correlation-id mapping.
 - websocket_channel:
     name: MyChannel
     description: My first WebSocket channel
-    url: wss://host:443/socket
+    url: https://host:443/socket
     headers:
     - Origin: https://host
     extractors:

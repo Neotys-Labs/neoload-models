@@ -6,7 +6,7 @@ shared_elements:
     steps:
     - websocket_channel:
         name: support_socket
-        url: wss://host:443/support
+        url: https://host:443/support
         push_messages:
         - name: on_agent
           conditions:
@@ -14,7 +14,7 @@ shared_elements:
           steps:
           - websocket_channel:
               name: agent_socket
-              url: wss://host:443/agent
+              url: https://host:443/agent
           - websocket_request:
               name: hello_agent
               channel: shared_elements>OpenSupport>support_socket>on_agent>agent_socket
@@ -29,7 +29,7 @@ user_paths:
     steps:
     - websocket_channel:
         name: chat_socket
-        url: wss://host:443/chat
+        url: https://host:443/chat
         messages_mapping:
           jsonpath: $.id
         push_messages:
@@ -47,7 +47,7 @@ user_paths:
           steps:
           - websocket_channel:
               name: room_socket
-              url: wss://host:443/room
+              url: https://host:443/room
           - websocket_request:
               name: join
               channel: actions>chat_socket>on_redirect>room_socket

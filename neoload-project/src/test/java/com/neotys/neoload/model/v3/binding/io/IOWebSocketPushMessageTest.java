@@ -43,7 +43,7 @@ public class IOWebSocketPushMessageTest extends AbstractIOElementsTest {
 		return buildProject(
 				WebSocketChannel.builder()
 						.name("chat_socket")
-						.url("wss://host:443/chat")
+						.url("https://host:443/chat")
 						.addPushMessages(WebSocketPushMessage.builder()
 								.name("on_ping")
 								.conditions(List.of(contains("ping")))

@@ -5,7 +5,7 @@ user_paths:
     steps:
     - websocket_channel:
         name: init_socket
-        url: wss://host:443/init
+        url: https://host:443/init
   actions:
     steps:
     - transaction:
@@ -13,7 +13,7 @@ user_paths:
         steps:
         - websocket_channel:
             name: login_socket
-            url: wss://host:443/login
+            url: https://host:443/login
     - if:
         name: has_notifications
         conditions:
@@ -22,12 +22,12 @@ user_paths:
           steps:
           - websocket_channel:
               name: notify_socket
-              url: wss://host:443/notify
+              url: https://host:443/notify
         else:
           steps:
           - websocket_channel:
               name: notify_socket
-              url: wss://host:443/notify-legacy
+              url: https://host:443/notify-legacy
     - switch:
         name: router
         value: "${room}"
@@ -38,24 +38,24 @@ user_paths:
           steps:
           - websocket_channel:
               name: vip_socket
-              url: wss://host:443/vip
+              url: https://host:443/vip
         default:
           steps:
           - websocket_channel:
               name: lobby_socket
-              url: wss://host:443/lobby
+              url: https://host:443/lobby
     - try_catch:
         name: safe
         try:
           steps:
           - websocket_channel:
               name: try_socket
-              url: wss://host:443/try
+              url: https://host:443/try
         catch:
           steps:
           - websocket_channel:
               name: catch_socket
-              url: wss://host:443/catch
+              url: https://host:443/catch
     - loop:
         name: retry
         count: 2
@@ -70,7 +70,7 @@ user_paths:
                 steps:
                 - websocket_channel:
                     name: deep_socket
-                    url: wss://host:443/deep
+                    url: https://host:443/deep
     - websocket_request:
         name: in_init
         channel: init>init_socket

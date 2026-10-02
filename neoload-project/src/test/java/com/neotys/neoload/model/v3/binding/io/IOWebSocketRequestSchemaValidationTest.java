@@ -79,7 +79,7 @@ public class IOWebSocketRequestSchemaValidationTest {
 						+ "    steps:\n"
 						+ "    - websocket_channel:\n"
 						+ "        name: my_channel\n"
-						+ "        url: wss://host:443/socket\n"
+						+ "        url: https://host:443/socket\n"
 						+ "    - websocket_request:\n"
 						+ "        channel: actions>my_channel\n"
 						+ "        message_type: text\n"

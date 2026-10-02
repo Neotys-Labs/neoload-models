@@ -5,19 +5,19 @@ user_paths:
     steps:
     - websocket_channel:
         name: chat_socket
-        url: wss://host:443/chat
+        url: https://host:443/chat
     - transaction:
         name: Twin
         steps:
         - websocket_channel:
             name: twin_socket
-            url: wss://host:443/twin1
+            url: https://host:443/twin1
     - transaction:
         name: Twin
         steps:
         - websocket_channel:
             name: twin_socket
-            url: wss://host:443/twin2
+            url: https://host:443/twin2
     - websocket_request:
         name: bare_name
         channel: chat_socket

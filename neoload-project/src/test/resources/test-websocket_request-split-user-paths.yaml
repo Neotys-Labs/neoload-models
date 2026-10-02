@@ -7,7 +7,7 @@ user_paths:
     - shared_element: OpenChat
     - websocket_channel:
         name: own_socket
-        url: wss://host:443/own
+        url: https://host:443/own
   actions:
     steps:
     - shared_element: SendInline
