@@ -973,35 +973,6 @@
 					},
 					"additionalProperties": false
 				},
-				"http_page": {
-					"name": "http_page",
-					"title": "Action: HTTP Page",
-					"type": "object",
-					"required": ["name", "steps"],
-					"properties": {
-						"name": { "$ref": "#/definitions/common/name" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"think_time": { "$ref": "#/definitions/common/text" },
-						"think_time_range": {
-							"type": "object",
-							"required": ["min", "max"],
-							"properties": {
-								"min": { "$ref": "#/definitions/common/text" },
-								"max": { "$ref": "#/definitions/common/text" }
-							},
-							"additionalProperties": false
-						},
-						"think_time_mode": {
-							"type": "string",
-							"enum": ["constant", "random"]
-						},
-						"screenshot": { "type": "boolean" },
-						"dynamic_action": { "type": "boolean" },
-						"force_encoding_for_dynamic_resources": { "type": "boolean" },
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
-					},
-					"additionalProperties": false
-				},
 				"request": {
 					"title": "Action: HTTP/s Request",
 					"type": "object",
@@ -1030,6 +1001,7 @@
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
 						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
+						"binary_source_file": { "$ref": "#/definitions/common/text" },
 						"parts": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/part" }
@@ -1054,7 +1026,11 @@
 						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" },
 						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					},
-					"not": { "required": ["body", "bodybinary"] }
+					"allOf": [
+						{ "not": { "required": ["body", "bodybinary"] } },
+						{ "not": { "required": ["body", "binary_source_file"] } },
+						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
+					]
 				},
 				"delay": {
 					"title": "Action: Delay",
