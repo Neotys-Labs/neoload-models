@@ -26,6 +26,7 @@ A request is asynchronous unless `synchronous` is set: it sends its frame and mo
 - it starts with where the channel is declared: `init`, `actions` or `end` for a channel declared in a User Path, `shared_elements>SharedElementName` for a channel declared inside a [shared element](shared_elements.md);
 - then comes the `name` of each step on the way, for instance a transaction, a loop or a fork;
 - the branches of an `if` are `then` and `else`, those of a `try_catch` are `try` and `catch`, and the default branch of a `switch` is `default`. A `switch` case is designated by its `name`;
+- a channel declared inside a [push message](websocket_channel.md#push_messages) is designated through the `name` of the outer channel, then the `name` of the push message;
 - the last part is the channel's `name`.
 
 A request can only use a channel of its own User Path: a virtual user only holds the connections it opened itself. Two channels may share a `name` as long as their paths differ.
@@ -58,6 +59,36 @@ actions:
       - websocket_request:
           channel: init>chat_socket
           body: hello
+```
+
+##### Requests and channels inside a push message
+
+A request inside a [push message](websocket_channel.md#push_messages) uses the same paths as any other request: replying on the push message's own channel is simply that channel's path. A channel declared inside a push message has the outer channel's `name`, then the push message's `name` in its path. `push_messages` and `steps` are keys, not names, so they are not part of it.
+
+```yaml
+actions:
+  steps:
+  - websocket_channel:
+      name: chat_socket                              # actions>chat_socket
+      url: wss://host:443/chat
+      push_messages:
+      - name: on_ping
+        conditions:
+        - "'${NL-MessageContent}' contains 'ping'"
+        steps:
+        - websocket_request:
+            channel: actions>chat_socket             # its own channel
+            body: pong
+      - name: on_redirect
+        conditions:
+        - "'${NL-MessageContent}' contains 'redirect'"
+        steps:
+        - websocket_channel:
+            name: room_socket                        # actions>chat_socket>on_redirect>room_socket
+            url: wss://host:443/room
+  - websocket_request:
+      channel: actions>chat_socket>on_redirect>room_socket   # only open once on_redirect has run
+      body: hello room
 ```
 
 ##### Channels inside a shared element

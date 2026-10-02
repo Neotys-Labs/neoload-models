@@ -1364,7 +1364,11 @@
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
 						},
-						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" }
+						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" },
+						"push_messages": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/websocket_push_message" }
+						}
 					}
 				},
 				"websocket_request": {
@@ -1425,6 +1429,33 @@
 				"description": "The complete path of the channel, joined with '>': init, actions or end for a channel declared in a user path, or shared_elements>SharedElementName for one declared inside a shared element, then each step name down to the channel's name",
 				"type": "string",
 				"pattern": "^((init|actions|end)(>[^>]+)+|shared_elements(>[^>]+){2,})$"
+			},
+			"websocket_push_message": {
+				"title": "WebSocket Push Message",
+				"description": "A handler of the frames received by its channel. With conditions it runs when they are true; without conditions it is a fallback, which runs only when no push message with conditions matched",
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"conditions": {
+						"allOf": [{ "$ref": "#/definitions/common/conditions" }],
+						"minItems": 1
+					},
+					"match": {
+						"type": "string",
+						"enum": ["any", "all"],
+						"default": "any"
+					},
+					"charset": { "$ref": "#/definitions/common/text" },
+					"extractors": {
+						"type": "array",
+						"items": { "$ref": "#/definitions/user_paths/extractor" }
+					},
+					"assertions": { "$ref": "#/definitions/common/assertions" },
+					"steps": { "$ref": "#/definitions/user_paths/steps" }
+				},
+				"dependentRequired": { "match": ["conditions"] }
 			},
 			"websocket_messages_mapping": {
 				"title": "WebSocket Messages Mapping",

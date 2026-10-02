@@ -1,0 +1,60 @@
+name: MyProject
+schemaVersion: "3.1"
+shared_elements:
+- transaction:
+    name: OpenSupport
+    steps:
+    - websocket_channel:
+        name: support_socket
+        url: wss://host:443/support
+        push_messages:
+        - name: on_agent
+          conditions:
+          - "'${NL-MessageContent}' contains 'agent'"
+          steps:
+          - websocket_request:
+              name: wrong_inside_shared
+              channel: shared_elements>OpenSupport>on_agent>support_socket
+              body: hello
+user_paths:
+- name: ChatUser
+  init:
+    steps:
+    - shared_element: OpenSupport
+  actions:
+    steps:
+    - websocket_channel:
+        name: chat_socket
+        url: wss://host:443/chat
+        push_messages:
+        - name: on_ping
+          conditions:
+          - "'${NL-MessageContent}' contains 'ping'"
+          steps:
+          - websocket_request:
+              name: wrong_inside
+              channel: actions>on_ping>chat_socket
+              body: pong
+          - websocket_request:
+              name: sync_without_mapping
+              channel: actions>chat_socket
+              synchronous: true
+              mapping_id: m1
+        - name: twin
+          conditions:
+          - "'${NL-MessageContent}' contains 'a'"
+          steps:
+          - websocket_channel:
+              name: inner
+              url: wss://host:443/a
+        - name: twin
+          conditions:
+          - "'${NL-MessageContent}' contains 'b'"
+          steps:
+          - websocket_channel:
+              name: inner
+              url: wss://host:443/b
+    - websocket_request:
+        name: through_twins
+        channel: actions>chat_socket>twin>inner
+        body: hello

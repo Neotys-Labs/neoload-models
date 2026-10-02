@@ -1,0 +1,16 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: chat_socket
+        url: wss://host:443/chat
+        push_messages:
+        - name: empty_conditions
+          conditions: []
+        - name: match_without_conditions
+          match: all
+        - name: default_match_without_conditions
+          match: any
+        - name: valid_fallback

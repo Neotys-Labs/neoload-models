@@ -11,6 +11,7 @@ import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import org.immutables.value.Value;
@@ -24,9 +25,12 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * <p>A channel has no identifier of its own: it is designated by its complete path, from
  * where it is declared down to its {@link #getName()}. Two channels may therefore share a
  * name as long as their paths differ.</p>
+ *
+ * <p>Its {@link #getPushMessages() push messages} handle the frames it receives that do not
+ * answer a waiting synchronous {@link WebSocketRequest}.</p>
  */
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketChannel.URL, WebSocketChannel.SERVER, WebSocketChannel.HEADERS, WebSocketChannel.EXTRACTORS, WebSocketChannel.MESSAGES_MAPPING})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketChannel.URL, WebSocketChannel.SERVER, WebSocketChannel.HEADERS, WebSocketChannel.EXTRACTORS, WebSocketChannel.MESSAGES_MAPPING, WebSocketChannel.PUSH_MESSAGES})
 @JsonSerialize(as = ImmutableWebSocketChannel.class)
 @JsonDeserialize(as = ImmutableWebSocketChannel.class)
 @Value.Immutable
@@ -37,6 +41,7 @@ public interface WebSocketChannel extends Step {
 	String HEADERS = "headers";
 	String EXTRACTORS = "extractors";
 	String MESSAGES_MAPPING = "messages_mapping";
+	String PUSH_MESSAGES = "push_messages";
 
 	/**
 	 * The {@link Request#URL} pattern widened to the WebSocket schemes. A relative path is still
@@ -63,6 +68,16 @@ public interface WebSocketChannel extends Step {
 	@JsonProperty(MESSAGES_MAPPING)
 	@Valid
 	Optional<WebSocketMessagesMapping> getMessagesMapping();
+
+	@JsonProperty(PUSH_MESSAGES)
+	@Valid
+	List<WebSocketPushMessage> getPushMessages();
+
+	/** The channel, then its push messages and every element of their steps. */
+	@Override
+	default Stream<Element> flattened() {
+		return Stream.concat(Stream.of(this), getPushMessages().stream().flatMap(WebSocketPushMessage::flattened));
+	}
 
 	class Builder extends ImmutableWebSocketChannel.Builder {}
 	static Builder builder() {
