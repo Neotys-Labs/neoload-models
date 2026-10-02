@@ -1,0 +1,76 @@
+name: MyProject
+schemaVersion: "3.1"
+shared_elements:
+- transaction:
+    name: OpenSupport
+    steps:
+    - websocket_channel:
+        name: support_socket
+        url: wss://host:443/support
+        push_messages:
+        - name: on_agent
+          conditions:
+          - "'${NL-MessageContent}' contains 'agent'"
+          steps:
+          - websocket_channel:
+              name: agent_socket
+              url: wss://host:443/agent
+          - websocket_request:
+              name: hello_agent
+              channel: shared_elements>OpenSupport>support_socket>on_agent>agent_socket
+              body: hello agent
+        - name: other
+user_paths:
+- name: ChatUser
+  init:
+    steps:
+    - shared_element: OpenSupport
+  actions:
+    steps:
+    - websocket_channel:
+        name: chat_socket
+        url: wss://host:443/chat
+        messages_mapping:
+          jsonpath: $.id
+        push_messages:
+        - name: on_ping
+          conditions:
+          - "'${NL-MessageContent}' contains 'ping'"
+          steps:
+          - websocket_request:
+              name: pong
+              channel: actions>chat_socket
+              body: pong
+        - name: on_redirect
+          conditions:
+          - "'${NL-MessageContent}' contains 'redirect'"
+          steps:
+          - websocket_channel:
+              name: room_socket
+              url: wss://host:443/room
+          - websocket_request:
+              name: join
+              channel: actions>chat_socket>on_redirect>room_socket
+              body: join
+        - name: on_report
+          conditions:
+          - "'${NL-MessageContent}' contains 'report'"
+          steps:
+          - fork:
+              name: report_fork
+              steps:
+              - websocket_request:
+                  name: get_report
+                  channel: actions>chat_socket
+                  synchronous: true
+                  mapping_id: report
+                  body: get report
+        - name: anything_else
+    - websocket_request:
+        name: hello_room
+        channel: actions>chat_socket>on_redirect>room_socket
+        body: hello room
+    - websocket_request:
+        name: still_agent
+        channel: shared_elements>OpenSupport>support_socket>on_agent>agent_socket
+        body: still there

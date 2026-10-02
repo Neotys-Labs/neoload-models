@@ -25,12 +25,15 @@ import org.junit.Test;
 
 /**
  * Schema-level coverage for the settings of {@code websocket_request} that depend on each other,
- * so that an editor validating against the published 3.1 schema reports the same mistakes as the
- * model: each request of the invalid-settings fixture, which the model rejects, must also be
- * rejected by the schema on its own.
+ * and for the conditions of a push message, so that an editor validating against the published
+ * 3.1 schema reports the same mistakes as the model: each request of the invalid-settings
+ * fixture, and each push message of the invalid push message fixture, which the model rejects,
+ * must also be rejected by the schema on its own.
  */
 public class IOWebSocketRequestSchemaValidationTest {
 	private static final String INVALID_SETTINGS_FIXTURE = "test-websocket_request-invalid-settings.yaml";
+	private static final String INVALID_PUSH_MESSAGES_FIXTURE = "test-websocket_push_message-invalid.yaml";
+	private static final String VALID_FALLBACK = "valid_fallback";
 	private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
 	private static JsonSchema schema31;
 
@@ -98,6 +101,31 @@ public class IOWebSocketRequestSchemaValidationTest {
 			assertFalse("the 3.1 schema must reject channel '" + reference + "'",
 					schema31.validate(projectWithChannelReference(reference)).isEmpty());
 		}
+	}
+
+	@Test
+	public void everyInvalidPushMessageIsRejectedBySchema() throws IOException, URISyntaxException {
+		final JsonNode channel = readFixture(INVALID_PUSH_MESSAGES_FIXTURE).at("/user_paths/0/actions/steps/0/websocket_channel");
+		int rejected = 0;
+		for (final JsonNode pushMessage : channel.get("push_messages")) {
+			final String name = pushMessage.get("name").asText();
+			final ObjectNode alone = channel.deepCopy();
+			alone.putArray("push_messages").add(pushMessage);
+			final JsonNode project = projectWith(YAML_MAPPER.createObjectNode().set("websocket_channel", alone), YAML_MAPPER.readTree("delay: 1s\n"));
+			if (VALID_FALLBACK.equals(name)) {
+				assertValid(project);
+			} else {
+				rejected++;
+				assertFalse("the 3.1 schema must reject push message '" + name + "'", schema31.validate(project).isEmpty());
+			}
+		}
+		assertEquals("one push message per D1 rule", 3, rejected);
+	}
+
+	@Test
+	public void validPushMessageFixturesAreAccepted() throws IOException, URISyntaxException {
+		assertValid(readFixture("test-websocket_push_message-required-and-optional.yaml"));
+		assertValid(readFixture("test-websocket_push_message-channel-paths.yaml"));
 	}
 
 	private static JsonNode projectWithChannelReference(final String reference) throws IOException {

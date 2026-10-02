@@ -71,6 +71,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-websocket_request-minimal",
 			"test-websocket_request-required-and-optional",
 			"test-websocket_request-close-and-binary",
+			"test-websocket_push_message-required-and-optional",
 			"test-request-required-and-optional",
 			"test-request-parts-only-required",
 			"test-request-parts-required-and-optional",
