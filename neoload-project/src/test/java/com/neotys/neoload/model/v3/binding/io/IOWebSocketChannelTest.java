@@ -26,7 +26,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 	private static Step getWebSocketChannelOnlyRequired() {
 		return WebSocketChannel.builder()
 				.name("my_channel")
-				.url("wss://host:443/socket")
+				.url("https://host:443/socket")
 				.build();
 	}
 
@@ -50,7 +50,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 	private static Step getWebSocketChannelMessagesMappingXpath() {
 		return WebSocketChannel.builder()
 				.name("xpath_channel")
-				.url("ws://host:80/socket")
+				.url("http://host:80/socket")
 				.messagesMapping(WebSocketMessagesMapping.builder()
 						.xpath("/message/@id")
 						.template("$2$")
@@ -112,6 +112,16 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebSocketChannelNoUrlRejected() throws IOException {
 		assertInvalid("test-websocket_channel-no-url", "url");
+	}
+
+	@Test
+	public void readWebSocketChannelWithWsSchemesRejected() throws IOException {
+		// NeoLoad stores a channel URL as http or https: ws and wss are not accepted
+		final Validation validation = validate("test-websocket_channel-ws-schemes");
+		assertFalse(validation.isValid());
+		final String message = validation.getMessage().orElse("");
+		assertTrue("unexpected message: " + message, message.startsWith("Data Model is invalid. Violation Number: 2."));
+		assertTrue("unexpected message: " + message, message.contains("url"));
 	}
 
 	@Test

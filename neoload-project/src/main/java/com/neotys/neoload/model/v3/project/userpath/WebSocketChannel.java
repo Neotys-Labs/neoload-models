@@ -44,10 +44,11 @@ public interface WebSocketChannel extends Step {
 	String PUSH_MESSAGES = "push_messages";
 
 	/**
-	 * The {@link Request#URL} pattern widened to the WebSocket schemes. A relative path is still
-	 * accepted, for use together with {@link #getServer()}.
+	 * The {@link Request#URL} pattern: {@code http} or {@code https}, the schemes NeoLoad stores
+	 * for a channel ({@code ws} and {@code wss} are not accepted), or a path relative to
+	 * {@link #getServer()}.
 	 */
-	String URL_PATTERN = "^((http[s]?|ws[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)";
+	String URL_PATTERN = "^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)";
 
 	@JsonProperty(URL)
 	@RequiredCheck(groups={NeoLoad.class})

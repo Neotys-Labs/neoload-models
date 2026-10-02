@@ -6,7 +6,7 @@ shared_elements:
     steps:
     - websocket_channel:
         name: support_socket
-        url: wss://host:443/support
+        url: https://host:443/support
         push_messages:
         - name: on_agent
           conditions:
@@ -25,7 +25,7 @@ user_paths:
     steps:
     - websocket_channel:
         name: chat_socket
-        url: wss://host:443/chat
+        url: https://host:443/chat
         push_messages:
         - name: on_ping
           conditions:
@@ -46,14 +46,14 @@ user_paths:
           steps:
           - websocket_channel:
               name: inner
-              url: wss://host:443/a
+              url: https://host:443/a
         - name: twin
           conditions:
           - "'${NL-MessageContent}' contains 'b'"
           steps:
           - websocket_channel:
               name: inner
-              url: wss://host:443/b
+              url: https://host:443/b
     - websocket_request:
         name: through_twins
         channel: actions>chat_socket>twin>inner

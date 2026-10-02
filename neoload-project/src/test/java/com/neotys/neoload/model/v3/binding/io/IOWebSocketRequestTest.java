@@ -28,7 +28,7 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 		return buildProject(
 				WebSocketChannel.builder()
 						.name("my_channel")
-						.url("wss://host:443/socket")
+						.url("https://host:443/socket")
 						.build(),
 				WebSocketRequest.builder()
 						.channel("actions>my_channel")
@@ -40,7 +40,7 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 		return buildProject(
 				WebSocketChannel.builder()
 						.name("chat_socket")
-						.url("wss://host:443/chat")
+						.url("https://host:443/chat")
 						.messagesMapping(WebSocketMessagesMapping.builder()
 								.jsonPath("$.correlationId")
 								.build())
@@ -66,7 +66,7 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 		return buildProject(
 				WebSocketChannel.builder()
 						.name("my_channel")
-						.url("wss://host:443/socket")
+						.url("https://host:443/socket")
 						.build(),
 				WebSocketRequest.builder()
 						.name("send_binary")

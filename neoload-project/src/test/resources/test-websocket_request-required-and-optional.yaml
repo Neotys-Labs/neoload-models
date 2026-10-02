@@ -5,7 +5,7 @@ user_paths:
     steps:
     - websocket_channel:
         name: chat_socket
-        url: wss://host:443/chat
+        url: https://host:443/chat
         messages_mapping:
           jsonpath: $.correlationId
     - websocket_request:

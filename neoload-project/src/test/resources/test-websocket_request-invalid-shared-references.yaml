@@ -6,7 +6,7 @@ shared_elements:
     steps:
     - websocket_channel:
         name: chat_socket
-        url: wss://host:443/chat
+        url: https://host:443/chat
         messages_mapping:
           jsonpath: $.id
 - transaction:
@@ -17,13 +17,13 @@ shared_elements:
         steps:
         - websocket_channel:
             name: twin_socket
-            url: wss://host:443/twin1
+            url: https://host:443/twin1
     - transaction:
         name: Twin
         steps:
         - websocket_channel:
             name: twin_socket
-            url: wss://host:443/twin2
+            url: https://host:443/twin2
     - websocket_request:
         name: ambiguous_inside
         channel: shared_elements>Twins>Twin>twin_socket
@@ -50,7 +50,7 @@ shared_elements:
     steps:
     - websocket_channel:
         name: raw_socket
-        url: wss://host:443/raw
+        url: https://host:443/raw
     - websocket_request:
         name: sync_without_mapping
         channel: shared_elements>OpenNoMapping>raw_socket
@@ -69,10 +69,10 @@ user_paths:
     - shared_element: OpenChat
     - websocket_channel:
         name: own_socket
-        url: wss://host:443/own1
+        url: https://host:443/own1
     - websocket_channel:
         name: solo_socket
-        url: wss://host:443/solo
+        url: https://host:443/solo
   actions:
     steps:
     - shared_element: Twins
@@ -94,7 +94,7 @@ user_paths:
     steps:
     - websocket_channel:
         name: own_socket
-        url: wss://host:443/own2
+        url: https://host:443/own2
   actions:
     steps:
     - shared_element: SendInline
