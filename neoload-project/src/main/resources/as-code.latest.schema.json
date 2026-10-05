@@ -556,16 +556,11 @@
 					"steps": { "$ref": "#/definitions/user_paths/steps" }
 				}
 			},
-			"non_empty_steps": {
-				"$id": "#/definitions/user_paths/non_empty_steps",
-				"title": "Non-empty Steps",
-				"allOf": [{ "$ref": "#/definitions/user_paths/steps" }],
-				"minItems": 1
-			},
 			"steps": {
 				"$id": "#/definitions/user_paths/steps",
 				"title": "Steps",
 				"type": "array",
+				"minItems": 1,
 				"items": {
 					"type": "object",
 					"properties": {
@@ -687,7 +682,7 @@
 							"enum": ["any", "all"],
 							"default": "any"
 						},
-						"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
 				},
@@ -700,7 +695,7 @@
 						"name": { "$ref": "#/definitions/common/text" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"count": { "$ref": "#/definitions/common/positive_number" },
-						"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
 				},
@@ -786,7 +781,7 @@
 					"description": { "$ref": "#/definitions/common/text" },
 					"value": { "$ref": "#/definitions/common/text" },
 					"break": { "type": "boolean" },
-					"steps": { "$ref": "#/definitions/user_paths/non_empty_steps" }
+					"steps": { "$ref": "#/definitions/user_paths/steps" }
 				},
 				"additionalProperties": false
 			},

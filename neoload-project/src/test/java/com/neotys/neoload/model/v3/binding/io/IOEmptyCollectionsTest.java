@@ -15,18 +15,10 @@ import com.neotys.neoload.model.v3.project.userpath.UserPath;
 
 
 /**
- * A project being designed can hold user path containers and transactions with no step yet. Such a project
- * must round-trip: the export writes {@code steps: []} and the loader accepts the result.
+ * A project being designed can hold user path containers and transactions with no step yet. The export
+ * still writes their {@code steps} field, as {@code steps: []}, instead of an empty object.
  */
 public class IOEmptyCollectionsTest extends AbstractIOElementsTest {
-
-	@Test
-	public void readEmptyCollections() throws IOException {
-		final Project expectedProject = buildProjectWithEmptyCollections();
-		assertNotNull(expectedProject);
-
-		read("test-empty-collections", expectedProject);
-	}
 
 	@Test
 	public void writeEmptyCollections() throws IOException {
