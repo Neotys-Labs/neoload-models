@@ -22,7 +22,7 @@ public class RequestTest {
 		assertEquals("parts", Request.PARTS);
 		assertEquals("extractors", Request.EXTRACTORS);
 		assertEquals("assertions", Request.ASSERTIONS);
-		assertEquals("_internalRecordedId", Request.INTERNAL_RECORDED_ID);
+		assertEquals("_internal_recorded_id", Request.INTERNAL_RECORDED_ID);
 		
 		assertEquals("request", Request.DEFAULT_NAME);
 		assertEquals("GET", Request.DEFAULT_METHOD);

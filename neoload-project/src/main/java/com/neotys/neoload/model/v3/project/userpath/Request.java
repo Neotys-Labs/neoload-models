@@ -42,7 +42,7 @@ public interface Request extends Step, SlaElement, AssertionsElement, DurationAs
 	String PARTS = "parts";
 	String EXTRACTORS = "extractors";
 	String FOLLOW_REDIRECTS = "followRedirects";
-	String INTERNAL_RECORDED_ID = "_internalRecordedId";
+	String INTERNAL_RECORDED_ID = "_internal_recorded_id";
 
 	String DEFAULT_NAME = "request";
 	String DEFAULT_METHOD = Method.GET.name();

@@ -28,7 +28,7 @@ import org.junit.Test;
  * Schema-level coverage for published request contracts (3.0 and 3.1):
  * {@code followRedirects} is declared, {@code name} is not (NLG ignores it),
  * {@code method} is any string (default GET), and 3.1 declares optional
- * {@code _internalRecordedId}.
+ * {@code _internal_recorded_id}.
  */
 public class IORequestSchemaValidationTest {
 
@@ -85,15 +85,15 @@ public class IORequestSchemaValidationTest {
 
     @Test
     public void requestSchema31DeclaresInternalRecordedId() {
-        JsonNode internalRecordedId = requestProperties(schema31Tree).get("_internalRecordedId");
-        assertNotNull("3.1 request.properties._internalRecordedId must be declared", internalRecordedId);
+        JsonNode internalRecordedId = requestProperties(schema31Tree).get("_internal_recorded_id");
+        assertNotNull("3.1 request.properties._internal_recorded_id must be declared", internalRecordedId);
         JsonNode required = schema31Tree.at("/definitions/user_paths/actions/request/required");
         assertTrue(required.isArray());
         for (JsonNode item : required) {
-            assertFalse("_internalRecordedId must not be required", "_internalRecordedId".equals(item.asText()));
+            assertFalse("_internal_recorded_id must not be required", "_internal_recorded_id".equals(item.asText()));
         }
-        assertFalse("3.0 request must not declare _internalRecordedId",
-                requestProperties(schema30Tree).has("_internalRecordedId"));
+        assertFalse("3.0 request must not declare _internal_recorded_id",
+                requestProperties(schema30Tree).has("_internal_recorded_id"));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class IORequestSchemaValidationTest {
                         + "    steps:\n"
                         + "    - request:\n"
                         + "        url: http://www.neotys.com/select\n");
-        assertValid("3.1 without _internalRecordedId", schema31, without);
+        assertValid("3.1 without _internal_recorded_id", schema31, without);
 
         JsonNode with = YAML_MAPPER.readTree(
                 "name: MyProject\n"
@@ -116,8 +116,8 @@ public class IORequestSchemaValidationTest {
                         + "    steps:\n"
                         + "    - request:\n"
                         + "        url: http://www.neotys.com/select\n"
-                        + "        _internalRecordedId: r0001\n");
-        assertValid("3.1 with _internalRecordedId", schema31, with);
+                        + "        _internal_recorded_id: r0001\n");
+        assertValid("3.1 with _internal_recorded_id", schema31, with);
     }
 
     @Test
@@ -130,8 +130,8 @@ public class IORequestSchemaValidationTest {
                         + "    steps:\n"
                         + "    - request:\n"
                         + "        url: http://www.neotys.com/select\n"
-                        + "        _internalRecordedId: 1\n");
-        assertFalse("_internalRecordedId must be a string in 3.1", schema31.validate(node).isEmpty());
+                        + "        _internal_recorded_id: 1\n");
+        assertFalse("_internal_recorded_id must be a string in 3.1", schema31.validate(node).isEmpty());
     }
 
     @Test

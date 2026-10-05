@@ -1012,7 +1012,7 @@
 							"type": "boolean",
 							"default": false
 						},
-						"_internalRecordedId": {
+						"_internal_recorded_id": {
 							"title": "Internal recorded request id",
 							"description": "Optional id of the recorded HAR entry this request was converted from (for example r0001). Omit when the project was not produced from a recording.",
 							"$ref": "#/definitions/common/text"
