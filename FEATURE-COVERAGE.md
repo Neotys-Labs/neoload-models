@@ -49,12 +49,8 @@ as-code variable catalogue matches the fourteen types offered by the GUI.
 (with an `operator`) joins the existing content assertion. `duration_assertion` is a separate,
 single-value setting (`less_than`) on `request` and `custom_action`.
 
-**Frameworks** — a `framework` model (`enabled`, `parameters`) with dynamic parameters
-(`enabled`, `extraction_source`, `xpath`, `jsonpath`, `regexp`, `template`), covering the GUI
-Frameworks / dynamic parameters feature, in a builtin and a custom flavour.
-
-**JSON Schema completeness** — request `name`, `followRedirects`, custom method, `bodybinary`;
-`assertions` on request, transaction and container; scenario `sla_profile`,
+**JSON Schema completeness** — request `name`, `followRedirects`, custom method, `bodybinary`,
+`binary_source_file`; `assertions` on request, transaction and container; scenario `sla_profile`,
 `store_variables_for_raw_data`, `excluded_urls`, `apm_configuration`, `monitoring`,
 `rendezvous_policies`; `custom_load` policy.
 
@@ -141,7 +137,7 @@ The GUI offers fourteen types (`VariablesPane#initialize`).
 | Failed-assertion policy per User Path (`getFailedAssertionPolicy`) | — |
 | Action enabled / disabled flag | — |
 | Breakpoints | — |
-| Shared elements (`SharedElementsContainer`) | — |
+| Shared elements (`SharedElementsContainer`) | 3.1 (`shared_elements` / `shared_element`) |
 
 ## User Path — logical actions
 
@@ -171,7 +167,7 @@ and protocol action catalogues.
 | NLP feature | as-code |
 |:------------|:--------|
 | HTTP/S request — URL, server, method, headers, text body, extractors | 3.0 |
-| Binary body | 3.0 (`bodybinary`, undeclared in the published schema) |
+| Binary body | 3.1 (`bodybinary` inline Base64, `binary_source_file` path) |
 | Follow redirects | 3.0 (`followRedirects`, undeclared in the published schema) |
 | HTTP Page (a page and its dynamic resources) | 3.1 draft (`http_page`) |
 | Multipart / form-data body | 3.1 (`parts`) |

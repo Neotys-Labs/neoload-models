@@ -87,6 +87,12 @@
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/scenario" }
 		},
+		"shared_elements": {
+			"title": "Shared_elements",
+			"type": "array",
+			"minItems": 1,
+			"items": { "$ref": "#/definitions/shared_element" }
+		},
 		"user_paths": {
 			"title": "User_paths",
 			"type": "array",
@@ -150,6 +156,11 @@
 				"title": "Positive Number",
 				"type": "integer",
 				"minimum": 0
+			},
+			"pacing_value": {
+				"title": "Pacing value",
+				"type": "string",
+				"pattern": "^(\\d+|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
 			},
 			"duration": {
 				"title": "Duration",
@@ -896,6 +907,7 @@
 					"sla_profile": {
 						"type": "string"
 					},
+					"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				}
@@ -935,7 +947,8 @@
 								"debug_logger": {"$ref": "#/definitions/user_paths/actions/debug_logger"},
                                 "rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
 								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"},
-								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"}
+								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"},
+								"shared_element": { "$ref": "#/definitions/common/name" }
 							},
 							"additionalProperties": false
 						}
@@ -952,6 +965,7 @@
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
+						"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": { "$ref": "#/definitions/common/assertions" }
 					},
@@ -985,6 +999,7 @@
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
 						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
+						"binary_source_file": { "$ref": "#/definitions/common/text" },
 						"parts": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/part" }
@@ -1014,7 +1029,11 @@
 						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" },
 						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					},
-					"not": { "required": ["body", "bodybinary"] }
+					"allOf": [
+						{ "not": { "required": ["body", "bodybinary"] } },
+						{ "not": { "required": ["body", "binary_source_file"] } },
+						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
+					]
 				},
 				"delay": {
 					"title": "Action: Delay",
@@ -1023,6 +1042,21 @@
 				"think_time": {
 					"title": "Action: Think Time",
 					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
+				},
+				"pacing": {
+					"title": "Action: Pacing",
+					"oneOf": [
+						{ "$ref": "#/definitions/common/pacing_value" },
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"min": { "$ref": "#/definitions/common/pacing_value" },
+								"max": { "$ref": "#/definitions/common/pacing_value" }
+							}
+						}
+					]
 				},
 				"javascript": {
 					"title": "Action: Javascript",
@@ -1408,6 +1442,7 @@
 					"description": { "$ref": "#/definitions/common/text" },
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": { "type": "boolean" },
+					"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				},
@@ -1426,6 +1461,34 @@
 					}
 				},
 				"additionalProperties": false
+			}
+		},
+		"shared_element": {
+			"title": "Shared Element",
+			"type": "object",
+			"minProperties": 1,
+			"maxProperties": 1,
+			"additionalProperties": false,
+			"properties": {
+				"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
+				"loop": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/loop" },
+						{ "required": ["name"] }
+					]
+				},
+				"while": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/while" },
+						{ "required": ["name"] }
+					]
+				},
+				"fork": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/fork" },
+						{ "required": ["name"] }
+					]
+				}
 			}
 		},
 		"framework": {
