@@ -20,10 +20,11 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
  * Think time policy of a User Path, mirroring the "Waiting time" settings of the designer's User Path
  * "Runtime parameters" panel: either {@code override} the think times of the pages and delays with a
  * duration, or scale them by a {@code factor}, optionally adding a {@code random} delay of +/- a percentage.
- * Without {@code override} nor {@code factor}, the think times defined on pages and delays apply.
+ * Without {@code override} nor {@code factor}, the think times defined on pages and delays apply, and without
+ * {@code random} no random delay is added.
  * <p>
- * Values are kept as written: a duration in the {@code think_time} step format, a non-negative integer
- * percentage with an optional {@code %}, or a variable.
+ * Values are kept as written: a duration in the {@link Pacing} format, an integer percentage with an optional
+ * {@code %}, or a variable.
  */
 @UserPathThinkTimeCheck(groups = {NeoLoad.class})
 @JsonInclude(value = Include.NON_EMPTY)
@@ -37,20 +38,20 @@ public interface UserPathThinkTime {
 	String FACTOR = "factor";
 	String RANDOM = "random";
 
-	String DURATION_PATTERN = "(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s\\s*)?(\\d+ms\\s*)?|\\$\\{[^}]+\\})";
-	String PERCENTAGE_PATTERN = "(\\d+%?|\\$\\{[^}]+\\})";
+	String FACTOR_PATTERN = "(\\d+%?|\\$\\{[^}]+\\})";
+	String RANDOM_PATTERN = "([1-9]\\d*%?|\\$\\{[^}]+\\})";
 
-	String DURATION_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.ThinkTimeDurationPattern.message}";
-	String PERCENTAGE_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.ThinkTimePercentagePattern.message}";
+	String FACTOR_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.ThinkTimeFactorPattern.message}";
+	String RANDOM_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.ThinkTimeRandomPattern.message}";
 
 	@JsonProperty(OVERRIDE)
-	Optional<@Pattern(regexp = DURATION_PATTERN, message = DURATION_MESSAGE, groups = {NeoLoad.class}) String> getOverride();
+	Optional<@Pattern(regexp = Pacing.PATTERN, message = Pacing.PATTERN_MESSAGE, groups = {NeoLoad.class}) String> getOverride();
 
 	@JsonProperty(FACTOR)
-	Optional<@Pattern(regexp = PERCENTAGE_PATTERN, message = PERCENTAGE_MESSAGE, groups = {NeoLoad.class}) String> getFactor();
+	Optional<@Pattern(regexp = FACTOR_PATTERN, message = FACTOR_MESSAGE, groups = {NeoLoad.class}) String> getFactor();
 
 	@JsonProperty(RANDOM)
-	Optional<@Pattern(regexp = PERCENTAGE_PATTERN, message = PERCENTAGE_MESSAGE, groups = {NeoLoad.class}) String> getRandom();
+	Optional<@Pattern(regexp = RANDOM_PATTERN, message = RANDOM_MESSAGE, groups = {NeoLoad.class}) String> getRandom();
 
 	class Builder extends ImmutableUserPathThinkTime.Builder {}
 	static Builder builder() {

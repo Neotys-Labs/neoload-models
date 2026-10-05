@@ -11,7 +11,7 @@ public interface PacingConstant extends Pacing {
 	String VALUE = "value";
 
 	@RequiredCheck(groups = {NeoLoad.class})
-	@Pattern(regexp = Pacing.PATTERN, groups = {NeoLoad.class})
+	@Pattern(regexp = Pacing.PATTERN, message = Pacing.PATTERN_MESSAGE, groups = {NeoLoad.class})
 	String getValue();
 
 	class Builder extends ImmutablePacingConstant.Builder {}

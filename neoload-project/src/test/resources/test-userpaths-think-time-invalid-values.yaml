@@ -30,9 +30,9 @@ user_paths:
   actions:
     steps:
     - delay: 1s
-- name: OverrideUnitsOutOfOrder
+- name: OverrideSpaceBetweenUnits
   think_time:
-    override: 30s 1m
+    override: 1m 30s
   actions:
     steps:
     - delay: 1s
@@ -75,6 +75,12 @@ user_paths:
 - name: RandomText
   think_time:
     random: abc
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomZero
+  think_time:
+    random: 0%
   actions:
     steps:
     - delay: 1s

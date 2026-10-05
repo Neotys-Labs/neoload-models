@@ -63,8 +63,8 @@ public class UserPathTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'think_time.override': must be a non-negative duration (e.g. 100 for 100 milliseconds, 5s, 1m 30s) or a variable.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'think_time.random': must be a non-negative integer percentage (e.g. 150%) or a variable.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'think_time.override': must be a number of milliseconds (e.g. 100), a combination of h, m, s and ms (e.g. 1h30m, 5s, 500ms) or a variable.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'think_time.random': must be a positive integer percentage (e.g. 10%) or a variable.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_THINK_TIME_VALUES = sb.toString();
 	}
 

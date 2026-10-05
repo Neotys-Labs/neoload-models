@@ -38,21 +38,19 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 						.build())
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath2")
-						.onError(FailurePolicy.DO_NOTHING)
 						.onAssertionFailure(FailurePolicy.GO_TO_NEXT_ITERATION)
 						.thinkTime(UserPathThinkTime.builder().factor("150%").build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath3")
-						.onAssertionFailure(FailurePolicy.DO_NOTHING)
 						.thinkTime(UserPathThinkTime.builder().random("20%").build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath4")
 						.onError(FailurePolicy.STOP_AND_START_NEW_VU)
-						.thinkTime(UserPathThinkTime.builder().override("1m 30s").build())
+						.thinkTime(UserPathThinkTime.builder().override("1m30s").build())
 						.actions(actions())
 						.build())
 				.build();
@@ -131,10 +129,11 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 		assertFalse(validation.isValid());
 
 		final String message = validation.getMessage().get();
-		assertTrue(message, message.contains("Violation Number: 13."));
-		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[0].think_time.override': must be a non-negative duration (e.g. 100 for 100 milliseconds, 5s, 1m 30s) or a variable."));
+		assertTrue(message, message.contains("Violation Number: 14."));
+		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[0].think_time.override': must be a number of milliseconds (e.g. 100), a combination of h, m, s and ms (e.g. 1h30m, 5s, 500ms) or a variable."));
 		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[7].think_time.factor': must be a non-negative integer percentage (e.g. 150%) or a variable."));
-		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[10].think_time.random': must be a non-negative integer percentage (e.g. 150%) or a variable."));
+		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[10].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
+		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[13].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
 	}
 
 	@Test
@@ -152,12 +151,12 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readUnknownOnErrorPolicyFailsDeserialization() {
-		assertReadFails("test-userpaths-invalid-on-error", "restart_vu", "do_nothing", "go_to_next_iteration", "stop_and_start_new_vu");
+		assertReadFails("test-userpaths-invalid-on-error", "restart_vu", "go_to_next_iteration", "stop_and_start_new_vu");
 	}
 
 	@Test
-	public void readUnknownOnAssertionFailurePolicyFailsDeserialization() {
-		assertReadFails("test-userpaths-invalid-on-assertion-failure", "Do_Nothing", "do_nothing", "go_to_next_iteration", "stop_and_start_new_vu");
+	public void readDoNothingOnAssertionFailurePolicyFailsDeserialization() {
+		assertReadFails("test-userpaths-invalid-on-assertion-failure", "do_nothing", "go_to_next_iteration", "stop_and_start_new_vu");
 	}
 
 	@Test

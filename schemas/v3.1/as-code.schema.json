@@ -162,20 +162,6 @@
 				"type": "string",
 				"pattern": "^(\\d+|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
 			},
-			"think_time_value": {
-				"title": "Think time value: a duration (100 = 100 milliseconds, 5s, 1m 30s) or a variable",
-				"anyOf": [
-					{ "type": "string", "pattern": "^(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s\\s*)?(\\d+ms\\s*)?|\\$\\{[^}]+\\})$" },
-					{ "$ref": "#/definitions/common/positive_number" }
-				]
-			},
-			"percentage_value": {
-				"title": "Percentage value: a non-negative integer percentage (150%, % optional) or a variable",
-				"anyOf": [
-					{ "type": "string", "pattern": "^(\\d+%?|\\$\\{[^}]+\\})$" },
-					{ "$ref": "#/definitions/common/positive_number" }
-				]
-			},
 			"duration": {
 				"title": "Duration",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
@@ -915,9 +901,9 @@
 				}
 			},
 			"failure_policy": {
-				"title": "User Path policy applied when an error occurs or an assertion fails",
+				"title": "User Path policy applied when an error occurs or an assertion fails. When omitted, the Virtual User does nothing",
 				"type": "string",
-				"enum": ["do_nothing", "go_to_next_iteration", "stop_and_start_new_vu"]
+				"enum": ["go_to_next_iteration", "stop_and_start_new_vu"]
 			},
 			"user_path_think_time": {
 				"title": "User Path think time policy: override or scale the think times of the pages and delays, optionally with a random delay",
@@ -925,9 +911,15 @@
 				"minProperties": 1,
 				"additionalProperties": false,
 				"properties": {
-					"override": { "$ref": "#/definitions/common/think_time_value" },
-					"factor": { "$ref": "#/definitions/common/percentage_value" },
-					"random": { "$ref": "#/definitions/common/percentage_value" }
+					"override": { "anyOf": [{ "$ref": "#/definitions/common/pacing_value" }, { "$ref": "#/definitions/common/positive_number" }] },
+					"factor": {
+						"title": "A non-negative integer percentage (150%, % optional) or a variable",
+						"anyOf": [{ "type": "string", "pattern": "^(\\d+%?|\\$\\{[^}]+\\})$" }, { "$ref": "#/definitions/common/positive_number" }]
+					},
+					"random": {
+						"title": "A positive integer percentage (10%, % optional) or a variable",
+						"anyOf": [{ "type": "string", "pattern": "^([1-9]\\d*%?|\\$\\{[^}]+\\})$" }, { "type": "integer", "minimum": 1 }]
+					}
 				},
 				"not": { "required": ["override", "factor"] }
 			},

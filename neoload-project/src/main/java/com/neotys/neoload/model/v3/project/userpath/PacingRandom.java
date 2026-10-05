@@ -15,14 +15,14 @@ public interface PacingRandom extends Pacing {
 	String DEFAULT_MIN = "0";
 
 	@RequiredCheck(groups = {NeoLoad.class})
-	@Pattern(regexp = Pacing.PATTERN, groups = {NeoLoad.class})
+	@Pattern(regexp = Pacing.PATTERN, message = Pacing.PATTERN_MESSAGE, groups = {NeoLoad.class})
 	@Value.Default
 	default String getMin() {
 		return DEFAULT_MIN;
 	}
 
 	@RequiredCheck(groups = {NeoLoad.class})
-	@Pattern(regexp = Pacing.PATTERN, groups = {NeoLoad.class})
+	@Pattern(regexp = Pacing.PATTERN, message = Pacing.PATTERN_MESSAGE, groups = {NeoLoad.class})
 	String getMax();
 
 	class Builder extends ImmutablePacingRandom.Builder {}

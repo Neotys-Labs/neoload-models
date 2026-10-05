@@ -10,7 +10,6 @@ user_paths:
     steps:
     - delay: 1s
 - name: MyUserPath2
-  on_error: do_nothing
   on_assertion_failure: go_to_next_iteration
   think_time:
     factor: 150%
@@ -18,7 +17,6 @@ user_paths:
     steps:
     - delay: 1s
 - name: MyUserPath3
-  on_assertion_failure: do_nothing
   think_time:
     random: 20%
   actions:
@@ -27,7 +25,7 @@ user_paths:
 - name: MyUserPath4
   on_error: stop_and_start_new_vu
   think_time:
-    override: 1m 30s
+    override: 1m30s
   actions:
     steps:
     - delay: 1s

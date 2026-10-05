@@ -34,7 +34,6 @@ public interface UserPath extends Element, AssertionsElement {
 
 	String ON_ERROR = "on_error";
 	String ON_ASSERTION_FAILURE = "on_assertion_failure";
-	String DO_NOTHING = "do_nothing";
 	String GO_TO_NEXT_ITERATION = "go_to_next_iteration";
 	String STOP_AND_START_NEW_VU = "stop_and_start_new_vu";
 
@@ -57,11 +56,9 @@ public interface UserPath extends Element, AssertionsElement {
 	
 	/**
 	 * What the Virtual User does when an error occurs or an assertion fails, as in the designer's
-	 * User Path "Runtime parameters" panel.
+	 * User Path "Runtime parameters" panel. Doing nothing, the default, is expressed by leaving the policy empty.
 	 */
 	enum FailurePolicy {
-		@JsonProperty(UserPath.DO_NOTHING)
-		DO_NOTHING,
 		@JsonProperty(UserPath.GO_TO_NEXT_ITERATION)
 		GO_TO_NEXT_ITERATION,
 		@JsonProperty(UserPath.STOP_AND_START_NEW_VU)
@@ -75,12 +72,12 @@ public interface UserPath extends Element, AssertionsElement {
 	}
 	
 	/**
-	 * The policy applied when an error occurs. Empty when not declared: the NeoLoad default then applies.
+	 * The policy applied when an error occurs. Empty by default: the Virtual User does nothing.
 	 */
 	Optional<FailurePolicy> getOnError();
 
 	/**
-	 * The policy applied when an assertion fails. Empty when not declared: the NeoLoad default then applies.
+	 * The policy applied when an assertion fails. Empty by default: the Virtual User does nothing.
 	 */
 	Optional<FailurePolicy> getOnAssertionFailure();
 

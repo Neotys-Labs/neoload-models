@@ -12,9 +12,9 @@ The User Path is a succession of web pages that may contain logical Actions such
 | name                                | The name of the User Path                                                                                                                                  | -               | &#x2713;           |       |
 | description                         | The description of the User Path                                                                                                                           | -               | -                  |       |
 | user_session                        | The "user_session" value can be: <ul><li>`reset_on`</li><li>`reset_off`</li><li>`reset_auto`</li></ul></br>The default value is `reset_auto`.              | -               | -                  |       |
-| on_error                            | What the Virtual User does when an error occurs, see [on_error and on_assertion_failure](#on_error-and-on_assertion_failure). When omitted, the NeoLoad default applies. | -               | -                  | 2026.3 |
-| on_assertion_failure                | What the Virtual User does when an assertion fails, see [on_error and on_assertion_failure](#on_error-and-on_assertion_failure). When omitted, the NeoLoad default applies. | -               | -                  | 2026.3 |
-| think_time                          | Overrides or scales the think times of the User Path, optionally with a random delay, see [think_time](#think_time). When omitted, the think times defined on the web pages and the `think_time` steps apply, with no random delay. | &#x2713;        | -                  | 2026.3 |
+| on_error                            | What the Virtual User does when an error occurs: `go_to_next_iteration` or `stop_and_start_new_vu`, see [on_error and on_assertion_failure](#on_error-and-on_assertion_failure). By default, it does nothing. | -               | -                  | 2026.3 |
+| on_assertion_failure                | What the Virtual User does when an assertion fails: `go_to_next_iteration` or `stop_and_start_new_vu`, see [on_error and on_assertion_failure](#on_error-and-on_assertion_failure). By default, it does nothing. | -               | -                  | 2026.3 |
+| think_time                          | Replaces or scales all the think times of the User Path, see [think_time](#think_time). By default, the think times are kept as defined. | &#x2713;        | -                  | 2026.3 |
 | init                                | The init [container](container.md)                                                                                                                         | -               | -                  |       |
 | actions                             | The actions [container](container.md)                                                                                                                      | -               | &#x2713;           |       |
 | end                                 | The end [container](container.md)                                                                                                                          | -               | -                  |       |
@@ -22,38 +22,25 @@ The User Path is a succession of web pages that may contain logical Actions such
 
 
 #### on_error and on_assertion_failure
-`on_error` sets what the Virtual User does when an error occurs, and `on_assertion_failure` what it does when an assertion fails. They match the "When an error occurs" and "When an assertion fails" settings of the User Path "Runtime parameters" panel of the NeoLoad designer.
+What the Virtual User does when an error occurs (`on_error`) or when an assertion fails (`on_assertion_failure`), as in the User Path "Runtime parameters" panel of the NeoLoad designer:
 
 | Value                   | Designer setting                  |
 |:----------------------- |:--------------------------------- |
-| `do_nothing`            | Do nothing                        |
 | `go_to_next_iteration`  | Go to the next iteration          |
 | `stop_and_start_new_vu` | Stop and start a new Virtual User |
 
-When omitted, the NeoLoad default applies: `do_nothing`, unless changed with the `vupath.errorPolicy` and `vupath.failedAssertionPolicy` system properties.
+By default, the Virtual User does nothing (designer setting "Do nothing"): to get this behavior, omit the setting.
 
 #### think_time
-The User Path `think_time` matches the "Waiting time" settings of the User Path "Runtime parameters" panel of the NeoLoad designer. It applies to all the think times of the User Path: the `think_time` of the [web pages](web_page.md) and the [think_time](think_time.md) steps. The [delay](delay.md) steps are not affected.
+Changes all the think times of the User Path at once: the `think_time` of its [web pages](web_page.md) and its [think_time](think_time.md) steps. The [delay](delay.md) steps are not changed. It matches the "Waiting time" settings of the User Path "Runtime parameters" panel of the NeoLoad designer.
 
-It must not be confused with the [think_time](think_time.md) step, which pauses the Virtual User at a given point of the User Path, nor with the `think_time` of a [web page](web_page.md), which applies before playing that web page.
+| Name                | Description                                                                                        | Designer setting                          | Accept variable | Required | Since  |
+|:------------------- |:-------------------------------------------------------------------------------------------------- |:----------------------------------------- |:---------------:|:--------:|:------:|
+| think_time.override | Replaces each think time with this duration, in the [pacing](pacing.md#duration-value) format (`100` for 100 milliseconds, `5s`, `1m30s`) | Override think time | &#x2713; | - | 2026.3 |
+| think_time.factor   | Multiplies each think time by this percentage: an integer, `0` or more (`150%`, `%` optional)      | Apply this factor for each page and delay | &#x2713;        | -        | 2026.3 |
+| think_time.random   | Adds a random delay of +/- this percentage to each think time: an integer, `1` or more (`10%`, `%` optional). By default, no random delay is added | Add a random delay +/- | &#x2713; | - | 2026.3 |
 
-##### Available settings
-At least one of `override`, `factor` and `random` must be set, and `override` cannot be combined with `factor`.
-
-| Name                | Description                                                                                                  | Accept variable | Required | Since  |
-|:------------------- |:------------------------------------------------------------------------------------------------------------ |:---------------:|:--------:|:------:|
-| think_time.override | Replaces every think time with this duration. Designer setting: "Override think time"                       | &#x2713;        | -        | 2026.3 |
-| think_time.factor   | Scales every think time by this percentage. Designer setting: "Apply this factor for each page and delay"   | &#x2713;        | -        | 2026.3 |
-| think_time.random   | Adds a random delay of +/- this percentage to the think times. Designer setting: "Add a random delay +/-"   | &#x2713;        | -        | 2026.3 |
-
-Without `override` nor `factor`, the think times defined on the web pages and the `think_time` steps apply (designer setting: "Use think time defined on pages and delays"). `random` is combined with whichever think times apply.
-
-##### Values
-* `override` is a duration in the [think_time](think_time.md#duration-value) step format: a plain number of milliseconds (`100`), or hours, minutes, seconds and milliseconds (`5s`, `1m 30s`, `1h 10m 15s 250ms`).
-* `factor` and `random` are non-negative integer percentages, the `%` sign being optional (`150%` or `150`).
-* All of them accept a variable instead (`${my_think_time}`).
-
-Negative values, malformed durations and malformed percentages are rejected.
+Use `override` or `factor`, not both. `random` can be used alone or with either of them. Without `override` nor `factor`, the think times are kept as defined (designer setting "Use think time defined on pages and delays").
 
 #### Example
 Defining a User Path:

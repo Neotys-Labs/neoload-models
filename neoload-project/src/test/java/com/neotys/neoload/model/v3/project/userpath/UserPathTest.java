@@ -24,7 +24,6 @@ public class UserPathTest {
 
 		assertEquals("on_error", UserPath.ON_ERROR);
 		assertEquals("on_assertion_failure", UserPath.ON_ASSERTION_FAILURE);
-		assertEquals("do_nothing", UserPath.DO_NOTHING);
 		assertEquals("go_to_next_iteration", UserPath.GO_TO_NEXT_ITERATION);
 		assertEquals("stop_and_start_new_vu", UserPath.STOP_AND_START_NEW_VU);
 		assertEquals("think_time", UserPath.THINK_TIME);

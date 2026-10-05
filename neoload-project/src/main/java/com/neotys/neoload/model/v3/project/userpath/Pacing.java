@@ -9,4 +9,5 @@ import com.neotys.neoload.model.v3.binding.serializer.PacingSerializer;
 @JsonDeserialize(using = PacingDeserializer.class)
 public interface Pacing {
 	String PATTERN = "^(\\d+|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$";
+	String PATTERN_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.DurationPattern.message}";
 }

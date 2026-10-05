@@ -20,13 +20,13 @@ user_paths:
     - delay: 1s
 - name: OverrideMinutesAndSeconds
   think_time:
-    override: 1m 30s
+    override: 1m30s
   actions:
     steps:
     - delay: 1s
 - name: OverrideEveryUnit
   think_time:
-    override: 1h 10m 15s 250ms
+    override: 1h10m15s250ms
   actions:
     steps:
     - delay: 1s
@@ -69,7 +69,7 @@ user_paths:
 - name: OverrideWithRandom
   think_time:
     override: 2s
-    random: 0%
+    random: 5%
   actions:
     steps:
     - delay: 1s

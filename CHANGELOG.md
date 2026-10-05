@@ -134,8 +134,8 @@ The runtime parameters of a User Path, set in the "Runtime parameters" panel of 
 now writable in as-code as three optional User Path keys.
 
 - **`on_error`** and **`on_assertion_failure`** — what the Virtual User does when an error occurs
-  or an assertion fails: `do_nothing`, `go_to_next_iteration` or `stop_and_start_new_vu`. When
-  omitted, the NeoLoad default applies.
+  or an assertion fails: `go_to_next_iteration` or `stop_and_start_new_vu`. When omitted, the
+  Virtual User does nothing.
 - **`think_time`** — replaces (`override`) or scales (`factor`) all the think times of the User
   Path, optionally adding a `random` delay of +/- a percentage. It applies to the web pages and the
   `think_time` steps of the User Path; `delay` steps are not affected.
