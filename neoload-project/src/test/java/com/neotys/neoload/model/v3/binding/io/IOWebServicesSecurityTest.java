@@ -87,6 +87,26 @@ public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
 				.build();
 	}
 
+	private static Project getSoapRequestSecurityProfiles() {
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(UserPath.builder()
+						.name("MyUserPath")
+						.actions(Container.builder()
+								.name("actions")
+								.addSteps(SoapRequest.builder()
+										.name("MySoapRequest")
+										.url("/soap")
+										.server("myServer")
+										.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+										.requestSecurityProfile("MyRequestProfile")
+										.responseSecurityProfile("MyResponseProfile")
+										.build())
+								.build())
+						.build())
+				.build();
+	}
+
 	@Test
 	public void readWebServicesSecurityOnlyRequired() throws IOException {
 		assertRead("test-web-services-security-only-required", getWebServicesSecurityOnlyRequired());
@@ -115,6 +135,16 @@ public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
 	@Test
 	public void writeWebServicesSecurityDerivedPasswordType() throws IOException {
 		assertWrite("test-web-services-security-derived-password-type", getWebServicesSecurityDerivedPasswordType());
+	}
+
+	@Test
+	public void readSoapRequestSecurityProfiles() throws IOException {
+		assertRead("test-soap-request-security-profiles", getSoapRequestSecurityProfiles());
+	}
+
+	@Test
+	public void writeSoapRequestSecurityProfiles() throws IOException {
+		assertWrite("test-soap-request-security-profiles", getSoapRequestSecurityProfiles());
 	}
 
 	@Test

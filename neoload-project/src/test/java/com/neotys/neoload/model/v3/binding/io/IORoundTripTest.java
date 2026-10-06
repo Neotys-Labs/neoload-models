@@ -72,6 +72,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-soap-request-only-required",
 			"test-soap-request-required-and-optional",
 			"test-soap-request-legacy-assertions",
+			"test-soap-request-security-profiles",
 			"test-web-services-security-only-required",
 			"test-web-services-security-required-and-optional",
 			"test-scenarios-only-required",
