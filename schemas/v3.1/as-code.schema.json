@@ -1568,7 +1568,9 @@
 						"size_assertion": {
 							"$ref": "#/definitions/user_paths/size_assertion",
 							"description": "Checks the length of the response content, in bytes."
-						}
+						},
+						"request_security_profile": { "$ref": "#/definitions/common/name" },
+						"response_security_profile": { "$ref": "#/definitions/common/name" }
 					},
 					"allOf": [
 						{ "not": { "required": ["assertions", "content_assertions"] } },

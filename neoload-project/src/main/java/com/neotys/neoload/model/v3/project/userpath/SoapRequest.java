@@ -14,12 +14,13 @@ import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertionEleme
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_DEFAULT)
-@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.PARAMETERS, SoapRequest.HEADERS, SoapRequest.CONTENT, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, HttpBasedRequest.FOLLOW_REDIRECTS, HttpBasedRequest.CHARSET, HttpBasedRequest.RESPONSE_STORAGE, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.PARAMETERS, SoapRequest.HEADERS, SoapRequest.CONTENT, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, HttpBasedRequest.FOLLOW_REDIRECTS, HttpBasedRequest.CHARSET, HttpBasedRequest.RESPONSE_STORAGE, SlaElement.SLA_PROFILE, SoapRequest.REQUEST_SECURITY_PROFILE, SoapRequest.RESPONSE_SECURITY_PROFILE})
 @JsonSerialize(as = ImmutableSoapRequest.class)
 @JsonDeserialize(as = ImmutableSoapRequest.class)
 @Value.Immutable
@@ -30,6 +31,8 @@ public interface SoapRequest extends Step, HttpBasedRequest, SlaElement, Asserti
 	String PARAMETERS = "parameters";
 	String HEADERS = "headers";
 	String CONTENT = "content";
+	String REQUEST_SECURITY_PROFILE = "request_security_profile";
+	String RESPONSE_SECURITY_PROFILE = "response_security_profile";
 
 	String DEFAULT_NAME = "soap_request";
 
@@ -55,6 +58,12 @@ public interface SoapRequest extends Step, HttpBasedRequest, SlaElement, Asserti
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Valid
 	SoapRequestContent getContent();
+
+	@JsonProperty(REQUEST_SECURITY_PROFILE)
+	Optional<String> getRequestSecurityProfile();
+
+	@JsonProperty(RESPONSE_SECURITY_PROFILE)
+	Optional<String> getResponseSecurityProfile();
 
 	class DefaultNameFilter {
 		@Override

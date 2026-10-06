@@ -23,6 +23,8 @@ external XML file referenced by `content.path`.
 | follow_redirects         | When `true`, the HTTP redirections are followed. See [follow_redirects](request.md#follow_redirects) | - | - | 2026.3|
 | charset                  | The charset used to encode the request body. See [charset](request.md#charset) | - | -  | 2026.3|
 | response_storage         | Stores the response body in a file. See [response_storage](request.md#response_storage) | - | - | 2026.3|
+| request_security_profile | The name of the [request profile](web_services_security.md#request_profiles) applied to the request | - | - | 2026.3|
+| response_security_profile | The name of the [response profile](web_services_security.md#response_profiles) used to process the response | - | - | 2026.3|
 
 #### Example 1
 
@@ -65,6 +67,20 @@ soap_request:
     less_than: 2048
   size_assertion:
     less_than: 4096
+```
+
+#### Example 4
+
+Defining a SOAP request secured by [Web Services Security](web_services_security.md) profiles.
+
+```yaml
+soap_request:
+  url: /soap
+  server: server_petstore
+  content:
+    path: ./requests/mySOAPRequest.xml
+  request_security_profile: MyRequestProfile
+  response_security_profile: MyResponseProfile
 ```
 
 ## url
