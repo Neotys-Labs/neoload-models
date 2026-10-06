@@ -18,7 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * {@code web_services_security} is a v3.1 feature:
+ * {@code web_services_security} and the soap_request security profile references are v3.1 features:
  * the v3.1 schema accepts well-formed entries and rejects malformed ones, the v3.0 schema rejects them.
  */
 public class IOWebServicesSecuritySchemaValidationTest {
@@ -33,7 +33,9 @@ public class IOWebServicesSecuritySchemaValidationTest {
             + "    - soap_request:\n"
             + "        url: http://host:80/\n"
             + "        content:\n"
-            + "          path: ./requests/mySOAPRequest.xml\n";
+            + "          path: ./requests/mySOAPRequest.xml\n"
+            + "        request_security_profile: MyRequestProfile\n"
+            + "        response_security_profile: MyResponseProfile\n";
 
     private static JsonSchema schema30;
     private static JsonSchema schema31;

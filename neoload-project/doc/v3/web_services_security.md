@@ -3,7 +3,8 @@
 ## Overview
 
 The `web_services_security` section declares the WS-Security material used by [soap_request](soap_request.md) steps:
-keystores, request profiles and response profiles.
+keystores, request profiles and response profiles. A SOAP request selects a profile by name with
+`request_security_profile` and `response_security_profile`.
 
 This section is available since NeoLoad **2026.3** (schema 3.1).
 
@@ -56,7 +57,7 @@ web_services_security:
 
 | Name    | Description                                  | Accept variable | Required | Since |
 |:------- |:-------------------------------------------- |:---------------:|:--------:|:-----:|
-| name    | The profile name. Must be unique among request profiles | - | &#x2713; | 2026.3|
+| name    | The profile name, referenced by `request_security_profile`. Must be unique among request profiles | - | &#x2713; | 2026.3|
 | headers | The list of security headers added to the request | -          | -        | 2026.3|
 
 #### headers
@@ -107,5 +108,5 @@ password_type:
 
 | Name     | Description                                             | Accept variable | Required | Since |
 |:-------- |:------------------------------------------------------- |:---------------:|:--------:|:-----:|
-| name     | The profile name. Must be unique among response profiles | -           | &#x2713; | 2026.3|
+| name     | The profile name, referenced by `response_security_profile`. Must be unique among response profiles | -           | &#x2713; | 2026.3|
 | keystore | The `path` of the keystore used to process the response   | -               | &#x2713; | 2026.3|

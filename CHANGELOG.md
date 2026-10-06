@@ -140,8 +140,9 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
 #### Web Services Security
 
 A new root key, `web_services_security`, declares WS-Security keystores, request profiles
-(`username` and `timestamp` tokens) and response profiles. The section is optional and
-absent from files that do not use it.
+(`username` and `timestamp` tokens) and response profiles. A `soap_request` selects them by
+name with `request_security_profile` and `response_security_profile`. Both are optional, and the
+section is absent from files that do not use it.
 
 ```yaml
 web_services_security:
