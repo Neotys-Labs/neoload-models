@@ -1533,7 +1533,9 @@
 								"path": { "$ref": "#/definitions/common/file_path" }
 							},
 							"additionalProperties": false
-						}
+						},
+						"request_security_profile": { "$ref": "#/definitions/common/name" },
+						"response_security_profile": { "$ref": "#/definitions/common/name" }
 					}
 				},
 				"duration_action": {
