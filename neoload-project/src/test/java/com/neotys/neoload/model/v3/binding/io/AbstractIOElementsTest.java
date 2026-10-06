@@ -5,6 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import com.neotys.neoload.model.v3.binding.io.IO.Format;
+import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.validation.validator.Validation;
+import com.neotys.neoload.model.v3.validation.validator.Validator;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,24 +19,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
-import com.neotys.neoload.model.v3.binding.io.IO.Format;
-import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
-
 abstract class AbstractIOElementsTest {
 
 	private static final Validator VALIDATOR = new Validator();
 
-	protected void read(final String fileName, final Project expectedProject) throws IOException {
+	protected void assertRead(final String fileName, final Project expectedProject) throws IOException {
 		assertNotNull(expectedProject);
 		
-		read(fileName, ProjectDescriptor.builder().project(expectedProject).build());
+		assertRead(fileName, ProjectDescriptor.builder().project(expectedProject).build());
 	}
 
-	protected void read(final String fileName, final ProjectDescriptor expectedDescriptor) throws IOException {
+	protected void assertRead(final String fileName, final ProjectDescriptor expectedDescriptor) throws IOException {
 		assertNotNull(expectedDescriptor);
 		
 		read(fileName, "yaml", expectedDescriptor);
@@ -61,13 +59,13 @@ abstract class AbstractIOElementsTest {
 		assertEquals(expectedDescriptor.toString(), actualDescriptor4.toString());
 	}
 	
-	protected void write(final String fileName, final Project expectedProject) throws IOException {
+	protected void assertWrite(final String fileName, final Project expectedProject) throws IOException {
 		assertNotNull(expectedProject);
 		
-		write(fileName, ProjectDescriptor.builder().project(expectedProject).build());
+		assertWrite(fileName, ProjectDescriptor.builder().project(expectedProject).build());
 	}
 
-	protected void write(final String fileName, final ProjectDescriptor expectedDescriptor) throws IOException {
+	protected void assertWrite(final String fileName, final ProjectDescriptor expectedDescriptor) throws IOException {
 		assertNotNull(expectedDescriptor);
 		
 		write(fileName, "yaml", expectedDescriptor);
@@ -81,6 +79,38 @@ abstract class AbstractIOElementsTest {
 		final IO mapper = new IO();
 		final String actualContent = mapper.write(expectedDescriptor, Format.valueOf(extension.toUpperCase()));
 		assertEquals(expectedContent, actualContent);
+	}
+
+	/**
+	 * @deprecated use {@link #assertRead(String, Project)}: Sonar only recognizes {@code assert*} helpers as assertions.
+	 */
+	@Deprecated
+	protected void read(final String fileName, final Project expectedProject) throws IOException {
+		assertRead(fileName, expectedProject);
+	}
+
+	/**
+	 * @deprecated use {@link #assertRead(String, ProjectDescriptor)}: Sonar only recognizes {@code assert*} helpers as assertions.
+	 */
+	@Deprecated
+	protected void read(final String fileName, final ProjectDescriptor expectedDescriptor) throws IOException {
+		assertRead(fileName, expectedDescriptor);
+	}
+
+	/**
+	 * @deprecated use {@link #assertWrite(String, Project)}: Sonar only recognizes {@code assert*} helpers as assertions.
+	 */
+	@Deprecated
+	protected void write(final String fileName, final Project expectedProject) throws IOException {
+		assertWrite(fileName, expectedProject);
+	}
+
+	/**
+	 * @deprecated use {@link #assertWrite(String, ProjectDescriptor)}: Sonar only recognizes {@code assert*} helpers as assertions.
+	 */
+	@Deprecated
+	protected void write(final String fileName, final ProjectDescriptor expectedDescriptor) throws IOException {
+		assertWrite(fileName, expectedDescriptor);
 	}
 
 	protected File getFile(final String fileName, final String extension) {
