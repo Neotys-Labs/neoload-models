@@ -9,18 +9,19 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_DEFAULT)
-@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.CONTENT})
+@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.CONTENT, HttpBasedRequest.FOLLOW_REDIRECTS, HttpBasedRequest.CHARSET, HttpBasedRequest.RESPONSE_STORAGE})
 @JsonSerialize(as = ImmutableSoapRequest.class)
 @JsonDeserialize(as = ImmutableSoapRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 @SuppressWarnings("java:S2097")
-public interface SoapRequest extends Step, UrlServerElement {
+public interface SoapRequest extends Step, HttpBasedRequest {
 	String NAME = "name";
 	String CONTENT = "content";
 
@@ -38,6 +39,16 @@ public interface SoapRequest extends Step, UrlServerElement {
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Valid
 	SoapRequestContent getContent();
+
+	@Override
+	default boolean hasBody() {
+		return true;
+	}
+
+	@Value.Check
+	default SoapRequest dropCharsetWithoutBody() {
+		return !hasBody() && getCharset().isPresent() ? ImmutableSoapRequest.copyOf(this).withCharset(Optional.empty()) : this;
+	}
 
 	class DefaultNameFilter {
 		@Override

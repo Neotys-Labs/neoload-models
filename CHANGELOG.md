@@ -137,6 +137,29 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
       source_filename: upload.jpg
 ```
 
+**`follow_redirects`, `charset` and `response_storage`** — advanced settings available on both
+`request` and `soap_request`.
+
+- `follow_redirects` (default `false`) follows the HTTP redirections. It replaces `followRedirects`,
+  which is still read but deprecated and always written back as `follow_redirects`. Declaring both
+  keys on one step is an error.
+- `charset` is the charset used to encode the request body. It only applies to requests with a
+  body (`POST`, `PUT` and every `soap_request`) and is ignored otherwise.
+- `response_storage` stores the response body in a file: `path` (required, may contain `{ID}`,
+  replaced by a unique number per stored file, and variables), `variable` (default
+  `responseFilePath`) and `delete_when_test_finished` (default `false`).
+
+```yaml
+- request:
+    url: /login
+    server: neotys
+    follow_redirects: true
+    response_storage:
+      path: responses/login_{ID}.html
+      variable: loginResponseFile
+      delete_when_test_finished: true
+```
+
 #### Assertions
 
 **`duration_assertion`** — checks that a `request` or `custom_action` completed within
