@@ -39,7 +39,8 @@
 			"type": "array",
 			"minItems": 1,
 			"additionalProperties": false,
-			"items": { "$ref": "#/definitions/common/text" }
+			"items": { "$ref": "#/definitions/common/text" },
+			"description": "Other as-code files loaded before this one. Each entry is a path relative to the project folder and declares the same top-level elements as a project file."
 		},
 		"variables": {
 			"$id": "#root/variables",
@@ -56,42 +57,48 @@
 					{ "$ref": "#/definitions/variables/random_number" },
 					{ "$ref": "#/definitions/variables/javascript" }
 				]
-			}
+			},
+			"description": "Variables add dynamic content to a scenario. They can be combined with other variables or with static content, for example `${product_${productID}}`, and used in places such as form parameter values."
 		},
 		"servers": {
 			"$id": "#root/servers",
 			"title": "Servers",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/server" }
+			"items": { "$ref": "#/definitions/server" },
+			"description": "Target servers for the test, defined once so the host can be changed without editing each request."
 		},
 		"sla_profiles": {
 			"$id": "#root/sla_profiles",
 			"title": "SLA Profiles",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/sla" }
+			"items": { "$ref": "#/definitions/sla" },
+			"description": "Service level agreement profiles. Each profile is a set of KPI thresholds used to check quality of service, for example a maximum average response time."
 		},
 		"populations": {
 			"$id": "#root/populations",
 			"title": "Populations",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/populations/population" }
+			"items": { "$ref": "#/definitions/populations/population" },
+			"description": "Groups of Virtual Users. Each population lists the User Paths that compose it and the share of each one."
 		},
 		"scenarios": {
 			"$id": "#root/scenarios",
 			"title": "Scenarios",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/scenario" }
+			"items": { "$ref": "#/definitions/scenario" },
+			"description": "Test configurations. A scenario selects the populations to run and the load policy of each one."
 		},
 		"user_paths": {
 			"$id": "#root/user_paths",
 			"title": "User_paths",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/user_paths/user_path" }
+			"items": { "$ref": "#/definitions/user_paths/user_path" },
+			"description": "Virtual user behavior. A User Path is the sequence of requests and logical actions that simulates one visitor."
 		},
 		"project_settings": {
 			"$id": "#root/project_settings",
@@ -134,7 +141,7 @@
 				"qtest.auth_method": {
 					"type": "string",
 					"enum": ["TOKEN", "LOGIN_PWD"],
-					"description": "The way to authenticate to the qTest server. Allowed values are \"TOKEN\" and \"LOGIN_PWD\""
+					"description": "How the qTest server is authenticated."
 				},
 				"qtest.project_id": {
 					"type": "integer",
@@ -148,7 +155,8 @@
 					"type": "integer",
 					"description": "The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier."
 				}
-			}
+			},
+			"description": "Project preferences that override the values defined in NeoLoad. Each property can be set on its own; the others keep the NeoLoad value."
 		}
 	},
 	"definitions": {
@@ -247,10 +255,7 @@
 				"properties": {
 					"name": { "$ref": "#/definitions/common/name" },
 					"descrption": { "$ref": "#/definitions/common/text" },
-					"change_policy": {
-						"$ref": "#/definitions/common/var_change_policy",
-						"description": "The policy when the value must change. The \"change_policy\" value can be: `each_use` `each_request` `each_page` `each_iteration` `each_user` The default value is `each_iteration`."
-					}
+					"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 				}
 			},
 			"constant": {
@@ -300,17 +305,11 @@
 								"$ref": "#/definitions/common/text",
 								"description": "The relative (compared to the NeoLoad project folder) or absolute path of the source file."
 							},
-							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
-							},
-							"order": {
-								"$ref": "#/definitions/common/var_order",
-								"description": "The values can be distributed in a set order. The value of order can be: `sequential` `random` `any` The default value is `any`."
-							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"order": { "$ref": "#/definitions/common/var_order" },
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "When no values are left, several policies can be applied. The value of \"out_of_value\" can be: `cycle` `stop_test` `no_value_code` The default value is `cycle`."
+								"description": "Policy applied when no values are left."
 							}
 						}
 					}
@@ -335,13 +334,10 @@
 							"increment": {
 								"type": "number"
 							},
-							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
-							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "When no values are left, several policies can be applied. The value of \"out_of_value\" can be: `cycle` `stop_test` `no_value_code` The default value is `cycle`."
+								"description": "Policy applied when no values are left."
 							}
 						}
 					}
@@ -401,8 +397,7 @@
 				"scheme": {
 					"$id": "#root/servers/items/scheme",
 					"type": "string",
-					"enum": ["http", "https"],
-					"description": "The scheme of the server. The available values are \"http\" and \"https\". The default value is \"http\"."
+					"enum": ["http", "https"]
 				},
 				"port": {
 					"type": "integer",
@@ -697,8 +692,7 @@
 					"description": { "$ref": "#/definitions/common/text" },
 					"user_session": {
 						"type": "string",
-						"enum": ["reset_on", "reset_off", "reset_auto"],
-						"description": "The \"user_session\" value can be: `reset_on` `reset_off` `reset_auto` The default value is `reset_auto`."
+						"enum": ["reset_on", "reset_off", "reset_auto"]
 					},
 					"init": { "$ref": "#/definitions/user_paths/container" },
 					"actions": { "$ref": "#/definitions/user_paths/container" },
@@ -872,8 +866,7 @@
 						"match": {
 							"type": "string",
 							"enum": ["any", "all"],
-							"default": "any",
-							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
+							"default": "any"
 						},
 						"then": { "$ref": "#/definitions/user_paths/container" },
 						"else": { "$ref": "#/definitions/user_paths/container" }
@@ -896,8 +889,7 @@
 						"match": {
 							"type": "string",
 							"enum": ["any", "all"],
-							"default": "any",
-							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
+							"default": "any"
 						},
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
@@ -975,7 +967,7 @@
 						"type": "string",
 						"default": "body",
 						"enum": ["header", "body", "both"],
-						"description": "The response part where to extract value. The available values are \"header\", \"body\" and \"both\". The default value is \"body\"."
+						"description": "The part of the response the value is extracted from."
 					},
 					"xpath": {
 						"$ref": "#/definitions/common/text",
@@ -1001,12 +993,12 @@
 					"decode": {
 						"type": "string",
 						"enum": ["html", "url"],
-						"description": "The decoder to apply on the value. The available values are \"html\" and \"url\"."
+						"description": "Decoder applied to the extracted value."
 					},
 					"extract_once": {
 						"type": "boolean",
 						"default": false,
-						"description": "This option allows considering only the first value extracted. The available values are \"true\" and \"false\". The default value is \"false\"."
+						"description": "When true, only the first extracted value is kept."
 					},
 					"default": {
 						"type": "string",
@@ -1048,7 +1040,7 @@
 						"type": "string",
 						"enum": ["TEXT", "PASSWORD"],
 						"default": "TEXT",
-						"description": "The kind of value. The available values are `TEXT` and `PASSWORD`. The default value is `TEXT`. A `PASSWORD` parameter is stored encrypted in the NeoLoad project."
+						"description": "A `PASSWORD` value is stored encrypted in the NeoLoad project."
 					}
 				},
 				"additionalProperties": false

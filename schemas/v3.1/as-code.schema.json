@@ -38,7 +38,8 @@
 			"type": "array",
 			"minItems": 1,
 			"additionalProperties": false,
-			"items": { "$ref": "#/definitions/common/text" }
+			"items": { "$ref": "#/definitions/common/text" },
+			"description": "Other as-code files loaded before this one. Each entry is a path relative to the project folder and declares the same top-level elements as a project file."
 		},
 		"variables": {
 			"title": "Variables",
@@ -66,7 +67,10 @@
 						"description": "A list or table of values loaded from the result of a SQL query executed on a database."
 					},
 					"random_uuid": { "$ref": "#/definitions/variables/random_uuid" },
-					"shared_queue": { "$ref": "#/definitions/variables/shared_queue" },
+					"shared_queue": {
+						"$ref": "#/definitions/variables/shared_queue",
+						"description": "A queue shared between virtual users, usable as a producer/consumer channel, with optional persistence to a file."
+					},
 					"javascript": {
 						"$ref": "#/definitions/variables/javascript",
 						"description": "Execution of a Javascript script."
@@ -76,37 +80,43 @@
 						"description": "A reference to a secret stored in an external vault provider configured in NeoLoad Web (HashiCorp Vault or AWS Secrets Manager). The provider type is resolved server-side from provider_id; it is not stored in the as-code file."
 					}
 				}
-			}
+			},
+			"description": "Variables add dynamic content to a scenario. They can be combined with other variables or with static content, for example `${product_${productID}}`, and used in places such as form parameter values."
 		},
 		"servers": {
 			"title": "Servers",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/server" }
+			"items": { "$ref": "#/definitions/server" },
+			"description": "Target servers for the test, defined once so the host can be changed without editing each request."
 		},
 		"sla_profiles": {
 			"title": "SLA Profiles",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/sla" }
+			"items": { "$ref": "#/definitions/sla" },
+			"description": "Service level agreement profiles. Each profile is a set of KPI thresholds used to check quality of service, for example a maximum average response time."
 		},
 		"populations": {
 			"title": "Populations",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/populations/population" }
+			"items": { "$ref": "#/definitions/populations/population" },
+			"description": "Groups of Virtual Users. Each population lists the User Paths that compose it and the share of each one."
 		},
 		"scenarios": {
 			"title": "Scenarios",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/scenario" }
+			"items": { "$ref": "#/definitions/scenario" },
+			"description": "Test configurations. A scenario selects the populations to run and the load policy of each one."
 		},
 		"user_paths": {
 			"title": "User_paths",
 			"type": "array",
 			"minItems": 1,
-			"items": { "$ref": "#/definitions/user_paths/user_path" }
+			"items": { "$ref": "#/definitions/user_paths/user_path" },
+			"description": "Virtual user behavior. A User Path is the sequence of requests and logical actions that simulates one visitor."
 		},
 		"frameworks": {
 			"title": "Frameworks",
@@ -121,7 +131,8 @@
 					"custom": { "$ref": "#/definitions/framework/custom_framework" }
 				},
 				"additionalProperties": false
-			}
+			},
+			"description": "Frameworks that extract dynamic parameters from responses, either a built-in framework or a custom one."
 		},
 		"project_settings": {
 			"title": "Neoload_Project_settings",
@@ -163,7 +174,7 @@
 				"qtest.auth_method": {
 					"type": "string",
 					"enum": ["TOKEN", "LOGIN_PWD"],
-					"description": "The way to authenticate to the qTest server. Allowed values are \"TOKEN\" and \"LOGIN_PWD\""
+					"description": "How the qTest server is authenticated."
 				},
 				"qtest.project_id": {
 					"type": "integer",
@@ -177,7 +188,8 @@
 					"type": "integer",
 					"description": "The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier."
 				}
-			}
+			},
+			"description": "Project preferences that override the values defined in NeoLoad. Each property can be set on its own; the others keep the NeoLoad value."
 		}
 	},
 	"definitions": {
@@ -288,10 +300,7 @@
 				"properties": {
 					"name": { "$ref": "#/definitions/common/name" },
 					"description": { "$ref": "#/definitions/common/text" },
-					"change_policy": {
-						"$ref": "#/definitions/common/var_change_policy",
-						"description": "The policy when the value must change. The \"change_policy\" value can be: `each_use` `each_request` `each_page` `each_iteration` `each_user` The default value is `each_iteration`."
-					}
+					"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 				}
 			},
 			"constant": {
@@ -339,17 +348,11 @@
 								"$ref": "#/definitions/common/text",
 								"description": "The relative (compared to the NeoLoad project folder) or absolute path of the source file."
 							},
-							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
-							},
-							"order": {
-								"$ref": "#/definitions/common/var_order",
-								"description": "The values can be distributed in a set order. The value of order can be: `sequential` `random` `any` The default value is `any`."
-							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"order": { "$ref": "#/definitions/common/var_order" },
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "When no values are left, several policies can be applied. The value of \"out_of_value\" can be: `cycle` `stop_test` `no_value_code` The default value is `cycle`."
+								"description": "Policy applied when no values are left."
 							}
 						}
 					}
@@ -373,13 +376,10 @@
 							"increment": {
 								"type": "number"
 							},
-							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
-							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "When no values are left, several policies can be applied. The value of \"out_of_value\" can be: `cycle` `stop_test` `no_value_code` The default value is `cycle`."
+								"description": "Policy applied when no values are left."
 							}
 						}
 					}
@@ -473,10 +473,7 @@
 								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$",
 								"description": "The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes."
 							},
-							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
-							}
+							"scope": { "$ref": "#/definitions/common/var_scope" }
 						}
 					}
 				],
@@ -508,17 +505,11 @@
 								"default": 1,
 								"description": "The first row of `values` to be used. The default value is \"1\"."
 							},
-							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
-							},
-							"order": {
-								"$ref": "#/definitions/common/var_order",
-								"description": "The values can be distributed in a set order. The value of order can be: `sequential` `random` `any` The default value is `any`."
-							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"order": { "$ref": "#/definitions/common/var_order" },
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "When no values are left, several policies can be applied. The value of \"out_of_value\" can be: `cycle` `stop_test` `no_value_code` The default value is `cycle`."
+								"description": "Policy applied when no values are left."
 							}
 						}
 					}
@@ -558,17 +549,11 @@
 								"items": { "type": "string" },
 								"description": "Overrides the column names taken from the query result set. When omitted, NeoLoad names each column after the matching column of the result set. Use `${<variableName>.<columnName>}` to access variable values."
 							},
-							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope can be: `local` `global` `unique` The default value is `global`."
-							},
-							"order": {
-								"$ref": "#/definitions/common/var_order",
-								"description": "The values can be distributed in a set order. The value of order can be: `sequential` `random` `any` The default value is `any`."
-							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"order": { "$ref": "#/definitions/common/var_order" },
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "When no values are left, several policies can be applied. The value of \"out_of_value\" can be: `cycle` `stop_test` `no_value_code` The default value is `cycle`."
+								"description": "Policy applied when no values are left."
 							}
 						}
 					}
@@ -703,8 +688,7 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false,
-				"description": "A reference to a secret stored in an external vault provider configured in NeoLoad Web (HashiCorp Vault or AWS Secrets Manager). The provider type is resolved server-side from provider_id; it is not stored in the as-code file."
+				"unevaluatedProperties": false
 			}
 		},
 		"server": {
@@ -717,8 +701,7 @@
 				"host": { "$ref": "#/definitions/common/text" },
 				"scheme": {
 					"type": "string",
-					"enum": ["http", "https"],
-					"description": "The scheme of the server. The available values are \"http\" and \"https\". The default value is \"http\"."
+					"enum": ["http", "https"]
 				},
 				"port": {
 					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
@@ -1102,14 +1085,12 @@
 					},
 					"operator": {
 						"type": "string",
-						"enum": ["ABOVE", "BELOW"],
-						"description": "The operator. Two possible values: BELOW ABOVE"
+						"enum": ["ABOVE", "BELOW"]
 					},
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"severity": {
 						"type": "string",
-						"enum": ["AVAILABILITY", "CUSTOM_ALERT", "ERROR", "INFO", "PERFORMANCE", "RESOURCE_CONTENTION"],
-						"description": "The severity of the problem. Six possible values: AVAILABILITY CUSTOM_ALERT ERROR INFO PERFORMANCE RESOURCE_CONTENTION"
+						"enum": ["AVAILABILITY", "CUSTOM_ALERT", "ERROR", "INFO", "PERFORMANCE", "RESOURCE_CONTENTION"]
 					}
 				},
 				"additionalProperties": false
@@ -1158,8 +1139,7 @@
 					"description": { "$ref": "#/definitions/common/text" },
 					"user_session": {
 						"type": "string",
-						"enum": ["reset_on", "reset_off", "reset_auto"],
-						"description": "The \"user_session\" value can be: `reset_on` `reset_off` `reset_auto` The default value is `reset_auto`."
+						"enum": ["reset_on", "reset_off", "reset_auto"]
 					},
 					"init": { "$ref": "#/definitions/user_paths/container" },
 					"actions": { "$ref": "#/definitions/user_paths/container" },
@@ -1441,8 +1421,7 @@
 						"match": {
 							"type": "string",
 							"enum": ["any", "all"],
-							"default": "any",
-							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
+							"default": "any"
 						},
 						"then": { "$ref": "#/definitions/user_paths/container" },
 						"else": { "$ref": "#/definitions/user_paths/container" }
@@ -1464,8 +1443,7 @@
 						"match": {
 							"type": "string",
 							"enum": ["any", "all"],
-							"default": "any",
-							"description": "The \"match\" value can be: `any` `all` The default value is `any`."
+							"default": "any"
 						},
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
@@ -1619,8 +1597,7 @@
 						"category": {
 							"type": "string",
 							"enum": ["predefined", "shared_queue"],
-							"default": "predefined",
-							"description": "The category of the variable. The available values are `predefined` and `shared_queue`."
+							"default": "predefined"
 						},
 						"variable_name": {
 							"$ref": "#/definitions/common/text",
@@ -1686,8 +1663,7 @@
 						"caught_exceptions": {
 							"type": "string",
 							"enum": ["errors", "assertions", "all"],
-							"default": "errors",
-							"description": "Exception types to catch: `errors`, `assertions`, `all`. Defaults to `errors`."
+							"default": "errors"
 						},
 						"try": { "$ref": "#/definitions/user_paths/container" },
 						"catch": { "$ref": "#/definitions/user_paths/container" }
@@ -1744,12 +1720,12 @@
 						"playback": {
 							"type": "string",
 							"enum": ["parallel", "sequential"],
-							"description": "How the Web Page's steps are played: `parallel` (default) or `sequential`"
+							"description": "How the Web Page's steps are played. The default is `parallel`."
 						},
 						"execute_resources": {
 							"type": "string",
 							"enum": ["static", "dynamic", "dynamic_forced_encoding"],
-							"description": "How the Web Page's resources are executed: `static` (default), `dynamic` or `dynamic_forced_encoding`"
+							"description": "How the Web Page's resources are executed. The default is `static`."
 						},
 						"steps": {
 							"$ref": "#/definitions/user_paths/steps",
@@ -1808,7 +1784,7 @@
 						"type": "string",
 						"default": "body",
 						"enum": ["header", "body", "both"],
-						"description": "The response part where to extract value. The available values are \"header\", \"body\" and \"both\". The default value is \"body\"."
+						"description": "The part of the response the value is extracted from."
 					},
 					"xpath": {
 						"$ref": "#/definitions/common/text",
@@ -1834,12 +1810,12 @@
 					"decode": {
 						"type": "string",
 						"enum": ["html", "url"],
-						"description": "The decoder to apply on the value. The available values are \"html\" and \"url\"."
+						"description": "Decoder applied to the extracted value."
 					},
 					"extract_once": {
 						"type": "boolean",
 						"default": false,
-						"description": "This option allows considering only the first value extracted. The available values are \"true\" and \"false\". The default value is \"false\"."
+						"description": "When true, only the first extracted value is kept."
 					},
 					"default": {
 						"type": "string",
@@ -1973,7 +1949,7 @@
 						"type": "string",
 						"enum": ["TEXT", "PASSWORD"],
 						"default": "TEXT",
-						"description": "The kind of value. The available values are `TEXT` and `PASSWORD`. The default value is `TEXT`. A `PASSWORD` parameter is stored encrypted in the NeoLoad project."
+						"description": "A `PASSWORD` value is stored encrypted in the NeoLoad project."
 					}
 				},
 				"additionalProperties": false
