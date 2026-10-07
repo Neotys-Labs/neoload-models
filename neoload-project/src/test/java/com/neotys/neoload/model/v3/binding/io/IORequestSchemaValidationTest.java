@@ -27,7 +27,8 @@ import org.junit.Test;
 /**
  * Schema-level coverage for published request contracts (3.0 and 3.1):
  * {@code followRedirects} is declared, {@code name} is not (NLG ignores it),
- * and {@code method} is any string (default GET).
+ * {@code method} is any string (default GET), and 3.1 declares optional
+ * {@code _internal_recorded_id}.
  */
 public class IORequestSchemaValidationTest {
 
@@ -80,6 +81,57 @@ public class IORequestSchemaValidationTest {
     public void allHttpMethodsFixtureIsValidAgainst3Dot0And3Dot1() {
         assertValid("3.0", schema30, allMethodsDocument);
         assertValid("3.1", schema31, allMethodsDocument);
+    }
+
+    @Test
+    public void requestSchema31DeclaresInternalRecordedId() {
+        JsonNode internalRecordedId = requestProperties(schema31Tree).get("_internal_recorded_id");
+        assertNotNull("3.1 request.properties._internal_recorded_id must be declared", internalRecordedId);
+        JsonNode required = schema31Tree.at("/definitions/user_paths/actions/request/required");
+        assertTrue(required.isArray());
+        for (JsonNode item : required) {
+            assertFalse("_internal_recorded_id must not be required", "_internal_recorded_id".equals(item.asText()));
+        }
+        assertFalse("3.0 request must not declare _internal_recorded_id",
+                requestProperties(schema30Tree).has("_internal_recorded_id"));
+    }
+
+    @Test
+    public void internalRecordedIdIsOptionalOn31() throws IOException {
+        JsonNode without = YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/select\n");
+        assertValid("3.1 without _internal_recorded_id", schema31, without);
+
+        JsonNode with = YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/select\n"
+                        + "        _internal_recorded_id: r0001\n");
+        assertValid("3.1 with _internal_recorded_id", schema31, with);
+    }
+
+    @Test
+    public void internalRecordedIdRejectsNonStringOn31() throws IOException {
+        JsonNode node = YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/select\n"
+                        + "        _internal_recorded_id: 1\n");
+        assertFalse("_internal_recorded_id must be a string in 3.1", schema31.validate(node).isEmpty());
     }
 
     @Test
