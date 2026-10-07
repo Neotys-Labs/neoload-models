@@ -3,6 +3,9 @@ variables:
 - constant:
     name: constant_variable
     value: 118218
+- password:
+    name: MyPassword
+    value: s3cr3t
 - file:
     name: cities_file
     description: cities variable file description
@@ -79,9 +82,24 @@ variables:
     scope: unique
     order: random
     out_of_value: stop_test
+- sql:
+    name: MySqlVar
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mydb
+    login: admin
+    password: pass
+    query: "SELECT username, email FROM users"
+    column_names:
+    - username
+    - email
+    order: sequential
 - javascript:
     name: My JSVar
     description: This is a js var
     script: "function evaluate() {\n\tlogger.debug(\"Computing value of js variable\"\
       );\n\treturn new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField\
       \ = myLibraryFunction();\n\t};\n}"
+- secret_vault:
+    name: db_password
+    provider_id: 665f1a2b3c4d5e6f7a8b9c0d
+    secret_id: my-app/db

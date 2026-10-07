@@ -1,0 +1,31 @@
+name: MyProject
+variables:
+- current_date:
+    name: offset_absent
+- current_date:
+    name: offset_milliseconds
+    offset: 500ms
+- current_date:
+    name: offset_seconds
+    offset: 30s
+- current_date:
+    name: offset_minutes
+    offset: 5m
+- current_date:
+    name: offset_hours
+    offset: 3h
+- current_date:
+    name: offset_days
+    offset: 1d
+- current_date:
+    name: offset_months
+    offset: 2mo
+- current_date:
+    name: offset_years
+    offset: 2y
+- current_date:
+    name: offset_negative
+    offset: -5d
+- current_date:
+    name: offset_zero
+    offset: 0s

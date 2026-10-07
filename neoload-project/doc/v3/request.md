@@ -11,9 +11,15 @@ A request defines a plain HTTP request.
 | [method](#method)                   | The request method                                                            | -               | -        |       |
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
+| [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        | 2026.3|
+| [binary_source_file](#binary_source_file) | Path of a file used as the binary request body, relative to the project folder | -               | -        | 2026.3|
+| [parts](#parts)                     | The multipart/form-data parts                                                 | &#x2713;        | -        | 2026.3|
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
+| [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration                 | -               | -        | 2026.3 |
+| [size_assertion](size_assertion.md) | The assertion to validate the response size                                   | -               | -        | 2026.3 |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
+| followRedirects                     | When `true`, the HTTP redirections returned by the server are followed.</br>The default value is `false`. | -               | -        |       |
 
 #### Example 1
 
@@ -170,7 +176,7 @@ Define the request body to use for the HTTP request. Variables can be used in th
 
 In using the `Content-Type` header with `application/x-www-form-urlencoded`, the variables can be used from the name/value pairs of the request body. To encode the evaluation of a variable from the name/value pairs, use convention: `__encodeURL(${my_variable})`.
 
-> The bodies containing a binary or multipart/form-data data are not yet supported. 
+> Multipart/form-data is defined with [`parts`](#parts), not `body`. A binary body is defined with `bodybinary` (Base64-encoded) or [`binary_source_file`](#binary_source_file) instead of `body`.
 
 #### Example 1
 
@@ -218,5 +224,93 @@ request:
     name=__encodeURL(${var_dog_name})&breed=__encodeURL(${var_dog_breed})
 ```
 
+## bodybinary
 
+Define a binary request body, encoded in base64. Use it for payloads such as `application/octet-stream` or any other binary format.
+
+Variables cannot be used in `bodybinary`
+
+The `body`, `bodybinary` and `binary_source_file` fields are mutually exclusive: a request must define at most one of them.
+
+Like `body`, `bodybinary` is only sent for the `POST` and `PUT` methods, and is ignored for the others.
+
+#### Example
+
+Defining an HTTP request sending the bytes of `Hello binary world!`.
+
+```yaml
+request:
+  url: https://www.compagny.com/upload
+  method: POST
+  headers:
+  - Content-Type: application/octet-stream
+  bodybinary: SGVsbG8gYmluYXJ5IHdvcmxkIQ==
+```
+
+## binary_source_file
+
+Define a binary request body from a file on disk. Use it when the payload should not be inlined as Base64 in the YAML.
+
+The path is relative to the as-code project folder. The file is sent as-is: variables are not evaluated in its content.
+
+Use a literal path. A path containing a variable is resolved at runtime only, so CheckVU cannot include the file in the project it runs.
+
+If the file is not found, the project still loads and a warning is reported, but the request is sent with an empty body.
+
+The `body`, `bodybinary` and `binary_source_file` fields are mutually exclusive: a request must define at most one of them.
+
+Like `body`, `binary_source_file` is only sent for the `POST` and `PUT` methods, and is ignored for the others.
+
+#### Example
+
+Defining an HTTP request whose body is the contents of `payloads/hello.bin`.
+
+```yaml
+request:
+  url: https://www.compagny.com/upload
+  method: POST
+  headers:
+  - Content-Type: application/octet-stream
+  binary_source_file: payloads/hello.bin
+```
+
+## parts
+
+Define the multipart/form-data parts of the HTTP request. Use `parts` instead of `body` for multipart uploads.
+
+Each part requires a `name`. A text part uses `value`. A file part uses `source_filename` (file on disk, relative to the NeoLoad project folder) and optionally `filename` (name sent to the server).
+
+In CheckVU CLI, `source_filename` must stay inside the project folder: absolute paths and `../` traversal are rejected.
+
+#### Available settings are
+
+| Name              | Description                                                                 | Accept variable | Required | Since |
+|:----------------- |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| name              | The form field name                                                         | &#x2713;        | &#x2713; | 2026.3|
+| content_type      | The part Content-Type                                                       | &#x2713;        | -        | 2026.3|
+| charset           | The part charset                                                            | &#x2713;        | -        | 2026.3|
+| transfer_encoding | The part Content-Transfer-Encoding                                          | &#x2713;        | -        | 2026.3|
+| value             | The text content of the part                                                | &#x2713;        | -        | 2026.3|
+| filename          | The file name sent to the server                                            | &#x2713;        | -        | 2026.3|
+| source_filename   | The path of the file used as part content, relative to the project folder   | &#x2713;        | -        | 2026.3|
+
+#### Example
+
+Defining an HTTP request with a text part and a file part.
+
+```yaml
+request:
+  url: https://example.com/upload
+  method: POST
+  parts:
+  - name: comment
+    content_type: text/plain
+    charset: UTF-8
+    transfer_encoding: 8bit
+    value: hello
+  - name: file
+    content_type: image/jpeg
+    filename: upload.jpg
+    source_filename: upload.jpg
+```
 

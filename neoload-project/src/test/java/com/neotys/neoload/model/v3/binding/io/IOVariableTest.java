@@ -7,9 +7,14 @@ import static com.neotys.neoload.model.v3.project.variable.OrderVariable.Order.*
 import static com.neotys.neoload.model.v3.project.variable.OutOfValueVariable.OutOfValue.*;
 import static com.neotys.neoload.model.v3.project.variable.ScopeVariable.Scope.*;
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.variable.*;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.validation.validator.Validation;
+import com.neotys.neoload.model.v3.validation.validator.Validator;
 import java.io.IOException;
 import org.junit.Test;
 
@@ -36,6 +41,11 @@ public class IOVariableTest extends AbstractIOElementsTest {
         final Variable constantVariable = ConstantVariable.builder()
                 .name("constant_variable")
                 .value("118218")
+                .build();
+
+        final Variable passwordVariable = PasswordVariable.builder()
+                .name("MyPassword")
+                .value("s3cr3t")
                 .build();
 
         final Variable fileVariable = FileVariable.builder()
@@ -114,6 +124,17 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .outOfValue(STOP)
                 .build();
 
+        final Variable sqlVariable = SqlVariable.builder()
+                .name("MySqlVar")
+                .driver("com.mysql.jdbc.Driver")
+                .url("jdbc:mysql://localhost:3306/mydb")
+                .login("admin")
+                .password("pass")
+                .query("SELECT username, email FROM users")
+                .addColumnNames("username", "email")
+                .order(SEQUENTIAL)
+                .build();
+
         final JavaScriptVariable javaScriptVariable = JavaScriptVariable.builder()
                 .name("My JSVar")
                 .description("This is a js var")
@@ -127,10 +148,167 @@ public class IOVariableTest extends AbstractIOElementsTest {
                 .changePolicy(EACH_ITERATION)
                 .build();
 
+        final Variable secretVaultVariable = SecretVaultVariable.builder()
+                .name("db_password")
+                .providerId("665f1a2b3c4d5e6f7a8b9c0d")
+                .secretId("my-app/db")
+                .build();
+
         return Project.builder()
                 .name("MyProject")
-                .addVariables(constantVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable,
-                        randomUUIDVariable, listVariable, listVariable2, javaScriptVariable)
+                .addVariables(constantVariable, passwordVariable, fileVariable, fileVariable2, counterVariable, randomNumberVariable, randomStringVariable,
+                        randomUUIDVariable, listVariable, listVariable2, sqlVariable, javaScriptVariable, secretVaultVariable)
                 .build();
+    }
+
+    @Test
+    public void readCurrentDateVariableOnlyRequired() throws IOException {
+        final Project expectedProject = buildProjectWithMinimalCurrentDateVariable();
+        assertNotNull(expectedProject);
+
+        read("test-current-date-variable-only-required", expectedProject);
+    }
+
+    @Test
+    public void writeCurrentDateVariableOnlyRequired() throws IOException {
+        final Project expectedProject = buildProjectWithMinimalCurrentDateVariable();
+        assertNotNull(expectedProject);
+
+        write("test-current-date-variable-only-required", expectedProject);
+    }
+
+    @Test
+    public void readCurrentDateVariableRequiredAndOptional() throws IOException {
+        final Project expectedProject = buildProjectWithFullCurrentDateVariable();
+        assertNotNull(expectedProject);
+
+        read("test-current-date-variable-required-and-optional", expectedProject);
+    }
+
+    @Test
+    public void writeCurrentDateVariableRequiredAndOptional() throws IOException {
+        final Project expectedProject = buildProjectWithFullCurrentDateVariable();
+        assertNotNull(expectedProject);
+
+        write("test-current-date-variable-required-and-optional", expectedProject);
+    }
+
+    private Project buildProjectWithMinimalCurrentDateVariable() {
+        return Project.builder()
+                .name("MyProject")
+                .addVariables(CurrentDateVariable.builder()
+                        .name("MyCurrentDate")
+                        .build())
+                .build();
+    }
+
+    private Project buildProjectWithFullCurrentDateVariable() {
+        return Project.builder()
+                .name("MyProject")
+                .addVariables(CurrentDateVariable.builder()
+                        .name("MyCurrentDate")
+                        .description("now plus 5 minutes")
+                        .pattern("yyyy-MM-dd'T'HH:mm:ss")
+                        .offset("5m")
+                        .build())
+                .build();
+    }
+
+    @Test
+    public void readCurrentDateVariableAcceptsEveryValidOffset() throws IOException {
+        final ProjectDescriptor descriptor = new IO().read(getFile("test-current-date-variable-offsets-valid", "yaml"));
+
+        final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
+        assertTrue(validation.getMessage().orElse(""), validation.isValid());
+    }
+
+    @Test
+    public void readCurrentDateVariableRejectsEveryInvalidOffset() throws IOException {
+        final ProjectDescriptor descriptor = new IO().read(getFile("test-current-date-variable-offsets-invalid", "yaml"));
+        final int variableCount = descriptor.getProject().getVariables().size();
+
+        final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
+        assertFalse(validation.isValid());
+
+        final String message = validation.getMessage().get();
+        assertTrue(message, message.contains("Violation Number: " + variableCount + "."));
+        for (int index = 0; index < variableCount; index++) {
+            assertTrue(message, message.contains("variables[" + index + "].offset"));
+        }
+    }
+
+    @Test
+    public void readDateVariableOnlyRequired() throws IOException {
+        final Project expectedProject = buildProjectWithMinimalDateVariable();
+        assertNotNull(expectedProject);
+
+        read("test-date-variable-only-required", expectedProject);
+    }
+
+    @Test
+    public void writeDateVariableOnlyRequired() throws IOException {
+        final Project expectedProject = buildProjectWithMinimalDateVariable();
+        assertNotNull(expectedProject);
+
+        write("test-date-variable-only-required", expectedProject);
+    }
+
+    @Test
+    public void readDateVariableRequiredAndOptional() throws IOException {
+        final Project expectedProject = buildProjectWithFullDateVariable();
+        assertNotNull(expectedProject);
+
+        read("test-date-variable-required-and-optional", expectedProject);
+    }
+
+    @Test
+    public void writeDateVariableRequiredAndOptional() throws IOException {
+        final Project expectedProject = buildProjectWithFullDateVariable();
+        assertNotNull(expectedProject);
+
+        write("test-date-variable-required-and-optional", expectedProject);
+    }
+
+    private Project buildProjectWithMinimalDateVariable() {
+        return Project.builder()
+                .name("MyProject")
+                .addVariables(DateVariable.builder()
+                        .name("MyDate")
+                        .startDate("01/01/2024 00:00:00")
+                        .build())
+                .build();
+    }
+
+    private Project buildProjectWithFullDateVariable() {
+        return Project.builder()
+                .name("MyProject")
+                .addVariables(DateVariable.builder()
+                        .name("MyDate")
+                        .description("start of year plus 5 minutes")
+                        .pattern("yyyy-MM-dd'T'HH:mm:ss")
+                        .startDate("2024-01-01T00:00:00")
+                        .changeStep("5m")
+                        .changePolicy(EACH_USE)
+                        .scope(LOCAL)
+                        .build())
+                .build();
+    }
+
+    @Test
+    public void readDateVariableRejectsInvalidChangeStep() throws IOException {
+        final ProjectDescriptor descriptor = new IO().read(getFile("test-date-variable-invalid-change-step", "yaml"));
+
+        final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
+        assertFalse(validation.isValid());
+        assertTrue(validation.getMessage().get(), validation.getMessage().get().contains("variables[0].change_step"));
+    }
+
+    @Test
+    public void readDateVariableRejectsMismatchedStartDate() throws IOException {
+        final ProjectDescriptor descriptor = new IO().read(getFile("test-date-variable-mismatched-start-date", "yaml"));
+
+        final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
+        assertFalse(validation.isValid());
+        assertTrue(validation.getMessage().get(), validation.getMessage().get().contains("variables[0]"));
     }
 }

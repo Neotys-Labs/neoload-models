@@ -34,6 +34,10 @@ import org.junit.Test;
 public class IORoundTripTest extends AbstractIOElementsTest {
 
 	private static final String[] ROUND_TRIP_FIXTURES = {
+			"test-current-date-variable-only-required",
+			"test-current-date-variable-required-and-optional",
+			"test-date-variable-only-required",
+			"test-date-variable-required-and-optional",
 			"test-custom-action-only-required",
 			"test-custom-action-required-and-optional",
 			"test-debug-logger-only-required",
@@ -49,6 +53,11 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-javascript-required-and-optional",
 			"test-loop-only-required",
 			"test-loop-required-and-optional",
+			"test-pacing-constant",
+			"test-pacing-random",
+			"test-pacing-random-without-min",
+			"test-pacing-variable-constant",
+			"test-pacing-variable-random",
 			"test-populations-only-required",
 			"test-populations-required-and-optional",
 			"test-readonly-slaprofiles-only-required",
@@ -57,6 +66,8 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-readonly-while-required-and-optional",
 			"test-request-only-required",
 			"test-request-required-and-optional",
+			"test-request-parts-only-required",
+			"test-request-parts-required-and-optional",
 			"test-scenarios-only-required",
 			"test-scenarios-required-and-optional",
 			"test-servers-only-required",
@@ -80,10 +91,15 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-while-required-and-optional",
 			"test-assert-content-only-required",
 			"test-assert-content-required-and-optional",
+			"test-assert-duration-request",
+			"test-assert-duration-custom-action",
+			"test-assert-size-custom-action",
 			"test-fork-only-required",
 			"test-fork-required-and-optional",
 			"test-variable-modifier-only-required",
 			"test-variable-modifier-required-and-optional",
+			"test-rendezvous-only-required",
+			"test-rendezvous-required-and-optional",
 			"test-shared-queue-only-required",
 			"test-shared-queue-required-and-optional",
 			"test-stop-vu-only-required",
@@ -91,7 +107,11 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-random-string-only-required",
 			"test-random-string-required-and-optional",
 			"test-random-uuid-only-required",
-			"test-random-uuid-required-and-optional"
+			"test-random-uuid-required-and-optional",
+			"test-password-only-required",
+			"test-password-required-and-optional",
+			"test-sql-only-required",
+			"test-sql-required-and-optional"
 	};
 
 	@Test
