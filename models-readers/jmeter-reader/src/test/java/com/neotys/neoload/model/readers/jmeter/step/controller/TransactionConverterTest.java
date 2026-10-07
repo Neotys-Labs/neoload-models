@@ -1,13 +1,10 @@
 package com.neotys.neoload.model.readers.jmeter.step.controller;
 
-import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
-import com.neotys.neoload.model.readers.jmeter.step.controller.TransactionControllerConverter;
-import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.timers.ConstantTimer;
@@ -17,12 +14,10 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TransactionConverterTest {
@@ -42,15 +37,14 @@ public class TransactionConverterTest {
         when(transactionController.getComment()).thenReturn("My comment");
         HashTree hashTree = Mockito.mock(HashTree.class);
         ConstantTimer constantTimer = new ConstantTimer();
-        List collections = new ArrayList();
-        collections.add(constantTimer);
+        List<Object> collections = List.of(constantTimer);
         HashTree subTree = Mockito.mock(HashTree.class);
         when(subTree.list()).thenReturn(collections);
-        when(hashTree.get(eq(transactionController))).thenReturn(subTree);
+        when(hashTree.get(transactionController)).thenReturn(subTree);
         List<Step> result = testcontrol.apply(transactionController, hashTree);
         List<Step> expected = new ArrayList<>();
         expected.add(Container.builder()
-                .addSteps(Delay.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build())
+                .addSteps(DelayConstant.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build())
                 .name("my thread group")
                 .description("My comment")
                 .build());

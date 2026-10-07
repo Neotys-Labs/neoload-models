@@ -2,17 +2,10 @@ package com.neotys.neoload.model.v3.writers.neoload;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import java.io.StringWriter;
-import java.io.Writer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -25,7 +18,7 @@ public class ProjectWriterTest {
         UserPath userPath = UserPath.builder()
                 .name("my User")
                 .actions(Container.builder()
-                        .addSteps(Delay.builder().value("3000").build())
+                        .addSteps(DelayConstant.builder().value("3000").build())
                         .build())
                 .build();
 
@@ -63,14 +56,5 @@ public class ProjectWriterTest {
         Assertions.assertThat(repositoryDocument.getChildNodes().item(0).getChildNodes().item(2).getNodeName()).isEqualTo("zones");
         Assertions.assertThat(repositoryDocument.getChildNodes().item(0).getChildNodes().item(3).getNodeName()).isEqualTo("zone");
         Assertions.assertThat(repositoryDocument.getChildNodes().item(0).getChildNodes().item(4).getNodeName()).isEqualTo("lg-host");
-    }
-
-    public static final void prettyPrint(Document xml) throws Exception {
-        Transformer tf = TransformerFactory.newInstance().newTransformer();
-        tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        tf.setOutputProperty(OutputKeys.INDENT, "yes");
-        Writer out = new StringWriter();
-        tf.transform(new DOMSource(xml), new StreamResult(out));
-        System.out.println(out.toString());
     }
 }
