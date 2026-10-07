@@ -1033,10 +1033,18 @@
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
 						},
-						"followRedirects": {
+						"follow_redirects": {
 							"type": "boolean",
 							"default": false
 						},
+						"followRedirects": {
+							"type": "boolean",
+							"default": false,
+							"deprecated": true,
+							"description": "Deprecated: use follow_redirects."
+						},
+						"charset": { "$ref": "#/definitions/common/text" },
+						"response_storage": { "$ref": "#/definitions/user_paths/actions/response_storage" },
 						"assertions": {
 							"type": "array",
 							"items": {
@@ -1049,7 +1057,10 @@
 						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" },
 						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
 					},
-					"not": { "required": ["body", "bodybinary"] }
+					"allOf": [
+						{ "not": { "required": ["body", "bodybinary"] } },
+						{ "not": { "required": ["followRedirects", "follow_redirects"] } }
+					]
 				},
 				"soap_request": {
 					"title": "Action: SOAP Request",
@@ -1068,6 +1079,33 @@
 								"path": { "$ref": "#/definitions/common/file_path" }
 							},
 							"additionalProperties": false
+						},
+						"follow_redirects": {
+							"type": "boolean",
+							"default": false
+						},
+						"followRedirects": {
+							"type": "boolean",
+							"default": false,
+							"deprecated": true,
+							"description": "Deprecated: use follow_redirects."
+						},
+						"charset": { "$ref": "#/definitions/common/text" },
+						"response_storage": { "$ref": "#/definitions/user_paths/actions/response_storage" }
+					},
+					"not": { "required": ["followRedirects", "follow_redirects"] }
+				},
+				"response_storage": {
+					"title": "Response storage",
+					"type": "object",
+					"required": ["path"],
+					"additionalProperties": false,
+					"properties": {
+						"path": { "$ref": "#/definitions/common/file_path" },
+						"variable": { "$ref": "#/definitions/common/text" },
+						"delete_when_test_finished": {
+							"type": "boolean",
+							"default": false
 						}
 					}
 				},

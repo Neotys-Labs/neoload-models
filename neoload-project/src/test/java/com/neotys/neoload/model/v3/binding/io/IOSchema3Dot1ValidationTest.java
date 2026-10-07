@@ -86,7 +86,11 @@ public class IOSchema3Dot1ValidationTest {
             "test-web_page-think-time-invalid-value.yaml",
             "test-web_page-think-time-min-only.yaml",
             "test-web_page-think-time-mixed.yaml",
-            "test-web_page-unsupported-step.yaml"
+            "test-web_page-unsupported-step.yaml",
+            "test-request-redirect-keys-conflict.yaml",
+            "test-request-redirect-keys-conflict.json",
+            "test-soap-request-redirect-keys-conflict.yaml",
+            "test-soap-request-redirect-keys-conflict.json"
     );
 
     @BeforeClass

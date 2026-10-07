@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.ResponseStorage;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequestContent;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
@@ -104,5 +105,27 @@ public class SoapRequestTest {
 		final Validation validation = validator.validate(userPath, NeoLoad.class);
 		assertTrue(validation.isValid());
 		assertFalse(validation.getMessage().isPresent());
+	}
+
+	@Test
+	public void validateResponseStoragePathRequired() {
+		final Validator validator = new Validator();
+
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(SoapRequest.builder()
+								.url("http://host:80/")
+								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+								.responseStorage(ResponseStorage.builder().variable("myFile").build())
+								.build())
+						.build())
+				.build();
+		final Validation validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
+				+ "Violation 1 - Incorrect value for 'actions.steps[0].response_storage.path': missing value or value is empty." + LINE_SEPARATOR,
+				validation.getMessage().get());
 	}
 }

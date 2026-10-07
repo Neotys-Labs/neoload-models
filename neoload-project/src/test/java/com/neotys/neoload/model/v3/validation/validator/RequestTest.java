@@ -5,16 +5,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
-import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.ResponseStorage;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-
+import org.junit.Test;
 
 public class RequestTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -329,5 +328,43 @@ public class RequestTest {
 		Validation validation = validator.validate(project, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_COMPLETE_VERSION, validation.getMessage().get());	
-	}	
+	}
+
+	@Test
+	public void validateResponseStoragePathRequired() {
+		final Validator validator = new Validator();
+
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(Request.builder()
+								.url("http://www.neotys.com/select")
+								.responseStorage(ResponseStorage.builder().variable("myFile").build())
+								.build())
+						.build())
+				.build();
+		final Validation validation = validator.validate(userPath, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
+				+ "Violation 1 - Incorrect value for 'actions.steps[0].response_storage.path': missing value or value is empty." + LINE_SEPARATOR,
+				validation.getMessage().get());
+	}
+
+	@Test
+	public void validateResponseStorageWithPath() {
+		final Validator validator = new Validator();
+
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(Request.builder()
+								.url("http://www.neotys.com/select")
+								.responseStorage(ResponseStorage.builder().path("responses/login_{ID}.html").build())
+								.build())
+						.build())
+				.build();
+		assertTrue(validator.validate(userPath, NeoLoad.class).isValid());
+	}
 }
