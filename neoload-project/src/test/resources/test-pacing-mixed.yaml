@@ -1,0 +1,13 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - transaction:
+        name: MyTransaction
+        pacing:
+          value: 30s
+          min: 1s
+          max: 3s
+        steps:
+        - delay: 100

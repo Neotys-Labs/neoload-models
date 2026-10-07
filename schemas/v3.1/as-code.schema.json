@@ -58,7 +58,8 @@
 					"sql": { "$ref": "#/definitions/variables/sql" },
 					"random_uuid": { "$ref": "#/definitions/variables/random_uuid" },
 					"shared_queue": { "$ref": "#/definitions/variables/shared_queue" },
-					"javascript": { "$ref": "#/definitions/variables/javascript" }
+					"javascript": { "$ref": "#/definitions/variables/javascript" },
+					"secret_vault": {"$ref": "#/definitions/variables/secret_vault"}
 				}
 			}
 		},
@@ -85,6 +86,12 @@
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/scenario" }
+		},
+		"shared_elements": {
+			"title": "Shared_elements",
+			"type": "array",
+			"minItems": 1,
+			"items": { "$ref": "#/definitions/shared_element" }
 		},
 		"user_paths": {
 			"title": "User_paths",
@@ -139,10 +146,25 @@
 				"type": "string",
 				"pattern": "((.|\n)*)"
 			},
+			"base64blob": {
+				"title": "Base64 Blob",
+				"type": "string",
+				"contentEncoding": "base64",
+				"pattern": "^[A-Za-z0-9+/\\s]*={0,2}\\s*$"
+			},
 			"positive_number": {
 				"title": "Positive Number",
 				"type": "integer",
 				"minimum": 0
+			},
+			"pacing_value": {
+				"title": "Pacing value",
+				"type": "string",
+				"pattern": "^(\\d+|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
+			},
+			"duration_value": {
+				"title": "Duration value",
+				"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
 			},
 			"duration": {
 				"title": "Duration",
@@ -369,16 +391,14 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"pattern": { "$ref": "#/definitions/common/text" },
-							"start_date": { "$ref": "#/definitions/common/text" },
-							"increment_value": {
-								"type": "number",
-								"default": 0
+							"pattern": {
+								"$ref": "#/definitions/common/text",
+								"default": "dd/MM/yyyy HH:mm:ss"
 							},
-							"increment_timeunit": {
+							"start_date": { "$ref": "#/definitions/common/text" },
+							"change_step": {
 								"type": "string",
-								"enum": ["millisecond","second", "minute", "hour", "day", "month", "year"],
-								"default": "second"
+								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$"
 							},
 							"scope": { "$ref": "#/definitions/common/var_scope" }
 						}
@@ -420,20 +440,23 @@
 			"sql": {
 				"title": "SQL",
 				"type": "object",
-				"required": ["query", "driver", "url"],
+				"required": ["url", "query"],
 				"allOf": [
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"query": { "$ref": "#/definitions/common/text" },
 							"driver": { "$ref": "#/definitions/common/text" },
 							"url": { "$ref": "#/definitions/common/text" },
 							"login": { "$ref": "#/definitions/common/text" },
 							"password": { "$ref": "#/definitions/common/text" },
+							"query": { "$ref": "#/definitions/common/text" },
 							"column_names": {
 								"type": "array",
 								"items": { "type": "string" }
-							}
+							},
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"order": { "$ref": "#/definitions/common/var_order" },
+							"out_of_value": { "$ref": "#/definitions/common/var_out_of_value" }
 						}
 					}
 				],
@@ -529,6 +552,21 @@
 								"type": "string",
 								"pattern": "^-?\\d+(ms|mo|s|m|h|d|y)$"
 							}
+						}
+					}
+				],
+				"unevaluatedProperties": false
+			},
+			"secret_vault": {
+				"title": "Secret Vault",
+				"type": "object",
+				"required": ["provider_id", "secret_id"],
+				"allOf": [
+					{ "$ref": "#/definitions/variables/generic" },
+					{
+						"properties": {
+							"provider_id": { "$ref": "#/definitions/common/text" },
+							"secret_id": { "$ref": "#/definitions/common/text" }
 						}
 					}
 				],
@@ -873,6 +911,7 @@
 					"sla_profile": {
 						"type": "string"
 					},
+					"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				}
@@ -887,6 +926,7 @@
 							"type": "string",
 							"enum": [
 								"go_to_next_iteration",
+                                "rendezvous",
 								"stop_vu"
 							]
 						},
@@ -910,7 +950,10 @@
 								"wait_until": { "$ref": "#/definitions/user_paths/actions/wait_until" },
 								"variable_modifier": {"$ref": "#/definitions/user_paths/actions/variable_modifier"},
 								"debug_logger": {"$ref": "#/definitions/user_paths/actions/debug_logger"},
-								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"}
+                                "rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
+								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"},
+								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"},
+								"shared_element": { "$ref": "#/definitions/common/name" }
 							},
 							"additionalProperties": false
 						}
@@ -927,37 +970,9 @@
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": { "$ref": "#/definitions/common/text" },
+						"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": { "$ref": "#/definitions/common/assertions" }
-					},
-					"additionalProperties": false
-				},
-				"http_page": {
-					"name": "http_page",
-					"title": "Action: HTTP Page",
-					"type": "object",
-					"required": ["name", "steps"],
-					"properties": {
-						"name": { "$ref": "#/definitions/common/name" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"think_time": { "$ref": "#/definitions/common/text" },
-						"think_time_range": {
-							"type": "object",
-							"required": ["min", "max"],
-							"properties": {
-								"min": { "$ref": "#/definitions/common/text" },
-								"max": { "$ref": "#/definitions/common/text" }
-							},
-							"additionalProperties": false
-						},
-						"think_time_mode": {
-							"type": "string",
-							"enum": ["constant", "random"]
-						},
-						"screenshot": { "type": "boolean" },
-						"dynamic_action": { "type": "boolean" },
-						"force_encoding_for_dynamic_resources": { "type": "boolean" },
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
 					},
 					"additionalProperties": false
 				},
@@ -967,7 +982,6 @@
 					"required": ["url"],
 					"additionalProperties": false,
 					"properties": {
-						"name": { "$ref": "#/definitions/common/name" },
 						"url": { "$ref": "#/definitions/common/text" },
 						"server": { "$ref": "#/definitions/common/text" },
 						"method": {
@@ -989,7 +1003,12 @@
 						},
 						"sla_profile": { "$ref": "#/definitions/common/text" },
 						"body": { "$ref": "#/definitions/common/textblob" },
-						"bodybinary": { "$ref": "#/definitions/common/textblob" },
+						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
+						"binary_source_file": { "$ref": "#/definitions/common/text" },
+						"parts": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/part" }
+						},
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
@@ -997,6 +1016,11 @@
 						"followRedirects": {
 							"type": "boolean",
 							"default": false
+						},
+						"_internal_recorded_id": {
+							"title": "Internal recorded request id",
+							"description": "Optional id of the recorded HAR entry this request was converted from (for example r0001). Omit when the project was not produced from a recording.",
+							"$ref": "#/definitions/common/text"
 						},
 						"assertions": {
 							"type": "array",
@@ -1007,19 +1031,83 @@
 								]
 							}
 						},
-						"parts": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/part" }
-						}
-					}
+						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" },
+						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
+					},
+					"allOf": [
+						{ "not": { "required": ["body", "bodybinary"] } },
+						{ "not": { "required": ["body", "binary_source_file"] } },
+						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
+					]
 				},
 				"delay": {
 					"title": "Action: Delay",
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
+					"oneOf": [
+						{ "$ref": "#/definitions/common/duration_value" },
+						{
+							"type": "object",
+							"required": ["value"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/name" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"value": { "$ref": "#/definitions/common/duration_value" }
+							}
+						},
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/name" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"min": { "$ref": "#/definitions/common/duration_value" },
+								"max": { "$ref": "#/definitions/common/duration_value" }
+							}
+						}
+					]
 				},
 				"think_time": {
 					"title": "Action: Think Time",
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
+					"oneOf": [
+						{ "$ref": "#/definitions/common/duration_value" },
+						{
+							"type": "object",
+							"required": ["value"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/name" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"value": { "$ref": "#/definitions/common/duration_value" }
+							}
+						},
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/name" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"min": { "$ref": "#/definitions/common/duration_value" },
+								"max": { "$ref": "#/definitions/common/duration_value" }
+							}
+						}
+					]
+				},
+				"pacing": {
+					"title": "Action: Pacing",
+					"oneOf": [
+						{ "$ref": "#/definitions/common/pacing_value" },
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"min": { "$ref": "#/definitions/common/pacing_value" },
+								"max": { "$ref": "#/definitions/common/pacing_value" }
+							}
+						}
+					]
 				},
 				"javascript": {
 					"title": "Action: Javascript",
@@ -1111,7 +1199,18 @@
 							"type": "boolean",
 							"default": false
 						},
-						"libraryPath": { "$ref": "#/definitions/common/text" }
+						"libraryPath": { "$ref": "#/definitions/common/text" },
+						"duration_assertion": { "$ref": "#/definitions/user_paths/duration_assertion" },
+						"size_assertion": { "$ref": "#/definitions/user_paths/size_assertion" }
+					},
+					"additionalProperties": false
+				},
+				"rendezvous": {
+					"title": "Action: Rendezvous",
+					"type": "object",
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" }
 					},
 					"additionalProperties": false
 				},
@@ -1220,7 +1319,69 @@
 						"catch": { "$ref": "#/definitions/user_paths/container" }
 					},
 					"additionalProperties": false
+				},
+				"web_page": {
+					"title": "Action: Web Page",
+					"type": "object",
+					"required": ["steps"],
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"sla_profile": { "$ref": "#/definitions/common/text" },
+						"think_time": {
+							"title": "Web Page Think Time",
+							"oneOf": [
+								{
+									"type": "object",
+									"required": ["value"],
+									"properties": {
+										"value": { "$ref": "#/definitions/user_paths/actions/web_page_think_time_value" }
+									},
+									"additionalProperties": false
+								},
+								{
+									"type": "object",
+									"required": ["max"],
+									"properties": {
+										"min": { "$ref": "#/definitions/user_paths/actions/web_page_think_time_value" },
+										"max": { "$ref": "#/definitions/user_paths/actions/web_page_think_time_value" }
+									},
+									"additionalProperties": false
+								}
+							]
+						},
+						"playback": {
+							"type": "string",
+							"enum": ["parallel", "sequential"]
+						},
+						"execute_resources": {
+							"type": "string",
+							"enum": ["static", "dynamic", "dynamic_forced_encoding"]
+						},
+						"steps": { "$ref": "#/definitions/user_paths/steps" }
+					},
+					"additionalProperties": false
+				},
+				"web_page_think_time_value": {
+					"title": "Web Page Think Time Value",
+					"type": "string",
+					"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
 				}
+			},
+			"part": {
+				"title": "Multipart Part",
+				"type": "object",
+				"required": ["name"],
+				"properties": {
+					"name": { "$ref": "#/definitions/common/text" },
+					"content_type": { "$ref": "#/definitions/common/text" },
+					"charset": { "$ref": "#/definitions/common/text" },
+					"transfer_encoding": { "$ref": "#/definitions/common/text" },
+					"value": { "$ref": "#/definitions/common/text" },
+					"filename": { "$ref": "#/definitions/common/text" },
+					"source_filename": { "$ref": "#/definitions/common/text" }
+				},
+				"additionalProperties": false
 			},
 			"extractor": {
 				"type": "object",
@@ -1278,45 +1439,35 @@
 				},
 				"additionalProperties": false
 			},
-			"part": {
-				"title": "Multipart Part",
-				"type": "object",
-				"required": ["name"],
-				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"contentType": { "$ref": "#/definitions/common/text" },
-					"charSet": { "$ref": "#/definitions/common/text" },
-					"transferEncoding": { "$ref": "#/definitions/common/text" },
-					"value": { "$ref": "#/definitions/common/text" },
-					"filename": { "$ref": "#/definitions/common/text" },
-					"sourceFilename": { "$ref": "#/definitions/common/text" }
-				},
-				"additionalProperties": false
-			},
 			"size_assertion": {
 				"title": "Size Assertion",
 				"type": "object",
-				"required": ["operator", "value"],
+				"minProperties": 1,
 				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"operator": {
-						"type": "string",
-						"enum": ["equals", "less_than", "greater_than"]
-					},
-					"value": {
-						"type": "integer",
-						"minimum": 0
-					}
+					"equals": { "$ref": "#/definitions/user_paths/size_assertion_bound" },
+					"greater_than": { "$ref": "#/definitions/user_paths/size_assertion_bound" },
+					"less_than": { "$ref": "#/definitions/user_paths/size_assertion_bound" }
 				},
-				"additionalProperties": false
+				"additionalProperties": false,
+				"not": {
+					"required": ["equals"],
+					"anyOf": [
+						{ "required": ["greater_than"] },
+						{ "required": ["less_than"] }
+					]
+				}
+			},
+			"size_assertion_bound": {
+				"title": "Size Assertion Bound",
+				"type": "integer",
+				"minimum": 0
 			},
 			"duration_assertion": {
 				"title": "Duration Assertion",
 				"type": "object",
-				"required": ["value"],
+				"required": ["less_than"],
 				"properties": {
-					"name": { "$ref": "#/definitions/common/name" },
-					"value": {
+					"less_than": {
 						"type": "integer",
 						"minimum": 0
 					}
@@ -1342,6 +1493,7 @@
 					"description": { "$ref": "#/definitions/common/text" },
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": { "type": "boolean" },
+					"pacing": { "$ref": "#/definitions/user_paths/actions/pacing" },
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": { "$ref": "#/definitions/common/assertions" }
 				},
@@ -1360,6 +1512,34 @@
 					}
 				},
 				"additionalProperties": false
+			}
+		},
+		"shared_element": {
+			"title": "Shared Element",
+			"type": "object",
+			"minProperties": 1,
+			"maxProperties": 1,
+			"additionalProperties": false,
+			"properties": {
+				"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
+				"loop": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/loop" },
+						{ "required": ["name"] }
+					]
+				},
+				"while": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/while" },
+						{ "required": ["name"] }
+					]
+				},
+				"fork": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/fork" },
+						{ "required": ["name"] }
+					]
+				}
 			}
 		},
 		"framework": {

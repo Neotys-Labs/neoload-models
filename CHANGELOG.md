@@ -105,6 +105,63 @@ otherwise.
     file: logs/custom.txt
 ```
 
+#### Shared elements
+
+**`shared_elements`** — a top-level, project-wide list of named, reusable steps: each entry is an
+ordinary `transaction`, `loop`, `while` or `fork` step. A **`shared_element`** step, usable
+anywhere a step is valid, resolves to one of these by name instead of inlining it; writing a
+project never inlines the definition at the reference site.
+
+```yaml
+shared_elements:
+- transaction:
+    name: Login
+    steps:
+    - request:
+        url: https://www.tricentis.com/login
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - shared_element: Login
+```
+
+See [shared_elements](neoload-project/doc/v3/shared_elements.md) for the full reference.
+
+#### Requests
+
+**`parts`** — a multipart/form-data body on an HTTP request, as in the NeoLoad GUI. Use `parts`
+instead of `body`. Each part requires a `name`. A text part uses `value`; a file part uses
+`source_filename` (path relative to the project folder) and optionally `filename` (name sent to
+the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
+
+```yaml
+- request:
+    url: https://example.com/upload
+    method: POST
+    parts:
+    - name: comment
+      content_type: text/plain
+      charset: UTF-8
+      value: hello
+    - name: file
+      content_type: image/jpeg
+      filename: upload.jpg
+      source_filename: upload.jpg
+```
+
+#### Assertions
+
+**`duration_assertion`** — checks that a `request` or `custom_action` completed within
+`less_than` milliseconds.
+
+```yaml
+- request:
+    url: https://www.tricentis.com/
+    duration_assertion:
+      less_than: 2048
+```
+
 #### Variables
 
 Four variable types that already existed in the NeoLoad GUI are now writable in as-code.

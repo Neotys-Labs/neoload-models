@@ -4,7 +4,20 @@ user_paths:
   actions:
     steps:
     - think_time: 3790200
+    - think_time:
+        max: 3790200
     - think_time: 3600000
+    - think_time:
+        max: 3600000
     - think_time: 180000
+    - think_time:
+        max: 180000
     - think_time: 10000
+    - think_time:
+        max: 10000
     - think_time: 200
+    - think_time:
+        max: 200
+    - think_time: "${think_time}"
+    - think_time:
+        max: "${max_think_time}"

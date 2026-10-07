@@ -45,19 +45,14 @@ is documented in `neoload-project/doc/v3/` yet.
 **Variables** — `date`, `current_date`, `sql`, `password`, `secret_vault`. With these five, the
 as-code variable catalogue matches the fourteen types offered by the GUI.
 
-**Assertions** — the `assertions` list becomes a `{content|size|duration}` discriminated union:
-`size` (with an `operator`) and `duration` join the existing content assertion.
-
-**Frameworks** — a `framework` model (`enabled`, `parameters`) with dynamic parameters
-(`enabled`, `extraction_source`, `xpath`, `jsonpath`, `regexp`, `template`), covering the GUI
-Frameworks / dynamic parameters feature, in a builtin and a custom flavour.
+**Assertions** — the `assertions` list becomes a `{content|size}` discriminated union: `size`
+(with an `operator`) joins the existing content assertion. `duration_assertion` is a separate,
+single-value setting (`less_than`) on `request` and `custom_action`.
 
 **JSON Schema completeness** — request `name`, `followRedirects`, custom method, `bodybinary`,
-multipart `parts`; `assertions` on request, transaction and container; scenario `sla_profile`,
+`binary_source_file`; `assertions` on request, transaction and container; scenario `sla_profile`,
 `store_variables_for_raw_data`, `excluded_urls`, `apm_configuration`, `monitoring`,
 `rendezvous_policies`; `custom_load` policy.
-
-**Binding fix** — `Part` bound to `ImmutablePart` so multipart bodies can be deserialised from YAML.
 
 ## Reverted before release
 
@@ -142,7 +137,7 @@ The GUI offers fourteen types (`VariablesPane#initialize`).
 | Failed-assertion policy per User Path (`getFailedAssertionPolicy`) | — |
 | Action enabled / disabled flag | — |
 | Breakpoints | — |
-| Shared elements (`SharedElementsContainer`) | — |
+| Shared elements (`SharedElementsContainer`) | 3.1 (`shared_elements` / `shared_element`) |
 
 ## User Path — logical actions
 
@@ -172,10 +167,10 @@ and protocol action catalogues.
 | NLP feature | as-code |
 |:------------|:--------|
 | HTTP/S request — URL, server, method, headers, text body, extractors | 3.0 |
-| Binary body | 3.0 (`bodybinary`, undeclared in the published schema) |
+| Binary body | 3.1 (`bodybinary` inline Base64, `binary_source_file` path) |
 | Follow redirects | 3.0 (`followRedirects`, undeclared in the published schema) |
 | HTTP Page (a page and its dynamic resources) | 3.1 draft (`http_page`) |
-| Multipart / form-data body | 3.1 draft (`parts` in the schema, plus the Jackson binding fix) |
+| Multipart / form-data body | 3.1 (`parts`) |
 | Keep-alive, charset, content-type override, referer | — |
 | Response storage to a file or a variable | — |
 | Static request optimisation | — |
@@ -193,7 +188,7 @@ and protocol action catalogues.
 | Content assertion (`contains`, `regexp`, `xpath`, `jsonpath`, `not`) | 3.0 |
 | Assertions on request, transaction, container and User Path | 3.0 |
 | Size assertion | 3.1 draft |
-| Duration assertion | 3.1 draft |
+| Duration assertion (`duration_assertion`, `less_than`, on request and custom action) | 3.1 |
 | JSON assertions (`JsonContentAssertion`, `JsonResponseAssertion`) | — |
 | Plugin assertions (`PluginContentAssertion`, `PluginResponseAssertion`) | — |
 | Response assertion (`ResponseAssertion`) | — |

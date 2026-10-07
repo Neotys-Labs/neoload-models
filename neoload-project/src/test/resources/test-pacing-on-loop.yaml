@@ -1,0 +1,10 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - loop:
+        count: "3"
+        pacing: 1s
+        steps:
+        - delay: 100

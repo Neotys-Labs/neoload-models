@@ -1,0 +1,45 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        url: http://www.neotys.com/default
+        followRedirects: true
+    - request:
+        url: http://www.neotys.com/get
+        method: GET
+    - request:
+        url: http://www.neotys.com/post
+        method: POST
+        body: '{"ok":true}'
+    - request:
+        url: http://www.neotys.com/head
+        method: HEAD
+    - request:
+        url: http://www.neotys.com/put
+        method: PUT
+        body: '{"ok":true}'
+    - request:
+        url: http://www.neotys.com/delete
+        method: DELETE
+    - request:
+        url: http://www.neotys.com/options
+        method: OPTIONS
+    - request:
+        url: http://www.neotys.com/trace
+        method: TRACE
+    - request:
+        url: http://www.neotys.com/patch
+        method: PATCH
+        body: '{"ok":true}'
+        followRedirects: true
+    - request:
+        url: http://www.neotys.com/propfind
+        method: PROPFIND
+    - request:
+        url: http://www.neotys.com/connect
+        method: CONNECT
+    - request:
+        url: http://www.neotys.com/custom
+        method: CUSTOM

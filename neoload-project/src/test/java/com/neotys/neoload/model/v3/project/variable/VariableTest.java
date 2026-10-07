@@ -77,4 +77,15 @@ public class VariableTest {
         assertEquals("stop_test", wire(OutOfValue.STOP));
         assertEquals("no_value_code", wire(OutOfValue.NO_VALUE));
     }
+
+    @Test
+    public void incrementTimeUnitLegacyDateIncrementTypeCode() {
+        assertEquals(-1, IncrementTimeUnit.MILLISECOND.getDateIncrementTypeCode());
+        assertEquals(0, IncrementTimeUnit.SECOND.getDateIncrementTypeCode());
+        assertEquals(1, IncrementTimeUnit.MINUTE.getDateIncrementTypeCode());
+        assertEquals(2, IncrementTimeUnit.HOUR.getDateIncrementTypeCode());
+        assertEquals(3, IncrementTimeUnit.DAY.getDateIncrementTypeCode());
+        assertEquals(4, IncrementTimeUnit.MONTH.getDateIncrementTypeCode());
+        assertEquals(5, IncrementTimeUnit.YEAR.getDateIncrementTypeCode());
+    }
 }

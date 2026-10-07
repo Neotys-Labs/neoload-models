@@ -46,7 +46,7 @@ public class UserPathTest {
 	public void flattened() {
 		final UserPath userPath = UserPath.builder().actions(Container.builder()
 				.addSteps(Request.builder().build())
-				.addSteps(Delay.builder().build())
+				.addSteps(DelayConstant.builder().build())
 				.build())
 				.build();
 

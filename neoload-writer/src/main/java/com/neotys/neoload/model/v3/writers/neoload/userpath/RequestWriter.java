@@ -1,13 +1,5 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import com.google.common.net.MediaType;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
@@ -18,7 +10,12 @@ import com.neotys.neoload.model.v3.util.URL;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
-
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class RequestWriter extends ElementWriter {
 
@@ -32,10 +29,14 @@ public class RequestWriter extends ElementWriter {
 	public static final String XML_ATTR_FOLLOW_REDIRECTS = "followRedirects";
 
 	public static final String XML_ATTR_POST_TYPE = "postType";
+	public static final String XML_ATTR_BINARY_TYPE = "binaryType";
+	public static final String XML_ATTR_BINARY_FILENAME = "binaryFileName";
 	public static final String XML_URL_PARAMETER_TAG_NAME = "urlPostParameter";
 	public static final String XML_STRING_DATA_TAG_NAME = "textPostContent";
 	public static final String XML_BINARY_DATA_TAG_NAME = "binaryPostContentBase64";
 	public static final String XML_PARTS_TAG_NAME = "multiparts";
+
+	static final String BINARY_CONTENT_TYPE_FILE = "FILE";
 
 	public static final int FORM_CONTENT = 1;
 	public static final int RAW_CONTENT = 2;
@@ -75,12 +76,17 @@ public class RequestWriter extends ElementWriter {
 		if(bodySupportedByMethod) {
 			int postType = getPostType(theRequest);
 			xmlRequest.setAttribute(XML_ATTR_POST_TYPE, String.valueOf(postType));
-			theRequest.getBody().ifPresent(s -> {
-				if(postType==FORM_CONTENT) writeParameters(RequestUtils.getParameters(s), Optional.empty(), document, xmlRequest);
-				if(postType==TEXT_CONTENT) writePostTextBody(s, document, xmlRequest);
-				if(postType==RAW_CONTENT) writePostRawBody(s.getBytes(), document, xmlRequest);
-			});
-			theRequest.getBodyBinary().ifPresent(s -> writePostRawBody(s, document, xmlRequest));
+			if (theRequest.getBinarySourceFile().isPresent()) {
+				writeBinarySourceFile(theRequest.getBinarySourceFile().get(), xmlRequest);
+			} else if (theRequest.getBodyBinary().isPresent()) {
+				writePostRawBody(theRequest.getBodyBinary().get(), document, xmlRequest);
+			} else {
+				theRequest.getBody().ifPresent(s -> {
+					if(postType==FORM_CONTENT) writeParameters(RequestUtils.getParameters(s), Optional.empty(), document, xmlRequest);
+					if(postType==TEXT_CONTENT) writePostTextBody(s, document, xmlRequest);
+					if(postType==RAW_CONTENT) writePostRawBody(s.getBytes(), document, xmlRequest);
+				});
+			}
 			theRequest.getParts().ifPresent(s -> writeParts(s, document, xmlRequest));
 		}
 		final Optional<String> parameterTag = bodySupportedByMethod ? Optional.of(XML_URL_PARAMETER_TAG_NAME) : Optional.empty();
@@ -94,6 +100,7 @@ public class RequestWriter extends ElementWriter {
 	}
 
 	protected int getPostType(final Request request) {
+		if(request.getBinarySourceFile().isPresent()) return RAW_CONTENT;
 		if(request.getBodyBinary().isPresent()) return RAW_CONTENT;
 		if(request.getParts().isPresent()) return MULTIPART_CONTENT;
 
@@ -121,6 +128,11 @@ public class RequestWriter extends ElementWriter {
 
 		// write also in the binary content in case of conversion
 		writePostRawBody(body.getBytes(), document, xmlRequest);
+	}
+
+	public void writeBinarySourceFile(final String sourcePath, final Element xmlRequest) {
+		xmlRequest.setAttribute(XML_ATTR_BINARY_TYPE, BINARY_CONTENT_TYPE_FILE);
+		xmlRequest.setAttribute(XML_ATTR_BINARY_FILENAME, sourcePath);
 	}
 
 	public void writePostRawBody(final byte[] body, final Document document, Element xmlRequest) {

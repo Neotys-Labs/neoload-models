@@ -4,7 +4,20 @@ import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.MINIMI
 import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.USE_NATIVE_TYPE_ID;
 import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.WRITE_DOC_START_MARKER;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.compatibility.SchemaSupport;
+import com.neotys.neoload.model.v3.project.Project;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -14,24 +27,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.commons.io.FilenameUtils;
-
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.google.common.base.Strings;
-import com.neotys.neoload.model.v3.compatibility.SchemaSupport;
-import com.neotys.neoload.model.v3.project.Project;
 import org.yaml.snakeyaml.LoaderOptions;
-
 
 public final class IO {
 	private static final Set<String> YAML_EXTENSIONS;
@@ -201,6 +198,24 @@ public final class IO {
 		jdk8Module.configureAbsentsAsNulls(true);
         objectMapper.registerModule(jdk8Module);
         objectMapper.registerModule(newPathModule());
+        objectMapper.registerModule(newBinaryModule());
+	}
+
+	/**
+	 * Serializes a byte[] as a base64 string, instead of Jackson's default writeBinary()
+	 * YAML parser resolves !!binary to bytes, would reject the schema's string type, and JSON Schema has no binary type
+	 * Reading is compatible with both.
+	 */
+	private static SimpleModule newBinaryModule() {
+		final SimpleModule module = new SimpleModule();
+		module.addSerializer(byte[].class, new JsonSerializer<>() {
+			@Override
+			public void serialize(final byte[] value, final JsonGenerator gen,
+					final SerializerProvider provider) throws IOException {
+				gen.writeString(provider.getConfig().getBase64Variant().encode(value));
+			}
+		});
+		return module;
 	}
 
 	/**

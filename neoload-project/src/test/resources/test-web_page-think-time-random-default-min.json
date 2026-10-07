@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"web_page":{"think_time":{"max":"5s"},"steps":[{"request":{"url":"http://host:80/"}}]}}]}}]}

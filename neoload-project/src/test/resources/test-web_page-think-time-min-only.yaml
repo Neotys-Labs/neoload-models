@@ -1,0 +1,11 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - web_page:
+        think_time:
+          min: 1s
+        steps:
+        - request:
+            url: http://host:80/
