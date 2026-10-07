@@ -21,7 +21,7 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_DEFAULT)
-@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.BODYBINARY, Request.PARTS, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, Request.FOLLOW_REDIRECTS, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.NAME, Request.URL, Request.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.BODYBINARY, Request.BINARY_SOURCE_FILE, Request.PARTS, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, Request.FOLLOW_REDIRECTS, Request.INTERNAL_RECORDED_ID, SlaElement.SLA_PROFILE})
 @JsonSerialize(as = ImmutableRequest.class)
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
@@ -38,10 +38,12 @@ public interface Request extends Step, SlaElement, AssertionsElement, DurationAs
 	String HEADERS = "headers";
 	String BODY = "body";
 	String BODYBINARY = "bodybinary";
+	String BINARY_SOURCE_FILE = "binary_source_file";
 	String PARTS = "parts";
 	String EXTRACTORS = "extractors";
 	String FOLLOW_REDIRECTS = "followRedirects";
-	
+	String INTERNAL_RECORDED_ID = "_internal_recorded_id";
+
 	String DEFAULT_NAME = "request";
 	String DEFAULT_METHOD = Method.GET.name();
 
@@ -103,6 +105,9 @@ public interface Request extends Step, SlaElement, AssertionsElement, DurationAs
 	@JsonProperty(BODYBINARY)
 	Optional<byte[]> getBodyBinary();
 
+	@JsonProperty(BINARY_SOURCE_FILE)
+	Optional<String> getBinarySourceFile();
+
 	@JsonProperty(PARTS)
 	@Valid
 	Optional<List<Part>> getParts();
@@ -115,6 +120,9 @@ public interface Request extends Step, SlaElement, AssertionsElement, DurationAs
 	@Valid
 	@Value.Default
 	default Boolean getFollowRedirects() { return false; }
+
+	@JsonProperty(INTERNAL_RECORDED_ID)
+	Optional<String> getInternalRecordedId();
 
 	// Jackson value filters excluding the default name / method from serialization:
 	// a property is omitted when the filter's equals(value) returns true.

@@ -111,6 +111,13 @@
 			"items": { "$ref": "#/definitions/scenario" },
 			"description": "Test configurations. A scenario selects the populations to run and the load policy of each one."
 		},
+		"shared_elements": {
+			"title": "Shared_elements",
+			"type": "array",
+			"minItems": 1,
+			"items": { "$ref": "#/definitions/shared_element" },
+			"description": "Named, reusable steps declared once for the project. A shared_element step runs one of them by name."
+		},
 		"user_paths": {
 			"title": "User_paths",
 			"type": "array",
@@ -214,6 +221,11 @@
 				"title": "Positive Number",
 				"type": "integer",
 				"minimum": 0
+			},
+			"pacing_value": {
+				"title": "Pacing value",
+				"type": "string",
+				"pattern": "^(\\d+|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
 			},
 			"duration": {
 				"title": "Duration",
@@ -1161,6 +1173,10 @@
 						"type": "string",
 						"description": "The name of the SLA profile to apply to the Container (will not be applied to children)"
 					},
+					"pacing": {
+						"$ref": "#/definitions/user_paths/actions/pacing",
+						"description": "The minimum duration enforced for the Container"
+					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
@@ -1243,10 +1259,10 @@
 									"$ref": "#/definitions/user_paths/actions/debug_logger",
 									"description": "The Debug Logger Action writes a text entry to a log file, for debugging purposes."
 								},
-                                "rendezvous": {
-                                	"$ref": "#/definitions/user_paths/actions/rendezvous",
-                                	"description": "A Rendezvous point synchronizes Virtual Users at a common meeting point so they carry out tasks simultaneously, creating an intense load on the server at a specific point in the application."
-                                },
+								"rendezvous": {
+									"$ref": "#/definitions/user_paths/actions/rendezvous",
+									"description": "A Rendezvous point synchronizes Virtual Users at a common meeting point so they carry out tasks simultaneously, creating an intense load on the server at a specific point in the application."
+								},
 								"stop_vu": {
 									"$ref": "#/definitions/user_paths/actions/stop_vu",
 									"description": "The Stop Virtual User action stops the current virtual user. By default, a new virtual user is started to replace the one that has been stopped, so that the number of running virtual users remains stable. Set `start_new_vu` to `false` to stop the current virtual user without starting a replacement."
@@ -1254,6 +1270,10 @@
 								"web_page": {
 									"$ref": "#/definitions/user_paths/actions/web_page",
 									"description": "The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back."
+								},
+								"shared_element": {
+									"$ref": "#/definitions/common/name",
+									"description": "The name of the shared_elements entry to run here."
 								}
 							},
 							"additionalProperties": false
@@ -1274,6 +1294,10 @@
 							"$ref": "#/definitions/common/text",
 							"description": "The name of the SLA profile to apply to the Transaction (will not be applied to children)"
 						},
+						"pacing": {
+							"$ref": "#/definitions/user_paths/actions/pacing",
+							"description": "The minimum duration enforced for the Transaction"
+						},
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": {
 							"$ref": "#/definitions/common/assertions",
@@ -1282,38 +1306,6 @@
 					},
 					"additionalProperties": false,
 					"description": "The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics."
-				},
-				"http_page": {
-					"name": "http_page",
-					"title": "Action: HTTP Page",
-					"type": "object",
-					"required": ["name", "steps"],
-					"properties": {
-						"name": { "$ref": "#/definitions/common/name" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"think_time": {
-							"$ref": "#/definitions/common/text",
-							"description": "Think time is the time the user normally takes to make a decision to do the next task."
-						},
-						"think_time_range": {
-							"type": "object",
-							"required": ["min", "max"],
-							"properties": {
-								"min": { "$ref": "#/definitions/common/text" },
-								"max": { "$ref": "#/definitions/common/text" }
-							},
-							"additionalProperties": false
-						},
-						"think_time_mode": {
-							"type": "string",
-							"enum": ["constant", "random"]
-						},
-						"screenshot": { "type": "boolean" },
-						"dynamic_action": { "type": "boolean" },
-						"force_encoding_for_dynamic_resources": { "type": "boolean" },
-						"steps": { "$ref": "#/definitions/user_paths/steps" }
-					},
-					"additionalProperties": false
 				},
 				"request": {
 					"title": "Action: HTTP/s Request",
@@ -1349,6 +1341,10 @@
 							"$ref": "#/definitions/common/base64blob",
 							"description": "The request body, as a base64-encoded binary payload"
 						},
+						"binary_source_file": {
+							"$ref": "#/definitions/common/text",
+							"description": "Path of a file used as the binary request body, relative to the project folder"
+						},
 						"parts": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/part" },
@@ -1362,6 +1358,11 @@
 							"type": "boolean",
 							"default": false,
 							"description": "When `true`, the HTTP redirections returned by the server are followed. The default value is `false`."
+						},
+						"_internal_recorded_id": {
+							"title": "Internal recorded request id",
+							"description": "Optional id of the recorded HAR entry this request was converted from (for example r0001). Omit when the project was not produced from a recording.",
+							"$ref": "#/definitions/common/text"
 						},
 						"assertions": {
 							"type": "array",
@@ -1382,7 +1383,11 @@
 							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"not": { "required": ["body", "bodybinary"] },
+					"allOf": [
+						{ "not": { "required": ["body", "bodybinary"] } },
+						{ "not": { "required": ["body", "binary_source_file"] } },
+						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
+					],
 					"description": "A request defines a plain HTTP request."
 				},
 				"delay": {
@@ -1394,6 +1399,28 @@
 					"title": "Action: Think Time",
 					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
 					"description": "Think time is the time the user normally takes to make a decision to do the next task."
+				},
+				"pacing": {
+					"title": "Action: Pacing",
+					"oneOf": [
+						{ "$ref": "#/definitions/common/pacing_value" },
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"min": {
+									"$ref": "#/definitions/common/pacing_value",
+									"description": "The minimum duration of a random pacing range. Defaults to `0`."
+								},
+								"max": {
+									"$ref": "#/definitions/common/pacing_value",
+									"description": "The maximum duration of a random pacing range. Must be strictly greater than `min`."
+								}
+							}
+						}
+					],
+					"description": "Pacing enforces a minimum duration: if the steps finish earlier, execution waits for the remainder. It is a constant duration, or a random range between `min` and `max`."
 				},
 				"javascript": {
 					"title": "Action: Javascript",
@@ -1928,6 +1955,10 @@
 						"type": "boolean",
 						"description": "Enable the break"
 					},
+					"pacing": {
+						"$ref": "#/definitions/user_paths/actions/pacing",
+						"description": "The minimum duration enforced for the case"
+					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
@@ -1953,6 +1984,34 @@
 					}
 				},
 				"additionalProperties": false
+			}
+		},
+		"shared_element": {
+			"title": "Shared Element",
+			"type": "object",
+			"minProperties": 1,
+			"maxProperties": 1,
+			"additionalProperties": false,
+			"properties": {
+				"transaction": { "$ref": "#/definitions/user_paths/actions/transaction" },
+				"loop": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/loop" },
+						{ "required": ["name"] }
+					]
+				},
+				"while": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/while" },
+						{ "required": ["name"] }
+					]
+				},
+				"fork": {
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/fork" },
+						{ "required": ["name"] }
+					]
+				}
 			}
 		},
 		"framework": {

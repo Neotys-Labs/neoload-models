@@ -19,6 +19,7 @@ class StepsConstants {
     protected static final String DEBUG_LOGGER = "debug_logger";
     protected static final String STOP_VU = "stop_vu";
     protected static final String WEB_PAGE = "web_page";
+    protected static final String SHARED_ELEMENT = "shared_element";
 
     private StepsConstants() {
         super();

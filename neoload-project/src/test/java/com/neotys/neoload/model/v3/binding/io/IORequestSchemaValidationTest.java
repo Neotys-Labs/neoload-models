@@ -27,7 +27,8 @@ import org.junit.Test;
 /**
  * Schema-level coverage for published request contracts (3.0 and 3.1):
  * {@code followRedirects} is declared, {@code name} is not (NLG ignores it),
- * and {@code method} is any string (default GET).
+ * {@code method} is any string (default GET), and 3.1 declares optional
+ * {@code _internal_recorded_id}.
  */
 public class IORequestSchemaValidationTest {
 
@@ -83,6 +84,57 @@ public class IORequestSchemaValidationTest {
     }
 
     @Test
+    public void requestSchema31DeclaresInternalRecordedId() {
+        JsonNode internalRecordedId = requestProperties(schema31Tree).get("_internal_recorded_id");
+        assertNotNull("3.1 request.properties._internal_recorded_id must be declared", internalRecordedId);
+        JsonNode required = schema31Tree.at("/definitions/user_paths/actions/request/required");
+        assertTrue(required.isArray());
+        for (JsonNode item : required) {
+            assertFalse("_internal_recorded_id must not be required", "_internal_recorded_id".equals(item.asText()));
+        }
+        assertFalse("3.0 request must not declare _internal_recorded_id",
+                requestProperties(schema30Tree).has("_internal_recorded_id"));
+    }
+
+    @Test
+    public void internalRecordedIdIsOptionalOn31() throws IOException {
+        JsonNode without = YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/select\n");
+        assertValid("3.1 without _internal_recorded_id", schema31, without);
+
+        JsonNode with = YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/select\n"
+                        + "        _internal_recorded_id: r0001\n");
+        assertValid("3.1 with _internal_recorded_id", schema31, with);
+    }
+
+    @Test
+    public void internalRecordedIdRejectsNonStringOn31() throws IOException {
+        JsonNode node = YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/select\n"
+                        + "        _internal_recorded_id: 1\n");
+        assertFalse("_internal_recorded_id must be a string in 3.1", schema31.validate(node).isEmpty());
+    }
+
+    @Test
     public void followRedirectsRejectsNonBoolean() throws IOException {
         JsonNode node = YAML_MAPPER.readTree(
                 "name: MyProject\n"
@@ -95,6 +147,47 @@ public class IORequestSchemaValidationTest {
                         + "        followRedirects: not-a-boolean\n");
         assertFalse("followRedirects must be a boolean in 3.0", schema30.validate(node).isEmpty());
         assertFalse("followRedirects must be a boolean in 3.1", schema31.validate(node).isEmpty());
+    }
+
+    @Test
+    public void binarySourceFileIsDeclaredOnlyIn3Dot1() {
+        assertFalse("3.0 request must not declare binary_source_file",
+                requestProperties(schema30Tree).has("binary_source_file"));
+        JsonNode binarySourceFile = requestProperties(schema31Tree).get("binary_source_file");
+        assertNotNull("3.1 request must declare binary_source_file", binarySourceFile);
+        assertEquals("#/definitions/common/text", binarySourceFile.get("$ref").asText());
+    }
+
+    @Test
+    public void binarySourceFileFixtureIsValidAgainst3Dot1() throws IOException {
+        JsonNode node = requestWithBodyFields("binary_source_file: payloads/hello.bin\n");
+        assertValid("3.1", schema31, node);
+    }
+
+    @Test
+    public void binarySourceFileIsMutuallyExclusiveWithBodyAndBodybinary() throws IOException {
+        assertFalse("3.1 must reject body + binary_source_file",
+                schema31.validate(requestWithBodyFields(
+                        "body: hello\n        binary_source_file: payloads/hello.bin\n")).isEmpty());
+        assertFalse("3.1 must reject bodybinary + binary_source_file",
+                schema31.validate(requestWithBodyFields(
+                        "bodybinary: SGVsbG8=\n        binary_source_file: payloads/hello.bin\n")).isEmpty());
+        assertFalse("3.1 must reject body + bodybinary",
+                schema31.validate(requestWithBodyFields(
+                        "body: hello\n        bodybinary: SGVsbG8=\n")).isEmpty());
+    }
+
+    private static JsonNode requestWithBodyFields(String extraFields) throws IOException {
+        return YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/upload\n"
+                        + "        method: POST\n"
+                        + "        " + extraFields);
     }
 
     private static JsonNode requestProperties(JsonNode schemaTree) {

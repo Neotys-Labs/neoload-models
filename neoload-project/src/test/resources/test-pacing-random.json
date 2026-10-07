@@ -1,0 +1,37 @@
+{
+  "name": "MyProject",
+  "user_paths": [
+    {
+      "name": "MyUserPath",
+      "init": {
+        "pacing": { "min": "1s", "max": "3s" },
+        "steps": [ { "delay": 100 } ]
+      },
+      "actions": {
+        "pacing": { "min": "1s", "max": "3s" },
+        "steps": [
+          { "transaction": { "name": "MyTransaction", "pacing": { "min": "1s", "max": "3s" }, "steps": [ { "delay": 100 } ] } },
+          {
+            "try_catch": {
+              "try": { "pacing": { "min": "1s", "max": "3s" }, "steps": [ { "delay": 100 } ] },
+              "catch": { "pacing": { "min": "1s", "max": "3s" }, "steps": [ { "delay": 100 } ] }
+            }
+          },
+          {
+            "switch": {
+              "value": "${MySwitchVar}",
+              "case": [
+                { "value": 0, "break": true, "pacing": { "min": "1s", "max": "3s" }, "steps": [ { "delay": 100 } ] }
+              ],
+              "default": { "pacing": { "min": "1s", "max": "3s" }, "steps": [ { "delay": 100 } ] }
+            }
+          }
+        ]
+      },
+      "end": {
+        "pacing": { "min": "1s", "max": "3s" },
+        "steps": [ { "delay": 100 } ]
+      }
+    }
+  ]
+}

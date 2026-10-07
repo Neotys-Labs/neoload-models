@@ -60,6 +60,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.contains("MyUserPath_actions_request_1")
 										.build())
 								.slaProfile("MySlaProfile")
+								.internalRecordedId("r0001")
 								.build())
 						.addSteps(Request.builder()
 								.url("/select?name=neoload")
@@ -158,6 +159,57 @@ public class IORequestTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		write("test-request-binary-body", expectedProject);
+	}
+
+	private static Project getRequestBinarySourceFile() {
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(Request.builder()
+								.url("/upload")
+								.server("neotys")
+								.method(Method.POST.name())
+								.addHeaders(Header.builder()
+										.name("Content-Type")
+										.value("application/octet-stream")
+										.build())
+								.binarySourceFile("payloads/hello.bin")
+								.build())
+						.addSteps(Request.builder()
+								.url("/upload-raw")
+								.server("neotys")
+								.method(Method.PUT.name())
+								.addHeaders(Header.builder()
+										.name("Content-Type")
+										.value("application/octet-stream")
+										.build())
+								.binarySourceFile("payload.bin")
+								.slaProfile("MySlaProfile")
+								.build())
+						.build())
+				.build();
+
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
+	}
+
+	@Test
+	public void readRequestBinarySourceFile() throws IOException {
+		final Project expectedProject = getRequestBinarySourceFile();
+		assertNotNull(expectedProject);
+
+		read("test-request-binary-source-file", expectedProject);
+	}
+
+	@Test
+	public void writeRequestBinarySourceFile() throws IOException {
+		final Project expectedProject = getRequestBinarySourceFile();
+		assertNotNull(expectedProject);
+
+		write("test-request-binary-source-file", expectedProject);
 	}
 
 	@Test
