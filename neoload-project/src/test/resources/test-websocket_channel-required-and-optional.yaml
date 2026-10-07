@@ -1,0 +1,17 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: full_channel
+        description: a channel using every setting
+        url: /socket
+        server: myserver
+        headers:
+        - Origin: https://host
+        extractors:
+        - name: session_id
+          regexp: "session=([0-9]+)"
+        messages_mapping:
+          jsonpath: $.correlationId
