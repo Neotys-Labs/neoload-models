@@ -1,0 +1,11 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: my_channel
+        url: https://host:443/socket
+    - websocket_request:
+        channel: actions>my_channel
+        body: hello

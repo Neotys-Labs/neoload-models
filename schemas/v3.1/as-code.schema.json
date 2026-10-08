@@ -200,7 +200,7 @@
 			"name": {
 				"title": "Name",
 				"type": "string",
-				"pattern": "^[^£?$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\]*$",
+				"pattern": "^[^£?$\"\\x5b\\x5d<>|*¤§µ#`@^²°¨\\x5c]*$",
 				"maxLength": 100
 			},
 			"project_name": {
@@ -953,7 +953,9 @@
                                 "rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
 								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"},
 								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"},
-								"shared_element": { "$ref": "#/definitions/common/name" }
+								"shared_element": { "$ref": "#/definitions/common/name" },
+								"websocket_channel": {"$ref": "#/definitions/user_paths/actions/websocket_channel"},
+								"websocket_request": {"$ref": "#/definitions/user_paths/actions/websocket_request"}
 							},
 							"additionalProperties": false
 						}
@@ -1366,6 +1368,153 @@
 					"title": "Web Page Think Time Value",
 					"type": "string",
 					"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
+				},
+				"websocket_channel": {
+					"title": "Action: WebSocket Channel",
+					"type": "object",
+					"required": ["name", "url"],
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"url": { "$ref": "#/definitions/common/text" },
+						"server": { "$ref": "#/definitions/common/text" },
+						"headers": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"/": {}
+								},
+								"patternProperties": {
+									".*": { "type": "string" }
+								},
+								"additionalProperties": false
+							}
+						},
+						"extractors": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" },
+						"timestamp_extractor": { "$ref": "#/definitions/user_paths/websocket_timestamp_extractor" },
+						"push_messages": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/websocket_push_message" }
+						}
+					}
+				},
+				"websocket_request": {
+					"title": "Action: WebSocket Request",
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"channel": { "$ref": "#/definitions/user_paths/websocket_channel_reference" },
+						"message_type": {
+							"type": "string",
+							"enum": ["text", "binary", "close"],
+							"default": "text"
+						},
+						"synchronous": {
+							"type": "boolean",
+							"default": false
+						},
+						"mapping_id": { "$ref": "#/definitions/common/text" },
+						"status_code": {
+							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"default": "1000"
+						},
+						"body": { "$ref": "#/definitions/common/textblob" },
+						"bodybinary": { "$ref": "#/definitions/common/base64blob" },
+						"extractors": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"assertions": { "$ref": "#/definitions/common/assertions" }
+					},
+					"not": { "required": ["body", "bodybinary"] },
+					"allOf": [
+						{
+							"$comment": "Only a synchronous request has a response: it needs mapping_id, and only it may carry mapping_id, extractors and assertions",
+							"if": { "required": ["synchronous"], "properties": { "synchronous": { "const": true } } },
+							"then": { "required": ["mapping_id"] },
+							"else": {
+								"properties": {
+									"mapping_id": false,
+									"extractors": { "maxItems": 0 },
+									"assertions": { "maxItems": 0 }
+								}
+							}
+						},
+						{
+							"$comment": "A close cannot be synchronous, and only a close may set a status_code other than the default",
+							"if": { "required": ["message_type"], "properties": { "message_type": { "const": "close" } } },
+							"then": { "properties": { "synchronous": { "const": false } } },
+							"else": { "properties": { "status_code": { "enum": ["1000", 1000] } } }
+						}
+					]
+				}
+			},
+			"websocket_channel_reference": {
+				"title": "WebSocket Channel Reference",
+				"description": "The complete path of the channel, joined with '>': init, actions or end for a channel declared in a user path, or shared_elements>SharedElementName for one declared inside a shared element, then each step name down to the channel's name",
+				"type": "string",
+				"pattern": "^((init|actions|end)(>[^>]+)+|shared_elements(>[^>]+){2,})$"
+			},
+			"websocket_push_message": {
+				"title": "WebSocket Push Message",
+				"description": "A handler of the frames received by its channel. With conditions it runs when they are true; without conditions it is a fallback, which runs only when no push message with conditions matched",
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"conditions": {
+						"allOf": [{ "$ref": "#/definitions/common/conditions" }],
+						"minItems": 1
+					},
+					"match": {
+						"type": "string",
+						"enum": ["any", "all"],
+						"default": "any"
+					},
+					"charset": { "$ref": "#/definitions/common/text" },
+					"extractors": {
+						"type": "array",
+						"items": { "$ref": "#/definitions/user_paths/extractor" }
+					},
+					"assertions": { "$ref": "#/definitions/common/assertions" },
+					"steps": { "$ref": "#/definitions/user_paths/steps" }
+				},
+				"dependentRequired": { "match": ["conditions"] }
+			},
+			"websocket_messages_mapping": {
+				"title": "WebSocket Messages Mapping",
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"xpath": { "$ref": "#/definitions/common/text" },
+					"jsonpath": { "$ref": "#/definitions/common/text" },
+					"regexp": { "$ref": "#/definitions/common/text" },
+					"template": { "$ref": "#/definitions/common/text" },
+					"decode": {
+						"type": "string",
+						"enum": ["html", "url", "custom"]
+					},
+					"custom_decoder": { "$ref": "#/definitions/common/text" },
+					"encoding": { "$ref": "#/definitions/common/text" }
+				}
+			},
+			"websocket_timestamp_extractor": {
+				"title": "WebSocket Timestamp Extractor",
+				"type": "object",
+				"required": ["regexp"],
+				"additionalProperties": false,
+				"properties": {
+					"regexp": { "$ref": "#/definitions/common/text" },
+					"template": { "$ref": "#/definitions/common/text" }
 				}
 			},
 			"part": {
@@ -1490,6 +1639,7 @@
 				"type": "object",
 				"required": ["value"],
 				"properties": {
+					"name": { "$ref": "#/definitions/common/name" },
 					"description": { "$ref": "#/definitions/common/text" },
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": { "type": "boolean" },

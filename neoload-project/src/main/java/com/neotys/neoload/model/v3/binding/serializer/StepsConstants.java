@@ -21,6 +21,8 @@ class StepsConstants {
 	protected static final String WEB_PAGE = "web_page";
 	protected static final String SHARED_ELEMENT = "shared_element";
 	protected static final String WAIT_UNTIL = "wait_until";
+	protected static final String WEBSOCKET_CHANNEL = "websocket_channel";
+	protected static final String WEBSOCKET_REQUEST = "websocket_request";
 
 	private StepsConstants() {
 		super();
