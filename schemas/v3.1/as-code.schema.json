@@ -1299,7 +1299,11 @@
 								"shared_element": {
 									"$ref": "#/definitions/common/name",
 									"description": "The name of the shared_elements entry to run here."
-								}
+								},
+                                "websocket_channel": {
+                                  "$ref": "#/definitions/user_paths/actions/websocket_channel",
+                                  "description":""
+                                }
 							},
 							"additionalProperties": false
 						}
@@ -1794,6 +1798,48 @@
 					]
 				}
 			},
+            "websocket_channel": {
+            "title": "Action: WebSocket Channel",
+            "type": "object",
+            "required": ["name", "url"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "$ref": "#/definitions/common/name" },
+              "description": { "$ref": "#/definitions/common/text" },
+              "url": { "$ref": "#/definitions/common/text" },
+              "server": { "$ref": "#/definitions/common/text" },
+              "headers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "/": {}
+                  },
+                  "patternProperties": {
+                    ".*": { "type": "string" }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "extractors": {
+                "type": "array",
+                "items": { "$ref": "#/definitions/user_paths/extractor" }
+              },
+              "messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" }
+            }
+          }
+        },
+      "websocket_messages_mapping": {
+        "title": "WebSocket Messages Mapping",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "xpath": { "$ref": "#/definitions/common/text" },
+          "jsonpath": { "$ref": "#/definitions/common/text" },
+          "regexp": { "$ref": "#/definitions/common/text" },
+          "template": { "$ref": "#/definitions/common/text" }
+        }
+      },
 			"part": {
 				"title": "Multipart Part",
 				"type": "object",
