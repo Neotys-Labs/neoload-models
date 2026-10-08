@@ -177,8 +177,9 @@ and protocol action catalogues.
 | Raw request | — |
 | SOAP request | 3.1 (`soap_request`, with `content_assertions`, `duration_assertion`, `size_assertion` and `sla_profile`) |
 | Silverlight SOAP request | — |
-| WebSocket channel | 3.1 draft (`websocket_channel`) |
-| WebSocket request, push message | — |
+| WebSocket channel and request, the request referencing its channel by path | 3.1 draft (`websocket_channel`, `websocket_request`) |
+| WebSocket channel inside a shared container (`shared_elements>Name>...` reference) | 3.1 draft |
+| WebSocket push message | — |
 | Media / RTMP, RTMPT requests | — |
 | Siebel request | — |
 | Recorded artifacts (screenshots, recorded response) | — |

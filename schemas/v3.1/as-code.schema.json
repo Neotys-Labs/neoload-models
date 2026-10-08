@@ -1438,7 +1438,11 @@
                                 "websocket_channel": {
                                   "$ref": "#/definitions/user_paths/actions/websocket_channel",
                                   "description":""
-                                }
+                                },
+                              "websocket_request": {
+                                "$ref": "#/definitions/user_paths/actions/websocket_request",
+                                "description":""
+                              }
 							},
 							"additionalProperties": false
 						}
@@ -1985,66 +1989,124 @@
 					},
 					"additionalProperties": false,
 					"description": "The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back."
-				}
-			},
-			"name_values": {
-				"title": "Name/Value List",
-				"type": "array",
-				"items": {
-					"oneOf": [
-						{ "type": "string" },
-						{
-							"type": "object",
-							"minProperties": 1,
-							"maxProperties": 1,
-							"patternProperties": {
-								".*": { "type": "string" }
+				},
+                "name_values": {
+                  "title": "Name/Value List",
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      { "type": "string" },
+                      {
+                        "type": "object",
+                        "minProperties": 1,
+                        "maxProperties": 1,
+                        "patternProperties": {
+                          ".*": { "type": "string" }
+                        }
+                      }
+                    ]
+                  }
+                },
+				"websocket_channel": {
+					"title": "Action: WebSocket Channel",
+					"type": "object",
+					"required": ["name", "url"],
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"url": { "$ref": "#/definitions/common/text" },
+						"server": { "$ref": "#/definitions/common/text" },
+						"headers": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"/": {}
+								},
+								"patternProperties": {
+									".*": { "type": "string" }
+								},
+								"additionalProperties": false
 							}
-						}
-					]
+						},
+						"extractors": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" }
+					}
 				}
 			},
-            "websocket_channel": {
-            "title": "Action: WebSocket Channel",
+			"websocket_messages_mapping": {
+				"title": "WebSocket Messages Mapping",
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"xpath": { "$ref": "#/definitions/common/text" },
+					"jsonpath": { "$ref": "#/definitions/common/text" },
+					"regexp": { "$ref": "#/definitions/common/text" },
+					"template": { "$ref": "#/definitions/common/text" }
+				}
+			},
+          "websocket_request": {
+            "title": "Action: WebSocket Request",
             "type": "object",
-            "required": ["name", "url"],
             "additionalProperties": false,
             "properties": {
               "name": { "$ref": "#/definitions/common/name" },
               "description": { "$ref": "#/definitions/common/text" },
-              "url": { "$ref": "#/definitions/common/text" },
-              "server": { "$ref": "#/definitions/common/text" },
-              "headers": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "/": {}
-                  },
-                  "patternProperties": {
-                    ".*": { "type": "string" }
-                  },
-                  "additionalProperties": false
-                }
+              "channel": { "$ref": "#/definitions/user_paths/websocket_channel_reference" },
+              "message_type": {
+                "type": "string",
+                "enum": ["text", "binary", "close"],
+                "default": "text"
               },
+              "synchronous": {
+                "type": "boolean",
+                "default": false
+              },
+              "mapping_id": { "$ref": "#/definitions/common/text" },
+              "status_code": {
+                "anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+                "default": "1000"
+              },
+              "body": { "$ref": "#/definitions/common/textblob" },
+              "bodybinary": { "$ref": "#/definitions/common/base64blob" },
               "extractors": {
                 "type": "array",
                 "items": { "$ref": "#/definitions/user_paths/extractor" }
               },
-              "messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" }
-            }
+              "assertions": { "$ref": "#/definitions/common/assertions" }
+            },
+            "not": { "required": ["body", "bodybinary"] },
+            "allOf": [
+              {
+                "$comment": "Only a synchronous request has a response: it needs mapping_id, and only it may carry mapping_id, extractors and assertions",
+                "if": { "required": ["synchronous"], "properties": { "synchronous": { "const": true } } },
+                "then": { "required": ["mapping_id"] },
+                "else": {
+                  "properties": {
+                    "mapping_id": false,
+                    "extractors": { "maxItems": 0 },
+                    "assertions": { "maxItems": 0 }
+                  }
+                }
+              },
+              {
+                "$comment": "A close cannot be synchronous, and only a close may set a status_code other than the default",
+                "if": { "required": ["message_type"], "properties": { "message_type": { "const": "close" } } },
+                "then": { "properties": { "synchronous": { "const": false } } },
+                "else": { "properties": { "status_code": { "enum": ["1000", 1000] } } }
+              }
+            ]
           }
         },
-      "websocket_messages_mapping": {
-        "title": "WebSocket Messages Mapping",
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "xpath": { "$ref": "#/definitions/common/text" },
-          "jsonpath": { "$ref": "#/definitions/common/text" },
-          "regexp": { "$ref": "#/definitions/common/text" },
-          "template": { "$ref": "#/definitions/common/text" }
-        }
+      "websocket_channel_reference": {
+        "title": "WebSocket Channel Reference",
+        "description": "The complete path of the channel, joined with '>': init, actions or end for a channel declared in a user path, or shared_elements>SharedElementName for one declared inside a shared element, then each step name down to the channel's name",
+        "type": "string",
+        "pattern": "^((init|actions|end)(>[^>]+)+|shared_elements(>[^>]+){2,})$"
       },
 			"part": {
 				"title": "Multipart Part",
@@ -2215,6 +2277,7 @@
 				"type": "object",
 				"required": ["value"],
 				"properties": {
+					"name": { "$ref": "#/definitions/common/name" },
 					"description": { "$ref": "#/definitions/common/text" },
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": {

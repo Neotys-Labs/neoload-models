@@ -36,6 +36,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		builder.put(ImmutableWebPage.class, WEB_PAGE);
 		builder.put(ImmutableWaitUntil.class, WAIT_UNTIL);
 		builder.put(ImmutableWebSocketChannel.class, WEBSOCKET_CHANNEL);
+		builder.put(ImmutableWebSocketRequest.class, WEBSOCKET_REQUEST);
 		STEPS = builder.build();
 	}
 
