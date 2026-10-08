@@ -178,7 +178,8 @@ and protocol action catalogues.
 | SOAP and Silverlight SOAP requests | — |
 | WebSocket channel and request, the request referencing its channel by path | 3.1 draft (`websocket_channel`, `websocket_request`) |
 | WebSocket channel inside a shared container (`shared_elements>Name>...` reference) | 3.1 draft |
-| WebSocket push message | — |
+| WebSocket push message (conditional or fallback, with a body of steps) | 3.1 draft (`websocket_channel.push_messages`) |
+| WebSocket timestamp extractor (server send time of an inbound frame) | 3.1 draft (`websocket_channel.timestamp_extractor`) |
 | Media / RTMP, RTMPT requests | — |
 | Siebel request | — |
 | Recorded artifacts (screenshots, recorded response) | — |

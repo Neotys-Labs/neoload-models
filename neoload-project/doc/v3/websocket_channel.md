@@ -1,6 +1,6 @@
 # WebSocket Channel
 
-The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping` it is defined like a [request](request.md): `url`, `server`, `headers` and `extractors`.
+The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping` and `push_messages` it is defined like a [request](request.md): `url`, `server`, `headers` and `extractors`.
 
 The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no `method`, `body` or `parts` settings.
 
@@ -16,6 +16,8 @@ A channel has no identifier of its own: it is designated by its complete path, f
 | headers                             | The headers of the upgrade request. `Upgrade: websocket` is implied, see [The `Upgrade` header](#the-upgrade-header) | &#x2713;        | -        | 2026.3 |
 | extractors                          | Variable extractors applied to the channel response                                                   | -               | -        | 2026.3 |
 | messages_mapping                    | How to extract the correlation id from an inbound frame. Mandatory as soon as a synchronous `websocket_request` uses the channel | - | - | 2026.3 |
+| timestamp_extractor                 | Where the time the server sent a frame at is in the frame, to measure the response time of the push messages, see [timestamp_extractor](#timestamp_extractor) | - | - | 2026.3 |
+| push_messages                       | The handlers of the frames the channel receives, see [push_messages](#push_messages)                   | -               | -        | 2026.3 |
 
 NeoLoad stores a channel URL with the `http`/`https` scheme, derived from whether the server uses SSL, so `ws` and `wss` are not accepted: write `http://` for `ws://` and `https://` for `wss://`.
 
@@ -46,6 +48,97 @@ The value this extracts from each inbound frame is compared against the `mapping
 messages_mapping:
   jsonpath: $.correlationId
 ```
+
+#### timestamp_extractor
+
+Tells the channel where to find, in each inbound frame, the time the server sent it at. The value it extracts, a number of milliseconds since the epoch, is the start time of the push message that handles the frame, so that the response time of the push message is measured from the moment the server sent the frame.
+
+Without `timestamp_extractor`, or when nothing is extracted, the push message is measured from the moment the frame is received, which gives a time of zero. The clocks of the server and of the load generator have to be synchronized: a frame that appears to have been sent in the future also gets a time of zero.
+
+| Name     | Description                                                              | Required |
+|:-------- |:------------------------------------------------------------------------ |:--------:|
+| regexp   | Regular expression applied to the content of the frame                    | &#x2713; |
+| template | Builds the value from the groups the `regexp` captured: `$1$` is the first group, `$2$` the second, and so on, any other text is kept as it is. Defaults to `$1$`, the first group | - |
+
+The result has to be a number: a value that is not one is logged as an error, and the push message is then measured from the moment the frame is received.
+
+```yaml
+timestamp_extractor:
+  regexp: '"sentAt":(\d+)'
+```
+
+With a frame such as `{"sentAt":1760000000000,"text":"hi"}`, the first group is `1760000000000`, which is the default result (`$1$`).
+
+When the number is split in the frame, the template puts it back together. With the frame `ts=17600-00123`, the groups are `17600` and `00123`:
+
+```yaml
+timestamp_extractor:
+  regexp: 'ts=(\d+)-(\d+)'
+  template: '$1$$2$'      # 1760000123
+```
+
+`template: '$2$'` would keep only the second group, `00123`.
+
+#### push_messages
+
+A push message handles the frames the channel receives, for instance messages the server sends on its own, or replies that cannot be paired with a request. For each frame:
+
+1. a frame answering a waiting synchronous `websocket_request` goes to that request, and no push message runs;
+2. otherwise, **every** push message whose `conditions` are true runs, in the order of the list;
+3. only if none of them matched, every push message **without `conditions`** runs: **a push message without `conditions` is the fallback**.
+
+A running push message applies its `extractors` and `assertions` to the frame, then runs its `steps`. While the conditions are evaluated, the variable `${NL-MessageContent}` holds the content of the frame.
+
+| Name        | Description                                                                                                  | Accept variable | Required | Since |
+|:----------- |:------------------------------------------------------------------------------------------------------------ |:---------------:|:--------:|:-----:|
+| name        | The push message name. Defaults to `push_message`. Part of the path of a channel declared in `steps`        | -               | -        | 2026.3 |
+| description | The push message description                                                                                 | -               | -        | 2026.3 |
+| conditions  | The conditions on the frame, with the syntax of an [if](if.md). When present, at least one. Without `conditions` the push message is the fallback | &#x2713; | - | 2026.3 |
+| match       | `any` or `all`: how the `conditions` are combined. Defaults to `any`. Only allowed with `conditions`        | -               | -        | 2026.3 |
+| charset     | The charset of the frame content                                                                             | -               | -        | 2026.3 |
+| extractors  | Variable extractors applied to the frame, before `steps` run                                                 | -               | -        | 2026.3 |
+| assertions  | [Content assertions](assertion.md) on the frame                                                              | -               | -        | 2026.3 |
+| steps       | The steps to run. May be empty: the push message then still takes the frames it matches, and is counted in the results | - | - | 2026.3 |
+
+A forgotten or misspelt `conditions` key is not an error: the push message silently becomes a fallback.
+
+Push messages run on the thread that receives the frames of the channel, so further frames wait until they are done. Put long actions inside a [fork](fork.md).
+
+A request inside a push message, and a channel declared inside one, are referenced as described in [Referencing a channel](websocket_request.md#requests-and-channels-inside-a-push-message).
+
+```yaml
+push_messages:
+- name: on_ping
+  conditions:
+  - "'${NL-MessageContent}' contains 'ping'"
+  steps:
+  - websocket_request:
+      channel: actions>MyChannel
+      body: pong
+- name: on_order_update
+  conditions:
+  - "'${NL-MessageContent}' contains 'order'"
+  - "'${NL-MessageContent}' contains 'status'"
+  match: all
+  extractors:
+  - name: order_id
+    jsonpath: $.order.id
+  assertions:
+  - contains: status
+  steps:
+  - request:
+      url: https://host/orders/${order_id}
+- name: on_heartbeat
+  conditions:
+  - "'${NL-MessageContent}' == 'hb'"
+- name: anything_else
+  steps:
+  - websocket_request:
+      channel: actions>MyChannel
+      body: unknown message
+```
+
+`on_heartbeat` has no steps: it only keeps heartbeat frames away from the fallback. `anything_else` has no `conditions`: it is the fallback.
 
 #### Example
 

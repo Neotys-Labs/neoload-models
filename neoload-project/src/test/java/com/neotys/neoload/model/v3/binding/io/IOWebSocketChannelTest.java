@@ -12,6 +12,7 @@ import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import com.neotys.neoload.model.v3.project.userpath.WebSocketChannel;
 import com.neotys.neoload.model.v3.project.userpath.WebSocketMessagesMapping;
+import com.neotys.neoload.model.v3.project.userpath.WebSocketTimestampExtractor;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -44,6 +45,9 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 				.messagesMapping(WebSocketMessagesMapping.builder()
 						.jsonPath("$.correlationId")
 						.build())
+				.timestampExtractor(WebSocketTimestampExtractor.builder()
+						.regexp("ts=(\\d+)")
+						.build())
 				.build();
 	}
 
@@ -57,6 +61,17 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 						.decode(WebSocketMessagesMapping.Decode.CUSTOM)
 						.customDecoder("com.example.MyDecoder")
 						.encoding("UTF-8")
+						.build())
+				.build();
+	}
+
+	private static Step getWebSocketChannelTimestampExtractorTemplate() {
+		return WebSocketChannel.builder()
+				.name("timestamp_channel")
+				.url("http://host:80/socket")
+				.timestampExtractor(WebSocketTimestampExtractor.builder()
+						.regexp("ts=(\\d+)-(\\d+)")
+						.template("$2$")
 						.build())
 				.build();
 	}
@@ -83,6 +98,27 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		read("test-websocket_channel-messages-mapping-xpath", expectedProject);
+	}
+
+	@Test
+	public void readWebSocketChannelTimestampExtractorTemplate() throws IOException {
+		final Project expectedProject = buildProject(getWebSocketChannelTimestampExtractorTemplate());
+		assertNotNull(expectedProject);
+
+		read("test-websocket_channel-timestamp-extractor-template", expectedProject);
+	}
+
+	@Test
+	public void writeWebSocketChannelTimestampExtractorTemplate() throws IOException {
+		final Project expectedProject = buildProject(getWebSocketChannelTimestampExtractorTemplate());
+		assertNotNull(expectedProject);
+
+		write("test-websocket_channel-timestamp-extractor-template", expectedProject);
+	}
+
+	@Test
+	public void readWebSocketChannelTimestampExtractorWithoutRegexpRejected() throws IOException {
+		assertInvalid("test-websocket_channel-timestamp-extractor-no-regexp", "regexp");
 	}
 
 	@Test
