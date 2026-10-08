@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueWebSocketMessagesMappingPathCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.Optional;
@@ -50,13 +49,11 @@ public interface WebSocketMessagesMapping {
 
 	@JsonProperty(REGEXP)
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultRegexpFilter.class)
-	@RequiredCheck(groups={NeoLoad.class})
 	@Value.Default
 	default String getRegexp() { return DEFAULT_REGEXP_VALUE; }
 
 	@JsonProperty(TEMPLATE)
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultTemplateFilter.class)
-	@RequiredCheck(groups={NeoLoad.class})
 	@Value.Default
 	default String getTemplate() { return DEFAULT_TEMPLATE_VALUE; }
 
