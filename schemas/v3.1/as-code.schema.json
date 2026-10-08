@@ -1302,11 +1302,11 @@
 								},
                                 "websocket_channel": {
                                   "$ref": "#/definitions/user_paths/actions/websocket_channel",
-                                  "description":""
+                                  "description":"The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `extractors`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request."
                                 },
                               "websocket_request": {
                                 "$ref": "#/definitions/user_paths/actions/websocket_request",
-                                "description":""
+                                "description":"The WebSocket Request action sends a frame (text, binary or close) on a channel opened earlier by a websocket_channel of the same user path. It is asynchronous unless `synchronous` is true, in which case it waits for the response frame whose correlation id equals `mapping_id`."
                               }
 							},
 							"additionalProperties": false
@@ -1803,15 +1803,23 @@
                 },
 				"websocket_channel": {
 					"title": "Action: WebSocket Channel",
+					"description": "The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `extractors`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request.",
 					"type": "object",
 					"required": ["name", "url"],
 					"additionalProperties": false,
 					"properties": {
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
-						"url": { "$ref": "#/definitions/common/text" },
-						"server": { "$ref": "#/definitions/common/text" },
+						"url": {
+							"$ref": "#/definitions/common/text",
+							"description": "The channel URL, with the `http` or `https` scheme (`ws` and `wss` are not accepted), or a path relative to `server`. Variables are accepted."
+						},
+						"server": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of a server defined in `servers`, used when `url` is a relative path."
+						},
 						"headers": {
+							"description": "Headers of the upgrade request, as a list of single-entry maps (`Header-Name: value`). `Upgrade: websocket` is implied and does not need to be written.",
 							"type": "array",
 							"items": {
 								"type": "object",
@@ -1825,83 +1833,185 @@
 							}
 						},
 						"extractors": {
+							"description": "Variable extractors applied to the response of the upgrade request.",
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
 						},
-						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" }
+						"messages_mapping": {
+							"$ref": "#/definitions/user_paths/websocket_messages_mapping",
+							"description": "How to extract the correlation id from each inbound frame. It is compared with the `mapping_id` of a synchronous websocket_request. Mandatory as soon as a synchronous websocket_request uses this channel."
+						},
+						"timestamp_extractor": {
+							"$ref": "#/definitions/user_paths/websocket_timestamp_extractor",
+							"description": "Where the time the server sent a frame is found in the frame, as a number of milliseconds since the epoch. It is the start time of the push message that handles the frame; without it the push message is measured from the reception of the frame, which gives a time of zero."
+						},
+						"push_messages": {
+							"description": "The handlers of the frames the channel receives. A frame that answers a waiting synchronous websocket_request goes to that request and no push message runs. Otherwise every push message whose `conditions` are true runs, in order; only if none matched, every push message without `conditions` (the fallbacks) runs.",
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/websocket_push_message" }
+						}
 					}
+				},
+				"websocket_request": {
+					"title": "Action: WebSocket Request",
+					"description": "The WebSocket Request action sends a frame (text, binary or close) on a channel opened earlier by a websocket_channel of the same user path. It is asynchronous unless `synchronous` is true, in which case it waits for the response frame whose correlation id equals `mapping_id`.",
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"channel": { "$ref": "#/definitions/user_paths/websocket_channel_reference" },
+						"message_type": {
+							"description": "The kind of frame: `text` (default), `binary` or `close`. A `close` ends the connection: it cannot be synchronous, and may carry a `status_code` and a reason in `body`.",
+							"type": "string",
+							"enum": ["text", "binary", "close"],
+							"default": "text"
+						},
+						"synchronous": {
+							"description": "When true, the request waits for the inbound frame whose correlation id equals `mapping_id`; the channel must then declare `messages_mapping`. Defaults to false. WARNING: inside a push message, a synchronous request must be inside a `fork`, otherwise it blocks the thread that receives the frames and fails after `runtime.so.timeout`.",
+							"type": "boolean",
+							"default": false
+						},
+						"mapping_id": {
+							"$ref": "#/definitions/common/text",
+							"description": "The correlation id of the awaited response. Required when `synchronous` is true, and only allowed then. Variables are accepted."
+						},
+						"status_code": {
+							"description": "The close status code, only for a `close`. Defaults to 1000 (normal closure).",
+							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"default": "1000"
+						},
+						"body": {
+							"$ref": "#/definitions/common/textblob",
+							"description": "The frame content as text, or the reason of a `close`. Mutually exclusive with `bodybinary`."
+						},
+						"bodybinary": {
+							"$ref": "#/definitions/common/base64blob",
+							"description": "The frame content as Base64, for a binary frame. Mutually exclusive with `body`."
+						},
+						"extractors": {
+							"description": "Variable extractors applied to the response, only for a synchronous request.",
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"content_assertions": {
+							"$ref": "#/definitions/common/content_assertions",
+							"description": "Content assertions applied to the response, only for a synchronous request."
+						}
+					},
+					"not": { "required": ["body", "bodybinary"] },
+					"allOf": [
+						{
+							"$comment": "Only a synchronous request has a response: it needs mapping_id, and only it may carry mapping_id, extractors and content_assertions",
+							"if": { "required": ["synchronous"], "properties": { "synchronous": { "const": true } } },
+							"then": { "required": ["mapping_id"] },
+							"else": {
+								"properties": {
+									"mapping_id": false,
+									"extractors": { "maxItems": 0 },
+									"content_assertions": { "maxItems": 0 }
+								}
+							}
+						},
+						{
+							"$comment": "A close cannot be synchronous, and only a close may set a status_code other than the default",
+							"if": { "required": ["message_type"], "properties": { "message_type": { "const": "close" } } },
+							"then": { "properties": { "synchronous": { "const": false } } },
+							"else": { "properties": { "status_code": { "enum": ["1000", 1000] } } }
+						}
+					]
 				}
 			},
-			"websocket_messages_mapping": {
-				"title": "WebSocket Messages Mapping",
+			"websocket_channel_reference": {
+				"title": "WebSocket Channel Reference",
+				"description": "The complete path of the channel to use: segments joined with '>', with no space around it. It starts with where the channel is declared: init, actions or end for a channel declared in a user path, or shared_elements>SharedElementName for one declared inside a shared element. Then comes the name of each step on the way down to the channel (for instance a transaction, a loop, a while or a fork), and last the name of the channel itself. Fixed segments: the branches of an if are then and else; the branches of a try_catch are try and catch; the default branch of a switch is default, while a switch case is designated by its name. A channel declared inside a push message is designated by the name of the outer channel, then the name of the push message (push_messages and steps are keys, not segments). A shared_element step is not part of a path. Two sibling steps on the path must not share a name. A request can only use a channel of its own user path.",
+				"examples": [
+					"actions>chat_socket",
+					"actions>Login>chat_socket",
+					"actions>has_notifications>then>notify_socket",
+					"actions>router>second_case>routed_socket",
+					"actions>chat_socket>on_redirect>room_socket",
+					"shared_elements>OpenChat>chat_socket"
+				],
+				"type": "string",
+				"pattern": "^((init|actions|end)(>[^>]+)+|shared_elements(>[^>]+){2,})$"
+			},
+			"websocket_push_message": {
+				"title": "WebSocket Push Message",
+				"description": "A handler of the frames received by its channel. With conditions it runs when they are true; without conditions it is a fallback, which runs only when no push message with conditions matched",
 				"type": "object",
 				"additionalProperties": false,
 				"properties": {
-					"xpath": { "$ref": "#/definitions/common/text" },
-					"jsonpath": { "$ref": "#/definitions/common/text" },
-					"regexp": { "$ref": "#/definitions/common/text" },
-					"template": { "$ref": "#/definitions/common/text" }
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"conditions": {
+						"description": "The conditions on the frame, written like those of an `if`; at least one when present. The variable `${NL-MessageContent}` holds the content of the frame. Without `conditions` the push message is a fallback.",
+						"allOf": [{ "$ref": "#/definitions/common/conditions" }],
+						"minItems": 1
+					},
+					"match": {
+						"description": "How the `conditions` are combined: `any` (default) or `all`. Only allowed with `conditions`.",
+						"type": "string",
+						"enum": ["any", "all"],
+						"default": "any"
+					},
+					"extractors": {
+						"description": "Variable extractors applied to the frame, before `steps` run.",
+						"type": "array",
+						"items": { "$ref": "#/definitions/user_paths/extractor" }
+					},
+					"content_assertions": {
+						"$ref": "#/definitions/common/content_assertions",
+						"description": "Content assertions applied to the frame."
+					},
+					"steps": {
+						"$ref": "#/definitions/user_paths/steps",
+						"description": "The steps to run for a matching frame; may be empty. These steps run on the thread that receives the frames of the channel, so a long action should be inside a `fork`. A synchronous websocket_request must always be inside a `fork`: otherwise it waits for a frame that this thread cannot deliver, and fails after `runtime.so.timeout`."
+					}
+				},
+				"dependentRequired": { "match": ["conditions"] }
+			},
+			"websocket_messages_mapping": {
+				"title": "WebSocket Messages Mapping",
+				"description": "Tells a channel how to extract the correlation id from an inbound frame. The extracted value is compared with the `mapping_id` of a synchronous websocket_request to pair a response with the request waiting for it. `xpath` and `jsonpath` are mutually exclusive.",
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"xpath": {
+						"$ref": "#/definitions/common/text",
+						"description": "XPath expression applied to the frame. Mutually exclusive with `jsonpath`."
+					},
+					"jsonpath": {
+						"$ref": "#/definitions/common/text",
+						"description": "JSONPath expression applied to the frame. Mutually exclusive with `xpath`."
+					},
+					"regexp": {
+						"$ref": "#/definitions/common/text",
+						"description": "Regular expression applied to the frame, or to the `xpath` / `jsonpath` result. Defaults to `(.*)`."
+					},
+					"template": {
+						"$ref": "#/definitions/common/text",
+						"description": "Template applied to the result of `regexp`: `$1$` is the first captured group, `$2$` the second. Defaults to `$1$`."
+					}
 				}
 			},
-          "websocket_request": {
-            "title": "Action: WebSocket Request",
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "name": { "$ref": "#/definitions/common/name" },
-              "description": { "$ref": "#/definitions/common/text" },
-              "channel": { "$ref": "#/definitions/user_paths/websocket_channel_reference" },
-              "message_type": {
-                "type": "string",
-                "enum": ["text", "binary", "close"],
-                "default": "text"
-              },
-              "synchronous": {
-                "type": "boolean",
-                "default": false
-              },
-              "mapping_id": { "$ref": "#/definitions/common/text" },
-              "status_code": {
-                "anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
-                "default": "1000"
-              },
-              "body": { "$ref": "#/definitions/common/textblob" },
-              "bodybinary": { "$ref": "#/definitions/common/base64blob" },
-              "extractors": {
-                "type": "array",
-                "items": { "$ref": "#/definitions/user_paths/extractor" }
-              },
-              "assertions": { "$ref": "#/definitions/common/assertions" }
-            },
-            "not": { "required": ["body", "bodybinary"] },
-            "allOf": [
-              {
-                "$comment": "Only a synchronous request has a response: it needs mapping_id, and only it may carry mapping_id, extractors and assertions",
-                "if": { "required": ["synchronous"], "properties": { "synchronous": { "const": true } } },
-                "then": { "required": ["mapping_id"] },
-                "else": {
-                  "properties": {
-                    "mapping_id": false,
-                    "extractors": { "maxItems": 0 },
-                    "assertions": { "maxItems": 0 }
-                  }
-                }
-              },
-              {
-                "$comment": "A close cannot be synchronous, and only a close may set a status_code other than the default",
-                "if": { "required": ["message_type"], "properties": { "message_type": { "const": "close" } } },
-                "then": { "properties": { "synchronous": { "const": false } } },
-                "else": { "properties": { "status_code": { "enum": ["1000", 1000] } } }
-              }
-            ]
-          }
-        },
-      "websocket_channel_reference": {
-        "title": "WebSocket Channel Reference",
-        "description": "The complete path of the channel, joined with '>': init, actions or end for a channel declared in a user path, or shared_elements>SharedElementName for one declared inside a shared element, then each step name down to the channel's name",
-        "type": "string",
-        "pattern": "^((init|actions|end)(>[^>]+)+|shared_elements(>[^>]+){2,})$"
-      },
+			"websocket_timestamp_extractor": {
+				"title": "WebSocket Timestamp Extractor",
+				"description": "Finds, in each inbound frame, the time the server sent it, as a number of milliseconds since the epoch. It is the start time of the push message that handles the frame. The clocks of the server and of the load generator must be synchronized: a value that is not a number, or that is in the future, gives a time of zero.",
+				"type": "object",
+				"required": ["regexp"],
+				"additionalProperties": false,
+				"properties": {
+					"regexp": {
+						"$ref": "#/definitions/common/text",
+						"description": "Regular expression applied to the content of the frame."
+					},
+					"template": {
+						"$ref": "#/definitions/common/text",
+						"description": "Builds the value from the groups `regexp` captured: `$1$` is the first group, `$2$` the second, any other text is kept as it is. Defaults to `$1$`."
+					}
+				}
+			},
 			"part": {
 				"title": "Multipart Part",
 				"type": "object",

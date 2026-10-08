@@ -92,9 +92,8 @@ A running push message applies its `extractors` and `content_assertions` to the 
 | description | The push message description                                                                                 | -               | -        | 2026.3 |
 | conditions  | The conditions on the frame, with the syntax of an [if](if.md). When present, at least one. Without `conditions` the push message is the fallback | &#x2713; | - | 2026.3 |
 | match       | `any` or `all`: how the `conditions` are combined. Defaults to `any`. Only allowed with `conditions`        | -               | -        | 2026.3 |
-| charset     | The charset of the frame content                                                                             | -               | -        | 2026.3 |
 | extractors  | Variable extractors applied to the frame, before `steps` run                                                 | -               | -        | 2026.3 |
-| content_assertions | [Content assertions](content_assertion.md) on the frame. `assertions` is a deprecated read-only alias | -               | -        | 2026.3 |
+| content_assertions | [Content assertions](content_assertion.md) on the frame | -               | -        | 2026.3 |
 | steps       | The steps to run. May be empty: the push message then still takes the frames it matches, and is counted in the results | - | - | 2026.3 |
 
 A forgotten or misspelt `conditions` key is not an error: the push message silently becomes a fallback.

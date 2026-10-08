@@ -27,7 +27,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
  *
  * <p>Only a synchronous request waits for a response: it is paired with the inbound frame whose
  * correlation id, extracted by the channel's messages mapping, equals {@link #getMappingId()}.
- * This is why {@link #getMappingId()}, {@link #getExtractors()} and {@link #getAssertions()} only
+ * This is why {@link #getMappingId()}, {@link #getExtractors()} and {@link #getContentAssertions()} only
  * apply to a synchronous request, and {@link #getStatusCode()} only to a {@link MessageType#CLOSE}
  * one.</p>
  *
@@ -35,7 +35,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * NeoLoad creates it when it records a non-text frame.</p>
  */
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketRequest.CHANNEL, WebSocketRequest.MESSAGE_TYPE, WebSocketRequest.SYNCHRONOUS, WebSocketRequest.MAPPING_ID, WebSocketRequest.STATUS_CODE, WebSocketRequest.BODY, WebSocketRequest.BODYBINARY, WebSocketRequest.EXTRACTORS, AssertionsElement.ASSERTIONS})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketRequest.CHANNEL, WebSocketRequest.MESSAGE_TYPE, WebSocketRequest.SYNCHRONOUS, WebSocketRequest.MAPPING_ID, WebSocketRequest.STATUS_CODE, WebSocketRequest.BODY, WebSocketRequest.BODYBINARY, WebSocketRequest.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS})
 @JsonSerialize(as = ImmutableWebSocketRequest.class)
 @JsonDeserialize(as = ImmutableWebSocketRequest.class)
 @Value.Immutable
