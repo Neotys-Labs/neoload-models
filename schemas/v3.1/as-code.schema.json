@@ -39,7 +39,7 @@
 			"minItems": 1,
 			"additionalProperties": false,
 			"items": { "$ref": "#/definitions/common/text" },
-			"description": "Other as-code files loaded before this one. Each entry is a path relative to the project folder and declares the same top-level elements as a project file."
+			"description": "Other as-code files loaded before this one. Each entry is a path relative to the project folder and must be inside the project folder. It declares the same top-level elements as a project file."
 		},
 		"variables": {
 			"title": "Variables",
@@ -358,7 +358,7 @@
 							},
 							"path": {
 								"$ref": "#/definitions/common/text",
-								"description": "The relative (compared to the NeoLoad project folder) or absolute path of the source file."
+								"description": "The path of the source file, relative to the project folder. The file must be inside the project folder."
 							},
 							"scope": { "$ref": "#/definitions/common/var_scope" },
 							"order": { "$ref": "#/definitions/common/var_order" },
@@ -634,7 +634,7 @@
 								"properties": {
 									"path": {
 										"$ref": "#/definitions/common/text",
-										"description": "The relative (compared to the NeoLoad project folder) or absolute path of the swap file."
+										"description": "The path of the swap file, relative to the project folder. The file must be inside the project folder."
 									},
 									"delimiter": {
 										"$ref": "#/definitions/common/text",
@@ -1343,7 +1343,7 @@
 						},
 						"binary_source_file": {
 							"$ref": "#/definitions/common/text",
-							"description": "Path of a file used as the binary request body, relative to the project folder"
+							"description": "Path of a file used as the binary request body, relative to the project folder. The file must be inside the project folder."
 						},
 						"parts": {
 							"type": "array",
@@ -1529,7 +1529,7 @@
 						},
 						"libraryPath": {
 							"$ref": "#/definitions/common/text",
-							"description": "The path to the JAR file containing the Custom Advanced Action"
+							"description": "The path to the JAR file containing the Custom Advanced Action, relative to the project folder. The file must be inside the project folder."
 						},
 						"duration_assertion": {
 							"$ref": "#/definitions/user_paths/duration_assertion",
@@ -1655,7 +1655,7 @@
 						},
 						"file": {
 							"$ref": "#/definitions/common/text",
-							"description": "The path of the log file"
+							"description": "The path of the log file, relative to the project folder. The file must be inside the project folder."
 						}
 					},
 					"additionalProperties": false,
@@ -1796,7 +1796,7 @@
 					},
 					"source_filename": {
 						"$ref": "#/definitions/common/text",
-						"description": "The path of the file used as part content, relative to the project folder"
+						"description": "The path of the file used as part content, relative to the project folder. The file must be inside the project folder."
 					}
 				},
 				"additionalProperties": false
