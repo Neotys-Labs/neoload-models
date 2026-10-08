@@ -16,7 +16,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 /**
  * Tells a {@link WebSocketChannel} how to extract the correlation id from an inbound frame. The
  * value it extracts is compared against the {@code mapping_id} of a synchronous
- * {@code websocket_request} to pair a response with the request waiting for it.
+ * {@link WebSocketRequest} to pair a response with the request waiting for it.
  *
  * <p>A channel carries at most one mapping, and it becomes mandatory as soon as one synchronous
  * request uses the channel.</p>
