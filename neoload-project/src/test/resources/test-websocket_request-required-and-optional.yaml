@@ -18,5 +18,5 @@ user_paths:
         extractors:
         - name: session_id
           regexp: "session=([0-9]+)"
-        assertions:
+        content_assertions:
         - contains: welcome

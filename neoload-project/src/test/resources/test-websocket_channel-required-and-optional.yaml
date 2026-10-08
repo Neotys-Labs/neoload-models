@@ -15,3 +15,5 @@ user_paths:
           regexp: "session=([0-9]+)"
         messages_mapping:
           jsonpath: $.correlationId
+        timestamp_extractor:
+          regexp: ts=(\d+)

@@ -48,8 +48,8 @@ public final class WebSocketRequestValidator extends AbstractConstraintValidator
 		if (!request.getExtractors().isEmpty()) {
 			problems.add("'extractors' are only applied on a synchronous request: an asynchronous one has no response.");
 		}
-		if (!request.getAssertions().isEmpty()) {
-			problems.add("'assertions' are only checked on a synchronous request: an asynchronous one has no response.");
+		if (!request.getContentAssertions().isEmpty()) {
+			problems.add("'content_assertions' are only checked on a synchronous request: an asynchronous one has no response.");
 		}
 	}
 

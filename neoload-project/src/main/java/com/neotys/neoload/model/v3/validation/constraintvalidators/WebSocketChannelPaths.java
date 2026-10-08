@@ -14,6 +14,7 @@ import com.neotys.neoload.model.v3.project.userpath.TryCatch;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.WebPage;
 import com.neotys.neoload.model.v3.project.userpath.WebSocketChannel;
+import com.neotys.neoload.model.v3.project.userpath.WebSocketPushMessage;
 import com.neotys.neoload.model.v3.project.userpath.WebSocketRequest;
 import com.neotys.neoload.model.v3.project.userpath.While;
 import java.util.ArrayList;
@@ -32,7 +33,8 @@ import javax.validation.ConstraintValidatorContext;
  * {@code shared_elements>Name} for one declared inside the shared element {@code Name}. The
  * children of an {@code if}, a {@code try_catch} and the default branch of a {@code switch} are
  * designated by their YAML key ({@code then}, {@code else}, {@code try}, {@code catch},
- * {@code default}), and a case by its name. A {@code shared_element} step is not a segment: a channel
+ * {@code default}), a case by its name, and a push message by its name after its channel's
+ * name. A {@code shared_element} step is not a segment: a channel
  * inside a shared element is always designated from the shared element's own root.
  */
 final class WebSocketChannelPaths {
@@ -141,6 +143,9 @@ final class WebSocketChannelPaths {
 		if (step instanceof WebSocketChannel) {
 			final WebSocketChannel channel = (WebSocketChannel) step;
 			channels.computeIfAbsent(path, key -> new ArrayList<>()).add(channel);
+			for (final WebSocketPushMessage pushMessage : channel.getPushMessages()) {
+				walkSteps(pushMessage.getSteps(), child(path, pushMessage.getName()));
+			}
 			return;
 		}
 		walkSteps(childSteps(step), path);

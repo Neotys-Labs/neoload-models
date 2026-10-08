@@ -56,7 +56,7 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 								.name("session_id")
 								.regexp("session=([0-9]+)")
 								.build())
-						.addAssertions(ContentAssertion.builder()
+						.addContentAssertions(ContentAssertion.builder()
 								.contains("welcome")
 								.build())
 						.build());
@@ -180,7 +180,7 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 				"websocket_request 'sync_no_mapping_id': a synchronous request requires 'mapping_id'.",
 				"websocket_request 'async_mapping_id': 'mapping_id' is only used by a synchronous request.",
 				"websocket_request 'async_extractors': 'extractors' are only applied on a synchronous request",
-				"websocket_request 'async_assertions': 'assertions' are only checked on a synchronous request",
+				"websocket_request 'async_assertions': 'content_assertions' are only checked on a synchronous request",
 				"websocket_request 'text_status_code': 'status_code' is only used by a 'close' request.",
 				"websocket_request 'both_bodies': 'body' and 'bodybinary' cannot be used simultaneously.");
 	}
