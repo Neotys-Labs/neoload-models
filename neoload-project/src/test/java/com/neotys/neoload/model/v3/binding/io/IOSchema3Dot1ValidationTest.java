@@ -109,7 +109,8 @@ public class IOSchema3Dot1ValidationTest {
             "test-soap-request-redirect-keys-conflict.yaml",
             "test-soap-request-redirect-keys-conflict.json",
             "test-empty-collections.yaml",
-            "test-empty-collections.json"
+            "test-empty-collections.json",
+            "test-websocket_channel-no-url.yaml"
     );
 
     @BeforeClass
