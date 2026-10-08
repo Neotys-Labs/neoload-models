@@ -101,6 +101,35 @@ A forgotten or misspelt `conditions` key is not an error: the push message silen
 
 Push messages run on the thread that receives the frames of the channel, so further frames wait until they are done. Put long actions inside a [fork](fork.md).
 
+> **Warning:** A **synchronous** `websocket_request` must never be directly in the `steps` of a push message: it waits for a frame that this same thread has to deliver, so it blocks until `runtime.so.timeout` expires (300s), then fails. Put it inside a [fork](fork.md).
+>
+> ```yaml
+> push_messages:
+> - name: on_hello
+>   conditions:
+>   - "'${NL-MessageContent}' contains 'hello'"
+>   steps:
+>   # WRONG: blocks the thread that receives the frames, the response never arrives
+>   - websocket_request:
+>       channel: actions>MyChannel
+>       synchronous: true
+>       mapping_id: id-1
+>       body: ask
+>
+> - name: on_hello_ok
+>   conditions:
+>   - "'${NL-MessageContent}' contains 'hello'"
+>   steps:
+>   # RIGHT: the fork runs on its own thread, the frames keep being delivered
+>   - fork:
+>       steps:
+>       - websocket_request:
+>           channel: actions>MyChannel
+>           synchronous: true
+>           mapping_id: id-1
+>           body: ask
+> ```
+
 A request inside a push message, and a channel declared inside one, are referenced as described in [Referencing a channel](websocket_request.md#requests-and-channels-inside-a-push-message).
 
 ```yaml
