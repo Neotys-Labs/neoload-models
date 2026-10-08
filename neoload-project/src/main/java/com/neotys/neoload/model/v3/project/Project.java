@@ -22,6 +22,7 @@ import com.neotys.neoload.model.v3.validation.constraints.SharedElementDefaultNa
 import com.neotys.neoload.model.v3.validation.constraints.SharedElementStepTypeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
 import com.neotys.neoload.model.v3.validation.constraints.ValidSchemaVersion;
+import com.neotys.neoload.model.v3.validation.constraints.WebSocketSharedChannelReferenceCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 @JsonDeserialize(as = ImmutableProject.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@WebSocketSharedChannelReferenceCheck(groups = {NeoLoad.class})
 public interface Project {
 	String SCHEMA = "$schema";
 	String SCHEMA_VERSION = "schemaVersion";
