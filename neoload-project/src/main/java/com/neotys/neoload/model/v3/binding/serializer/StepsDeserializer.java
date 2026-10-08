@@ -43,6 +43,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		builder.put(STOP_VU, StopVU.class);
 		builder.put(WEB_PAGE, WebPage.class);
 		builder.put(WAIT_UNTIL, WaitUntil.class);
+		builder.put(WEBSOCKET_CHANNEL, WebSocketChannel.class);
 		STEPS = builder.build();
 	}
 

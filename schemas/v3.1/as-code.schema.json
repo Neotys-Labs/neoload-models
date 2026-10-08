@@ -200,7 +200,7 @@
 			"name": {
 				"title": "Name",
 				"type": "string",
-				"pattern": "^[^£?$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\]*$",
+				"pattern": "^[^£?$\"\\x5b\\x5d<>|*¤§µ#`@^²°¨\\x5c]*$",
 				"maxLength": 100
 			},
 			"project_name": {
@@ -953,7 +953,8 @@
                                 "rendezvous": { "$ref": "#/definitions/user_paths/actions/rendezvous" },
 								"stop_vu": {"$ref": "#/definitions/user_paths/actions/stop_vu"},
 								"web_page": {"$ref": "#/definitions/user_paths/actions/web_page"},
-								"shared_element": { "$ref": "#/definitions/common/name" }
+								"shared_element": { "$ref": "#/definitions/common/name" },
+								"websocket_channel": {"$ref": "#/definitions/user_paths/actions/websocket_channel"}
 							},
 							"additionalProperties": false
 						}
@@ -1366,6 +1367,53 @@
 					"title": "Web Page Think Time Value",
 					"type": "string",
 					"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
+				},
+				"websocket_channel": {
+					"title": "Action: WebSocket Channel",
+					"type": "object",
+					"required": ["name", "url"],
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"url": { "$ref": "#/definitions/common/text" },
+						"server": { "$ref": "#/definitions/common/text" },
+						"headers": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"/": {}
+								},
+								"patternProperties": {
+									".*": { "type": "string" }
+								},
+								"additionalProperties": false
+							}
+						},
+						"extractors": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"messages_mapping": { "$ref": "#/definitions/user_paths/websocket_messages_mapping" }
+					}
+				}
+			},
+			"websocket_messages_mapping": {
+				"title": "WebSocket Messages Mapping",
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"xpath": { "$ref": "#/definitions/common/text" },
+					"jsonpath": { "$ref": "#/definitions/common/text" },
+					"regexp": { "$ref": "#/definitions/common/text" },
+					"template": { "$ref": "#/definitions/common/text" },
+					"decode": {
+						"type": "string",
+						"enum": ["html", "url", "custom"]
+					},
+					"custom_decoder": { "$ref": "#/definitions/common/text" },
+					"encoding": { "$ref": "#/definitions/common/text" }
 				}
 			},
 			"part": {
