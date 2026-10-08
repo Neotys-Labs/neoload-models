@@ -177,7 +177,8 @@ and protocol action catalogues.
 | Raw request | — |
 | SOAP request | 3.1 (`soap_request`) |
 | Silverlight SOAP request | — |
-| WebSocket channel, WebSocket request, push message | — |
+| WebSocket channel | 3.1 draft (`websocket_channel`) |
+| WebSocket request, push message | — |
 | Media / RTMP, RTMPT requests | — |
 | Siebel request | — |
 | Recorded artifacts (screenshots, recorded response) | — |
