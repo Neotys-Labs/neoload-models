@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.ImmutableContainer;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
@@ -44,14 +45,20 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 	protected static Container asContainer(final ObjectCodec codec, final JsonNode node, final String fieldName) throws JsonProcessingException {
 		Container container = asObject(codec, node, fieldName, Container.class);
 		if (container != null) {
-			container = Container.builder()
-					.from(container)
-					.name(fieldName)
-					.build();
+			container = renamed(container, fieldName);
 		}
 		return container;
 	}
 	
+	/**
+	 * Renames the container while keeping its assertion lists by reference. Rebuilding it through
+	 * {@code builder.from()} would mark {@code content_assertions} as explicitly set, making a
+	 * legacy-only container indistinguishable from one with both fields filled.
+	 */
+	private static Container renamed(final Container container, final String name) {
+		return ImmutableContainer.copyOf(container).withName(name);
+	}
+
 	private static List<ContentAssertion> asContentAssertionList(final ObjectCodec codec, final JsonNode assertionsNode) throws JsonProcessingException {
 		final ImmutableList.Builder<ContentAssertion> assertions = new ImmutableList.Builder<>();
 		for (final JsonNode assertionNode : assertionsNode) {

@@ -1,0 +1,24 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  assertions:
+  - name: user_path_legacy
+    contains: up
+  actions:
+    assertions:
+    - name: actions_legacy
+      contains: legacy
+    steps:
+    - request:
+        url: http://www.neotys.com/select?name:neoload
+        assertions:
+        - name: request_legacy
+          contains: legacy
+    - transaction:
+        name: MyContainer
+        assertions:
+        - name: container_legacy
+          contains: legacy
+        steps:
+        - request:
+            url: http://www.neotys.com/other
