@@ -227,6 +227,10 @@
 				"type": "string",
 				"pattern": "^(\\d+|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
 			},
+			"duration_value": {
+				"title": "Duration value",
+				"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
+			},
 			"duration": {
 				"title": "Duration",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
@@ -1251,6 +1255,10 @@
 									"$ref": "#/definitions/user_paths/actions/fork",
 									"description": "The Fork action is used to play actions in a different execution thread to the current one. This execution thread is parallel to the main chain used by the Virtual User. When the current iteration of the Virtual User stops, all the threads created using Fork actions in the Actions Container are immediately halted."
 								},
+								"wait_until": {
+									"$ref": "#/definitions/user_paths/actions/wait_until",
+									"description": "The Wait Until action pauses the current execution thread until certain conditions have been verified. You may also set a maximum timeout delay: once this delay is timed out, the thread is restarted and the following action is executed, even if the conditions have not been verified."
+								},
 								"variable_modifier": {
 									"$ref": "#/definitions/user_paths/actions/variable_modifier",
 									"description": "A Variable Modifier action makes it possible to change the value of a variable separately from its value changing policy. For example, the value of a variable may be modified in a loop for a User Path."
@@ -1392,12 +1400,64 @@
 				},
 				"delay": {
 					"title": "Action: Delay",
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+					"oneOf": [
+						{ "$ref": "#/definitions/common/duration_value" },
+						{
+							"type": "object",
+							"required": ["value"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/name" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"value": { "$ref": "#/definitions/common/duration_value" }
+							}
+						},
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/name" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"min": {
+									"$ref": "#/definitions/common/duration_value",
+									"description": "The minimum delay duration. The default value is `0`."
+								},
+								"max": { "$ref": "#/definitions/common/duration_value" }
+							}
+						}
+					],
 					"description": "The Delay Action pauses the Virtual User for a specified duration. This duration always applies and is not impacted by thinktime overriding."
 				},
 				"think_time": {
 					"title": "Action: Think Time",
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+					"oneOf": [
+						{ "$ref": "#/definitions/common/duration_value" },
+						{
+							"type": "object",
+							"required": ["value"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/name" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"value": { "$ref": "#/definitions/common/duration_value" }
+							}
+						},
+						{
+							"type": "object",
+							"required": ["max"],
+							"additionalProperties": false,
+							"properties": {
+								"name": { "$ref": "#/definitions/common/name" },
+								"description": { "$ref": "#/definitions/common/text" },
+								"min": {
+									"$ref": "#/definitions/common/duration_value",
+									"description": "The minimum think time duration. The default value is `0`."
+								},
+								"max": { "$ref": "#/definitions/common/duration_value" }
+							}
+						}
+					],
 					"description": "Think time is the time the user normally takes to make a decision to do the next task."
 				},
 				"pacing": {
@@ -1610,9 +1670,13 @@
 							"enum": ["any", "all"],
 							"default": "any"
 						},
-						"timeout": { "$ref": "#/definitions/common/text" }
+						"timeout": {
+							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"description": "The maximum time to wait for the conditions to be verified. The default value is `1m` (60000 ms)."
+						}
 					},
-					"additionalProperties": false
+					"additionalProperties": false,
+					"description": "The Wait Until action pauses the current execution thread until certain conditions have been verified. You may also set a maximum timeout delay: once this delay is timed out, the thread is restarted and the following action is executed, even if the conditions have not been verified."
 				},
 				"variable_modifier": {
 					"title": "Action: Variable Modifier",

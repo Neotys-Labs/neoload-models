@@ -12,10 +12,10 @@ public class TryCatchTest {
 		final TryCatch tryCatch = TryCatch.builder()
 				.name("my_try_catch")
 				.getTry(Container.builder()
-						.addSteps(Delay.builder().value("500").build(), Delay.builder().value("2500").build())
+						.addSteps(DelayConstant.builder().value("500").build(), DelayConstant.builder().value("2500").build())
 						.build())
 				.getCatch(Container.builder()
-						.addSteps(Delay.builder().value("1000").build())
+						.addSteps(DelayConstant.builder().value("1000").build())
 						.build())
 				.build();
 		// 1 tryCatch + 1 try container + 2 delays + 1 catch container + 1 delay = 6
@@ -27,7 +27,7 @@ public class TryCatchTest {
 		final TryCatch tryCatch = TryCatch.builder()
 				.name("my_try_catch")
 				.getTry(Container.builder()
-						.addSteps(Delay.builder().value("500").build())
+						.addSteps(DelayConstant.builder().value("500").build())
 						.build())
 				.build();
 		// 1 tryCatch + 1 try container + 1 delay = 3
@@ -38,7 +38,7 @@ public class TryCatchTest {
 	public void testDefaultValues() {
 		final TryCatch tryCatch = TryCatch.builder()
 				.getTry(Container.builder()
-						.addSteps(Delay.builder().value("500").build())
+						.addSteps(DelayConstant.builder().value("500").build())
 						.build())
 				.build();
 		assertEquals("try_catch", tryCatch.getName());

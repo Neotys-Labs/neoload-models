@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath.UserSession;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
@@ -24,18 +24,16 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.name("actions")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.build())
 						.build())
 				.build();
 
-		final Project project = Project.builder()
+		return Project.builder()
 				.name("MyProject")
 				.addUserPaths(userPath)
 				.build();
-
-		return project;
 	}
 
 	private static Project getUserPathsRequiredAndOptional() {
@@ -49,7 +47,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.slaProfile("MyInitSlaProfile1")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.build())
 						.addAssertions(ContentAssertion.builder()
@@ -62,7 +60,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.slaProfile("MyActionsSlaProfile1")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.addAssertions(ContentAssertion.builder()
 										.contains("MyUserPath1_actions_MyTransaction")
@@ -78,7 +76,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.slaProfile("MyEndSlaProfile1")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.build())
 						.addAssertions(ContentAssertion.builder()
@@ -100,7 +98,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.slaProfile("MyInitSlaProfile2")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.build())
 						.build())
@@ -110,7 +108,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.slaProfile("MyActionsSlaProfile2")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.build())
 						.build())
@@ -120,7 +118,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.slaProfile("MyEndSlaProfile2")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.build())
 						.build())
@@ -136,7 +134,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.slaProfile("MyInitSlaProfile3")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.build())
 						.build())
@@ -146,7 +144,7 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.slaProfile("MyActionsSlaProfile3")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.build())
 						.build())
@@ -156,20 +154,18 @@ public class IOUserPathsTest extends AbstractIOElementsTest {
 						.slaProfile("MyEndSlaProfile3")
 						.addSteps(Container.builder()
 								.name("MyTransaction")
-								.addSteps(Delay.builder().value("1000")
+								.addSteps(DelayConstant.builder().value("1000")
 										.build())
 								.build())
 						.build())
 				.build();
 
-		final Project project = Project.builder()
+		return Project.builder()
 				.name("MyProject")
 				.addUserPaths(userPath1)
 				.addUserPaths(userPath2)
 				.addUserPaths(userPath3)
 				.build();
-
-		return project;
 	}
 
 	@Test

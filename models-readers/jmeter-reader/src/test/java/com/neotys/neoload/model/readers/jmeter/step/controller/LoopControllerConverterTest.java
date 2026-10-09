@@ -3,7 +3,7 @@ package com.neotys.neoload.model.readers.jmeter.step.controller;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.Loop;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.control.LoopController;
@@ -75,7 +75,7 @@ public class LoopControllerConverterTest {
                 .description(loopController.getComment())
                 .name(loopController.getName())
                 .count(loopController.getLoopString())
-                .addSteps(Delay.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build())
+                .addSteps(DelayConstant.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build())
                 .build();
         List<Step> expected = new ArrayList<>();
         expected.add(loopBuilder);

@@ -17,7 +17,7 @@ import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Request;
-import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
+import com.neotys.neoload.model.v3.project.userpath.ThinkTimeConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
@@ -69,7 +69,7 @@ public class IOIntegrationTest extends AbstractIOElementsTest {
 								.addSteps(Request.builder()
 												.url("http://www.company.com/select?name:product")
 												.build(),
-										ThinkTime.builder().value("1000")
+										ThinkTimeConstant.builder().value("1000")
 												.build())
 								.build())
 						.build())
