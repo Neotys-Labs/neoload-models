@@ -45,4 +45,12 @@ public class IOAssertionsFieldValidationTest {
 		assertTrue(message, message.contains("user_paths[0].actions.steps[0].assertions': must contain only unique names."));
 		assertFalse(message, message.contains("content_assertions"));
 	}
+
+	@Test
+	public void onlyLegacyAssertionsKeyIsValid() throws IOException, URISyntaxException {
+		final ProjectDescriptor descriptor = new IO().read(getFile("test-legacy-assertions-only.yaml"));
+
+		final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
+		assertTrue(validation.getMessage().orElse(""), validation.isValid());
+	}
 }
