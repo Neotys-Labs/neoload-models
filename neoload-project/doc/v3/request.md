@@ -12,7 +12,7 @@ A request defines a plain HTTP request.
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
 | [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        | 2026.3|
-| [binary_source_file](#binary_source_file) | Path of a file used as the binary request body, relative to the project folder | -               | -        | 2026.3|
+| [binary_source_file](#binary_source_file) | Path of a file used as the binary request body, relative to the project folder. The file must be inside the project folder. | -               | -        | 2026.3|
 | [parts](#parts)                     | The multipart/form-data parts                                                 | &#x2713;        | -        | 2026.3|
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
 | [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
@@ -292,7 +292,7 @@ In CheckVU CLI, `source_filename` must stay inside the project folder: absolute 
 | transfer_encoding | The part Content-Transfer-Encoding                                          | &#x2713;        | -        | 2026.3|
 | value             | The text content of the part                                                | &#x2713;        | -        | 2026.3|
 | filename          | The file name sent to the server                                            | &#x2713;        | -        | 2026.3|
-| source_filename   | The path of the file used as part content, relative to the project folder   | &#x2713;        | -        | 2026.3|
+| source_filename   | The path of the file used as part content, relative to the project folder. The file must be inside the project folder.   | &#x2713;        | -        | 2026.3|
 
 #### Example
 
