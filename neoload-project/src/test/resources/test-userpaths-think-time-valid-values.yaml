@@ -1,0 +1,82 @@
+name: MyProject
+user_paths:
+- name: OverrideZero
+  think_time:
+    override: 0
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideNumberOfMilliseconds
+  think_time:
+    override: 100
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideMilliseconds
+  think_time:
+    override: 500ms
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideMinutesAndSeconds
+  think_time:
+    override: 1m30s
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideEveryUnit
+  think_time:
+    override: 1h10m15s250ms
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideUnitsWithoutSpace
+  think_time:
+    override: 2m100ms
+  actions:
+    steps:
+    - delay: 1s
+- name: FactorZero
+  think_time:
+    factor: 0
+  actions:
+    steps:
+    - delay: 1s
+- name: FactorNumber
+  think_time:
+    factor: 150
+  actions:
+    steps:
+    - delay: 1s
+- name: FactorPercentage
+  think_time:
+    factor: 50%
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomNumber
+  think_time:
+    random: 10
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomPercentage
+  think_time:
+    random: 100%
+  actions:
+    steps:
+    - delay: 1s
+- name: OverrideWithRandom
+  think_time:
+    override: 2s
+    random: 5%
+  actions:
+    steps:
+    - delay: 1s
+- name: FactorWithRandom
+  think_time:
+    factor: 200%
+    random: 25%
+  actions:
+    steps:
+    - delay: 1s

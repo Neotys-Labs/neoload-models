@@ -8,6 +8,9 @@ import static com.neotys.neoload.model.v3.project.userpath.UserPath.ACTIONS;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.DEFAULT_USER_SESSION;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.END;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.INIT;
+import static com.neotys.neoload.model.v3.project.userpath.UserPath.ON_ASSERTION_FAILURE;
+import static com.neotys.neoload.model.v3.project.userpath.UserPath.ON_ERROR;
+import static com.neotys.neoload.model.v3.project.userpath.UserPath.THINK_TIME;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.USER_SESSION;
 import static com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement.ASSERTIONS;
 
@@ -24,6 +27,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
 import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
 
 public final class UserPathDeserializer extends StdDeserializer<UserPath> {
@@ -68,6 +72,9 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		final String name = asText(node, NAME);
 		final String description = asText(node, DESCRIPTION);
 		final UserPath.UserSession userSession = asUserSession(codec, node);
+		final UserPath.FailurePolicy onError = asObject(codec, node, ON_ERROR, UserPath.FailurePolicy.class);
+		final UserPath.FailurePolicy onAssertionFailure = asObject(codec, node, ON_ASSERTION_FAILURE, UserPath.FailurePolicy.class);
+		final UserPathThinkTime thinkTime = asObject(codec, node, THINK_TIME, UserPathThinkTime.class);
 		final Container init = asContainer(codec, node, INIT);
 		final Container actions = asContainer(codec, node, ACTIONS);
 		final Container end = asContainer(codec, node, END);
@@ -77,6 +84,9 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 				.name(name)
 				.description(Optional.ofNullable(description))
 				.userSession(userSession)
+				.onError(Optional.ofNullable(onError))
+				.onAssertionFailure(Optional.ofNullable(onAssertionFailure))
+				.thinkTime(Optional.ofNullable(thinkTime))
 				.init(Optional.ofNullable(init))
 				.actions(actions)
 				.end(Optional.ofNullable(end))

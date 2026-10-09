@@ -85,6 +85,8 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-try-catch-required-and-optional",
 			"test-userpaths-only-required",
 			"test-userpaths-required-and-optional",
+			"test-userpaths-runtime-parameters",
+			"test-userpaths-runtime-parameters-variables",
 			"test-variable-extractor-only-required",
 			"test-variable-extractor-required-and-optional",
 			"test-variable-only-required",

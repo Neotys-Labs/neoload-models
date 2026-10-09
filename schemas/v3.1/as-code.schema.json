@@ -1157,6 +1157,9 @@
 						"type": "string",
 						"enum": ["reset_on", "reset_off", "reset_auto"]
 					},
+					"on_error": { "$ref": "#/definitions/user_paths/failure_policy" },
+					"on_assertion_failure": { "$ref": "#/definitions/user_paths/failure_policy" },
+					"think_time": { "$ref": "#/definitions/user_paths/user_path_think_time" },
 					"init": { "$ref": "#/definitions/user_paths/container" },
 					"actions": { "$ref": "#/definitions/user_paths/container" },
 					"end": { "$ref": "#/definitions/user_paths/container" },
@@ -1165,6 +1168,29 @@
 						"description": "The list of assertions to validate the response content of all requests matching criteria within the User Path. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
 					}
 				}
+			},
+			"failure_policy": {
+				"title": "User Path policy applied when an error occurs or an assertion fails. When omitted, the Virtual User does nothing",
+				"type": "string",
+				"enum": ["go_to_next_iteration", "stop_and_start_new_vu"]
+			},
+			"user_path_think_time": {
+				"title": "User Path think time policy: override or scale the think times of the pages and delays, optionally with a random delay",
+				"type": "object",
+				"minProperties": 1,
+				"additionalProperties": false,
+				"properties": {
+					"override": { "anyOf": [{ "$ref": "#/definitions/common/pacing_value" }, { "$ref": "#/definitions/common/positive_number" }] },
+					"factor": {
+						"title": "A non-negative integer percentage (150%, % optional) or a variable",
+						"anyOf": [{ "type": "string", "pattern": "^(\\d+%?|\\$\\{[^}]+\\})$" }, { "$ref": "#/definitions/common/positive_number" }]
+					},
+					"random": {
+						"title": "A positive integer percentage (10%, % optional) or a variable",
+						"anyOf": [{ "type": "string", "pattern": "^([1-9]\\d*%?|\\$\\{[^}]+\\})$" }, { "type": "integer", "minimum": 1 }]
+					}
+				},
+				"not": { "required": ["override", "factor"] }
 			},
 			"container": {
 				"title": "Containers",
