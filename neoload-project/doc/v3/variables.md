@@ -139,7 +139,7 @@ A list or table of values loaded from a text file.
 | is_first_line_column_names | If `true`, the first line of the file can be used as column headers name.<br>The value of this parameter is ignored if `column_names` parameter is specified.<br>The default value is `false`. | -               | If column_names is not present        |       |
 | start_from_line            | The default value is "1". | -               | -        |       |
 | delimiter                  | The delimiter is used to separate data columns.</br>The default value is ",". | -               | -        |       |
-| path                       | The relative (compared to the NeoLoad project folder) or absolute path of the source file. | -               | &#x2713;        |       |
+| path                       | The path of the source file, relative to the project folder. The file must be inside the project folder. | -               | &#x2713;        |       |
 | change_policy              | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |       |
 | scope                      | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        |       |
 | order                      | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | -               | -        |       |
@@ -441,7 +441,7 @@ A queue shared between virtual users, usable as a producer/consumer channel, wit
 | queue_size              | The maximum number of elements the queue can hold.</br>The default value is `10000`. | -    | -        | 2026.3|
 | consumer_timeout        | The time, in milliseconds, a consumer waits for a value before giving up.</br>The default value is `5000`. | - | -   | 2026.3|
 | swap_file               | The file used to persist the queue content. See below. When absent, no file swap is used. | -   | -        | 2026.3|
-| swap_file.path          | The relative (compared to the NeoLoad project folder) or absolute path of the swap file. | -    | &#x2713; | 2026.3|
+| swap_file.path          | The path of the swap file, relative to the project folder. The file must be inside the project folder. | -    | &#x2713; | 2026.3|
 | swap_file.delimiter     | The delimiter used to separate data columns in the swap file.</br>The default value is `;`. | -    | -        | 2026.3|
 | swap_file.load_from_file| If `true`, the queue is populated from the swap file at test start.</br>The default value is `false`. | -    | -        | 2026.3|
 | swap_file.save_to_file  | If `true`, the queue content is written to the swap file at test end.</br>The default value is `true`. | -    | -        | 2026.3|

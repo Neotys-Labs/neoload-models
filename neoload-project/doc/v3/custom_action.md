@@ -14,7 +14,7 @@ Custom actions are supported in NeoLoad from version 2025.1 onwards.
 | [type](#type) | The type of the Action                                                              |        -        | &#x2713; |       |
 | [parameters](#parameters) | The action parameter list                                                           |    &#x2713;     |    -     |       |
 | asRequest     | Consider the executions as requests in the calculation of the statistics and graphs |        -        |    -     |       |
-| libraryPath   | The path to the JAR file containing the Custom Advanced Action                      |        -        |    -     |       |
+| libraryPath   | The path to the JAR file containing the Custom Advanced Action, relative to the project folder. The file must be inside the project folder. |        -        |    -     |       |
 | [duration_assertion](duration_assertion.md) | Checks that the action completed within a given duration             |        -        |    -     | 2026.3 |
 | [size_assertion](size_assertion.md) | The assertion to validate the response size                   |        -        |    -     | 2026.3 |
 

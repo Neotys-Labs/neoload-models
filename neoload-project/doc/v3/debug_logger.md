@@ -6,7 +6,7 @@ The Debug Logger Action writes a text entry to a log file, for debugging purpose
 | Name        | Description                         | Accept variable | Required | Since |
 |:----------- |:------------------------------------|:---------------:|:--------:|:-----:|
 | text        | The text to log                     | &#x2713;         | &#x2713; |       |
-| file        | The path of the log file            | &#x2713;         |    -     |       |
+| file        | The path of the log file, relative to the project folder. The file must be inside the project folder. | &#x2713;         |    -     |       |
 
 #### Default value
 When `file` is not set, the text is written to `logs/runTimeLog.txt`.

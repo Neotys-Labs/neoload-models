@@ -1,8 +1,7 @@
 package com.neotys.neoload.model.readers.jmeter.step.timer;
 
-import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
@@ -25,6 +24,6 @@ public class ConstantTimerConverter implements BiFunction<ConstantTimer, HashTre
     public List<Step> apply(final ConstantTimer constantTimer, final HashTree hashtree) {
         LOGGER.info("Constant timer Correctly converted");
         EventListenerUtils.readSupportedFunction("ConstantTimer","ConstantTimer");
-        return ImmutableList.of(Delay.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build());
+        return List.of(DelayConstant.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build());
     }
 }

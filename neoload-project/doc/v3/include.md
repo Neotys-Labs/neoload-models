@@ -1,7 +1,7 @@
 # Include
 A YAML file can include other YAML files. Included YAML files must declare top level [Project](project.md) elements such as SLA profiles, variables, servers, User Paths, Populations and Scenarios as for separate YAML files.
 
-Each `include` element defines a relative path from the project folder. 
+Each `include` element defines a relative path from the project folder. The file must be inside the project folder. 
 
 The included YAML files are loaded first. The top level [Project](project.md) elements are then loaded.
 
