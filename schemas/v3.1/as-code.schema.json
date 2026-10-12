@@ -1211,7 +1211,6 @@
 							"type": "string",
 							"enum": [
 								"go_to_next_iteration",
-                                "rendezvous",
 								"stop_vu"
 							]
 						},
@@ -1625,24 +1624,7 @@
 							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
-					"description": "Custom action can be an Advanced Action, a SAP GUI Action, a Citrix Action, a RealBrowser Action or an RTE Action. A Custom Advanced action can also be developed using Java."
-				},
-				"rendezvous": {
-					"title": "Action: Rendezvous",
-					"type": "object",
-					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "Name of the rendezvous point. Defaults to `rendezvous`."
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "An optional description, for information purposes only."
-						}
-					},
-					"additionalProperties": false,
-					"description": "A Rendezvous point synchronizes Virtual Users at a common meeting point so they carry out tasks simultaneously, creating an intense load on the server at a specific point in the application."
+					"additionalProperties": false
 				},
 				"go_to_next_iteration": {
 					"title": "Action: Go to next iteration",
