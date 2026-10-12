@@ -194,6 +194,14 @@
 				"qtest.cycle_id": {
 					"type": "integer",
 					"description": "The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier."
+				},
+				"global_assertions.content_types": {
+					"$ref": "#/definitions/common/text",
+					"description": "Comma-separated list of the response content types the global assertions (the assertions of a User Path) are applied to. NeoLoad default: text/html,text/xhtml"
+				},
+				"global_assertions.apply_on_custom_actions": {
+					"type": "boolean",
+					"description": "Also apply the global assertions to custom actions. NeoLoad default: false"
 				}
 			},
 			"description": "Project preferences that override the values defined in NeoLoad. Each property can be set on its own; the others keep the NeoLoad value."

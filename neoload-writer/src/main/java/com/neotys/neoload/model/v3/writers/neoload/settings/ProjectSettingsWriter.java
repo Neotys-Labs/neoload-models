@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.writers.neoload.settings;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -11,13 +12,17 @@ public class ProjectSettingsWriter {
 		
 	private static final String PROJECT_SETTINGS_DEFAULT_FILE = "defaultProjectSettings.properties";	
 	private static final String SETTINGS_XML_FILE = NeoLoadWriter.ConfigFiles.SETTINGS.getFileName();
+	private static final String GLOBAL_ASSERTIONS_CONTENT_TYPES = "global_assertions.content_types";
+	// Derived token: the comma-separated content types expanded into one <contentType> element each
+	private static final String GLOBAL_ASSERTIONS_CONTENT_TYPES_ELEMENTS = "global_assertions.content_types.elements";
 
 	private ProjectSettingsWriter() {
 	}
 
 	public static void writeSettingsXML(final String nlProjectFolder, final Map<String,String> overwrittenProjectSettings) throws IOException{
 		final Map<String,String> allProjectSettings = readProjectSettingsDefault();
-		allProjectSettings.putAll(overwrittenProjectSettings);	    
+		allProjectSettings.putAll(overwrittenProjectSettings);
+		allProjectSettings.put(GLOBAL_ASSERTIONS_CONTENT_TYPES_ELEMENTS, toContentTypeElements(allProjectSettings.get(GLOBAL_ASSERTIONS_CONTENT_TYPES)));
 	    final Reader source = new InputStreamReader(ProjectSettingsWriter.class.getResourceAsStream(SETTINGS_XML_FILE));
 	    try(final Reader reader = new TokenReplacingReader(source, allProjectSettings)){
 		    int intValueOfChar;
@@ -51,5 +56,16 @@ public class ProjectSettingsWriter {
 			            e -> e.getValue().toString()
 			       )
 			   );
-	}	
+	}
+
+	private static String toContentTypeElements(final String contentTypes) {
+		if (contentTypes == null) {
+			return "";
+		}
+		return Arrays.stream(contentTypes.split(","))
+				.map(String::trim)
+				.filter(contentType -> !contentType.isEmpty())
+				.map(contentType -> "<contentType value=\"" + contentType + "\"/>\n")
+				.collect(Collectors.joining());
+	}
 }
