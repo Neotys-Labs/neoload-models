@@ -47,7 +47,7 @@ public class ProjectSettingsWritterTest {
 
     @Test
     public void writeSettingsGlobalAssertionsDefaultXMLTest() throws IOException {
-        File tmpDir = Files.createTempDir();
+        File tmpDir = java.nio.file.Files.createTempDirectory("project-settings").toFile();
         ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), ImmutableMap.of());
 
         String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName()))).replace("\r\n", "\n");
@@ -60,7 +60,7 @@ public class ProjectSettingsWritterTest {
 
     @Test
     public void writeSettingsGlobalAssertionsXMLTest() throws IOException {
-        File tmpDir = Files.createTempDir();
+        File tmpDir = java.nio.file.Files.createTempDirectory("project-settings").toFile();
         Map<String, String> settings = ImmutableMap.<String, String>builder()
                 .put("global_assertions.content_types", "text/html, application/json,,")
                 .put("global_assertions.apply_on_custom_actions", "true")
