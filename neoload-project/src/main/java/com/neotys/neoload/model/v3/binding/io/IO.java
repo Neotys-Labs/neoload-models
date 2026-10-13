@@ -83,6 +83,7 @@ public final class IO {
 		if (isProjectType(type)) {
 			final JsonNode root = mapper.readTree(content);
 			checkSchemaVersionSupported(root);
+			DeprecatedKeys.normalize(root);
 			return mapper.treeToValue(root, type);
 		}
 		// Deserialize
