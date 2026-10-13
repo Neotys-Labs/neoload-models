@@ -45,12 +45,12 @@ user_paths:
           steps:
           - request:
               url: http://www.neotys.com/select
-          assertions:
+          content_assertions:
           - contains: ThenAssertion
         else:
           description: MyElseDescription
           sla_profile: MySLAProfile
           steps:
           - delay: 3m 200ms
-          assertions:
+          content_assertions:
           - contains: ElseAssertion
