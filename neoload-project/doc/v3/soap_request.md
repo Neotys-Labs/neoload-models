@@ -12,6 +12,9 @@ external XML file referenced by `content.path`.
 | [url](#url)              | The URL to hit                                                       | &#x2713;        | &#x2713; | 2026.3|
 | [server](#server)        | The server name to use                                               | -               | -        | 2026.3|
 | [content](#content)      | The external XML file used as the request body                      | -               | &#x2713; | 2026.3|
+| follow_redirects         | When `true`, the HTTP redirections are followed. See [follow_redirects](request.md#follow_redirects) | - | - | 2026.3|
+| charset                  | The charset used to encode the request body. See [charset](request.md#charset) | - | -  | 2026.3|
+| response_storage         | Stores the response body in a file. See [response_storage](request.md#response_storage) | - | - | 2026.3|
 
 #### Example 1
 
@@ -53,3 +56,8 @@ Define the external XML file used as the SOAP request body.
 | Name              | Description                                                                 | Accept variable | Required | Since |
 |:----------------- |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | path              | The path of the XML file used as the request body, relative to the project folder | -         | &#x2713; | 2026.3|
+
+## follow_redirects, charset and response_storage
+
+These settings work as on an HTTP request, see [request](request.md#follow_redirects). A SOAP request always
+has a body, so `charset` is always kept.
