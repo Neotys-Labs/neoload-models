@@ -3,16 +3,21 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.NameValue;
+import com.neotys.neoload.model.v3.project.userpath.ResponseStorage;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequestContent;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 
 public class IOSoapRequestTest extends AbstractIOElementsTest {
@@ -252,5 +257,47 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 		assertEquals(expectedSoapRequest.getParameters(), actualSoapRequest.getParameters());
 		assertEquals(expectedSoapRequest.getHeaders(), actualSoapRequest.getHeaders());
 		assertEquals(expectedDescriptor.toString(), actualDescriptor.toString());
+	}
+
+	private static Project getSoapRequestAdvanced() {
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(UserPath.builder()
+						.name("MyUserPath")
+						.actions(Container.builder()
+								.name("actions")
+								.addSteps(SoapRequest.builder()
+										.url("http://host:80/")
+										.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+										.followRedirects(true)
+										.charset("UTF-8")
+										.responseStorage(ResponseStorage.builder().path("responses/order_${orderId}_{ID}.xml").build())
+										.build())
+								.build())
+						.build())
+				.build();
+	}
+
+	@Test
+	public void readSoapRequestAdvanced() throws IOException {
+		read("test-soap-request-advanced", getSoapRequestAdvanced());
+	}
+
+	@Test
+	public void writeSoapRequestAdvanced() throws IOException {
+		write("test-soap-request-advanced", getSoapRequestAdvanced());
+	}
+
+	@Test
+	public void readSoapRequestWithBothFollowRedirectsKeysFails() throws IOException {
+		for (final String extension : new String[] { "yaml", "json" }) {
+			final String content = getContent(getFile("test-soap-request-redirect-keys-conflict", extension), StandardCharsets.UTF_8);
+			try {
+				new IO().read(content);
+				fail("Reading the " + extension + " fixture must fail");
+			} catch (final JsonMappingException e) {
+				assertTrue(e.getMessage(), e.getMessage().contains("followRedirects") && e.getMessage().contains("follow_redirects"));
+			}
+		}
 	}
 }
