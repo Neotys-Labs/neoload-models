@@ -280,12 +280,18 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readSoapRequestAdvanced() throws IOException {
-		read("test-soap-request-advanced", getSoapRequestAdvanced());
+		final Project expectedProject = getSoapRequestAdvanced();
+		assertNotNull(expectedProject);
+
+		read("test-soap-request-advanced", expectedProject);
 	}
 
 	@Test
 	public void writeSoapRequestAdvanced() throws IOException {
-		write("test-soap-request-advanced", getSoapRequestAdvanced());
+		final Project expectedProject = getSoapRequestAdvanced();
+		assertNotNull(expectedProject);
+
+		write("test-soap-request-advanced", expectedProject);
 	}
 
 	@Test
