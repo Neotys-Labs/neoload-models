@@ -2,6 +2,8 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertion;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,6 +44,40 @@ public class IOCustomActionTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		write("test-custom-action-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void readCustomActionContentAssertions() throws IOException {
+		final Project expectedProject = buildProject(getCustomActionWithContentAssertions());
+		assertNotNull(expectedProject);
+
+		read("test-assert-content-custom-action", expectedProject);
+	}
+
+	@Test
+	public void writeCustomActionContentAssertions() throws IOException {
+		final Project expectedProject = buildProject(getCustomActionWithContentAssertions());
+		assertNotNull(expectedProject);
+
+		write("test-assert-content-custom-action", expectedProject);
+	}
+
+	private CustomAction getCustomActionWithContentAssertions() {
+		return CustomAction.builder()
+				.name("sql action")
+				.type("SQL")
+				.addContentAssertions(ContentAssertion.builder()
+						.contains("expected text")
+						.build())
+				.addContentAssertions(ContentAssertion.builder()
+						.name("no_error")
+						.not(true)
+						.contains("ERROR")
+						.build())
+				.durationAssertion(DurationAssertion.builder()
+						.lessThan(500L)
+						.build())
+				.build();
 	}
 
 

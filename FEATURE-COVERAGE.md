@@ -187,6 +187,7 @@ and protocol action catalogues.
 |:------------|:--------|
 | Content assertion (`contains`, `regexp`, `xpath`, `jsonpath`, `not`) | 3.0 |
 | Assertions on request, transaction, container and User Path | 3.0 |
+| Content assertions on custom action (`content_assertions` on `custom_action`) | 3.1 |
 | Size assertion | 3.1 draft |
 | Duration assertion (`duration_assertion`, `less_than`, on request and custom action) | 3.1 |
 | JSON assertions (`JsonContentAssertion`, `JsonResponseAssertion`) | — |
