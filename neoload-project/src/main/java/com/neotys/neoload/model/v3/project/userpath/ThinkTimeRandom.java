@@ -4,6 +4,7 @@ import javax.validation.constraints.Pattern;
 
 import org.immutables.value.Value;
 
+import com.neotys.neoload.model.v3.validation.constraints.MinNotGreaterThanMaxCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
@@ -13,7 +14,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
  */
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface ThinkTimeRandom extends ThinkTime {
+@MinNotGreaterThanMaxCheck(element = "think_time", groups = {NeoLoad.class})
+public interface ThinkTimeRandom extends ThinkTime, RandomDuration {
 
 	String MIN = "min";
 	String MAX = "max";
