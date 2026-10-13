@@ -278,12 +278,38 @@ public class IORequestTest extends AbstractIOElementsTest {
 						.build());
 	}
 
-	private void assertReadFails(final String fixture) throws IOException {
+
+	@Test
+	public void readFollowRedirects() throws IOException {
+		final Project expectedProject = getFollowRedirects();
+		assertNotNull(expectedProject);
+
+		read("test-request-follow-redirects", expectedProject);
+	}
+
+	@Test
+	public void writeFollowRedirects() throws IOException {
+		final Project expectedProject = getFollowRedirects();
+		assertNotNull(expectedProject);
+
+		write("test-request-follow-redirects", expectedProject);
+	}
+
+	@Test
+	public void readDeprecatedFollowRedirectsAlias() throws IOException {
+		final Project expectedProject = getFollowRedirects();
+		assertNotNull(expectedProject);
+
+		read("test-request-follow-redirects-deprecated", expectedProject);
+	}
+
+	@Test
+	public void readBothFollowRedirectsKeysFails() throws IOException {
 		for (final String extension : new String[] { "yaml", "json" }) {
-			final String content = getContent(getFile(fixture, extension), StandardCharsets.UTF_8);
+			final String content = getContent(getFile("test-request-redirect-keys-conflict", extension), StandardCharsets.UTF_8);
 			try {
 				new IO().read(content);
-				fail("Reading " + fixture + "." + extension + " must fail");
+				fail("Reading the " + extension + " fixture must fail");
 			} catch (final JsonMappingException e) {
 				assertTrue(e.getMessage(), e.getMessage().contains("followRedirects") && e.getMessage().contains("follow_redirects"));
 			}
@@ -291,38 +317,27 @@ public class IORequestTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readFollowRedirects() throws IOException {
-		read("test-request-follow-redirects", getFollowRedirects());
-	}
-
-	@Test
-	public void writeFollowRedirects() throws IOException {
-		write("test-request-follow-redirects", getFollowRedirects());
-	}
-
-	@Test
-	public void readDeprecatedFollowRedirectsAlias() throws IOException {
-		read("test-request-follow-redirects-deprecated", getFollowRedirects());
-	}
-
-	@Test
-	public void readBothFollowRedirectsKeysFails() throws IOException {
-		assertReadFails("test-request-redirect-keys-conflict");
-	}
-
-	@Test
 	public void readCharset() throws IOException {
-		read("test-request-charset", getCharset());
+		final Project expectedProject = getCharset();
+		assertNotNull(expectedProject);
+
+		read("test-request-charset", expectedProject);
 	}
 
 	@Test
 	public void writeCharset() throws IOException {
-		write("test-request-charset", getCharset());
+		final Project expectedProject = getCharset();
+		assertNotNull(expectedProject);
+
+		write("test-request-charset", expectedProject);
 	}
 
 	@Test
 	public void readCharsetIgnoredWithoutBody() throws IOException {
-		read("test-request-charset-get-ignored", projectOf(Request.builder().url(TEST_URL).build()));
+		final Project expectedProject = projectOf(Request.builder().url(TEST_URL).build());
+		assertNotNull(expectedProject);
+
+		read("test-request-charset-get-ignored", expectedProject);
 	}
 
 	@Test
@@ -334,12 +349,18 @@ public class IORequestTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readResponseStorage() throws IOException {
-		read("test-request-response-storage", getResponseStorage());
+		final Project expectedProject = getResponseStorage();
+		assertNotNull(expectedProject);
+
+		read("test-request-response-storage", expectedProject);
 	}
 
 	@Test
 	public void writeResponseStorage() throws IOException {
-		write("test-request-response-storage", getResponseStorage());
+		final Project expectedProject = getResponseStorage();
+		assertNotNull(expectedProject);
+
+		write("test-request-response-storage", expectedProject);
 	}
 
 	@Test
