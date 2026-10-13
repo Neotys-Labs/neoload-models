@@ -1170,7 +1170,7 @@
 					"end": { "$ref": "#/definitions/user_paths/container" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
-						"description": "The list of assertions to validate the response content of all requests matching criteria within the User Path. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
+						"description": "The list of assertions to validate the response content of all requests matching criteria within the User Path. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project, or with the global_assertions.content_types project setting."
 					}
 				}
 			},
@@ -1192,7 +1192,7 @@
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
-						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
+						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project, or with the global_assertions.content_types project setting."
 					}
 				}
 			},
@@ -1317,7 +1317,7 @@
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": {
 							"$ref": "#/definitions/common/assertions",
-							"description": "The list of assertions to validate the response content of all requests matching criteria within the Transaction. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
+							"description": "The list of assertions to validate the response content of all requests matching criteria within the Transaction. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project, or with the global_assertions.content_types project setting."
 						}
 					},
 					"additionalProperties": false,
@@ -2034,7 +2034,7 @@
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
-						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
+						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project, or with the global_assertions.content_types project setting."
 					}
 				},
 				"additionalProperties": false
