@@ -291,12 +291,12 @@
 			},
 			"var_order": {
 				"type": "string",
-				"default": "global",
+				"default": "any",
 				"enum": ["sequential", "random", "any"]
 			},
 			"var_out_of_value": {
 				"type": "string",
-				"default": "global",
+				"default": "cycle",
 				"enum": ["cycle", "stop_test", "no_value_code"]
 			},
 			"assertions": {
