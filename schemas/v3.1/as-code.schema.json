@@ -1689,7 +1689,7 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"copy_variables": {
 							"type": "boolean",
-							"default": true,
+							"default": false,
 							"description": "When `true`, existing values of variables are copied locally so that modifications in another thread do not affect this Fork. Default is `false`."
 						},
 						"steps": {
