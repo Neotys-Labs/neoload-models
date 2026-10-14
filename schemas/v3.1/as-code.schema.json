@@ -224,8 +224,10 @@
 			},
 			"pacing_value": {
 				"title": "Pacing value",
-				"type": "string",
-				"pattern": "^(\\d+|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
+				"anyOf": [
+					{ "type": "string", "pattern": "^(\\d+|(\\d+\\s*(h|ms|m|s)\\s*)+|\\$\\{[^}]+\\})$" },
+					{ "$ref": "#/definitions/common/positive_number" }
+				]
 			},
 			"duration_value": {
 				"title": "Duration value",
@@ -1460,6 +1462,14 @@
 						{ "$ref": "#/definitions/common/pacing_value" },
 						{
 							"type": "object",
+							"required": ["value"],
+							"additionalProperties": false,
+							"properties": {
+								"value": { "$ref": "#/definitions/common/pacing_value" }
+							}
+						},
+						{
+							"type": "object",
 							"required": ["max"],
 							"additionalProperties": false,
 							"properties": {
@@ -1474,7 +1484,7 @@
 							}
 						}
 					],
-					"description": "Pacing enforces a minimum duration: if the steps finish earlier, execution waits for the remainder. It is a constant duration, or a random range between `min` and `max`."
+					"description": "Pacing enforces a minimum duration: if the steps finish earlier, execution waits for the remainder. It is a constant duration (scalar or `value`), or a random range between `min` and `max`. A plain number is a duration in milliseconds."
 				},
 				"javascript": {
 					"title": "Action: Javascript",

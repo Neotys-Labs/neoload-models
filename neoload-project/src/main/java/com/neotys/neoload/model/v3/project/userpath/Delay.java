@@ -1,16 +1,17 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
+import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import javax.validation.Valid;
 import org.immutables.value.Value;
 
 /**
- * Polymorphic duration step, used for both the {@code delay} and the {@code think_time} step keys
- * and for the web page {@code think_time} field. It is either a {@link DelayConstant} (fixed duration)
- * or a {@link DelayRandom} (random duration between a {@code min} and a {@code max}).
- *
- * <p>The two concrete forms are (de)serialized by {@code StepsSerializer} / {@code StepsDeserializer}
- * (and by the web page serializers), which pick the simplified scalar syntax or the expanded object
- * syntax (carrying {@code name} / {@code description}).
+ * Step used for both the {@code delay} and the {@code think_time} step keys. The wait itself is its
+ * {@link Duration}; the step only adds the {@code name} / {@code description} inherited from
+ * {@code Element}, written by {@code StepsSerializer} / {@code StepsDeserializer}.
  */
+@Value.Immutable
+@Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 public interface Delay extends Step {
 
 	/**
@@ -21,6 +22,12 @@ public interface Delay extends Step {
 	String DEFAULT_NAME = "delay";
 	String DEFAULT_THINK_TIME_NAME = "think_time";
 
+	@RequiredCheck(groups = {NeoLoad.class})
+	@Value.Default
+	default String getName() {
+		return defaultName();
+	}
+
 	/**
 	 * Selects the step YAML key ({@code think_time} when true, {@code delay} otherwise) and mirrors
 	 * NLGui {@code DelayAction.isThinkTime()}. It is never written to YAML.
@@ -30,7 +37,16 @@ public interface Delay extends Step {
 		return false;
 	}
 
+	@RequiredCheck(groups = {NeoLoad.class})
+	@Valid
+	Duration getDuration();
+
 	default String defaultName() {
 		return isThinkTime() ? DEFAULT_THINK_TIME_NAME : DEFAULT_NAME;
+	}
+
+	class Builder extends ImmutableDelay.Builder {}
+	static Builder builder() {
+		return new Builder();
 	}
 }

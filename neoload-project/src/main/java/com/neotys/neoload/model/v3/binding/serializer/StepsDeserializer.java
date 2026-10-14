@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableMap;
+import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -115,7 +116,15 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		if (!stepNode.has(key)) {
 			return null;
 		}
-		return DelayHelper.read(stepNode.get(key), thinkTime, true);
+		final JsonNode delayNode = stepNode.get(key);
+		final Delay.Builder builder = Delay.builder().isThinkTime(thinkTime).duration(DurationDeserializer.read(delayNode));
+		if (delayNode.has(Element.NAME)) {
+			builder.name(delayNode.get(Element.NAME).asText());
+		}
+		if (delayNode.has(Element.DESCRIPTION)) {
+			builder.description(delayNode.get(Element.DESCRIPTION).asText());
+		}
+		return builder.build();
 	}
 
 	private static Step parseRendezvous(final JsonNode stepNode) {

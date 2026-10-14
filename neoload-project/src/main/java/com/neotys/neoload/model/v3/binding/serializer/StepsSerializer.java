@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.google.common.collect.ImmutableMap;
+import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import java.io.IOException;
 import java.util.List;
@@ -81,7 +82,26 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 	private void serializeDelay(final Delay delay, final JsonGenerator generator) throws IOException {
 		generator.writeStartObject();
 		generator.writeFieldName(delay.isThinkTime() ? THINK_TIME : DELAY);
-		DelayHelper.write(generator, delay, true);
+		writeDelay(generator, delay);
+		generator.writeEndObject();
+	}
+
+	private void writeDelay(final JsonGenerator generator, final Delay delay) throws IOException {
+		final Duration duration = delay.getDuration();
+		final boolean implicit = delay.defaultName().equals(delay.getName()) && delay.getDescription().isEmpty();
+		if (duration instanceof DurationConstant && implicit) {
+			generator.writeString(DurationSerializer.toText(((DurationConstant) duration).getValue()));
+			return;
+		}
+		generator.writeStartObject();
+		if (!delay.defaultName().equals(delay.getName())) {
+			generator.writeStringField(Element.NAME, delay.getName());
+		}
+		final String description = delay.getDescription().orElse(null);
+		if (description != null && !description.trim().isEmpty()) {
+			generator.writeStringField(Element.DESCRIPTION, description.trim());
+		}
+		DurationSerializer.writeFields(generator, duration);
 		generator.writeEndObject();
 	}
 

@@ -4,22 +4,20 @@ package com.neotys.neoload.model.v3.binding.io;
 import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Loop;
-
+import java.io.IOException;
+import org.junit.Test;
 
 public class IOLoopTest extends AbstractIOElementsTest {
 
     private static Loop getLoopOnlyRequired() {
         return Loop.builder()
 				.count("5")
-				.addSteps(DelayConstant.builder()
-						.value("1000")
+				.addSteps(Delay.builder()
+						.duration(DurationConstant.builder().value("1000").build())
 						.build())
 				.build();
     }
@@ -29,8 +27,8 @@ public class IOLoopTest extends AbstractIOElementsTest {
 				.name("looper")
 				.description("a simple loop")
 				.count("5")
-				.addSteps(DelayConstant.builder()
-						.value("1000")
+				.addSteps(Delay.builder()
+						.duration(DurationConstant.builder().value("1000").build())
 						.build())
 				.build();
 	}

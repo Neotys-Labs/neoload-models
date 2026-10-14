@@ -8,8 +8,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
-import com.neotys.neoload.model.v3.binding.serializer.WebPageDelayDeserializer;
-import com.neotys.neoload.model.v3.binding.serializer.WebPageDelaySerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
@@ -49,10 +47,8 @@ public interface WebPage extends Step, SlaElement {
 	}
 
 	@JsonProperty(THINK_TIME)
-	@JsonSerialize(contentUsing = WebPageDelaySerializer.class)
-	@JsonDeserialize(contentUsing = WebPageDelayDeserializer.class)
 	@Valid
-	Optional<Delay> getThinkTime();
+	Optional<Duration> getThinkTime();
 
 	@JsonProperty(PLAYBACK)
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultPlaybackFilter.class)

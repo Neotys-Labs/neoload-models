@@ -180,6 +180,20 @@ public class IOSchema3Dot1ValidationTest {
         assertWebPageThinkTime("{value: 2.5}", false);
     }
 
+    @Test
+    public void pacingAcceptsValueFormAndSpaces() throws IOException {
+        assertPacing("{ value: 2s }", true);
+        assertPacing("1h 1s", true);
+        assertPacing("1500", true);
+        assertPacing("{ max: 5s }", true);
+        assertPacing("{ value: 2s, min: 1s }", false);
+    }
+
+    private static void assertPacing(final String pacing, final boolean valid) throws IOException {
+        final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    pacing: " + pacing + "\n    steps:\n    - delay: 1s\n";
+        Assert.assertEquals(pacing, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+    }
+
     private static void assertWebPageThinkTime(final String thinkTime, final boolean valid) throws IOException {
         final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - web_page:\n"
                 + "        think_time: " + thinkTime + "\n        steps:\n        - request:\n            url: http://host:80/\n";

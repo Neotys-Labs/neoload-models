@@ -6,7 +6,8 @@ import static org.junit.Assert.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class IOTransactionTest extends AbstractIOElementsTest {
 	private static Step getTransactionOnlyRequired() {
 		return Container.builder()
 				.name("MyTransaction")
-				.addSteps(DelayConstant.builder().value("1000")
+				.addSteps(Delay.builder().duration(DurationConstant.builder().value("1000").build())
 						.build())
 				.build();
 	}
@@ -27,7 +28,7 @@ public class IOTransactionTest extends AbstractIOElementsTest {
 				.name("MyTransaction")
 				.description("My Transaction")
 				.slaProfile("MySlaProfile")
-				.addSteps(DelayConstant.builder().value("1000")
+				.addSteps(Delay.builder().duration(DurationConstant.builder().value("1000").build())
 						.build())
 				.addContentAssertions(ContentAssertion.builder()
 						.contains("MyUserPath_actions_MyTransaction")

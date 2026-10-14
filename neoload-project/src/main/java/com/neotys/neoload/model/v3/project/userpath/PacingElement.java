@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.neotys.neoload.model.v3.validation.constraints.PacingRandomMaxGreaterThanMinCheck;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.Optional;
 import javax.validation.Valid;
 
@@ -9,5 +11,5 @@ interface PacingElement {
 
 	@JsonProperty(PACING)
 	@Valid
-	Optional<Pacing> getPacing();
+	Optional<@PacingRandomMaxGreaterThanMinCheck(groups = {NeoLoad.class}) Duration> getPacing();
 }

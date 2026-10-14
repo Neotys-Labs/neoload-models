@@ -5,7 +5,8 @@ import static junit.framework.TestCase.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Fork;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class IOForkTest extends AbstractIOElementsTest {
 	private Project buildProjectContainingFork_OnlyRequired() {
 		final Fork fork = Fork.builder()
 				.addSteps(
-						DelayConstant.builder().value("1000").build()
+						Delay.builder().duration(DurationConstant.builder().value("1000").build()).build()
 				)
 				.build();
 
@@ -74,7 +75,7 @@ public class IOForkTest extends AbstractIOElementsTest {
 				.description("MyForkDescription")
 				.copyVariables(true)
 				.addSteps(
-						DelayConstant.builder().value("1000").build()
+						Delay.builder().duration(DurationConstant.builder().value("1000").build()).build()
 				)
 				.build();
 
