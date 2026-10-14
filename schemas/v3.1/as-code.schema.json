@@ -306,8 +306,7 @@
 				"required": ["name"],
 				"properties": {
 					"name": { "$ref": "#/definitions/common/name" },
-					"description": { "$ref": "#/definitions/common/text" },
-					"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
+					"description": { "$ref": "#/definitions/common/text" }
 				}
 			},
 			"constant": {
@@ -360,7 +359,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -387,7 +387,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -410,7 +411,8 @@
 							"predictable": {
 								"type": "boolean",
 								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -435,7 +437,8 @@
 							"predictable": {
 								"type": "boolean",
 								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -480,7 +483,8 @@
 								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$",
 								"description": "The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes."
 							},
-							"scope": { "$ref": "#/definitions/common/var_scope" }
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -517,7 +521,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -561,7 +566,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -575,7 +581,8 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"script": { "$ref": "#/definitions/common/textblob" }
+							"script": { "$ref": "#/definitions/common/textblob" },
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -598,7 +605,8 @@
 								"type": "boolean",
 								"default": false,
 								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
