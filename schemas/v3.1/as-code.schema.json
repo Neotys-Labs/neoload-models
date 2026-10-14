@@ -1871,7 +1871,7 @@
 					},
 					"default": {
 						"type": "string",
-						"default": "",
+						"default": "<NOT FOUND>",
 						"description": "The value to return when not extracted. The default value is \"<NOT FOUND>\"."
 					},
 					"throw_assertion_error": {
