@@ -200,6 +200,9 @@ public class IOSchema3Dot1ValidationTest {
             assertStep(key + ": { name: wait, max: 3000 }", true);
             assertStep(key + ": abc", false);
             assertStep(key + ": { name: wait, value: 1.5s }", false);
+            assertStep(key + ": { name: wait, value: 2s, min: 1s }", false);
+            assertStep(key + ": { value: 2s, max: 3s }", false);
+            assertStep(key + ": { name: wait, other: 1s, max: 3s }", false);
         }
     }
 

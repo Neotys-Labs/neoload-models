@@ -1426,48 +1426,39 @@
 					"oneOf": [
 						{ "$ref": "#/definitions/common/duration_value" },
 						{
-							"type": "object",
-							"required": ["value"],
-							"additionalProperties": false,
+							"$ref": "#/definitions/user_paths/actions/duration_object",
 							"properties": {
 								"name": { "$ref": "#/definitions/common/name" },
-								"description": { "$ref": "#/definitions/common/text" },
-								"value": { "$ref": "#/definitions/common/duration_value" }
-							}
-						},
-						{
-							"type": "object",
-							"required": ["max"],
-							"additionalProperties": false,
-							"properties": {
-								"name": { "$ref": "#/definitions/common/name" },
-								"description": { "$ref": "#/definitions/common/text" },
-								"min": {
-									"$ref": "#/definitions/common/duration_value",
-									"description": "The minimum duration. The default value is `0`."
-								},
-								"max": { "$ref": "#/definitions/common/duration_value" }
-							}
+								"description": { "$ref": "#/definitions/common/text" }
+							},
+							"unevaluatedProperties": false
 						}
 					],
-					"description": "A duration shared by the `delay` and `think_time` actions and the Web Page `think_time`: a fixed duration (scalar or `value`), or a random duration between `min` and `max`."
+					"description": "The `delay` and `think_time` actions: a `duration`, optionally named and described when written as an object."
 				},
 				"duration": {
 					"title": "Duration",
 					"oneOf": [
 						{ "$ref": "#/definitions/common/duration_value" },
 						{
-							"type": "object",
+							"$ref": "#/definitions/user_paths/actions/duration_object",
+							"unevaluatedProperties": false
+						}
+					],
+					"description": "A duration shared by the pacing, the Web Page `think_time` and the `delay` and `think_time` actions: a fixed duration (scalar or `value`), or a random duration between `min` and `max`. A plain number is a duration in milliseconds."
+				},
+				"duration_object": {
+					"title": "Duration object",
+					"type": "object",
+					"oneOf": [
+						{
 							"required": ["value"],
-							"additionalProperties": false,
 							"properties": {
 								"value": { "$ref": "#/definitions/common/duration_value" }
 							}
 						},
 						{
-							"type": "object",
 							"required": ["max"],
-							"additionalProperties": false,
 							"properties": {
 								"min": {
 									"$ref": "#/definitions/common/duration_value",
@@ -1477,7 +1468,7 @@
 							}
 						}
 					],
-					"description": "A duration shared by the pacing and the Web Page `think_time`: a fixed duration (scalar or `value`), or a random duration between `min` and `max`. A plain number is a duration in milliseconds."
+					"description": "The object form of a `duration`: a fixed `value`, or a random duration between `min` and `max`. `value` cannot be combined with `min` or `max`."
 				},
 				"javascript": {
 					"title": "Action: Javascript",
