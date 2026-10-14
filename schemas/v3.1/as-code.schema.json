@@ -1557,6 +1557,7 @@
 						"value": { "$ref": "#/definitions/common/text" },
 						"case": {
 							"type": "array",
+							"description": "Case list. A Case contains steps executed when Case value equals Switch value",
 							"items": { "$ref": "#/definitions/user_paths/case" }
 						},
 						"default": { "$ref": "#/definitions/user_paths/container" }
@@ -1972,6 +1973,7 @@
 						"$ref": "#/definitions/user_paths/actions/duration",
 						"description": "The minimum duration enforced for the case. A random pacing `max` must be strictly greater than `min`."
 					},
+					"sla_profile": { "$ref": "#/definitions/common/text" },
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
