@@ -8,13 +8,13 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.DelayRandom;
 import com.neotys.neoload.model.v3.project.userpath.ExecuteResources;
 import com.neotys.neoload.model.v3.project.userpath.Playback;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.WebPage;
-import com.neotys.neoload.model.v3.project.userpath.WebPageThinkTimeConstant;
-import com.neotys.neoload.model.v3.project.userpath.WebPageThinkTimeRandom;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -67,7 +67,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeConstant() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(WebPageThinkTimeConstant.builder().value("2s").build())
+				.thinkTime(DelayConstant.builder().isThinkTime(true).value("2000").build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -78,7 +78,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeRandom() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(WebPageThinkTimeRandom.builder().min("1s").max("5s").build())
+				.thinkTime(DelayRandom.builder().isThinkTime(true).min("1000").max("5000").build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -89,7 +89,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeRandomDefaultsMin() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(WebPageThinkTimeRandom.builder().max("5s").build())
+				.thinkTime(DelayRandom.builder().isThinkTime(true).max("5000").build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -101,15 +101,15 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	public void readWebPageThinkTimeValuesPreservedVerbatim() throws IOException {
 		final Project expectedProject = buildProject(
 				WebPage.builder()
-						.thinkTime(WebPageThinkTimeConstant.builder().value("2").build())
+						.thinkTime(DelayConstant.builder().isThinkTime(true).value("2").build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build(),
 				WebPage.builder()
-						.thinkTime(WebPageThinkTimeConstant.builder().value("500ms").build())
+						.thinkTime(DelayConstant.builder().isThinkTime(true).value("500").build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build(),
 				WebPage.builder()
-						.thinkTime(WebPageThinkTimeConstant.builder().value("${max_think_time}").build())
+						.thinkTime(DelayConstant.builder().isThinkTime(true).value("${max_think_time}").build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build());
 		assertNotNull(expectedProject);
@@ -141,14 +141,25 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readWebPageThinkTimeMinOnlyRejected() {
+	public void readWebPageThinkTimeMinOnlyRejected() throws IOException {
 		final IO io = new IO();
 		final File file = getFile("test-web_page-think-time-min-only", "yaml");
+		final ProjectDescriptor descriptor = io.read(file);
+
+		final Validation validation = VALIDATOR.validate(descriptor, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertTrue(validation.getMessage().get().contains("max"));
+	}
+
+	@Test
+	public void readWebPageThinkTimeWithNameRejected() {
+		final IO io = new IO();
+		final File file = getFile("test-web_page-think-time-with-name", "yaml");
 		try {
 			io.read(file);
-			fail("Expected reading a think_time with 'min' but no 'max' to fail");
+			fail("Expected reading a web page think_time with a name to fail");
 		} catch (final IOException e) {
-			assertTrue(e.getMessage().contains("max"));
+			assertTrue(e.getMessage().contains("think_time"));
 		}
 	}
 
@@ -229,7 +240,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 				.name("MyWebPage")
 				.description("My Web Page")
 				.slaProfile("MySlaProfile")
-				.thinkTime(WebPageThinkTimeConstant.builder().value("2s").build())
+				.thinkTime(DelayConstant.builder().isThinkTime(true).value("2000").build())
 				.playback(Playback.SEQUENTIAL)
 				.executeResources(ExecuteResources.DYNAMIC)
 				.addSteps(

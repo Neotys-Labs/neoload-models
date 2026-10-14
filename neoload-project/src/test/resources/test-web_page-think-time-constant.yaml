@@ -4,8 +4,7 @@ user_paths:
   actions:
     steps:
     - web_page:
-        think_time:
-          value: 2s
+        think_time: 2s
         steps:
         - request:
             url: http://host:80/

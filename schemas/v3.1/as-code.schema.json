@@ -1229,11 +1229,11 @@
 									"description": "A request defines a plain HTTP request."
 								},
 								"delay": {
-									"$ref": "#/definitions/user_paths/actions/delay",
+									"$ref": "#/definitions/user_paths/actions/duration_action",
 									"description": "The Delay Action pauses the Virtual User for a specified duration. This duration always applies and is not impacted by thinktime overriding."
 								},
 								"think_time": {
-									"$ref": "#/definitions/user_paths/actions/think_time",
+									"$ref": "#/definitions/user_paths/actions/duration_action",
 									"description": "Think time is the time the user normally takes to make a decision to do the next task."
 								},
 								"javascript": {
@@ -1423,8 +1423,8 @@
 					],
 					"description": "A request defines a plain HTTP request."
 				},
-				"delay": {
-					"title": "Action: Delay",
+				"duration_action": {
+					"title": "Duration Action",
 					"oneOf": [
 						{ "$ref": "#/definitions/common/duration_value" },
 						{
@@ -1446,44 +1446,13 @@
 								"description": { "$ref": "#/definitions/common/text" },
 								"min": {
 									"$ref": "#/definitions/common/duration_value",
-									"description": "The minimum delay duration. The default value is `0`."
+									"description": "The minimum duration. The default value is `0`."
 								},
 								"max": { "$ref": "#/definitions/common/duration_value" }
 							}
 						}
 					],
-					"description": "The Delay Action pauses the Virtual User for a specified duration. This duration always applies and is not impacted by thinktime overriding."
-				},
-				"think_time": {
-					"title": "Action: Think Time",
-					"oneOf": [
-						{ "$ref": "#/definitions/common/duration_value" },
-						{
-							"type": "object",
-							"required": ["value"],
-							"additionalProperties": false,
-							"properties": {
-								"name": { "$ref": "#/definitions/common/name" },
-								"description": { "$ref": "#/definitions/common/text" },
-								"value": { "$ref": "#/definitions/common/duration_value" }
-							}
-						},
-						{
-							"type": "object",
-							"required": ["max"],
-							"additionalProperties": false,
-							"properties": {
-								"name": { "$ref": "#/definitions/common/name" },
-								"description": { "$ref": "#/definitions/common/text" },
-								"min": {
-									"$ref": "#/definitions/common/duration_value",
-									"description": "The minimum think time duration. The default value is `0`."
-								},
-								"max": { "$ref": "#/definitions/common/duration_value" }
-							}
-						}
-					],
-					"description": "Think time is the time the user normally takes to make a decision to do the next task."
+					"description": "A duration shared by the `delay` and `think_time` actions and the Web Page `think_time`: a fixed duration (scalar or `value`), or a random duration between `min` and `max`."
 				},
 				"pacing": {
 					"title": "Action: Pacing",
@@ -1803,35 +1772,9 @@
 						},
 						"think_time": {
 							"title": "Web Page Think Time",
-							"oneOf": [
-								{
-									"type": "object",
-									"required": ["value"],
-									"properties": {
-										"value": {
-											"$ref": "#/definitions/user_paths/actions/web_page_think_time_value",
-											"description": "Constant think time duration (`value`)."
-										}
-									},
-									"additionalProperties": false
-								},
-								{
-									"type": "object",
-									"required": ["max"],
-									"properties": {
-										"min": {
-											"$ref": "#/definitions/user_paths/actions/web_page_think_time_value",
-											"description": "Minimum think time. Defaults to `0`."
-										},
-										"max": {
-											"$ref": "#/definitions/user_paths/actions/web_page_think_time_value",
-											"description": "Maximum think time."
-										}
-									},
-									"additionalProperties": false
-								}
-							],
-							"description": "The think time to apply before playing the Web Page. Either a constant value (`value`), or a random value between `min` (defaults to `0`) and `max`"
+							"allOf": [{ "$ref": "#/definitions/user_paths/actions/duration_action" }],
+							"not": { "type": "object", "anyOf": [{ "required": ["name"] }, { "required": ["description"] }] },
+							"description": "The think time to apply before playing the Web Page. Same syntax as the `think_time` action, without `name` and `description`."
 						},
 						"playback": {
 							"type": "string",
@@ -1850,11 +1793,6 @@
 					},
 					"additionalProperties": false,
 					"description": "The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back."
-				},
-				"web_page_think_time_value": {
-					"title": "Web Page Think Time Value",
-					"type": "string",
-					"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
 				}
 			},
 			"part": {

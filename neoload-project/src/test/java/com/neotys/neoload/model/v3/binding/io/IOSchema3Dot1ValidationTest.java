@@ -92,6 +92,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-web_page-think-time-invalid-value.yaml",
             "test-web_page-think-time-min-only.yaml",
             "test-web_page-think-time-mixed.yaml",
+            "test-web_page-think-time-with-name.yaml",
             "test-web_page-unsupported-step.yaml",
             "test-shared-elements-unsupported-type.yaml",
             "test-shared-elements-missing-name-loop.yaml",
@@ -167,5 +168,21 @@ public class IOSchema3Dot1ValidationTest {
     public void pacingOnWhileFailsSchemaValidation() throws IOException {
         Assert.assertFalse("Expected 'pacing' on a while step to fail schema validation",
                 validate("test-pacing-on-while").isEmpty());
+    }
+
+    @Test
+    public void webPageThinkTimeSharesStepDurationSyntax() throws IOException {
+        assertWebPageThinkTime("1m 30s", true);
+        assertWebPageThinkTime("{value: 2000}", true);
+        assertWebPageThinkTime("{max: 5s}", true);
+        assertWebPageThinkTime("{min: 1s, max: 5s}", true);
+        assertWebPageThinkTime("{name: tt, value: 2s}", false);
+        assertWebPageThinkTime("{value: 2.5}", false);
+    }
+
+    private static void assertWebPageThinkTime(final String thinkTime, final boolean valid) throws IOException {
+        final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - web_page:\n"
+                + "        think_time: " + thinkTime + "\n        steps:\n        - request:\n            url: http://host:80/\n";
+        Assert.assertEquals(thinkTime, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
     }
 }

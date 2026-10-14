@@ -2,10 +2,6 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static junit.framework.TestCase.assertNotNull;
 
-import java.io.IOException;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
@@ -16,11 +12,13 @@ import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.Request;
-import com.neotys.neoload.model.v3.project.userpath.ThinkTimeConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
+import java.io.IOException;
+import org.junit.Test;
 
 public class IOIntegrationTest extends AbstractIOElementsTest {
 
@@ -69,7 +67,7 @@ public class IOIntegrationTest extends AbstractIOElementsTest {
 								.addSteps(Request.builder()
 												.url("http://www.company.com/select?name:product")
 												.build(),
-										ThinkTimeConstant.builder().value("1000")
+										DelayConstant.builder().isThinkTime(true).value("1000")
 												.build())
 								.build())
 						.build())

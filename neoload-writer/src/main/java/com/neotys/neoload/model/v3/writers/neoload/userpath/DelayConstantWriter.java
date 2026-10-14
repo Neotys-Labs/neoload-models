@@ -24,7 +24,7 @@ public class DelayConstantWriter extends ElementWriter {
         Element xmlDelay = document.createElement(XML_TAG_NAME);
         super.writeXML(document, xmlDelay, outputFolder);
         xmlDelay.setAttribute(XML_DURATION_ATT, ((DelayConstant)element).getValue());
-        xmlDelay.setAttribute(XML_ISTHINKTIME_ATT, "false");
+        xmlDelay.setAttribute(XML_ISTHINKTIME_ATT, String.valueOf(((DelayConstant)element).isThinkTime()));
         currentElement.appendChild(xmlDelay);
     }
 }

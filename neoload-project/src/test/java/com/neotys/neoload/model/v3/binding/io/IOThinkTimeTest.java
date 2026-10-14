@@ -1,18 +1,16 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
-import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.ThinkTime;
-import com.neotys.neoload.model.v3.project.userpath.ThinkTimeConstant;
-import com.neotys.neoload.model.v3.project.userpath.ThinkTimeRandom;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.List;
-
 import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static junit.framework.TestCase.assertNotNull;
 
+import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.DelayRandom;
+import java.io.IOException;
+import java.util.List;
+import org.junit.Test;
 
 public class IOThinkTimeTest extends AbstractIOElementsTest {
 
@@ -50,42 +48,42 @@ public class IOThinkTimeTest extends AbstractIOElementsTest {
 		write("test-think-time-with-unit-required-and-optional", expectedProject);
 	}
 
-	private List<ThinkTime> getThinkTimesOnlyRequired() {
+	private List<Delay> getThinkTimesOnlyRequired() {
 		return List.of(
-				ThinkTimeConstant.builder().value("3790200").build(),
-				ThinkTimeRandom.builder().max("3790200").build(),
-				ThinkTimeConstant.builder().value("3600000").build(),
-				ThinkTimeRandom.builder().max("3600000").build(),
-				ThinkTimeConstant.builder().value("180000").build(),
-				ThinkTimeRandom.builder().max("180000").build(),
-				ThinkTimeConstant.builder().value("10000").build(),
-				ThinkTimeRandom.builder().max("10000").build(),
-				ThinkTimeConstant.builder().value("200").build(),
-				ThinkTimeRandom.builder().max("200").build(),
-				ThinkTimeConstant.builder().value("${think_time}").build(),
-				ThinkTimeRandom.builder().max("${max_think_time}").build()
+				DelayConstant.builder().isThinkTime(true).value("3790200").build(),
+				DelayRandom.builder().isThinkTime(true).max("3790200").build(),
+				DelayConstant.builder().isThinkTime(true).value("3600000").build(),
+				DelayRandom.builder().isThinkTime(true).max("3600000").build(),
+				DelayConstant.builder().isThinkTime(true).value("180000").build(),
+				DelayRandom.builder().isThinkTime(true).max("180000").build(),
+				DelayConstant.builder().isThinkTime(true).value("10000").build(),
+				DelayRandom.builder().isThinkTime(true).max("10000").build(),
+				DelayConstant.builder().isThinkTime(true).value("200").build(),
+				DelayRandom.builder().isThinkTime(true).max("200").build(),
+				DelayConstant.builder().isThinkTime(true).value("${think_time}").build(),
+				DelayRandom.builder().isThinkTime(true).max("${max_think_time}").build()
 		);
 	}
 
-	private List<ThinkTime> getThinkTimesRequiredAndOptional() {
+	private List<Delay> getThinkTimesRequiredAndOptional() {
 		return List.of(
-				ThinkTimeConstant.builder()
+				DelayConstant.builder().isThinkTime(true)
 						.name("MyConstantThinkTime1")
 						.description("MyConstantThinkTime1Description")
 						.value("3790200")
 						.build(),
-				ThinkTimeConstant.builder()
+				DelayConstant.builder().isThinkTime(true)
 						.name("MyConstantThinkTime2")
 						.description("MyConstantThinkTime2Description")
 						.value("${think_time}")
 						.build(),
-				ThinkTimeRandom.builder()
+				DelayRandom.builder().isThinkTime(true)
 						.name("MyRandomThinkTime1")
 						.description("MyRandomThinkTime1Description")
 						.min("3790100")
 						.max("3790200")
 						.build(),
-				ThinkTimeRandom.builder()
+				DelayRandom.builder().isThinkTime(true)
 						.name("MyRandomThinkTime2")
 						.description("MyRandomThinkTime2Description")
 						.min("${min_think_time}")

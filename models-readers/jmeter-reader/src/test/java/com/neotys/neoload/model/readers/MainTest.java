@@ -55,7 +55,7 @@ public class MainTest {
                                                 .operator(Condition.Operator.EQUALS)
                                                 .operand2("2")
                                                 .build())
-                                        .addSteps(ThinkTimeConstant.builder()
+                                        .addSteps(DelayConstant.builder().isThinkTime(true)
                                                 .value("300")
                                                 .build())
                                         .build()
