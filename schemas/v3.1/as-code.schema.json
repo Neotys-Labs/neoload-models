@@ -224,7 +224,10 @@
 			},
 			"duration_value": {
 				"title": "Duration value",
-				"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
+				"anyOf": [
+					{ "type": "string", "pattern": "^\\s*(\\d+|(\\d+\\s*(h|ms|m|s)\\s*)+|\\$\\{[^}]+\\})\\s*$" },
+					{ "$ref": "#/definitions/common/positive_number" }
+				]
 			},
 			"duration": {
 				"title": "Duration",

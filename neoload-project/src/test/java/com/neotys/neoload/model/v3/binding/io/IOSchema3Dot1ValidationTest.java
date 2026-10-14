@@ -187,6 +187,25 @@ public class IOSchema3Dot1ValidationTest {
         assertPacing("1500", true);
         assertPacing("{ max: 5s }", true);
         assertPacing("{ value: 2s, min: 1s }", false);
+        assertPacing("abc", false);
+        assertPacing("{ value: 5x }", false);
+        assertPacing("{ min: abc, max: 5s }", false);
+    }
+
+    @Test
+    public void durationActionsRejectMalformedDurations() throws IOException {
+        for (final String key : new String[] {"delay", "think_time"}) {
+            assertStep(key + ": 1h 1s", true);
+            assertStep(key + ": ${my_var}", true);
+            assertStep(key + ": { name: wait, max: 3000 }", true);
+            assertStep(key + ": abc", false);
+            assertStep(key + ": { name: wait, value: 1.5s }", false);
+        }
+    }
+
+    private static void assertStep(final String step, final boolean valid) throws IOException {
+        final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - " + step + "\n";
+        Assert.assertEquals(step, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
     }
 
     private static void assertPacing(final String pacing, final boolean valid) throws IOException {
