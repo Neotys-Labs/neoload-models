@@ -19,7 +19,7 @@ with `min`/`max` bounds. `value` cannot be combined with `min` or `max`.
 ##### Random pacing (range)
 | Name       | Description                                                    | Accept variable | Required | Since  |
 |:---------- |:---------------------------------------------------------------|:----------------:|:--------:|:------:|
-| pacing.min | The minimum duration of a random pacing range. Optional, `0` when absent  | &#x2713;          | -        | 2026.3 |
+| pacing.min | The minimum duration of a random pacing range  | &#x2713;          | -        | 2026.3 |
 | pacing.max | The maximum duration of a random pacing range. Must be strictly greater than `pacing.min` | &#x2713;          | &#x2713; | 2026.3 |
 
 #### Duration value
