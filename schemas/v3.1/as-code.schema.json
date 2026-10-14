@@ -222,13 +222,6 @@
 				"type": "integer",
 				"minimum": 0
 			},
-			"pacing_value": {
-				"title": "Pacing value",
-				"anyOf": [
-					{ "type": "string", "pattern": "^(\\d+|(\\d+\\s*(h|ms|m|s)\\s*)+|\\$\\{[^}]+\\})$" },
-					{ "$ref": "#/definitions/common/positive_number" }
-				]
-			},
 			"duration_value": {
 				"title": "Duration value",
 				"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }]
@@ -1191,8 +1184,8 @@
 						"description": "The name of the SLA profile to apply to the Container (will not be applied to children)"
 					},
 					"pacing": {
-						"$ref": "#/definitions/user_paths/actions/pacing",
-						"description": "The minimum duration enforced for the Container"
+						"$ref": "#/definitions/user_paths/actions/duration",
+						"description": "The minimum duration enforced for the Container. A random pacing `max` must be strictly greater than `min`."
 					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
@@ -1318,8 +1311,8 @@
 							"description": "The name of the SLA profile to apply to the Transaction (will not be applied to children)"
 						},
 						"pacing": {
-							"$ref": "#/definitions/user_paths/actions/pacing",
-							"description": "The minimum duration enforced for the Transaction"
+							"$ref": "#/definitions/user_paths/actions/duration",
+							"description": "The minimum duration enforced for the Transaction. A random pacing `max` must be strictly greater than `min`."
 						},
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": {
@@ -1456,16 +1449,16 @@
 					],
 					"description": "A duration shared by the `delay` and `think_time` actions and the Web Page `think_time`: a fixed duration (scalar or `value`), or a random duration between `min` and `max`."
 				},
-				"pacing": {
-					"title": "Action: Pacing",
+				"duration": {
+					"title": "Duration",
 					"oneOf": [
-						{ "$ref": "#/definitions/common/pacing_value" },
+						{ "$ref": "#/definitions/common/duration_value" },
 						{
 							"type": "object",
 							"required": ["value"],
 							"additionalProperties": false,
 							"properties": {
-								"value": { "$ref": "#/definitions/common/pacing_value" }
+								"value": { "$ref": "#/definitions/common/duration_value" }
 							}
 						},
 						{
@@ -1474,17 +1467,14 @@
 							"additionalProperties": false,
 							"properties": {
 								"min": {
-									"$ref": "#/definitions/common/pacing_value",
-									"description": "The minimum duration of a random pacing range. Defaults to `0`."
+									"$ref": "#/definitions/common/duration_value",
+									"description": "The minimum duration. The default value is `0`."
 								},
-								"max": {
-									"$ref": "#/definitions/common/pacing_value",
-									"description": "The maximum duration of a random pacing range. Must be strictly greater than `min`."
-								}
+								"max": { "$ref": "#/definitions/common/duration_value" }
 							}
 						}
 					],
-					"description": "Pacing enforces a minimum duration: if the steps finish earlier, execution waits for the remainder. It is a constant duration (scalar or `value`), or a random range between `min` and `max`. A plain number is a duration in milliseconds."
+					"description": "A duration shared by the pacing and the Web Page `think_time`: a fixed duration (scalar or `value`), or a random duration between `min` and `max`. A plain number is a duration in milliseconds."
 				},
 				"javascript": {
 					"title": "Action: Javascript",
@@ -1781,10 +1771,8 @@
 							"description": "The name of the SLA profile to apply to the Web Page (will not be applied to children)"
 						},
 						"think_time": {
-							"title": "Web Page Think Time",
-							"allOf": [{ "$ref": "#/definitions/user_paths/actions/duration_action" }],
-							"not": { "type": "object", "anyOf": [{ "required": ["name"] }, { "required": ["description"] }] },
-							"description": "The think time to apply before playing the Web Page. Same syntax as the `think_time` action, without `name` and `description`."
+							"$ref": "#/definitions/user_paths/actions/duration",
+							"description": "The think time to apply before playing the Web Page. Same syntax as the pacing."
 						},
 						"playback": {
 							"type": "string",
@@ -1993,8 +1981,8 @@
 						"description": "Enable the break"
 					},
 					"pacing": {
-						"$ref": "#/definitions/user_paths/actions/pacing",
-						"description": "The minimum duration enforced for the case"
+						"$ref": "#/definitions/user_paths/actions/duration",
+						"description": "The minimum duration enforced for the case. A random pacing `max` must be strictly greater than `min`."
 					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
