@@ -285,12 +285,12 @@
 			},
 			"var_order": {
 				"type": "string",
-				"default": "global",
+				"default": "any",
 				"enum": ["sequential", "random", "any"]
 			},
 			"var_out_of_value": {
 				"type": "string",
-				"default": "global",
+				"default": "cycle",
 				"enum": ["cycle", "stop_test", "no_value_code"]
 			},
 			"assertions": {
@@ -308,8 +308,7 @@
 				"required": ["name"],
 				"properties": {
 					"name": { "$ref": "#/definitions/common/name" },
-					"description": { "$ref": "#/definitions/common/text" },
-					"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
+					"description": { "$ref": "#/definitions/common/text" }
 				}
 			},
 			"constant": {
@@ -362,7 +361,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -389,7 +389,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -412,7 +413,8 @@
 							"predictable": {
 								"type": "boolean",
 								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -437,7 +439,8 @@
 							"predictable": {
 								"type": "boolean",
 								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -482,7 +485,8 @@
 								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$",
 								"description": "The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes."
 							},
-							"scope": { "$ref": "#/definitions/common/var_scope" }
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -519,7 +523,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -563,7 +568,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -577,7 +583,8 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"script": { "$ref": "#/definitions/common/textblob" }
+							"script": { "$ref": "#/definitions/common/textblob" },
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -600,7 +607,8 @@
 								"type": "boolean",
 								"default": false,
 								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -795,6 +803,7 @@
 					"title": "Thresholds",
 					"type": "array",
 					"minItems": 1,
+					"description": "Threshold list. Each KPI+scope combination must appear at most once.",
 					"additionalProperties": false,
 					"items": { "$ref": "#/definitions/sla/threshold" }
 				}
@@ -802,7 +811,16 @@
 			"threshold": {
 				"title": "Threshold",
 				"type": "string",
-				"pattern": "^(.*?)\\s(warn\\s(>=|==|<=|>|<))(?=\\s)(.*?)per\\s(test|interval)$"
+				"description": "Format: [kpi] (warn|fail) >=|==|<= [value][unit] ... per test|interval\n\nMultiple conditions (warn and/or fail) can be combined on the same line. Units: s, ms, /s, Mbps, MB, %.\n\nKPIs per test:\n  avg-request-resp-time    — average request response time (s, ms)\n  avg-page-resp-time       — average page response time (s, ms)\n  avg-transaction-resp-time — average transaction response time (s, ms)\n  perc-transaction-resp-time (p{N}) — Nth-percentile transaction response time, default p90 (s, ms)\n  avg-request-per-sec      — average requests per second (/s)\n  avg-throughput-per-sec   — average throughput per second (Mbps)\n  errors-count             — total number of errors\n  count                    — total element count\n  throughput               — total throughput (MB)\n  error-rate               — error rate (%)\n\nKPIs per interval:\n  avg-resp-time            — average response time (s, ms)\n  avg-elt-per-sec          — average elements per second (/s)\n  avg-throughput-per-sec   — average throughput per second (Mbps)\n  errors-per-sec           — errors per second (/s)\n  error-rate               — error rate (%)",
+				"pattern": "^(.*?)\\s((warn|fail)\\s(>=|==|<=))(?=\\s)(.*?)per\\s(test|interval)$",
+				"examples": [
+					"avg-request-resp-time warn >= 200ms fail >= 500ms per test",
+					"perc-transaction-resp-time (p90) warn >= 1s fail >= 2s per test",
+					"error-rate warn >= 2% fail >= 5% per test",
+					"error-rate warn >= 5% per interval",
+					"avg-throughput-per-sec fail <= 10Mbps per test",
+					"errors-count fail >= 10 per test"
+]
 			}
 		},
 		"populations": {
@@ -1008,7 +1026,7 @@
 				"name": { "$ref": "#/definitions/common/name" },
 				"description": { "$ref": "#/definitions/common/text" },
 				"sla_profile": {
-					"$ref": "#/definitions/common/text",
+					"$ref": "#/definitions/common/name",
 					"description": "The name of the SLA profile to apply to the Scenario (will not be applied to children)"
 				},
 				"store_variables_for_raw_data": {
@@ -1169,7 +1187,7 @@
 				"properties": {
 					"description": { "$ref": "#/definitions/common/text" },
 					"sla_profile": {
-						"type": "string",
+						"$ref": "#/definitions/common/name",
 						"description": "The name of the SLA profile to apply to the Container (will not be applied to children)"
 					},
 					"pacing": {
@@ -1300,7 +1318,7 @@
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
+							"$ref": "#/definitions/common/name",
 							"description": "The name of the SLA profile to apply to the Transaction (will not be applied to children)"
 						},
 						"pacing": {
@@ -1344,7 +1362,7 @@
 							}
 						},
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
+							"$ref": "#/definitions/common/name",
 							"description": "The name of the SLA profile to apply to the request"
 						},
 						"body": { "$ref": "#/definitions/common/textblob" },
@@ -1586,6 +1604,7 @@
 						"value": { "$ref": "#/definitions/common/text" },
 						"case": {
 							"type": "array",
+							"description": "Case list. A Case contains steps executed when Case value equals Switch value",
 							"items": { "$ref": "#/definitions/user_paths/case" }
 						},
 						"default": { "$ref": "#/definitions/user_paths/container" }
@@ -1669,7 +1688,7 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"copy_variables": {
 							"type": "boolean",
-							"default": true,
+							"default": false,
 							"description": "When `true`, existing values of variables are copied locally so that modifications in another thread do not affect this Fork. Default is `false`."
 						},
 						"steps": {
@@ -1796,7 +1815,7 @@
 						},
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
+							"$ref": "#/definitions/common/name",
 							"description": "The name of the SLA profile to apply to the Web Page (will not be applied to children)"
 						},
 						"think_time": {
@@ -1933,7 +1952,7 @@
 					},
 					"default": {
 						"type": "string",
-						"default": "",
+						"default": "<NOT FOUND>",
 						"description": "The value to return when not extracted. The default value is \"<NOT FOUND>\"."
 					},
 					"throw_assertion_error": {
@@ -2033,6 +2052,10 @@
 					"pacing": {
 						"$ref": "#/definitions/user_paths/actions/pacing",
 						"description": "The minimum duration enforced for the case"
+					},
+					"sla_profile": {
+						"$ref": "#/definitions/common/name",
+						"description": "The name of the SLA profile to apply to the Case (will not be applied to children)"
 					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
