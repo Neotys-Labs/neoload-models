@@ -1,6 +1,6 @@
 # WebSocket Channel
 
-The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping`, `timestamp_extractor` and `push_messages` it is defined like a [request](request.md): `url`, `server`, `headers` and `extractors`.
+The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping`, `timestamp_extractor` and `push_messages` it is defined like a [request](request.md): `url`, `server`, `headers`, `extractors` and the assertions (`content_assertions`, `duration_assertion`, `size_assertion`).
 
 The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no `method`, `body` or `parts` settings.
 
@@ -15,6 +15,10 @@ A channel has no identifier of its own: it is designated by its complete path, f
 | server                              | The name of the server to use when `url` is a relative path                                           | -               | -        | 2026.3 |
 | headers                             | The headers of the upgrade request. `Upgrade: websocket` is implied, see [The `Upgrade` header](#the-upgrade-header) | &#x2713;        | -        | 2026.3 |
 | extractors                          | Variable extractors applied to the channel response                                                   | -               | -        | 2026.3 |
+| [content_assertions](content_assertion.md) | The list of assertions to validate the response of the upgrade request                  | -               | -        | 2026.3 |
+| assertions                          | Deprecated alias of `content_assertions`, read-only. Use `content_assertions` instead. | -               | -        | 2026.3 |
+| [duration_assertion](duration_assertion.md) | Checks that the upgrade request completed within a given duration                | -               | -        | 2026.3 |
+| [size_assertion](size_assertion.md) | The assertion to validate the response size                                                           | -               | -        | 2026.3 |
 | messages_mapping                    | How to extract the correlation id from an inbound frame. Mandatory as soon as a synchronous `websocket_request` uses the channel | - | - | 2026.3 |
 | timestamp_extractor                 | Where the time the server sent a frame at is in the frame, to measure the response time of the push messages, see [timestamp_extractor](#timestamp_extractor) | - | - | 2026.3 |
 | push_messages                       | The handlers of the frames the channel receives, see [push_messages](#push_messages)                   | -               | -        | 2026.3 |

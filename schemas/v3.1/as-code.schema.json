@@ -1784,23 +1784,6 @@
 					"additionalProperties": false,
 					"description": "The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back."
 				},
-                "name_values": {
-                  "title": "Name/Value List",
-                  "type": "array",
-                  "items": {
-                    "oneOf": [
-                      { "type": "string" },
-                      {
-                        "type": "object",
-                        "minProperties": 1,
-                        "maxProperties": 1,
-                        "patternProperties": {
-                          ".*": { "type": "string" }
-                        }
-                      }
-                    ]
-                  }
-                },
 				"websocket_channel": {
 					"title": "Action: WebSocket Channel",
 					"description": "The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `extractors`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request.",
@@ -1837,6 +1820,24 @@
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
 						},
+						"assertions": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
+							"description": "Deprecated alias of `content_assertions`, read-only."
+						},
+						"content_assertions": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
+							"description": "The list of assertions to validate the response of the upgrade request"
+						},
+						"duration_assertion": {
+							"$ref": "#/definitions/user_paths/duration_assertion",
+							"description": "Checks that the upgrade request completed within a given duration"
+						},
+						"size_assertion": {
+							"$ref": "#/definitions/user_paths/size_assertion",
+							"description": "Checks the length of the response content, in bytes."
+						},
 						"messages_mapping": {
 							"$ref": "#/definitions/user_paths/websocket_messages_mapping",
 							"description": "How to extract the correlation id from each inbound frame. It is compared with the `mapping_id` of a synchronous websocket_request. Mandatory as soon as a synchronous websocket_request uses this channel."
@@ -1850,7 +1851,8 @@
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/websocket_push_message" }
 						}
-					}
+					},
+					"not": { "required": ["assertions", "content_assertions"] }
 				},
 				"websocket_request": {
 					"title": "Action: WebSocket Request",
@@ -1918,6 +1920,23 @@
 							"if": { "required": ["message_type"], "properties": { "message_type": { "const": "close" } } },
 							"then": { "properties": { "synchronous": { "const": false } } },
 							"else": { "properties": { "status_code": { "enum": ["1000", 1000] } } }
+						}
+					]
+				}
+			},
+			"name_values": {
+				"title": "Name/Value List",
+				"type": "array",
+				"items": {
+					"oneOf": [
+						{ "type": "string" },
+						{
+							"type": "object",
+							"minProperties": 1,
+							"maxProperties": 1,
+							"patternProperties": {
+								".*": { "type": "string" }
+							}
 						}
 					]
 				}

@@ -12,6 +12,8 @@ import com.neotys.neoload.model.v3.project.userpath.WebSocketChannel;
 import com.neotys.neoload.model.v3.project.userpath.WebSocketMessagesMapping;
 import com.neotys.neoload.model.v3.project.userpath.WebSocketRequest;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -41,6 +43,11 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 				WebSocketChannel.builder()
 						.name("chat_socket")
 						.url("https://host:443/chat")
+						.addContentAssertions(ContentAssertion.builder()
+								.contains("101 Switching Protocols")
+								.build())
+						.durationAssertion(DurationAssertion.builder().lessThan(2000L).build())
+						.sizeAssertion(SizeAssertion.builder().lessThan(4096L).build())
 						.messagesMapping(WebSocketMessagesMapping.builder()
 								.jsonPath("$.correlationId")
 								.build())

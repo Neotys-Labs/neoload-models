@@ -7,12 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.Header;
-import com.neotys.neoload.model.v3.project.userpath.Step;
-import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
-import com.neotys.neoload.model.v3.project.userpath.WebSocketChannel;
-import com.neotys.neoload.model.v3.project.userpath.WebSocketMessagesMapping;
-import com.neotys.neoload.model.v3.project.userpath.WebSocketTimestampExtractor;
+import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -37,7 +32,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 				.description("a channel using every setting")
 				.url("/socket")
 				.server("myserver")
-				.addHeaders(Header.builder().name("Origin").value("https://host").build())
+				.addHeaders(NameValue.builder().name("Origin").value("https://host").build())
 				.addExtractors(VariableExtractor.builder()
 						.name("session_id")
 						.regexp("session=([0-9]+)")

@@ -7,13 +7,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
-import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
-import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertionElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertionElement;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
+
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
@@ -30,38 +32,22 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * answer a waiting synchronous {@link WebSocketRequest}.</p>
  */
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketChannel.URL, WebSocketChannel.SERVER, WebSocketChannel.HEADERS, WebSocketChannel.EXTRACTORS, WebSocketChannel.MESSAGES_MAPPING, WebSocketChannel.TIMESTAMP_EXTRACTOR, WebSocketChannel.PUSH_MESSAGES})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, WebSocketChannel.HEADERS, WebSocketChannel.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, WebSocketChannel.MESSAGES_MAPPING, WebSocketChannel.TIMESTAMP_EXTRACTOR, WebSocketChannel.PUSH_MESSAGES})
 @JsonSerialize(as = ImmutableWebSocketChannel.class)
 @JsonDeserialize(as = ImmutableWebSocketChannel.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface WebSocketChannel extends Step {
-	String URL = "url";
-	String SERVER = "server";
+public interface WebSocketChannel extends Step, UrlServerElement, AssertionsElement, DurationAssertionElement, SizeAssertionElement {
 	String HEADERS = "headers";
 	String EXTRACTORS = "extractors";
 	String MESSAGES_MAPPING = "messages_mapping";
 	String TIMESTAMP_EXTRACTOR = "timestamp_extractor";
 	String PUSH_MESSAGES = "push_messages";
 
-	/**
-	 * The {@link Request#URL} pattern: {@code http} or {@code https}, the schemes NeoLoad stores
-	 * for a channel ({@code ws} and {@code wss} are not accepted), or a path relative to
-	 * {@link #getServer()}.
-	 */
-	String URL_PATTERN = "^((http[s]?):\\/\\/(([^:/\\[\\]]+)|(\\[[^/]+\\])):?((\\d+)|(\\$\\{.+\\}))?)?($|\\/.*$)";
-
-	@JsonProperty(URL)
-	@RequiredCheck(groups={NeoLoad.class})
-	@Pattern(regexp=URL_PATTERN, groups={NeoLoad.class})
-	String getUrl();
-
-	@JsonProperty(SERVER)
-	Optional<String> getServer();
-
 	@JsonProperty(HEADERS)
+	@JsonInclude(Include.NON_EMPTY)
 	@Valid
-	List<Header> getHeaders();
+	List<NameValue> getHeaders();
 
 	@JsonProperty(EXTRACTORS)
 	@Valid
