@@ -241,7 +241,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 
 		assertEquals(DurationConstant.builder().value("1500").build(), pacingOf(project));
 		final String yaml = new IO().write(ProjectDescriptor.builder().project(project).build(), Format.YAML);
-		assertTrue(yaml, yaml.contains("pacing: 1s 500ms"));
+		assertTrue(yaml, yaml.contains("pacing: 1s500ms"));
 	}
 
 	@Test

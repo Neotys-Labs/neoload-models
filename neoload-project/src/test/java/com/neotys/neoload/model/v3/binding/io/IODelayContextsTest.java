@@ -122,6 +122,13 @@ public class IODelayContextsTest {
 	}
 
 	@Test
+	public void writeConstantInCompactUnitFormat() throws IOException {
+		assertTrue(write(context.project(DurationConstant.builder().value("3601000").build())).contains(context.key + ": 1h1s"));
+		assertTrue(write(context.project(DurationConstant.builder().value("1500").build())).contains(context.key + ": 1s500ms"));
+		assertTrue(write(context.project(DurationConstant.builder().value("${var}").build())).contains("${var}"));
+	}
+
+	@Test
 	public void readRandomWithoutMinHasNoMinimum() throws IOException {
 		final Project project = read("{max: 5s}");
 
@@ -137,7 +144,7 @@ public class IODelayContextsTest {
 			final Project project = read(delayYaml);
 
 			assertEquals(delayYaml, expected, context.duration(project));
-			assertTrue(delayYaml, write(project).contains(context.key + ": 1m 30s"));
+			assertTrue(delayYaml, write(project).contains(context.key + ": 1m30s"));
 		}
 	}
 
