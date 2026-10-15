@@ -6,6 +6,12 @@ user_paths:
     - websocket_channel:
         name: chat_socket
         url: https://host:443/chat
+        content_assertions:
+        - contains: 101 Switching Protocols
+        duration_assertion:
+          less_than: 2000
+        size_assertion:
+          less_than: 4096
         messages_mapping:
           jsonpath: $.correlationId
     - websocket_request:
