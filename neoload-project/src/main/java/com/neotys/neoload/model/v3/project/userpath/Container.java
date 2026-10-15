@@ -42,6 +42,7 @@ public interface Container extends Step, SlaElement, PacingElement, AssertionsEl
 
 	@RequiredCheck(groups={NeoLoad.class})
 	@Valid
+	@JsonInclude(Include.ALWAYS)
 	@JsonSerialize(using = StepsSerializer.class)
 	@JsonDeserialize(using = StepsDeserializer.class)
 	@JsonProperty(STEPS)
