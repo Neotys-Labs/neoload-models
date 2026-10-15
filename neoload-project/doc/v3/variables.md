@@ -171,15 +171,15 @@ A list or table of values defined inline in the YAML file.
 
 | Name          | Description                   | Accept variable | Required | Since |
 |:------------- |:----------------------------- |:---------------:|:--------:|:-----:|
-| name          | The variable name             | -               | &#x2713; |       |
-| description   | The variable description      | -               | -        |       |
-| column_names  | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | -               | &#x2713; |       |
-| values        | The list of rows. Each row is a list of values, one per column of `column_names`. | -               | &#x2713; |       |
-| start_from_line | The first row of `values` to be used. The default value is "1". | -               | -        |       |
-| change_policy | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |       |
-| scope         | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        |       |
-| order         | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | -               | -        |       |
-| out_of_value  | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | -               | -        |       |
+| name          | The variable name             | -               | &#x2713; | 2026.3 |
+| description   | The variable description      | -               | -        | 2026.3 |
+| column_names  | The list of column names. Use `${<variableName>.<columnName>}` to access variable values. | -               | &#x2713; | 2026.3 |
+| values        | The list of rows. Each row is a list of values, one per column of `column_names`. | -               | &#x2713; | 2026.3 |
+| start_from_line | The first row of `values` to be used. The default value is "1". | -               | -        | 2026.3 |
+| change_policy | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3 |
+| scope         | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        | 2026.3 |
+| order         | The values can be distributed in a set order. The value of order can be:<ul><li>`sequential`</li><li>`random`</li><li>`any`</li></ul></br>The default value is `any`. | -               | -        | 2026.3 |
+| out_of_value  | When no values are left, several policies can be applied. The value of "out_of_value" can be:<ul><li>`cycle`</li><li>`stop_test`</li><li>`no_value_code`</li></ul></br>The default value is `cycle`. | -               | -        | 2026.3 |
 
 #### Example
 Defining a List variable.

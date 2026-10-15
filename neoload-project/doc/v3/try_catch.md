@@ -8,11 +8,11 @@ running it, executes the Catch container.
 
 | Name              | Description                                                                                                  | Accept variable | Required | Since |
 |:------------------|:-------------------------------------------------------------------------------------------------------------|:----------------:|:--------:|:-----:|
-| name              | The name of the Try Catch. Defaults to `try_catch`.                                                          |         -         |    -     |   -   |
-| description       | The description of the Try Catch                                                                             |         -         |    -     |   -   |
-| caught_exceptions | Exception types to catch: `errors`, `assertions`, `all`. Defaults to `errors`.                               |         -         |    -     |   -   |
-| try               | The Try [container](container.md)                                                                            |         -         |    -     |   -   |
-| catch             | The Catch [container](container.md)                                                                          |         -         |    -     |   -   |
+| name              | The name of the Try Catch. Defaults to `try_catch`.                                                          |         -         |    -     | 2026.3 |
+| description       | The description of the Try Catch                                                                             |         -         |    -     | 2026.3 |
+| caught_exceptions | Exception types to catch: `errors`, `assertions`, `all`. Defaults to `errors`.                               |         -         |    -     | 2026.3 |
+| try               | The Try [container](container.md)                                                                            |         -         |    -     | 2026.3 |
+| catch             | The Catch [container](container.md)                                                                          |         -         |    -     | 2026.3 |
 
 #### Example
 Run two requests in the Try container. If a request assertion fails, or an unhandled error occurs, run the

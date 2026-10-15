@@ -12,7 +12,7 @@ The Web Page Action is used to group together the requests and resources that ma
 | think_time                          | The think time to apply before playing the Web Page. Either a constant value (`value`), or a random value between `min` (defaults to `0`) and `max` | &#x2713; | -        | 2026.3 |
 | playback                            | How the Web Page's steps are played: `parallel` (default) or `sequential`                             | -               | -        | 2026.3 |
 | execute_resources                   | How the Web Page's resources are executed: `static` (default), `dynamic` or `dynamic_forced_encoding` | -               | -        | 2026.3 |
-| steps                               | Steps of the Web Page. Only [request](request.md) and nested `web_page` steps are supported            | -               | &#x2713; | 2026.3 |
+| steps                               | Steps of the Web Page. Only [request](request.md), nested `web_page` and [soap_request](soap_request.md) steps are supported            | -               | &#x2713; | 2026.3 |
 
 #### think_time
 
