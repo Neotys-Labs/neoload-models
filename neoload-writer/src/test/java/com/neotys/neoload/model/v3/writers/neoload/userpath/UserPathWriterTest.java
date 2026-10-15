@@ -1,7 +1,8 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
@@ -18,7 +19,7 @@ public class UserPathWriterTest {
                 .name("my User")
                 .actions(Container.builder()
                         .name("delay")
-                        .addSteps(DelayConstant.builder().value("3000").build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
                         .build())
                 .build();
 
@@ -64,7 +65,7 @@ public class UserPathWriterTest {
                         .build())
                 .actions(Container.builder()
                         .name("actions")
-                        .addSteps(DelayConstant.builder().value("3000").build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
                         .addContentAssertions(ContentAssertion.builder()
                         		.contains("userpath_actions_contains_1")
                         		.build())

@@ -1,14 +1,12 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
 
-import com.neotys.neoload.model.v3.project.Element;
-import org.junit.Test;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static org.junit.Assert.assertEquals;
 
+import com.neotys.neoload.model.v3.project.Element;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.junit.Test;
 
 public class UserPathTest {
 	@Test
@@ -46,7 +44,7 @@ public class UserPathTest {
 	public void flattened() {
 		final UserPath userPath = UserPath.builder().actions(Container.builder()
 				.addSteps(Request.builder().build())
-				.addSteps(DelayConstant.builder().build())
+				.addSteps(Delay.builder().build())
 				.build())
 				.build();
 

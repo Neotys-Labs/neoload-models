@@ -1,22 +1,22 @@
 package com.neotys.neoload.model.readers.jmeter.step.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.While;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jmeter.control.WhileController;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 
 public class WhileControllerConverterTest {
     private TestEventListener spy;
@@ -61,7 +61,7 @@ public class WhileControllerConverterTest {
         List<Step> expected = new ArrayList<>();
         expected.add(While.builder()
                 .name(whileController.getName())
-                .addSteps(DelayConstant.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build())
+                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build())
                 .description(whileController.getCondition())
                 .build());
         assertEquals(expected,result);
