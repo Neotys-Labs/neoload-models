@@ -1042,7 +1042,7 @@
 				"name": { "$ref": "#/definitions/common/name" },
 				"description": { "$ref": "#/definitions/common/text" },
 				"sla_profile": {
-					"$ref": "#/definitions/common/text",
+					"$ref": "#/definitions/common/name",
 					"description": "The name of the SLA profile to apply to the Scenario (will not be applied to children)"
 				},
 				"store_variables_for_raw_data": {
@@ -1203,7 +1203,7 @@
 				"properties": {
 					"description": { "$ref": "#/definitions/common/text" },
 					"sla_profile": {
-						"type": "string",
+						"$ref": "#/definitions/common/name",
 						"description": "The name of the SLA profile to apply to the Container (will not be applied to children)"
 					},
 					"pacing": {
@@ -1330,7 +1330,7 @@
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
+							"$ref": "#/definitions/common/name",
 							"description": "The name of the SLA profile to apply to the Transaction (will not be applied to children)"
 						},
 						"pacing": {
@@ -1374,7 +1374,7 @@
 							}
 						},
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
+							"$ref": "#/definitions/common/name",
 							"description": "The name of the SLA profile to apply to the request"
 						},
 						"body": { "$ref": "#/definitions/common/textblob" },
@@ -1817,7 +1817,7 @@
 						},
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
+							"$ref": "#/definitions/common/name",
 							"description": "The name of the SLA profile to apply to the Web Page (will not be applied to children)"
 						},
 						"think_time": {
@@ -2067,7 +2067,10 @@
 						"$ref": "#/definitions/user_paths/actions/pacing",
 						"description": "The minimum duration enforced for the case"
 					},
-					"sla_profile": { "$ref": "#/definitions/common/text" },
+					"sla_profile": {
+						"$ref": "#/definitions/common/name",
+						"description": "The name of the SLA profile to apply to the Case (will not be applied to children)"
+					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
 						"$ref": "#/definitions/common/assertions",
