@@ -11,7 +11,10 @@
 		"neoload*.yml",
 		"*.nl.json",
 		"*.neoload.json",
-		"neoload*.json"
+		"neoload*.json",
+		"*.nl.js",
+		"*.neoload.js",
+		"neoload*.js"
 	],
 	"type": "object",
 	"additionalProperties": false,
