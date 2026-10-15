@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
@@ -158,7 +159,7 @@ public class RequestWriterTest {
 				.server("server_test")
 				.method("POST")
 				.bodyBinary(WrittingTestUtils.BINARY_DATA_TEST)
-				.putHeaders("Content-Type", Optional.of("application/octet-stream"))
+				.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -186,7 +187,7 @@ public class RequestWriterTest {
 				.server("server_test")
 				.method("POST")
 				.binarySourceFile("payloads/hello.bin")
-				.putHeaders("Content-Type", Optional.of("application/octet-stream"))
+				.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -213,7 +214,7 @@ public class RequestWriterTest {
 				.url("/test_path?param_name=param_value")
 				.server("server_test")
 				.method("POST")
-				.putHeaders("Content-Type", Optional.of("multipart/mixed"))
+				.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("multipart/mixed")))
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -244,7 +245,7 @@ public class RequestWriterTest {
 				.server("server_test")
 				.method("POST")
 				.parts(ImmutableList.of(stringPart, filePart))
-				.putHeaders("Content-Type", Optional.of("multipart/mixed"))
+				.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("multipart/mixed")))
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"

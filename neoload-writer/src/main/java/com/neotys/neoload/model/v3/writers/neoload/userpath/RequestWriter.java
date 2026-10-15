@@ -1,6 +1,5 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
-import com.google.common.collect.Multimap;
 import com.google.common.net.MediaType;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
@@ -12,6 +11,7 @@ import com.neotys.neoload.model.v3.writers.neoload.SlaElementWriter;
 import com.neotys.neoload.model.v3.writers.neoload.userpath.assertion.AssertionsWriter;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -91,7 +91,7 @@ public class RequestWriter extends ElementWriter {
 		}
 		final Optional<String> parameterTag = bodySupportedByMethod ? Optional.of(XML_URL_PARAMETER_TAG_NAME) : Optional.empty();
 		url.getQuery().ifPresent(s -> writeParameters(RequestUtils.getParameters(s), parameterTag, document, xmlRequest));
-		theRequest.getHeaders().entries().forEach(header -> HeaderWriter.writeXML(document, xmlRequest, header.getKey(), header.getValue()));
+		theRequest.getHeaders().forEach(header -> HeaderWriter.writeXML(document, xmlRequest, header.getKey(), header.getValue()));
 	}
 
 	private boolean isBodySupportedByMethod(final Request theRequest) {
@@ -116,8 +116,8 @@ public class RequestWriter extends ElementWriter {
 	}
 
 
-	public void writeParameters(final Multimap<String, Optional<String>> parameters, Optional<String> xmlTag, final Document document, Element xmlRequest) {
-			parameters.entries().forEach(param -> ParameterWriter.writeXML(document, xmlRequest, xmlTag, param.getKey(), param.getValue()));
+	public void writeParameters(final List<Map.Entry<String, Optional<String>>> parameters, Optional<String> xmlTag, final Document document, Element xmlRequest) {
+			parameters.forEach(param -> ParameterWriter.writeXML(document, xmlRequest, xmlTag, param.getKey(), param.getValue()));
 	}
 
 	public void writePostTextBody(final String body, final Document document, Element xmlRequest) {
@@ -151,7 +151,7 @@ public class RequestWriter extends ElementWriter {
 	}
 
 	private Optional<String> getContentType(Request request) {
-		return request.getHeaders().entries().stream()
+		return request.getHeaders().stream()
 				.filter(header -> "content-type".equalsIgnoreCase(header.getKey()) && header.getValue().isPresent())
 				.map(header -> header.getValue().get())
 				.findFirst();

@@ -6,12 +6,14 @@ import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -97,10 +99,10 @@ public class RequestUtils {
 	 * Gets the parameters from URL query or form body (<name>=<value>&<name>=<value>).
 	 *
 	 * @param query the part of the URL or the form body that contains all the parameters
-	 * @return parameters by name, in query order
+	 * @return name/value pairs, in query order
 	 */
-	public static Multimap<String, Optional<String>> getParameters(final String query) {
-		final ImmutableListMultimap.Builder<String, Optional<String>> urlParameters = ImmutableListMultimap.builder();
+	public static List<Map.Entry<String, Optional<String>>> getParameters(final String query) {
+		final ImmutableList.Builder<Map.Entry<String, Optional<String>>> urlParameters = ImmutableList.builder();
 		if (Strings.isNullOrEmpty(query) || query.trim().isEmpty()) {
 			return urlParameters.build();
 		}
@@ -108,14 +110,14 @@ public class RequestUtils {
 			if (param.contains("=")) {
 				final String[] pair = param.split("=");
 				if (pair.length > 1) {
-					urlParameters.put(pair[0], Optional.of(pair[1]));
+					urlParameters.add(Maps.immutableEntry(pair[0], Optional.of(pair[1])));
 				} else if (pair.length == 1) {
-					urlParameters.put(pair[0], Optional.of(""));
+					urlParameters.add(Maps.immutableEntry(pair[0], Optional.of("")));
 				} else {
-					urlParameters.put("", Optional.of(""));
+					urlParameters.add(Maps.immutableEntry("", Optional.of("")));
 				}
 			} else {
-				urlParameters.put(param, Optional.empty());
+				urlParameters.add(Maps.immutableEntry(param, Optional.empty()));
 			}
 		}
 		return urlParameters.build();
@@ -180,9 +182,11 @@ public class RequestUtils {
 		}
 	}
 
-	public static boolean containFormHeader(final Multimap<String, Optional<String>> headers) {
+	public static boolean containFormHeader(final List<Map.Entry<String, Optional<String>>> headers) {
 		if (headers == null) return false;
-		return headers.get(HEADER_CONTENT_TYPE).stream()
+		return headers.stream()
+				.filter(header -> HEADER_CONTENT_TYPE.equals(header.getKey()))
+				.map(Map.Entry::getValue)
 				.findFirst()
 				.filter(value -> isForm(value.orElse(null)))
 				.isPresent();

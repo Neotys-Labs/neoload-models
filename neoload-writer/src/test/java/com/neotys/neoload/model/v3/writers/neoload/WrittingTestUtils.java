@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
@@ -55,7 +56,7 @@ public class WrittingTestUtils {
             .server(SERVER_TEST.getName())
             .method("POST")
             .body("post param_name=post_param Value")
-            .putHeaders("Content-Type", Optional.of("application/x-www-form-urlencoded"))
+            .addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/x-www-form-urlencoded")))
             .build();
 
 	public static final Request REQUEST_TEST3_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST3).withMethod("PUT");
@@ -66,7 +67,7 @@ public class WrittingTestUtils {
             .server(SERVER_TEST.getName())
             .method("POST")
             .body("texte a convertir en binaire")
-            .putHeaders("Content-Type", Optional.of("text/plain"))
+            .addHeaders(Maps.immutableEntry("Content-Type", Optional.of("text/plain")))
             .build();
 
 	public static final Request REQUEST_TEST4_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST4).withMethod("PUT");
@@ -81,7 +82,7 @@ public class WrittingTestUtils {
             .method("POST")
             // TODO !!! should be natively binary in the model
             .body(new String(BINARY_DATA_TEST))
-            .putHeaders("Content-Type", Optional.of("application/octet-stream"))
+            .addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
             .build();
 
     // TODO page does not exist in V3
@@ -172,7 +173,7 @@ public class WrittingTestUtils {
             .server(SERVER_JACK9090_TEST.getName())
             .method("POST")
             .body("firstname=a&lastname=b&email=c@d.fr&address=e&sex=Male")
-            .putHeaders("Content-Type", Optional.of("application/x-www-form-urlencoded"))
+            .addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/x-www-form-urlencoded")))
             // TDOD
             //.referer(GET_FOLLOW_LINK_REQUEST_TEST)
             .build();

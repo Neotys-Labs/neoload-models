@@ -6,10 +6,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
+import java.util.Map;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -202,27 +204,33 @@ public class RequestUtilsTest {
 		assertNotNull(RequestUtils.getParameters(" \t \r\n "));
 		assertEquals(0, RequestUtils.getParameters(" \t \r\n ").size());
 		
-		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("name", Optional.empty())
+		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("name", Optional.empty()))
 				.build(), RequestUtils.getParameters("name"));
-		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("name", Optional.of(""))
+		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("name", Optional.of("")))
 				.build(), RequestUtils.getParameters("name="));
-		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("", Optional.of(""))
+		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("", Optional.of("")))
 				.build(), RequestUtils.getParameters("="));
-		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("", Optional.of("value"))
+		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("", Optional.of("value")))
 				.build(), RequestUtils.getParameters("=value"));
-		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("name", Optional.of("value"))
+		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("name", Optional.of("value")))
 				.build(), RequestUtils.getParameters("name=value"));
-		assertEquals(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("name1", Optional.of("value1"))
-				.put("name2", Optional.empty())
-				.put("name3", Optional.of(""))
-				.put("name4", Optional.of("value4"))
+		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("name1", Optional.of("value1")))
+				.add(Maps.immutableEntry("name2", Optional.empty()))
+				.add(Maps.immutableEntry("name3", Optional.of("")))
+				.add(Maps.immutableEntry("name4", Optional.of("value4")))
 				.build(), RequestUtils.getParameters("name1=value1&name2&name3=&name4=value4"));
+		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("a", Optional.of("1")))
+				.add(Maps.immutableEntry("b", Optional.of("2")))
+				.add(Maps.immutableEntry("a", Optional.of("3")))
+				.add(Maps.immutableEntry("a", Optional.of("3")))
+				.build(), RequestUtils.getParameters("a=1&b=2&a=3&a=3"));
 	}
 	
 	@Test
@@ -295,32 +303,32 @@ public class RequestUtilsTest {
 	@Test
 	public void containFormHeader() {
 		assertFalse(RequestUtils.containFormHeader(null));
-		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.of()));
+		assertFalse(RequestUtils.containFormHeader(ImmutableList.of()));
 
-		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("name1", Optional.empty())
-				.put("name2", Optional.empty())
-				.put("name3", Optional.empty())
+		assertFalse(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("name1", Optional.empty()))
+				.add(Maps.immutableEntry("name2", Optional.empty()))
+				.add(Maps.immutableEntry("name3", Optional.empty()))
 				.build()));
-		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("name", Optional.of("value"))
-				.put("Content-Type", Optional.empty())
-				.put("name", Optional.of("value"))
+		assertFalse(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("name", Optional.of("value")))
+				.add(Maps.immutableEntry("Content-Type", Optional.empty()))
+				.add(Maps.immutableEntry("name", Optional.of("value")))
 				.build()));
-		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("name", Optional.of("value"))
-				.put("Content-Type", Optional.of(""))
-				.put("name", Optional.of("value"))
+		assertFalse(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("name", Optional.of("value")))
+				.add(Maps.immutableEntry("Content-Type", Optional.of("")))
+				.add(Maps.immutableEntry("name", Optional.of("value")))
 				.build()));
-		assertFalse(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("name", Optional.of("value"))
-				.put("Content-Type", Optional.of("value"))
-				.put("name", Optional.of("value"))
+		assertFalse(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("name", Optional.of("value")))
+				.add(Maps.immutableEntry("Content-Type", Optional.of("value")))
+				.add(Maps.immutableEntry("name", Optional.of("value")))
 				.build()));
-		assertTrue(RequestUtils.containFormHeader(ImmutableListMultimap.<String, Optional<String>>builder()
-				.put("name", Optional.of("value"))
-				.put("Content-Type", Optional.of("application/x-www-form-urlencoded"))
-				.put("name", Optional.of("value"))
+		assertTrue(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
+				.add(Maps.immutableEntry("name", Optional.of("value")))
+				.add(Maps.immutableEntry("Content-Type", Optional.of("application/x-www-form-urlencoded")))
+				.add(Maps.immutableEntry("name", Optional.of("value")))
 				.build()));
 	}
 

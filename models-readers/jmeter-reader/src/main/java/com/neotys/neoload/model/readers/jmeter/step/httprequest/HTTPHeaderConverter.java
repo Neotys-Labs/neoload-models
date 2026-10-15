@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.readers.jmeter.step.httprequest;
 
+import com.google.common.collect.Maps;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import java.util.Optional;
@@ -45,7 +46,7 @@ class HTTPHeaderConverter {
                 final Object objectHeader = tep.getObjectValue();
                 if(objectHeader instanceof Header) {
                     final Header header = (Header) objectHeader;
-                    request.putHeaders(header.getName(), Optional.ofNullable(header.getValue()));
+                    request.addHeaders(Maps.immutableEntry(header.getName(), Optional.ofNullable(header.getValue())));
                 }
             }
         }

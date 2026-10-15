@@ -126,7 +126,7 @@ public class HTTPSamplerProxyConverterTest {
             step.flattened()
                     .forEach(c -> {
                         if (c instanceof Request) {
-                            for (java.util.Map.Entry<String, java.util.Optional<String>> head : ((Request) c).getHeaders().entries()) {
+                            for (java.util.Map.Entry<String, java.util.Optional<String>> head : ((Request) c).getHeaders()) {
                                 assertEquals(head.getKey(), header.getName());
                                 assertEquals(head.getValue(), java.util.Optional.ofNullable(header.getValue()));
                             }
