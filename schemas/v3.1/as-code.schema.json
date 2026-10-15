@@ -407,7 +407,8 @@
 								"type": "number"
 							},
 							"max": {
-								"type": "number"
+								"type": "number",
+								"description": "Must be greater than or equal to `min`."
 							},
 							"predictable": {
 								"type": "boolean",
@@ -432,7 +433,7 @@
 							},
 							"max_length": {
 								"type": "number",
-								"description": "The maximum number of characters of the generated value. The default value is `10`."
+								"description": "The maximum number of characters of the generated value. The default value is `10`. Must be greater than or equal to `min_length`."
 							},
 							"predictable": {
 								"type": "boolean",
@@ -892,7 +893,7 @@
 					},
 					"max_users": {
 						"$ref": "#/definitions/common/positive_number",
-						"description": "The maximum number of Virtual Users"
+						"description": "The maximum number of Virtual Users. Must be greater than or equal to `min_users`."
 					},
 					"increment_users": {
 						"type": "integer",
@@ -1446,7 +1447,10 @@
 									"$ref": "#/definitions/common/duration_value",
 									"description": "The minimum delay duration. The default value is `0`."
 								},
-								"max": { "$ref": "#/definitions/common/duration_value" }
+								"max": {
+									"$ref": "#/definitions/common/duration_value",
+									"description": "The maximum delay duration. Must be greater than or equal to `min`."
+								}
 							}
 						}
 					],
@@ -1477,7 +1481,10 @@
 									"$ref": "#/definitions/common/duration_value",
 									"description": "The minimum think time duration. The default value is `0`."
 								},
-								"max": { "$ref": "#/definitions/common/duration_value" }
+								"max": {
+									"$ref": "#/definitions/common/duration_value",
+									"description": "The maximum think time duration. Must be greater than or equal to `min`."
+								}
 							}
 						}
 					],
@@ -1498,7 +1505,7 @@
 								},
 								"max": {
 									"$ref": "#/definitions/common/pacing_value",
-									"description": "The maximum duration of a random pacing range. Must be strictly greater than `min`."
+									"description": "The maximum duration of a random pacing range. Must be greater than or equal to `min`."
 								}
 							}
 						}
@@ -1823,7 +1830,7 @@
 										},
 										"max": {
 											"$ref": "#/definitions/user_paths/actions/web_page_think_time_value",
-											"description": "Maximum think time."
+											"description": "Maximum think time. Must be greater than or equal to `min`."
 										}
 									},
 									"additionalProperties": false

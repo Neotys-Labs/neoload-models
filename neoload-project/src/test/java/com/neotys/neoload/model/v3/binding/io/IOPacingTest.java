@@ -182,7 +182,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readPacingRandomRangesWhereMaxIsGreaterThanMinAreAccepted() throws IOException {
+	public void readPacingRandomRangesWhereMinIsNotGreaterThanMaxAreAccepted() throws IOException {
 		final ProjectDescriptor descriptor = new IO().read(getFile("test-pacing-random-valid-ranges", "yaml"));
 		assertNotNull(descriptor);
 
@@ -191,7 +191,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readPacingRandomRangesWhereMaxIsNotGreaterThanMinAreRejected() throws IOException {
+	public void readPacingRandomRangesWhereMinIsGreaterThanMaxAreRejected() throws IOException {
 		final ProjectDescriptor descriptor = new IO().read(getFile("test-pacing-random-invalid-ranges", "yaml"));
 
 		final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
@@ -199,6 +199,9 @@ public class IOPacingTest extends AbstractIOElementsTest {
 
 		final String message = validation.getMessage().get();
 		assertTrue(message, message.contains("Violation Number: 3."));
+		for (int step = 0; step < 3; step++) {
+			assertTrue(message, message.contains("Incorrect value for 'project.user_paths[0].actions.steps[" + step + "].pacing': pacing 'min' must be less than or equal to 'max'."));
+		}
 	}
 
 	@Test

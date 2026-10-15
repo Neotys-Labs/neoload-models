@@ -4,8 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.neotys.neoload.model.v3.project.MinMaxRange;
+import com.neotys.neoload.model.v3.validation.constraints.MinNotGreaterThanMaxCheck;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.math.BigDecimal;
+import java.util.Optional;
 import org.immutables.value.Value;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
@@ -14,7 +18,8 @@ import org.immutables.value.Value;
 		RandomStringVariable.PREDICTABLE, ChangePolicyVariable.CHANGE_POLICY})
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface RandomStringVariable extends ChangePolicyVariable {
+@MinNotGreaterThanMaxCheck(element = "random_string", min = RandomStringVariable.MIN_LENGTH, max = RandomStringVariable.MAX_LENGTH, groups = {NeoLoad.class})
+public interface RandomStringVariable extends ChangePolicyVariable, MinMaxRange {
 
 	String MIN_LENGTH 			= "min_length";
 	String MAX_LENGTH 			= "max_length";
@@ -38,6 +43,16 @@ public interface RandomStringVariable extends ChangePolicyVariable {
 	@Value.Default
 	default boolean isPredictable() {
 		return false;
+	}
+
+	@Override
+	default Optional<BigDecimal> comparableMin() {
+		return Optional.of(BigDecimal.valueOf(getMinLength()));
+	}
+
+	@Override
+	default Optional<BigDecimal> comparableMax() {
+		return Optional.of(BigDecimal.valueOf(getMaxLength()));
 	}
 
 	class Builder extends ImmutableRandomStringVariable.Builder {}

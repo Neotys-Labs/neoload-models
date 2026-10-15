@@ -7,19 +7,20 @@ user_paths:
         name: MyTransaction1
         pacing:
           min: 3s
-          max: 3s
+          max: 1s
         steps:
         - delay: 100
     - transaction:
         name: MyTransaction2
         pacing:
-          min: 3s
-          max: 1s
+          min: 1s
+          max: "999"
         steps:
         - delay: 100
     - transaction:
         name: MyTransaction3
         pacing:
-          max: "0"
+          min: 1h
+          max: 59m59s
         steps:
         - delay: 100

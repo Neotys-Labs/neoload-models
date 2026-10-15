@@ -87,8 +87,8 @@ public class IOVariableTest extends AbstractIOElementsTest {
 
         final Variable randomNumberVariable = RandomNumberVariable.builder()
                 .name("MyRandomNumber")
-                .min(9999)
-                .max(-1)
+                .min(-1)
+                .max(9999)
                 .isPredictable(false)
                 .changePolicy(EACH_REQUEST)
                 .build();

@@ -7,9 +7,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.v3.project.MinMaxRange;
+import com.neotys.neoload.model.v3.validation.constraints.MinNotGreaterThanMaxCheck;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.math.BigDecimal;
+import java.util.Optional;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
@@ -23,7 +27,8 @@ import javax.validation.Valid;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 @Gson.TypeAdapters
-public interface RampupLoadPolicy extends LoadPolicy {
+@MinNotGreaterThanMaxCheck(element = PopulationPolicy.RAMPUP_LOAD, min = RampupLoadPolicy.MIN_USERS, max = RampupLoadPolicy.MAX_USERS, groups = {NeoLoad.class})
+public interface RampupLoadPolicy extends LoadPolicy, MinMaxRange {
 	String MIN_USERS = "min_users";
 	String MAX_USERS = "max_users";
 	String INCREMENT_USERS = "increment_users";
@@ -56,6 +61,16 @@ public interface RampupLoadPolicy extends LoadPolicy {
     default void check() {
         Preconditions.checkState(getType() == LoadPolicyType.RAMPUP);
     }
+
+	@Override
+	default Optional<BigDecimal> comparableMin() {
+		return Optional.of(BigDecimal.valueOf(getMinUsers()));
+	}
+
+	@Override
+	default Optional<BigDecimal> comparableMax() {
+		return Optional.ofNullable(getMaxUsers()).map(BigDecimal::valueOf);
+	}
 
 	class Builder extends ImmutableRampupLoadPolicy.Builder {}
 	static Builder builder() {
