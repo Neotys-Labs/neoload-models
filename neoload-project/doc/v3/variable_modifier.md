@@ -1,4 +1,5 @@
 # Variable Modifier
+_Variable Modifier_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 A Variable Modifier action makes it possible to change the value of a variable separately from its value changing policy. For example, the value of a variable may be modified in a loop for a User Path.
 

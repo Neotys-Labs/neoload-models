@@ -1,9 +1,8 @@
 # Try Catch
+_Try Catch_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 A logical action that executes a Try container and, if one of the caught exception types occurs while
 running it, executes the Catch container.
-
-Try Catch is supported in NeoLoad from version 2026.3 onwards.
 
 #### Available settings
 

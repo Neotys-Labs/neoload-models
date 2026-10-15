@@ -226,6 +226,7 @@ request:
 ```
 
 ## bodybinary
+_bodybinary_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 Define a binary request body, encoded in base64. Use it for payloads such as `application/octet-stream` or any other binary format.
 
@@ -249,6 +250,7 @@ request:
 ```
 
 ## binary_source_file
+_binary_source_file_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 Define a binary request body from a file on disk. Use it when the payload should not be inlined as Base64 in the YAML.
 
@@ -276,6 +278,7 @@ request:
 ```
 
 ## parts
+_parts_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 Define the multipart/form-data parts of the HTTP request. Use `parts` instead of `body` for multipart uploads.
 

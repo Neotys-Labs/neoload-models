@@ -1,4 +1,5 @@
 # Debug Logger
+_Debug Logger_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 The Debug Logger Action writes a text entry to a log file, for debugging purposes.
 

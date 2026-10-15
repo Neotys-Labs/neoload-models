@@ -1,4 +1,5 @@
 # Fork
+_Fork_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 The Fork action is used to play actions in a different execution thread to the current one. This execution thread is parallel to the main chain used by the Virtual User. When the current iteration of the Virtual User stops, all the threads created using Fork actions in the Actions Container are immediately halted.
 

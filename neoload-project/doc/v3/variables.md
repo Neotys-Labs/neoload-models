@@ -108,6 +108,8 @@ constant:
 ```
 
 ## Password variable
+_Password variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 An alphanumerical string whose value is a secret. In as-code YAML the value is stored as authored plaintext; NeoLoad encrypts it when the project is imported. Double quotes are recommended so YAML special characters in the secret are not interpreted.
 
 When NeoLoad exports a project back to as-code, `value` is written in its NeoLoad-encrypted form rather than in clear text, so an export never reveals the secret. Importing that file again restores the very same secret, and exporting it once more writes back the very same encrypted text.
@@ -163,6 +165,8 @@ file:
 ```
 
 ## List variable
+_List variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 A list or table of values defined inline in the YAML file.
 
 | Name          | Description                   | Accept variable | Required | Since |
@@ -248,6 +252,8 @@ random_number:
 ```
 
 ## Random String variable
+_Random String variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 A random alphanumeric string the length of which is within a length range.
 
 | Name         | Description                   | Accept variable | Required | Since |
@@ -273,6 +279,8 @@ random_string:
 ```
 
 ## Random UUID variable
+_Random UUID variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 A random UUID value.
 
 | Name         | Description                   | Accept variable | Required | Since |
@@ -296,6 +304,8 @@ random_uuid:
 ```
 
 ## SQL variable
+_SQL variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 A list or table of values loaded from the result of a SQL query executed on a database.
 
 | Name         | Description                   | Accept variable | Required | Since |
@@ -332,7 +342,7 @@ sql:
 ```
 
 ## Current Date variable
-Supported only from version 2026.3 onwards.
+_Current Date variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 A variable whose value is the current date/time at generation, formatted according to a pattern and optionally shifted by a fixed offset. There is no fixed start date — the value is always derived from the wall clock at the moment it is evaluated.
 
@@ -368,7 +378,7 @@ current_date:
 ```
 
 ## Date variable
-Supported only from version 2026.3 onwards.
+_Date variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 A variable whose value is a fixed date, formatted according to a pattern and optionally shifted at each change by a fixed step.
 
@@ -432,6 +442,8 @@ Defining a JavaScript variable.
 ```
 
 ## Shared Queue variable
+_Shared Queue variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 A queue shared between virtual users, usable as a producer/consumer channel, with optional persistence to a file.
 
 | Name                    | Description                                                                 | Accept variable | Required | Since |
@@ -463,6 +475,8 @@ shared_queue:
 ```
 
 ## Secret Vault variable
+_Secret Vault variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 A reference to a secret stored in an external vault provider configured in NeoLoad Web (HashiCorp Vault or AWS Secrets Manager). The provider type is resolved server-side from `provider_id`; it is not stored in the as-code file.
 
 | Name               | Description                                                                 | Accept variable | Required | Since |

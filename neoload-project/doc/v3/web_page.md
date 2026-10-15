@@ -1,4 +1,5 @@
 # Web Page
+_Web Page_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back.
 
