@@ -1,10 +1,10 @@
 package com.neotys.neoload.model.v3.binding.converter;
 
-import org.junit.Test;
-
 import static com.neotys.neoload.model.v3.binding.converter.TimeDurationInMsHelper.convertToDuration;
 import static com.neotys.neoload.model.v3.binding.converter.TimeDurationInMsHelper.convertToString;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class TimeDurationInMsHelperTest {
 
@@ -15,8 +15,8 @@ public class TimeDurationInMsHelperTest {
 		assertEquals("0", convertToString(0l));
 		
 		assertEquals("1h", convertToString(3600000l));
-		assertEquals("2h 3m 4s 5ms", convertToString(7384005l));
-		assertEquals("3m 5ms", convertToString(180005l));
+		assertEquals("2h3m4s5ms", convertToString(7384005l));
+		assertEquals("3m5ms", convertToString(180005l));
 		assertEquals("5ms", convertToString(5l));
 	}
 

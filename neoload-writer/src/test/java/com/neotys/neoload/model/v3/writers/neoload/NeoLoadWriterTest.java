@@ -1,28 +1,28 @@
 package com.neotys.neoload.model.v3.writers.neoload;
 
+import static junit.framework.TestCase.assertTrue;
+
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Optional;
-
-import static junit.framework.TestCase.assertTrue;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
 
 public class NeoLoadWriterTest {
 
     private UserPath userPath = UserPath.builder()
             .name("my User")
             .actions(Container.builder()
-                    .addSteps(DelayConstant.builder().value("3000").build())
+                    .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
                     .build())
             .build();
 
@@ -136,9 +136,9 @@ public class NeoLoadWriterTest {
         UserPath myUserPath = UserPath.builder()
                 .name("myUser")
                 .actions(Container.builder()
-                        .addSteps(DelayConstant.builder()
+                        .addSteps(Delay.builder()
                                 .name("myDelay")
-                                .value("3000")
+                                .duration(DurationConstant.builder().value("3000").build())
                                 .build())
                         .build())
                 .build();

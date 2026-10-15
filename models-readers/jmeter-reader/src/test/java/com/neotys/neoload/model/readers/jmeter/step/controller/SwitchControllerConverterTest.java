@@ -1,21 +1,20 @@
 package com.neotys.neoload.model.readers.jmeter.step.controller;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.control.SwitchController;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class SwitchControllerConverterTest {
 
@@ -53,7 +52,7 @@ public class SwitchControllerConverterTest {
                 .description("Hunt or be hunted")
                 .value("Geralt")
                 .getDefault(Container.builder()
-                        .addSteps(DelayConstant.builder().name("").value("26081997").build())
+                        .addSteps(Delay.builder().name("").duration(DurationConstant.builder().value("26081997").build()).build())
                         .build())
                 .addCases(Case.builder()
                         .value("Geralt")
@@ -62,7 +61,7 @@ public class SwitchControllerConverterTest {
 								Container.builder()
 										.name("Geralt")
 										.description("")
-										.addSteps(DelayConstant.builder().name("").value("26081997").build())
+										.addSteps(Delay.builder().name("").duration(DurationConstant.builder().value("26081997").build()).build())
 										.build()
 								)
 						)

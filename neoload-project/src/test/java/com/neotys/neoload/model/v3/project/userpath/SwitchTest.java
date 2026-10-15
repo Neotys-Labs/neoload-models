@@ -1,8 +1,8 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class SwitchTest {
 
@@ -15,7 +15,7 @@ public class SwitchTest {
                 .addCases(Case.builder()
                         .value("Geralt")
                         .isBreak(true)
-                        .addSteps(DelayConstant.builder().value("500").build(), DelayConstant.builder().value("2500").build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("500").build()).build(), Delay.builder().duration(DurationConstant.builder().value("2500").build()).build())
                         .build())
                 .build();
         assertEquals(4, aSwitch.flattened().count());
@@ -30,10 +30,10 @@ public class SwitchTest {
                 .addCases(Case.builder()
                         .value("Geralt")
                         .isBreak(true)
-                        .addSteps(DelayConstant.builder().value("500").build(), DelayConstant.builder().value("2500").build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("500").build()).build(), Delay.builder().duration(DurationConstant.builder().value("2500").build()).build())
                         .build())
                 .getDefault(Container.builder()
-                        .addSteps(DelayConstant.builder().value("5000").build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("5000").build()).build())
                         .build())
                 .build();
         assertEquals(6, aSwitch.flattened().count());
