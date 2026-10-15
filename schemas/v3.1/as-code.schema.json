@@ -1330,19 +1330,7 @@
 							"type": "string",
 							"default": "GET"
 						},
-						"headers": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"/": {}
-								},
-								"patternProperties": {
-									".*": { "type": "string" }
-								},
-								"additionalProperties": false
-							}
-						},
+						"headers": { "$ref": "#/definitions/user_paths/name_value_map_list" },
 						"sla_profile": {
 							"$ref": "#/definitions/common/text",
 							"description": "The name of the SLA profile to apply to the request"
@@ -1411,6 +1399,8 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"url": { "$ref": "#/definitions/common/url" },
 						"server": { "$ref": "#/definitions/common/name" },
+						"parameters": { "$ref": "#/definitions/user_paths/name_value_map_list" },
+						"headers": { "$ref": "#/definitions/user_paths/name_value_map_list" },
 						"content": {
 							"type": "object",
 							"required": ["path"],
@@ -1853,6 +1843,23 @@
 					"title": "Web Page Think Time Value",
 					"type": "string",
 					"pattern": "^(\\d+(\\.\\d+)?|(\\d+(h|ms|m|s))+|\\$\\{[^}]+\\})$"
+				}
+			},
+			"name_value_map_list": {
+				"title": "Name/Value Map List",
+				"type": "array",
+				"items": {
+					"oneOf": [
+						{ "type": "string" },
+						{
+							"type": "object",
+							"minProperties": 1,
+							"maxProperties": 1,
+							"patternProperties": {
+								".*": { "type": "string" }
+							}
+						}
+					]
 				}
 			},
 			"part": {

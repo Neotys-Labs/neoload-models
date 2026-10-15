@@ -1,10 +1,8 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
-import com.neotys.neoload.model.v3.util.Parameter;
+import java.util.Optional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Optional;
 
 public class ParameterWriter {
 
@@ -12,23 +10,14 @@ public class ParameterWriter {
     public static final String XML_VALUE = "value";
     public static final String XML_NAME = "name";
     public static final String XML_SEPARATOR = "separator";
-    
-    private final Parameter parameter;
 
-    public ParameterWriter(Parameter parameter) {
-        this.parameter = parameter;
-    }
+    private ParameterWriter() {}
 
-    public void writeXML(final Document document, final Element currentElement, Optional<String> tagName) {
+    public static void writeXML(final Document document, final Element currentElement, final Optional<String> tagName, final String name, final Optional<String> value) {
         Element xmlParam = document.createElement(tagName.orElse(XML_TAG_NAME));
-        xmlParam.setAttribute(XML_NAME, parameter.getName());
-        xmlParam.setAttribute(XML_VALUE, parameter.getValue().orElse(""));
-        xmlParam.setAttribute(XML_SEPARATOR, parameter.getValue().map(v -> "=").orElse(""));       
+        xmlParam.setAttribute(XML_NAME, name);
+        xmlParam.setAttribute(XML_VALUE, value.orElse(""));
+        xmlParam.setAttribute(XML_SEPARATOR, value.map(v -> "=").orElse(""));
         currentElement.appendChild(xmlParam);
     }
-
-	public static ParameterWriter of(Parameter paramElem) {
-		return new ParameterWriter(paramElem);
-	}
-
 }

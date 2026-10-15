@@ -2,7 +2,7 @@ package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
-import com.neotys.neoload.model.v3.project.userpath.Header;
+import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
@@ -158,7 +158,7 @@ public class RequestWriterTest {
 				.server("server_test")
 				.method("POST")
 				.bodyBinary(WrittingTestUtils.BINARY_DATA_TEST)
-				.addHeaders(Header.builder().name("Content-Type").value("application/octet-stream").build())
+				.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -186,7 +186,7 @@ public class RequestWriterTest {
 				.server("server_test")
 				.method("POST")
 				.binarySourceFile("payloads/hello.bin")
-				.addHeaders(Header.builder().name("Content-Type").value("application/octet-stream").build())
+				.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -213,7 +213,7 @@ public class RequestWriterTest {
 				.url("/test_path?param_name=param_value")
 				.server("server_test")
 				.method("POST")
-				.addHeaders(Header.builder().name("Content-Type").value("multipart/mixed").build())
+				.addHeaders(NameValue.builder().name("Content-Type").value("multipart/mixed").build())
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -244,7 +244,7 @@ public class RequestWriterTest {
 				.server("server_test")
 				.method("POST")
 				.parts(ImmutableList.of(stringPart, filePart))
-				.addHeaders(Header.builder().name("Content-Type").value("multipart/mixed").build())
+				.addHeaders(NameValue.builder().name("Content-Type").value("multipart/mixed").build())
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"

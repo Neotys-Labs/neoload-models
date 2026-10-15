@@ -9,7 +9,6 @@ import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.JavaScriptVariable;
 import com.neotys.neoload.model.v3.project.variable.OutOfValueVariable;
 import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
-import com.neotys.neoload.model.v3.util.Parameter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,25 +41,6 @@ public class WrittingTestUtils {
             .method("GET")
             .build();
 
-    public static final Parameter PARAMETER_TEST = Parameter.builder()
-            .name("param_name")
-            .value("param_value")
-            .build();
-
-    public static final Parameter PARAMETER_TEST_EMPTY_VALUE = Parameter.builder()
-            .name("param_name")
-            .value("")
-            .build();
-
-    public static final Parameter PARAMETER_TEST_NO_VALUE = Parameter.builder()
-            .name("param_name")
-            .build();
-
-    public static final Parameter POST_PARAMETER_TEST = Parameter.builder()
-            .name("post param_name")
-            .value("post_param Value")
-            .build();
-
     public static final Request REQUEST_TEST2 = Request.builder()
             .name("request_test")
             .url("/test_path?param_name=param_value")
@@ -74,7 +54,7 @@ public class WrittingTestUtils {
             .server(SERVER_TEST.getName())
             .method("POST")
             .body("post param_name=post_param Value")
-            .addHeaders(Header.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
+            .addHeaders(NameValue.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
             .build();
 
 	public static final Request REQUEST_TEST3_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST3).withMethod("PUT");
@@ -85,7 +65,7 @@ public class WrittingTestUtils {
             .server(SERVER_TEST.getName())
             .method("POST")
             .body("texte a convertir en binaire")
-            .addHeaders(Header.builder().name("Content-Type").value("text/plain").build())
+            .addHeaders(NameValue.builder().name("Content-Type").value("text/plain").build())
             .build();
 
 	public static final Request REQUEST_TEST4_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST4).withMethod("PUT");
@@ -100,7 +80,7 @@ public class WrittingTestUtils {
             .method("POST")
             // TODO !!! should be natively binary in the model
             .body(new String(BINARY_DATA_TEST))
-            .addHeaders(Header.builder().name("Content-Type").value("application/octet-stream").build())
+            .addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
             .build();
 
     // TODO page does not exist in V3
@@ -191,7 +171,7 @@ public class WrittingTestUtils {
             .server(SERVER_JACK9090_TEST.getName())
             .method("POST")
             .body("firstname=a&lastname=b&email=c@d.fr&address=e&sex=Male")
-            .addHeaders(Header.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
+            .addHeaders(NameValue.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
             // TDOD
             //.referer(GET_FOLLOW_LINK_REQUEST_TEST)
             .build();
