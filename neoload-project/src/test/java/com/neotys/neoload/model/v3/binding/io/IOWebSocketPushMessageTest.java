@@ -96,7 +96,7 @@ public class IOWebSocketPushMessageTest extends AbstractIOElementsTest {
 		final Project expectedProject = getPushMessagesRequiredAndOptional();
 		assertNotNull(expectedProject);
 
-		read("test-websocket_push_message-required-and-optional", expectedProject);
+		assertRead("test-websocket_push_message-required-and-optional", expectedProject);
 	}
 
 	@Test
@@ -104,7 +104,7 @@ public class IOWebSocketPushMessageTest extends AbstractIOElementsTest {
 		final Project expectedProject = getPushMessagesRequiredAndOptional();
 		assertNotNull(expectedProject);
 
-		write("test-websocket_push_message-required-and-optional", expectedProject);
+		assertWrite("test-websocket_push_message-required-and-optional", expectedProject);
 	}
 
 	@Test

@@ -7,12 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.Header;
-import com.neotys.neoload.model.v3.project.userpath.Step;
-import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
-import com.neotys.neoload.model.v3.project.userpath.WebSocketChannel;
-import com.neotys.neoload.model.v3.project.userpath.WebSocketMessagesMapping;
-import com.neotys.neoload.model.v3.project.userpath.WebSocketTimestampExtractor;
+import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -37,7 +32,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 				.description("a channel using every setting")
 				.url("/socket")
 				.server("myserver")
-				.addHeaders(Header.builder().name("Origin").value("https://host").build())
+				.addHeaders(NameValue.builder().name("Origin").value("https://host").build())
 				.addExtractors(VariableExtractor.builder()
 						.name("session_id")
 						.regexp("session=([0-9]+)")
@@ -78,7 +73,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getWebSocketChannelOnlyRequired());
 		assertNotNull(expectedProject);
 
-		read("test-websocket_channel-only-required", expectedProject);
+		assertRead("test-websocket_channel-only-required", expectedProject);
 	}
 
 	@Test
@@ -86,7 +81,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getWebSocketChannelRequiredAndOptional());
 		assertNotNull(expectedProject);
 
-		read("test-websocket_channel-required-and-optional", expectedProject);
+		assertRead("test-websocket_channel-required-and-optional", expectedProject);
 	}
 
 	@Test
@@ -94,7 +89,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getWebSocketChannelMessagesMappingXpath());
 		assertNotNull(expectedProject);
 
-		read("test-websocket_channel-messages-mapping-xpath", expectedProject);
+		assertRead("test-websocket_channel-messages-mapping-xpath", expectedProject);
 	}
 
 	@Test
@@ -102,7 +97,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getWebSocketChannelTimestampExtractorTemplate());
 		assertNotNull(expectedProject);
 
-		read("test-websocket_channel-timestamp-extractor-template", expectedProject);
+		assertRead("test-websocket_channel-timestamp-extractor-template", expectedProject);
 	}
 
 	@Test
@@ -110,7 +105,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getWebSocketChannelTimestampExtractorTemplate());
 		assertNotNull(expectedProject);
 
-		write("test-websocket_channel-timestamp-extractor-template", expectedProject);
+		assertWrite("test-websocket_channel-timestamp-extractor-template", expectedProject);
 	}
 
 	@Test
@@ -123,7 +118,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getWebSocketChannelOnlyRequired());
 		assertNotNull(expectedProject);
 
-		write("test-websocket_channel-only-required", expectedProject);
+		assertWrite("test-websocket_channel-only-required", expectedProject);
 	}
 
 	@Test
@@ -131,7 +126,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getWebSocketChannelRequiredAndOptional());
 		assertNotNull(expectedProject);
 
-		write("test-websocket_channel-required-and-optional", expectedProject);
+		assertWrite("test-websocket_channel-required-and-optional", expectedProject);
 	}
 
 	@Test
@@ -139,7 +134,7 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getWebSocketChannelMessagesMappingXpath());
 		assertNotNull(expectedProject);
 
-		write("test-websocket_channel-messages-mapping-xpath", expectedProject);
+		assertWrite("test-websocket_channel-messages-mapping-xpath", expectedProject);
 	}
 
 	@Test
