@@ -1,4 +1,4 @@
-# Assertion on response size
+# Size assertion
 _Size assertion_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 A size assertion checks the length of the response content, in bytes. It mirrors the "Content length" validation panel of the NeoLoad designer: either an exact size, or a range built from a lower bound and/or an upper bound.

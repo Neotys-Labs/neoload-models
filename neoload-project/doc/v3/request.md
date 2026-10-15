@@ -21,7 +21,6 @@ A request defines a plain HTTP request.
 | [size_assertion](size_assertion.md) | The assertion to validate the response size                                   | -               | -        | 2026.3 |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
 | followRedirects                     | When `true`, the HTTP redirections returned by the server are followed.</br>The default value is `false`. | -               | -        |       |
-| _internal_recorded_id               | The identifier of the recorded request this request originates from. Set by NeoLoad when a recording is imported; it is read and written as-is | -               | -        | 2026.3 |
 
 #### Example 1
 
