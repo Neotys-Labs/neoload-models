@@ -9,5 +9,5 @@ interface PacingElement {
 
 	@JsonProperty(PACING)
 	@Valid
-	Optional<Pacing> getPacing();
+	Optional<Duration> getPacing();
 }

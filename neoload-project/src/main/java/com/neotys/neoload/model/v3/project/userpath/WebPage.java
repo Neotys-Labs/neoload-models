@@ -48,7 +48,7 @@ public interface WebPage extends Step, SlaElement {
 
 	@JsonProperty(THINK_TIME)
 	@Valid
-	Optional<WebPageThinkTime> getThinkTime();
+	Optional<Duration> getThinkTime();
 
 	@JsonProperty(PLAYBACK)
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultPlaybackFilter.class)

@@ -28,7 +28,7 @@ think_time:
   max: 5s
 ```
 
-`min` defaults to `0` when omitted. Values can be a plain number of seconds (`2`, `2.5`), a time literal with optional `h`/`m`/`s`/`ms` suffixed components (`500ms`, `2s`, `1h30m`), or a variable reference (`${max_think_time}`).
+The web page `think_time` uses the same syntax as the [think_time](think_time.md) step (a scalar duration, `value`, or `min` / `max`), without `name` and `description`. A plain number is a duration in milliseconds; time literals (`500ms`, `2s`, `1h 30m`) and variables (`${max_think_time}`) are also accepted. `min` is optional.
 
 #### Example
 
