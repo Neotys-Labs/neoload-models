@@ -44,4 +44,34 @@ public class ProjectSettingsWritterTest {
         // Overrides
         Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" logicalNamesEnabled=\"false\" url=\"http://urlto.dynatrace.com\" token=\"myApiTokenInClear\"/>");
     }
+
+    @Test
+    public void writeSettingsGlobalAssertionsDefaultXMLTest() throws IOException {
+        File tmpDir = java.nio.file.Files.createTempDirectory("project-settings").toFile();
+        ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), ImmutableMap.of());
+
+        String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName()))).replace("\r\n", "\n");
+        // Default
+        Assertions.assertThat(settingsContent).contains("<globalAssertionSettings applyGlobalAssertionsOnCA=\"false\">\n"
+                + "<contentType value=\"text/html\"/>\n"
+                + "<contentType value=\"text/xhtml\"/>\n"
+                + "</globalAssertionSettings>");
+    }
+
+    @Test
+    public void writeSettingsGlobalAssertionsXMLTest() throws IOException {
+        File tmpDir = java.nio.file.Files.createTempDirectory("project-settings").toFile();
+        Map<String, String> settings = ImmutableMap.<String, String>builder()
+                .put("global_assertions.content_types", "text/html, application/json,,")
+                .put("global_assertions.apply_on_custom_actions", "true")
+                .build();
+        ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), settings);
+
+        String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName()))).replace("\r\n", "\n");
+        // Overrides
+        Assertions.assertThat(settingsContent).contains("<globalAssertionSettings applyGlobalAssertionsOnCA=\"true\">\n"
+                + "<contentType value=\"text/html\"/>\n"
+                + "<contentType value=\"application/json\"/>\n"
+                + "</globalAssertionSettings>");
+    }
 }

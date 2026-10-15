@@ -84,6 +84,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-pacing-on-while.yaml",
             "test-date-variable-invalid-change-step.yaml",
             "test-assert-duration-unknown-property.yaml",
+            "test-project-settings-global-assertions-invalid.yaml",
             "test-assertions-mutually-exclusive.yaml",
             "test-web_page-empty-steps.yaml",
             "test-web_page-execute-resources-invalid.yaml",
@@ -167,5 +168,11 @@ public class IOSchema3Dot1ValidationTest {
     public void pacingOnWhileFailsSchemaValidation() throws IOException {
         Assert.assertFalse("Expected 'pacing' on a while step to fail schema validation",
                 validate("test-pacing-on-while").isEmpty());
+    }
+
+    @Test
+    public void nonBooleanApplyGlobalAssertionsOnCustomActionsFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected a non-boolean 'global_assertions.apply_on_custom_actions' to fail schema validation",
+                validate("test-project-settings-global-assertions-invalid").isEmpty());
     }
 }
