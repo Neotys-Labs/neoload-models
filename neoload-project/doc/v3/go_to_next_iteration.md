@@ -1,4 +1,5 @@
 # Go to next iteration
+_Go to next iteration_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 The Go to next iteration action interrupts the Virtual User runtime and makes it go to the next iteration. The way this 
 action behaves depends on where it is placed within the Virtual User:

@@ -1,4 +1,5 @@
 # Shared elements
+_Shared elements_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 `shared_elements` is a top-level, project-wide list of named, reusable steps. A `shared_element`
 step, usable anywhere a step is valid — in a User Path or nested inside another shared element —
@@ -7,8 +8,6 @@ resolves to one of these steps by name instead of inlining it.
 Each `shared_elements` entry is an ordinary [transaction](transaction.md), [loop](loop.md),
 [while](while.md) or [fork](fork.md) step; that `name` is what a `shared_element` step references.
 Any other step type is rejected.
-
-Available since NeoLoad 2026.3 (schema 3.1).
 
 #### Available settings — `shared_elements` entry
 | Name            | Description                                              | Accept variable | Required | Since |

@@ -1,4 +1,5 @@
 # Soap Request
+_Soap Request_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 A soap_request defines a SOAP request. The request body is not written inline: it is read from an
 external XML file referenced by `content.path`.

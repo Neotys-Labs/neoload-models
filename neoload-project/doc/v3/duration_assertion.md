@@ -1,4 +1,6 @@
 # Duration assertion
+_Duration assertion_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 A duration assertion checks that a [request](request.md) or [custom_action](custom_action.md) completed within a given duration. The step is considered failed if its execution time is greater than or equal to `less_than`.
 
 #### Available settings
