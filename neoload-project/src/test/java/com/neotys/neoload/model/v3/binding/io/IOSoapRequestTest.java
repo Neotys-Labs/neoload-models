@@ -214,4 +214,43 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 		assertFalse(actualSoapRequest.getParameters().get("paramNoValue").iterator().next().isPresent());
 		assertEquals(expectedDescriptor.toString(), actualDescriptor.toString());
 	}
+
+	private static Project getSoapRequestWithDuplicates() {
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(SoapRequest.builder()
+								.url("http://host:80/")
+								.putParameters("param1", Optional.of("value1"))
+								.putParameters("param1", Optional.of("value1"))
+								.putParameters("param2", Optional.empty())
+								.putParameters("param2", Optional.empty())
+								.putHeaders("Cookie", Optional.of("a=1"))
+								.putHeaders("Cookie", Optional.of("a=1"))
+								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+								.build())
+						.build())
+				.build();
+
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
+	}
+
+	@Test
+	public void duplicateParametersAndHeadersRoundTrip() throws IOException {
+		final Project expectedProject = getSoapRequestWithDuplicates();
+		final ProjectDescriptor expectedDescriptor = ProjectDescriptor.builder().project(expectedProject).build();
+
+		final IO io = new IO();
+		final String yaml = io.write(expectedDescriptor, Format.YAML);
+		final ProjectDescriptor actualDescriptor = io.read(yaml);
+
+		final SoapRequest actualSoapRequest = (SoapRequest) actualDescriptor.getProject().getUserPaths().get(0).getActions().getSteps().get(0);
+		assertEquals(4, actualSoapRequest.getParameters().size());
+		assertEquals(2, actualSoapRequest.getHeaders().size());
+		assertEquals(expectedDescriptor.toString(), actualDescriptor.toString());
+	}
 }

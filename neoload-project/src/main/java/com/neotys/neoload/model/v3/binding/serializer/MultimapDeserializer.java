@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import java.io.IOException;
 import java.util.Map;
@@ -13,10 +13,10 @@ import java.util.Optional;
 
 /**
  * Deserializes a list of entries ({@code [{name: value}, ...]}) into a
- * {@code Multimap<String, Optional<String>>}, preserving insertion order and multiple values per
- * key, mirroring {@link MultimapSerializer}. A bare string entry (e.g. {@code - name}) is read as
- * a name with no value; a single-entry map ({@code - name: value}) is read as a name with a
- * value (possibly an empty string).
+ * {@code Multimap<String, Optional<String>>}, preserving insertion order, multiple values per
+ * key and duplicate name/value pairs, mirroring {@link MultimapSerializer}. A bare string entry
+ * (e.g. {@code - name}) is read as a name with no value; a single-entry map
+ * ({@code - name: value}) is read as a name with a value (possibly an empty string).
  */
 public final class MultimapDeserializer extends StdDeserializer<Multimap<String, Optional<String>>> {
 	private static final long serialVersionUID = 1L;
@@ -30,7 +30,7 @@ public final class MultimapDeserializer extends StdDeserializer<Multimap<String,
 		final ObjectCodec codec = parser.getCodec();
 		final JsonNode node = codec.readTree(parser);
 
-		final Multimap<String, Optional<String>> multimap = LinkedHashMultimap.create();
+		final Multimap<String, Optional<String>> multimap = LinkedListMultimap.create();
 		if (node != null) {
 			node.forEach(entryNode -> addEntry(multimap, entryNode));
 		}
