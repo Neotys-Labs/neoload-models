@@ -1,7 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
@@ -13,7 +12,6 @@ import com.neotys.neoload.model.v3.project.variable.ScopeVariable;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,7 +54,7 @@ public class WrittingTestUtils {
             .server(SERVER_TEST.getName())
             .method("POST")
             .body("post param_name=post_param Value")
-            .addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/x-www-form-urlencoded")))
+            .addHeaders(NameValue.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
             .build();
 
 	public static final Request REQUEST_TEST3_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST3).withMethod("PUT");
@@ -67,7 +65,7 @@ public class WrittingTestUtils {
             .server(SERVER_TEST.getName())
             .method("POST")
             .body("texte a convertir en binaire")
-            .addHeaders(Maps.immutableEntry("Content-Type", Optional.of("text/plain")))
+            .addHeaders(NameValue.builder().name("Content-Type").value("text/plain").build())
             .build();
 
 	public static final Request REQUEST_TEST4_PUT_METHOD = ImmutableRequest.copyOf(WrittingTestUtils.REQUEST_TEST4).withMethod("PUT");
@@ -82,7 +80,7 @@ public class WrittingTestUtils {
             .method("POST")
             // TODO !!! should be natively binary in the model
             .body(new String(BINARY_DATA_TEST))
-            .addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
+            .addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
             .build();
 
     // TODO page does not exist in V3
@@ -173,7 +171,7 @@ public class WrittingTestUtils {
             .server(SERVER_JACK9090_TEST.getName())
             .method("POST")
             .body("firstname=a&lastname=b&email=c@d.fr&address=e&sex=Male")
-            .addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/x-www-form-urlencoded")))
+            .addHeaders(NameValue.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
             // TDOD
             //.referer(GET_FOLLOW_LINK_REQUEST_TEST)
             .build();

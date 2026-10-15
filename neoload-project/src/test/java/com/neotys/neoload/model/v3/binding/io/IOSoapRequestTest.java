@@ -5,15 +5,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequestContent;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import java.io.IOException;
-import java.util.Optional;
 import org.junit.Test;
 
 public class IOSoapRequestTest extends AbstractIOElementsTest {
@@ -46,10 +45,10 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 								.description("My SOAP request")
 								.url("/soap")
 								.server("myServer")
-								.addParameters(Maps.immutableEntry("param1", Optional.of("value1")))
-								.addParameters(Maps.immutableEntry("param2", Optional.of("value2")))
-								.addHeaders(Maps.immutableEntry("SOAPAction", Optional.of("http://example.com/action")))
-								.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("text/xml; charset=utf-8")))
+								.addParameters(NameValue.builder().name("param1").value("value1").build())
+								.addParameters(NameValue.builder().name("param2").value("value2").build())
+								.addHeaders(NameValue.builder().name("SOAPAction").value("http://example.com/action").build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("text/xml; charset=utf-8").build())
 								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
 								.build())
 						.build())
@@ -100,8 +99,8 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 						.name("actions")
 						.addSteps(SoapRequest.builder()
 								.url("http://host:80/")
-								.addParameters(Maps.immutableEntry("param1", Optional.of("value1")))
-								.addParameters(Maps.immutableEntry("param2", Optional.of("value2")))
+								.addParameters(NameValue.builder().name("param1").value("value1").build())
+								.addParameters(NameValue.builder().name("param2").value("value2").build())
 								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
 								.build())
 						.build())
@@ -136,8 +135,8 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 						.name("actions")
 						.addSteps(SoapRequest.builder()
 								.url("http://host:80/")
-								.addHeaders(Maps.immutableEntry("SOAPAction", Optional.of("http://example.com/action")))
-								.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("text/xml; charset=utf-8")))
+								.addHeaders(NameValue.builder().name("SOAPAction").value("http://example.com/action").build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("text/xml; charset=utf-8").build())
 								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
 								.build())
 						.build())
@@ -172,7 +171,7 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 						.name("actions")
 						.addSteps(SoapRequest.builder()
 								.url("http://host:80/")
-								.addParameters(Maps.immutableEntry("paramNoValue", Optional.empty()))
+								.addParameters(NameValue.builder().name("paramNoValue").build())
 								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
 								.build())
 						.build())
@@ -210,7 +209,7 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 		final ProjectDescriptor actualDescriptor = io.read(yaml);
 
 		final SoapRequest actualSoapRequest = (SoapRequest) actualDescriptor.getProject().getUserPaths().get(0).getActions().getSteps().get(0);
-		assertEquals(ImmutableList.of(Maps.immutableEntry("paramNoValue", Optional.empty())), actualSoapRequest.getParameters());
+		assertEquals(ImmutableList.of(NameValue.builder().name("paramNoValue").build()), actualSoapRequest.getParameters());
 		assertEquals(expectedDescriptor.toString(), actualDescriptor.toString());
 	}
 
@@ -221,13 +220,13 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 						.name("actions")
 						.addSteps(SoapRequest.builder()
 								.url("http://host:80/")
-								.addParameters(Maps.immutableEntry("param1", Optional.of("value1")))
-								.addParameters(Maps.immutableEntry("param2", Optional.empty()))
-								.addParameters(Maps.immutableEntry("param1", Optional.of("value1")))
-								.addParameters(Maps.immutableEntry("param2", Optional.empty()))
-								.addHeaders(Maps.immutableEntry("Cookie", Optional.of("a=1")))
-								.addHeaders(Maps.immutableEntry("Accept", Optional.of("text/xml")))
-								.addHeaders(Maps.immutableEntry("Cookie", Optional.of("a=1")))
+								.addParameters(NameValue.builder().name("param1").value("value1").build())
+								.addParameters(NameValue.builder().name("param2").build())
+								.addParameters(NameValue.builder().name("param1").value("value1").build())
+								.addParameters(NameValue.builder().name("param2").build())
+								.addHeaders(NameValue.builder().name("Cookie").value("a=1").build())
+								.addHeaders(NameValue.builder().name("Accept").value("text/xml").build())
+								.addHeaders(NameValue.builder().name("Cookie").value("a=1").build())
 								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
 								.build())
 						.build())

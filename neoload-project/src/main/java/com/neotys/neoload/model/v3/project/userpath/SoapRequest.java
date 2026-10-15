@@ -6,14 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.neotys.neoload.model.v3.binding.serializer.NameValueListDeserializer;
-import com.neotys.neoload.model.v3.binding.serializer.NameValueListSerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
@@ -43,15 +39,13 @@ public interface SoapRequest extends Step, UrlServerElement {
 
 	@JsonProperty(PARAMETERS)
 	@JsonInclude(Include.NON_EMPTY)
-	@JsonSerialize(using = NameValueListSerializer.class)
-	@JsonDeserialize(using = NameValueListDeserializer.class)
-	List<Map.Entry<String, Optional<String>>> getParameters();
+	@Valid
+	List<NameValue> getParameters();
 
 	@JsonProperty(HEADERS)
 	@JsonInclude(Include.NON_EMPTY)
-	@JsonSerialize(using = NameValueListSerializer.class)
-	@JsonDeserialize(using = NameValueListDeserializer.class)
-	List<Map.Entry<String, Optional<String>>> getHeaders();
+	@Valid
+	List<NameValue> getHeaders();
 
 	@JsonProperty(CONTENT)
 	@RequiredCheck(groups = {NeoLoad.class})

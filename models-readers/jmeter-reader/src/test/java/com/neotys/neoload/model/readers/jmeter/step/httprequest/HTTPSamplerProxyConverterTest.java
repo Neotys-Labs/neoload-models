@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import java.util.ArrayList;
@@ -126,8 +127,8 @@ public class HTTPSamplerProxyConverterTest {
             step.flattened()
                     .forEach(c -> {
                         if (c instanceof Request) {
-                            for (java.util.Map.Entry<String, java.util.Optional<String>> head : ((Request) c).getHeaders()) {
-                                assertEquals(head.getKey(), header.getName());
+                            for (NameValue head : ((Request) c).getHeaders()) {
+                                assertEquals(head.getName(), header.getName());
                                 assertEquals(head.getValue(), java.util.Optional.ofNullable(header.getValue()));
                             }
                         }

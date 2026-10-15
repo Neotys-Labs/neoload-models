@@ -3,14 +3,12 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertNotNull;
 
-import com.google.common.collect.Maps;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 import org.junit.Test;
 
 public class IORequestTest extends AbstractIOElementsTest {
@@ -45,8 +43,8 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/select?name=neoload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("text/html; charset=utf-8")))
-								.addHeaders(Maps.immutableEntry("Accept-Encoding", Optional.of("gzip, compress, br")))
+								.addHeaders(NameValue.builder().name("Content-Type").value("text/html; charset=utf-8").build())
+								.addHeaders(NameValue.builder().name("Accept-Encoding").value("gzip, compress, br").build())
 								.body("My Body\nline 1\nline 2\n")
 								.addExtractors(VariableExtractor.builder()
 										.name("MyVariable1")
@@ -62,8 +60,8 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/select?name=neoload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("text/html; charset=utf-8")))
-								.addHeaders(Maps.immutableEntry("Accept-Encoding", Optional.of("gzip, compress, br")))
+								.addHeaders(NameValue.builder().name("Content-Type").value("text/html; charset=utf-8").build())
+								.addHeaders(NameValue.builder().name("Accept-Encoding").value("gzip, compress, br").build())
 								.body("My Body line 1 line 2")
 								.addExtractors(VariableExtractor.builder()
 										.name("MyVariable1")
@@ -109,14 +107,14 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/upload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.bodyBinary(TEXT_PAYLOAD)
 								.build())
 						.addSteps(Request.builder()
 								.url("/upload-raw")
 								.server("neotys")
 								.method(Method.PUT.name())
-								.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.bodyBinary(RAW_PAYLOAD)
 								.slaProfile("MySlaProfile")
 								.build())
@@ -154,14 +152,14 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/upload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.binarySourceFile("payloads/hello.bin")
 								.build())
 						.addSteps(Request.builder()
 								.url("/upload-raw")
 								.server("neotys")
 								.method(Method.PUT.name())
-								.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.binarySourceFile("payload.bin")
 								.slaProfile("MySlaProfile")
 								.build())

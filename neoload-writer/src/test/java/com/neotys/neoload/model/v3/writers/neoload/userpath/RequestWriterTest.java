@@ -1,13 +1,12 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import com.google.common.io.Files;
+import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
-import java.util.Optional;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -159,7 +158,7 @@ public class RequestWriterTest {
 				.server("server_test")
 				.method("POST")
 				.bodyBinary(WrittingTestUtils.BINARY_DATA_TEST)
-				.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
+				.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -187,7 +186,7 @@ public class RequestWriterTest {
 				.server("server_test")
 				.method("POST")
 				.binarySourceFile("payloads/hello.bin")
-				.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("application/octet-stream")))
+				.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -214,7 +213,7 @@ public class RequestWriterTest {
 				.url("/test_path?param_name=param_value")
 				.server("server_test")
 				.method("POST")
-				.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("multipart/mixed")))
+				.addHeaders(NameValue.builder().name("Content-Type").value("multipart/mixed").build())
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
@@ -245,7 +244,7 @@ public class RequestWriterTest {
 				.server("server_test")
 				.method("POST")
 				.parts(ImmutableList.of(stringPart, filePart))
-				.addHeaders(Maps.immutableEntry("Content-Type", Optional.of("multipart/mixed")))
+				.addHeaders(NameValue.builder().name("Content-Type").value("multipart/mixed").build())
 				.build();
 
 		String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"

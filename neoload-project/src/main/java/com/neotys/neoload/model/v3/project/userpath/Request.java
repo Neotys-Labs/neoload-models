@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
-import com.neotys.neoload.model.v3.binding.serializer.NameValueListDeserializer;
-import com.neotys.neoload.model.v3.binding.serializer.NameValueListSerializer;
 import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertionElement;
@@ -16,7 +14,6 @@ import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertionEleme
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.value.Value;
@@ -89,9 +86,8 @@ public interface Request extends Step, UrlServerElement, SlaElement, AssertionsE
 	
 	@JsonProperty(HEADERS)
 	@JsonInclude(Include.NON_EMPTY)
-	@JsonSerialize(using = NameValueListSerializer.class)
-	@JsonDeserialize(using = NameValueListDeserializer.class)
-	List<Map.Entry<String, Optional<String>>> getHeaders();
+	@Valid
+	List<NameValue> getHeaders();
 	
 	@JsonProperty(BODY)
 	Optional<String> getBody();

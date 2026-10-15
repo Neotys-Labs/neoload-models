@@ -7,12 +7,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
+import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
-import java.util.Map;
-import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -204,32 +202,32 @@ public class RequestUtilsTest {
 		assertNotNull(RequestUtils.getParameters(" \t \r\n "));
 		assertEquals(0, RequestUtils.getParameters(" \t \r\n ").size());
 		
-		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("name", Optional.empty()))
+		assertEquals(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("name").build())
 				.build(), RequestUtils.getParameters("name"));
-		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("name", Optional.of("")))
+		assertEquals(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("name").value("").build())
 				.build(), RequestUtils.getParameters("name="));
-		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("", Optional.of("")))
+		assertEquals(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("").value("").build())
 				.build(), RequestUtils.getParameters("="));
-		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("", Optional.of("value")))
+		assertEquals(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("").value("value").build())
 				.build(), RequestUtils.getParameters("=value"));
-		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("name", Optional.of("value")))
+		assertEquals(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("name").value("value").build())
 				.build(), RequestUtils.getParameters("name=value"));
-		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("name1", Optional.of("value1")))
-				.add(Maps.immutableEntry("name2", Optional.empty()))
-				.add(Maps.immutableEntry("name3", Optional.of("")))
-				.add(Maps.immutableEntry("name4", Optional.of("value4")))
+		assertEquals(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("name1").value("value1").build())
+				.add(NameValue.builder().name("name2").build())
+				.add(NameValue.builder().name("name3").value("").build())
+				.add(NameValue.builder().name("name4").value("value4").build())
 				.build(), RequestUtils.getParameters("name1=value1&name2&name3=&name4=value4"));
-		assertEquals(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("a", Optional.of("1")))
-				.add(Maps.immutableEntry("b", Optional.of("2")))
-				.add(Maps.immutableEntry("a", Optional.of("3")))
-				.add(Maps.immutableEntry("a", Optional.of("3")))
+		assertEquals(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("a").value("1").build())
+				.add(NameValue.builder().name("b").value("2").build())
+				.add(NameValue.builder().name("a").value("3").build())
+				.add(NameValue.builder().name("a").value("3").build())
 				.build(), RequestUtils.getParameters("a=1&b=2&a=3&a=3"));
 	}
 	
@@ -305,30 +303,30 @@ public class RequestUtilsTest {
 		assertFalse(RequestUtils.containFormHeader(null));
 		assertFalse(RequestUtils.containFormHeader(ImmutableList.of()));
 
-		assertFalse(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("name1", Optional.empty()))
-				.add(Maps.immutableEntry("name2", Optional.empty()))
-				.add(Maps.immutableEntry("name3", Optional.empty()))
+		assertFalse(RequestUtils.containFormHeader(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("name1").build())
+				.add(NameValue.builder().name("name2").build())
+				.add(NameValue.builder().name("name3").build())
 				.build()));
-		assertFalse(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("name", Optional.of("value")))
-				.add(Maps.immutableEntry("Content-Type", Optional.empty()))
-				.add(Maps.immutableEntry("name", Optional.of("value")))
+		assertFalse(RequestUtils.containFormHeader(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("name").value("value").build())
+				.add(NameValue.builder().name("Content-Type").build())
+				.add(NameValue.builder().name("name").value("value").build())
 				.build()));
-		assertFalse(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("name", Optional.of("value")))
-				.add(Maps.immutableEntry("Content-Type", Optional.of("")))
-				.add(Maps.immutableEntry("name", Optional.of("value")))
+		assertFalse(RequestUtils.containFormHeader(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("name").value("value").build())
+				.add(NameValue.builder().name("Content-Type").value("").build())
+				.add(NameValue.builder().name("name").value("value").build())
 				.build()));
-		assertFalse(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("name", Optional.of("value")))
-				.add(Maps.immutableEntry("Content-Type", Optional.of("value")))
-				.add(Maps.immutableEntry("name", Optional.of("value")))
+		assertFalse(RequestUtils.containFormHeader(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("name").value("value").build())
+				.add(NameValue.builder().name("Content-Type").value("value").build())
+				.add(NameValue.builder().name("name").value("value").build())
 				.build()));
-		assertTrue(RequestUtils.containFormHeader(ImmutableList.<Map.Entry<String, Optional<String>>>builder()
-				.add(Maps.immutableEntry("name", Optional.of("value")))
-				.add(Maps.immutableEntry("Content-Type", Optional.of("application/x-www-form-urlencoded")))
-				.add(Maps.immutableEntry("name", Optional.of("value")))
+		assertTrue(RequestUtils.containFormHeader(ImmutableList.<NameValue>builder()
+				.add(NameValue.builder().name("name").value("value").build())
+				.add(NameValue.builder().name("Content-Type").value("application/x-www-form-urlencoded").build())
+				.add(NameValue.builder().name("name").value("value").build())
 				.build()));
 	}
 

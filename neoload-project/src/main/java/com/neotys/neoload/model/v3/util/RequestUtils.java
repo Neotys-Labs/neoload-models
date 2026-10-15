@@ -7,13 +7,12 @@ import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.server.Server.Scheme;
+import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -101,8 +100,8 @@ public class RequestUtils {
 	 * @param query the part of the URL or the form body that contains all the parameters
 	 * @return name/value pairs, in query order
 	 */
-	public static List<Map.Entry<String, Optional<String>>> getParameters(final String query) {
-		final ImmutableList.Builder<Map.Entry<String, Optional<String>>> urlParameters = ImmutableList.builder();
+	public static List<NameValue> getParameters(final String query) {
+		final ImmutableList.Builder<NameValue> urlParameters = ImmutableList.builder();
 		if (Strings.isNullOrEmpty(query) || query.trim().isEmpty()) {
 			return urlParameters.build();
 		}
@@ -110,14 +109,14 @@ public class RequestUtils {
 			if (param.contains("=")) {
 				final String[] pair = param.split("=");
 				if (pair.length > 1) {
-					urlParameters.add(Maps.immutableEntry(pair[0], Optional.of(pair[1])));
+					urlParameters.add(NameValue.builder().name(pair[0]).value(pair[1]).build());
 				} else if (pair.length == 1) {
-					urlParameters.add(Maps.immutableEntry(pair[0], Optional.of("")));
+					urlParameters.add(NameValue.builder().name(pair[0]).value("").build());
 				} else {
-					urlParameters.add(Maps.immutableEntry("", Optional.of("")));
+					urlParameters.add(NameValue.builder().name("").value("").build());
 				}
 			} else {
-				urlParameters.add(Maps.immutableEntry(param, Optional.empty()));
+				urlParameters.add(NameValue.builder().name(param).build());
 			}
 		}
 		return urlParameters.build();
@@ -182,11 +181,11 @@ public class RequestUtils {
 		}
 	}
 
-	public static boolean containFormHeader(final List<Map.Entry<String, Optional<String>>> headers) {
+	public static boolean containFormHeader(final List<NameValue> headers) {
 		if (headers == null) return false;
 		return headers.stream()
-				.filter(header -> HEADER_CONTENT_TYPE.equals(header.getKey()))
-				.map(Map.Entry::getValue)
+				.filter(header -> HEADER_CONTENT_TYPE.equals(header.getName()))
+				.map(NameValue::getValue)
 				.findFirst()
 				.filter(value -> isForm(value.orElse(null)))
 				.isPresent();
