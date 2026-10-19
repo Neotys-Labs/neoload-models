@@ -15,7 +15,8 @@ A request defines a plain HTTP request.
 | [binary_source_file](#binary_source_file) | Path of a file used as the binary request body, relative to the project folder. The file must be inside the project folder. | -               | -        | 2026.3|
 | [parts](#parts)                     | The multipart/form-data parts                                                 | &#x2713;        | -        | 2026.3|
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
-| [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
+| [content_assertions](content_assertion.md)  | The list of assertions to validate the response content                       | -               | -        | 2026.3   |
+| assertions                          | Deprecated alias of `content_assertions`, read-only. Use `content_assertions` instead. | -               | -        | 7.6   |
 | [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration                 | -               | -        | 2026.3 |
 | [size_assertion](size_assertion.md) | The assertion to validate the response size                                   | -               | -        | 2026.3 |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
@@ -225,6 +226,7 @@ request:
 ```
 
 ## bodybinary
+_bodybinary_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 Define a binary request body, encoded in base64. Use it for payloads such as `application/octet-stream` or any other binary format.
 
@@ -248,6 +250,7 @@ request:
 ```
 
 ## binary_source_file
+_binary_source_file_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 Define a binary request body from a file on disk. Use it when the payload should not be inlined as Base64 in the YAML.
 
@@ -275,6 +278,7 @@ request:
 ```
 
 ## parts
+_parts_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 Define the multipart/form-data parts of the HTTP request. Use `parts` instead of `body` for multipart uploads.
 
