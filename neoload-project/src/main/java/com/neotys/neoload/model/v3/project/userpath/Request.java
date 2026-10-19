@@ -85,8 +85,9 @@ public interface Request extends Step, UrlServerElement, SlaElement, AssertionsE
 	}
 	
 	@JsonProperty(HEADERS)
+	@JsonInclude(Include.NON_EMPTY)
 	@Valid
-	List<Header> getHeaders();
+	List<NameValue> getHeaders();
 	
 	@JsonProperty(BODY)
 	Optional<String> getBody();
