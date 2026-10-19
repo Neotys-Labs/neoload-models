@@ -4,12 +4,8 @@ package com.neotys.neoload.model.v3.binding.io;
 import static org.junit.Assert.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Header;
-import com.neotys.neoload.model.v3.project.userpath.Request;
+import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
-import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -47,14 +43,8 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/select?name=neoload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("text/html; charset=utf-8")
-										.build())
-								.addHeaders(Header.builder()
-										.name("Accept-Encoding")
-										.value("gzip, compress, br")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("text/html; charset=utf-8").build())
+								.addHeaders(NameValue.builder().name("Accept-Encoding").value("gzip, compress, br").build())
 								.body("My Body\nline 1\nline 2\n")
 								.addExtractors(VariableExtractor.builder()
 										.name("MyVariable1")
@@ -70,14 +60,8 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/select?name=neoload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("text/html; charset=utf-8")
-										.build())
-								.addHeaders(Header.builder()
-										.name("Accept-Encoding")
-										.value("gzip, compress, br")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("text/html; charset=utf-8").build())
+								.addHeaders(NameValue.builder().name("Accept-Encoding").value("gzip, compress, br").build())
 								.body("My Body line 1 line 2")
 								.addExtractors(VariableExtractor.builder()
 										.name("MyVariable1")
@@ -123,20 +107,14 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/upload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("application/octet-stream")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.bodyBinary(TEXT_PAYLOAD)
 								.build())
 						.addSteps(Request.builder()
 								.url("/upload-raw")
 								.server("neotys")
 								.method(Method.PUT.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("application/octet-stream")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.bodyBinary(RAW_PAYLOAD)
 								.slaProfile("MySlaProfile")
 								.build())
@@ -174,20 +152,14 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/upload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("application/octet-stream")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.binarySourceFile("payloads/hello.bin")
 								.build())
 						.addSteps(Request.builder()
 								.url("/upload-raw")
 								.server("neotys")
 								.method(Method.PUT.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("application/octet-stream")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.binarySourceFile("payload.bin")
 								.slaProfile("MySlaProfile")
 								.build())
