@@ -1435,6 +1435,8 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"url": { "$ref": "#/definitions/common/url" },
 						"server": { "$ref": "#/definitions/common/name" },
+						"parameters": { "$ref": "#/definitions/user_paths/name_values" },
+						"headers": { "$ref": "#/definitions/user_paths/name_values" },
 						"content": {
 							"type": "object",
 							"required": ["path"],
