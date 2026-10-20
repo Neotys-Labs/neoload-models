@@ -172,6 +172,17 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
       less_than: 2048
 ```
 
+**Global assertion settings** — two new `project_settings` keys choose which responses the
+global assertions (the assertions of a User Path) are applied to: `global_assertions.content_types`
+(comma-separated, NeoLoad default `text/html,text/xhtml`) and
+`global_assertions.apply_on_custom_actions` (NeoLoad default `false`).
+
+```yaml
+project_settings:
+  global_assertions.content_types: text/html,text/xhtml,application/json
+  global_assertions.apply_on_custom_actions: true
+```
+
 #### Variables
 
 Four variable types that already existed in the NeoLoad GUI are now writable in as-code.

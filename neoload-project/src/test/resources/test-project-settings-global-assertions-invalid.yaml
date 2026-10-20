@@ -1,0 +1,3 @@
+name: MyProject
+project_settings:
+  global_assertions.apply_on_custom_actions: yes please

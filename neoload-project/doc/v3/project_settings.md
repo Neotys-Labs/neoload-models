@@ -18,6 +18,8 @@ the other properties will keep the value defined from NeoLoad.
 | qtest.project_id                        | The qTest unique identifier of the qTest project in which the result will be transferred          | -               | -        | 7.10   |
 | qtest.cycle_id                          | The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier.  | -               | -        | 7.10   |
 | qtest.create_defects                    | Enable automatic creation of Defects on failed and warning SLAs                                   | -               | -        | 7.11   |
+| global_assertions.content_types         | Comma-separated list of the response content types the global assertions (the assertions of a User Path) are applied to. NeoLoad default: `text/html,text/xhtml` | -               | -        | 2026.3 |
+| global_assertions.apply_on_custom_actions | Also apply the global assertions to custom actions. NeoLoad default: `false`                    | -               | -        | 2026.3 |
 
 #### Example
 - Enable Dynatrace integration monitoring. It is possible, for example, to quickly activate Dynatrace monitoring for the pre-production server.
@@ -35,6 +37,13 @@ project_settings:
   qtest.project_id: 101762
   qtest.cycle_id: 3761630
   qtest.create_defects: false
+```
+
+- Apply the global assertions to JSON responses and to custom actions as well.
+```yaml
+project_settings:
+  global_assertions.content_types: text/html,text/xhtml,application/json
+  global_assertions.apply_on_custom_actions: true
 ```
 
 #### Other Example
