@@ -165,13 +165,13 @@ public class ThresholdHelperTest {
 			final StringBuilder expectedMessage = new StringBuilder();
 			expectedMessage.append("avg-request-resp-time warn >= 1.0 fail >= 2.0 pertest is not a valid threshold: ");
 			expectedMessage.append(System.lineSeparator());
-			// The underlying IndexOutOfBoundsException message format changed with the JDK:
-			// JDK < 14 uses "offset ..., count ..., length ...", JDK >= 14 uses "Range [...] ...".
-			if (Runtime.version().feature() >= 14) {
-				expectedMessage.append("Range [52, 52 + 2) out of bounds for length 53");
-			} else {
-				expectedMessage.append("offset 52, count 2, length 53");
-			}
+			// ANTLR 4.7.2+ reports lexer token recognition errors for invalid scope text
+			// instead of failing with an IndexOutOfBoundsException.
+			expectedMessage.append("Position 46 token recognition error at: 'pert'");
+			expectedMessage.append(System.lineSeparator());
+			expectedMessage.append("Position 50 token recognition error at: 'es'");
+			expectedMessage.append(System.lineSeparator());
+			expectedMessage.append("Position 52 token recognition error at: 't'");
 			assertEquals(expectedMessage.toString(), e.getMessage());
 			throwException = true;
 		}
