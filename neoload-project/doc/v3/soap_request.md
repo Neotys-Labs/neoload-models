@@ -15,6 +15,11 @@ external XML file referenced by `content.path`.
 | [parameters](#parameters)| The query string parameter list                                     | &#x2713;        | -        | 2026.3|
 | [headers](#headers)      | The request header list                                              | &#x2713;        | -        | 2026.3|
 | [content](#content)      | The external XML file used as the request body                      | -               | &#x2713; | 2026.3|
+| [content_assertions](content_assertion.md) | The list of assertions to validate the response content | -         | -        | 2026.3|
+| assertions               | Deprecated alias of `content_assertions`, read-only. Use `content_assertions` instead. | - | -   | 2026.3|
+| [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration | -   | -        | 2026.3|
+| [size_assertion](size_assertion.md) | The assertion to validate the response size                  | -               | -        | 2026.3|
+| sla_profile              | The name of the SLA profile to apply to the request                 | -               | -        | 2026.3|
 
 #### Example 1
 
@@ -39,6 +44,24 @@ soap_request:
   server: server_petstore
   content:
     path: ./requests/mySOAPRequest.xml
+```
+
+#### Example 3
+
+Defining a SOAP request with assertions and an SLA profile.
+
+```yaml
+soap_request:
+  url: http://petstore.swagger.io:80/
+  content:
+    path: ./requests/mySOAPRequest.xml
+  sla_profile: MySlaProfile
+  content_assertions:
+  - contains: Success
+  duration_assertion:
+    less_than: 2048
+  size_assertion:
+    less_than: 4096
 ```
 
 ## url

@@ -71,6 +71,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-request-parts-required-and-optional",
 			"test-soap-request-only-required",
 			"test-soap-request-required-and-optional",
+			"test-soap-request-legacy-assertions",
 			"test-scenarios-only-required",
 			"test-scenarios-required-and-optional",
 			"test-servers-only-required",

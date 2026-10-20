@@ -62,6 +62,37 @@ public class IOSoapRequestSchemaValidationTest {
     }
 
     @Test
+    public void soapRequestWithAssertionsAndSlaProfileAcceptedBySchema3Dot1() throws IOException {
+        final JsonNode document = soapRequestDocumentWith(
+                "        assertions:\n"
+                        + "        - contains: legacy\n"
+                        + "        duration_assertion:\n"
+                        + "          less_than: 2048\n"
+                        + "        size_assertion:\n"
+                        + "          greater_than: 1024\n"
+                        + "        sla_profile: MySla\n");
+        assertTrue("3.1 schema must accept soap_request assertions and sla_profile", schema31.validate(document).isEmpty());
+    }
+
+    @Test
+    public void soapRequestWithContentAssertionsAcceptedBySchema3Dot1() throws IOException {
+        final JsonNode document = soapRequestDocumentWith(
+                "        content_assertions:\n"
+                        + "        - contains: text\n");
+        assertTrue("3.1 schema must accept soap_request content_assertions", schema31.validate(document).isEmpty());
+    }
+
+    @Test
+    public void soapRequestWithInvalidDurationAssertionRejectedBySchema3Dot1() throws IOException {
+        final JsonNode document = soapRequestDocumentWith(
+                "        duration_assertion:\n"
+                        + "          unknown: 1\n");
+        final Set<ValidationMessage> errors = schema31.validate(document);
+        assertFalse("3.1 schema must reject an invalid duration_assertion", errors.isEmpty());
+        assertTrue("error must point at duration_assertion", errors.stream().anyMatch(e -> e.getMessage().contains("duration_assertion")));
+    }
+
+    @Test
     public void soapRequestWithValidParametersAcceptedBySchema3Dot1() throws IOException {
         final JsonNode document = YAML_MAPPER.readTree(
                 "name: MyProject\n"
@@ -134,6 +165,20 @@ public class IOSoapRequestSchemaValidationTest {
         assertFalse("3.1 schema must reject a non-string headers value", errors.isEmpty());
         assertTrue("error must be reported on the headers field",
                 errors.stream().anyMatch(error -> error.getInstanceLocation().toString().contains("headers")));
+    }
+
+    private static JsonNode soapRequestDocumentWith(final String extraKeys) throws IOException {
+        return YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - soap_request:\n"
+                        + "        url: http://host:80/\n"
+                        + "        content:\n"
+                        + "          path: ./requests/mySOAPRequest.xml\n"
+                        + extraKeys);
     }
 
     private static Path locateSchemasDir() throws URISyntaxException {
