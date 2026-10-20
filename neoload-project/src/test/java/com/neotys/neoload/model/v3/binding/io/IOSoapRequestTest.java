@@ -12,6 +12,9 @@ import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequestContent;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertion;
 import java.io.IOException;
 import org.junit.Test;
 
@@ -50,6 +53,14 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 								.addHeaders(NameValue.builder().name("SOAPAction").value("http://example.com/action").build())
 								.addHeaders(NameValue.builder().name("Content-Type").value("text/xml; charset=utf-8").build())
 								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_1").contains("Design").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_2").not(true).contains("Maintenance").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_3").contains("^Analyze.*$").regexp(true).build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_4").xPath("xpath").contains("DevOps").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_5").jsonPath("jsonpath").contains("Automation").build())
+								.durationAssertion(DurationAssertion.builder().lessThan(2048L).build())
+								.sizeAssertion(SizeAssertion.builder().greaterThan(1024L).lessThan(2048L).build())
+								.slaProfile("MySla")
 								.build())
 						.build())
 				.build();
@@ -58,6 +69,33 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 				.name("MyProject")
 				.addUserPaths(userPath)
 				.build();
+	}
+
+	private static Project getSoapRequestLegacyAssertions() {
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(SoapRequest.builder()
+								.url("http://host:80/")
+								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+								.addContentAssertions(ContentAssertion.builder().name("soap_legacy").contains("legacy").build())
+								.build())
+						.build())
+				.build();
+
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
+	}
+
+	@Test
+	public void readSoapRequestLegacyAssertions() throws IOException {
+		final Project expectedProject = getSoapRequestLegacyAssertions();
+		assertNotNull(expectedProject);
+
+		read("test-soap-request-legacy-assertions", expectedProject);
 	}
 
 	@Test

@@ -16,3 +16,24 @@ user_paths:
         - Content-Type: text/xml; charset=utf-8
         content:
           path: ./requests/mySOAPRequest.xml
+        duration_assertion:
+          less_than: 2048
+        size_assertion:
+          greater_than: 1024
+          less_than: 2048
+        sla_profile: MySla
+        content_assertions:
+        - name: assertion_1
+          contains: Design
+        - name: assertion_2
+          not: true
+          contains: Maintenance
+        - name: assertion_3
+          contains: ^Analyze.*$
+          regexp: true
+        - name: assertion_4
+          xpath: xpath
+          contains: DevOps
+        - name: assertion_5
+          jsonpath: jsonpath
+          contains: Automation
