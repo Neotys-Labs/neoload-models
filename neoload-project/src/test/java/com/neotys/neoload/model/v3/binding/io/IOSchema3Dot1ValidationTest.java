@@ -80,6 +80,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
             "test-pacing-invalid-values.yaml",
+            "test-pacing-malformed-units.yaml",
             "test-pacing-mixed.yaml",
             "test-pacing-on-loop.yaml",
             "test-pacing-on-while.yaml",
@@ -93,6 +94,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-web_page-think-time-invalid-value.yaml",
             "test-web_page-think-time-min-only.yaml",
             "test-web_page-think-time-mixed.yaml",
+            "test-web_page-think-time-with-name.yaml",
             "test-web_page-unsupported-step.yaml",
             "test-shared-elements-unsupported-type.yaml",
             "test-shared-elements-missing-name-loop.yaml",
@@ -203,5 +205,73 @@ public class IOSchema3Dot1ValidationTest {
             Assert.assertFalse("Expected user path '" + userPath.get("name").asText() + "' of " + fixture + " to fail schema validation",
                     SCHEMA.validate(project).isEmpty());
         }
+    }
+
+    @Test
+    public void webPageThinkTimeSharesStepDurationSyntax() throws IOException {
+        assertWebPageThinkTime("1m 30s", true);
+        assertWebPageThinkTime("{value: 2000}", true);
+        assertWebPageThinkTime("{max: 5s}", true);
+        assertWebPageThinkTime("{min: 1s, max: 5s}", true);
+        assertWebPageThinkTime("{name: tt, value: 2s}", false);
+        assertWebPageThinkTime("{value: 2.5}", false);
+    }
+
+    @Test
+    public void pacingAcceptsValueFormAndSpaces() throws IOException {
+        assertPacing("{ value: 2s }", true);
+        assertPacing("1h 1s", true);
+        assertPacing("1500", true);
+        assertPacing("{ max: 5s }", true);
+        assertPacing("{ value: 2s, min: 1s }", false);
+        assertPacing("abc", false);
+        assertPacing("1 h", false);
+        assertPacing("1m1h", false);
+        assertPacing("1s1s", false);
+        assertPacing("1s5", false);
+        assertPacing("\" 1h 2m 5s \"", true);
+        assertPacing("{ value: 5x }", false);
+        assertPacing("{ min: abc, max: 5s }", false);
+    }
+
+    @Test
+    public void durationVariableFollowsElementNameRules() throws IOException {
+        assertPacing("${my-var}", true);
+        assertPacing("${file.column}", true);
+        assertPacing("${a€b}", false);
+        assertPacing("${a$b}", false);
+        assertPacing("${a.}", false);
+    }
+
+    @Test
+    public void durationActionsRejectMalformedDurations() throws IOException {
+        for (final String key : new String[] {"delay", "think_time"}) {
+            assertStep(key + ": 1h 1s", true);
+            assertStep(key + ": 1h 1m 1s 1ms", true);
+            assertStep(key + ": 1h1m1s1ms", true);
+            assertStep(key + ": ${my_var}", true);
+            assertStep(key + ": { name: wait, max: 3000 }", true);
+            assertStep(key + ": abc", false);
+            assertStep(key + ": { name: wait, value: 1.5s }", false);
+            assertStep(key + ": { name: wait, value: 2s, min: 1s }", false);
+            assertStep(key + ": { value: 2s, max: 3s }", false);
+            assertStep(key + ": { name: wait, other: 1s, max: 3s }", false);
+        }
+    }
+
+    private static void assertStep(final String step, final boolean valid) throws IOException {
+        final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - " + step + "\n";
+        Assert.assertEquals(step, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+    }
+
+    private static void assertPacing(final String pacing, final boolean valid) throws IOException {
+        final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    pacing: " + pacing + "\n    steps:\n    - delay: 1s\n";
+        Assert.assertEquals(pacing, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+    }
+
+    private static void assertWebPageThinkTime(final String thinkTime, final boolean valid) throws IOException {
+        final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - web_page:\n"
+                + "        think_time: " + thinkTime + "\n        steps:\n        - request:\n            url: http://host:80/\n";
+        Assert.assertEquals(thinkTime, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
     }
 }

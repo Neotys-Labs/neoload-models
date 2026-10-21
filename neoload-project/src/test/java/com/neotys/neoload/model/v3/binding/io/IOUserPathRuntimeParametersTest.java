@@ -8,7 +8,8 @@ import static org.junit.Assert.fail;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath.FailurePolicy;
 import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
@@ -25,7 +26,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 	private static Container actions() {
 		return Container.builder()
 				.name("actions")
-				.addSteps(DelayConstant.builder().value("1000").build())
+				.addSteps(Delay.builder().duration(DurationConstant.builder().value("1000").build()).build())
 				.build();
 	}
 
@@ -36,7 +37,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 						.name("MyUserPath1")
 						.onError(FailurePolicy.GO_TO_NEXT_ITERATION)
 						.onAssertionFailure(FailurePolicy.STOP_AND_START_NEW_VU)
-						.thinkTime(UserPathThinkTime.builder().override("5s").random("10%").build())
+						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value("5000").build()).random("10%").build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
@@ -53,7 +54,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath4")
 						.onError(FailurePolicy.STOP_AND_START_NEW_VU)
-						.thinkTime(UserPathThinkTime.builder().override("1m30s").build())
+						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value("90000").build()).build())
 						.actions(actions())
 						.build())
 				.build();
@@ -64,7 +65,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 				.name("MyProject")
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath1")
-						.thinkTime(UserPathThinkTime.builder().override("${my_think_time}").random("${my_random_delay}").build())
+						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value("${my_think_time}").build()).random("${my_random_delay}").build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
@@ -133,7 +134,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 
 		final String message = validation.getMessage().get();
 		assertTrue(message, message.contains("Violation Number: 14."));
-		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[0].think_time.override': must be a number of milliseconds (e.g. 100), a combination of h, m, s and ms (e.g. 1h30m, 5s, 500ms) or a variable."));
+		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[0].think_time.override.value': '-100' " + ViolationsAssert.INVALID_DURATION));
 		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[7].think_time.factor': must be a non-negative integer percentage (e.g. 150%) or a variable."));
 		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[10].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
 		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[13].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
@@ -185,6 +186,12 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 	public void readThinkTimeThatIsNotAnObjectFailsWithAClearMessage() {
 		assertReadFails(userPathWith("think_time: 5s"),
 				"Incorrect value for 'think_time' in User Path 'MyUserPath': must be an object with 'override', 'factor' and/or 'random' (found: \"5s\").");
+	}
+
+	@Test
+	public void readThinkTimeOverrideThatIsNotASingleDurationFailsWithAClearMessage() {
+		assertReadFails(userPathWith("think_time:\n    override:\n      min: 1s\n      max: 2s"),
+				"Incorrect value for 'think_time.override' in User Path 'MyUserPath': must be a single duration (found: {\"min\":\"1s\",\"max\":\"2s\"}).");
 	}
 
 	@Test

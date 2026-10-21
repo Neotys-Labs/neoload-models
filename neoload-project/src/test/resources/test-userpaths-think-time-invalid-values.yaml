@@ -30,9 +30,9 @@ user_paths:
   actions:
     steps:
     - delay: 1s
-- name: OverrideSpaceBetweenUnits
+- name: OverrideUnitsOutOfOrder
   think_time:
-    override: 1m 30s
+    override: 30s1m
   actions:
     steps:
     - delay: 1s

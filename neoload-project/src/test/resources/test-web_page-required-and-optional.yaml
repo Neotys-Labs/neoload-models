@@ -7,8 +7,7 @@ user_paths:
         name: MyWebPage
         description: My Web Page
         sla_profile: MySlaProfile
-        think_time:
-          value: 2s
+        think_time: 2s
         playback: sequential
         execute_resources: dynamic
         steps:

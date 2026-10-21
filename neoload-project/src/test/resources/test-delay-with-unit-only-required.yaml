@@ -3,9 +3,9 @@ user_paths:
 - name: MyUserPath
   actions:
     steps:
-    - delay: 1h 3m 10s 200ms
+    - delay: 1h3m10s200ms
     - delay:
-        max: 1h 3m 10s 200ms
+        max: 1h3m10s200ms
     - delay: 1h
     - delay:
         max: 1h

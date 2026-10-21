@@ -7,7 +7,8 @@ import static org.junit.Assert.fail;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.TryCatch;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import java.io.File;
@@ -39,13 +40,13 @@ public class IOTryCatchTest extends AbstractIOElementsTest {
 				.caughtExceptions(TryCatch.CaughtException.ASSERTIONS)
 				.getTry(Container.builder()
 						.addSteps(
-								DelayConstant.builder().value("1000").build(),
-								DelayConstant.builder().value("2000").build()
+								Delay.builder().duration(DurationConstant.builder().value("1000").build()).build(),
+								Delay.builder().duration(DurationConstant.builder().value("2000").build()).build()
 						)
 						.build())
 				.getCatch(Container.builder()
 						.addSteps(
-								DelayConstant.builder().value("500").build()
+								Delay.builder().duration(DurationConstant.builder().value("500").build()).build()
 						)
 						.build())
 				.build();

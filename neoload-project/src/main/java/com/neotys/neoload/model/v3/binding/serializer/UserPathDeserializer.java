@@ -78,6 +78,10 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		if (thinkTimeNode != null && !thinkTimeNode.isNull() && !thinkTimeNode.isObject()) {
 			throw incorrectValue(THINK_TIME, userPathName, "must be an object with '" + OVERRIDE + "', '" + FACTOR + "' and/or '" + RANDOM + "'", thinkTimeNode);
 		}
+		final JsonNode overrideNode = thinkTimeNode == null ? null : thinkTimeNode.get(OVERRIDE);
+		if (overrideNode != null && overrideNode.isContainerNode()) {
+			throw incorrectValue(THINK_TIME + "." + OVERRIDE, userPathName, "must be a single duration", overrideNode);
+		}
 		return asObject(codec, node, THINK_TIME, UserPathThinkTime.class);
 	}
 

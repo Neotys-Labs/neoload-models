@@ -2,6 +2,7 @@ package com.neotys.neoload.model.v3.project.userpath;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.immutables.value.Value;
@@ -23,8 +24,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
  * Without {@code override} nor {@code factor}, the think times defined on pages and delays apply, and without
  * {@code random} no random delay is added.
  * <p>
- * Values are kept as written: a duration in the {@link Pacing} format, an integer percentage with an optional
- * {@code %}, or a variable.
+ * {@code override} is a constant {@link Duration}, in milliseconds or a variable. {@code factor} and
+ * {@code random} are kept as written: an integer percentage with an optional {@code %}, or a variable.
  */
 @UserPathThinkTimeCheck(groups = {NeoLoad.class})
 @JsonInclude(value = Include.NON_EMPTY)
@@ -45,7 +46,8 @@ public interface UserPathThinkTime {
 	String RANDOM_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.ThinkTimeRandomPattern.message}";
 
 	@JsonProperty(OVERRIDE)
-	Optional<@Pattern(regexp = Pacing.PATTERN, message = Pacing.PATTERN_MESSAGE, groups = {NeoLoad.class}) String> getOverride();
+	@Valid
+	Optional<DurationConstant> getOverride();
 
 	@JsonProperty(FACTOR)
 	Optional<@Pattern(regexp = FACTOR_PATTERN, message = FACTOR_MESSAGE, groups = {NeoLoad.class}) String> getFactor();

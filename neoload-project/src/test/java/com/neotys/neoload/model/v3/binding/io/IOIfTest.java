@@ -7,7 +7,8 @@ import static org.junit.Assert.assertNotNull;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Condition;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.If;
 import com.neotys.neoload.model.v3.project.userpath.Match;
 import com.neotys.neoload.model.v3.project.userpath.Request;
@@ -34,9 +35,9 @@ public class IOIfTest extends AbstractIOElementsTest {
 						.build()))
 				.then(Container.builder()
 						.name("container")
-						.addSteps(DelayConstant
+						.addSteps(Delay
 								.builder()
-								.value(String.valueOf(3*60*1000+200)) // "3m 200ms"
+								.duration(DurationConstant.builder().value(String.valueOf(3*60*1000+200)).build())
 								.build()
 						).build())
 				.build();
@@ -126,9 +127,9 @@ public class IOIfTest extends AbstractIOElementsTest {
 				.name("container")
 				.description("MyElseDescription")
 				.slaProfile("MySLAProfile")
-				.addSteps(DelayConstant
+				.addSteps(Delay
 						.builder()
-						.value(String.valueOf(3*60*1000+200)) // "3m 200ms"
+						.duration(DurationConstant.builder().value(String.valueOf(3*60*1000+200)).build())
 						.build())
 				.addContentAssertions(ContentAssertion.builder()
 						.contains("ElseAssertion")

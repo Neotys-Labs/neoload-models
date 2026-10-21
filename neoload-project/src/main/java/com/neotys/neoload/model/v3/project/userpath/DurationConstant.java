@@ -7,14 +7,14 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
-public interface PacingConstant extends Pacing {
+public interface DurationConstant extends Duration {
 	String VALUE = "value";
 
 	@RequiredCheck(groups = {NeoLoad.class})
-	@Pattern(regexp = Pacing.PATTERN, message = Pacing.PATTERN_MESSAGE, groups = {NeoLoad.class})
+	@Pattern(regexp = Duration.PATTERN, message = Duration.PATTERN_MESSAGE, groups = {NeoLoad.class})
 	String getValue();
 
-	class Builder extends ImmutablePacingConstant.Builder {}
+	class Builder extends ImmutableDurationConstant.Builder {}
 	static Builder builder() {
 		return new Builder();
 	}

@@ -51,6 +51,6 @@ user_paths:
           description: MyElseDescription
           sla_profile: MySLAProfile
           steps:
-          - delay: 3m 200ms
+          - delay: 3m200ms
           content_assertions:
           - contains: ElseAssertion
