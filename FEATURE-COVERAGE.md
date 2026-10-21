@@ -154,6 +154,7 @@ and protocol action catalogues.
 | Switch | 3.0 |
 | JavaScript | 3.0 |
 | Advanced / SAP GUI / Citrix / RealBrowser / RTE actions | 3.0 (`custom_action`) |
+| RealBrowser actions as dedicated steps (`browser_open`, `browser_click`...), parameters documented and checked by the JSON Schema | 3.1 |
 | Try … Catch | 3.1 |
 | Go to next iteration | 3.1 |
 | Stop Virtual User | 3.1 |
