@@ -3,17 +3,15 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-
+import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Condition;
 import com.neotys.neoload.model.v3.project.userpath.Match;
 import com.neotys.neoload.model.v3.project.userpath.WaitUntil;
-
+import java.io.IOException;
+import java.util.List;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class IOWaitUntilTest extends AbstractIOElementsTest {
 
@@ -31,6 +29,18 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 		Assert.assertNotNull(expectedProject);
 
 		read("test-readonly-waituntil-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void readWaitUntilWithInvalidTimeoutFails() {
+		final Exception exception = Assert.assertThrows(Exception.class, () -> new IO().read(getFile("test-waituntil-invalid-timeout", "yaml")));
+		Throwable cause = exception;
+		while (cause != null && !(cause instanceof InvalidDurationException)) {
+			cause = cause.getCause();
+		}
+		Assert.assertNotNull(exception.toString(), cause);
+		Assert.assertTrue(exception.getMessage(), exception.getMessage().startsWith("Incorrect duration: '1m1h' is not a valid duration."));
+		Assert.assertTrue(exception.getMessage(), exception.getMessage().contains("ImmutableWaitUntil$Json[\"timeout\"]"));
 	}
 
 	@Test
