@@ -15,4 +15,13 @@ public interface MinMaxRange {
 	Optional<BigDecimal> comparableMin();
 
 	Optional<BigDecimal> comparableMax();
+
+	/**
+	 * Whether both bounds can be compared and min is greater than max.
+	 */
+	default boolean minGreaterThanMax() {
+		final Optional<BigDecimal> min = comparableMin();
+		final Optional<BigDecimal> max = comparableMax();
+		return min.isPresent() && max.isPresent() && min.get().compareTo(max.get()) > 0;
+	}
 }
