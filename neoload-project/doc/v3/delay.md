@@ -43,6 +43,8 @@ delay: ${myDelayVariable}
 ```
 
 ### Complete form
+_Complete form_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 | Name        | Description                                              | Accept variable | Required | Since  |
 |:----------- |:------------------------------------------------------- |:---------------:|:--------:|:------:|
 | name        | The name of the delay. The default value is `delay`.    | -        | -        | 2026.3 |
@@ -65,6 +67,8 @@ delay:
 ```
 
 ## Random duration delay
+_Random duration delay_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 A random delay is drawn between a `min` and a `max`.
 
 #### Available settings

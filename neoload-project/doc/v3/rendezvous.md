@@ -1,4 +1,5 @@
 # Rendezvous
+_Rendezvous_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 A Rendezvous point synchronizes Virtual Users at a common meeting point so they carry out tasks simultaneously, creating an intense load on the server at a specific point in the application.
 

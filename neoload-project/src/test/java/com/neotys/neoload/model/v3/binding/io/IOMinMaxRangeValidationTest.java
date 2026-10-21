@@ -21,10 +21,10 @@ public class IOMinMaxRangeValidationTest {
 	private static final List<String> INVERTED_RANGE_VIOLATIONS = Arrays.asList(
 			"Incorrect value for 'project.variables[0]': random_number 'min' must be less than or equal to 'max'.",
 			"Incorrect value for 'project.variables[1]': random_string 'min_length' must be less than or equal to 'max_length'.",
-			"Incorrect value for 'project.user_paths[0].actions.pacing': pacing 'min' must be less than or equal to 'max'.",
-			"Incorrect value for 'project.user_paths[0].actions.steps[0]': delay 'min' must be less than or equal to 'max'.",
-			"Incorrect value for 'project.user_paths[0].actions.steps[1]': think_time 'min' must be less than or equal to 'max'.",
-			"Incorrect value for 'project.user_paths[0].actions.steps[2].think_time': think_time 'min' must be less than or equal to 'max'.",
+			"Incorrect value for 'project.user_paths[0].actions.pacing': duration 'min' must be less than or equal to 'max'.",
+			"Incorrect value for 'project.user_paths[0].actions.steps[0].delay': duration 'min' must be less than or equal to 'max'.",
+			"Incorrect value for 'project.user_paths[0].actions.steps[1].think_time': duration 'min' must be less than or equal to 'max'.",
+			"Incorrect value for 'project.user_paths[0].actions.steps[2].think_time': duration 'min' must be less than or equal to 'max'.",
 			"Incorrect value for 'project.scenarios[0].populations[0].rampup_load': rampup_load 'min_users' must be less than or equal to 'max_users'.");
 
 	private static File getFile(final String fileName) throws URISyntaxException {

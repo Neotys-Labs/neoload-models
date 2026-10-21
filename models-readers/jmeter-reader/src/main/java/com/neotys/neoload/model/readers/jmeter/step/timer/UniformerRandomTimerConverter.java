@@ -3,17 +3,16 @@ package com.neotys.neoload.model.readers.jmeter.step.timer;
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import java.util.List;
+import java.util.function.BiFunction;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apache.jmeter.testelement.property.PropertyIterator;
 import org.apache.jmeter.timers.UniformRandomTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.function.BiFunction;
 
 /**
  * This function convert the UniforRandomTimer of JMeter into Delay Step of Neoload
@@ -26,10 +25,10 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
     //Methods
     @Override
     public List<Step> apply(final UniformRandomTimer uniformRandomTimer, final HashTree hashTree) {
-        final Delay delay = DelayConstant.builder()
+        final Delay delay = Delay.builder()
                 .name(uniformRandomTimer.getName())
                 .description(uniformRandomTimer.getComment())
-                .value(checkDelay(uniformRandomTimer))
+                .duration(DurationConstant.builder().value(checkDelay(uniformRandomTimer)).build())
                 .build();
         LOGGER.info("Uniform Random Timer Correctly converted");
         EventListenerUtils.readSupportedFunction("UniformRandomTimer","Uniform Random Timer");

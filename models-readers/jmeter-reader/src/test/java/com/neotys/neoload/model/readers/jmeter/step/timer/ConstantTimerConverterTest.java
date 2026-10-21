@@ -1,18 +1,18 @@
 package com.neotys.neoload.model.readers.jmeter.step.timer;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.spy;
 
 public class ConstantTimerConverterTest {
 
@@ -30,7 +30,7 @@ public class ConstantTimerConverterTest {
         ConstantTimerConverter constantTimerConverter = new ConstantTimerConverter();
         List<Step> result = constantTimerConverter.apply(constantTimer, null);
         List<Step> expected = new ArrayList<>();
-        expected.add(DelayConstant.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build());
+        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build());
         assertEquals(result,expected);
 
     }

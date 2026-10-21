@@ -1,4 +1,5 @@
 # Web Page
+_Web Page_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back.
 
@@ -11,7 +12,7 @@ The Web Page Action is used to group together the requests and resources that ma
 | think_time                          | The think time to apply before playing the Web Page. Either a constant value (`value`), or a random value between `min` (defaults to `0`) and `max`, which must be greater than or equal to `min` | &#x2713; | -        | 2026.3 |
 | playback                            | How the Web Page's steps are played: `parallel` (default) or `sequential`                             | -               | -        | 2026.3 |
 | execute_resources                   | How the Web Page's resources are executed: `static` (default), `dynamic` or `dynamic_forced_encoding` | -               | -        | 2026.3 |
-| steps                               | Steps of the Web Page. Only [request](request.md) and nested `web_page` steps are supported            | -               | &#x2713; | 2026.3 |
+| steps                               | Steps of the Web Page. Only [request](request.md), nested `web_page` and [soap_request](soap_request.md) steps are supported            | -               | &#x2713; | 2026.3 |
 
 #### think_time
 
@@ -28,7 +29,7 @@ think_time:
   max: 5s
 ```
 
-`min` defaults to `0` when omitted. Values can be a plain number of seconds (`2`, `2.5`), a time literal with optional `h`/`m`/`s`/`ms` suffixed components (`500ms`, `2s`, `1h30m`), or a variable reference (`${max_think_time}`).
+The web page `think_time` uses the same syntax as the [think_time](think_time.md) step (a scalar duration, `value`, or `min` / `max`), without `name` and `description`. A plain number is a duration in milliseconds; time literals (`500ms`, `2s`, `1h 30m`) and variables (`${max_think_time}`) are also accepted. `min` is optional.
 
 #### Example
 

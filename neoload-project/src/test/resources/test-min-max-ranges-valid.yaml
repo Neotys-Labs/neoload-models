@@ -29,7 +29,7 @@ user_paths:
         max: 1s
     - web_page:
         think_time:
-          min: "1.5"
+          min: "1500"
           max: 1500ms
         steps:
         - request:

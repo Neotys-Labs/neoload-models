@@ -1,9 +1,8 @@
 # Custom Action
+_Custom Action_ is supported in NeoLoad from version 2025.1 onwards.
 
 Custom action can be an Advanced Action, a SAP GUI Action, a Citrix Action, a RealBrowser Action or an RTE Action.
 A Custom Advanced action can also be developed using Java.
-
-Custom actions are supported in NeoLoad from version 2025.1 onwards.
 
 #### Available settings are
 

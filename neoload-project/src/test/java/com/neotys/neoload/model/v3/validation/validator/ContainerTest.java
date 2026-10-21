@@ -6,8 +6,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.PacingConstant;
-import com.neotys.neoload.model.v3.project.userpath.PacingRandom;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
+import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -28,7 +28,7 @@ public class ContainerTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'pacing': pacing 'min' must be less than or equal to 'max'.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'pacing': duration 'min' must be less than or equal to 'max'.").append(LINE_SEPARATOR);
 		CONSTRAINTS_CONTAINER_PACING_MIN_GREATER_THAN_MAX = sb.toString();
 	}
 
@@ -258,42 +258,42 @@ public class ContainerTest {
 
 		Container container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(PacingConstant.builder().value("30s").build())
+				.pacing(DurationConstant.builder().value("30000").build())
 				.build();
 		Validation validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.getMessage().orElse(""), validation.isValid());
 
 		container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(PacingConstant.builder().value("abc").build())
+				.pacing(DurationConstant.builder().value("abc").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
 
 		container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(PacingRandom.builder().max("3s").build())
+				.pacing(DurationRandom.builder().max("3000").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.getMessage().orElse(""), validation.isValid());
 
 		container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(PacingRandom.builder().max("abc").build())
+				.pacing(DurationRandom.builder().max("abc").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
 
 		container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(PacingRandom.builder().min("3s").max("3s").build())
+				.pacing(DurationRandom.builder().min("3000").max("3000").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.getMessage().orElse(""), validation.isValid());
 
 		container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(PacingRandom.builder().min("3s").max("1s").build())
+				.pacing(DurationRandom.builder().min("3000").max("1000").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());

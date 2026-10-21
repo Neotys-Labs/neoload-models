@@ -1,5 +1,11 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
+import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.validation.naming.DurationStrategy;
+import com.neotys.neoload.model.v3.validation.naming.LoadPolicyStrategy;
+import com.neotys.neoload.model.v3.validation.naming.PropertyNamingStrategy;
+import com.neotys.neoload.model.v3.validation.naming.RampupStrategy;
+import com.neotys.neoload.model.v3.validation.naming.SnakeCaseStrategy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,18 +13,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.validation.Configuration;
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.Path.Node;
 import javax.validation.ValidatorFactory;
-
-import com.google.common.base.Strings;
-import com.neotys.neoload.model.v3.validation.naming.LoadPolicyStrategy;
-import com.neotys.neoload.model.v3.validation.naming.PropertyNamingStrategy;
-import com.neotys.neoload.model.v3.validation.naming.RampupStrategy;
-import com.neotys.neoload.model.v3.validation.naming.SnakeCaseStrategy;
 
 public final class Validator {
 	private static final String PROPERTY_PATH_SEPARATOR = ".";
@@ -29,6 +28,7 @@ public final class Validator {
 		PROPERTY_NAMING_STRATEGIES = new HashMap<>();
 		PROPERTY_NAMING_STRATEGIES.put("loadPolicy", new LoadPolicyStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("rampup", new RampupStrategy());
+		PROPERTY_NAMING_STRATEGIES.put("duration", new DurationStrategy());
 	}
 	
 	private static final PropertyNamingStrategy defaultNamingStrategy = new SnakeCaseStrategy();

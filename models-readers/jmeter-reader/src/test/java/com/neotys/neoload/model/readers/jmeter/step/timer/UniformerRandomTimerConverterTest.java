@@ -1,19 +1,18 @@
 package com.neotys.neoload.model.readers.jmeter.step.timer;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jmeter.timers.UniformRandomTimer;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.spy;
 
 public class UniformerRandomTimerConverterTest {
 
@@ -43,10 +42,10 @@ public class UniformerRandomTimerConverterTest {
         uniformRandomTimer.setProperty("RandomTimer.range", "0");
 
         List<Step> result = new UniformerRandomTimerConverter().apply(uniformRandomTimer,null);
-        Delay delay = DelayConstant.builder()
+        Delay delay = Delay.builder()
                 .name(uniformRandomTimer.getName())
                 .description(uniformRandomTimer.getComment())
-                .value("69")
+                .duration(DurationConstant.builder().value("69").build())
                 .build();
         List<Step> expected = new ArrayList<>();
         expected.add(delay);

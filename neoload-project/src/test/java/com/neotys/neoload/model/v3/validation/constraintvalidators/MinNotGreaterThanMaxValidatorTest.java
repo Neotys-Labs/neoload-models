@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
-import com.neotys.neoload.model.v3.project.userpath.PacingRandom;
+import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
 import com.neotys.neoload.model.v3.project.variable.RandomNumberVariable;
 import org.junit.Test;
 
@@ -24,14 +24,17 @@ public class MinNotGreaterThanMaxValidatorTest {
 		assertTrue(validator.isValid(randomNumber(-10, 10), null));
 		assertTrue(validator.isValid(randomNumber(10, 10), null));
 		assertFalse(validator.isValid(randomNumber(11, 10), null));
+
+		assertTrue(validator.isValid(DurationRandom.builder().max("0").build(), null));
+		assertFalse(validator.isValid(DurationRandom.builder().min("3000").max("1000").build(), null));
 	}
 
 	@Test
 	public void isValidWhenABoundCannotBeCompared() {
 		final MinNotGreaterThanMaxValidator validator = new MinNotGreaterThanMaxValidator();
 
-		assertTrue(validator.isValid(PacingRandom.builder().min("${min_pacing}").max("1s").build(), null));
-		assertTrue(validator.isValid(PacingRandom.builder().min("5s").max("abc").build(), null));
+		assertTrue(validator.isValid(DurationRandom.builder().min("${min_pacing}").max("1000").build(), null));
+		assertTrue(validator.isValid(DurationRandom.builder().min("5000").max("abc").build(), null));
 		assertTrue(validator.isValid(RampupLoadPolicy.builder()
 				.minUsers(10)
 				.incrementUsers(1)

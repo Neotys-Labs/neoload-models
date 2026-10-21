@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
 import com.neotys.neoload.model.v3.project.userpath.Request;
+import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.WebPage;
 import com.neotys.neoload.model.v3.validation.constraints.WebPageStepsCheck;
@@ -13,6 +14,6 @@ public final class WebPageStepsValidator extends AbstractConstraintValidator<Web
 		if (steps == null) {
 			return true;
 		}
-		return steps.stream().allMatch(step -> step instanceof Request || step instanceof WebPage);
+		return steps.stream().allMatch(step -> step instanceof Request || step instanceof SoapRequest || step instanceof WebPage);
 	}
 }
