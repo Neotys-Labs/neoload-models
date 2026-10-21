@@ -38,15 +38,12 @@ final class TimeDurationInMsHelper {
 			sb.append(hours).append(HOURS);
 		}
 		if (minutes != 0) {
-			addSeparatorIfNecessary(sb);
 			sb.append(minutes).append(MINUTES);
 		}
 		if (seconds != 0) {
-			addSeparatorIfNecessary(sb);
 			sb.append(seconds).append(SECONDS);
 		}
 		if (milliSeconds != 0) {
-			addSeparatorIfNecessary(sb);
 			sb.append(milliSeconds).append(MILLISECONDS);
 		}
 		return sb.toString();
@@ -87,12 +84,6 @@ final class TimeDurationInMsHelper {
 				+ Duration.ofMillis(milliSecondNumber).toMillis());
 	}
 
-	private static void addSeparatorIfNecessary(final StringBuilder sb) {
-		if ((sb != null) && (sb.length() > 0)) {
-			sb.append(' ');
-		}		
-	}
-	
 	private static int extractNumberFromGroup(final String group) {
 		if (group != null) {
 			return Integer.valueOf(group);

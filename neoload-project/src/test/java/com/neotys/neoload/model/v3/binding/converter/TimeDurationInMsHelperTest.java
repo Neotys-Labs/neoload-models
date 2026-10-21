@@ -16,8 +16,8 @@ public class TimeDurationInMsHelperTest {
 		assertEquals("0", convertToString(0l));
 		
 		assertEquals("1h", convertToString(3600000l));
-		assertEquals("2h 3m 4s 5ms", convertToString(7384005l));
-		assertEquals("3m 5ms", convertToString(180005l));
+		assertEquals("2h3m4s5ms", convertToString(7384005l));
+		assertEquals("3m5ms", convertToString(180005l));
 		assertEquals("5ms", convertToString(5l));
 	}
 
