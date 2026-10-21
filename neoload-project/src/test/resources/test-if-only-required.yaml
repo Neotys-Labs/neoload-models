@@ -9,4 +9,4 @@ user_paths:
         - "'operand1' == 'operand2'"
         then:
           steps:
-          - delay: 3m 200ms
+          - delay: 3m200ms

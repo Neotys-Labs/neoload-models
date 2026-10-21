@@ -199,6 +199,23 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	}
 
 	@Test
+	public void readDurationsWithSpacesBetweenUnitsAndWriteThemWithoutSpaces() throws IOException {
+		final Project expectedProject = IOHelper.buildProject(
+				Container.builder().name("actions")
+						.pacing(DurationRandom.builder().min("90000").max("3725000").build())
+						.addSteps(Delay.builder().duration(DurationConstant.builder().value("5415000").build()).build())
+						.build());
+		assertNotNull(expectedProject);
+
+		read("test-duration-spaces-between-units", expectedProject);
+
+		final String yaml = new IO().write(ProjectDescriptor.builder().project(expectedProject).build(), Format.YAML);
+		assertTrue(yaml, yaml.contains("1h30m15s"));
+		assertTrue(yaml, yaml.contains("1h2m5s"));
+		assertFalse(yaml, yaml.contains("1h 30m"));
+	}
+
+	@Test
 	public void readDurationRandomRangesWhereMaxIsGreaterThanMinAreAccepted() throws IOException {
 		final ProjectDescriptor descriptor = new IO().read(getFile("test-pacing-random-valid-ranges", "yaml"));
 		assertNotNull(descriptor);
@@ -256,7 +273,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 
 		assertEquals(DurationConstant.builder().value("1500").build(), pacingOf(project));
 		final String yaml = new IO().write(ProjectDescriptor.builder().project(project).build(), Format.YAML);
-		assertTrue(yaml, yaml.contains("pacing: 1s 500ms"));
+		assertTrue(yaml, yaml.contains("pacing: 1s500ms"));
 	}
 
 	@Test
