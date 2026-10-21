@@ -6,6 +6,7 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 | [transaction](transaction.md)     |        |
 | [web_page](web_page.md)           | 2026.3 |
 | [request](request.md)             |        |
+| [soap_request](soap_request.md)   | 2026.3 |
 | [delay](delay.md)                 |        |
 | [think_time](think_time.md)       |        |
 | [javascript](javascript.md)       |        |
@@ -22,3 +23,4 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 | [debug_logger](debug_logger.md)   | 2026.3 |
 | [stop_vu](stop_vu.md)             | 2026.3 |
 | [shared_element](shared_elements.md) | 2026.3 |
+| [wait_until](wait_until.md)       | 2026.3 |

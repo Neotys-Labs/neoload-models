@@ -1,7 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.writers.neoload.WrittingTestUtils;
@@ -18,7 +18,7 @@ public class UserPathWriterTest {
                 .name("my User")
                 .actions(Container.builder()
                         .name("delay")
-                        .addSteps(Delay.builder().value("3000").build())
+                        .addSteps(DelayConstant.builder().value("3000").build())
                         .build())
                 .build();
 
@@ -58,24 +58,24 @@ public class UserPathWriterTest {
                 .name("My User")
                 .init(Container.builder()
                         .name("init")
-                        .addAssertions(ContentAssertion.builder()
+                        .addContentAssertions(ContentAssertion.builder()
                         		.contains("userpath_init_contains_1")
                         		.build())
                         .build())
                 .actions(Container.builder()
                         .name("actions")
-                        .addSteps(Delay.builder().value("3000").build())
-                        .addAssertions(ContentAssertion.builder()
+                        .addSteps(DelayConstant.builder().value("3000").build())
+                        .addContentAssertions(ContentAssertion.builder()
                         		.contains("userpath_actions_contains_1")
                         		.build())
                         .build())
                 .end(Container.builder()
                         .name("end")
-                        .addAssertions(ContentAssertion.builder()
+                        .addContentAssertions(ContentAssertion.builder()
                         		.contains("userpath_end_contains_1")
                         		.build())
                         .build())
-                .addAssertions(ContentAssertion.builder()
+                .addContentAssertions(ContentAssertion.builder()
                 		.contains("userpath_contains_1")
                 		.build())
                 .build();

@@ -17,7 +17,7 @@ user_paths:
           break: false
           steps:
           - delay: 1s
-          assertions:
+          content_assertions:
           - contains: MyCase1Assertion on Content
         default:
           steps:

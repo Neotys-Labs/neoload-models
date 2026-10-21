@@ -7,18 +7,7 @@ import static org.junit.Assert.fail;
 
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.Case;
-import com.neotys.neoload.model.v3.project.userpath.Condition;
-import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
-import com.neotys.neoload.model.v3.project.userpath.If;
-import com.neotys.neoload.model.v3.project.userpath.Pacing;
-import com.neotys.neoload.model.v3.project.userpath.PacingConstant;
-import com.neotys.neoload.model.v3.project.userpath.PacingRandom;
-import com.neotys.neoload.model.v3.project.userpath.Step;
-import com.neotys.neoload.model.v3.project.userpath.Switch;
-import com.neotys.neoload.model.v3.project.userpath.TryCatch;
-import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -29,14 +18,14 @@ import org.junit.Test;
 public class IOPacingTest extends AbstractIOElementsTest {
 
 	private static Container withPacing(final Pacing pacing) {
-		return Container.builder().pacing(pacing).addSteps(Delay.builder().value("100").build()).build();
+		return Container.builder().pacing(pacing).addSteps(DelayConstant.builder().value("100").build()).build();
 	}
 
 	private static Project buildProjectWithPacingEverywhere(final Pacing pacing) {
 		final Container transaction = Container.builder()
 				.name("MyTransaction")
 				.pacing(pacing)
-				.addSteps(Delay.builder().value("100").build())
+				.addSteps(DelayConstant.builder().value("100").build())
 				.build();
 
 		final TryCatch tryCatch = TryCatch.builder()
@@ -50,7 +39,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 						.value("0")
 						.isBreak(true)
 						.pacing(pacing)
-						.addSteps(Delay.builder().value("100").build())
+						.addSteps(DelayConstant.builder().value("100").build())
 						.build())
 				.getDefault(withPacing(pacing))
 				.build();
@@ -63,9 +52,9 @@ public class IOPacingTest extends AbstractIOElementsTest {
 
 		final UserPath userPath = UserPath.builder()
 				.name("MyUserPath")
-				.init(Container.builder().name("init").pacing(pacing).addSteps(Delay.builder().value("100").build()).build())
+				.init(Container.builder().name("init").pacing(pacing).addSteps(DelayConstant.builder().value("100").build()).build())
 				.actions(actions)
-				.end(Container.builder().name("end").pacing(pacing).addSteps(Delay.builder().value("100").build()).build())
+				.end(Container.builder().name("end").pacing(pacing).addSteps(DelayConstant.builder().value("100").build()).build())
 				.build();
 
 		return Project.builder().name("MyProject").addUserPaths(userPath).build();
@@ -127,7 +116,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 		final Project expectedProject = IOHelper.buildProject(
 				Container.builder().name("actions")
 						.pacing(PacingRandom.builder().max("3s").build())
-						.addSteps(Delay.builder().value("100").build())
+						.addSteps(DelayConstant.builder().value("100").build())
 						.build());
 		assertNotNull(expectedProject);
 
@@ -138,7 +127,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	public void readConstantPacingAsVariablePassesThroughUnchanged() throws IOException {
 		final Step transaction = Container.builder().name("MyTransaction")
 				.pacing(PacingConstant.builder().value("${my_pacing}").build())
-				.addSteps(Delay.builder().value("100").build())
+				.addSteps(DelayConstant.builder().value("100").build())
 				.build();
 		final Project expectedProject = IOHelper.buildProject(transaction);
 		assertNotNull(expectedProject);
@@ -151,7 +140,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 		final Project expectedProject = IOHelper.buildProject(
 				Container.builder().name("actions")
 						.pacing(PacingRandom.builder().min("${min_pacing}").max("${max_pacing}").build())
-						.addSteps(Delay.builder().value("100").build())
+						.addSteps(DelayConstant.builder().value("100").build())
 						.build());
 		assertNotNull(expectedProject);
 
@@ -162,7 +151,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	public void writeAbsentPacingProducesNoPacingKey() throws IOException {
 		final Project project = IOHelper.buildProject(
 				Container.builder().name("actions")
-						.addSteps(Delay.builder().value("100").build())
+						.addSteps(DelayConstant.builder().value("100").build())
 						.build());
 
 		final String yaml = new IO().write(ProjectDescriptor.builder().project(project).build(), Format.YAML);

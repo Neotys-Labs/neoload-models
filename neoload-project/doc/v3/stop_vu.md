@@ -1,8 +1,7 @@
 # Stop Virtual User
+_Stop Virtual User_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 The Stop Virtual User action stops the current virtual user. By default, a new virtual user is started to replace the one that has been stopped, so that the number of running virtual users remains stable. Set `start_new_vu` to `false` to stop the current virtual user without starting a replacement.
-
-Stop Virtual User is supported in NeoLoad from version 2026.3 onwards.
 
 #### Available settings
 | Name         | Description                                                                                    | Accept variable | Required | Since  |

@@ -1,12 +1,13 @@
 # Debug Logger
+_Debug Logger_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 The Debug Logger Action writes a text entry to a log file, for debugging purposes.
 
 #### Available settings
 | Name        | Description                         | Accept variable | Required | Since |
 |:----------- |:------------------------------------|:---------------:|:--------:|:-----:|
-| text        | The text to log                     | &#x2713;         | &#x2713; |       |
-| file        | The path of the log file            | &#x2713;         |    -     |       |
+| text        | The text to log                     | &#x2713;         | &#x2713; | 2026.3 |
+| file        | The path of the log file, relative to the project folder. The file must be inside the project folder. | &#x2713;         |    -     | 2026.3 |
 
 #### Default value
 When `file` is not set, the text is written to `logs/runTimeLog.txt`.

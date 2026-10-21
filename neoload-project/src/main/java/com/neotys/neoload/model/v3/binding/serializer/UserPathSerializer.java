@@ -10,11 +10,7 @@ import static com.neotys.neoload.model.v3.project.userpath.UserPath.ON_ASSERTION
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.ON_ERROR;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.THINK_TIME;
 import static com.neotys.neoload.model.v3.project.userpath.UserPath.USER_SESSION;
-import static com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement.ASSERTIONS;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import static com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement.CONTENT_ASSERTIONS;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -22,7 +18,10 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
-import com.neotys.neoload.model.v3.project.userpath.assertion.Assertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 public final class UserPathSerializer extends StdSerializer<UserPath> {
 	private static final long serialVersionUID = -9059965357953456780L;
@@ -61,10 +60,10 @@ public final class UserPathSerializer extends StdSerializer<UserPath> {
         	generator.writeObjectField(END, Container.builder().from(end.get()).name("").build());
         }
         
-        final List<Assertion> assertions = userPath.getAssertions();
-        if ((assertions != null) && (!assertions.isEmpty())) {
-        	AssertionsSerializer.serialize(generator, ASSERTIONS, assertions);
-        }        
+        final List<ContentAssertion> contentAssertions = userPath.getContentAssertions();
+        if ((contentAssertions != null) && (!contentAssertions.isEmpty())) {
+        	generator.writeObjectField(CONTENT_ASSERTIONS, contentAssertions);
+        }
         
         generator.writeEndObject();		
 	}

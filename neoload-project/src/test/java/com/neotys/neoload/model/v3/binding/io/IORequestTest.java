@@ -4,8 +4,12 @@ package com.neotys.neoload.model.v3.binding.io;
 import static org.junit.Assert.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.userpath.Container;
+import com.neotys.neoload.model.v3.project.userpath.Header;
+import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
+import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -56,10 +60,11 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.name("MyVariable1")
 										.jsonPath("MyJsonPath")
 										.build())
-								.addAssertions(ContentAssertion.builder()
+								.addContentAssertions(ContentAssertion.builder()
 										.contains("MyUserPath_actions_request_1")
 										.build())
 								.slaProfile("MySlaProfile")
+								.internalRecordedId("r0001")
 								.build())
 						.addSteps(Request.builder()
 								.url("/select?name=neoload")
@@ -78,7 +83,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 										.name("MyVariable1")
 										.jsonPath("MyJsonPath")
 										.build())
-								.addAssertions(ContentAssertion.builder()
+								.addContentAssertions(ContentAssertion.builder()
 										.contains("MyUserPath_actions_request_2")
 										.build())
 								.slaProfile("MySlaProfile")
@@ -158,6 +163,57 @@ public class IORequestTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		write("test-request-binary-body", expectedProject);
+	}
+
+	private static Project getRequestBinarySourceFile() {
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(Request.builder()
+								.url("/upload")
+								.server("neotys")
+								.method(Method.POST.name())
+								.addHeaders(Header.builder()
+										.name("Content-Type")
+										.value("application/octet-stream")
+										.build())
+								.binarySourceFile("payloads/hello.bin")
+								.build())
+						.addSteps(Request.builder()
+								.url("/upload-raw")
+								.server("neotys")
+								.method(Method.PUT.name())
+								.addHeaders(Header.builder()
+										.name("Content-Type")
+										.value("application/octet-stream")
+										.build())
+								.binarySourceFile("payload.bin")
+								.slaProfile("MySlaProfile")
+								.build())
+						.build())
+				.build();
+
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
+	}
+
+	@Test
+	public void readRequestBinarySourceFile() throws IOException {
+		final Project expectedProject = getRequestBinarySourceFile();
+		assertNotNull(expectedProject);
+
+		read("test-request-binary-source-file", expectedProject);
+	}
+
+	@Test
+	public void writeRequestBinarySourceFile() throws IOException {
+		final Project expectedProject = getRequestBinarySourceFile();
+		assertNotNull(expectedProject);
+
+		write("test-request-binary-source-file", expectedProject);
 	}
 
 	@Test

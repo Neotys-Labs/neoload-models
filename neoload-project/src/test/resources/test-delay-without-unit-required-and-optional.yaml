@@ -1,0 +1,23 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - delay:
+        name: MyConstantDelay1
+        description: MyConstantDelay1Description
+        value: 3790200
+    - delay:
+        name: MyConstantDelay2
+        description: MyConstantDelay2Description
+        value: "${delay}"
+    - delay:
+        name: MyRandomDelay1
+        description: MyRandomDelay1Description
+        min: 3790100
+        max: 3790200
+    - delay:
+        name: MyRandomDelay2
+        description: MyRandomDelay2Description
+        min: "${min_delay}"
+        max: "${max_delay}"

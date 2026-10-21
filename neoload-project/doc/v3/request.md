@@ -11,10 +11,12 @@ A request defines a plain HTTP request.
 | [method](#method)                   | The request method                                                            | -               | -        |       |
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
-| [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        |       |
+| [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        | 2026.3|
+| [binary_source_file](#binary_source_file) | Path of a file used as the binary request body, relative to the project folder. The file must be inside the project folder. | -               | -        | 2026.3|
 | [parts](#parts)                     | The multipart/form-data parts                                                 | &#x2713;        | -        | 2026.3|
 | [extractors](variable-extractor.md) | The extractor list                                                            | -               | -        |       |
-| [assertions](assertion.md)          | The list of assertions to validate the response content                       | -               | -        | 7.6   |
+| [content_assertions](content_assertion.md)  | The list of assertions to validate the response content                       | -               | -        | 2026.3   |
+| assertions                          | Deprecated alias of `content_assertions`, read-only. Use `content_assertions` instead. | -               | -        | 7.6   |
 | [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration                 | -               | -        | 2026.3 |
 | [size_assertion](size_assertion.md) | The assertion to validate the response size                                   | -               | -        | 2026.3 |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
@@ -175,7 +177,7 @@ Define the request body to use for the HTTP request. Variables can be used in th
 
 In using the `Content-Type` header with `application/x-www-form-urlencoded`, the variables can be used from the name/value pairs of the request body. To encode the evaluation of a variable from the name/value pairs, use convention: `__encodeURL(${my_variable})`.
 
-> Multipart/form-data is defined with [`parts`](#parts), not `body`. A binary body is defined with `bodybinary` (Base64-encoded) instead of `body`.
+> Multipart/form-data is defined with [`parts`](#parts), not `body`. A binary body is defined with `bodybinary` (Base64-encoded) or [`binary_source_file`](#binary_source_file) instead of `body`.
 
 #### Example 1
 
@@ -224,12 +226,13 @@ request:
 ```
 
 ## bodybinary
+_bodybinary_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 Define a binary request body, encoded in base64. Use it for payloads such as `application/octet-stream` or any other binary format.
 
 Variables cannot be used in `bodybinary`
 
-The `body` and `bodybinary` fields are mutually exclusive: a request must define at most one of them.
+The `body`, `bodybinary` and `binary_source_file` fields are mutually exclusive: a request must define at most one of them.
 
 Like `body`, `bodybinary` is only sent for the `POST` and `PUT` methods, and is ignored for the others.
 
@@ -246,7 +249,36 @@ request:
   bodybinary: SGVsbG8gYmluYXJ5IHdvcmxkIQ==
 ```
 
+## binary_source_file
+_binary_source_file_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
+Define a binary request body from a file on disk. Use it when the payload should not be inlined as Base64 in the YAML.
+
+The path is relative to the as-code project folder. The file is sent as-is: variables are not evaluated in its content.
+
+Use a literal path. A path containing a variable is resolved at runtime only, so CheckVU cannot include the file in the project it runs.
+
+If the file is not found, the project still loads and a warning is reported, but the request is sent with an empty body.
+
+The `body`, `bodybinary` and `binary_source_file` fields are mutually exclusive: a request must define at most one of them.
+
+Like `body`, `binary_source_file` is only sent for the `POST` and `PUT` methods, and is ignored for the others.
+
+#### Example
+
+Defining an HTTP request whose body is the contents of `payloads/hello.bin`.
+
+```yaml
+request:
+  url: https://www.compagny.com/upload
+  method: POST
+  headers:
+  - Content-Type: application/octet-stream
+  binary_source_file: payloads/hello.bin
+```
+
 ## parts
+_parts_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 Define the multipart/form-data parts of the HTTP request. Use `parts` instead of `body` for multipart uploads.
 
@@ -264,7 +296,7 @@ In CheckVU CLI, `source_filename` must stay inside the project folder: absolute 
 | transfer_encoding | The part Content-Transfer-Encoding                                          | &#x2713;        | -        | 2026.3|
 | value             | The text content of the part                                                | &#x2713;        | -        | 2026.3|
 | filename          | The file name sent to the server                                            | &#x2713;        | -        | 2026.3|
-| source_filename   | The path of the file used as part content, relative to the project folder   | &#x2713;        | -        | 2026.3|
+| source_filename   | The path of the file used as part content, relative to the project folder. The file must be inside the project folder.   | &#x2713;        | -        | 2026.3|
 
 #### Example
 

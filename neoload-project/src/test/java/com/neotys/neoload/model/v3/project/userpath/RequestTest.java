@@ -18,9 +18,11 @@ public class RequestTest {
 		assertEquals("headers", Request.HEADERS);
 		assertEquals("body", Request.BODY);
 		assertEquals("bodybinary", Request.BODYBINARY);
+		assertEquals("binary_source_file", Request.BINARY_SOURCE_FILE);
 		assertEquals("parts", Request.PARTS);
 		assertEquals("extractors", Request.EXTRACTORS);
 		assertEquals("assertions", Request.ASSERTIONS);
+		assertEquals("_internal_recorded_id", Request.INTERNAL_RECORDED_ID);
 		
 		assertEquals("request", Request.DEFAULT_NAME);
 		assertEquals("GET", Request.DEFAULT_METHOD);

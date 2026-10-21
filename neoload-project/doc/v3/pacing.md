@@ -1,4 +1,6 @@
 # Pacing
+_Pacing_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
+
 Pacing enforces a minimum duration for a container: if the container's steps finish before that duration has
 elapsed, execution waits for the remainder before moving on.
 

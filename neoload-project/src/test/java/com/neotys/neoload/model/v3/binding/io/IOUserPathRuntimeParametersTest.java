@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath.FailurePolicy;
 import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
@@ -22,7 +22,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 	private static Container actions() {
 		return Container.builder()
 				.name("actions")
-				.addSteps(Delay.builder().value("1000").build())
+				.addSteps(DelayConstant.builder().value("1000").build())
 				.build();
 	}
 

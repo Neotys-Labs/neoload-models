@@ -1,15 +1,13 @@
 package com.neotys.neoload.model.v3.binding.io;
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
+import static org.junit.Assert.assertNotNull;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-
-import org.junit.Test;
-
 import java.io.IOException;
-
-import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 public class IOSwitchTest extends AbstractIOElementsTest  {
 
@@ -19,12 +17,12 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
 				.addCases(Case.builder()
 						.value("0")
 						.isBreak(true)
-						.addSteps(Delay.builder()
+						.addSteps(DelayConstant.builder()
 								.value("1000")
 								.build())
 						.build())
                 .getDefault(Container.builder()
-                		.addSteps(Delay.builder()
+                		.addSteps(DelayConstant.builder()
                 				.value("3000")
                 				.build())
                 		.build())                
@@ -39,7 +37,7 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
                 .addCases(Case.builder()
                 		.value("0")
                         .isBreak(true)
-                        .addSteps(Delay.builder()
+                        .addSteps(DelayConstant.builder()
                         		.value("1000")
                         		.build())
                         .build())
@@ -47,15 +45,15 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
 						.description("MyCase1Description")
 						.value("1")
 						.isBreak(false)
-						.addSteps(Delay.builder()
+						.addSteps(DelayConstant.builder()
 								.value("1000")
 								.build())
-						.addAssertions(ContentAssertion.builder()
+						.addContentAssertions(ContentAssertion.builder()
 								.contains("MyCase1Assertion on Content")
 								.build())
 						.build())
                 .getDefault(Container.builder()
-                		.addSteps(Delay.builder()
+                		.addSteps(DelayConstant.builder()
                 				.value("3000")
                 				.build())
                 		.build())                
