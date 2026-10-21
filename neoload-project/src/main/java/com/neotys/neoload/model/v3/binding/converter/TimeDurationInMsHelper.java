@@ -59,15 +59,16 @@ final class TimeDurationInMsHelper {
 	 * 1000				-> 1000
 	 * @param input
 	 * @return
+	 * @throws InvalidDurationException if the input is not a valid duration
 	 */
 	protected static String convertToDuration(final String input) {
 		if (isNullOrEmpty(input)) {
-			return ZERO;
+			throw new InvalidDurationException(input);
 		}
 
 		final Matcher matcher = TIME_PATTERN.matcher(input.trim());
 		if (!matcher.matches()) {
-			return ZERO;
+			throw new InvalidDurationException(input);
 		}
 
 		if ((matcher.groupCount() == 15 && matcher.group(15) != null)) {

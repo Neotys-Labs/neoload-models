@@ -1,23 +1,23 @@
 package com.neotys.neoload.model.readers.jmeter.step;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.variable.CounterConverter;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.variable.Variable;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jmeter.modifiers.CounterConfig;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class StepConvertersTest {
 
@@ -35,7 +35,7 @@ public class StepConvertersTest {
         hashTree.add(constantTimer);
         List<Step> result = new StepConverters().convertStep(hashTree);
         List<Step> expected = new ArrayList<>();
-        expected.add(DelayConstant.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build());
+        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build());
         assertEquals(result,expected);
     }
 

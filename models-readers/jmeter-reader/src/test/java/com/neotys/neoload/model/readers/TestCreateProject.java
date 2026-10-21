@@ -1,12 +1,12 @@
 package com.neotys.neoload.model.readers;
 
+import static junit.framework.TestCase.assertTrue;
+
 import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
 import org.junit.Test;
-
-import static junit.framework.TestCase.assertTrue;
 
 public class TestCreateProject {
 
@@ -17,11 +17,11 @@ public class TestCreateProject {
                 .description("a simple switch")
                 .name("switch")
                 .addCases(Case.builder()
-                        .addSteps(DelayConstant.builder().value("3").build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("3").build()).build())
                         .value("0")
                         .isBreak(true)
                         .build())
-                .getDefault(Container.builder().addSteps(DelayConstant.builder().value("3").build()).build())
+                .getDefault(Container.builder().addSteps(Delay.builder().duration(DurationConstant.builder().value("3").build()).build()).build())
                 .value("1")
                 .build();
         final UserPath userPath = UserPath.builder()

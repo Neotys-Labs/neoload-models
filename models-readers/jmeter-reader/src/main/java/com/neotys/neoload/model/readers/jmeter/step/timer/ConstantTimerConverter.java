@@ -1,15 +1,15 @@
 package com.neotys.neoload.model.readers.jmeter.step.timer;
 
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
+import java.util.List;
+import java.util.function.BiFunction;
 import org.apache.jmeter.timers.ConstantTimer;
 import org.apache.jorphan.collections.HashTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.function.BiFunction;
 
 /**
  * This class convert the ConstantTimer of Jmeter into Delay Step of Neoload
@@ -24,6 +24,6 @@ public class ConstantTimerConverter implements BiFunction<ConstantTimer, HashTre
     public List<Step> apply(final ConstantTimer constantTimer, final HashTree hashtree) {
         LOGGER.info("Constant timer Correctly converted");
         EventListenerUtils.readSupportedFunction("ConstantTimer","ConstantTimer");
-        return List.of(DelayConstant.builder().name(constantTimer.getName()).value(constantTimer.getDelay()).build());
+        return List.of(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build());
     }
 }

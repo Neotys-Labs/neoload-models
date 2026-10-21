@@ -1,5 +1,8 @@
 package com.neotys.neoload.model.readers.jmeter.step.thread;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.spy;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.*;
@@ -7,9 +10,12 @@ import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.DelayConstant;
+import com.neotys.neoload.model.v3.project.userpath.Delay;
+import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.timers.ConstantTimer;
@@ -17,12 +23,6 @@ import org.apache.jorphan.collections.HashTree;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.spy;
 
 public class ThreadGroupConverterTest {
 
@@ -88,9 +88,9 @@ public class ThreadGroupConverterTest {
                 .name(threadGroup.getName())
                 .description(threadGroup.getComment());
         Container container = Container.builder()
-                .addSteps(DelayConstant.builder()
+                .addSteps(Delay.builder()
                         .name(constantTimer.getName())
-                        .value(constantTimer.getDelay())
+                        .duration(DurationConstant.builder().value(constantTimer.getDelay()).build())
                         .build())
                 .build();
         userPath.actions(container);
