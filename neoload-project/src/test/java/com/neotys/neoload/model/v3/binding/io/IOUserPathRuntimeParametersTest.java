@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.binding.io;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -15,9 +16,11 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 
 public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
+	private static final String EXPECTED_POLICIES = "must be 'go_to_next_iteration' or 'stop_and_start_new_vu'";
 
 	private static Container actions() {
 		return Container.builder()
@@ -150,28 +153,64 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readUnknownOnErrorPolicyFailsDeserialization() {
-		assertReadFails("test-userpaths-invalid-on-error", "restart_vu", "go_to_next_iteration", "stop_and_start_new_vu");
+	public void readUnknownOnErrorPolicyFailsWithAClearMessage() throws IOException {
+		assertReadFails(getContent(getFile("test-userpaths-invalid-on-error", "yaml"), StandardCharsets.UTF_8),
+				"Incorrect value for 'on_error' in User Path 'MyUserPath': " + EXPECTED_POLICIES + " (found: \"restart_vu\").");
 	}
 
 	@Test
-	public void readDoNothingOnAssertionFailurePolicyFailsDeserialization() {
-		assertReadFails("test-userpaths-invalid-on-assertion-failure", "do_nothing", "go_to_next_iteration", "stop_and_start_new_vu");
+	public void readDoNothingOnAssertionFailurePolicyFailsWithAClearMessage() throws IOException {
+		assertReadFails(getContent(getFile("test-userpaths-invalid-on-assertion-failure", "yaml"), StandardCharsets.UTF_8),
+				"Incorrect value for 'on_assertion_failure' in User Path 'MyUserPath': " + EXPECTED_POLICIES + " (found: \"do_nothing\").");
+	}
+
+	@Test
+	public void readPolicyThatIsNotANameFailsWithAClearMessage() {
+		assertReadFails(userPathWith("on_error: 1"),
+				"Incorrect value for 'on_error' in User Path 'MyUserPath': " + EXPECTED_POLICIES + " (found: 1).");
+		assertReadFails(userPathWith("on_error: \"\""),
+				"Incorrect value for 'on_error' in User Path 'MyUserPath': " + EXPECTED_POLICIES + " (found: \"\").");
+		assertReadFails(userPathWith("on_assertion_failure: true"),
+				"Incorrect value for 'on_assertion_failure' in User Path 'MyUserPath': " + EXPECTED_POLICIES + " (found: true).");
+	}
+
+	@Test
+	public void readPolicyWithoutValueLeavesItUnset() throws IOException {
+		final UserPath userPath = new IO().read(userPathWith("on_error:")).getProject().getUserPaths().get(0);
+
+		assertFalse(userPath.getOnError().isPresent());
+	}
+
+	@Test
+	public void readThinkTimeThatIsNotAnObjectFailsWithAClearMessage() {
+		assertReadFails(userPathWith("think_time: 5s"),
+				"Incorrect value for 'think_time' in User Path 'MyUserPath': must be an object with 'override', 'factor' and/or 'random' (found: \"5s\").");
 	}
 
 	@Test
 	public void readUnknownThinkTimeSettingFailsDeserialization() {
-		assertReadFails("test-userpaths-think-time-unknown-key", "random_delay");
+		try {
+			new IO().read(getFile("test-userpaths-think-time-unknown-key", "yaml"));
+			fail("Expected reading an unknown think_time setting to fail");
+		} catch (final IOException e) {
+			assertTrue(e.getMessage(), e.getMessage().contains("random_delay"));
+		}
 	}
 
-	private void assertReadFails(final String fixture, final String... expectedInMessage) {
+	private static String userPathWith(final String setting) {
+		return "name: MyProject\nuser_paths:\n- name: MyUserPath\n  " + setting + "\n  actions:\n    steps:\n    - delay: 1s\n";
+	}
+
+	/**
+	 * Checks the message NeoLoad shows when loading the project: the one of the cause, when there is one.
+	 */
+	private static void assertReadFails(final String content, final String expectedMessage) {
 		try {
-			new IO().read(getFile(fixture, "yaml"));
-			fail("Expected reading '" + fixture + "' to fail");
+			new IO().read(content);
+			fail("Expected reading to fail with: " + expectedMessage);
 		} catch (final IOException e) {
-			for (final String expected : expectedInMessage) {
-				assertTrue(e.getMessage(), e.getMessage().contains(expected));
-			}
+			final Throwable shown = e.getCause() != null ? e.getCause() : e;
+			assertEquals(expectedMessage, shown.getMessage());
 		}
 	}
 }
