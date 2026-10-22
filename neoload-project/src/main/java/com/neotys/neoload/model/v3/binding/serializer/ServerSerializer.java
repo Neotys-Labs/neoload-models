@@ -8,9 +8,6 @@ import static com.neotys.neoload.model.v3.project.server.Server.NAME;
 import static com.neotys.neoload.model.v3.project.server.Server.PORT;
 import static com.neotys.neoload.model.v3.project.server.Server.SCHEME;
 
-import java.io.IOException;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
@@ -20,6 +17,8 @@ import com.neotys.neoload.model.v3.project.server.BasicAuthentication;
 import com.neotys.neoload.model.v3.project.server.NegotiateAuthentication;
 import com.neotys.neoload.model.v3.project.server.NtlmAuthentication;
 import com.neotys.neoload.model.v3.project.server.Server;
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Serializes a {@link Server}, writing the authentication under its wrapper key
@@ -36,12 +35,12 @@ public final class ServerSerializer extends StdSerializer<Server> {
 	@Override
 	public void serialize(final Server server, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		generator.writeStartObject();
-		generator.writeStringField(NAME, server.getName());
+		SerializerHelper.writeStringIfPresent(generator, NAME, server.getName());
 		final Optional<String> description = server.getDescription();
 		if (description.isPresent()) {
 			generator.writeStringField(Element.DESCRIPTION, description.get());
 		}
-		generator.writeStringField(HOST, server.getHost());
+		SerializerHelper.writeStringIfPresent(generator, HOST, server.getHost());
 
 		// Port and scheme are written only when they differ from their defaults (the default port
 		// depends on the scheme: 80 for http, 443 for https), mirroring ServerDeserializer.
@@ -50,7 +49,7 @@ public final class ServerSerializer extends StdSerializer<Server> {
 			generator.writeObjectField(SCHEME, scheme);
 		}
 		if (!isDefaultPort(server.getPort(), scheme)) {
-			generator.writeStringField(PORT, server.getPort());
+			SerializerHelper.writeStringIfPresent(generator, PORT, server.getPort());
 		}
 
 		final Optional<Authentication> authentication = server.getAuthentication();

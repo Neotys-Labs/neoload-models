@@ -119,12 +119,8 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		}
 		final JsonNode delayNode = stepNode.get(key);
 		final Delay.Builder builder = Delay.builder().isThinkTime(thinkTime).duration(DurationDeserializer.read(delayNode));
-		if (delayNode.has(Element.NAME)) {
-			builder.name(delayNode.get(Element.NAME).asText());
-		}
-		if (delayNode.has(Element.DESCRIPTION)) {
-			builder.description(delayNode.get(Element.DESCRIPTION).asText());
-		}
+		DeserializerHelper.asText(delayNode, Element.NAME).ifPresent(builder::name);
+		DeserializerHelper.asText(delayNode, Element.DESCRIPTION).ifPresent(builder::description);
 		return builder.build();
 	}
 
@@ -143,10 +139,12 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 	}
 
 	private static Step parseSharedElementRef(final JsonNode stepNode) {
-		if (stepNode.has(SHARED_ELEMENT)) {
-			return SharedElementRef.builder().name(stepNode.get(SHARED_ELEMENT).asText()).build();
+		if (!stepNode.has(SHARED_ELEMENT)) {
+			return null;
 		}
-		return null;
+		final SharedElementRef.Builder builder = SharedElementRef.builder();
+		DeserializerHelper.asText(stepNode, SHARED_ELEMENT).ifPresent(builder::name);
+		return builder.build();
 	}
 
 	private Step parseRegisteredStep(final ObjectCodec codec, final JsonNode stepNode) throws IOException {
