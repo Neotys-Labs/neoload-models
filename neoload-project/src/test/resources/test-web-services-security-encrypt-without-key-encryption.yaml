@@ -1,0 +1,12 @@
+name: MyProject
+web_services_security:
+  keystores:
+  - path: ./wss-keystores/client.p12
+  request_profiles:
+  - name: MyRequestProfile
+    headers:
+    - tokens:
+      - encrypt:
+          keystore: ./wss-keystores/client.p12
+          alias: server
+          asymmetric_encryption_algorithm: none

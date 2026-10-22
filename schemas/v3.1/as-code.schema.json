@@ -808,6 +808,47 @@
 																}
 															}
 														}
+													},
+													{
+														"type": "object",
+														"required": ["signature"],
+														"additionalProperties": false,
+														"properties": {
+															"signature": {
+																"type": "object",
+																"required": ["keystore", "alias"],
+																"additionalProperties": false,
+																"properties": {
+																	"keystore": { "$ref": "#/definitions/common/file_path" },
+																	"alias": { "$ref": "#/definitions/common/text" },
+																	"key_identifier_type": { "type": "string", "enum": ["direct_reference", "direct_reference_first_certificate", "issuer_reference", "x509_key_identifier", "subject_key_identifier", "thumbprint_sha1", "encrypted_key_sha1"] },
+																	"signature_algorithm": { "type": "string", "enum": ["rsa_sha1", "rsa_sha256", "rsa_sha384", "rsa_sha512", "rsa_ripemd160", "rsa_md5", "hmac_md5", "hmac_ripemd160", "hmac_sha1", "hmac_sha256", "hmac_sha384", "hmac_sha512", "dsa_sha1", "ecdsa_sha1", "ecdsa_sha256", "ecdsa_sha384", "ecdsa_sha512"] },
+																	"digest_algorithm": { "type": "string", "enum": ["sha1", "sha256", "sha384", "sha512", "ripemd160"] },
+																	"canonicalization_algorithm": { "type": "string", "enum": ["canonical_xml_omit_comments", "canonical_xml_with_comments", "exclusive_canonical_xml_omit_comments", "exclusive_canonical_xml_with_comments"] },
+																	"parts": { "$ref": "#/definitions/web_services_security_parts" }
+																}
+															}
+														}
+													},
+													{
+														"type": "object",
+														"required": ["encrypt"],
+														"additionalProperties": false,
+														"properties": {
+															"encrypt": {
+																"type": "object",
+																"required": ["keystore", "alias"],
+																"additionalProperties": false,
+																"properties": {
+																	"keystore": { "$ref": "#/definitions/common/file_path" },
+																	"alias": { "$ref": "#/definitions/common/text" },
+																	"key_identifier_type": { "type": "string", "enum": ["direct_reference", "issuer_reference", "x509_key_identifier", "subject_key_identifier", "thumbprint_sha1", "encrypted_key_sha1"] },
+																	"symmetric_encryption_algorithm": { "type": "string", "enum": ["triple_des", "aes_128", "aes_192", "aes_256"] },
+																	"asymmetric_encryption_algorithm": { "type": "string", "enum": ["rsa_v1_5", "rsa_oaep", "none"] },
+																	"parts": { "$ref": "#/definitions/web_services_security_parts" }
+																}
+															}
+														}
 													}
 												]
 											}
@@ -831,6 +872,33 @@
 						}
 					}
 				}
+			}
+		},
+		"web_services_security_parts": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"oneOf": [
+					{
+						"type": "object",
+						"required": ["id"],
+						"additionalProperties": false,
+						"properties": {
+							"id": { "type": "string", "minLength": 1 },
+							"encoding": { "type": "string", "enum": ["element", "content"] }
+						}
+					},
+					{
+						"type": "object",
+						"required": ["name"],
+						"additionalProperties": false,
+						"properties": {
+							"name": { "type": "string", "minLength": 1 },
+							"namespace": { "type": "string", "minLength": 1 },
+							"encoding": { "type": "string", "enum": ["element", "content"] }
+						}
+					}
+				]
 			}
 		},
 		"server": {

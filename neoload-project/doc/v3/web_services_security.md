@@ -66,9 +66,20 @@ web_services_security:
 |:--------------- |:------------------------------------------------- |:---------------:|:--------:|:-----:|
 | actor           | The SOAP actor/role targeted by the header        | -               | -        | 2026.3|
 | must_understand | Whether the receiver must process the header. Defaults to `false` | -               | -        | 2026.3|
-| tokens          | The list of tokens of the header. Each token is either a `username` or a `timestamp` | - | - | 2026.3|
+| [tokens](#tokens) | The list of tokens of the header. Each token is a `username`, `timestamp`, `signature` or `encrypt` | - | - | 2026.3|
 
-#### username
+## tokens
+
+Each item of a header `tokens` list holds exactly one token, keyed by its type.
+
+| Type | Description | Since |
+|:---- |:----------- |:-----:|
+| [username](#username) | Identifies the user with a user name and an optional password | 2026.3|
+| [timestamp](#timestamp) | Adds the creation and expiry times of the message | 2026.3|
+| [signature](#signature) | Signs the message with a key of a declared keystore | 2026.3|
+| [encrypt](#encrypt) | Encrypts the message with a key of a declared keystore | 2026.3|
+
+### username
 
 | Name          | Description                                                   | Accept variable | Required | Since |
 |:------------- |:------------------------------------------------------------- |:---------------:|:--------:|:-----:|
@@ -96,13 +107,72 @@ password_type:
 | derived_key.salt      | The salt used for the derived key          | &#x2713;        | &#x2713; | 2026.3|
 | derived_key.iteration | The iteration count used for the derived key | &#x2713;      | &#x2713; | 2026.3|
 
-#### timestamp
+### timestamp
 
 | Name         | Description                              | Accept variable | Required | Since |
 |:------------ |:---------------------------------------- |:---------------:|:--------:|:-----:|
 | id           | The timestamp identifier                 | -               | -        | 2026.3|
 | time_to_live | The validity duration, in seconds. Defaults to `300` | -               | -        | 2026.3|
 | milliseconds | Use millisecond precision. Defaults to `true`                | -               | -        | 2026.3|
+
+### signature
+
+Signs the message with a key of a keystore declared in `keystores`.
+
+| Name | Description | Accept variable | Required | Since |
+|:---- |:----------- |:---------------:|:--------:|:-----:|
+| keystore | The `path` of a keystore declared in `keystores` | - | &#x2713; | 2026.3|
+| alias | The alias of the key in the keystore | &#x2713; | &#x2713; | 2026.3|
+| key_identifier_type | How the key is referenced in the message: `direct_reference`, `direct_reference_first_certificate`, `issuer_reference`, `x509_key_identifier`, `subject_key_identifier`, `thumbprint_sha1` or `encrypted_key_sha1`. Defaults to `issuer_reference` | - | - | 2026.3|
+| signature_algorithm | `rsa_sha1`, `rsa_sha256`, `rsa_sha384`, `rsa_sha512`, `rsa_ripemd160`, `rsa_md5`, `hmac_md5`, `hmac_ripemd160`, `hmac_sha1`, `hmac_sha256`, `hmac_sha384`, `hmac_sha512`, `dsa_sha1`, `ecdsa_sha1`, `ecdsa_sha256`, `ecdsa_sha384` or `ecdsa_sha512`. Defaults to `rsa_sha1` | - | - | 2026.3|
+| digest_algorithm | `sha1`, `sha256`, `sha384`, `sha512` or `ripemd160`. Defaults to `sha1` | - | - | 2026.3|
+| canonicalization_algorithm | `canonical_xml_omit_comments`, `canonical_xml_with_comments`, `exclusive_canonical_xml_omit_comments` or `exclusive_canonical_xml_with_comments`. Defaults to `exclusive_canonical_xml_omit_comments` | - | - | 2026.3|
+| [parts](#parts) | The parts of the message to sign. Defaults to an empty list | - | - | 2026.3|
+
+### encrypt
+
+Encrypts the message with the key of a keystore declared in `keystores`.
+
+| Name | Description | Accept variable | Required | Since |
+|:---- |:----------- |:---------------:|:--------:|:-----:|
+| keystore | The `path` of a keystore declared in `keystores` | - | &#x2713; | 2026.3|
+| alias | The alias of the key in the keystore | &#x2713; | &#x2713; | 2026.3|
+| key_identifier_type | Same values as `signature`, except `direct_reference_first_certificate`. Defaults to `issuer_reference` | - | - | 2026.3|
+| symmetric_encryption_algorithm | `triple_des`, `aes_128`, `aes_192` or `aes_256`. Defaults to `aes_128` | - | - | 2026.3|
+| asymmetric_encryption_algorithm | `rsa_v1_5`, `rsa_oaep` or `none` to send the symmetric key unencrypted. Defaults to `rsa_v1_5` | - | - | 2026.3|
+| [parts](#parts) | The parts of the message to encrypt. Defaults to an empty list | - | - | 2026.3|
+
+#### parts
+
+A part is identified either by `id`, or by `name` and an optional `namespace`.
+
+| Name | Description | Accept variable | Required | Since |
+|:---- |:----------- |:---------------:|:--------:|:-----:|
+| id | The identifier of the part. Exclusive with `name` and `namespace` | - | - | 2026.3|
+| name | The element name of the part. Required when `id` is not set | - | - | 2026.3|
+| namespace | The namespace of the element | - | - | 2026.3|
+| encoding | `element` or `content`. Defaults to `element` | - | - | 2026.3|
+
+```yaml
+tokens:
+- signature:
+    keystore: ./wss-keystores/client.p12
+    alias: ${alias}
+    key_identifier_type: direct_reference_first_certificate
+    signature_algorithm: rsa_sha256
+    digest_algorithm: sha256
+    parts:
+    - id: Body-1
+- encrypt:
+    keystore: ./wss-keystores/client.p12
+    alias: server
+    symmetric_encryption_algorithm: aes_256
+    asymmetric_encryption_algorithm: rsa_oaep
+    parts:
+    - name: Body
+      namespace: http://schemas.xmlsoap.org/soap/envelope/
+      encoding: content
+```
 
 ## response_profiles
 

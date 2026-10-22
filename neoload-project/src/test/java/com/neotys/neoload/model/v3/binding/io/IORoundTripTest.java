@@ -75,6 +75,8 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-soap-request-security-profiles",
 			"test-web-services-security-only-required",
 			"test-web-services-security-required-and-optional",
+			"test-web-services-security-signature-encrypt",
+			"test-web-services-security-signature-encrypt-defaults",
 			"test-scenarios-only-required",
 			"test-scenarios-required-and-optional",
 			"test-servers-only-required",
