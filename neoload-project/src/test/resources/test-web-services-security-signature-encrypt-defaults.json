@@ -1,0 +1,1 @@
+{"name":"MyProject","web_services_security":{"keystores":[{"path":"./wss-keystores/client.p12"}],"request_profiles":[{"name":"MyRequestProfile","headers":[{"tokens":[{"signature":{"keystore":"./wss-keystores/client.p12","alias":"client","parts":[{"id":"Body-1"}]}},{"encrypt":{"keystore":"./wss-keystores/client.p12","alias":"server","parts":[{"name":"Body"}]}}]}]}]}}
