@@ -13,6 +13,7 @@ import com.neotys.neoload.model.v3.project.userpath.Duration;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
 import java.io.IOException;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,41 +41,37 @@ public final class DurationDeserializer extends StdDeserializer<Duration> {
 
 	static Duration read(final JsonNode node) throws JsonMappingException {
 		if (!node.isObject()) {
-			return DurationConstant.builder().value(convertDuration(node)).build();
+			return readConstant(DeserializerHelper.asText(node));
 		}
-		if (node.has(DurationConstant.VALUE) && (node.has(DurationRandom.MIN) || node.has(DurationRandom.MAX))) {
+		final Optional<String> value = DeserializerHelper.asText(node, DurationConstant.VALUE);
+		final Optional<String> min = DeserializerHelper.asText(node, DurationRandom.MIN);
+		final Optional<String> max = DeserializerHelper.asText(node, DurationRandom.MAX);
+		if (value.isPresent() && (min.isPresent() || max.isPresent())) {
 			throw JsonMappingException.from((JsonParser) null, "Incorrect duration: 'value' cannot be combined with 'min' or 'max'.");
 		}
-		if (node.has(DurationRandom.MIN) || node.has(DurationRandom.MAX)) {
-			return readRandom(node);
+		if (min.isPresent() || max.isPresent()) {
+			return readRandom(min, max);
 		}
-		return readConstant(node);
+		return readConstant(value);
 	}
 
-	private static Duration readRandom(final JsonNode node) {
+	private static Duration readRandom(final Optional<String> min, final Optional<String> max) {
 		final DurationRandom.Builder builder = DurationRandom.builder();
-		if (node.has(DurationRandom.MIN)) {
-			builder.min(convertDuration(node.get(DurationRandom.MIN)));
-		}
-		if (node.has(DurationRandom.MAX)) {
-			builder.max(convertDuration(node.get(DurationRandom.MAX)));
-		}
+		min.map(DurationDeserializer::convertDuration).ifPresent(builder::min);
+		max.map(DurationDeserializer::convertDuration).ifPresent(builder::max);
 		return builder.build();
 	}
 
-	private static Duration readConstant(final JsonNode node) {
+	private static Duration readConstant(final Optional<String> value) {
 		final DurationConstant.Builder builder = DurationConstant.builder();
-		if (node.has(DurationConstant.VALUE)) {
-			builder.value(convertDuration(node.get(DurationConstant.VALUE)));
-		}
+		value.map(DurationDeserializer::convertDuration).ifPresent(builder::value);
 		return builder.build();
 	}
 
 	/**
 	 * Text the converter cannot parse is kept as-is, so that validation reports it rather than reading it as zero.
 	 */
-	private static String convertDuration(final JsonNode node) {
-		final String text = node.asText();
+	private static String convertDuration(final String text) {
 		try {
 			return STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(text);
 		} catch (final InvalidDurationException e) {
