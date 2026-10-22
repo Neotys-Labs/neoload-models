@@ -40,13 +40,13 @@ public class IOTryCatchTest extends AbstractIOElementsTest {
 				.caughtExceptions(TryCatch.CaughtException.ASSERTIONS)
 				.getTry(Container.builder()
 						.addSteps(
-								Delay.builder().duration(DurationConstant.builder().value("1000").build()).build(),
-								Delay.builder().duration(DurationConstant.builder().value("2000").build()).build()
+								Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("1000").build()).build(),
+								Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("2000").build()).build()
 						)
 						.build())
 				.getCatch(Container.builder()
 						.addSteps(
-								Delay.builder().duration(DurationConstant.builder().value("500").build()).build()
+								Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("500").build()).build()
 						)
 						.build())
 				.build();

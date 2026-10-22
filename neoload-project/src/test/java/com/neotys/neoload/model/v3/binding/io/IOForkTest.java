@@ -50,7 +50,7 @@ public class IOForkTest extends AbstractIOElementsTest {
 	private Project buildProjectContainingFork_OnlyRequired() {
 		final Fork fork = Fork.builder()
 				.addSteps(
-						Delay.builder().duration(DurationConstant.builder().value("1000").build()).build()
+						Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("1000").build()).build()
 				)
 				.build();
 
@@ -75,7 +75,7 @@ public class IOForkTest extends AbstractIOElementsTest {
 				.description("MyForkDescription")
 				.copyVariables(true)
 				.addSteps(
-						Delay.builder().duration(DurationConstant.builder().value("1000").build()).build()
+						Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("1000").build()).build()
 				)
 				.build();
 

@@ -75,7 +75,7 @@ public class LoopControllerConverterTest {
                 .description(loopController.getComment())
                 .name(loopController.getName())
                 .count(loopController.getLoopString())
-                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build())
+                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().valueInMsOrVariable(constantTimer.getDelay()).build()).build())
                 .build();
         List<Step> expected = new ArrayList<>();
         expected.add(loopBuilder);

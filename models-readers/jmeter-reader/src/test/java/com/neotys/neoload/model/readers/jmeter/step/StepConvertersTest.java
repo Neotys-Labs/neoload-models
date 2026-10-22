@@ -35,7 +35,7 @@ public class StepConvertersTest {
         hashTree.add(constantTimer);
         List<Step> result = new StepConverters().convertStep(hashTree);
         List<Step> expected = new ArrayList<>();
-        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build());
+        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().valueInMsOrVariable(constantTimer.getDelay()).build()).build());
         assertEquals(result,expected);
     }
 

@@ -29,6 +29,10 @@ public final class Validator {
 		PROPERTY_NAMING_STRATEGIES.put("loadPolicy", new LoadPolicyStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("rampup", new RampupStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("duration", new DurationStrategy());
+		PROPERTY_NAMING_STRATEGIES.put("valueInMsOrVariable", node -> "value");
+		PROPERTY_NAMING_STRATEGIES.put("minInMsOrVariable", node -> "min");
+		PROPERTY_NAMING_STRATEGIES.put("maxInMsOrVariable", node -> "max");
+		PROPERTY_NAMING_STRATEGIES.put("timeoutInMsOrVariable", node -> "timeout");
 	}
 	
 	private static final PropertyNamingStrategy defaultNamingStrategy = new SnakeCaseStrategy();

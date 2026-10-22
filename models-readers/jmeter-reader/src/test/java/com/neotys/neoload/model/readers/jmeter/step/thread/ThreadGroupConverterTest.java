@@ -90,7 +90,7 @@ public class ThreadGroupConverterTest {
         Container container = Container.builder()
                 .addSteps(Delay.builder()
                         .name(constantTimer.getName())
-                        .duration(DurationConstant.builder().value(constantTimer.getDelay()).build())
+                        .duration(DurationConstant.builder().valueInMsOrVariable(constantTimer.getDelay()).build())
                         .build())
                 .build();
         userPath.actions(container);

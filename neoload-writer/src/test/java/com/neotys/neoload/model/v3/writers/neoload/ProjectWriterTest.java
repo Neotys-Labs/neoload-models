@@ -19,7 +19,7 @@ public class ProjectWriterTest {
         UserPath userPath = UserPath.builder()
                 .name("my User")
                 .actions(Container.builder()
-                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("3000").build()).build())
                         .build())
                 .build();
 

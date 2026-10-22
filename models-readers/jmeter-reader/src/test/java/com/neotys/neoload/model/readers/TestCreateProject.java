@@ -17,11 +17,11 @@ public class TestCreateProject {
                 .description("a simple switch")
                 .name("switch")
                 .addCases(Case.builder()
-                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("3").build()).build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("3").build()).build())
                         .value("0")
                         .isBreak(true)
                         .build())
-                .getDefault(Container.builder().addSteps(Delay.builder().duration(DurationConstant.builder().value("3").build()).build()).build())
+                .getDefault(Container.builder().addSteps(Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("3").build()).build()).build())
                 .value("1")
                 .build();
         final UserPath userPath = UserPath.builder()

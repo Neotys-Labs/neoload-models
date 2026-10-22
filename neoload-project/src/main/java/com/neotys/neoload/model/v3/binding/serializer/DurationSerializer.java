@@ -27,7 +27,7 @@ public final class DurationSerializer extends StdSerializer<Duration> {
 	@Override
 	public void serialize(final Duration duration, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		if (duration instanceof DurationConstant) {
-			generator.writeString(toText(((DurationConstant) duration).getValue()));
+			generator.writeString(toText(((DurationConstant) duration).getValueInMsOrVariable()));
 		} else if (duration instanceof DurationRandom) {
 			generator.writeStartObject();
 			writeFields(generator, duration);
@@ -37,18 +37,18 @@ public final class DurationSerializer extends StdSerializer<Duration> {
 
 	static void writeFields(final JsonGenerator generator, final Duration duration) throws IOException {
 		if (duration instanceof DurationConstant) {
-			generator.writeStringField(DurationConstant.VALUE, toText(((DurationConstant) duration).getValue()));
+			generator.writeStringField(DurationConstant.VALUE, toText(((DurationConstant) duration).getValueInMsOrVariable()));
 		} else if (duration instanceof DurationRandom) {
 			writeRandomFields(generator, (DurationRandom) duration);
 		}
 	}
 
 	private static void writeRandomFields(final JsonGenerator generator, final DurationRandom random) throws IOException {
-		final String min = random.getMin().map(DurationSerializer::toText).orElse(ZERO);
+		final String min = random.getMinInMsOrVariable().map(DurationSerializer::toText).orElse(ZERO);
 		if (!ZERO.equals(min)) {
 			generator.writeStringField(DurationRandom.MIN, min);
 		}
-		generator.writeStringField(DurationRandom.MAX, toText(random.getMax()));
+		generator.writeStringField(DurationRandom.MAX, toText(random.getMaxInMsOrVariable()));
 	}
 
 	static String toText(final String valueInMs) {

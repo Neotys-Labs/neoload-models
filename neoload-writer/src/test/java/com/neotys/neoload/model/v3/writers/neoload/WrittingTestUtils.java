@@ -209,7 +209,7 @@ public class WrittingTestUtils {
 
     public static final Delay DELAY_TEST = Delay.builder()
             .name("Delay_name")
-            .duration(DurationConstant.builder().value("200").build())
+            .duration(DurationConstant.builder().valueInMsOrVariable("200").build())
             .build();
 
     public static final Container SHARED_CONTAINER_TEST = Container.builder()
@@ -314,9 +314,9 @@ public class WrittingTestUtils {
                     .build())
             .build();
 
-    public static final Delay DELAY_SWITCH_TEST_CASE = Delay.builder().name("delayB").duration(DurationConstant.builder().value("0").build()).build();
+    public static final Delay DELAY_SWITCH_TEST_CASE = Delay.builder().name("delayB").duration(DurationConstant.builder().valueInMsOrVariable("0").build()).build();
 
-    public static final Delay DELAY_SWITCH_TEST_DEFAULT = Delay.builder().name("delayB").duration(DurationConstant.builder().value("0").build()).build();
+    public static final Delay DELAY_SWITCH_TEST_DEFAULT = Delay.builder().name("delayB").duration(DurationConstant.builder().valueInMsOrVariable("0").build()).build();
 
     public static final Container CONTAINER_IN_DEFAULT_SWITCH =
             Container.builder()

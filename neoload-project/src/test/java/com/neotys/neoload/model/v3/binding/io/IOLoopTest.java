@@ -17,7 +17,7 @@ public class IOLoopTest extends AbstractIOElementsTest {
         return Loop.builder()
 				.count("5")
 				.addSteps(Delay.builder()
-						.duration(DurationConstant.builder().value("1000").build())
+						.duration(DurationConstant.builder().valueInMsOrVariable("1000").build())
 						.build())
 				.build();
     }
@@ -28,7 +28,7 @@ public class IOLoopTest extends AbstractIOElementsTest {
 				.description("a simple loop")
 				.count("5")
 				.addSteps(Delay.builder()
-						.duration(DurationConstant.builder().value("1000").build())
+						.duration(DurationConstant.builder().valueInMsOrVariable("1000").build())
 						.build())
 				.build();
 	}

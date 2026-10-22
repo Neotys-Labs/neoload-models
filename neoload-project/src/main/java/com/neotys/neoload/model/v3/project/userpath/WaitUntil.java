@@ -11,12 +11,11 @@ import com.neotys.neoload.model.v3.binding.serializer.MatchDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
-import java.util.List;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WaitUntil.CONDITIONS, Match.MATCH, WaitUntil.TIMEOUT})
@@ -57,13 +56,17 @@ public interface WaitUntil extends Step {
 	}
 
 	@JsonProperty(TIMEOUT)
-	@Pattern(regexp = "(\\d+|\\$\\{\\w+\\})", groups = {NeoLoad.class})
+	@Pattern(regexp = Duration.PATTERN, message = Duration.PATTERN_MESSAGE, groups = {NeoLoad.class})
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultTimeoutFilter.class)
 	@JsonSerialize(converter= TimeDurationInMsOrInVariableToStringConverter.class)
 	@JsonDeserialize(converter= StringToTimeDurationInMsOrInVariableConverter.class)
 	@Value.Default
-	default String getTimeout() {
+	default String getTimeoutInMsOrVariable() {
 		return DEFAULT_TIMEOUT;
+	}
+
+	default ParsedDuration parseTimeout() {
+		return Durations.parse(getTimeoutInMsOrVariable(), DurationGrammar.MILLISECONDS);
 	}
 
 	// Jackson value filters excluding the default name / match from serialization:

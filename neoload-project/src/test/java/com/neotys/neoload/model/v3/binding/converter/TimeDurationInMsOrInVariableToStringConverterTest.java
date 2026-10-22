@@ -11,10 +11,11 @@ public class TimeDurationInMsOrInVariableToStringConverterTest {
 	public void testConverts() {
 		final TimeDurationInMsOrInVariableToStringConverter converter = TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING;
 		assertEquals("0", converter.convert(null));
-		assertEquals("0", converter.convert("-1000"));
+		assertEquals("-1000", converter.convert("-1000"));
 		assertEquals("0", converter.convert(""));
 		
 		assertEquals("${variable}", converter.convert("${variable}"));
 		assertEquals("1m300ms", converter.convert("60300"));
+		assertEquals("abc", converter.convert("abc"));
 	}
 }

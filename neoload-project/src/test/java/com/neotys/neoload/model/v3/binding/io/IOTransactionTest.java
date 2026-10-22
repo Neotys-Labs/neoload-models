@@ -18,7 +18,7 @@ public class IOTransactionTest extends AbstractIOElementsTest {
 	private static Step getTransactionOnlyRequired() {
 		return Container.builder()
 				.name("MyTransaction")
-				.addSteps(Delay.builder().duration(DurationConstant.builder().value("1000").build())
+				.addSteps(Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("1000").build())
 						.build())
 				.build();
 	}
@@ -28,7 +28,7 @@ public class IOTransactionTest extends AbstractIOElementsTest {
 				.name("MyTransaction")
 				.description("My Transaction")
 				.slaProfile("MySlaProfile")
-				.addSteps(Delay.builder().duration(DurationConstant.builder().value("1000").build())
+				.addSteps(Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("1000").build())
 						.build())
 				.addContentAssertions(ContentAssertion.builder()
 						.contains("MyUserPath_actions_MyTransaction")

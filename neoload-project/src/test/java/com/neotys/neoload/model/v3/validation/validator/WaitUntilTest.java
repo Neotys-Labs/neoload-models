@@ -5,14 +5,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.userpath.Condition;
 import com.neotys.neoload.model.v3.project.userpath.Condition.Operator;
 import com.neotys.neoload.model.v3.project.userpath.Match;
 import com.neotys.neoload.model.v3.project.userpath.WaitUntil;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-
+import org.junit.Test;
 
 public class WaitUntilTest {
 	private static final String LINE_SEPARATOR = System.lineSeparator();
@@ -26,8 +24,7 @@ public class WaitUntilTest {
 	private static final String CONSTRAINTS_CONDITION_OPERATOR_REQUIRED = "Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR +
 				"Violation 1 - Incorrect value for 'conditions[0].operator': missing value or value is empty." + LINE_SEPARATOR;
 
-	private static final String CONSTRAINTS_TIMEOUT_PATTERN = "Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR +
-				"Violation 1 - Incorrect value for 'timeout': must match \"(\\d+|\\$\\{\\w+\\})\"" + LINE_SEPARATOR;
+	private static final String CONSTRAINTS_TIMEOUT_PATTERN = "Incorrect value for 'timeout': '";
 
 	private static Condition validCondition() {
 		return Condition.builder()
@@ -126,7 +123,7 @@ public class WaitUntilTest {
 
 		waitUntil = WaitUntil.builder()
 				.addConditions(validCondition())
-				.timeout("30000")
+				.timeoutInMsOrVariable("30000")
 				.build();
 		validation = validator.validate(waitUntil, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -134,7 +131,7 @@ public class WaitUntilTest {
 
 		waitUntil = WaitUntil.builder()
 				.addConditions(validCondition())
-				.timeout("${myTimeout}")
+				.timeoutInMsOrVariable("${myTimeout}")
 				.build();
 		validation = validator.validate(waitUntil, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -142,27 +139,27 @@ public class WaitUntilTest {
 
 		waitUntil = WaitUntil.builder()
 				.addConditions(validCondition())
-				.timeout("-30000")
+				.timeoutInMsOrVariable("-30000")
 				.build();
 		validation = validator.validate(waitUntil, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_TIMEOUT_PATTERN, validation.getMessage().get());
+		assertTrue(validation.getMessage().get(), validation.getMessage().get().contains(CONSTRAINTS_TIMEOUT_PATTERN));
 
 		waitUntil = WaitUntil.builder()
 				.addConditions(validCondition())
-				.timeout("30 seconds")
+				.timeoutInMsOrVariable("30 seconds")
 				.build();
 		validation = validator.validate(waitUntil, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_TIMEOUT_PATTERN, validation.getMessage().get());
+		assertTrue(validation.getMessage().get(), validation.getMessage().get().contains(CONSTRAINTS_TIMEOUT_PATTERN));
 
 		waitUntil = WaitUntil.builder()
 				.addConditions(validCondition())
-				.timeout("")
+				.timeoutInMsOrVariable("")
 				.build();
 		validation = validator.validate(waitUntil, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_TIMEOUT_PATTERN, validation.getMessage().get());
+		assertTrue(validation.getMessage().get(), validation.getMessage().get().contains(CONSTRAINTS_TIMEOUT_PATTERN));
 	}
 
 	@Test

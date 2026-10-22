@@ -33,7 +33,7 @@ public class ForkTest {
 	public void validateFork_StepsIsNotEmpty_mustBeValid() {
 		final Validator validator = new Validator();
 		Fork fork = Fork.builder()
-				.addSteps(Delay.builder().duration(DurationConstant.builder().value("1000").build()).build())
+				.addSteps(Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("1000").build()).build())
 				.build();
 		Validation validation = validator.validate(fork, NeoLoad.class);
 		assertTrue(validation.isValid());
