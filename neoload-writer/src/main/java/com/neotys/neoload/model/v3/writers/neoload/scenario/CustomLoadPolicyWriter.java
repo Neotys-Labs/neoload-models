@@ -3,10 +3,9 @@ package com.neotys.neoload.model.v3.writers.neoload.scenario;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import java.util.stream.IntStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.stream.IntStream;
 
 public class CustomLoadPolicyWriter extends LoadPolicyWriter {
 
@@ -39,7 +38,8 @@ public class CustomLoadPolicyWriter extends LoadPolicyWriter {
         String customLoadPolicyDuration = String.valueOf(customLoadPolicy.getSteps()
                 .get(customLoadPolicy.getSteps().size()-1)
                 .getWhen()
-                .getValue()
+                .amount()
+                .getAsLong()
         );
         if (customLoadPolicy.getDuration() != null && LoadDuration.Type.ITERATION.equals(customLoadPolicy.getDuration().getType())) {
             xmlElement.setAttribute(XML_ATTR_ITERATION, customLoadPolicyDuration);

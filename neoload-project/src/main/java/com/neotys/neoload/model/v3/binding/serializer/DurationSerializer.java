@@ -1,10 +1,10 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
-import static com.neotys.neoload.model.v3.binding.converter.TimeDurationInMsOrInVariableToStringConverter.TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.neotys.neoload.model.v3.binding.converter.MillisecondsDurationToStringConverter;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Duration;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
@@ -19,6 +19,7 @@ import java.io.IOException;
 public final class DurationSerializer extends StdSerializer<Duration> {
 	private static final long serialVersionUID = 1L;
 	private static final String ZERO = "0";
+	private static final MillisecondsDurationToStringConverter TO_TEXT = new MillisecondsDurationToStringConverter();
 
 	public DurationSerializer() {
 		super(Duration.class);
@@ -51,7 +52,7 @@ public final class DurationSerializer extends StdSerializer<Duration> {
 		generator.writeStringField(DurationRandom.MAX, toText(random.getMax()));
 	}
 
-	static String toText(final String valueInMs) {
-		return TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(valueInMs);
+	static String toText(final MillisecondsDuration duration) {
+		return TO_TEXT.convert(duration);
 	}
 }

@@ -3,6 +3,8 @@ package com.neotys.neoload.model.v3.binding.io;
 import static junit.framework.TestCase.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
@@ -68,7 +70,7 @@ public class IOIntegrationTest extends AbstractIOElementsTest {
 								.addSteps(Request.builder()
 												.url("http://www.company.com/select?name:product")
 												.build(),
-										Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value("1000").build())
+										Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value(MillisecondsDuration.of(1000)).build())
 												.build())
 								.build())
 						.build())
@@ -85,7 +87,7 @@ public class IOIntegrationTest extends AbstractIOElementsTest {
 	}
 
 	private Scenario buildScenario() {
-		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(SecondsDuration.of(100)).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		return Scenario.builder()
 				.name("MyScenario")
 				.addPopulations(PopulationPolicy.builder()

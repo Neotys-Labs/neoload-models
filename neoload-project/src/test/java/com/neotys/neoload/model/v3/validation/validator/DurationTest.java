@@ -5,13 +5,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import org.junit.Test;
 
 public class DurationTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -91,7 +88,7 @@ public class DurationTest {
 		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
-				.value(0)
+				.value(SecondsDuration.of(0))
 				.type(LoadDuration.Type.TIME)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
@@ -107,7 +104,7 @@ public class DurationTest {
 		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
-				.value(1)
+				.value(SecondsDuration.of(1))
 				.type(LoadDuration.Type.TIME)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
@@ -151,7 +148,7 @@ public class DurationTest {
 		assertFalse(validation.getMessage().isPresent());	
 
 		duration = LoadDuration.builder()
-				.value(1)
+				.value(SecondsDuration.of(1))
 				.type(LoadDuration.Type.TIME)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);

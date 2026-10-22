@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
 import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.validation.naming.DefaultPropertyNamingStrategy;
 import com.neotys.neoload.model.v3.validation.naming.DurationStrategy;
 import com.neotys.neoload.model.v3.validation.naming.LoadPolicyStrategy;
 import com.neotys.neoload.model.v3.validation.naming.PropertyNamingStrategy;
@@ -29,6 +30,9 @@ public final class Validator {
 		PROPERTY_NAMING_STRATEGIES.put("loadPolicy", new LoadPolicyStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("rampup", new RampupStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("duration", new DurationStrategy());
+		PROPERTY_NAMING_STRATEGIES.put("monitoringParameters", new DefaultPropertyNamingStrategy("monitoring"));
+		PROPERTY_NAMING_STRATEGIES.put("beforeFirstVu", new DefaultPropertyNamingStrategy("before"));
+		PROPERTY_NAMING_STRATEGIES.put("afterLastVus", new DefaultPropertyNamingStrategy("after"));
 	}
 	
 	private static final PropertyNamingStrategy defaultNamingStrategy = new SnakeCaseStrategy();

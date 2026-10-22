@@ -5,6 +5,8 @@ import static org.junit.Assert.fail;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.validation.validator.Validator;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
@@ -78,6 +80,7 @@ public class IOSchema3Dot1ValidationTest {
             // Voluntarily invalid files for unit-test:
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
+            "test-waituntil-invalid-timeout.yaml",
             "test-pacing-invalid-values.yaml",
             "test-pacing-malformed-units.yaml",
             "test-pacing-mixed.yaml",
@@ -220,6 +223,52 @@ public class IOSchema3Dot1ValidationTest {
             assertStep(key + ": { name: wait, value: 2s, min: 1s }", false);
             assertStep(key + ": { value: 2s, max: 3s }", false);
             assertStep(key + ": { name: wait, other: 1s, max: 3s }", false);
+        }
+    }
+
+    private static final String[] DURATION_VALUES = {"90", "90s", "1h30m", "120m", "500ms", "1s1h", "abc", "5x", "-5", "${v}"};
+
+    private static final String USER_PATH_STEPS = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n";
+    private static final String CONSTANT_LOAD = "name: P\nscenarios:\n- name: S\n  populations:\n  - name: Po\n    constant_load:\n      users: 1\n";
+    private static final String SCENARIO_LOAD = "  populations:\n  - name: Po\n    constant_load:\n      users: 1\n";
+
+    private static final String[] DURATION_FIELDS = {
+            CONSTANT_LOAD + "      duration: %s\n",
+            CONSTANT_LOAD + "      rampup: %s\n",
+            CONSTANT_LOAD + "      stop_after: %s\n",
+            "name: P\nscenarios:\n- name: S\n  populations:\n  - name: Po\n    rampup_load:\n      min_users: 1\n      increment_users: 1\n      increment_every: 5s\n      increment_rampup: %s\n",
+            "name: P\nscenarios:\n- name: S\n  populations:\n  - name: Po\n    peaks_load:\n      minimum:\n        users: 1\n        duration: 1m\n      maximum:\n        users: 2\n        duration: 1m\n      start: minimum\n      step_rampup: %s\n",
+            "name: P\nscenarios:\n- name: S\n  monitoring:\n    before: %s\n" + SCENARIO_LOAD,
+            "name: P\nscenarios:\n- name: S\n  monitoring:\n    after: %s\n" + SCENARIO_LOAD,
+            "name: P\nscenarios:\n- name: S\n  rendezvous_policies:\n  - name: rdv\n    timeout: %s\n" + SCENARIO_LOAD,
+            USER_PATH_STEPS + "    - delay: %s\n",
+            USER_PATH_STEPS + "    - think_time: %s\n",
+            "name: P\nuser_paths:\n- name: U\n  actions:\n    pacing: %s\n    steps:\n    - delay: 1s\n",
+            USER_PATH_STEPS + "    - web_page:\n        think_time: %s\n        steps:\n        - request:\n            url: http://host:80/\n",
+            USER_PATH_STEPS + "    - wait_until:\n        conditions:\n        - \"'${a}' == 'b'\"\n        timeout: %s\n"
+    };
+
+    @Test
+    public void schemaAcceptsAndRejectsTheSameDurationValuesAsTheJavaModel() throws IOException {
+        final List<String> mismatches = new ArrayList<>();
+        for (final String template : DURATION_FIELDS) {
+            for (final String value : DURATION_VALUES) {
+                final String yaml = template.replace("%s", value);
+                final boolean schemaValid = SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty();
+                final boolean javaValid = isValidForJava(yaml);
+                if (schemaValid != javaValid) {
+                    mismatches.add("value '" + value + "' (schema valid: " + schemaValid + ", java valid: " + javaValid + ") in:\n" + yaml);
+                }
+            }
+        }
+        Assert.assertTrue(String.join("\n", mismatches), mismatches.isEmpty());
+    }
+
+    private static boolean isValidForJava(final String yaml) {
+        try {
+            return new Validator().validate(new IO().read(yaml), NeoLoad.class).isValid();
+        } catch (final IOException e) {
+            return false;
         }
     }
 

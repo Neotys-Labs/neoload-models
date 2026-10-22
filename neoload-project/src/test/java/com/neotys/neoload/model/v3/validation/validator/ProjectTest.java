@@ -4,6 +4,7 @@ package com.neotys.neoload.model.v3.validation.validator;
 import static org.junit.Assert.*;
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.project.scenario.*;
@@ -356,7 +357,7 @@ public class ProjectTest {
 								.build())
 						.addRendezvousPolicies(RendezvousPolicy.builder()
 								.name("rdv")
-								.timeout(100)
+								.timeout(SecondsDuration.of(100))
 								.when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build())
 								.build())
 						.build())

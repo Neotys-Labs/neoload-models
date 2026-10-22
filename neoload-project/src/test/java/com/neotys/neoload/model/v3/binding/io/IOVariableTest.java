@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.variable.*;
+import com.neotys.neoload.model.v3.project.variable.Offset;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -209,7 +210,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
                         .name("MyCurrentDate")
                         .description("now plus 5 minutes")
                         .pattern("yyyy-MM-dd'T'HH:mm:ss")
-                        .offset("5m")
+                        .offset(Offset.parse("5m"))
                         .build())
                 .build();
     }
@@ -287,7 +288,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
                         .description("start of year plus 5 minutes")
                         .pattern("yyyy-MM-dd'T'HH:mm:ss")
                         .startDate("2024-01-01T00:00:00")
-                        .changeStep("5m")
+                        .changeStep(Offset.parse("5m"))
                         .changePolicy(EACH_USE)
                         .scope(LOCAL)
                         .build())

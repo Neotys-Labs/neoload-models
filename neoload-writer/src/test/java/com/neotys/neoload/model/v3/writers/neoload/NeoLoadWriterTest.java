@@ -4,6 +4,7 @@ import static junit.framework.TestCase.assertTrue;
 
 import com.google.common.io.Files;
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
@@ -22,7 +23,7 @@ public class NeoLoadWriterTest {
     private UserPath userPath = UserPath.builder()
             .name("my User")
             .actions(Container.builder()
-                    .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
+                    .addSteps(Delay.builder().duration(DurationConstant.builder().value(MillisecondsDuration.of(3000)).build()).build())
                     .build())
             .build();
 
@@ -138,7 +139,7 @@ public class NeoLoadWriterTest {
                 .actions(Container.builder()
                         .addSteps(Delay.builder()
                                 .name("myDelay")
-                                .duration(DurationConstant.builder().value("3000").build())
+                                .duration(DurationConstant.builder().value(MillisecondsDuration.of(3000)).build())
                                 .build())
                         .build())
                 .build();

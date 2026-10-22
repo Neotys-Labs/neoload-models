@@ -2,7 +2,6 @@ package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.validation.constraints.CustomStepDurationCheck;
-
 import javax.validation.ConstraintValidatorContext;
 
 public final class CustomStepDurationValidator extends AbstractConstraintValidator<CustomStepDurationCheck, LoadDuration> {
@@ -11,8 +10,6 @@ public final class CustomStepDurationValidator extends AbstractConstraintValidat
         if (loadDuration == null) {
             return true;
         }
-        return loadDuration.getValue() != null
-                && loadDuration.getValue() >= 0
-                && loadDuration.getType() != null;
+        return loadDuration.amount().isPresent() && loadDuration.getType() != null;
     }
 }

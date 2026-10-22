@@ -17,6 +17,4 @@ import com.neotys.neoload.model.v3.validation.constraintvalidators.ElementNameVa
 @JsonDeserialize(using = DurationDeserializer.class)
 public interface Duration {
 	String VARIABLE_NAME_PATTERN = "[^" + ElementNameValidator.FORBIDDEN_CHARS + ".}]+";
-	String PATTERN = "(\\d+|\\$\\{" + VARIABLE_NAME_PATTERN + "(\\." + VARIABLE_NAME_PATTERN + ")*\\})";
-	String PATTERN_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.DurationPattern.message}";
 }

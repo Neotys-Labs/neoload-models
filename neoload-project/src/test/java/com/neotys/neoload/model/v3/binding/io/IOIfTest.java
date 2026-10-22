@@ -1,10 +1,10 @@
 package com.neotys.neoload.model.v3.binding.io;
 
-
 import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static org.junit.Assert.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Condition;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
@@ -37,7 +37,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 						.name("container")
 						.addSteps(Delay
 								.builder()
-								.duration(DurationConstant.builder().value(String.valueOf(3*60*1000+200)).build())
+								.duration(DurationConstant.builder().value(MillisecondsDuration.of(3*60*1000+200)).build())
 								.build()
 						).build())
 				.build();
@@ -129,7 +129,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 				.slaProfile("MySLAProfile")
 				.addSteps(Delay
 						.builder()
-						.duration(DurationConstant.builder().value(String.valueOf(3*60*1000+200)).build())
+						.duration(DurationConstant.builder().value(MillisecondsDuration.of(3*60*1000+200)).build())
 						.build())
 				.addContentAssertions(ContentAssertion.builder()
 						.contains("ElseAssertion")

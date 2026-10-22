@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.writers.neoload.WriterUtils;
@@ -22,7 +23,7 @@ public class DelayWriterTest {
     public void writeDelayXmlTest() throws ParserConfigurationException {
     	final Document doc = WrittingTestUtils.generateEmptyDocument();
     	final Element root = WrittingTestUtils.generateTestRootElement(doc);
-    	final Delay delay = Delay.builder().name("myDelay").duration(DurationConstant.builder().value("1000").build()).description("myDescription").build();
+    	final Delay delay = Delay.builder().name("myDelay").duration(DurationConstant.builder().value(MillisecondsDuration.of(1000)).build()).description("myDescription").build();
     	final String expectedResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
     			+ "<test-root><delay-action duration=\"1000\" isThinkTime=\"false\" name=\"myDelay\" uid=\"" + WriterUtils.getElementUid(delay)+ "\"><description>myDescription</description></delay-action>"
     			+ "</test-root>";	

@@ -3,19 +3,17 @@ package com.neotys.neoload.model.v3.binding.converter;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.converter.StartAfterToStringConverter;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter.Type;
-
+import org.junit.Test;
 
 public class StartAfterToStringConverterTest {
 	private static final String ZERO = "0";
 	
 	private static StartAfter convertToStartAfter(final int input) {
 		return StartAfter.builder()
-				.value(input)
+				.value(SecondsDuration.of(input))
 				.type(Type.TIME)
 				.build();
 	}
@@ -35,7 +33,7 @@ public class StartAfterToStringConverterTest {
 
 		// TIME
 		// Input: -1 - Output: 0O
-		assertEquals(ZERO, converter.convert(convertToStartAfter(-1)));
+		assertEquals("-1", converter.convert(convertToStartAfter(-1)));
 		// Input: 0 - Output: 0
 		assertEquals(ZERO, converter.convert(convertToStartAfter(0)));
 

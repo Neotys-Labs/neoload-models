@@ -3,10 +3,9 @@ package com.neotys.neoload.model.v3.writers.neoload.scenario;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
+import java.util.Optional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Optional;
 
 public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
 
@@ -36,7 +35,7 @@ public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
         xmlElement.setAttribute(XML_ATTR_MINLOAD, String.valueOf(minimumLoadPolicy.getUsers()));
         // Default Delay attribute
         final LoadDuration minimumDuration = minimumLoadPolicy.getDuration();
-        xmlElement.setAttribute(XML_ATTR_MINDURATION, String.valueOf(minimumDuration.getValue()));
+        xmlElement.setAttribute(XML_ATTR_MINDURATION, String.valueOf(minimumDuration.amount().getAsLong()));
         // Default Delay Type attribute
         xmlElement.setAttribute(XML_ATTR_MINTYPE, "2");
         if (minimumDuration.getType() == LoadDuration.Type.TIME) {
@@ -49,7 +48,7 @@ public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
         xmlElement.setAttribute(XML_ATTR_MAXLOAD, String.valueOf(maximumLoadPolicy.getUsers()));
         // Peak Delay attribute
         final LoadDuration maximumDuration = maximumLoadPolicy.getDuration();
-        xmlElement.setAttribute(XML_ATTR_MAXDURATION, String.valueOf(maximumDuration.getValue()));
+        xmlElement.setAttribute(XML_ATTR_MAXDURATION, String.valueOf(maximumDuration.amount().getAsLong()));
         // Peak Delay Type attribute
         xmlElement.setAttribute(XML_ATTR_MAXTYPE, "2");
         if (maximumDuration.getType() == LoadDuration.Type.TIME) {
@@ -67,7 +66,7 @@ public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
         xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, "1");
         Optional.ofNullable(peaksLoadPolicy.getDuration()).ifPresent(duration -> {
         	if (duration.getType() == LoadDuration.Type.ITERATION) {
-        		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.getValue()));
+        		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.amount().getAsLong()));
         	}
         });
         

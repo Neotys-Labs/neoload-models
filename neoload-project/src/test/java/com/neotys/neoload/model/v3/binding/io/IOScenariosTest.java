@@ -1,7 +1,11 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
+import static org.junit.Assert.assertNotNull;
+
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.Apm;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
@@ -21,16 +25,10 @@ import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
-
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-
-import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
-import static org.junit.Assert.assertNotNull;
-
+import org.junit.Test;
 
 public class IOScenariosTest extends AbstractIOElementsTest {
 
@@ -48,7 +46,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.minUsers(1)
 						.incrementUsers(10)
 						.incrementEvery(LoadDuration.builder()
-								.value(5)
+								.value(SecondsDuration.of(5))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
@@ -60,14 +58,14 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.minimum(PeakLoadPolicy.builder()
 								.users(100)
 								.duration(LoadDuration.builder()
-										.value(120)
+										.value(SecondsDuration.of(120))
 										.type(LoadDuration.Type.TIME)
 										.build())
 								.build())
 						.maximum(PeakLoadPolicy.builder()
 								.users(500)
 								.duration(LoadDuration.builder()
-										.value(120)
+										.value(SecondsDuration.of(120))
 										.type(LoadDuration.Type.TIME)
 										.build())
 								.build())
@@ -76,7 +74,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.build();
 
 		ImmutableLoadDuration loadDuration = LoadDuration.builder()
-				.value(100)
+				.value(SecondsDuration.of(100))
 				.type(LoadDuration.Type.TIME)
 				.build();
 		ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
@@ -103,16 +101,16 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.loadPolicy(ConstantLoadPolicy.builder()
 						.users(500)
 						.duration(LoadDuration.builder()
-								.value(900)
+								.value(SecondsDuration.of(900))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.startAfter(StartAfter.builder()
-								.value(30)
+								.value(SecondsDuration.of(30))
 								.type(StartAfter.Type.TIME)
 								.build())
-						.rampup(60)
+						.rampup(SecondsDuration.of(60))
 						.stopAfter(StopAfter.builder()
-								.value(30)
+								.value(SecondsDuration.of(30))
 								.type(StopAfter.Type.TIME)
 								.build())
 						.build())
@@ -136,7 +134,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.value("MyPopulation1")
 								.type(StartAfter.Type.POPULATION)
 								.build())
-						.rampup(90)
+						.rampup(SecondsDuration.of(90))
 						.stopAfter(StopAfter.builder()
 								.type(StopAfter.Type.CURRENT_ITERATION)
 								.build())
@@ -166,19 +164,19 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.type(LoadDuration.Type.ITERATION)
 								.build())
 						.startAfter(StartAfter.builder()
-								.value(60)
+								.value(SecondsDuration.of(60))
 								.type(StartAfter.Type.TIME)
 								.build())
-						.rampup(15)
+						.rampup(SecondsDuration.of(15))
 						.stopAfter(StopAfter.builder()
-								.value(60)
+								.value(SecondsDuration.of(60))
 								.type(StopAfter.Type.TIME)
 								.build())
 						.build())
 				.build();
 
 		ImmutableLoadDuration loadDuration = LoadDuration.builder()
-				.value(100)
+				.value(SecondsDuration.of(100))
 				.type(LoadDuration.Type.TIME)
 				.build();
 		ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
@@ -191,12 +189,12 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.loadPolicy(CustomLoadPolicy.builder()
 						.steps(Collections.singletonList(customPolicyStep))
 						.startAfter(StartAfter.builder()
-								.value(30)
+								.value(SecondsDuration.of(30))
 								.type(StartAfter.Type.TIME)
 								.build())
-						.rampup(60)
+						.rampup(SecondsDuration.of(60))
 						.stopAfter(StopAfter.builder()
-								.value(30)
+								.value(SecondsDuration.of(30))
 								.type(StopAfter.Type.TIME)
 								.build())
 						.build())
@@ -226,7 +224,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 										.type(WhenRelease.Type.MANUAL)
 										.value("manual")
 										.build())
-								.timeout(900)
+								.timeout(SecondsDuration.of(900))
 								.build(),
 						RendezvousPolicy.builder()
 								.name("rdv_percentage")
@@ -241,10 +239,10 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 										.type(WhenRelease.Type.VU_NUMBER)
 										.value("200")
 										.build())
-								.timeout(100)
+								.timeout(SecondsDuration.of(100))
 								.build()
 				)
-				.monitoringParameters(MonitoringParameters.builder().beforeFirstVu(6).afterLastVus(99).build())
+				.monitoringParameters(MonitoringParameters.builder().beforeFirstVu(SecondsDuration.of(6)).afterLastVus(SecondsDuration.of(99)).build())
 				.isStoredVariables(true)
 				.excludedUrls(List.of(".*\\.abcd"))
 				.build();

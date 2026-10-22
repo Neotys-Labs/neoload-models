@@ -1,16 +1,16 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 public class CustomPolicyStepsSameDurationTypeValidatorTest {
 
@@ -27,7 +27,7 @@ public class CustomPolicyStepsSameDurationTypeValidatorTest {
     @Test
     public void someStepsDurationTypeAreEmptyIsValid() {
         ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
+                .value(SecondsDuration.of(100))
                 .type(LoadDuration.Type.TIME)
                 .build();
         ImmutableLoadDuration loadDurationWithoutType = LoadDuration.builder()
@@ -47,7 +47,7 @@ public class CustomPolicyStepsSameDurationTypeValidatorTest {
     @Test
     public void someStepsDurationAreEmptyIsValid() {
         ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
+                .value(SecondsDuration.of(100))
                 .type(LoadDuration.Type.TIME)
                 .build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
@@ -63,7 +63,7 @@ public class CustomPolicyStepsSameDurationTypeValidatorTest {
     @Test
     public void someStepsDurationTypeAreDifferentFromOthersIsInvalid() {
         ImmutableLoadDuration loadDurationTime = LoadDuration.builder()
-                .value(100)
+                .value(SecondsDuration.of(100))
                 .type(LoadDuration.Type.TIME)
                 .build();
         ImmutableLoadDuration loadDurationIteration = LoadDuration.builder()
@@ -84,7 +84,7 @@ public class CustomPolicyStepsSameDurationTypeValidatorTest {
     @Test
     public void isValid() {
         ImmutableLoadDuration loadDurationTime = LoadDuration.builder()
-                .value(100)
+                .value(SecondsDuration.of(100))
                 .type(LoadDuration.Type.TIME)
                 .build();
         ImmutableCustomPolicyStep customPolicyStepTime = CustomPolicyStep.builder()

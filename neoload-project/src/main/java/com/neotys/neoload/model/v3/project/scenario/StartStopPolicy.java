@@ -1,13 +1,10 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationConverter;
-import com.neotys.neoload.model.v3.binding.converter.TimeDurationToStringConverter;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
+import com.neotys.neoload.model.v3.validation.constraints.SecondsDurationCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-
 import javax.validation.Valid;
 
 public interface StartStopPolicy {
@@ -17,10 +14,9 @@ public interface StartStopPolicy {
 	@Valid
 	@JsonProperty(START_AFTER)
 	StartAfter getStartAfter();
-	@PositiveCheck(unit="second", groups={NeoLoad.class})	
-	@JsonSerialize(converter=TimeDurationToStringConverter.class)
-	@JsonDeserialize(converter=StringToTimeDurationConverter.class)
-	Integer getRampup();
+	@SecondsDurationCheck(groups={NeoLoad.class})
+	@PositiveCheck(unit="second", groups={NeoLoad.class})
+	SecondsDuration getRampup();
 	
 	@Valid
 	@JsonProperty(STOP_AFTER)

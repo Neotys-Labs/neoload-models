@@ -1,15 +1,16 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class CustomPolicyStepTest {
 
@@ -18,7 +19,7 @@ public class CustomPolicyStepTest {
         final Validator validator = new Validator();
         ImmutableLoadDuration loadDuration = LoadDuration.builder()
                 .type(LoadDuration.Type.TIME)
-                .value(100)
+                .value(SecondsDuration.of(100))
                 .build();
         CustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
                 .when(loadDuration)

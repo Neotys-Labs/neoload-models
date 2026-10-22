@@ -5,14 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import org.junit.Test;
 
 public class RampupLoadPolicyTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -49,6 +46,9 @@ public class RampupLoadPolicyTest {
 		CONSTRAINTS_INCREMENT_EVERY = sb.toString();
 	}
 
+	private static final String CONSTRAINTS_INCREMENT_RAMPUP_INVALID = "Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR +
+			"Violation 1 - Incorrect value for 'rampup': '-1' is not a valid duration, expected ordered units such as 1h30m15s or a number of seconds." + LINE_SEPARATOR;
+
 	private static final String CONSTRAINTS_INCREMENT_RAMPUP;
 	static {
 		final StringBuilder sb = new StringBuilder();
@@ -64,7 +64,7 @@ public class RampupLoadPolicyTest {
 		RampupLoadPolicy loadPolicy = RampupLoadPolicy.builder()
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -76,7 +76,7 @@ public class RampupLoadPolicyTest {
 				.minUsers(-10)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -88,7 +88,7 @@ public class RampupLoadPolicyTest {
 				.minUsers(0)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -100,7 +100,7 @@ public class RampupLoadPolicyTest {
 				.minUsers(1)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -118,7 +118,7 @@ public class RampupLoadPolicyTest {
 				.maxUsers(-10)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -131,7 +131,7 @@ public class RampupLoadPolicyTest {
 				.maxUsers(0)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -144,7 +144,7 @@ public class RampupLoadPolicyTest {
 				.maxUsers(1)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -156,7 +156,7 @@ public class RampupLoadPolicyTest {
 				.minUsers(1)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -172,7 +172,7 @@ public class RampupLoadPolicyTest {
 		RampupLoadPolicy loadPolicy = RampupLoadPolicy.builder()
 				.minUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -184,7 +184,7 @@ public class RampupLoadPolicyTest {
 				.minUsers(1)
 				.incrementUsers(-10)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -196,7 +196,7 @@ public class RampupLoadPolicyTest {
 				.minUsers(1)
 				.incrementUsers(0)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -208,7 +208,7 @@ public class RampupLoadPolicyTest {
 				.minUsers(1)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -242,7 +242,7 @@ public class RampupLoadPolicyTest {
 				.minUsers(1)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -259,23 +259,23 @@ public class RampupLoadPolicyTest {
 				.minUsers(1)
 				.incrementUsers(1)				
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
-				.rampup(-1)
+				.rampup(SecondsDuration.of(-1))
 				.build();
 		Validation validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_INCREMENT_RAMPUP, validation.getMessage().get());	
+		assertEquals(CONSTRAINTS_INCREMENT_RAMPUP_INVALID, validation.getMessage().get());	
 
 		loadPolicy = RampupLoadPolicy.builder()
 				.minUsers(1)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
-				.rampup(0)
+				.rampup(SecondsDuration.of(0))
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -285,7 +285,7 @@ public class RampupLoadPolicyTest {
 				.minUsers(1)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
 				.build();
@@ -297,10 +297,10 @@ public class RampupLoadPolicyTest {
 				.minUsers(1)
 				.incrementUsers(1)
 				.incrementEvery(LoadDuration.builder()
-						.value(1)
+						.value(SecondsDuration.of(1))
 						.type(LoadDuration.Type.TIME)
 						.build())
-				.rampup(1)
+				.rampup(SecondsDuration.of(1))
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertTrue(validation.isValid());

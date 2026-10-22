@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload;
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
@@ -19,7 +20,7 @@ public class ProjectWriterTest {
         UserPath userPath = UserPath.builder()
                 .name("my User")
                 .actions(Container.builder()
-                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value(MillisecondsDuration.of(3000)).build()).build())
                         .build())
                 .build();
 

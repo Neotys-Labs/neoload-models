@@ -5,6 +5,7 @@ import static org.mockito.Mockito.spy;
 
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
@@ -45,7 +46,7 @@ public class UniformerRandomTimerConverterTest {
         Delay delay = Delay.builder()
                 .name(uniformRandomTimer.getName())
                 .description(uniformRandomTimer.getComment())
-                .duration(DurationConstant.builder().value("69").build())
+                .duration(DurationConstant.builder().value(MillisecondsDuration.of(69)).build())
                 .build();
         List<Step> expected = new ArrayList<>();
         expected.add(delay);

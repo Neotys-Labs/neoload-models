@@ -1,6 +1,5 @@
 package com.neotys.neoload.model.v3.project.variable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -37,13 +36,7 @@ public interface CurrentDateVariable extends Variable {
 	}
 
 	@JsonProperty(OFFSET)
-	@OffsetCheck(groups = {NeoLoad.class})
-	Optional<String> getOffset();
-
-	@JsonIgnore
-	default Optional<Offset> getParsedOffset() {
-		return getOffset().flatMap(Offset::parse);
-	}
+	Optional<@OffsetCheck(groups = {NeoLoad.class}) Offset> getOffset();
 
 	class DefaultPatternFilter {
 		@Override

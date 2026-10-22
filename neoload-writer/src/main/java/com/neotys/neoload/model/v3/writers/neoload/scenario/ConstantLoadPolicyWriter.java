@@ -2,10 +2,9 @@ package com.neotys.neoload.model.v3.writers.neoload.scenario;
 
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import java.util.Optional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Optional;
 
 public class ConstantLoadPolicyWriter extends LoadPolicyWriter {
 
@@ -28,7 +27,7 @@ public class ConstantLoadPolicyWriter extends LoadPolicyWriter {
         // IterationNumber attribute
         Optional.ofNullable(constantLoadPolicy.getDuration()).ifPresent(duration -> {
         	if (duration.getType() == LoadDuration.Type.ITERATION) {
-        		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.getValue()));
+        		xmlElement.setAttribute(XML_ATTR_ITERATIONNUMBER, String.valueOf(duration.amount().getAsLong()));
         	}
         });
         volumePolicyElement.appendChild(xmlElement);

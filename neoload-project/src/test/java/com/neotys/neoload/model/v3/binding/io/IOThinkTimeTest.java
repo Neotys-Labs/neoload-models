@@ -5,6 +5,7 @@ import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static junit.framework.TestCase.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
@@ -50,18 +51,18 @@ public class IOThinkTimeTest extends AbstractIOElementsTest {
 
 	private List<Delay> getThinkTimesOnlyRequired() {
 		return List.of(
-				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value("3790200").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max("3790200").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value("3600000").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max("3600000").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value("180000").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max("180000").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value("10000").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max("10000").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value("200").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max("200").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value("${think_time}").build()).build(),
-				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max("${max_think_time}").build()).build()
+				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value(MillisecondsDuration.of(3790200)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max(MillisecondsDuration.of(3790200)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value(MillisecondsDuration.of(3600000)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max(MillisecondsDuration.of(3600000)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value(MillisecondsDuration.of(180000)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max(MillisecondsDuration.of(180000)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value(MillisecondsDuration.of(10000)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max(MillisecondsDuration.of(10000)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value(MillisecondsDuration.of(200)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max(MillisecondsDuration.of(200)).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value(MillisecondsDuration.ofVariable("think_time")).build()).build(),
+				Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max(MillisecondsDuration.ofVariable("max_think_time")).build()).build()
 		);
 	}
 
@@ -70,21 +71,21 @@ public class IOThinkTimeTest extends AbstractIOElementsTest {
 				Delay.builder().isThinkTime(true)
 						.name("MyConstantThinkTime1")
 						.description("MyConstantThinkTime1Description")
-						.duration(DurationConstant.builder().value("3790200").build())
+						.duration(DurationConstant.builder().value(MillisecondsDuration.of(3790200)).build())
 						.build(),
 				Delay.builder().isThinkTime(true)
 						.name("MyConstantThinkTime2")
 						.description("MyConstantThinkTime2Description")
-						.duration(DurationConstant.builder().value("${think_time}").build())
+						.duration(DurationConstant.builder().value(MillisecondsDuration.ofVariable("think_time")).build())
 						.build(),
 				Delay.builder().isThinkTime(true)
 						.name("MyRandomThinkTime1")
 						.description("MyRandomThinkTime1Description")
-						.duration(DurationRandom.builder().min("3790100").max("3790200").build()).build(),
+						.duration(DurationRandom.builder().min(MillisecondsDuration.of(3790100)).max(MillisecondsDuration.of(3790200)).build()).build(),
 				Delay.builder().isThinkTime(true)
 						.name("MyRandomThinkTime2")
 						.description("MyRandomThinkTime2Description")
-						.duration(DurationRandom.builder().min("${min_think_time}").max("${max_think_time}").build()).build()
+						.duration(DurationRandom.builder().min(MillisecondsDuration.ofVariable("min_think_time")).max(MillisecondsDuration.ofVariable("max_think_time")).build()).build()
 		);
 	}
 }
