@@ -223,7 +223,10 @@
 			},
 			"start_after_options": {
 				"title": "Start after",
-				"anyOf": [{ "$ref": "#/definitions/common/seconds" }, { "$ref": "#/definitions/common/text" }]
+				"anyOf": [
+					{ "$ref": "#/definitions/common/seconds" },
+					{ "title": "Population name", "type": "string", "pattern": "^(?!\\s*-\\d)" }
+				]
 			},
 			"seconds": {
 				"title": "Seconds duration",

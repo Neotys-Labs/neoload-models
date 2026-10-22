@@ -20,6 +20,9 @@ public final class StartAfterValidator extends AbstractConstraintValidator<Compo
 			return false;
 		}
 		if (type == StartAfter.Type.TIME) {
+			if (InvalidDuration.isInvalid(value)) {
+				return InvalidDuration.report(context, value);
+			}
 			return value instanceof SecondsDuration && ((SecondsDuration) value).isLiteral() && ((SecondsDuration) value).getAmount() > 0;
 		}
 		return value instanceof String && !((String) value).trim().isEmpty();

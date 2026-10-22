@@ -13,6 +13,9 @@ import org.junit.Test;
 public class DurationTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
+	private static final String CONSTRAINTS_INVALID_TIME = "Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR +
+			"Violation 1 - Incorrect value for '': '-10' is not a valid duration, expected ordered units such as 1h30m15s or a number of seconds." + LINE_SEPARATOR;
+
 	private static final String CONSTRAINTS_VALUE_NULL;
 	static {
 		final StringBuilder sb = new StringBuilder();
@@ -72,12 +75,12 @@ public class DurationTest {
 		assertEquals(CONSTRAINTS_VALUE_NULL, validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
-				.value(-10)
+				.value(SecondsDuration.of(-10))
 				.type(LoadDuration.Type.TIME)
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
+		assertEquals(CONSTRAINTS_INVALID_TIME, validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
 				.value(-10)

@@ -77,8 +77,9 @@ public class StringToStartAfterConverterTest {
 		// Input: 0 - Output: 0 
 		assertEquals(convertToStartAfter(0), converter.convert("0"));
 		
-		// Input: -1 - Output: -1
-		assertEquals(convertToStartAfter("-1"), converter.convert("-1"));
+		assertEquals(StartAfter.builder().value(SecondsDuration.parse("-1")).type(StartAfter.Type.TIME).build(), converter.convert("-1"));
+		assertEquals(StartAfter.builder().value(SecondsDuration.parse("-5s")).type(StartAfter.Type.TIME).build(), converter.convert("-5s"));
+		assertEquals(convertToStartAfter("my-population"), converter.convert("my-population"));
 
 		// POPULATION
 		// Input: population - Output: population

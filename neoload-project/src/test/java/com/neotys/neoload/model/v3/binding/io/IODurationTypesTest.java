@@ -157,6 +157,29 @@ public class IODurationTypesTest {
 	}
 
 	@Test
+	public void startAfterIsAPositiveDelayOrAPopulationName() throws IOException {
+		final ProjectDescriptor delay = read(CONSTANT_LOAD + "      start_after: 1m\n");
+		assertEquals(StartAfter.Type.TIME, policy(delay, 0).getStartAfter().getType());
+		assertEquals(SecondsDuration.of(60), policy(delay, 0).getStartAfter().getValue());
+		assertTrue(message(validate(delay)), validate(delay).isValid());
+
+		final ProjectDescriptor population = read(CONSTANT_LOAD + "      start_after: MyOtherPopulation\n");
+		assertEquals(StartAfter.Type.POPULATION, policy(population, 0).getStartAfter().getType());
+		assertEquals("MyOtherPopulation", policy(population, 0).getStartAfter().getValue());
+		assertTrue(message(validate(population)), validate(population).isValid());
+
+		for (final String text : new String[] {"0", "-5", "-5s"}) {
+			final ProjectDescriptor invalid = read(CONSTANT_LOAD + "      start_after: " + text + "\n");
+
+			assertEquals(text, StartAfter.Type.TIME, policy(invalid, 0).getStartAfter().getType());
+			final String message = message(validate(invalid));
+			assertTrue(message, message.contains("constant_load.start_after"));
+			assertEquals(text, 1, count(message, "Violation 1"));
+			assertTrue(text, write(invalid).contains("start_after: " + text));
+		}
+	}
+
+	@Test
 	public void secondBasedFieldsRejectMillisecondsAndOutOfOrderUnits() throws IOException {
 		for (final String text : new String[] {"500ms", "1s1h"}) {
 			final ProjectDescriptor descriptor = read(SCENARIO + "  rendezvous_policies:\n  - name: rdv\n    timeout: " + text + "\n");

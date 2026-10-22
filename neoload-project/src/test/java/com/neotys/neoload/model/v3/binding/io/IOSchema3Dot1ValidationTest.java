@@ -235,6 +235,7 @@ public class IOSchema3Dot1ValidationTest {
     private static final String[] DURATION_FIELDS = {
             CONSTANT_LOAD + "      duration: %s\n",
             CONSTANT_LOAD + "      rampup: %s\n",
+            CONSTANT_LOAD + "      start_after: %s\n",
             CONSTANT_LOAD + "      stop_after: %s\n",
             "name: P\nscenarios:\n- name: S\n  populations:\n  - name: Po\n    rampup_load:\n      min_users: 1\n      increment_users: 1\n      increment_every: 5s\n      increment_rampup: %s\n",
             "name: P\nscenarios:\n- name: S\n  populations:\n  - name: Po\n    peaks_load:\n      minimum:\n        users: 1\n        duration: 1m\n      maximum:\n        users: 2\n        duration: 1m\n      start: minimum\n      step_rampup: %s\n",
