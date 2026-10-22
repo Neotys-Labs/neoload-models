@@ -106,7 +106,9 @@ public class IOSchema3Dot1ValidationTest {
             "test-userpaths-invalid-on-assertion-failure.yaml",
             "test-userpaths-think-time-invalid-usage.yaml",
             "test-userpaths-think-time-invalid-values.yaml",
-            "test-userpaths-think-time-unknown-key.yaml"
+            "test-userpaths-think-time-unknown-key.yaml",
+            "test-empty-collections.yaml",
+            "test-empty-collections.json"
     );
 
     @BeforeClass

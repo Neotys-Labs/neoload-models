@@ -1354,19 +1354,7 @@
 							"type": "string",
 							"default": "GET"
 						},
-						"headers": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"/": {}
-								},
-								"patternProperties": {
-									".*": { "type": "string" }
-								},
-								"additionalProperties": false
-							}
-						},
+						"headers": { "$ref": "#/definitions/user_paths/name_values" },
 						"sla_profile": {
 							"$ref": "#/definitions/common/text",
 							"description": "The name of the SLA profile to apply to the request"
@@ -1435,6 +1423,8 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"url": { "$ref": "#/definitions/common/url" },
 						"server": { "$ref": "#/definitions/common/name" },
+						"parameters": { "$ref": "#/definitions/user_paths/name_values" },
+						"headers": { "$ref": "#/definitions/user_paths/name_values" },
 						"content": {
 							"type": "object",
 							"required": ["path"],
@@ -1809,6 +1799,23 @@
 					},
 					"additionalProperties": false,
 					"description": "The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back."
+				}
+			},
+			"name_values": {
+				"title": "Name/Value List",
+				"type": "array",
+				"items": {
+					"oneOf": [
+						{ "type": "string" },
+						{
+							"type": "object",
+							"minProperties": 1,
+							"maxProperties": 1,
+							"patternProperties": {
+								".*": { "type": "string" }
+							}
+						}
+					]
 				}
 			},
 			"part": {
