@@ -9,12 +9,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
 import javax.validation.Valid;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_DEFAULT)
-@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.CONTENT})
+@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.PARAMETERS, SoapRequest.HEADERS, SoapRequest.CONTENT})
 @JsonSerialize(as = ImmutableSoapRequest.class)
 @JsonDeserialize(as = ImmutableSoapRequest.class)
 @Value.Immutable
@@ -22,6 +23,8 @@ import org.immutables.value.Value.Style.ValidationMethod;
 @SuppressWarnings("java:S2097")
 public interface SoapRequest extends Step, UrlServerElement {
 	String NAME = "name";
+	String PARAMETERS = "parameters";
+	String HEADERS = "headers";
 	String CONTENT = "content";
 
 	String DEFAULT_NAME = "soap_request";
@@ -33,6 +36,16 @@ public interface SoapRequest extends Step, UrlServerElement {
 	default String getName() {
 		return DEFAULT_NAME;
 	}
+
+	@JsonProperty(PARAMETERS)
+	@JsonInclude(Include.NON_EMPTY)
+	@Valid
+	List<NameValue> getParameters();
+
+	@JsonProperty(HEADERS)
+	@JsonInclude(Include.NON_EMPTY)
+	@Valid
+	List<NameValue> getHeaders();
 
 	@JsonProperty(CONTENT)
 	@RequiredCheck(groups = {NeoLoad.class})
