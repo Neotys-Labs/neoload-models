@@ -5,6 +5,8 @@ import static org.junit.Assert.fail;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.validation.validator.Validator;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
@@ -80,6 +82,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-current-date-variable-offsets-invalid.yaml",
             "test-pacing-invalid-values.yaml",
             "test-pacing-malformed-units.yaml",
+            "test-waituntil-invalid-timeout.yaml",
             "test-pacing-mixed.yaml",
             "test-pacing-on-loop.yaml",
             "test-pacing-on-while.yaml",
@@ -238,4 +241,52 @@ public class IOSchema3Dot1ValidationTest {
                 + "        think_time: " + thinkTime + "\n        steps:\n        - request:\n            url: http://host:80/\n";
         Assert.assertEquals(thinkTime, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
     }
+    /**
+     * Values placed in each duration field. start_after is left out of the fields below: it also takes a population name,
+     * which the schema reads as text while the Java model reads any scalar.
+     */
+    private static final String[] DURATION_VALUES = {"90", "90s", "1h30m", "120m", "500ms", "1s1h", "abc", "5x", "-5", "${v}"};
+
+    private static final String[][] DURATION_FIELDS = {
+            {"constant_load duration", "name: P\nscenarios:\n- name: S\n  populations:\n  - name: C\n    constant_load:\n      users: 5\n      duration: %s\n"},
+            {"constant_load rampup", "name: P\nscenarios:\n- name: S\n  populations:\n  - name: C\n    constant_load:\n      users: 5\n      duration: 1m\n      rampup: %s\n"},
+            {"constant_load stop_after", "name: P\nscenarios:\n- name: S\n  populations:\n  - name: C\n    constant_load:\n      users: 5\n      duration: 1m\n      stop_after: %s\n"},
+            {"custom_load rampup", "name: P\nscenarios:\n- name: S\n  populations:\n  - name: C\n    custom_load:\n      rampup: %s\n      steps:\n      - when: 1m\n        users: 5\n"},
+            {"rampup_load increment_rampup", "name: P\nscenarios:\n- name: S\n  populations:\n  - name: R\n    rampup_load:\n      min_users: 1\n      max_users: 5\n      increment_users: 1\n      increment_every: 1 iteration\n      duration: 5 iterations\n      increment_rampup: %s\n"},
+            {"peaks_load step_rampup", "name: P\nscenarios:\n- name: S\n  populations:\n  - name: K\n    peaks_load:\n      minimum:\n        users: 1\n        duration: 1 iteration\n      maximum:\n        users: 5\n        duration: 1 iteration\n      start: maximum\n      duration: 5 iterations\n      step_rampup: %s\n"},
+            {"monitoring before", "name: P\nscenarios:\n- name: S\n  monitoring:\n    before: %s\n  populations:\n  - name: C\n    constant_load:\n      users: 5\n      duration: 1m\n"},
+            {"monitoring after", "name: P\nscenarios:\n- name: S\n  monitoring:\n    after: %s\n  populations:\n  - name: C\n    constant_load:\n      users: 5\n      duration: 1m\n"},
+            {"rendezvous timeout", "name: P\nscenarios:\n- name: S\n  populations:\n  - name: C\n    constant_load:\n      users: 5\n      duration: 1m\n  rendezvous_policies:\n  - name: rdv\n    timeout: %s\n"},
+            {"delay", "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - delay: %s\n"},
+            {"think_time", "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - think_time: %s\n"},
+            {"pacing", "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - transaction:\n        name: T\n        pacing: %s\n        steps:\n        - delay: 1\n"},
+            {"web_page think_time", "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - web_page:\n        think_time: %s\n        steps:\n        - request:\n            url: http://host:80/\n"},
+            {"wait_until timeout", "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - wait_until:\n        conditions:\n        - \"'${status_code}' == '200'\"\n        timeout: %s\n"}
+    };
+
+    @Test
+    public void durationFieldsAcceptAndRejectTheSameValuesAsTheJavaModel() throws IOException {
+        final List<String> differences = new ArrayList<>();
+        for (final String[] field : DURATION_FIELDS) {
+            for (final String value : DURATION_VALUES) {
+                final String yaml = String.format(field[1], value);
+                final boolean schemaValid = SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty();
+                final boolean javaValid = isValidForJava(yaml);
+                if (schemaValid != javaValid) {
+                    differences.add(field[0] + " = " + value + ": schema " + schemaValid + ", java " + javaValid);
+                }
+            }
+        }
+        Assert.assertTrue(String.join("\n", differences), differences.isEmpty());
+    }
+
+    private static boolean isValidForJava(final String yaml) {
+        try {
+            final ProjectDescriptor descriptor = new IO().read(yaml);
+            return new Validator().validate(descriptor, NeoLoad.class).isValid();
+        } catch (final IOException e) {
+            return false;
+        }
+    }
+
 }
