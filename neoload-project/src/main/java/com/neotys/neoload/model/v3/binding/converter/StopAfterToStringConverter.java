@@ -8,10 +8,13 @@ public final class StopAfterToStringConverter extends StdConverter<StopAfter, St
 	public String convert(final StopAfter stopAfter) {
 		if (stopAfter == null) return null;
 		
+		if (stopAfter.getInvalidText().isPresent()) {
+			return stopAfter.getInvalidText().get();
+		}
 		String convertedValue;
 		final StopAfter.Type type = stopAfter.getType();
 		if (type == StopAfter.Type.TIME) {
-			convertedValue = TimeDurationHelper.convertToString((Integer) stopAfter.getValue());
+			convertedValue = Durations.format((Integer) stopAfter.getValue(), DurationGrammar.SECONDS);
 		}
 		else {
 			convertedValue = "current_iteration";

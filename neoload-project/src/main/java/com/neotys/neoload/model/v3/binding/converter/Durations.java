@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.binding.converter;
 
 import com.neotys.neoload.model.v3.project.variable.Offset;
+import java.util.Optional;
 import java.util.regex.Matcher;
 
 /**
@@ -38,6 +39,14 @@ public final class Durations {
 			return true;
 		} catch (final InvalidDurationException e) {
 			return false;
+		}
+	}
+
+	public static Optional<Integer> tryParseSeconds(final String text) {
+		try {
+			return Optional.of((int) parse(text, DurationGrammar.SECONDS).getAmount());
+		} catch (final InvalidDurationException e) {
+			return Optional.empty();
 		}
 	}
 

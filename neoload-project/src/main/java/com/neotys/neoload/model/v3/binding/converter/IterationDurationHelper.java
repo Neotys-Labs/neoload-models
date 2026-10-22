@@ -39,11 +39,15 @@ final class IterationDurationHelper {
 		}
 
 		int value = 0;
-		for (int i = 1, ilength = matcher.groupCount(); i <= ilength; i++) {
-			final String group = matcher.group(i);
-			if (group != null) {
-				value = value + Integer.valueOf(group) * ITERATION_FACTORS[i];
+		try {
+			for (int i = 1, ilength = matcher.groupCount(); i <= ilength; i++) {
+				final String group = matcher.group(i);
+				if (group != null) {
+					value = value + Integer.parseInt(group) * ITERATION_FACTORS[i];
+				}
 			}
+		} catch (final NumberFormatException e) {
+			return null;
 		}
 		return value;
 	}

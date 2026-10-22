@@ -6,7 +6,9 @@ import com.neotys.neoload.model.v3.binding.converter.StopAfterToStringConverter;
 import com.neotys.neoload.model.v3.binding.converter.StringToStopAfterConverter;
 import com.neotys.neoload.model.v3.project.Composite;
 import com.neotys.neoload.model.v3.validation.constraints.CompositeCheck;
+import com.neotys.neoload.model.v3.validation.constraints.SecondsDurationCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.Optional;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
@@ -23,6 +25,9 @@ public interface StopAfter extends Composite<Object, StopAfter.Type>{
 		TIME
 	}
 	
+	@Value.Auxiliary
+	Optional<@SecondsDurationCheck(groups={NeoLoad.class}) String> getInvalidText();
+
 	class Builder extends ImmutableStopAfter.Builder {}
 	static Builder builder() {
 		return new Builder();
