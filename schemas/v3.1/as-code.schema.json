@@ -1256,83 +1256,83 @@
 								},
 								"browser_open": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_open",
-									"description": "Real Browser action BrowserOpen (OpenBrowser in NeoLoad GUI). Open a new browser."
+									"description": "Real Browser action BrowserOpen. Open a new browser."
 								},
 								"browser_close": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_close",
-									"description": "Real Browser action BrowserClose (CloseBrowser in NeoLoad GUI). Close the browser. This action is useful for avoiding stacking browser instances on a single VU. The recommended configurations is : If the OpenBrowser action is at the beginning of the ACTIONS container, put the CloseBrowser action at end of the ACTIONS container."
+									"description": "Real Browser action BrowserClose. Close the browser. This action is useful for avoiding stacking browser instances on a single VU. The recommended configurations is : If the OpenBrowser action is at the beginning of the ACTIONS container, put the CloseBrowser action at end of the ACTIONS container."
 								},
 								"browser_navigate": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_navigate",
-									"description": "Real Browser action BrowserNavigate (Navigate in NeoLoad GUI). Navigate to an url."
+									"description": "Real Browser action BrowserNavigate. Navigate to an url."
 								},
 								"browser_click": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_click",
-									"description": "Real Browser action BrowserClick (Click in NeoLoad GUI). Click a selector."
+									"description": "Real Browser action BrowserClick. Click a selector."
 								},
 								"browser_type": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_type",
-									"description": "Real Browser action BrowserType (Type in NeoLoad GUI). Type some text inside an element."
+									"description": "Real Browser action BrowserType. Type some text inside an element."
 								},
 								"browser_press": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_press",
-									"description": "Real Browser action BrowserPress (Press in NeoLoad GUI). Press a key on a selector."
+									"description": "Real Browser action BrowserPress. Press a key on a selector."
 								},
 								"browser_select_option": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_select_option",
-									"description": "Real Browser action BrowserSelectOption (SelectOption in NeoLoad GUI). Select one or several options of a select element."
+									"description": "Real Browser action BrowserSelectOption. Select one or several options of a select element."
 								},
 								"browser_mouse_over": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_mouse_over",
-									"description": "Real Browser action BrowserMouseOver (MouseOver in NeoLoad GUI). Positions the mouse over the specified coordinates or element location. Scrolls the window when that position is out of the current viewport. Both parameters can be set at the same time, in that case the mouse will be positioned at the specified coordinates relative to the located element instead of the page origin."
+									"description": "Real Browser action BrowserMouseOver. Positions the mouse over the specified coordinates or element location. Scrolls the window when that position is out of the current viewport. Both parameters can be set at the same time, in that case the mouse will be positioned at the specified coordinates relative to the located element instead of the page origin."
 								},
 								"browser_drag_and_drop": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_drag_and_drop",
-									"description": "Real Browser action BrowserDragAndDrop (Drag & Drop in NeoLoad GUI). Drag and drop an element onto another element."
+									"description": "Real Browser action BrowserDragAndDrop. Drag and drop an element onto another element."
 								},
 								"browser_scroll": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_scroll",
-									"description": "Real Browser action BrowserScroll (Scroll in NeoLoad GUI). Scrolls the window to a particular place in the document."
+									"description": "Real Browser action BrowserScroll. Scrolls the window to a particular place in the document."
 								},
 								"browser_read": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_read",
-									"description": "Real Browser action BrowserRead (Read in NeoLoad GUI). Read the text content of an Element."
+									"description": "Real Browser action BrowserRead. Read the text content of an Element."
 								},
 								"browser_wait_selector": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_wait_selector",
-									"description": "Real Browser action BrowserWaitSelector (WaitSelector in NeoLoad GUI). Wait for a selector."
+									"description": "Real Browser action BrowserWaitSelector. Wait for a selector."
 								},
 								"browser_evaluate_javascript": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_evaluate_javascript",
-									"description": "Real Browser action BrowserEvaluateJavascript (EvaluateJavascript in NeoLoad GUI). Executes some arbitrary Javascript code in the current page context."
+									"description": "Real Browser action BrowserEvaluateJavascript. Executes some arbitrary Javascript code in the current page context."
 								},
 								"browser_upload_file": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_upload_file",
-									"description": "Real Browser action BrowserUploadFile (UploadFile in NeoLoad GUI). Upload files to an input element."
+									"description": "Real Browser action BrowserUploadFile. Upload files to an input element."
 								},
 								"browser_handle_dialog": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_handle_dialog",
-									"description": "Real Browser action BrowserHandleDialog (HandleBrowserDialog in NeoLoad GUI). Set dialog behavior."
+									"description": "Real Browser action BrowserHandleDialog. Set dialog behavior."
 								},
 								"browser_open_tab": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_open_tab",
-									"description": "Real Browser action BrowserOpenTab (OpenTab in NeoLoad GUI). Open a new tab at the rightmost position."
+									"description": "Real Browser action BrowserOpenTab. Open a new tab at the rightmost position."
 								},
 								"browser_switch_tab": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_switch_tab",
-									"description": "Real Browser action BrowserSwitchTab (SwitchTab in NeoLoad GUI). Switch tab to the given index."
+									"description": "Real Browser action BrowserSwitchTab. Switch tab to the given index."
 								},
 								"browser_close_tab": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_close_tab",
-									"description": "Real Browser action BrowserCloseTab (CloseTab in NeoLoad GUI). Close tab at the given index."
+									"description": "Real Browser action BrowserCloseTab. Close tab at the given index."
 								},
 								"browser_capture_requests": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_capture_requests",
-									"description": "Real Browser action BrowserCaptureRequests (CaptureRequests in NeoLoad GUI). Configure the capture of HTTP requests metrics for analysis purpose. It allows to capture the metrics (duration, TTFB, success...) of the requests sent and responses received between the browser and the server. By default when no regexp/url/resourceType parameter is specified, then all the HTTP request metrics are aggregated in a single group. When a matching criteria is defined (regexp/url/resourceType), the metrics of all HTTP requests matching it are aggregated in a group, and the non-matching one in a different group (for example with regexp (.*)\\.html then requests will be split in two different groups: one for all HTML pages and another one for all other resources). When multiple matching criteria are defined (regexp/url/resourceType), they are applied in order they are defined."
+									"description": "Real Browser action BrowserCaptureRequests. Configure the capture of HTTP requests metrics for analysis purpose. It allows to capture the metrics (duration, TTFB, success...) of the requests sent and responses received between the browser and the server. By default when no regexp/url/resourceType parameter is specified, then all the HTTP request metrics are aggregated in a single group. When a matching criteria is defined (regexp/url/resourceType), the metrics of all HTTP requests matching it are aggregated in a group, and the non-matching one in a different group (for example with regexp (.*)\\.html then requests will be split in two different groups: one for all HTML pages and another one for all other resources). When multiple matching criteria are defined (regexp/url/resourceType), they are applied in order they are defined."
 								},
 								"browser_capture_web_vitals": {
 									"$ref": "#/definitions/user_paths/real_browser/browser_capture_web_vitals",
-									"description": "Real Browser action BrowserCaptureWebVitals (CaptureWebVitals in NeoLoad GUI). Captures Core Web Vitals metrics during Virtual User navigation. This helps detect performance issues that affect the user experience. NeoLoad collects the following metrics for each defined URL: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), Cumulative Layout Shift (CLS). If you don't define a URL, NeoLoad aggregates metrics across all visited pages. To collect all metrics, place this action before the first Navigate action. The Virtual User needs to stay a minimum amount of time and perform at least one interaction to ensure Web Vitals were collected for a given page."
+									"description": "Real Browser action BrowserCaptureWebVitals. Captures Core Web Vitals metrics during Virtual User navigation. This helps detect performance issues that affect the user experience. NeoLoad collects the following metrics for each defined URL: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), Cumulative Layout Shift (CLS). If you don't define a URL, NeoLoad aggregates metrics across all visited pages. To collect all metrics, place this action before the first Navigate action. The Virtual User needs to stay a minimum amount of time and perform at least one interaction to ensure Web Vitals were collected for a given page."
 								},
 								"try_catch": {
 									"$ref": "#/definitions/user_paths/actions/try_catch",
@@ -2081,6 +2081,10 @@
 				"additionalProperties": false
 			},
 			"real_browser": {
+				"name": {
+					"$ref": "#/definitions/common/name",
+					"description": "The name of the action. Defaults to the action type, for example `BrowserClick`."
+				},
 				"parameter_names": {
 					"selector": {
 						"const": "selector",
@@ -2135,15 +2139,35 @@
 						"description": "true or false. Forces the click, even if the target element is obscured by other elements. Default value is \"false\"."
 					}
 				},
+				"parameter_groups": {
+					"frame": {
+						"anyOf": [
+							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
+							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
+							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" }
+						]
+					},
+					"waitForNavigation": {
+						"anyOf": [
+							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
+							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
+							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" }
+						]
+					},
+					"waitForDownload": {
+						"anyOf": [
+							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload" },
+							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
+							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" }
+						]
+					}
+				},
 				"browser_open": {
 					"title": "Action: Real Browser BrowserOpen",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `OpenBrowser`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2266,16 +2290,13 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserOpen (OpenBrowser in NeoLoad GUI). Open a new browser."
+					"description": "Real Browser action BrowserOpen. Open a new browser."
 				},
 				"browser_close": {
 					"title": "Action: Real Browser BrowserClose",
 					"type": "object",
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `CloseBrowser`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2309,17 +2330,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserClose (CloseBrowser in NeoLoad GUI). Close the browser. This action is useful for avoiding stacking browser instances on a single VU. The recommended configurations is : If the OpenBrowser action is at the beginning of the ACTIONS container, put the CloseBrowser action at end of the ACTIONS container."
+					"description": "Real Browser action BrowserClose. Close the browser. This action is useful for avoiding stacking browser instances on a single VU. The recommended configurations is : If the OpenBrowser action is at the beginning of the ACTIONS container, put the CloseBrowser action at end of the ACTIONS container."
 				},
 				"browser_navigate": {
 					"title": "Action: Real Browser BrowserNavigate",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `Navigate`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2336,9 +2354,7 @@
 												"const": "unsafeUrl",
 												"description": "URL to visit without scheme restriction, for example a local file. Always ignored on a NeoLoad Cloud Load Generator. Advanced parameter, hidden by default in NeoLoad GUI."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -2361,16 +2377,13 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserNavigate (Navigate in NeoLoad GUI). Navigate to an url."
+					"description": "Real Browser action BrowserNavigate. Navigate to an url."
 				},
 				"browser_click": {
 					"title": "Action: Real Browser BrowserClick",
 					"type": "object",
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `Click`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2398,15 +2411,9 @@
 												"description": "Modifier keys to press separated by \"+\" like Control+Shift."
 											},
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -2428,17 +2435,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserClick (Click in NeoLoad GUI). Click a selector."
+					"description": "Real Browser action BrowserClick. Click a selector."
 				},
 				"browser_type": {
 					"title": "Action: Real Browser BrowserType",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `Type`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2461,15 +2465,9 @@
 												"const": "delay",
 												"description": "Adds delay between each keydown/keyup sequence in ms. When this parameter is absent, the text will be inserted in the field as a whole, without triggering any keydown/keyup events."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -2492,17 +2490,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserType (Type in NeoLoad GUI). Type some text inside an element."
+					"description": "Real Browser action BrowserType. Type some text inside an element."
 				},
 				"browser_press": {
 					"title": "Action: Real Browser BrowserPress",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `Press`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2521,15 +2516,9 @@
 												"description": "Delay in ms between each keydown/keyup sequence."
 											},
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -2555,17 +2544,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserPress (Press in NeoLoad GUI). Press a key on a selector."
+					"description": "Real Browser action BrowserPress. Press a key on a selector."
 				},
 				"browser_select_option": {
 					"title": "Action: Real Browser BrowserSelectOption",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `SelectOption`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2594,12 +2580,8 @@
 												"description": "Select the option with a matching index. Multiple options can be selected by adding more parameters with a different index."
 											},
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -2622,16 +2604,13 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserSelectOption (SelectOption in NeoLoad GUI). Select one or several options of a select element."
+					"description": "Real Browser action BrowserSelectOption. Select one or several options of a select element."
 				},
 				"browser_mouse_over": {
 					"title": "Action: Real Browser BrowserMouseOver",
 					"type": "object",
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `MouseOver`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2646,12 +2625,8 @@
 												"description": "Coordinates of the mouse, relative to the selector if specified, absolute otherwise. If no coordinates are specified with selector, the mouse will be placed at the middle of the element. Example: 100.0;200.0"
 											},
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -2673,17 +2648,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserMouseOver (MouseOver in NeoLoad GUI). Positions the mouse over the specified coordinates or element location. Scrolls the window when that position is out of the current viewport. Both parameters can be set at the same time, in that case the mouse will be positioned at the specified coordinates relative to the located element instead of the page origin."
+					"description": "Real Browser action BrowserMouseOver. Positions the mouse over the specified coordinates or element location. Scrolls the window when that position is out of the current viewport. Both parameters can be set at the same time, in that case the mouse will be positioned at the specified coordinates relative to the located element instead of the page origin."
 				},
 				"browser_drag_and_drop": {
 					"title": "Action: Real Browser BrowserDragAndDrop",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `Drag & Drop`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2708,14 +2680,10 @@
 												"const": "targetPosition",
 												"description": "A position relative to the top left corner of the target element where to release the click finalizing the drop action. Example : 200;350"
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/force" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -2741,16 +2709,13 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserDragAndDrop (Drag & Drop in NeoLoad GUI). Drag and drop an element onto another element."
+					"description": "Real Browser action BrowserDragAndDrop. Drag and drop an element onto another element."
 				},
 				"browser_scroll": {
 					"title": "Action: Real Browser BrowserScroll",
 					"type": "object",
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `Scroll`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2767,12 +2732,8 @@
 												"const": "Y",
 												"description": "The amount of pixels to scroll on the Y axis. Positive values emulate a scroll down and negative values a scroll top event. Default value is \"0\"."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -2794,17 +2755,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserScroll (Scroll in NeoLoad GUI). Scrolls the window to a particular place in the document."
+					"description": "Real Browser action BrowserScroll. Scrolls the window to a particular place in the document."
 				},
 				"browser_read": {
 					"title": "Action: Real Browser BrowserRead",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `Read`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2823,9 +2781,7 @@
 												"description": "If specified, returns the attribute's value instead of the text value of the selected element"
 											},
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
 											{
 												"const": "ignoreErrors",
 												"description": "Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a \"If...Then...Else\" or a \"Try...Catch\" block. Default value is \"true\"."
@@ -2851,17 +2807,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserRead (Read in NeoLoad GUI). Read the text content of an Element."
+					"description": "Real Browser action BrowserRead. Read the text content of an Element."
 				},
 				"browser_wait_selector": {
 					"title": "Action: Real Browser BrowserWaitSelector",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `WaitSelector`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2879,9 +2832,7 @@
 												"const": "state",
 												"description": "attached, detached, visible, hidden. Defaults to 'visible'."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" },
 											{
 												"const": "selectorLogicalOperator",
@@ -2908,17 +2859,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserWaitSelector (WaitSelector in NeoLoad GUI). Wait for a selector."
+					"description": "Real Browser action BrowserWaitSelector. Wait for a selector."
 				},
 				"browser_evaluate_javascript": {
 					"title": "Action: Real Browser BrowserEvaluateJavascript",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `EvaluateJavascript`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2935,15 +2883,9 @@
 												"const": "variableName",
 												"description": "The name of the variable where the evaluation result will be stored."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -2966,17 +2908,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserEvaluateJavascript (EvaluateJavascript in NeoLoad GUI). Executes some arbitrary Javascript code in the current page context."
+					"description": "Real Browser action BrowserEvaluateJavascript. Executes some arbitrary Javascript code in the current page context."
 				},
 				"browser_upload_file": {
 					"title": "Action: Real Browser BrowserUploadFile",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `UploadFile`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -2991,12 +2930,8 @@
 												"description": "A list of file paths separated by semicolons ';'. Use the variable '${NL-CustomResources}' to access on the Load Generator the synchronized resources located in the 'custom-resources' folder of the project."
 											},
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
+											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
 										]
 									}
@@ -3022,17 +2957,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserUploadFile (UploadFile in NeoLoad GUI). Upload files to an input element."
+					"description": "Real Browser action BrowserUploadFile. Upload files to an input element."
 				},
 				"browser_handle_dialog": {
 					"title": "Action: Real Browser BrowserHandleDialog",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `HandleBrowserDialog`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -3074,16 +3006,13 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserHandleDialog (HandleBrowserDialog in NeoLoad GUI). Set dialog behavior."
+					"description": "Real Browser action BrowserHandleDialog. Set dialog behavior."
 				},
 				"browser_open_tab": {
 					"title": "Action: Real Browser BrowserOpenTab",
 					"type": "object",
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `OpenTab`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"asRequest": {
 							"type": "boolean",
@@ -3100,17 +3029,14 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserOpenTab (OpenTab in NeoLoad GUI). Open a new tab at the rightmost position."
+					"description": "Real Browser action BrowserOpenTab. Open a new tab at the rightmost position."
 				},
 				"browser_switch_tab": {
 					"title": "Action: Real Browser BrowserSwitchTab",
 					"type": "object",
 					"required": ["parameters"],
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `SwitchTab`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -3145,16 +3071,13 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserSwitchTab (SwitchTab in NeoLoad GUI). Switch tab to the given index."
+					"description": "Real Browser action BrowserSwitchTab. Switch tab to the given index."
 				},
 				"browser_close_tab": {
 					"title": "Action: Real Browser BrowserCloseTab",
 					"type": "object",
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `CloseTab`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -3188,16 +3111,13 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserCloseTab (CloseTab in NeoLoad GUI). Close tab at the given index."
+					"description": "Real Browser action BrowserCloseTab. Close tab at the given index."
 				},
 				"browser_capture_requests": {
 					"title": "Action: Real Browser BrowserCaptureRequests",
 					"type": "object",
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `CaptureRequests`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -3250,16 +3170,13 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserCaptureRequests (CaptureRequests in NeoLoad GUI). Configure the capture of HTTP requests metrics for analysis purpose. It allows to capture the metrics (duration, TTFB, success...) of the requests sent and responses received between the browser and the server. By default when no regexp/url/resourceType parameter is specified, then all the HTTP request metrics are aggregated in a single group. When a matching criteria is defined (regexp/url/resourceType), the metrics of all HTTP requests matching it are aggregated in a group, and the non-matching one in a different group (for example with regexp (.*)\\.html then requests will be split in two different groups: one for all HTML pages and another one for all other resources). When multiple matching criteria are defined (regexp/url/resourceType), they are applied in order they are defined."
+					"description": "Real Browser action BrowserCaptureRequests. Configure the capture of HTTP requests metrics for analysis purpose. It allows to capture the metrics (duration, TTFB, success...) of the requests sent and responses received between the browser and the server. By default when no regexp/url/resourceType parameter is specified, then all the HTTP request metrics are aggregated in a single group. When a matching criteria is defined (regexp/url/resourceType), the metrics of all HTTP requests matching it are aggregated in a group, and the non-matching one in a different group (for example with regexp (.*)\\.html then requests will be split in two different groups: one for all HTML pages and another one for all other resources). When multiple matching criteria are defined (regexp/url/resourceType), they are applied in order they are defined."
 				},
 				"browser_capture_web_vitals": {
 					"title": "Action: Real Browser BrowserCaptureWebVitals",
 					"type": "object",
 					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the action. Defaults to `CaptureWebVitals`, the action name in NeoLoad GUI."
-						},
+						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
@@ -3292,7 +3209,7 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Real Browser action BrowserCaptureWebVitals (CaptureWebVitals in NeoLoad GUI). Captures Core Web Vitals metrics during Virtual User navigation. This helps detect performance issues that affect the user experience. NeoLoad collects the following metrics for each defined URL: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), Cumulative Layout Shift (CLS). If you don't define a URL, NeoLoad aggregates metrics across all visited pages. To collect all metrics, place this action before the first Navigate action. The Virtual User needs to stay a minimum amount of time and perform at least one interaction to ensure Web Vitals were collected for a given page."
+					"description": "Real Browser action BrowserCaptureWebVitals. Captures Core Web Vitals metrics during Virtual User navigation. This helps detect performance issues that affect the user experience. NeoLoad collects the following metrics for each defined URL: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), Cumulative Layout Shift (CLS). If you don't define a URL, NeoLoad aggregates metrics across all visited pages. To collect all metrics, place this action before the first Navigate action. The Virtual User needs to stay a minimum amount of time and perform at least one interaction to ensure Web Vitals were collected for a given page."
 				}
 			}
 		},

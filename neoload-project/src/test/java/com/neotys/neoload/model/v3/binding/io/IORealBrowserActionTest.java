@@ -38,7 +38,7 @@ public class IORealBrowserActionTest extends AbstractIOElementsTest {
 	private static CustomAction[] getRealBrowserActions() {
 		return new CustomAction[] {
 				CustomAction.builder()
-						.name("OpenBrowser")
+						.name("BrowserOpen")
 						.type("BrowserOpen")
 						.addParameters(parameter("browser", "chromium"), parameter("resolution", "1920x1080"))
 						.build(),
@@ -70,7 +70,7 @@ public class IORealBrowserActionTest extends AbstractIOElementsTest {
 								parameter("filePaths", "${NL-CustomResources}/a.txt;${NL-CustomResources}/b.txt"))
 						.build(),
 				CustomAction.builder()
-						.name("OpenTab")
+						.name("BrowserOpenTab")
 						.type("BrowserOpenTab")
 						.build(),
 				CustomAction.builder()

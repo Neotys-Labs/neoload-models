@@ -69,6 +69,8 @@ public class IORealBrowserActionSchemaValidationTest {
                         + "        - { name: selector, value: 'role=link[name=\"Log in\"]' }\n"
                         + "        - { name: selector, value: '#login' }\n"
                         + "        - { name: timeout, value: \"8000\" }\n"
+                        + "        - { name: frameName, value: main }\n"
+                        + "        - { name: waitForDownload.path, value: /tmp/report.pdf }\n"
                         + "    - browser_type:\n"
                         + "        name: Type password\n"
                         + "        parameters:\n"

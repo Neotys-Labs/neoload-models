@@ -13,7 +13,7 @@ it is read the same way, but its parameters are not checked. Writing a project a
 
 | Name          | Description                                                                         | Accept variable | Required | Since |
 |:--------------|:------------------------------------------------------------------------------------|:---------------:|:--------:|:-----:|
-| name          | The name of the action. Defaults to the action name in NeoLoad GUI (`Click`, `OpenBrowser`...), see the table below |        -        |    -     |       |
+| name          | The name of the action. Defaults to the action type (`BrowserClick`, `BrowserOpen`...), see the table below |        -        |    -     |       |
 | description   | The description of the action                                                       |        -        |    -     |       |
 | parameters    | The action parameter list, see each action below. Each entry has a `name`, a `value` and an optional `type` (`TEXT` or `PASSWORD`), like the [custom_action parameters](custom_action.md#parameters) |    &#x2713;     | When the action has a required parameter | |
 | asRequest     | Consider the executions as requests in the calculation of the statistics and graphs |        -        |    -     |       |
@@ -62,32 +62,32 @@ description says so, for example `selector`, `header` or `resourceType`.
 
 ## Actions
 
-| Step | NeoLoad GUI action (default name) | Type |
-|:-----|:-------------------|:-----|
-| [browser_open](#browser_open) | OpenBrowser | `BrowserOpen` |
-| [browser_close](#browser_close) | CloseBrowser | `BrowserClose` |
-| [browser_navigate](#browser_navigate) | Navigate | `BrowserNavigate` |
-| [browser_click](#browser_click) | Click | `BrowserClick` |
-| [browser_type](#browser_type) | Type | `BrowserType` |
-| [browser_press](#browser_press) | Press | `BrowserPress` |
-| [browser_select_option](#browser_select_option) | SelectOption | `BrowserSelectOption` |
-| [browser_mouse_over](#browser_mouse_over) | MouseOver | `BrowserMouseOver` |
-| [browser_drag_and_drop](#browser_drag_and_drop) | Drag & Drop | `BrowserDragAndDrop` |
-| [browser_scroll](#browser_scroll) | Scroll | `BrowserScroll` |
-| [browser_read](#browser_read) | Read | `BrowserRead` |
-| [browser_wait_selector](#browser_wait_selector) | WaitSelector | `BrowserWaitSelector` |
-| [browser_evaluate_javascript](#browser_evaluate_javascript) | EvaluateJavascript | `BrowserEvaluateJavascript` |
-| [browser_upload_file](#browser_upload_file) | UploadFile | `BrowserUploadFile` |
-| [browser_handle_dialog](#browser_handle_dialog) | HandleBrowserDialog | `BrowserHandleDialog` |
-| [browser_open_tab](#browser_open_tab) | OpenTab | `BrowserOpenTab` |
-| [browser_switch_tab](#browser_switch_tab) | SwitchTab | `BrowserSwitchTab` |
-| [browser_close_tab](#browser_close_tab) | CloseTab | `BrowserCloseTab` |
-| [browser_capture_requests](#browser_capture_requests) | CaptureRequests | `BrowserCaptureRequests` |
-| [browser_capture_web_vitals](#browser_capture_web_vitals) | CaptureWebVitals | `BrowserCaptureWebVitals` |
+| Step | Type |
+|:-----|:-----|
+| [browser_open](#browser_open) | `BrowserOpen` |
+| [browser_close](#browser_close) | `BrowserClose` |
+| [browser_navigate](#browser_navigate) | `BrowserNavigate` |
+| [browser_click](#browser_click) | `BrowserClick` |
+| [browser_type](#browser_type) | `BrowserType` |
+| [browser_press](#browser_press) | `BrowserPress` |
+| [browser_select_option](#browser_select_option) | `BrowserSelectOption` |
+| [browser_mouse_over](#browser_mouse_over) | `BrowserMouseOver` |
+| [browser_drag_and_drop](#browser_drag_and_drop) | `BrowserDragAndDrop` |
+| [browser_scroll](#browser_scroll) | `BrowserScroll` |
+| [browser_read](#browser_read) | `BrowserRead` |
+| [browser_wait_selector](#browser_wait_selector) | `BrowserWaitSelector` |
+| [browser_evaluate_javascript](#browser_evaluate_javascript) | `BrowserEvaluateJavascript` |
+| [browser_upload_file](#browser_upload_file) | `BrowserUploadFile` |
+| [browser_handle_dialog](#browser_handle_dialog) | `BrowserHandleDialog` |
+| [browser_open_tab](#browser_open_tab) | `BrowserOpenTab` |
+| [browser_switch_tab](#browser_switch_tab) | `BrowserSwitchTab` |
+| [browser_close_tab](#browser_close_tab) | `BrowserCloseTab` |
+| [browser_capture_requests](#browser_capture_requests) | `BrowserCaptureRequests` |
+| [browser_capture_web_vitals](#browser_capture_web_vitals) | `BrowserCaptureWebVitals` |
 
 ## browser_open
 
-Displayed as **OpenBrowser** in NeoLoad GUI, type `BrowserOpen`. Open a new browser.
+Type `BrowserOpen`. Open a new browser.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -118,7 +118,7 @@ Displayed as **OpenBrowser** in NeoLoad GUI, type `BrowserOpen`. Open a new brow
 
 ## browser_close
 
-Displayed as **CloseBrowser** in NeoLoad GUI, type `BrowserClose`. Close the browser. This action is useful for avoiding stacking browser instances on a single VU. The recommended configurations is : If the OpenBrowser action is at the beginning of the ACTIONS container, put the CloseBrowser action at end of the ACTIONS container.
+Type `BrowserClose`. Close the browser. This action is useful for avoiding stacking browser instances on a single VU. The recommended configurations is : If the OpenBrowser action is at the beginning of the ACTIONS container, put the CloseBrowser action at end of the ACTIONS container.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -127,7 +127,7 @@ Displayed as **CloseBrowser** in NeoLoad GUI, type `BrowserClose`. Close the bro
 
 ## browser_navigate
 
-Displayed as **Navigate** in NeoLoad GUI, type `BrowserNavigate`. Navigate to an url.
+Type `BrowserNavigate`. Navigate to an url.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -140,7 +140,7 @@ Displayed as **Navigate** in NeoLoad GUI, type `BrowserNavigate`. Navigate to an
 
 ## browser_click
 
-Displayed as **Click** in NeoLoad GUI, type `BrowserClick`. Click a selector.
+Type `BrowserClick`. Click a selector.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -164,7 +164,7 @@ Displayed as **Click** in NeoLoad GUI, type `BrowserClick`. Click a selector.
 
 ## browser_type
 
-Displayed as **Type** in NeoLoad GUI, type `BrowserType`. Type some text inside an element.
+Type `BrowserType`. Type some text inside an element.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -186,7 +186,7 @@ Displayed as **Type** in NeoLoad GUI, type `BrowserType`. Type some text inside 
 
 ## browser_press
 
-Displayed as **Press** in NeoLoad GUI, type `BrowserPress`. Press a key on a selector.
+Type `BrowserPress`. Press a key on a selector.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -207,7 +207,7 @@ Displayed as **Press** in NeoLoad GUI, type `BrowserPress`. Press a key on a sel
 
 ## browser_select_option
 
-Displayed as **SelectOption** in NeoLoad GUI, type `BrowserSelectOption`. Select one or several options of a select element.
+Type `BrowserSelectOption`. Select one or several options of a select element.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -226,7 +226,7 @@ Displayed as **SelectOption** in NeoLoad GUI, type `BrowserSelectOption`. Select
 
 ## browser_mouse_over
 
-Displayed as **MouseOver** in NeoLoad GUI, type `BrowserMouseOver`. Positions the mouse over the specified coordinates or element location. Scrolls the window when that position is out of the current viewport. Both parameters can be set at the same time, in that case the mouse will be positioned at the specified coordinates relative to the located element instead of the page origin.
+Type `BrowserMouseOver`. Positions the mouse over the specified coordinates or element location. Scrolls the window when that position is out of the current viewport. Both parameters can be set at the same time, in that case the mouse will be positioned at the specified coordinates relative to the located element instead of the page origin.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -243,7 +243,7 @@ Displayed as **MouseOver** in NeoLoad GUI, type `BrowserMouseOver`. Positions th
 
 ## browser_drag_and_drop
 
-Displayed as **Drag & Drop** in NeoLoad GUI, type `BrowserDragAndDrop`. Drag and drop an element onto another element.
+Type `BrowserDragAndDrop`. Drag and drop an element onto another element.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -263,7 +263,7 @@ Displayed as **Drag & Drop** in NeoLoad GUI, type `BrowserDragAndDrop`. Drag and
 
 ## browser_scroll
 
-Displayed as **Scroll** in NeoLoad GUI, type `BrowserScroll`. Scrolls the window to a particular place in the document.
+Type `BrowserScroll`. Scrolls the window to a particular place in the document.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -279,7 +279,7 @@ Displayed as **Scroll** in NeoLoad GUI, type `BrowserScroll`. Scrolls the window
 
 ## browser_read
 
-Displayed as **Read** in NeoLoad GUI, type `BrowserRead`. Read the text content of an Element.
+Type `BrowserRead`. Read the text content of an Element.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -294,7 +294,7 @@ Displayed as **Read** in NeoLoad GUI, type `BrowserRead`. Read the text content 
 
 ## browser_wait_selector
 
-Displayed as **WaitSelector** in NeoLoad GUI, type `BrowserWaitSelector`. Wait for a selector.
+Type `BrowserWaitSelector`. Wait for a selector.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -309,7 +309,7 @@ Displayed as **WaitSelector** in NeoLoad GUI, type `BrowserWaitSelector`. Wait f
 
 ## browser_evaluate_javascript
 
-Displayed as **EvaluateJavascript** in NeoLoad GUI, type `BrowserEvaluateJavascript`. Executes some arbitrary Javascript code in the current page context.
+Type `BrowserEvaluateJavascript`. Executes some arbitrary Javascript code in the current page context.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -328,7 +328,7 @@ Displayed as **EvaluateJavascript** in NeoLoad GUI, type `BrowserEvaluateJavascr
 
 ## browser_upload_file
 
-Displayed as **UploadFile** in NeoLoad GUI, type `BrowserUploadFile`. Upload files to an input element.
+Type `BrowserUploadFile`. Upload files to an input element.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -345,7 +345,7 @@ Displayed as **UploadFile** in NeoLoad GUI, type `BrowserUploadFile`. Upload fil
 
 ## browser_handle_dialog
 
-Displayed as **HandleBrowserDialog** in NeoLoad GUI, type `BrowserHandleDialog`. Set dialog behavior.
+Type `BrowserHandleDialog`. Set dialog behavior.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -355,13 +355,13 @@ Displayed as **HandleBrowserDialog** in NeoLoad GUI, type `BrowserHandleDialog`.
 
 ## browser_open_tab
 
-Displayed as **OpenTab** in NeoLoad GUI, type `BrowserOpenTab`. Open a new tab at the rightmost position.
+Type `BrowserOpenTab`. Open a new tab at the rightmost position.
 
 This action takes no parameter.
 
 ## browser_switch_tab
 
-Displayed as **SwitchTab** in NeoLoad GUI, type `BrowserSwitchTab`. Switch tab to the given index.
+Type `BrowserSwitchTab`. Switch tab to the given index.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -370,7 +370,7 @@ Displayed as **SwitchTab** in NeoLoad GUI, type `BrowserSwitchTab`. Switch tab t
 
 ## browser_close_tab
 
-Displayed as **CloseTab** in NeoLoad GUI, type `BrowserCloseTab`. Close tab at the given index.
+Type `BrowserCloseTab`. Close tab at the given index.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -379,7 +379,7 @@ Displayed as **CloseTab** in NeoLoad GUI, type `BrowserCloseTab`. Close tab at t
 
 ## browser_capture_requests
 
-Displayed as **CaptureRequests** in NeoLoad GUI, type `BrowserCaptureRequests`. Configure the capture of HTTP requests metrics for analysis purpose. It allows to capture the metrics (duration, TTFB, success...) of the requests sent and responses received between the browser and the server. By default when no regexp/url/resourceType parameter is specified, then all the HTTP request metrics are aggregated in a single group. When a matching criteria is defined (regexp/url/resourceType), the metrics of all HTTP requests matching it are aggregated in a group, and the non-matching one in a different group (for example with regexp (.*)\.html then requests will be split in two different groups: one for all HTML pages and another one for all other resources). When multiple matching criteria are defined (regexp/url/resourceType), they are applied in order they are defined.
+Type `BrowserCaptureRequests`. Configure the capture of HTTP requests metrics for analysis purpose. It allows to capture the metrics (duration, TTFB, success...) of the requests sent and responses received between the browser and the server. By default when no regexp/url/resourceType parameter is specified, then all the HTTP request metrics are aggregated in a single group. When a matching criteria is defined (regexp/url/resourceType), the metrics of all HTTP requests matching it are aggregated in a group, and the non-matching one in a different group (for example with regexp (.*)\.html then requests will be split in two different groups: one for all HTML pages and another one for all other resources). When multiple matching criteria are defined (regexp/url/resourceType), they are applied in order they are defined.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -392,7 +392,7 @@ Displayed as **CaptureRequests** in NeoLoad GUI, type `BrowserCaptureRequests`. 
 
 ## browser_capture_web_vitals
 
-Displayed as **CaptureWebVitals** in NeoLoad GUI, type `BrowserCaptureWebVitals`. Captures Core Web Vitals metrics during Virtual User navigation. This helps detect performance issues that affect the user experience. NeoLoad collects the following metrics for each defined URL: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), Cumulative Layout Shift (CLS). If you don't define a URL, NeoLoad aggregates metrics across all visited pages. To collect all metrics, place this action before the first Navigate action. The Virtual User needs to stay a minimum amount of time and perform at least one interaction to ensure Web Vitals were collected for a given page.
+Type `BrowserCaptureWebVitals`. Captures Core Web Vitals metrics during Virtual User navigation. This helps detect performance issues that affect the user experience. NeoLoad collects the following metrics for each defined URL: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), Cumulative Layout Shift (CLS). If you don't define a URL, NeoLoad aggregates metrics across all visited pages. To collect all metrics, place this action before the first Navigate action. The Virtual User needs to stay a minimum amount of time and perform at least one interaction to ensure Web Vitals were collected for a given page.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|

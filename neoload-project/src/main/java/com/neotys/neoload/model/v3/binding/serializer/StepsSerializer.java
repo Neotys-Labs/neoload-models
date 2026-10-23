@@ -91,7 +91,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 			customActionNode = buffer.asParser(generator.getCodec()).readValueAsTree();
 		}
 		customActionNode.remove(CustomAction.TYPE);
-		if (RealBrowserSteps.defaultNameOf(customAction.getType()).equals(customAction.getName())) {
+		if (customAction.getType().equals(customAction.getName())) {
 			customActionNode.remove(Element.NAME);
 		}
 		final String stepName = RealBrowserSteps.stepOf(customAction.getType());

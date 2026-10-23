@@ -159,7 +159,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		if (type == null) {
 			return null;
 		}
-		return CustomAction.builder().name(RealBrowserSteps.defaultNameOf(type)).type(type).build();
+		return CustomAction.builder().name(type).type(type).build();
 	}
 
 	private Step parseRegisteredStep(final ObjectCodec codec, final JsonNode stepNode) throws IOException {
@@ -180,7 +180,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		final ObjectNode customActionNode = stepValue.isObject() ? ((ObjectNode) stepValue).deepCopy() : (ObjectNode) codec.createObjectNode();
 		customActionNode.put(CustomAction.TYPE, type);
 		if (!customActionNode.has(Element.NAME)) {
-			customActionNode.put(Element.NAME, RealBrowserSteps.defaultNameOf(type));
+			customActionNode.put(Element.NAME, type);
 		}
 		return codec.treeToValue(customActionNode, CustomAction.class);
 	}

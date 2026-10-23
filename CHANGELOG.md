@@ -144,8 +144,8 @@ Each Real Browser action of NeoLoad GUI now has its own step, named after the ac
 `browser_open`, `browser_navigate`, `browser_click`, `browser_type`, `browser_upload_file`... (20
 steps). The step name gives the type, so there is no `type` property; the other properties are
 the ones of `custom_action` (`name`, `description`, `parameters`, `asRequest`,
-`duration_assertion`, `size_assertion`). `name` is optional and defaults to the action name in
-NeoLoad GUI (`Click`, `OpenBrowser`...); an action without any setting can be written as a bare
+`duration_assertion`, `size_assertion`). `name` is optional and defaults to the action type
+(`BrowserClick`, `BrowserOpen`...); an action without any setting can be written as a bare
 scalar, for example `- browser_open_tab`. The JSON Schema suggests the parameter names of each
 action with their NeoLoad GUI description, rejects the names the action does not know, and
 requires its mandatory parameters (for example `url` on `browser_navigate`, `selector` and
