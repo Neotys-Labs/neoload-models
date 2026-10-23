@@ -11,6 +11,7 @@ import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
+import com.neotys.neoload.model.v3.project.security.WebServicesSecurity;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.userpath.Step;
@@ -31,7 +32,7 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Project.SCHEMA, Project.SCHEMA_VERSION, Project.NAME, Project.SLA_PROFILES, Project.SERVERS, Project.SHARED_ELEMENTS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
+@JsonPropertyOrder({Project.SCHEMA, Project.SCHEMA_VERSION, Project.NAME, Project.WEB_SERVICES_SECURITY, Project.SLA_PROFILES, Project.SERVERS, Project.SHARED_ELEMENTS, Project.USER_PATHS, Project.POPULATIONS, Project.SCENARIOS, Project.PROJECT_SETTINGS})
 @JsonSerialize(as = ImmutableProject.class)
 @JsonDeserialize(as = ImmutableProject.class)
 @Value.Immutable
@@ -41,6 +42,7 @@ public interface Project {
 	String SCHEMA_VERSION = "schemaVersion";
 	String DEFAULT_SCHEMA_VERSION = "3.0";
 	String NAME = "name";
+	String WEB_SERVICES_SECURITY = "web_services_security";
 	String SLA_PROFILES = "sla_profiles";
 	String VARIABLES = "variables";
 	String SERVERS = "servers";
@@ -64,6 +66,10 @@ public interface Project {
 	@JsonProperty(NAME)
 	@ProjectNameCheck(groups={NeoLoad.class})
 	Optional<String> getName();
+
+	@JsonProperty(WEB_SERVICES_SECURITY)
+	@Valid
+	Optional<WebServicesSecurity> getWebServicesSecurity();
 
 	@JsonProperty(SLA_PROFILES)
 	@UniqueElementNameCheck(groups={NeoLoad.class})
