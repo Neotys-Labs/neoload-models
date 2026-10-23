@@ -5,14 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import java.time.Duration;
+import org.junit.Test;
 
 public class RampupLoadPolicyTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -262,7 +259,7 @@ public class RampupLoadPolicyTest {
 						.value(1)
 						.type(LoadDuration.Type.TIME)
 						.build())
-				.rampup(-1)
+				.rampup(Duration.ofSeconds(-1))
 				.build();
 		Validation validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -275,7 +272,7 @@ public class RampupLoadPolicyTest {
 						.value(1)
 						.type(LoadDuration.Type.TIME)
 						.build())
-				.rampup(0)
+				.rampup(Duration.ofSeconds(0))
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -300,7 +297,7 @@ public class RampupLoadPolicyTest {
 						.value(1)
 						.type(LoadDuration.Type.TIME)
 						.build())
-				.rampup(1)
+				.rampup(Duration.ofSeconds(1))
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertTrue(validation.isValid());

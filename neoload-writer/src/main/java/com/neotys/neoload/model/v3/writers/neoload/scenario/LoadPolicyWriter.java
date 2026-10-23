@@ -4,10 +4,10 @@ import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import java.time.Duration;
+import java.util.Optional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Optional;
 
 public abstract class LoadPolicyWriter {
     // duration-policy-entry
@@ -73,7 +73,7 @@ public abstract class LoadPolicyWriter {
     	Optional.ofNullable(loadPolicy.getStartAfter()).ifPresent(startAfter -> {
         	if (startAfter.getType() == StartAfter.Type.TIME) {
         		xmlElement.setAttribute(XML_ATTR_START_TYPE, "1");
-                xmlElement.setAttribute(XML_ATTR_START_DELAY, String.valueOf((Integer)startAfter.getValue() * 1000));
+                xmlElement.setAttribute(XML_ATTR_START_DELAY, String.valueOf(((Duration) startAfter.getValue()).toMillis()));
         	}
         	else {
         		xmlElement.setAttribute(XML_ATTR_START_TYPE, "2");
@@ -84,7 +84,7 @@ public abstract class LoadPolicyWriter {
     	Optional.ofNullable(loadPolicy.getStopAfter()).ifPresent(stopAfter -> {
         	if (stopAfter.getType() == StopAfter.Type.TIME) {
         		xmlElement.setAttribute(XML_ATTR_STOP_TYPE, "1");
-                xmlElement.setAttribute(XML_ATTR_STOP_DELAY, String.valueOf((Integer)stopAfter.getValue() * 1000));
+                xmlElement.setAttribute(XML_ATTR_STOP_DELAY, String.valueOf(((Duration) stopAfter.getValue()).toMillis()));
         	}
         	else {
         		xmlElement.setAttribute(XML_ATTR_STOP_TYPE, "2");
@@ -99,7 +99,7 @@ public abstract class LoadPolicyWriter {
     	xmlElement.setAttribute(XML_ATTR_VU_START_MODE, "0");
     	Optional.ofNullable(loadPolicy.getRampup()).ifPresent(duration -> {
         	xmlElement.setAttribute(XML_ATTR_VU_START_MODE, "1");
-            xmlElement.setAttribute(XML_ATTR_VU_START_DELAY, String.valueOf(duration * 1000));
+            xmlElement.setAttribute(XML_ATTR_VU_START_DELAY, String.valueOf(duration.toMillis()));
         });
         currentElement.appendChild(xmlElement);    	
     }

@@ -2,6 +2,7 @@ package com.neotys.neoload.model.v3.binding.converter;
 
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import java.time.Duration;
 
 public final class StopAfterToStringConverter extends StdConverter<StopAfter, String> {
 	@Override
@@ -11,7 +12,7 @@ public final class StopAfterToStringConverter extends StdConverter<StopAfter, St
 		String convertedValue;
 		final StopAfter.Type type = stopAfter.getType();
 		if (type == StopAfter.Type.TIME) {
-			convertedValue = TimeDurationHelper.convertToString((Integer) stopAfter.getValue());
+			convertedValue = DurationParser.format((Duration) stopAfter.getValue());
 		}
 		else {
 			convertedValue = "current_iteration";
