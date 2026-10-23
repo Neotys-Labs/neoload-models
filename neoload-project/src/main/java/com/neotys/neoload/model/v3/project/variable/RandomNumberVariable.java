@@ -4,12 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.neotys.neoload.model.v3.project.MinMaxRange;
 import com.neotys.neoload.model.v3.validation.constraints.MinNotGreaterThanMaxCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import java.math.BigDecimal;
-import java.util.Optional;
 import org.immutables.value.Value;
 
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
@@ -19,7 +16,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 @MinNotGreaterThanMaxCheck(element = "random_number", groups = {NeoLoad.class})
-public interface RandomNumberVariable extends ChangePolicyVariable, MinMaxRange {
+public interface RandomNumberVariable extends ChangePolicyVariable {
 
 	String MIN = "min";
 	String MAX = "max";
@@ -38,16 +35,6 @@ public interface RandomNumberVariable extends ChangePolicyVariable, MinMaxRange 
 	@Value.Default
 	default boolean isPredictable() {
 		return false;
-	}
-
-	@Override
-	default Optional<BigDecimal> comparableMin() {
-		return Optional.of(BigDecimal.valueOf(getMin()));
-	}
-
-	@Override
-	default Optional<BigDecimal> comparableMax() {
-		return Optional.of(BigDecimal.valueOf(getMax()));
 	}
 
 
