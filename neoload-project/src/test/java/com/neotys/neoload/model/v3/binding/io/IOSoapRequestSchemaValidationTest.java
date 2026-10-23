@@ -10,6 +10,7 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -134,6 +135,13 @@ public class IOSoapRequestSchemaValidationTest {
         assertFalse("3.1 schema must reject a non-string headers value", errors.isEmpty());
         assertTrue("error must be reported on the headers field",
                 errors.stream().anyMatch(error -> error.getInstanceLocation().toString().contains("headers")));
+    }
+
+    @Test
+    public void soapRequestWithNameValueObjectsAcceptedBySchema3Dot1() throws IOException, URISyntaxException {
+        final URL fixtureUrl = IOSoapRequestSchemaValidationTest.class.getClassLoader().getResource("test-soap-request-name-value.yaml");
+        final JsonNode document = YAML_MAPPER.readTree(new File(fixtureUrl.toURI()));
+        assertTrue("3.1 schema must accept name/value objects", schema31.validate(document).isEmpty());
     }
 
     private static Path locateSchemasDir() throws URISyntaxException {

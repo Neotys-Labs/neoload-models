@@ -177,6 +177,23 @@ public class IORequestSchemaValidationTest {
                         "body: hello\n        bodybinary: SGVsbG8=\n")).isEmpty());
     }
 
+    @Test
+    public void nameValueHeaderObjectAcceptedBySchema3Dot1() throws IOException, URISyntaxException {
+        assertValid("3.1", schema31, readFixture("test-request-header-name-value.yaml"));
+    }
+
+    @Test
+    public void nameValueHeaderObjectWithExtraKeysRejectedBySchema3Dot1() throws IOException, URISyntaxException {
+        final Set<ValidationMessage> errors = schema31.validate(readFixture("test-request-header-name-value-extra-key.yaml"));
+        assertTrue("error must be reported on the header entry: " + errors,
+                errors.stream().anyMatch(error -> error.getInstanceLocation().toString().matches(".*headers.0.*")));
+    }
+
+    private static JsonNode readFixture(String fileName) throws IOException, URISyntaxException {
+        URL fixtureUrl = IORequestSchemaValidationTest.class.getClassLoader().getResource(fileName);
+        return YAML_MAPPER.readTree(new File(fixtureUrl.toURI()));
+    }
+
     private static JsonNode requestWithBodyFields(String extraFields) throws IOException {
         return YAML_MAPPER.readTree(
                 "name: MyProject\n"

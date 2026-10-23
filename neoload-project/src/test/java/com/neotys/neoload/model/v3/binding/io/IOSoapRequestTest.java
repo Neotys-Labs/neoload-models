@@ -213,6 +213,15 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 		assertEquals(expectedDescriptor.toString(), actualDescriptor.toString());
 	}
 
+	@Test
+	public void readSoapRequestWithNameValueObjects() throws IOException {
+		final ProjectDescriptor descriptor = new IO().read(getFile("test-soap-request-name-value", "yaml"));
+
+		final SoapRequest soapRequest = (SoapRequest) descriptor.getProject().getUserPaths().get(0).getActions().getSteps().get(0);
+		assertEquals(ImmutableList.of(NameValue.builder().name("SOAPAction").value("urn:op").build()), soapRequest.getHeaders());
+		assertEquals(ImmutableList.of(NameValue.builder().name("p").value("v").build()), soapRequest.getParameters());
+	}
+
 	private static Project getSoapRequestWithInterleavedDuplicates() {
 		final UserPath userPath = UserPath.builder()
 				.name("MyUserPath")
