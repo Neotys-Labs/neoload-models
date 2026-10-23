@@ -72,8 +72,8 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 			generator.writeStartObject();
 			generator.writeStringField(SHARED_ELEMENT, step.getName());
 			generator.writeEndObject();
-		} else if (step instanceof CustomAction && RealBrowserSteps.stepOf(((CustomAction) step).getType()) != null) {
-			serializeRealBrowserStep((CustomAction) step, generator, provider);
+		} else if (step instanceof CustomAction && CustomActionSteps.stepOf(((CustomAction) step).getType()) != null) {
+			serializeCustomActionStep((CustomAction) step, generator, provider);
 		} else {
 			final String stepName = STEPS.get(step.getClass());
 			if (stepName != null) {
@@ -84,7 +84,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		}
 	}
 
-	private void serializeRealBrowserStep(final CustomAction customAction, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
+	private void serializeCustomActionStep(final CustomAction customAction, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		final ObjectNode customActionNode;
 		try (final TokenBuffer buffer = new TokenBuffer(generator.getCodec(), false)) {
 			provider.defaultSerializeValue(customAction, buffer);
@@ -94,7 +94,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		if (customAction.getType().equals(customAction.getName())) {
 			customActionNode.remove(Element.NAME);
 		}
-		final String stepName = RealBrowserSteps.stepOf(customAction.getType());
+		final String stepName = CustomActionSteps.stepOf(customAction.getType());
 		if (customActionNode.isEmpty()) {
 			generator.writeString(stepName);
 			return;

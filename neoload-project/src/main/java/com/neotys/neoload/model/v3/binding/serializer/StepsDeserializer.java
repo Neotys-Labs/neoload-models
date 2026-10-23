@@ -51,7 +51,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 			StepsDeserializer::parseRendezvous,
 			StepsDeserializer::parseStopVU,
 			StepsDeserializer::parseSharedElementRef,
-			StepsDeserializer::parseBareRealBrowserStep
+			StepsDeserializer::parseBareCustomActionStep
 	);
 
 	public StepsDeserializer() {
@@ -151,11 +151,11 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		return null;
 	}
 
-	private static Step parseBareRealBrowserStep(final JsonNode stepNode) {
+	private static Step parseBareCustomActionStep(final JsonNode stepNode) {
 		if (!stepNode.isTextual()) {
 			return null;
 		}
-		final String type = RealBrowserSteps.typeOf(stepNode.asText());
+		final String type = CustomActionSteps.typeOf(stepNode.asText());
 		if (type == null) {
 			return null;
 		}
@@ -165,9 +165,9 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 	private Step parseRegisteredStep(final ObjectCodec codec, final JsonNode stepNode) throws IOException {
 		final String stepName = stepNode.fieldNames().next();
 		final JsonNode stepValue = stepNode.get(stepName);
-		final String realBrowserType = RealBrowserSteps.typeOf(stepName);
-		if (realBrowserType != null) {
-			return parseRealBrowserStep(codec, stepValue, realBrowserType);
+		final String customActionType = CustomActionSteps.typeOf(stepName);
+		if (customActionType != null) {
+			return parseCustomActionStep(codec, stepValue, customActionType);
 		}
 		final Class<? extends Step> stepClass = STEPS.get(stepName);
 		if (stepClass == null) {
@@ -176,7 +176,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		return codec.treeToValue(stepValue, stepClass);
 	}
 
-	private static Step parseRealBrowserStep(final ObjectCodec codec, final JsonNode stepValue, final String type) throws IOException {
+	private static Step parseCustomActionStep(final ObjectCodec codec, final JsonNode stepValue, final String type) throws IOException {
 		final ObjectNode customActionNode = stepValue.isObject() ? ((ObjectNode) stepValue).deepCopy() : (ObjectNode) codec.createObjectNode();
 		customActionNode.put(CustomAction.TYPE, type);
 		if (!customActionNode.has(Element.NAME)) {

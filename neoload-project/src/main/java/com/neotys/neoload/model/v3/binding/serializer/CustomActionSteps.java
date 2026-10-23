@@ -1,14 +1,16 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 
 /**
- * The Real Browser steps ({@code browser_click}...) are {@link com.neotys.neoload.model.v3.project.userpath.CustomAction}s
- * whose type is given by the step name instead of a {@code type} property. Their name is optional and defaults to the
- * type of the action.
+ * The dedicated steps of the custom actions ({@code browser_click}...): each one is a
+ * {@link com.neotys.neoload.model.v3.project.userpath.CustomAction} whose type is given by the step name instead of a
+ * {@code type} property. Their name is optional and defaults to the type of the action. A family of custom actions
+ * gets its steps by adding its step-to-type table to {@link #TYPES_BY_STEP}.
  */
-final class RealBrowserSteps {
-	private static final ImmutableBiMap<String, String> TYPES_BY_STEP = ImmutableBiMap.<String, String>builder()
+final class CustomActionSteps {
+	private static final ImmutableMap<String, String> REAL_BROWSER = ImmutableMap.<String, String>builder()
 			.put("browser_open", "BrowserOpen")
 			.put("browser_close", "BrowserClose")
 			.put("browser_navigate", "BrowserNavigate")
@@ -31,16 +33,20 @@ final class RealBrowserSteps {
 			.put("browser_capture_web_vitals", "BrowserCaptureWebVitals")
 			.build();
 
-	private RealBrowserSteps() {
+	private static final ImmutableBiMap<String, String> TYPES_BY_STEP = ImmutableBiMap.<String, String>builder()
+			.putAll(REAL_BROWSER)
+			.build();
+
+	private CustomActionSteps() {
 		super();
 	}
 
-	/** @return the custom action type of the step, or {@code null} when the step is not a Real Browser step */
+	/** @return the custom action type of the step, or {@code null} when the step is not a custom action step */
 	static String typeOf(final String stepName) {
 		return TYPES_BY_STEP.get(stepName);
 	}
 
-	/** @return the step name of the custom action type, or {@code null} when the type is not a Real Browser action */
+	/** @return the step name of the custom action type, or {@code null} when the type has no dedicated step */
 	static String stepOf(final String type) {
 		return TYPES_BY_STEP.inverse().get(type);
 	}

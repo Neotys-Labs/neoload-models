@@ -19,12 +19,18 @@ public class IORealBrowserActionTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readRealBrowserActions() throws IOException {
-		read("test-real-browser-actions", buildProject(getRealBrowserActions()));
+		final Project expectedProject = buildProject(getRealBrowserActions());
+		assertNotNull(expectedProject);
+
+		read("test-real-browser-actions", expectedProject);
 	}
 
 	@Test
 	public void readRealBrowserActionsWrittenAsCustomAction() throws IOException {
-		read("test-real-browser-actions-as-custom-action", buildProject(getRealBrowserActions()));
+		final Project expectedProject = buildProject(getRealBrowserActions());
+		assertNotNull(expectedProject);
+
+		read("test-real-browser-actions-as-custom-action", expectedProject);
 	}
 
 	@Test
