@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.readers.jmeter.step.timer.TimerDuration;
 import com.neotys.neoload.model.readers.jmeter.variable.CounterConverter;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
@@ -35,7 +36,7 @@ public class StepConvertersTest {
         hashTree.add(constantTimer);
         List<Step> result = new StepConverters().convertStep(hashTree);
         List<Step> expected = new ArrayList<>();
-        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build());
+        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(TimerDuration.of(constantTimer.getDelay())).build()).build());
         assertEquals(result,expected);
     }
 

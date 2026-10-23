@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.readers;
 
+import com.neotys.neoload.model.readers.jmeter.step.timer.TimerDuration;
 import com.neotys.neoload.model.v3.project.ImmutableProject;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
@@ -45,7 +46,7 @@ public class MainTest {
                                                 .name("Transaction in looper")
                                                 .build())
                                         .addSteps(Delay.builder()
-                                                .duration(DurationConstant.builder().value("200").build())
+                                                .duration(DurationConstant.builder().value(TimerDuration.of("200")).build())
                                                 .name("Delay in looper")
                                                 .build())
                                         .build())
@@ -56,7 +57,7 @@ public class MainTest {
                                                 .operand2("2")
                                                 .build())
                                         .addSteps(Delay.builder().isThinkTime(true)
-                                                .duration(DurationConstant.builder().value("300").build())
+                                                .duration(DurationConstant.builder().value(TimerDuration.of("300")).build())
                                                 .build())
                                         .build()
                                 )

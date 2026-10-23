@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
 import org.junit.Test;
@@ -18,12 +19,12 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
 						.value("0")
 						.isBreak(true)
 						.addSteps(Delay.builder()
-								.duration(DurationConstant.builder().value("1000").build())
+								.duration(DurationConstant.builder().value(Durations.of("1000")).build())
 								.build())
 						.build())
                 .getDefault(Container.builder()
                 		.addSteps(Delay.builder()
-                				.duration(DurationConstant.builder().value("3000").build())
+                				.duration(DurationConstant.builder().value(Durations.of("3000")).build())
                 				.build())
                 		.build())                
                 .build();
@@ -38,7 +39,7 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
                 		.value("0")
                         .isBreak(true)
                         .addSteps(Delay.builder()
-                        		.duration(DurationConstant.builder().value("1000").build())
+                        		.duration(DurationConstant.builder().value(Durations.of("1000")).build())
                         		.build())
                         .build())
 				.addCases(Case.builder()
@@ -46,7 +47,7 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
 						.value("1")
 						.isBreak(false)
 						.addSteps(Delay.builder()
-								.duration(DurationConstant.builder().value("1000").build())
+								.duration(DurationConstant.builder().value(Durations.of("1000")).build())
 								.build())
 						.addContentAssertions(ContentAssertion.builder()
 								.contains("MyCase1Assertion on Content")
@@ -54,7 +55,7 @@ public class IOSwitchTest extends AbstractIOElementsTest  {
 						.build())
                 .getDefault(Container.builder()
                 		.addSteps(Delay.builder()
-                				.duration(DurationConstant.builder().value("3000").build())
+                				.duration(DurationConstant.builder().value(Durations.of("3000")).build())
                 				.build())
                 		.build())                
                 .build();

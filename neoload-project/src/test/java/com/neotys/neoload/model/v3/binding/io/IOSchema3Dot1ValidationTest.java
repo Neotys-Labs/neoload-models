@@ -5,6 +5,8 @@ import static org.junit.Assert.fail;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.validation.validator.Validator;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
@@ -79,6 +81,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
             "test-pacing-invalid-values.yaml",
+            "test-waituntil-invalid-timeout.yaml",
             "test-pacing-malformed-units.yaml",
             "test-pacing-mixed.yaml",
             "test-pacing-on-loop.yaml",
@@ -243,5 +246,31 @@ public class IOSchema3Dot1ValidationTest {
         final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - web_page:\n"
                 + "        think_time: " + thinkTime + "\n        steps:\n        - request:\n            url: http://host:80/\n";
         Assert.assertEquals(thinkTime, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+    }
+
+    @Test
+    public void schemaAndJavaModelAcceptAndRejectTheSameDurationValues() throws IOException {
+        final String[] values = {"90", "90s", "1h30m", "120m", "500ms", "1s1h", "abc", "5x", "-5", "${v}"};
+        final List<String> mismatches = new ArrayList<>();
+
+        for (final DurationFields field : DurationFields.values()) {
+            for (final String value : values) {
+                final String yaml = field.yaml(value);
+                final boolean schemaValid = SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty();
+                if (schemaValid != isValidForJava(yaml)) {
+                    mismatches.add(field + "=" + value + " (schema " + (schemaValid ? "valid" : "invalid") + ")");
+                }
+            }
+        }
+
+        Assert.assertTrue("Schema and Java verdicts differ for: " + mismatches, mismatches.isEmpty());
+    }
+
+    private static boolean isValidForJava(final String yaml) {
+        try {
+            return new Validator().validate(new IO().read(yaml), NeoLoad.class).isValid();
+        } catch (final IOException e) {
+            return false;
+        }
     }
 }
