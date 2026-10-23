@@ -16,6 +16,7 @@ All below steps can be in a [transaction](transaction.md) or a [container](conta
 | [switch](switch.md)               | 2025.1 |
 | [try_catch](try_catch.md)         | 2026.3 |
 | [custom_action](custom_action.md) | 2025.1 |
+| [browser_open, browser_click...](real_browser_actions.md) (Real Browser actions) | 2026.3 |
 | [fork](fork.md)                   | 2026.3 |
 | [variable_modifier](variable_modifier.md)      | 2026.3 |
 | [rendezvous](rendezvous.md)       | 2026.3 |

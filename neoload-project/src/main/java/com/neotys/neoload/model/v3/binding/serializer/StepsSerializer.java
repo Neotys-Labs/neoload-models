@@ -4,6 +4,8 @@ import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.*;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.util.TokenBuffer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.v3.project.Element;
@@ -51,12 +53,12 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 	public void serialize(final List<Step> steps, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		generator.writeStartArray();
 		for (final Step step : steps) {
-			serializeStep(step, generator);
+			serializeStep(step, generator, provider);
 		}
 		generator.writeEndArray();
 	}
 
-	private void serializeStep(final Step step, final JsonGenerator generator) throws IOException {
+	private void serializeStep(final Step step, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		if (step instanceof Delay) {
 			serializeDelay((Delay) step, generator);
 		} else if (step instanceof GoToNextIteration) {
@@ -70,6 +72,8 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 			generator.writeStartObject();
 			generator.writeStringField(SHARED_ELEMENT, step.getName());
 			generator.writeEndObject();
+		} else if (step instanceof CustomAction && CustomActionSteps.stepOf(((CustomAction) step).getType()) != null) {
+			serializeCustomActionStep((CustomAction) step, generator, provider);
 		} else {
 			final String stepName = STEPS.get(step.getClass());
 			if (stepName != null) {
@@ -78,6 +82,27 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 				generator.writeEndObject();
 			}
 		}
+	}
+
+	private void serializeCustomActionStep(final CustomAction customAction, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
+		final ObjectNode customActionNode;
+		try (final TokenBuffer buffer = new TokenBuffer(generator.getCodec(), false)) {
+			provider.defaultSerializeValue(customAction, buffer);
+			customActionNode = buffer.asParser(generator.getCodec()).readValueAsTree();
+		}
+		customActionNode.remove(CustomAction.TYPE);
+		if (customAction.getType().equals(customAction.getName())) {
+			customActionNode.remove(Element.NAME);
+		}
+		final String stepName = CustomActionSteps.stepOf(customAction.getType());
+		if (customActionNode.isEmpty()) {
+			generator.writeString(stepName);
+			return;
+		}
+		generator.writeStartObject();
+		generator.writeFieldName(stepName);
+		generator.writeTree(customActionNode);
+		generator.writeEndObject();
 	}
 
 	private void serializeDelay(final Delay delay, final JsonGenerator generator) throws IOException {

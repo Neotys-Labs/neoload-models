@@ -96,8 +96,10 @@ A Citrix Action:
 - CitrixWindowActivate
 - CitrixWindowWait
 
-A RealBrowser Action:
+A RealBrowser Action. Since 2026.3, prefer the dedicated [Real Browser steps](real_browser_actions.md) (`browser_click`...),
+which document and check the parameters of each action:
 - BrowserCaptureRequests
+- BrowserCaptureWebVitals
 - BrowserClick
 - BrowserClose
 - BrowserCloseTab
@@ -124,6 +126,9 @@ An RTE Action:
 - RTESendKey
 
 This can also be the type of Custom Advanced Action, developed using Java.
+
+A `custom_action` accepts any type and any parameter name. A `custom_action` of a RealBrowser type is written back as its
+[Real Browser step](real_browser_actions.md).
 
 
 ## parameters

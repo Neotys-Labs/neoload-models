@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.*;
@@ -49,7 +50,8 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 			StepsDeserializer::parseThinkTime,
 			StepsDeserializer::parseRendezvous,
 			StepsDeserializer::parseStopVU,
-			StepsDeserializer::parseSharedElementRef
+			StepsDeserializer::parseSharedElementRef,
+			StepsDeserializer::parseBareCustomActionStep
 	);
 
 	public StepsDeserializer() {
@@ -149,13 +151,37 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		return null;
 	}
 
+	private static Step parseBareCustomActionStep(final JsonNode stepNode) {
+		if (!stepNode.isTextual()) {
+			return null;
+		}
+		final String type = CustomActionSteps.typeOf(stepNode.asText());
+		if (type == null) {
+			return null;
+		}
+		return CustomAction.builder().name(type).type(type).build();
+	}
+
 	private Step parseRegisteredStep(final ObjectCodec codec, final JsonNode stepNode) throws IOException {
 		final String stepName = stepNode.fieldNames().next();
+		final JsonNode stepValue = stepNode.get(stepName);
+		final String customActionType = CustomActionSteps.typeOf(stepName);
+		if (customActionType != null) {
+			return parseCustomActionStep(codec, stepValue, customActionType);
+		}
 		final Class<? extends Step> stepClass = STEPS.get(stepName);
 		if (stepClass == null) {
 			return null;
 		}
-		final JsonNode stepValue = stepNode.get(stepName);
 		return codec.treeToValue(stepValue, stepClass);
+	}
+
+	private static Step parseCustomActionStep(final ObjectCodec codec, final JsonNode stepValue, final String type) throws IOException {
+		final ObjectNode customActionNode = stepValue.isObject() ? ((ObjectNode) stepValue).deepCopy() : (ObjectNode) codec.createObjectNode();
+		customActionNode.put(CustomAction.TYPE, type);
+		if (!customActionNode.has(Element.NAME)) {
+			customActionNode.put(Element.NAME, type);
+		}
+		return codec.treeToValue(customActionNode, CustomAction.class);
 	}
 }
