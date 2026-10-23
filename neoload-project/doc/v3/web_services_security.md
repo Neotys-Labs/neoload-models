@@ -66,7 +66,7 @@ web_services_security:
 |:--------------- |:------------------------------------------------- |:---------------:|:--------:|:-----:|
 | actor           | The SOAP actor/role targeted by the header        | -               | -        | 2026.3|
 | must_understand | Whether the receiver must process the header. Defaults to `false` | -               | -        | 2026.3|
-| [tokens](#tokens) | The list of tokens of the header. Each token is a `username`, `timestamp`, `signature` or `encrypt` | - | - | 2026.3|
+| [tokens](#tokens) | The list of tokens of the header. Each token is a `username`, `timestamp`, `signature` or `encryption` | - | - | 2026.3|
 
 ## tokens
 
@@ -77,7 +77,7 @@ Each item of a header `tokens` list holds exactly one token, keyed by its type.
 | [username](#username) | Identifies the user with a user name and an optional password | 2026.3|
 | [timestamp](#timestamp) | Adds the creation and expiry times of the message | 2026.3|
 | [signature](#signature) | Signs the message with a key of a declared keystore | 2026.3|
-| [encrypt](#encrypt) | Encrypts the message with a key of a declared keystore | 2026.3|
+| [encryption](#encryption) | Encrypts the message with a key of a declared keystore | 2026.3|
 
 ### username
 
@@ -129,7 +129,7 @@ Signs the message with a key of a keystore declared in `keystores`.
 | canonicalization_algorithm | `canonical_xml_omit_comments`, `canonical_xml_with_comments`, `exclusive_canonical_xml_omit_comments` or `exclusive_canonical_xml_with_comments`. Defaults to `exclusive_canonical_xml_omit_comments` | - | - | 2026.3|
 | [parts](#parts) | The parts of the message to sign. Defaults to an empty list | - | - | 2026.3|
 
-### encrypt
+### encryption
 
 Encrypts the message with the key of a keystore declared in `keystores`.
 
@@ -163,7 +163,7 @@ tokens:
     digest_algorithm: sha256
     parts:
     - id: Body-1
-- encrypt:
+- encryption:
     keystore: ./wss-keystores/client.p12
     alias: server
     symmetric_encryption_algorithm: aes_256

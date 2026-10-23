@@ -11,7 +11,7 @@ web_services_security:
           alias: client
           parts:
           - id: Body-1
-      - encrypt:
+      - encryption:
           keystore: ./wss-keystores/client.p12
           alias: server
           parts:
