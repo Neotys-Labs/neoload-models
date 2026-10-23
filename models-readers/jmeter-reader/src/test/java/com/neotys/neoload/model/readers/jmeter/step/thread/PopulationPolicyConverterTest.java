@@ -1,15 +1,16 @@
 package com.neotys.neoload.model.readers.jmeter.step.thread;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.*;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.spy;
 
 public class PopulationPolicyConverterTest {
 
@@ -45,8 +46,8 @@ public class PopulationPolicyConverterTest {
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(threadGroup.getNumThreads())
                 .duration(loadDuration)
-                .rampup(rampup)
-                .startAfter(StartAfter.builder().type(StartAfter.Type.TIME).value(69).build())
+                .rampup(SecondsDuration.of(rampup))
+                .startAfter(StartAfter.builder().type(StartAfter.Type.TIME).value(SecondsDuration.of(69)).build())
                 .build();
 
         PopulationPolicy expected = PopulationPolicy.builder()
@@ -78,14 +79,14 @@ public class PopulationPolicyConverterTest {
 
         LoadDuration loadDuration = LoadDuration.builder()
                 .type(LoadDuration.Type.TIME)
-                .value((int) threadGroup.getDuration())
+                .value(SecondsDuration.of(threadGroup.getDuration()))
                 .build();
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(threadGroup.getNumThreads())
                 .duration(loadDuration)
-                .rampup(rampup)
+                .rampup(SecondsDuration.of(rampup))
                 .startAfter(StartAfter.builder()
-                        .value(delay)
+                        .value(SecondsDuration.of(delay))
                         .type(StartAfter.Type.TIME)
                         .build())
                 .build();
@@ -123,9 +124,9 @@ public class PopulationPolicyConverterTest {
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(numThreads)
                 .duration(loadDuration)
-                .rampup(rampup)
+                .rampup(SecondsDuration.of(rampup))
                 .startAfter(StartAfter.builder()
-                        .value(delay)
+                        .value(SecondsDuration.of(delay))
                         .type(StartAfter.Type.TIME)
                         .build()
                 ).build();

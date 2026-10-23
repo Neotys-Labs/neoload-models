@@ -1,8 +1,9 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
+import org.junit.Test;
 
 public class WaitUntilTest {
 	@Test
@@ -14,6 +15,6 @@ public class WaitUntilTest {
 		assertEquals("timeout", WaitUntil.TIMEOUT);
 
 		assertEquals("wait_until", WaitUntil.DEFAULT_NAME);
-		assertEquals("60000", WaitUntil.DEFAULT_TIMEOUT);
+		assertEquals(MillisecondsDuration.of(60000), WaitUntil.DEFAULT_TIMEOUT);
 	}
 }

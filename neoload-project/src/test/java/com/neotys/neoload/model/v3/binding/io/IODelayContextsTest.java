@@ -13,6 +13,7 @@ import static org.junit.Assert.fail;
 
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.Duration;
@@ -79,7 +80,7 @@ public class IODelayContextsTest {
 
 		private Step step(final Duration duration) {
 			switch (this) {
-				case PACING: return Container.builder().pacing(duration).addSteps(Delay.builder().duration(DurationConstant.builder().value("1000").build()).build()).build();
+				case PACING: return Container.builder().pacing(duration).addSteps(Delay.builder().duration(DurationConstant.builder().value(MillisecondsDuration.of(1000)).build()).build()).build();
 				case WEB_PAGE: return WebPage.builder().thinkTime(duration).addSteps(Request.builder().url("http://host:80/").build()).build();
 				default: return Delay.builder().isThinkTime(this == THINK_TIME_STEP).duration(duration).build();
 			}
@@ -107,7 +108,7 @@ public class IODelayContextsTest {
 
 	@Test
 	public void writeRandomWithoutMinOmitsMin() throws IOException {
-		final String yaml = write(context.project(DurationRandom.builder().max("5000").build()));
+		final String yaml = write(context.project(DurationRandom.builder().max(MillisecondsDuration.of(5000)).build()));
 
 		assertTrue(yaml, yaml.contains("max: 5s"));
 		assertFalse(yaml, yaml.contains("min"));
@@ -115,7 +116,7 @@ public class IODelayContextsTest {
 
 	@Test
 	public void writeRandomWithZeroMinOmitsMin() throws IOException {
-		final String yaml = write(context.project(DurationRandom.builder().min("0").max("5000").build()));
+		final String yaml = write(context.project(DurationRandom.builder().min(MillisecondsDuration.of(0)).max(MillisecondsDuration.of(5000)).build()));
 
 		assertTrue(yaml, yaml.contains("max: 5s"));
 		assertFalse(yaml, yaml.contains("min"));
@@ -123,7 +124,7 @@ public class IODelayContextsTest {
 
 	@Test
 	public void writeRandomWithMinKeepsMin() throws IOException {
-		final String yaml = write(context.project(DurationRandom.builder().min("2000").max("5000").build()));
+		final String yaml = write(context.project(DurationRandom.builder().min(MillisecondsDuration.of(2000)).max(MillisecondsDuration.of(5000)).build()));
 
 		assertTrue(yaml, yaml.contains("min: 2s"));
 		assertTrue(yaml, yaml.contains("max: 5s"));
@@ -131,22 +132,22 @@ public class IODelayContextsTest {
 
 	@Test
 	public void writeConstantInCompactUnitFormat() throws IOException {
-		assertTrue(write(context.project(DurationConstant.builder().value("3601000").build())).contains(context.key + ": 1h1s"));
-		assertTrue(write(context.project(DurationConstant.builder().value("1500").build())).contains(context.key + ": 1s500ms"));
-		assertTrue(write(context.project(DurationConstant.builder().value("${var}").build())).contains("${var}"));
+		assertTrue(write(context.project(DurationConstant.builder().value(MillisecondsDuration.of(3601000)).build())).contains(context.key + ": 1h1s"));
+		assertTrue(write(context.project(DurationConstant.builder().value(MillisecondsDuration.of(1500)).build())).contains(context.key + ": 1s500ms"));
+		assertTrue(write(context.project(DurationConstant.builder().value(MillisecondsDuration.ofVariable("var")).build())).contains("${var}"));
 	}
 
 	@Test
 	public void readRandomWithoutMinHasNoMinimum() throws IOException {
 		final Project project = read("{max: 5s}");
 
-		assertEquals(DurationRandom.builder().max("5000").build(), context.duration(project));
+		assertEquals(DurationRandom.builder().max(MillisecondsDuration.of(5000)).build(), context.duration(project));
 		assertTrue(VALIDATOR.validate(ProjectDescriptor.builder().project(project).build(), NeoLoad.class).isValid());
 	}
 
 	@Test
 	public void readConstantInScalarAndObjectForm() throws IOException {
-		final Duration expected = DurationConstant.builder().value("90000").build();
+		final Duration expected = DurationConstant.builder().value(MillisecondsDuration.of(90000)).build();
 
 		for (final String delayYaml : new String[] {"1m 30s", "{value: 90000}"}) {
 			final Project project = read(delayYaml);
@@ -160,7 +161,7 @@ public class IODelayContextsTest {
 	public void readPlainNumberAsMilliseconds() throws IOException {
 		final Project project = read("{value: 2000}");
 
-		assertEquals(DurationConstant.builder().value("2000").build(), context.duration(project));
+		assertEquals(DurationConstant.builder().value(MillisecondsDuration.of(2000)).build(), context.duration(project));
 		assertTrue(write(project).contains(context.key + ": 2s"));
 	}
 
@@ -168,7 +169,7 @@ public class IODelayContextsTest {
 	public void readConstantWithSpacesBetweenUnits() throws IOException {
 		final Project project = read("1h 1m 1s 1ms");
 
-		assertEquals(DurationConstant.builder().value("3661001").build(), context.duration(project));
+		assertEquals(DurationConstant.builder().value(MillisecondsDuration.of(3661001)).build(), context.duration(project));
 		assertTrue(VALIDATOR.validate(ProjectDescriptor.builder().project(project).build(), NeoLoad.class).isValid());
 	}
 
@@ -185,10 +186,10 @@ public class IODelayContextsTest {
 	@Test
 	public void validateVariableFollowsVariableNameRules() {
 		for (final String variable : new String[] {"${my-var}", "${my var}", "${file.column}"}) {
-			assertTrue(variable, validate(context.project(DurationConstant.builder().value(variable).build())).isValid());
+			assertTrue(variable, validate(context.project(DurationConstant.builder().value(MillisecondsDuration.parse(variable)).build())).isValid());
 		}
 		for (final String variable : new String[] {"${}", "${a$b}", "${a€b}", "${a#b}", "${a.}", "${.a}", "${a{b}}"}) {
-			assertViolations(validate(context.project(DurationConstant.builder().value(variable).build())), invalidDuration(context.path + ".value", variable));
+			assertViolations(validate(context.project(DurationConstant.builder().value(MillisecondsDuration.parse(variable)).build())), invalidDuration(context.path + ".value", variable));
 		}
 	}
 

@@ -2,10 +2,8 @@ package com.neotys.neoload.model.v3.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.google.common.primitives.Doubles;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
@@ -15,6 +13,8 @@ import com.neotys.neoload.model.v3.project.scenario.LoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import java.util.List;
+import java.util.Optional;
 
 public final class ScenarioUtils {
 	private static final int UNDETERMINED_MAX_VUS = -1;
@@ -22,7 +22,7 @@ public final class ScenarioUtils {
 			.maxUsers(Optional.of(0))
 			.duration(Optional.of(LoadDuration.builder()
 					.type(Type.TIME)
-					.value(0)
+					.value(SecondsDuration.of(0))
 					.build()))
 			.build();
 	
@@ -139,7 +139,7 @@ public final class ScenarioUtils {
 
 		return LoadDuration.builder()
 				.type(Type.TIME)
-				.value(Math.max(currentDuration.getValue(), maxDuration.getValue()))
+				.value(SecondsDuration.of(Math.max(currentDuration.amount().orElse(0), maxDuration.amount().orElse(0))))
 				.build();
 	}
 
@@ -185,8 +185,8 @@ public final class ScenarioUtils {
 		if (duration != null) {
 			final int minUsers = loadPolicy.getMinUsers();
 			final int incrementUsers = loadPolicy.getIncrementUsers();
-			final Integer delayIncrement = loadPolicy.getIncrementEvery().getValue();
-			return computeMaxUsersFromRampupLoadPolicy(minUsers, incrementUsers, delayIncrement, maxUsers, duration.getValue());
+			final int delayIncrement = (int) loadPolicy.getIncrementEvery().amount().orElse(0);
+			return computeMaxUsersFromRampupLoadPolicy(minUsers, incrementUsers, delayIncrement, maxUsers, (int) duration.amount().orElse(0));
 		} 
 		return (maxUsers != null) ? maxUsers : UNDETERMINED_MAX_VUS;		
 	}
@@ -203,7 +203,7 @@ public final class ScenarioUtils {
 		return steps.get(steps.size() - 1).getWhen();
 	}
 
-	private static int computeMaxUsersFromRampupLoadPolicy(final int minUsers, final int incrementUsers, final Integer delayIncrement, Integer maxUsers, final Integer duration) {
+	private static int computeMaxUsersFromRampupLoadPolicy(final int minUsers, final int incrementUsers, final int delayIncrement, Integer maxUsers, final int duration) {
 		if (duration == -1) return -1;
 		if (maxUsers == null) maxUsers = Integer.MAX_VALUE;
 		int ratio = (duration / delayIncrement);

@@ -1,14 +1,12 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
 import com.neotys.neoload.model.v3.validation.constraints.DurationRandomMaxGreaterThanMinCheck;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import javax.validation.ConstraintValidatorContext;
 
 public final class DurationRandomMaxGreaterThanMinValidator extends AbstractConstraintValidator<DurationRandomMaxGreaterThanMinCheck, DurationRandom> {
-	private static final Pattern MILLISECONDS = Pattern.compile("\\d+");
-
 	@Override
 	public boolean isValid(final DurationRandom duration, final ConstraintValidatorContext context) {
 		if (duration == null) {
@@ -22,10 +20,10 @@ public final class DurationRandomMaxGreaterThanMinValidator extends AbstractCons
 		return max.get() > min.get();
 	}
 
-	private static Optional<Long> toMilliseconds(final String value) {
-		if (value == null || !MILLISECONDS.matcher(value).matches()) {
+	private static Optional<Long> toMilliseconds(final MillisecondsDuration value) {
+		if (value == null || !value.isLiteral()) {
 			return Optional.empty();
 		}
-		return Optional.of(Long.parseLong(value));
+		return Optional.of(value.getAmount());
 	}
 }

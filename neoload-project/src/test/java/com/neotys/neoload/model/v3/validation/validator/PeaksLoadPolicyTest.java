@@ -5,15 +5,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import org.junit.Test;
 
 public class PeaksLoadPolicyTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -50,7 +47,7 @@ public class PeaksLoadPolicyTest {
 				.maximum(PeakLoadPolicy.builder()
 						.users(10)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
@@ -65,7 +62,7 @@ public class PeaksLoadPolicyTest {
 				.maximum(PeakLoadPolicy.builder()
 						.users(10)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
@@ -79,14 +76,14 @@ public class PeaksLoadPolicyTest {
 				.minimum(PeakLoadPolicy.builder()
 						.users(1)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
 				.maximum(PeakLoadPolicy.builder()
 						.users(10)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
@@ -105,7 +102,7 @@ public class PeaksLoadPolicyTest {
 				.minimum(PeakLoadPolicy.builder()
 						.users(10)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
@@ -119,7 +116,7 @@ public class PeaksLoadPolicyTest {
 				.minimum(PeakLoadPolicy.builder()
 						.users(10)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
@@ -134,14 +131,14 @@ public class PeaksLoadPolicyTest {
 				.minimum(PeakLoadPolicy.builder()
 						.users(1)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
 				.maximum(PeakLoadPolicy.builder()
 						.users(10)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
@@ -160,14 +157,14 @@ public class PeaksLoadPolicyTest {
 				.minimum(PeakLoadPolicy.builder()
 						.users(1)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
 				.maximum(PeakLoadPolicy.builder()
 						.users(10)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
@@ -180,14 +177,14 @@ public class PeaksLoadPolicyTest {
 				.minimum(PeakLoadPolicy.builder()
 						.users(1)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
 				.maximum(PeakLoadPolicy.builder()
 						.users(10)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
@@ -201,14 +198,14 @@ public class PeaksLoadPolicyTest {
 				.minimum(PeakLoadPolicy.builder()
 						.users(1)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())
 				.maximum(PeakLoadPolicy.builder()
 						.users(10)
 						.duration(LoadDuration.builder()
-								.value(1)
+								.value(SecondsDuration.of(1))
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.build())

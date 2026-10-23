@@ -5,17 +5,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import org.junit.Test;
 
 public class StartAfterTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
+	private static final String CONSTRAINTS_INVALID_TIME = "Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR +
+			"Violation 1 - Incorrect value for '': '-10' is not a valid duration, expected ordered units such as 1h30m15s or a number of seconds." + LINE_SEPARATOR;
+
 	private static final String CONSTRAINTS_VALUE;
 	static {
 		final StringBuilder sb = new StringBuilder();
@@ -67,12 +67,12 @@ public class StartAfterTest {
 		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
-				.value(-10)
+				.value(SecondsDuration.of(-10))
 				.type(StartAfter.Type.TIME)
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
+		assertEquals(CONSTRAINTS_INVALID_TIME, validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
 				.value(-10)
@@ -83,7 +83,7 @@ public class StartAfterTest {
 		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
-				.value(0)
+				.value(SecondsDuration.of(0))
 				.type(StartAfter.Type.TIME)
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);
@@ -99,7 +99,7 @@ public class StartAfterTest {
 		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
-				.value(1)
+				.value(SecondsDuration.of(1))
 				.type(StartAfter.Type.TIME)
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);
@@ -159,7 +159,7 @@ public class StartAfterTest {
 		assertFalse(validation.getMessage().isPresent());	
 
 		startAfter = StartAfter.builder()
-				.value(1)
+				.value(SecondsDuration.of(1))
 				.type(StartAfter.Type.TIME)
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);

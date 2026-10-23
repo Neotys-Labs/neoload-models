@@ -1,20 +1,17 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
-import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationInMsOrInVariableConverter.STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
+import com.neotys.neoload.model.v3.binding.converter.StringToMillisecondsDurationConverter;
 import com.neotys.neoload.model.v3.project.Element;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Duration;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Reads a {@link Duration} from three syntaxes: a scalar, an object with {@code value}, or an object
@@ -23,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class DurationDeserializer extends StdDeserializer<Duration> {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(DurationDeserializer.class);
+	private static final StringToMillisecondsDurationConverter TO_DURATION = new StringToMillisecondsDurationConverter();
 
 	public DurationDeserializer() {
 		super(Duration.class);
@@ -70,16 +67,7 @@ public final class DurationDeserializer extends StdDeserializer<Duration> {
 		return builder.build();
 	}
 
-	/**
-	 * Text the converter cannot parse is kept as-is, so that validation reports it rather than reading it as zero.
-	 */
-	private static String convertDuration(final JsonNode node) {
-		final String text = node.asText();
-		try {
-			return STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(text);
-		} catch (final InvalidDurationException e) {
-			LOGGER.debug("Duration kept as-is for validation", e);
-			return text;
-		}
+	private static MillisecondsDuration convertDuration(final JsonNode node) {
+		return TO_DURATION.convert(node.asText());
 	}
 }

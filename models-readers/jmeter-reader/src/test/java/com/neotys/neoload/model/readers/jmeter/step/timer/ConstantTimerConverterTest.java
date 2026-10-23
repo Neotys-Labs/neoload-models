@@ -5,6 +5,7 @@ import static org.mockito.Mockito.spy;
 
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
@@ -30,7 +31,7 @@ public class ConstantTimerConverterTest {
         ConstantTimerConverter constantTimerConverter = new ConstantTimerConverter();
         List<Step> result = constantTimerConverter.apply(constantTimer, null);
         List<Step> expected = new ArrayList<>();
-        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build());
+        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(MillisecondsDuration.parse(constantTimer.getDelay())).build()).build());
         assertEquals(result,expected);
 
     }

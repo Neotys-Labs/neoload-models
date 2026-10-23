@@ -2,6 +2,7 @@ package com.neotys.neoload.model.readers.jmeter.step.timer;
 
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Step;
@@ -28,7 +29,7 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
         final Delay delay = Delay.builder()
                 .name(uniformRandomTimer.getName())
                 .description(uniformRandomTimer.getComment())
-                .duration(DurationConstant.builder().value(checkDelay(uniformRandomTimer)).build())
+                .duration(DurationConstant.builder().value(MillisecondsDuration.parse(checkDelay(uniformRandomTimer))).build())
                 .build();
         LOGGER.info("Uniform Random Timer Correctly converted");
         EventListenerUtils.readSupportedFunction("UniformRandomTimer","Uniform Random Timer");

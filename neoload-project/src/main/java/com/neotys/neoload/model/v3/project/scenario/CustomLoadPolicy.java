@@ -7,17 +7,17 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.validation.constraints.CustomPolicyStepsAtLeastOneGreaterThanZeroDurationCheck;
 import com.neotys.neoload.model.v3.validation.constraints.CustomPolicyStepsOrderedCheck;
 import com.neotys.neoload.model.v3.validation.constraints.CustomPolicyStepsSameDurationTypeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
-
+import java.util.List;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
-import java.util.List;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
 
 @JsonInclude(value= JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({StartStopPolicy.START_AFTER, CustomLoadPolicy.RAMPUP, StartStopPolicy.STOP_AFTER, CustomLoadPolicy.STEPS})
@@ -39,7 +39,7 @@ public interface CustomLoadPolicy extends LoadPolicy {
     List<CustomPolicyStep> getSteps();
 
     @JsonProperty(RAMPUP)
-    Integer getRampup();
+    SecondsDuration getRampup();
 
     @JsonIgnore
     @Value.Derived

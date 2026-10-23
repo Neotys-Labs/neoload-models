@@ -24,7 +24,8 @@ public class CustomStepWriter {
 
         String customLoadPolicyDuration = String.valueOf(customPolicyStep
                 .getWhen()
-                .getValue()
+                .amount()
+                .getAsLong()
         );
         if (LoadDuration.Type.ITERATION.equals(customPolicyStep.getWhen().getType())) {
             xmlElement.setAttribute(XML_ATTR_ITERATION, customLoadPolicyDuration);

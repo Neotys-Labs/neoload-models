@@ -1,13 +1,13 @@
 package com.neotys.neoload.model.v3.writers.neoload.scenario;
 
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import java.util.Optional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Optional;
 
 public abstract class LoadPolicyWriter {
     // duration-policy-entry
@@ -53,7 +53,7 @@ public abstract class LoadPolicyWriter {
         Optional.ofNullable(loadPolicy.getDuration()).ifPresent(duration -> {
         	if (duration.getType() == LoadDuration.Type.TIME) {
         		xmlElement.setAttribute(XML_ATTR_TYPE, "2");
-                xmlElement.setAttribute(XML_ATTR_TIME, String.valueOf(duration.getValue()));
+                xmlElement.setAttribute(XML_ATTR_TIME, String.valueOf(duration.amount().getAsLong()));
                 xmlElement.setAttribute(XML_ATTR_TIMEUNIT, "0");
         	}
         	else {
@@ -73,7 +73,7 @@ public abstract class LoadPolicyWriter {
     	Optional.ofNullable(loadPolicy.getStartAfter()).ifPresent(startAfter -> {
         	if (startAfter.getType() == StartAfter.Type.TIME) {
         		xmlElement.setAttribute(XML_ATTR_START_TYPE, "1");
-                xmlElement.setAttribute(XML_ATTR_START_DELAY, String.valueOf((Integer)startAfter.getValue() * 1000));
+                xmlElement.setAttribute(XML_ATTR_START_DELAY, String.valueOf(((SecondsDuration) startAfter.getValue()).getAmount() * 1000));
         	}
         	else {
         		xmlElement.setAttribute(XML_ATTR_START_TYPE, "2");
@@ -84,7 +84,7 @@ public abstract class LoadPolicyWriter {
     	Optional.ofNullable(loadPolicy.getStopAfter()).ifPresent(stopAfter -> {
         	if (stopAfter.getType() == StopAfter.Type.TIME) {
         		xmlElement.setAttribute(XML_ATTR_STOP_TYPE, "1");
-                xmlElement.setAttribute(XML_ATTR_STOP_DELAY, String.valueOf((Integer)stopAfter.getValue() * 1000));
+                xmlElement.setAttribute(XML_ATTR_STOP_DELAY, String.valueOf(((SecondsDuration) stopAfter.getValue()).getAmount() * 1000));
         	}
         	else {
         		xmlElement.setAttribute(XML_ATTR_STOP_TYPE, "2");
@@ -99,7 +99,7 @@ public abstract class LoadPolicyWriter {
     	xmlElement.setAttribute(XML_ATTR_VU_START_MODE, "0");
     	Optional.ofNullable(loadPolicy.getRampup()).ifPresent(duration -> {
         	xmlElement.setAttribute(XML_ATTR_VU_START_MODE, "1");
-            xmlElement.setAttribute(XML_ATTR_VU_START_DELAY, String.valueOf(duration * 1000));
+            xmlElement.setAttribute(XML_ATTR_VU_START_DELAY, String.valueOf(duration.getAmount() * 1000));
         });
         currentElement.appendChild(xmlElement);    	
     }

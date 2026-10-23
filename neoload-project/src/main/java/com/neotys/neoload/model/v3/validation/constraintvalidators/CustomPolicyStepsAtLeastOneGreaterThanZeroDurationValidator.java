@@ -1,11 +1,9 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
-import com.neotys.neoload.model.v3.project.Composite;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.validation.constraints.CustomPolicyStepsAtLeastOneGreaterThanZeroDurationCheck;
-
-import javax.validation.ConstraintValidatorContext;
 import java.util.List;
+import javax.validation.ConstraintValidatorContext;
 
 public final class CustomPolicyStepsAtLeastOneGreaterThanZeroDurationValidator extends AbstractConstraintValidator<CustomPolicyStepsAtLeastOneGreaterThanZeroDurationCheck, List<CustomPolicyStep>> {
     @Override
@@ -13,14 +11,13 @@ public final class CustomPolicyStepsAtLeastOneGreaterThanZeroDurationValidator e
         if (customPolicySteps == null ||
                 customPolicySteps.isEmpty() ||
                 customPolicySteps.stream().anyMatch(customPolicyStep ->
-                        customPolicyStep.getWhen() == null || customPolicyStep.getWhen().getValue() == null
+                        customPolicyStep.getWhen() == null || !customPolicyStep.getWhen().amount().isPresent()
                 )
         ) {
             return true;
         }
         return customPolicySteps.stream()
                 .map(CustomPolicyStep::getWhen)
-                .map(Composite::getValue)
-                .anyMatch(integer -> integer > 0);
+                .anyMatch(when -> when.amount().getAsLong() > 0);
     }
 }

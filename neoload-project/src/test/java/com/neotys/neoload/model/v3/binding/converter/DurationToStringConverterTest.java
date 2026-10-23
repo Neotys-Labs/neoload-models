@@ -3,19 +3,17 @@ package com.neotys.neoload.model.v3.binding.converter;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.converter.DurationToStringConverter;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration.Type;
-
+import org.junit.Test;
 
 public class DurationToStringConverterTest {
 	private static final String ZERO = "0";
 	
 	private LoadDuration convertToTimeDuration(final int input) {
 		return LoadDuration.builder()
-				.value(input)
+				.value(SecondsDuration.of(input))
 				.type(Type.TIME)
 				.build();
 	}
@@ -35,8 +33,7 @@ public class DurationToStringConverterTest {
 		assertEquals(null, converter.convert(null));
 
 		// TIME
-		// Input: -1 - Output: 0O
-		assertEquals(ZERO, converter.convert(convertToTimeDuration(-1)));
+		assertEquals("-1", converter.convert(convertToTimeDuration(-1)));
 		// Input: 0 - Output: 0
 		assertEquals(ZERO, converter.convert(convertToTimeDuration(0)));
 

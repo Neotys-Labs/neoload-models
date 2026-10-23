@@ -1,16 +1,16 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.Collections;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 public class CustomPolicyStepsAtLeastOneGreaterThanZeroDurationValidatorTest {
 
@@ -27,7 +27,7 @@ public class CustomPolicyStepsAtLeastOneGreaterThanZeroDurationValidatorTest {
     @Test
     public void stepsWithoutDurationIsValid() {
         ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
+                .value(SecondsDuration.of(100))
                 .type(LoadDuration.Type.TIME)
                 .build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
@@ -43,7 +43,7 @@ public class CustomPolicyStepsAtLeastOneGreaterThanZeroDurationValidatorTest {
     @Test
     public void stepsWithoutDurationValueIsValid() {
         ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
+                .value(SecondsDuration.of(100))
                 .type(LoadDuration.Type.TIME)
                 .build();
         ImmutableLoadDuration loadDurationWithoutValue = LoadDuration.builder()
@@ -63,7 +63,7 @@ public class CustomPolicyStepsAtLeastOneGreaterThanZeroDurationValidatorTest {
     @Test
     public void stepsWithoutDurationValueGreaterThanZeroIsInvalid() {
         ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(0)
+                .value(SecondsDuration.of(0))
                 .type(LoadDuration.Type.TIME)
                 .build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
@@ -76,11 +76,11 @@ public class CustomPolicyStepsAtLeastOneGreaterThanZeroDurationValidatorTest {
     @Test
     public void isValid() {
         ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
+                .value(SecondsDuration.of(100))
                 .type(LoadDuration.Type.TIME)
                 .build();
         ImmutableLoadDuration loadDuration2 = LoadDuration.builder()
-                .value(0)
+                .value(SecondsDuration.of(0))
                 .type(LoadDuration.Type.TIME)
                 .build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()

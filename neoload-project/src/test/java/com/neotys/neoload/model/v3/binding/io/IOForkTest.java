@@ -4,6 +4,7 @@ package com.neotys.neoload.model.v3.binding.io;
 import static junit.framework.TestCase.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
@@ -50,7 +51,7 @@ public class IOForkTest extends AbstractIOElementsTest {
 	private Project buildProjectContainingFork_OnlyRequired() {
 		final Fork fork = Fork.builder()
 				.addSteps(
-						Delay.builder().duration(DurationConstant.builder().value("1000").build()).build()
+						Delay.builder().duration(DurationConstant.builder().value(MillisecondsDuration.of(1000)).build()).build()
 				)
 				.build();
 
@@ -75,7 +76,7 @@ public class IOForkTest extends AbstractIOElementsTest {
 				.description("MyForkDescription")
 				.copyVariables(true)
 				.addSteps(
-						Delay.builder().duration(DurationConstant.builder().value("1000").build()).build()
+						Delay.builder().duration(DurationConstant.builder().value(MillisecondsDuration.of(1000)).build()).build()
 				)
 				.build();
 

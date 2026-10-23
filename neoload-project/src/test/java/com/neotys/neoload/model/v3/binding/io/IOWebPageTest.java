@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.duration.MillisecondsDuration;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
 import com.neotys.neoload.model.v3.project.userpath.ExecuteResources;
@@ -76,7 +77,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeConstant() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(DurationConstant.builder().value("2000").build())
+				.thinkTime(DurationConstant.builder().value(MillisecondsDuration.of(2000)).build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -87,7 +88,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeRandom() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(DurationRandom.builder().min("1000").max("5000").build())
+				.thinkTime(DurationRandom.builder().min(MillisecondsDuration.of(1000)).max(MillisecondsDuration.of(5000)).build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -98,7 +99,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeRandomDefaultsMin() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(DurationRandom.builder().max("5000").build())
+				.thinkTime(DurationRandom.builder().max(MillisecondsDuration.of(5000)).build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -110,15 +111,15 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	public void readWebPageThinkTimeValuesPreservedVerbatim() throws IOException {
 		final Project expectedProject = buildProject(
 				WebPage.builder()
-						.thinkTime(DurationConstant.builder().value("2").build())
+						.thinkTime(DurationConstant.builder().value(MillisecondsDuration.of(2)).build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build(),
 				WebPage.builder()
-						.thinkTime(DurationConstant.builder().value("500").build())
+						.thinkTime(DurationConstant.builder().value(MillisecondsDuration.of(500)).build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build(),
 				WebPage.builder()
-						.thinkTime(DurationConstant.builder().value("${max_think_time}").build())
+						.thinkTime(DurationConstant.builder().value(MillisecondsDuration.ofVariable("max_think_time")).build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build());
 		assertNotNull(expectedProject);
@@ -260,7 +261,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 				.name("MyWebPage")
 				.description("My Web Page")
 				.slaProfile("MySlaProfile")
-				.thinkTime(DurationConstant.builder().value("2000").build())
+				.thinkTime(DurationConstant.builder().value(MillisecondsDuration.of(2000)).build())
 				.playback(Playback.SEQUENTIAL)
 				.executeResources(ExecuteResources.DYNAMIC)
 				.addSteps(

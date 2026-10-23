@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.gson.Gson;
@@ -29,7 +30,7 @@ public interface ConstantLoadPolicy extends LoadPolicy {
 	int getUsers();
 
 	@JsonProperty(RAMPUP)
-	Integer getRampup();
+	SecondsDuration getRampup();
 
     @Value.Check
     default void check() {

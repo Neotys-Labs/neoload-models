@@ -3,19 +3,24 @@ package com.neotys.neoload.model.v3.binding.converter;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.converter.StringToDurationConverter;
+import com.neotys.neoload.model.v3.project.duration.SecondsDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration.Type;
-
+import org.junit.Test;
 
 public class StringToDurationConverterTest {
 	private static final LoadDuration ERROR = LoadDuration.builder().build();
 
+	private static LoadDuration convertToInvalidTimeDuration(final String input) {
+		return LoadDuration.builder()
+				.value(SecondsDuration.parse(input))
+				.type(Type.TIME)
+				.build();
+	}
+
 	private static LoadDuration convertToTimeDuration(final int input) {
 		return LoadDuration.builder()
-				.value(input)
+				.value(SecondsDuration.of(input))
 				.type(Type.TIME)
 				.build();
 	}
@@ -34,12 +39,9 @@ public class StringToDurationConverterTest {
 		assertEquals(ERROR, converter.convert(null));
 		// Input: EMPTY - Output: -1
 		assertEquals(ERROR, converter.convert(""));
-		// Input: -1 - Output: -1
-		assertEquals(ERROR, converter.convert("-1"));
-		// Input: xXx - Output: -1
-		assertEquals(ERROR, converter.convert("xXx"));
-		// Input: x48hx30m - Output: -1
-		assertEquals(ERROR, converter.convert("x48hx30m"));
+		assertEquals(convertToInvalidTimeDuration("-1"), converter.convert("-1"));
+		assertEquals(convertToInvalidTimeDuration("xXx"), converter.convert("xXx"));
+		assertEquals(convertToInvalidTimeDuration("x48hx30m"), converter.convert("x48hx30m"));
 
 		// TIME
 		// Input: 48h30m15s - Output: 48 * 60 * 60 + 30 * 60 + 15
