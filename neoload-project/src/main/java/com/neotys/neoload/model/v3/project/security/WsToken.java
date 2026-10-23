@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 		@JsonSubTypes.Type(value = ImmutableWsUsernameToken.class, name = "username"),
 		@JsonSubTypes.Type(value = ImmutableWsTimestampToken.class, name = "timestamp"),
 		@JsonSubTypes.Type(value = ImmutableWsSignatureToken.class, name = "signature"),
-		@JsonSubTypes.Type(value = ImmutableWsEncryptToken.class, name = "encrypt")
+		@JsonSubTypes.Type(value = ImmutableWsEncryptToken.class, name = "encryption")
 })
 public interface WsToken {
 }

@@ -15,7 +15,7 @@ web_services_security:
           canonicalization_algorithm: canonical_xml_with_comments
           parts:
           - id: Body-1
-      - encrypt:
+      - encryption:
           keystore: ./wss-keystores/client.p12
           alias: server
           key_identifier_type: x509_key_identifier

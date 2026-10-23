@@ -832,10 +832,10 @@
 													},
 													{
 														"type": "object",
-														"required": ["encrypt"],
+														"required": ["encryption"],
 														"additionalProperties": false,
 														"properties": {
-															"encrypt": {
+															"encryption": {
 																"type": "object",
 																"required": ["keystore", "alias"],
 																"additionalProperties": false,

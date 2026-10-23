@@ -128,21 +128,21 @@ public class IOWebServicesSecuritySchemaValidationTest {
     @Test
     public void signatureAndEncryptTokensAcceptedBySchema3Dot1() throws IOException {
         final String signature = "signature:\n            keystore: ./wss-keystores/server.p12\n            alias: ${alias}\n            key_identifier_type: direct_reference_first_certificate\n            signature_algorithm: rsa_sha256\n            digest_algorithm: sha256\n            parts:\n            - id: Body-1";
-        final String encrypt = "\n      - encrypt:\n          keystore: ./wss-keystores/server.p12\n          alias: server\n          symmetric_encryption_algorithm: aes_256\n          asymmetric_encryption_algorithm: rsa_oaep\n          parts:\n          - name: Body\n            namespace: http://schemas.xmlsoap.org/soap/envelope/\n            encoding: content";
+        final String encrypt = "\n      - encryption:\n          keystore: ./wss-keystores/server.p12\n          alias: server\n          symmetric_encryption_algorithm: aes_256\n          asymmetric_encryption_algorithm: rsa_oaep\n          parts:\n          - name: Body\n            namespace: http://schemas.xmlsoap.org/soap/envelope/\n            encoding: content";
 
         assertTrue(schema31.validate(project(requestProfile("digest", signature + encrypt))).isEmpty());
     }
 
     @Test
     public void encryptWithoutKeyEncryptionAcceptedBySchema3Dot1() throws IOException {
-        final String encrypt = "encrypt:\n            keystore: ./wss-keystores/server.p12\n            alias: server\n            asymmetric_encryption_algorithm: none";
+        final String encrypt = "encryption:\n            keystore: ./wss-keystores/server.p12\n            alias: server\n            asymmetric_encryption_algorithm: none";
 
         assertTrue(schema31.validate(project(requestProfile("digest", encrypt))).isEmpty());
     }
 
     @Test
     public void encryptWithoutAliasRejectedBySchema3Dot1() throws IOException {
-        assertFalse(schema31.validate(project(requestProfile("digest", "encrypt:\n            keystore: ./wss-keystores/server.p12"))).isEmpty());
+        assertFalse(schema31.validate(project(requestProfile("digest", "encryption:\n            keystore: ./wss-keystores/server.p12"))).isEmpty());
     }
 
     @Test
@@ -161,7 +161,7 @@ public class IOWebServicesSecuritySchemaValidationTest {
 
     @Test
     public void unsupportedEncryptFieldsRejectedBySchema3Dot1() throws IOException {
-        final String token = "encrypt:\n            keystore: ./wss-keystores/server.p12\n            alias: server\n            ";
+        final String token = "encryption:\n            keystore: ./wss-keystores/server.p12\n            alias: server\n            ";
 
         assertFalse(schema31.validate(project(requestProfile("digest", token + "embeddedKey: true"))).isEmpty());
         assertFalse(schema31.validate(project(requestProfile("digest", token + "embeddedKeyName: true"))).isEmpty());

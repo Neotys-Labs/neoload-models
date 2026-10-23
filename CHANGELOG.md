@@ -193,11 +193,11 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
 #### Web Services Security
 
 A new root key, `web_services_security`, declares WS-Security keystores, request profiles
-(`username`, `timestamp`, `signature` and `encrypt` tokens) and response profiles. A `soap_request`
+(`username`, `timestamp`, `signature` and `encryption` tokens) and response profiles. A `soap_request`
 selects them by name with `request_security_profile` and `response_security_profile`. Both are
-optional, and the section is absent from files that do not use it. A `signature` or `encrypt` token
+optional, and the section is absent from files that do not use it. A `signature` or `encryption` token
 requires a `keystore` declared in `keystores` and an `alias`, and may list the `parts` to sign or
-encrypt. An `encrypt` token sets `asymmetric_encryption_algorithm: none` to send the symmetric key unencrypted.
+encrypt. An `encryption` token sets `asymmetric_encryption_algorithm: none` to send the symmetric key unencrypted.
 
 ```yaml
 web_services_security:
