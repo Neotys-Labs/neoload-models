@@ -78,7 +78,7 @@ model but not merged; **—** = not implemented anywhere.
 | Dynatrace integration settings (`dynatrace.enabled` / `url` / `token`) | 3.0 |
 | qTest integration settings (`qtest.*`) | 3.0 |
 | Certificates (`CertificateSettings`) | — |
-| Web Services security / WSS (`WSSSettings`) | 3.1 draft (`web_services_security`: keystores, username and timestamp tokens; no signature/encryption) |
+| Web Services security / WSS (`WSSSettings`) | 3.1 draft (`web_services_security`: keystores, username, timestamp, signature and encryption tokens; no embedded key, variable keystores) |
 | Page naming policy (`PageNamingSettings`) | — |
 | JavaScript policy (`JSPolicySettings`) | — |
 | Error handling policy (`ErrorHandlingSettings`) | — |
