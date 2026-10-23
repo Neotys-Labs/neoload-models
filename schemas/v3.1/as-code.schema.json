@@ -1861,7 +1861,7 @@
 							"default": "any"
 						},
 						"timeout": {
-							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"$ref": "#/definitions/common/duration_value",
 							"description": "The maximum time to wait for the conditions to be verified. The default value is `1m` (60000 ms)."
 						}
 					},
