@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
+import com.neotys.neoload.model.v3.project.SlaElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertionElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertionElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
@@ -15,13 +19,13 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_DEFAULT)
-@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.PARAMETERS, SoapRequest.HEADERS, SoapRequest.CONTENT})
+@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.PARAMETERS, SoapRequest.HEADERS, SoapRequest.CONTENT, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, SlaElement.SLA_PROFILE})
 @JsonSerialize(as = ImmutableSoapRequest.class)
 @JsonDeserialize(as = ImmutableSoapRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 @SuppressWarnings("java:S2097")
-public interface SoapRequest extends Step, UrlServerElement {
+public interface SoapRequest extends Step, UrlServerElement, SlaElement, AssertionsElement, DurationAssertionElement, SizeAssertionElement {
 	String NAME = "name";
 	String PARAMETERS = "parameters";
 	String HEADERS = "headers";
