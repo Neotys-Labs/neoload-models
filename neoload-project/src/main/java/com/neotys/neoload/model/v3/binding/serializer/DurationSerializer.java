@@ -1,19 +1,18 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
-import static com.neotys.neoload.model.v3.binding.converter.TimeDurationInMsOrInVariableToStringConverter.TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.neotys.neoload.model.v3.project.userpath.Duration;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
+import com.neotys.neoload.model.v3.project.userpath.DurationOrVariable;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
 import java.io.IOException;
 
 /**
  * Writes a {@link Duration}: a scalar for a constant, an object with {@code min} / {@code max} for a
- * random one. Durations are formatted back from milliseconds; {@code min} is written only when it is
- * present and not zero. The fields can also be written inline, for steps that carry their own
+ * random one. Each value is written by {@link DurationOrVariableSerializer}; {@code min} is written only when
+ * it is present and not zero. The fields can also be written inline, for steps that carry their own
  * {@code name} / {@code description}.
  */
 public final class DurationSerializer extends StdSerializer<Duration> {
@@ -51,7 +50,7 @@ public final class DurationSerializer extends StdSerializer<Duration> {
 		generator.writeStringField(DurationRandom.MAX, toText(random.getMax()));
 	}
 
-	static String toText(final String valueInMs) {
-		return TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(valueInMs);
+	static String toText(final DurationOrVariable value) {
+		return DurationOrVariableSerializer.toText(value);
 	}
 }

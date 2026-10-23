@@ -2,6 +2,9 @@ package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
+import com.neotys.neoload.model.v3.project.userpath.DurationLiteral;
+import com.neotys.neoload.model.v3.project.userpath.DurationOrVariable;
+import com.neotys.neoload.model.v3.project.userpath.DurationVariable;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,8 +28,15 @@ public class DelayWriter extends ElementWriter {
         final Delay delay = (Delay) element;
         Element xmlDelay = document.createElement(XML_TAG_NAME);
         super.writeXML(document, xmlDelay, outputFolder);
-        xmlDelay.setAttribute(XML_DURATION_ATT, ((DurationConstant) delay.getDuration()).getValue());
+        xmlDelay.setAttribute(XML_DURATION_ATT, toText(((DurationConstant) delay.getDuration()).getValue()));
         xmlDelay.setAttribute(XML_ISTHINKTIME_ATT, String.valueOf(delay.isThinkTime()));
         currentElement.appendChild(xmlDelay);
+    }
+
+    private static String toText(final DurationOrVariable value) {
+        if (value instanceof DurationLiteral) {
+            return String.valueOf(((DurationLiteral) value).getValue().toMillis());
+        }
+        return ((DurationVariable) value).getValue();
     }
 }

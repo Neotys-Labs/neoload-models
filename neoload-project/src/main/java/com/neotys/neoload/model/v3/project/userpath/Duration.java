@@ -9,7 +9,7 @@ import com.neotys.neoload.model.v3.validation.constraintvalidators.ElementNameVa
 /**
  * A duration, shared by {@code pacing}, {@code think_time} and {@code delay}. It is either a
  * {@link DurationConstant} (fixed duration) or a {@link DurationRandom} (random duration between a
- * {@code min} and a {@code max}). Values are stored in milliseconds or as a {@code ${variable}}.
+ * {@code min} and a {@code max}). Each value is a {@link DurationOrVariable}.
  * A variable is referenced as {@code ${name}} or {@code ${name.field}}, each part being a valid element name
  * (see {@link ElementNameValidator}) without {@code .} nor a closing brace.
  */
@@ -17,6 +17,5 @@ import com.neotys.neoload.model.v3.validation.constraintvalidators.ElementNameVa
 @JsonDeserialize(using = DurationDeserializer.class)
 public interface Duration {
 	String VARIABLE_NAME_PATTERN = "[^" + ElementNameValidator.FORBIDDEN_CHARS + ".}]+";
-	String PATTERN = "(\\d+|\\$\\{" + VARIABLE_NAME_PATTERN + "(\\." + VARIABLE_NAME_PATTERN + ")*\\})";
-	String PATTERN_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.DurationPattern.message}";
+	String VARIABLE_PATTERN = "\\$\\{" + VARIABLE_NAME_PATTERN + "(\\." + VARIABLE_NAME_PATTERN + ")*\\}";
 }
