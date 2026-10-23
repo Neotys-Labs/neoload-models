@@ -20,9 +20,9 @@ public class StringToTimeDurationInMsOrInVariableConverterTest {
 	}
 
 	@Test
-	public void testConvertThrowsOnInvalidDurations() {
-		for (final String input : Arrays.asList(null, "", "-1000", "1 h", "1m1h", "1s1s", "1s5")) {
-			assertThrows(input, InvalidDurationException.class, () -> STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(input));
+	public void testKeepsInvalidDurationsAsWritten() {
+		for (final String input : Arrays.asList("", "-1000", "1 h", "1m1h", "1s1s", "1s5", "99999999999999999999")) {
+			assertEquals(input, STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(input));
 		}
 	}
 }

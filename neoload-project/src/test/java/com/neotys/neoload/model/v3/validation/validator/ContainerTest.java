@@ -242,28 +242,28 @@ public class ContainerTest {
 
 		Container container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(DurationConstant.builder().value("30000").build())
+				.pacing(DurationConstant.builder().valueInMsOrVariable("30000").build())
 				.build();
 		Validation validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.getMessage().orElse(""), validation.isValid());
 
 		container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(DurationConstant.builder().value("abc").build())
+				.pacing(DurationConstant.builder().valueInMsOrVariable("abc").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());
 
 		container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(DurationRandom.builder().max("3000").build())
+				.pacing(DurationRandom.builder().maxInMsOrVariable("3000").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.getMessage().orElse(""), validation.isValid());
 
 		container = Container.builder()
 				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
-				.pacing(DurationRandom.builder().max("abc").build())
+				.pacing(DurationRandom.builder().maxInMsOrVariable("abc").build())
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertFalse(validation.isValid());

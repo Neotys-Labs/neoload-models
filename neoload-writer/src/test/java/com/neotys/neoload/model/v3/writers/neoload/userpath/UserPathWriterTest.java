@@ -19,7 +19,7 @@ public class UserPathWriterTest {
                 .name("my User")
                 .actions(Container.builder()
                         .name("delay")
-                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("3000").build()).build())
                         .build())
                 .build();
 
@@ -65,7 +65,7 @@ public class UserPathWriterTest {
                         .build())
                 .actions(Container.builder()
                         .name("actions")
-                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("3000").build()).build())
                         .addContentAssertions(ContentAssertion.builder()
                         		.contains("userpath_actions_contains_1")
                         		.build())

@@ -8,10 +8,13 @@ public final class DurationToStringConverter extends StdConverter<LoadDuration, 
 	public String convert(final LoadDuration duration) {
 		if (duration == null) return null;
 		
+		if (duration.getInvalidText().isPresent()) {
+			return duration.getInvalidText().get();
+		}
 		String convertedValue;
 		final LoadDuration.Type type = duration.getType();
 		if (type == LoadDuration.Type.TIME) { 
-			convertedValue = TimeDurationHelper.convertToString(duration.getValue());
+			convertedValue = Durations.format(duration.getValue(), DurationGrammar.SECONDS);
 		}
 		else {
 			convertedValue = IterationDurationHelper.convertToString(duration.getValue());

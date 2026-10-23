@@ -76,7 +76,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeConstant() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(DurationConstant.builder().value("2000").build())
+				.thinkTime(DurationConstant.builder().valueInMsOrVariable("2000").build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -87,7 +87,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeRandom() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(DurationRandom.builder().min("1000").max("5000").build())
+				.thinkTime(DurationRandom.builder().minInMsOrVariable("1000").maxInMsOrVariable("5000").build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -98,7 +98,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeRandomDefaultsMin() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(DurationRandom.builder().max("5000").build())
+				.thinkTime(DurationRandom.builder().maxInMsOrVariable("5000").build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -110,15 +110,15 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	public void readWebPageThinkTimeValuesPreservedVerbatim() throws IOException {
 		final Project expectedProject = buildProject(
 				WebPage.builder()
-						.thinkTime(DurationConstant.builder().value("2").build())
+						.thinkTime(DurationConstant.builder().valueInMsOrVariable("2").build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build(),
 				WebPage.builder()
-						.thinkTime(DurationConstant.builder().value("500").build())
+						.thinkTime(DurationConstant.builder().valueInMsOrVariable("500").build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build(),
 				WebPage.builder()
-						.thinkTime(DurationConstant.builder().value("${max_think_time}").build())
+						.thinkTime(DurationConstant.builder().valueInMsOrVariable("${max_think_time}").build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build());
 		assertNotNull(expectedProject);
@@ -260,7 +260,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 				.name("MyWebPage")
 				.description("My Web Page")
 				.slaProfile("MySlaProfile")
-				.thinkTime(DurationConstant.builder().value("2000").build())
+				.thinkTime(DurationConstant.builder().valueInMsOrVariable("2000").build())
 				.playback(Playback.SEQUENTIAL)
 				.executeResources(ExecuteResources.DYNAMIC)
 				.addSteps(

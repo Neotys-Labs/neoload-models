@@ -1,21 +1,22 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
+import com.neotys.neoload.model.v3.binding.converter.DurationGrammar;
+import com.neotys.neoload.model.v3.binding.converter.Durations;
+import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
+import com.neotys.neoload.model.v3.binding.converter.ParsedDuration;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
 import com.neotys.neoload.model.v3.validation.constraints.DurationRandomMaxGreaterThanMinCheck;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import javax.validation.ConstraintValidatorContext;
 
 public final class DurationRandomMaxGreaterThanMinValidator extends AbstractConstraintValidator<DurationRandomMaxGreaterThanMinCheck, DurationRandom> {
-	private static final Pattern MILLISECONDS = Pattern.compile("\\d+");
-
 	@Override
 	public boolean isValid(final DurationRandom duration, final ConstraintValidatorContext context) {
 		if (duration == null) {
 			return true;
 		}
-		final Optional<Long> min = duration.getMin().map(DurationRandomMaxGreaterThanMinValidator::toMilliseconds).orElse(Optional.of(0L));
-		final Optional<Long> max = toMilliseconds(duration.getMax());
+		final Optional<Long> min = duration.getMinInMsOrVariable().map(DurationRandomMaxGreaterThanMinValidator::toMilliseconds).orElse(Optional.of(0L));
+		final Optional<Long> max = toMilliseconds(duration.getMaxInMsOrVariable());
 		if (!min.isPresent() || !max.isPresent()) {
 			return true;
 		}
@@ -23,9 +24,11 @@ public final class DurationRandomMaxGreaterThanMinValidator extends AbstractCons
 	}
 
 	private static Optional<Long> toMilliseconds(final String value) {
-		if (value == null || !MILLISECONDS.matcher(value).matches()) {
+		try {
+			final ParsedDuration parsed = Durations.parse(value, DurationGrammar.MILLISECONDS);
+			return parsed.isVariable() ? Optional.empty() : Optional.of(parsed.getAmount());
+		} catch (final InvalidDurationException e) {
 			return Optional.empty();
 		}
-		return Optional.of(Long.parseLong(value));
 	}
 }

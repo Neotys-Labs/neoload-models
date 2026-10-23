@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.binding.converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import java.util.Optional;
 
 public final class StringToDurationConverter extends StdConverter<String, LoadDuration> {
 	private static final LoadDuration ERROR_VALUE = LoadDuration.builder().build();
@@ -13,20 +14,20 @@ public final class StringToDurationConverter extends StdConverter<String, LoadDu
 			return ERROR_VALUE;
 		}
 		
-		Integer value = TimeDurationHelper.convertToInteger(input);
-		if (value != null) {
+		final Optional<Integer> seconds = Durations.tryParseSeconds(input);
+		if (seconds.isPresent()) {
 			return LoadDuration.builder()
-					.value(value)
+					.value(seconds.get())
 					.type(LoadDuration.Type.TIME)
 					.build();		
 		}
-		value = IterationDurationHelper.convertToInteger(input);
+		final Integer value = IterationDurationHelper.convertToInteger(input);
 		if (value != null) {
 			return LoadDuration.builder()
 					.value(value)
 					.type(LoadDuration.Type.ITERATION)
 					.build();
 		}
-		return ERROR_VALUE;
+		return LoadDuration.builder().invalidText(input).build();
 	}
 }

@@ -22,7 +22,7 @@ public class NeoLoadWriterTest {
     private UserPath userPath = UserPath.builder()
             .name("my User")
             .actions(Container.builder()
-                    .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
+                    .addSteps(Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("3000").build()).build())
                     .build())
             .build();
 
@@ -138,7 +138,7 @@ public class NeoLoadWriterTest {
                 .actions(Container.builder()
                         .addSteps(Delay.builder()
                                 .name("myDelay")
-                                .duration(DurationConstant.builder().value("3000").build())
+                                .duration(DurationConstant.builder().valueInMsOrVariable("3000").build())
                                 .build())
                         .build())
                 .build();

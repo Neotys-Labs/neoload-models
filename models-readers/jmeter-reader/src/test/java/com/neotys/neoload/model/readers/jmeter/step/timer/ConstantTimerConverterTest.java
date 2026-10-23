@@ -30,7 +30,7 @@ public class ConstantTimerConverterTest {
         ConstantTimerConverter constantTimerConverter = new ConstantTimerConverter();
         List<Step> result = constantTimerConverter.apply(constantTimer, null);
         List<Step> expected = new ArrayList<>();
-        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build());
+        expected.add(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().valueInMsOrVariable(constantTimer.getDelay()).build()).build());
         assertEquals(result,expected);
 
     }

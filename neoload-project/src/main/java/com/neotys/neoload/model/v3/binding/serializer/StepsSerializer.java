@@ -91,7 +91,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		final Duration duration = delay.getDuration();
 		final boolean implicit = delay.defaultName().equals(delay.getName()) && delay.getDescription().isEmpty();
 		if (duration instanceof DurationConstant && implicit) {
-			generator.writeString(DurationSerializer.toText(((DurationConstant) duration).getValue()));
+			generator.writeString(DurationSerializer.toText(((DurationConstant) duration).getValueInMsOrVariable()));
 			return;
 		}
 		generator.writeStartObject();

@@ -61,7 +61,7 @@ public class WhileControllerConverterTest {
         List<Step> expected = new ArrayList<>();
         expected.add(While.builder()
                 .name(whileController.getName())
-                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build())
+                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().valueInMsOrVariable(constantTimer.getDelay()).build()).build())
                 .description(whileController.getCondition())
                 .build());
         assertEquals(expected,result);

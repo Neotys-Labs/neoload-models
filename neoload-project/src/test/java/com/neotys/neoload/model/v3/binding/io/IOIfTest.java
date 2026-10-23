@@ -37,7 +37,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 						.name("container")
 						.addSteps(Delay
 								.builder()
-								.duration(DurationConstant.builder().value(String.valueOf(3*60*1000+200)).build())
+								.duration(DurationConstant.builder().valueInMsOrVariable(String.valueOf(3*60*1000+200)).build())
 								.build()
 						).build())
 				.build();
@@ -129,7 +129,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 				.slaProfile("MySLAProfile")
 				.addSteps(Delay
 						.builder()
-						.duration(DurationConstant.builder().value(String.valueOf(3*60*1000+200)).build())
+						.duration(DurationConstant.builder().valueInMsOrVariable(String.valueOf(3*60*1000+200)).build())
 						.build())
 				.addContentAssertions(ContentAssertion.builder()
 						.contains("ElseAssertion")

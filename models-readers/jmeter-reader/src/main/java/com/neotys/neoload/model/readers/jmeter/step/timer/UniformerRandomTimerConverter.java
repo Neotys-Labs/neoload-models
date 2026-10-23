@@ -28,7 +28,7 @@ public class UniformerRandomTimerConverter implements BiFunction<UniformRandomTi
         final Delay delay = Delay.builder()
                 .name(uniformRandomTimer.getName())
                 .description(uniformRandomTimer.getComment())
-                .duration(DurationConstant.builder().value(checkDelay(uniformRandomTimer)).build())
+                .duration(DurationConstant.builder().valueInMsOrVariable(checkDelay(uniformRandomTimer)).build())
                 .build();
         LOGGER.info("Uniform Random Timer Correctly converted");
         EventListenerUtils.readSupportedFunction("UniformRandomTimer","Uniform Random Timer");

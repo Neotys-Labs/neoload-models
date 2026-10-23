@@ -44,7 +44,7 @@ public class TransactionConverterTest {
         List<Step> result = testcontrol.apply(transactionController, hashTree);
         List<Step> expected = new ArrayList<>();
         expected.add(Container.builder()
-                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build())
+                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().valueInMsOrVariable(constantTimer.getDelay()).build()).build())
                 .name("my thread group")
                 .description("My comment")
                 .build());

@@ -1,5 +1,8 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
+import com.neotys.neoload.model.v3.binding.converter.DurationGrammar;
+import com.neotys.neoload.model.v3.binding.converter.Durations;
+import com.neotys.neoload.model.v3.binding.converter.ParsedDuration;
 import com.neotys.neoload.model.v3.validation.constraints.DurationRandomMaxGreaterThanMinCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -18,11 +21,19 @@ public interface DurationRandom extends Duration {
 	String MIN = "min";
 	String MAX = "max";
 
-	Optional<@Pattern(regexp = Duration.PATTERN, message = Duration.PATTERN_MESSAGE, groups = {NeoLoad.class}) String> getMin();
+	Optional<@Pattern(regexp = Duration.PATTERN, message = Duration.PATTERN_MESSAGE, groups = {NeoLoad.class}) String> getMinInMsOrVariable();
 
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Pattern(regexp = Duration.PATTERN, message = Duration.PATTERN_MESSAGE, groups = {NeoLoad.class})
-	String getMax();
+	String getMaxInMsOrVariable();
+
+	default Optional<ParsedDuration> parseMin() {
+		return getMinInMsOrVariable().map(min -> Durations.parse(min, DurationGrammar.MILLISECONDS));
+	}
+
+	default ParsedDuration parseMax() {
+		return Durations.parse(getMaxInMsOrVariable(), DurationGrammar.MILLISECONDS);
+	}
 
 	class Builder extends ImmutableDurationRandom.Builder {}
 	static Builder builder() {

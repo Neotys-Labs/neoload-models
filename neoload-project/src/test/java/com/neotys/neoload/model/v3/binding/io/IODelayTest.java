@@ -50,18 +50,18 @@ public class IODelayTest extends AbstractIOElementsTest {
 
 	private List<Delay> getDelaysOnlyRequired() {
 		return List.of(
-				Delay.builder().duration(DurationConstant.builder().value("3790200").build()).build(),
-				Delay.builder().duration(DurationRandom.builder().max("3790200").build()).build(),
-				Delay.builder().duration(DurationConstant.builder().value("3600000").build()).build(),
-				Delay.builder().duration(DurationRandom.builder().max("3600000").build()).build(),
-				Delay.builder().duration(DurationConstant.builder().value("180000").build()).build(),
-				Delay.builder().duration(DurationRandom.builder().max("180000").build()).build(),
-				Delay.builder().duration(DurationConstant.builder().value("10000").build()).build(),
-				Delay.builder().duration(DurationRandom.builder().max("10000").build()).build(),
-				Delay.builder().duration(DurationConstant.builder().value("200").build()).build(),
-				Delay.builder().duration(DurationRandom.builder().max("200").build()).build(),
-				Delay.builder().duration(DurationConstant.builder().value("${delay}").build()).build(),
-				Delay.builder().duration(DurationRandom.builder().max("${max_delay}").build()).build()
+				Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("3790200").build()).build(),
+				Delay.builder().duration(DurationRandom.builder().maxInMsOrVariable("3790200").build()).build(),
+				Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("3600000").build()).build(),
+				Delay.builder().duration(DurationRandom.builder().maxInMsOrVariable("3600000").build()).build(),
+				Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("180000").build()).build(),
+				Delay.builder().duration(DurationRandom.builder().maxInMsOrVariable("180000").build()).build(),
+				Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("10000").build()).build(),
+				Delay.builder().duration(DurationRandom.builder().maxInMsOrVariable("10000").build()).build(),
+				Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("200").build()).build(),
+				Delay.builder().duration(DurationRandom.builder().maxInMsOrVariable("200").build()).build(),
+				Delay.builder().duration(DurationConstant.builder().valueInMsOrVariable("${delay}").build()).build(),
+				Delay.builder().duration(DurationRandom.builder().maxInMsOrVariable("${max_delay}").build()).build()
 		);
 	}
 
@@ -70,21 +70,21 @@ public class IODelayTest extends AbstractIOElementsTest {
 				Delay.builder()
 						.name("MyConstantDelay1")
 						.description("MyConstantDelay1Description")
-						.duration(DurationConstant.builder().value("3790200").build())
+						.duration(DurationConstant.builder().valueInMsOrVariable("3790200").build())
 						.build(),
 				Delay.builder()
 						.name("MyConstantDelay2")
 						.description("MyConstantDelay2Description")
-						.duration(DurationConstant.builder().value("${delay}").build())
+						.duration(DurationConstant.builder().valueInMsOrVariable("${delay}").build())
 						.build(),
 				Delay.builder()
 						.name("MyRandomDelay1")
 						.description("MyRandomDelay1Description")
-						.duration(DurationRandom.builder().min("3790100").max("3790200").build()).build(),
+						.duration(DurationRandom.builder().minInMsOrVariable("3790100").maxInMsOrVariable("3790200").build()).build(),
 				Delay.builder()
 						.name("MyRandomDelay2")
 						.description("MyRandomDelay2Description")
-						.duration(DurationRandom.builder().min("${min_delay}").max("${max_delay}").build()).build()
+						.duration(DurationRandom.builder().minInMsOrVariable("${min_delay}").maxInMsOrVariable("${max_delay}").build()).build()
 		);
 	}
 }

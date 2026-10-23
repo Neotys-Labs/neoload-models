@@ -68,7 +68,7 @@ public class IOIntegrationTest extends AbstractIOElementsTest {
 								.addSteps(Request.builder()
 												.url("http://www.company.com/select?name:product")
 												.build(),
-										Delay.builder().isThinkTime(true).duration(DurationConstant.builder().value("1000").build())
+										Delay.builder().isThinkTime(true).duration(DurationConstant.builder().valueInMsOrVariable("1000").build())
 												.build())
 								.build())
 						.build())

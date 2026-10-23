@@ -11,7 +11,7 @@ public final class StartAfterToStringConverter extends StdConverter<StartAfter, 
 		String convertedValue;
 		final StartAfter.Type type = startAfter.getType();
 		if (type == StartAfter.Type.TIME) {
-			convertedValue = TimeDurationHelper.convertToString((Integer) startAfter.getValue());
+			convertedValue = Durations.format((Integer) startAfter.getValue(), DurationGrammar.SECONDS);
 		}
 		else {
 			convertedValue = (String) startAfter.getValue();

@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.binding.converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import java.util.Optional;
 
 public final class StringToStopAfterConverter extends StdConverter<String, StopAfter> {
 	private static final StopAfter ERROR_VALUE = StopAfter.builder().build();
@@ -14,10 +15,10 @@ public final class StringToStopAfterConverter extends StdConverter<String, StopA
 		}
 		
 		// Time case
-		final Integer value = TimeDurationHelper.convertToInteger(input);
-		if (value != null) {
+		final Optional<Integer> seconds = Durations.tryParseSeconds(input);
+		if (seconds.isPresent()) {
 			return StopAfter.builder()
-					.value(value)
+					.value(seconds.get())
 					.type(StopAfter.Type.TIME)
 					.build();		
 		}
@@ -27,6 +28,6 @@ public final class StringToStopAfterConverter extends StdConverter<String, StopA
 					.type(StopAfter.Type.CURRENT_ITERATION)
 					.build();
 		}
-		return ERROR_VALUE;
+		return StopAfter.builder().invalidText(input).build();
 	}
 }

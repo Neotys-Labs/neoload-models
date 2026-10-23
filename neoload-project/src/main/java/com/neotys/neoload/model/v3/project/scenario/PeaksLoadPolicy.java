@@ -8,13 +8,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.v3.binding.converter.Durations;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.constraints.SecondsDurationCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.Optional;
+import javax.validation.Valid;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
-
-import javax.validation.Valid;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({PeaksLoadPolicy.MINIMUM, PeaksLoadPolicy.MAXIMUM, PeaksLoadPolicy.START, DurationPolicy.DURATION, StartStopPolicy.START_AFTER, PeaksLoadPolicy.STEP_RAMPUP, StartStopPolicy.STOP_AFTER})
@@ -45,8 +47,15 @@ public interface PeaksLoadPolicy extends LoadPolicy {
 	@RequiredCheck(groups={NeoLoad.class})
 	@JsonProperty(START)
 	Peak getStart();
-	@JsonProperty(STEP_RAMPUP)
-	Integer getRampup();
+	@JsonProperty(value = STEP_RAMPUP, access = JsonProperty.Access.READ_ONLY)
+	@Value.Default
+	default Integer getRampup() {
+		return getRampupText().flatMap(Durations::tryParseSeconds).orElse(null);
+	}
+
+	@JsonProperty(value = STEP_RAMPUP, access = JsonProperty.Access.WRITE_ONLY)
+	@Value.Auxiliary
+	Optional<@SecondsDurationCheck(groups={NeoLoad.class}) String> getRampupText();
 
     @Value.Check
     default void check() {

@@ -29,6 +29,18 @@ public final class Validator {
 		PROPERTY_NAMING_STRATEGIES.put("loadPolicy", new LoadPolicyStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("rampup", new RampupStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("duration", new DurationStrategy());
+		PROPERTY_NAMING_STRATEGIES.put("valueInMsOrVariable", node -> "value");
+		PROPERTY_NAMING_STRATEGIES.put("minInMsOrVariable", node -> "min");
+		PROPERTY_NAMING_STRATEGIES.put("maxInMsOrVariable", node -> "max");
+		PROPERTY_NAMING_STRATEGIES.put("timeoutInMsOrVariable", node -> "timeout");
+		PROPERTY_NAMING_STRATEGIES.put("invalidText", node -> "");
+		PROPERTY_NAMING_STRATEGIES.put("monitoringParameters", node -> "monitoring");
+		PROPERTY_NAMING_STRATEGIES.put("beforeFirstVu", node -> "before");
+		PROPERTY_NAMING_STRATEGIES.put("afterLastVus", node -> "after");
+		PROPERTY_NAMING_STRATEGIES.put("beforeFirstVuText", node -> "before");
+		PROPERTY_NAMING_STRATEGIES.put("afterLastVusText", node -> "after");
+		PROPERTY_NAMING_STRATEGIES.put("timeoutText", node -> "timeout");
+		PROPERTY_NAMING_STRATEGIES.put("rampupText", new RampupStrategy());
 	}
 	
 	private static final PropertyNamingStrategy defaultNamingStrategy = new SnakeCaseStrategy();
@@ -93,15 +105,18 @@ public final class Validator {
 				continue;
 			}
 
-			if (!first) {
-				builder.append(PROPERTY_PATH_SEPARATOR);
-			}
-
 			PropertyNamingStrategy namingStrategy = PROPERTY_NAMING_STRATEGIES.get(input);
 			if (namingStrategy == null) {
 				namingStrategy = defaultNamingStrategy;
 			}
 			final String output = namingStrategy.apply(node);
+			if (output.isEmpty()) {
+				continue;
+			}
+
+			if (!first) {
+				builder.append(PROPERTY_PATH_SEPARATOR);
+			}
 			builder.append(output);
 
 			first = false;
