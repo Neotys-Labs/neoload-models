@@ -1320,7 +1320,7 @@
 					"title": "Action: HTTP/s Request",
 					"type": "object",
 					"required": ["url"],
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"properties": {
 						"url": { "$ref": "#/definitions/common/text" },
 						"server": { "$ref": "#/definitions/common/text" },
@@ -1351,11 +1351,6 @@
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
 						},
-						"followRedirects": {
-							"type": "boolean",
-							"default": false,
-							"description": "When `true`, the HTTP redirections returned by the server are followed. The default value is `false`."
-						},
 						"_internal_recorded_id": {
 							"title": "Internal recorded request id",
 							"description": "Optional id of the recorded HAR entry this request was converted from (for example r0001). Omit when the project was not produced from a recording.",
@@ -1383,7 +1378,8 @@
 						{ "not": { "required": ["assertions", "content_assertions"] } },
 						{ "not": { "required": ["body", "bodybinary"] } },
 						{ "not": { "required": ["body", "binary_source_file"] } },
-						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
+						{ "not": { "required": ["bodybinary", "binary_source_file"] } },
+						{ "$ref": "#/definitions/user_paths/actions/http_based_request" }
 					],
 					"description": "A request defines a plain HTTP request."
 				},
@@ -1391,7 +1387,7 @@
 					"title": "Action: SOAP Request",
 					"type": "object",
 					"required": ["url", "content"],
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"properties": {
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
@@ -1406,6 +1402,49 @@
 								"path": { "$ref": "#/definitions/common/file_path" }
 							},
 							"additionalProperties": false
+						}
+					},
+					"allOf": [
+						{ "$ref": "#/definitions/user_paths/actions/http_based_request" }
+					]
+				},
+				"http_based_request": {
+					"title": "HTTP based request settings",
+					"description": "Settings shared by the steps sending an HTTP call: request and soap_request.",
+					"type": "object",
+					"properties": {
+						"follow_redirects": {
+							"type": "boolean",
+							"default": false,
+							"description": "When `true`, the HTTP redirections returned by the server are followed. The default value is `false`."
+						},
+						"followRedirects": {
+							"type": "boolean",
+							"default": false,
+							"deprecated": true,
+							"description": "Deprecated: use follow_redirects."
+						},
+						"charset": { "$ref": "#/definitions/common/text" },
+						"response_storage": { "$ref": "#/definitions/user_paths/actions/response_storage" }
+					},
+					"not": { "required": ["followRedirects", "follow_redirects"] }
+				},
+				"response_storage": {
+					"title": "Response storage",
+					"type": "object",
+					"required": ["path"],
+					"additionalProperties": false,
+					"properties": {
+						"path": { "$ref": "#/definitions/common/file_path" },
+						"variable": {
+							"allOf": [
+								{ "$ref": "#/definitions/common/name" },
+								{ "minLength": 1 }
+							]
+						},
+						"delete_when_test_finished": {
+							"type": "boolean",
+							"default": false
 						}
 					}
 				},

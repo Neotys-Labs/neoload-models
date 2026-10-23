@@ -15,13 +15,13 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_DEFAULT)
-@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.PARAMETERS, SoapRequest.HEADERS, SoapRequest.CONTENT})
+@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.PARAMETERS, SoapRequest.HEADERS, SoapRequest.CONTENT, HttpBasedRequest.FOLLOW_REDIRECTS, HttpBasedRequest.CHARSET, HttpBasedRequest.RESPONSE_STORAGE})
 @JsonSerialize(as = ImmutableSoapRequest.class)
 @JsonDeserialize(as = ImmutableSoapRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 @SuppressWarnings("java:S2097")
-public interface SoapRequest extends Step, UrlServerElement {
+public interface SoapRequest extends Step, HttpBasedRequest {
 	String NAME = "name";
 	String PARAMETERS = "parameters";
 	String HEADERS = "headers";

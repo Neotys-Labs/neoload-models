@@ -136,6 +136,45 @@ public class IOSoapRequestSchemaValidationTest {
                 errors.stream().anyMatch(error -> error.getInstanceLocation().toString().contains("headers")));
     }
 
+    private static JsonNode soapRequestWith(final String settings) throws IOException {
+        return YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - soap_request:\n"
+                        + "        url: http://host:80/\n"
+                        + "        content:\n"
+                        + "          path: ./requests/mySOAPRequest.xml\n"
+                        + settings);
+    }
+
+    @Test
+    public void soapRequestAdvancedSettingsAcceptedBySchema3Dot1() throws IOException {
+        assertTrue(schema31.validate(soapRequestWith(
+                "        follow_redirects: true\n"
+                        + "        charset: UTF-8\n"
+                        + "        response_storage:\n"
+                        + "          path: responses/order_${orderId}_{ID}.xml\n")).isEmpty());
+        assertTrue(schema31.validate(soapRequestWith("        followRedirects: true\n")).isEmpty());
+    }
+
+    @Test
+    public void soapRequestUnknownKeyRejectedBySchema3Dot1() throws IOException {
+        assertFalse(schema31.validate(soapRequestWith("        unknown_key: true\n")).isEmpty());
+    }
+
+    @Test
+    public void soapRequestBothRedirectKeysRejectedBySchema3Dot1() throws IOException {
+        assertFalse(schema31.validate(soapRequestWith("        followRedirects: true\n        follow_redirects: false\n")).isEmpty());
+    }
+
+    @Test
+    public void soapRequestResponseStorageWithoutPathRejectedBySchema3Dot1() throws IOException {
+        assertFalse(schema31.validate(soapRequestWith("        response_storage:\n          variable: myFile\n")).isEmpty());
+    }
+
     private static Path locateSchemasDir() throws URISyntaxException {
         final URL testClassesUrl = IOSoapRequestSchemaValidationTest.class.getProtectionDomain().getCodeSource().getLocation();
         final Path moduleDir = Paths.get(testClassesUrl.toURI()).getParent().getParent();
