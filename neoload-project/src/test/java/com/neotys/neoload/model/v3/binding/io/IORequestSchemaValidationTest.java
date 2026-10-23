@@ -177,6 +177,31 @@ public class IORequestSchemaValidationTest {
                         "body: hello\n        bodybinary: SGVsbG8=\n")).isEmpty());
     }
 
+    @Test
+    public void nameValueHeaderObjectAcceptedBySchema3Dot1() throws IOException {
+        assertValid("3.1", schema31, requestWithHeader("{name: User-Agent, value: NeoLoad-WebUser}"));
+    }
+
+    @Test
+    public void nameValueHeaderObjectWithExtraKeysRejectedBySchema3Dot1() throws IOException {
+        final Set<ValidationMessage> errors = schema31.validate(requestWithHeader("{name: A, value: B, other: C}"));
+        assertTrue("error must be reported on the header entry: " + errors,
+                errors.stream().anyMatch(error -> error.getInstanceLocation().toString().matches(".*headers.0.*")));
+    }
+
+    private static JsonNode requestWithHeader(String header) throws IOException {
+        return YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/select\n"
+                        + "        headers:\n"
+                        + "        - " + header + "\n");
+    }
+
     private static JsonNode requestWithBodyFields(String extraFields) throws IOException {
         return YAML_MAPPER.readTree(
                 "name: MyProject\n"

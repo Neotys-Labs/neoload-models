@@ -206,6 +206,25 @@ public class IOSoapRequestSchemaValidationTest {
         assertFalse(schema31.validate(soapRequestDocumentWith("        response_storage:\n          variable: myFile\n")).isEmpty());
     }
 
+    @Test
+    public void soapRequestWithNameValueObjectsAcceptedBySchema3Dot1() throws IOException {
+        final JsonNode document = YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - soap_request:\n"
+                        + "        url: http://host:80/\n"
+                        + "        headers:\n"
+                        + "        - {name: SOAPAction, value: 'urn:op'}\n"
+                        + "        parameters:\n"
+                        + "        - {name: p, value: v}\n"
+                        + "        content:\n"
+                        + "          path: ./requests/mySOAPRequest.xml\n");
+        assertTrue("3.1 schema must accept name/value objects", schema31.validate(document).isEmpty());
+    }
+
     private static Path locateSchemasDir() throws URISyntaxException {
         final URL testClassesUrl = IOSoapRequestSchemaValidationTest.class.getProtectionDomain().getCodeSource().getLocation();
         final Path moduleDir = Paths.get(testClassesUrl.toURI()).getParent().getParent();
