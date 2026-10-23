@@ -2245,13 +2245,11 @@
 												"description": "Disable all screenshots during Check VU or Debug. Default value is \"false\"."
 											},
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserOpen action."
+										]
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "const": "browser" } }, "required": ["name"] } }],
-							"description": "The action parameter list. Required parameters: browser."
+							"allOf": [{ "contains": { "properties": { "name": { "const": "browser" } }, "required": ["name"] } }]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2291,12 +2289,10 @@
 												"const": "shouldClearProcesses",
 												"description": "This parameter is only applicable when the action is in the Actions container (ignored otherwise). Default is false, the internal processes are persisted in the Virtual user instance to be reused from one iteration to another. Setting the value to true will ensure all external processes are closed and recreated for each iteration, at the cost of increasing the response time and CPU consumption of this CloseBrowser and the next OpenBrowser actions. Default value is \"false\"."
 											}
-										],
-										"description": "The name of a parameter of the BrowserClose action."
+										]
 									}
 								}
-							},
-							"description": "The action parameter list."
+							}
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2344,13 +2340,11 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserNavigate action."
+										]
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "const": "url" } }, "required": ["name"] } }],
-							"description": "The action parameter list. Required parameters: url."
+							"allOf": [{ "contains": { "properties": { "name": { "const": "url" } }, "required": ["name"] } }]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2414,12 +2408,10 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserClick action."
+										]
 									}
 								}
-							},
-							"description": "The action parameter list."
+							}
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2479,13 +2471,11 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserType action."
+										]
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }],
-							"description": "The action parameter list. Required parameters: selector."
+							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2541,16 +2531,14 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserPress action."
+										]
 									}
 								}
 							},
 							"allOf": [
 								{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } },
 								{ "contains": { "properties": { "name": { "const": "key" } }, "required": ["name"] } }
-							],
-							"description": "The action parameter list. Required parameters: selector, key."
+							]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2613,13 +2601,11 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserSelectOption action."
+										]
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }],
-							"description": "The action parameter list. Required parameters: selector."
+							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2667,12 +2653,10 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserMouseOver action."
+										]
 									}
 								}
-							},
-							"description": "The action parameter list."
+							}
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2733,16 +2717,14 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserDragAndDrop action."
+										]
 									}
 								}
 							},
 							"allOf": [
 								{ "contains": { "properties": { "name": { "const": "sourceSelector" } }, "required": ["name"] } },
 								{ "contains": { "properties": { "name": { "const": "targetSelector" } }, "required": ["name"] } }
-							],
-							"description": "The action parameter list. Required parameters: sourceSelector, targetSelector."
+							]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2792,12 +2774,10 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserScroll action."
+										]
 									}
 								}
-							},
-							"description": "The action parameter list."
+							}
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2850,13 +2830,11 @@
 												"const": "ignoreErrors",
 												"description": "Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a \"If...Then...Else\" or a \"Try...Catch\" block. Default value is \"true\"."
 											}
-										],
-										"description": "The name of a parameter of the BrowserRead action."
+										]
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }],
-							"description": "The action parameter list. Required parameters: selector."
+							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2909,13 +2887,11 @@
 												"const": "selectorLogicalOperator",
 												"description": "Set this option with AND or OR to change the logical operator between the selectors. Default value is \"AND\"."
 											}
-										],
-										"description": "The name of a parameter of the BrowserWaitSelector action."
+										]
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }],
-							"description": "The action parameter list. Required parameters: selector."
+							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -2969,13 +2945,11 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserEvaluateJavascript action."
+										]
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "const": "script" } }, "required": ["name"] } }],
-							"description": "The action parameter list. Required parameters: script."
+							"allOf": [{ "contains": { "properties": { "name": { "const": "script" } }, "required": ["name"] } }]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -3024,16 +2998,14 @@
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" },
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserUploadFile action."
+										]
 									}
 								}
 							},
 							"allOf": [
 								{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } },
 								{ "contains": { "properties": { "name": { "const": "filePaths" } }, "required": ["name"] } }
-							],
-							"description": "The action parameter list. Required parameters: selector, filePaths."
+							]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -3081,13 +3053,11 @@
 												"const": "times",
 												"description": "The number of times this behavior will be repeated throughout the user path. Default is 1."
 											}
-										],
-										"description": "The name of a parameter of the BrowserHandleDialog action."
+										]
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "const": "behavior" } }, "required": ["name"] } }],
-							"description": "The action parameter list. Required parameters: behavior."
+							"allOf": [{ "contains": { "properties": { "name": { "const": "behavior" } }, "required": ["name"] } }]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -3154,13 +3124,11 @@
 												"description": "The 0-based index of the tab"
 											},
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserSwitchTab action."
+										]
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "const": "index" } }, "required": ["name"] } }],
-							"description": "The action parameter list. Required parameters: index."
+							"allOf": [{ "contains": { "properties": { "name": { "const": "index" } }, "required": ["name"] } }]
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -3200,12 +3168,10 @@
 												"description": "The 0-based index of the tab. If empty closes the current tab."
 											},
 											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
-										],
-										"description": "The name of a parameter of the BrowserCloseTab action."
+										]
 									}
 								}
-							},
-							"description": "The action parameter list."
+							}
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -3264,12 +3230,10 @@
 												"const": "ignoreSizesForRegexp",
 												"description": "Mitigates thread hanging issues when accessing the request sizes. Regular expression applied to the full request URL: when a request URL matches, response sizes are not computed. Leave empty to compute sizes for all requests. Advanced parameter, hidden by default in NeoLoad GUI."
 											}
-										],
-										"description": "The name of a parameter of the BrowserCaptureRequests action."
+										]
 									}
 								}
-							},
-							"description": "The action parameter list."
+							}
 						},
 						"asRequest": {
 							"type": "boolean",
@@ -3308,12 +3272,10 @@
 												"const": "url",
 												"description": "A url (excluding query parameters) to group Web Vitals metrics data under."
 											}
-										],
-										"description": "The name of a parameter of the BrowserCaptureWebVitals action."
+										]
 									}
 								}
-							},
-							"description": "The action parameter list."
+							}
 						},
 						"asRequest": {
 							"type": "boolean",
