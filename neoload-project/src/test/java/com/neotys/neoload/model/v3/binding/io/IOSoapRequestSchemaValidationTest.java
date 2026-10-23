@@ -10,6 +10,7 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -207,21 +208,9 @@ public class IOSoapRequestSchemaValidationTest {
     }
 
     @Test
-    public void soapRequestWithNameValueObjectsAcceptedBySchema3Dot1() throws IOException {
-        final JsonNode document = YAML_MAPPER.readTree(
-                "name: MyProject\n"
-                        + "user_paths:\n"
-                        + "- name: MyUserPath\n"
-                        + "  actions:\n"
-                        + "    steps:\n"
-                        + "    - soap_request:\n"
-                        + "        url: http://host:80/\n"
-                        + "        headers:\n"
-                        + "        - {name: SOAPAction, value: 'urn:op'}\n"
-                        + "        parameters:\n"
-                        + "        - {name: p, value: v}\n"
-                        + "        content:\n"
-                        + "          path: ./requests/mySOAPRequest.xml\n");
+    public void soapRequestWithNameValueObjectsAcceptedBySchema3Dot1() throws IOException, URISyntaxException {
+        final URL fixtureUrl = IOSoapRequestSchemaValidationTest.class.getClassLoader().getResource("test-soap-request-name-value.yaml");
+        final JsonNode document = YAML_MAPPER.readTree(new File(fixtureUrl.toURI()));
         assertTrue("3.1 schema must accept name/value objects", schema31.validate(document).isEmpty());
     }
 
