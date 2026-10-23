@@ -2,13 +2,12 @@ package com.neotys.neoload.model.v3.binding.converter;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
-import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.converter.StringToStopAfterConverter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter.Type;
-
+import java.time.Duration;
+import org.junit.Test;
 
 public class StringToStopAfterConverterTest {
 	private static final StopAfter ERROR = StopAfter.builder().build();
@@ -19,7 +18,7 @@ public class StringToStopAfterConverterTest {
 
 	private static StopAfter convertToStopAfter(final int input) {
 		return StopAfter.builder()
-				.value(input)
+				.value(Duration.ofSeconds(input))
 				.type(Type.TIME)
 				.build();
 	}
@@ -76,12 +75,10 @@ public class StringToStopAfterConverterTest {
 		// Input: 0 - Output: 0 
 		assertEquals(convertToStopAfter(0), converter.convert("0"));
 		
-		// Input: -1 - Output: ERROR
-		assertEquals(ERROR, converter.convert("-1"));
+		assertThrows(InvalidDurationException.class, () -> converter.convert("-1"));
 
 		// CURRENT_ITERATION
-		// Input: xXx - Output: ERROR
-		assertEquals(ERROR, converter.convert("xXx"));
+		assertThrows(InvalidDurationException.class, () -> converter.convert("xXx"));
 		
 		// Input: current_iteration - Output: current_iteration
 		assertEquals(CURRENT_ITERATION, converter.convert("current_iteration"));
