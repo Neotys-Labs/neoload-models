@@ -215,20 +215,7 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readSoapRequestWithNameValueObjects() throws IOException {
-		final ProjectDescriptor descriptor = new IO().read(
-				"name: MyProject\n"
-						+ "user_paths:\n"
-						+ "- name: MyUserPath\n"
-						+ "  actions:\n"
-						+ "    steps:\n"
-						+ "    - soap_request:\n"
-						+ "        url: http://host:80/\n"
-						+ "        headers:\n"
-						+ "        - {name: SOAPAction, value: 'urn:op'}\n"
-						+ "        parameters:\n"
-						+ "        - {name: p, value: v}\n"
-						+ "        content:\n"
-						+ "          path: ./requests/mySOAPRequest.xml\n");
+		final ProjectDescriptor descriptor = new IO().read(getFile("test-soap-request-name-value", "yaml"));
 
 		final SoapRequest soapRequest = (SoapRequest) descriptor.getProject().getUserPaths().get(0).getActions().getSteps().get(0);
 		assertEquals(ImmutableList.of(NameValue.builder().name("SOAPAction").value("urn:op").build()), soapRequest.getHeaders());
