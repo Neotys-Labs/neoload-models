@@ -2081,9 +2081,28 @@
 				"additionalProperties": false
 			},
 			"real_browser": {
-				"name": {
-					"$ref": "#/definitions/common/name",
-					"description": "The name of the action. Defaults to the action type, for example `BrowserClick`."
+				"action": {
+					"type": "object",
+					"properties": {
+						"name": {
+							"$ref": "#/definitions/common/name",
+							"description": "The name of the action. Defaults to the action type, for example `BrowserClick`."
+						},
+						"description": { "$ref": "#/definitions/common/text" },
+						"asRequest": {
+							"type": "boolean",
+							"default": false,
+							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
+						},
+						"duration_assertion": {
+							"$ref": "#/definitions/user_paths/duration_assertion",
+							"description": "Checks that the action completed within a given duration"
+						},
+						"size_assertion": {
+							"$ref": "#/definitions/user_paths/size_assertion",
+							"description": "Checks the length of the response content, in bytes."
+						}
+					}
 				},
 				"parameter_names": {
 					"selector": {
@@ -2164,11 +2183,9 @@
 				},
 				"browser_open": {
 					"title": "Action: Real Browser BrowserOpen",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2274,30 +2291,15 @@
 								}
 							},
 							"allOf": [{ "contains": { "properties": { "name": { "const": "browser" } }, "required": ["name"] } }]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserOpen. Open a new browser."
 				},
 				"browser_close": {
 					"title": "Action: Real Browser BrowserClose",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2314,31 +2316,16 @@
 									}
 								}
 							}
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserClose. Close the browser. This action is useful for avoiding stacking browser instances on a single VU. The recommended configurations is : If the OpenBrowser action is at the beginning of the ACTIONS container, put the CloseBrowser action at end of the ACTIONS container."
 				},
 				"browser_navigate": {
 					"title": "Action: Real Browser BrowserNavigate",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2361,30 +2348,15 @@
 								}
 							},
 							"allOf": [{ "contains": { "properties": { "name": { "const": "url" } }, "required": ["name"] } }]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserNavigate. Navigate to an url."
 				},
 				"browser_click": {
 					"title": "Action: Real Browser BrowserClick",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2419,31 +2391,16 @@
 									}
 								}
 							}
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserClick. Click a selector."
 				},
 				"browser_type": {
 					"title": "Action: Real Browser BrowserType",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2474,31 +2431,16 @@
 								}
 							},
 							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserType. Type some text inside an element."
 				},
 				"browser_press": {
 					"title": "Action: Real Browser BrowserPress",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2528,31 +2470,16 @@
 								{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } },
 								{ "contains": { "properties": { "name": { "const": "key" } }, "required": ["name"] } }
 							]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserPress. Press a key on a selector."
 				},
 				"browser_select_option": {
 					"title": "Action: Real Browser BrowserSelectOption",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2588,30 +2515,15 @@
 								}
 							},
 							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserSelectOption. Select one or several options of a select element."
 				},
 				"browser_mouse_over": {
 					"title": "Action: Real Browser BrowserMouseOver",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2632,31 +2544,16 @@
 									}
 								}
 							}
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserMouseOver. Positions the mouse over the specified coordinates or element location. Scrolls the window when that position is out of the current viewport. Both parameters can be set at the same time, in that case the mouse will be positioned at the specified coordinates relative to the located element instead of the page origin."
 				},
 				"browser_drag_and_drop": {
 					"title": "Action: Real Browser BrowserDragAndDrop",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2693,30 +2590,15 @@
 								{ "contains": { "properties": { "name": { "const": "sourceSelector" } }, "required": ["name"] } },
 								{ "contains": { "properties": { "name": { "const": "targetSelector" } }, "required": ["name"] } }
 							]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserDragAndDrop. Drag and drop an element onto another element."
 				},
 				"browser_scroll": {
 					"title": "Action: Real Browser BrowserScroll",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2739,31 +2621,16 @@
 									}
 								}
 							}
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserScroll. Scrolls the window to a particular place in the document."
 				},
 				"browser_read": {
 					"title": "Action: Real Browser BrowserRead",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2791,31 +2658,16 @@
 								}
 							},
 							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserRead. Read the text content of an Element."
 				},
 				"browser_wait_selector": {
 					"title": "Action: Real Browser BrowserWaitSelector",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2843,31 +2695,16 @@
 								}
 							},
 							"allOf": [{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } }]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserWaitSelector. Wait for a selector."
 				},
 				"browser_evaluate_javascript": {
 					"title": "Action: Real Browser BrowserEvaluateJavascript",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2892,31 +2729,16 @@
 								}
 							},
 							"allOf": [{ "contains": { "properties": { "name": { "const": "script" } }, "required": ["name"] } }]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserEvaluateJavascript. Executes some arbitrary Javascript code in the current page context."
 				},
 				"browser_upload_file": {
 					"title": "Action: Real Browser BrowserUploadFile",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2941,31 +2763,16 @@
 								{ "contains": { "properties": { "name": { "const": "selector" } }, "required": ["name"] } },
 								{ "contains": { "properties": { "name": { "const": "filePaths" } }, "required": ["name"] } }
 							]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserUploadFile. Upload files to an input element."
 				},
 				"browser_handle_dialog": {
 					"title": "Action: Real Browser BrowserHandleDialog",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -2990,54 +2797,22 @@
 								}
 							},
 							"allOf": [{ "contains": { "properties": { "name": { "const": "behavior" } }, "required": ["name"] } }]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserHandleDialog. Set dialog behavior."
 				},
 				"browser_open_tab": {
 					"title": "Action: Real Browser BrowserOpenTab",
-					"type": "object",
-					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
-						}
-					},
-					"additionalProperties": false,
+					"$ref": "#/definitions/user_paths/real_browser/action",
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserOpenTab. Open a new tab at the rightmost position."
 				},
 				"browser_switch_tab": {
 					"title": "Action: Real Browser BrowserSwitchTab",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"required": ["parameters"],
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -3055,30 +2830,15 @@
 								}
 							},
 							"allOf": [{ "contains": { "properties": { "name": { "const": "index" } }, "required": ["name"] } }]
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserSwitchTab. Switch tab to the given index."
 				},
 				"browser_close_tab": {
 					"title": "Action: Real Browser BrowserCloseTab",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -3095,30 +2855,15 @@
 									}
 								}
 							}
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserCloseTab. Close tab at the given index."
 				},
 				"browser_capture_requests": {
 					"title": "Action: Real Browser BrowserCaptureRequests",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -3154,30 +2899,15 @@
 									}
 								}
 							}
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserCaptureRequests. Configure the capture of HTTP requests metrics for analysis purpose. It allows to capture the metrics (duration, TTFB, success...) of the requests sent and responses received between the browser and the server. By default when no regexp/url/resourceType parameter is specified, then all the HTTP request metrics are aggregated in a single group. When a matching criteria is defined (regexp/url/resourceType), the metrics of all HTTP requests matching it are aggregated in a group, and the non-matching one in a different group (for example with regexp (.*)\\.html then requests will be split in two different groups: one for all HTML pages and another one for all other resources). When multiple matching criteria are defined (regexp/url/resourceType), they are applied in order they are defined."
 				},
 				"browser_capture_web_vitals": {
 					"title": "Action: Real Browser BrowserCaptureWebVitals",
-					"type": "object",
+					"$ref": "#/definitions/user_paths/real_browser/action",
 					"properties": {
-						"name": { "$ref": "#/definitions/user_paths/real_browser/name" },
-						"description": { "$ref": "#/definitions/common/text" },
 						"parameters": {
 							"type": "array",
 							"items": {
@@ -3193,22 +2923,9 @@
 									}
 								}
 							}
-						},
-						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
-						},
-						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
-						},
-						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
 						}
 					},
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"description": "Real Browser action BrowserCaptureWebVitals. Captures Core Web Vitals metrics during Virtual User navigation. This helps detect performance issues that affect the user experience. NeoLoad collects the following metrics for each defined URL: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), Cumulative Layout Shift (CLS). If you don't define a URL, NeoLoad aggregates metrics across all visited pages. To collect all metrics, place this action before the first Navigate action. The Virtual User needs to stay a minimum amount of time and perform at least one interaction to ensure Web Vitals were collected for a given page."
 				}
 			}
