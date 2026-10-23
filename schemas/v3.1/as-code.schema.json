@@ -213,17 +213,24 @@
 					{ "$ref": "#/definitions/common/positive_number" }
 				]
 			},
+			"duration_seconds": {
+				"title": "Duration in seconds",
+				"anyOf": [
+					{ "type": "string", "pattern": "^\\s*(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?)\\s*$" },
+					{ "$ref": "#/definitions/common/positive_number" }
+				]
+			},
 			"duration": {
 				"title": "Duration",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
 			},
 			"stop_after_options": {
 				"title": "variation_policy.stop_after values",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "type": "string", "enum": ["current_iteration"] }]
+				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "type": "string", "enum": ["current_iteration"] }]
 			},
 			"start_after_options": {
 				"title": "Start after",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/text" }]
+				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "$ref": "#/definitions/common/text" }]
 			},
 			"time": {
 				"title": "Time",
@@ -862,7 +869,7 @@
 						"description": "The fixed number of Virtual Users"
 					},
 					"rampup": {
-						"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/positive_number" }],
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay."
 					}
 				}
@@ -902,7 +909,7 @@
 						"description": "The incrementation frequency: time length or number of iterations."
 					},
 					"increment_rampup": {
-						"$ref": "#/definitions/common/time",
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "Define how Virtual Users start: simultaneously or with a preset delay. This rule is used each time new Virtual Users are created, at each load increase for a ramp-up load policy."
 					}
 				},
@@ -928,7 +935,7 @@
 						"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population."
 					},
 					"step_rampup": {
-						"$ref": "#/definitions/common/text",
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay. This rule is used each time new Virtual Users are created, at each load peak for a peak load policy."
 					},
 					"stop_after": {
@@ -966,7 +973,7 @@
 						"description": "Steps to define the Virtual Users count for a specific period"
 					},
 					"rampup": {
-						"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/positive_number" }],
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "Simultaneously or with a preset delay.There are different behaviours depending on duration mode (unlimited, time length, iterations) - unlimited/time length: This rule is used each time Virtual Users count is updated - iterations: This rule is used each time a new step starts"
 					},
 					"start_after": {
@@ -1107,11 +1114,11 @@
 				"type": "object",
 				"properties": {
 					"before": {
-						"$ref": "#/definitions/common/time",
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "The monitoring time before the first Virtual User starts. Monitoring time is expressed in hours (h), minutes (m), seconds (s)."
 					},
 					"after": {
-						"$ref": "#/definitions/common/time",
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "The monitoring time after the last Virtual User stops. Monitoring time is expressed in hours (h), minutes (m), seconds (s)."
 					}
 				},
@@ -1128,7 +1135,7 @@
 						"description": "When to release the Rendezvous. Possible values are: \"manual\", percentage or positive number. The default value is 100%."
 					},
 					"timeout": {
-						"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/positive_number" }],
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "The timeout between Virtual Users. Timeout duration is expressed in hours (h), minutes (m), seconds (s). The default value is 300s."
 					}
 				},

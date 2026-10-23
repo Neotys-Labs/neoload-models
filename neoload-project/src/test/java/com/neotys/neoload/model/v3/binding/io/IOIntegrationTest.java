@@ -20,6 +20,7 @@ import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.FileVariable;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import java.io.IOException;
+import java.time.Duration;
 import org.junit.Test;
 
 public class IOIntegrationTest extends AbstractIOElementsTest {
@@ -86,7 +87,7 @@ public class IOIntegrationTest extends AbstractIOElementsTest {
 	}
 
 	private Scenario buildScenario() {
-		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(Duration.ofSeconds(100)).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		return Scenario.builder()
 				.name("MyScenario")
 				.addPopulations(PopulationPolicy.builder()
