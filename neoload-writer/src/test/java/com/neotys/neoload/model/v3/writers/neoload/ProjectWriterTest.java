@@ -4,6 +4,7 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,7 +20,7 @@ public class ProjectWriterTest {
         UserPath userPath = UserPath.builder()
                 .name("my User")
                 .actions(Container.builder()
-                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("3000").build()).build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("3000")).build()).build())
                         .build())
                 .build();
 

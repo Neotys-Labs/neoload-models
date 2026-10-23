@@ -6,6 +6,7 @@ import static org.mockito.Mockito.spy;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
+import com.neotys.neoload.model.readers.jmeter.step.timer.TimerDuration;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Loop;
@@ -75,7 +76,7 @@ public class LoopControllerConverterTest {
                 .description(loopController.getComment())
                 .name(loopController.getName())
                 .count(loopController.getLoopString())
-                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build())
+                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(TimerDuration.of(constantTimer.getDelay())).build()).build())
                 .build();
         List<Step> expected = new ArrayList<>();
         expected.add(loopBuilder);

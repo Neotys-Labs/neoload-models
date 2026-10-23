@@ -1,14 +1,5 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,6 +11,12 @@ import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
+import java.util.Optional;
+import javax.validation.Valid;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, SlaElement.SLA_PROFILE, Scenario.STORE_VARIABLES, Scenario.MONITORING, Scenario.POPULATIONS, Scenario.RENDEZVOUS_POLICIES, Scenario.EXCLUDED_URLS, Scenario.APM})
@@ -63,6 +60,7 @@ public interface Scenario extends Element, SlaElement {
 	}
 
 	@JsonProperty(MONITORING)
+	@Valid
 	Optional<MonitoringParameters> getMonitoringParameters();
 
 	class Builder extends ImmutableScenario.Builder {

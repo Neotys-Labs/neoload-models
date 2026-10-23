@@ -4,7 +4,6 @@ import com.neotys.neoload.model.v3.validation.constraints.DurationRandomMaxGreat
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.Optional;
-import javax.validation.constraints.Pattern;
 import org.immutables.value.Value;
 
 /**
@@ -18,11 +17,10 @@ public interface DurationRandom extends Duration {
 	String MIN = "min";
 	String MAX = "max";
 
-	Optional<@Pattern(regexp = Duration.PATTERN, message = Duration.PATTERN_MESSAGE, groups = {NeoLoad.class}) String> getMin();
+	Optional<DurationOrVariable> getMin();
 
 	@RequiredCheck(groups = {NeoLoad.class})
-	@Pattern(regexp = Duration.PATTERN, message = Duration.PATTERN_MESSAGE, groups = {NeoLoad.class})
-	String getMax();
+	DurationOrVariable getMax();
 
 	class Builder extends ImmutableDurationRandom.Builder {}
 	static Builder builder() {
