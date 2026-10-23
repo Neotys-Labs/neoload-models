@@ -1,6 +1,6 @@
 package com.neotys.neoload.model.v3.binding.io;
 
-import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.MAX_NOT_GREATER_THAN_MIN;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.MIN_GREATER_THAN_MAX;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.VALUE_COMBINED_WITH_BOUNDS;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertReadError;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertViolations;
@@ -202,9 +202,15 @@ public class IODelayContextsTest {
 	}
 
 	@Test
-	public void validateMaxNotGreaterThanMinRejected() throws IOException {
-		for (final String delayYaml : new String[] {"{min: 5s, max: 5s}", "{min: 10s, max: 5s}", "{max: 0}"}) {
-			assertViolations(validate(read(delayYaml)), invalidValue(context.path, MAX_NOT_GREATER_THAN_MIN));
+	public void validateMinGreaterThanMaxRejected() throws IOException {
+		assertViolations(validate(read("{min: 10s, max: 5s}")), invalidValue(context.path, MIN_GREATER_THAN_MAX));
+	}
+
+	@Test
+	public void validateMinEqualToMaxAccepted() throws IOException {
+		for (final String delayYaml : new String[] {"{min: 5s, max: 5s}", "{max: 0}"}) {
+			final Validation validation = validate(read(delayYaml));
+			assertTrue(validation.getMessage().orElse(""), validation.isValid());
 		}
 	}
 }

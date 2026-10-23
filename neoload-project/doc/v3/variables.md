@@ -235,7 +235,7 @@ A random numerical value within a value range.
 | name         | The variable name             | -               | &#x2713; | 6.10  |
 | description  | The variable description      | -               | -        | 6.10  |
 | min          | The variable min value        | -               | &#x2713; | 6.10  |
-| max          | The variable max value        | -               | &#x2713; | 6.10  |
+| max          | The variable max value. Must be greater than or equal to `min` | -               | &#x2713; | 6.10  |
 | predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | - |6.10|
 | change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        |6.10|
 
@@ -261,7 +261,7 @@ A random alphanumeric string the length of which is within a length range.
 | name         | The variable name             | -               | &#x2713; | 2026.3|
 | description  | The variable description      | -               | -        | 2026.3|
 | min_length   | The minimum number of characters of the generated value.</br>The default value is `5`. | -               | -        | 2026.3|
-| max_length   | The maximum number of characters of the generated value.</br>The default value is `10`. | -               | -        | 2026.3|
+| max_length   | The maximum number of characters of the generated value.</br>The default value is `10`.</br>Must be greater than or equal to `min_length`. | -               | -        | 2026.3|
 | predictable  | When true, randomly generated values will have comparable values for two identical tests.</br>The default value is `false`. | -               | -        | 2026.3|
 | change_policy| The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
 
