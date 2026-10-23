@@ -1,14 +1,20 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.junit.Test;
 
 public class IORequestTest extends AbstractIOElementsTest {
@@ -202,5 +208,68 @@ public class IORequestTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		write("test-request-required-and-optional", expectedProject);
+	}
+
+	private static String requestWithHeader(final String header) {
+		return "name: MyProject\n"
+				+ "user_paths:\n"
+				+ "- name: MyUserPath\n"
+				+ "  actions:\n"
+				+ "    steps:\n"
+				+ "    - request:\n"
+				+ "        url: /select\n"
+				+ "        headers:\n"
+				+ "        " + header + "\n";
+	}
+
+	private static List<NameValue> readHeaders(final String header) throws IOException {
+		final ProjectDescriptor descriptor = new IO().read(requestWithHeader(header));
+		final Request request = (Request) descriptor.getProject().getUserPaths().get(0).getActions().getSteps().get(0);
+		return request.getHeaders();
+	}
+
+	@Test
+	public void readHeaderAsNameValueObject() throws IOException {
+		final List<NameValue> headers = readHeaders("- name: User-Agent\n          value: NeoLoad-WebUser");
+
+		assertEquals(ImmutableList.of(NameValue.builder().name("User-Agent").value("NeoLoad-WebUser").build()), headers);
+	}
+
+	@Test
+	public void readExistingHeaderForms() throws IOException {
+		assertEquals(ImmutableList.of(NameValue.builder().name("User-Agent").value("NeoLoad-WebUser").build()),
+				readHeaders("- User-Agent: NeoLoad-WebUser"));
+		assertEquals(ImmutableList.of(NameValue.builder().name("User-Agent").build()),
+				readHeaders("- User-Agent"));
+		assertEquals(ImmutableList.of(NameValue.builder().name("name").value("foo").build()),
+				readHeaders("- name: foo"));
+	}
+
+	@Test
+	public void readHeaderAsNameValueObjectWithNullValue() throws IOException {
+		final List<NameValue> headers = readHeaders("- name: X-Empty\n          value:");
+
+		assertEquals(readHeaders("- X-Empty:"), headers);
+		assertEquals("X-Empty", headers.get(0).getName());
+	}
+
+	@Test
+	public void writeNameValueObjectHeaderAsSingleEntryMap() throws IOException {
+		final IO io = new IO();
+		final ProjectDescriptor descriptor = io.read(requestWithHeader("- name: User-Agent\n          value: NeoLoad-WebUser"));
+
+		assertTrue(io.write(descriptor, Format.YAML).contains("- User-Agent: NeoLoad-WebUser"));
+	}
+
+	@Test
+	public void rejectHeaderObjectWithExtraKeys() {
+		final IOException error = assertThrows(IOException.class, () -> readHeaders("- {name: A, value: B, other: C}"));
+
+		assertTrue(error.getMessage(), error.getMessage().contains("a name, a single-entry map or a {name, value} object"));
+	}
+
+	@Test
+	public void rejectEmptyHeaderObject() {
+		assertThrows(IOException.class, () -> readHeaders("- {}"));
 	}
 }
