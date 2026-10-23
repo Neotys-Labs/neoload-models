@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Deserializes a {@link NameValue}, mirroring {@link NameValueSerializer}. A bare string
@@ -31,10 +30,9 @@ public final class NameValueDeserializer extends StdDeserializer<NameValue> {
 			return ctx.reportInputMismatch(this, "Expected a name or a single-entry map, got: %s", node);
 		}
 		final Map.Entry<String, JsonNode> property = node.properties().iterator().next();
-		final JsonNode value = property.getValue();
 		return NameValue.builder()
 				.name(property.getKey())
-				.value(Optional.ofNullable(value.isNull() ? null : value.asText()))
+				.value(DeserializerHelper.asText(property.getValue()))
 				.build();
 	}
 }
