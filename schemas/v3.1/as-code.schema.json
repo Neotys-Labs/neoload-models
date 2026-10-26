@@ -90,6 +90,7 @@
 			"items": { "$ref": "#/definitions/server" },
 			"description": "Target servers for the test, defined once so the host can be changed without editing each request."
 		},
+		"web_services_security": { "$ref": "#/definitions/web_services_security" },
 		"sla_profiles": {
 			"title": "SLA Profiles",
 			"type": "array",
@@ -206,6 +207,11 @@
 				"type": "integer",
 				"minimum": 0
 			},
+			"strictly_positive_number": {
+				"title": "Strictly Positive Number",
+				"type": "integer",
+				"minimum": 1
+			},
 			"duration_value": {
 				"title": "Duration value",
 				"anyOf": [
@@ -283,12 +289,12 @@
 			},
 			"var_order": {
 				"type": "string",
-				"default": "global",
+				"default": "any",
 				"enum": ["sequential", "random", "any"]
 			},
 			"var_out_of_value": {
 				"type": "string",
-				"default": "global",
+				"default": "cycle",
 				"enum": ["cycle", "stop_test", "no_value_code"]
 			},
 			"assertions": {
@@ -306,8 +312,7 @@
 				"required": ["name"],
 				"properties": {
 					"name": { "$ref": "#/definitions/common/name" },
-					"description": { "$ref": "#/definitions/common/text" },
-					"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
+					"description": { "$ref": "#/definitions/common/text" }
 				}
 			},
 			"constant": {
@@ -360,7 +365,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -387,7 +393,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -410,7 +417,8 @@
 							"predictable": {
 								"type": "boolean",
 								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -435,7 +443,8 @@
 							"predictable": {
 								"type": "boolean",
 								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -480,7 +489,8 @@
 								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$",
 								"description": "The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes."
 							},
-							"scope": { "$ref": "#/definitions/common/var_scope" }
+							"scope": { "$ref": "#/definitions/common/var_scope" },
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -517,7 +527,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -561,7 +572,8 @@
 							"out_of_value": {
 								"$ref": "#/definitions/common/var_out_of_value",
 								"description": "Policy applied when no values are left."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -575,7 +587,8 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"script": { "$ref": "#/definitions/common/textblob" }
+							"script": { "$ref": "#/definitions/common/textblob" },
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -598,7 +611,8 @@
 								"type": "boolean",
 								"default": false,
 								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
-							}
+							},
+							"change_policy": { "$ref": "#/definitions/common/var_change_policy" }
 						}
 					}
 				],
@@ -698,6 +712,127 @@
 				"unevaluatedProperties": false
 			}
 		},
+		"web_services_security": {
+			"title": "Web Services Security",
+			"type": "object",
+			"minProperties": 1,
+			"additionalProperties": false,
+			"properties": {
+				"keystores": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"type": "object",
+						"required": ["path"],
+						"additionalProperties": false,
+						"properties": {
+							"path": { "$ref": "#/definitions/common/file_path" },
+							"password": { "$ref": "#/definitions/common/text" }
+						}
+					}
+				},
+				"request_profiles": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"type": "object",
+						"required": ["name"],
+						"additionalProperties": false,
+						"properties": {
+							"name": { "$ref": "#/definitions/common/name" },
+							"headers": {
+								"type": "array",
+								"minItems": 1,
+								"items": {
+									"type": "object",
+									"additionalProperties": false,
+									"properties": {
+										"actor": { "$ref": "#/definitions/common/text" },
+										"must_understand": { "type": "boolean" },
+										"tokens": {
+											"type": "array",
+											"minItems": 1,
+											"items": {
+												"oneOf": [
+													{
+														"type": "object",
+														"required": ["username"],
+														"additionalProperties": false,
+														"properties": {
+															"username": {
+																"type": "object",
+																"required": ["username"],
+																"additionalProperties": false,
+																"properties": {
+																	"username": { "$ref": "#/definitions/common/text" },
+																	"password": { "$ref": "#/definitions/common/text" },
+																	"password_type": {
+																		"anyOf": [
+																			{ "type": "string", "enum": ["plain_text", "digest"] },
+																			{
+																				"type": "object",
+																				"required": ["derived_key"],
+																				"additionalProperties": false,
+																				"properties": {
+																					"derived_key": {
+																						"type": "object",
+																						"required": ["salt", "iteration"],
+																						"additionalProperties": false,
+																						"properties": {
+																							"salt": { "$ref": "#/definitions/common/text" },
+																							"iteration": { "anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/strictly_positive_number" }] }
+																						}
+																					}
+																				}
+																			}
+																		]
+																	},
+																	"nonce": { "type": "boolean" },
+																	"created": { "type": "boolean" }
+																}
+															}
+														}
+													},
+													{
+														"type": "object",
+														"required": ["timestamp"],
+														"additionalProperties": false,
+														"properties": {
+															"timestamp": {
+																"type": "object",
+																"additionalProperties": false,
+																"properties": {
+																	"id": { "$ref": "#/definitions/common/text" },
+																	"time_to_live": { "$ref": "#/definitions/common/positive_number" },
+																	"milliseconds": { "type": "boolean" }
+																}
+															}
+														}
+													}
+												]
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"response_profiles": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"type": "object",
+						"required": ["name", "keystore"],
+						"additionalProperties": false,
+						"properties": {
+							"name": { "$ref": "#/definitions/common/name" },
+							"keystore": { "$ref": "#/definitions/common/file_path" }
+						}
+					}
+				}
+			}
+		},
 		"server": {
 			"title": "Server",
 			"type": "object",
@@ -793,6 +928,7 @@
 					"title": "Thresholds",
 					"type": "array",
 					"minItems": 1,
+					"description": "Threshold list. Each KPI+scope combination must appear at most once.",
 					"additionalProperties": false,
 					"items": { "$ref": "#/definitions/sla/threshold" }
 				}
@@ -800,7 +936,16 @@
 			"threshold": {
 				"title": "Threshold",
 				"type": "string",
-				"pattern": "^(.*?)\\s(warn\\s(>=|==|<=|>|<))(?=\\s)(.*?)per\\s(test|interval)$"
+				"description": "Format: [kpi] (warn|fail) >=|==|<= [value][unit] ... per test|interval\n\nMultiple conditions (warn and/or fail) can be combined on the same line. Units: s, ms, /s, Mbps, MB, %.\n\nKPIs per test:\n  avg-request-resp-time    — average request response time (s, ms)\n  avg-page-resp-time       — average page response time (s, ms)\n  avg-transaction-resp-time — average transaction response time (s, ms)\n  perc-transaction-resp-time (p{N}) — Nth-percentile transaction response time, default p90 (s, ms)\n  avg-request-per-sec      — average requests per second (/s)\n  avg-throughput-per-sec   — average throughput per second (Mbps)\n  errors-count             — total number of errors\n  count                    — total element count\n  throughput               — total throughput (MB)\n  error-rate               — error rate (%)\n\nKPIs per interval:\n  avg-resp-time            — average response time (s, ms)\n  avg-elt-per-sec          — average elements per second (/s)\n  avg-throughput-per-sec   — average throughput per second (Mbps)\n  errors-per-sec           — errors per second (/s)\n  error-rate               — error rate (%)",
+				"pattern": "^(.*?)\\s((warn|fail)\\s(>=|==|<=))(?=\\s)(.*?)per\\s(test|interval)$",
+				"examples": [
+					"avg-request-resp-time warn >= 200ms fail >= 500ms per test",
+					"perc-transaction-resp-time (p90) warn >= 1s fail >= 2s per test",
+					"error-rate warn >= 2% fail >= 5% per test",
+					"error-rate warn >= 5% per interval",
+					"avg-throughput-per-sec fail <= 10Mbps per test",
+					"errors-count fail >= 10 per test"
+]
 			}
 		},
 		"populations": {
@@ -1006,7 +1151,7 @@
 				"name": { "$ref": "#/definitions/common/name" },
 				"description": { "$ref": "#/definitions/common/text" },
 				"sla_profile": {
-					"$ref": "#/definitions/common/text",
+					"$ref": "#/definitions/common/name",
 					"description": "The name of the SLA profile to apply to the Scenario (will not be applied to children)"
 				},
 				"store_variables_for_raw_data": {
@@ -1193,7 +1338,7 @@
 				"properties": {
 					"description": { "$ref": "#/definitions/common/text" },
 					"sla_profile": {
-						"type": "string",
+						"$ref": "#/definitions/common/name",
 						"description": "The name of the SLA profile to apply to the Container (will not be applied to children)"
 					},
 					"pacing": {
@@ -1324,7 +1469,7 @@
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
+							"$ref": "#/definitions/common/name",
 							"description": "The name of the SLA profile to apply to the Transaction (will not be applied to children)"
 						},
 						"pacing": {
@@ -1346,7 +1491,7 @@
 					"title": "Action: HTTP/s Request",
 					"type": "object",
 					"required": ["url"],
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"properties": {
 						"url": { "$ref": "#/definitions/common/text" },
 						"server": { "$ref": "#/definitions/common/text" },
@@ -1356,7 +1501,7 @@
 						},
 						"headers": { "$ref": "#/definitions/user_paths/name_values" },
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
+							"$ref": "#/definitions/common/name",
 							"description": "The name of the SLA profile to apply to the request"
 						},
 						"body": { "$ref": "#/definitions/common/textblob" },
@@ -1376,11 +1521,6 @@
 						"extractors": {
 							"type": "array",
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
-						},
-						"followRedirects": {
-							"type": "boolean",
-							"default": false,
-							"description": "When `true`, the HTTP redirections returned by the server are followed. The default value is `false`."
 						},
 						"_internal_recorded_id": {
 							"title": "Internal recorded request id",
@@ -1409,7 +1549,8 @@
 						{ "not": { "required": ["assertions", "content_assertions"] } },
 						{ "not": { "required": ["body", "bodybinary"] } },
 						{ "not": { "required": ["body", "binary_source_file"] } },
-						{ "not": { "required": ["bodybinary", "binary_source_file"] } }
+						{ "not": { "required": ["bodybinary", "binary_source_file"] } },
+						{ "$ref": "#/definitions/user_paths/actions/http_based_request" }
 					],
 					"description": "A request defines a plain HTTP request."
 				},
@@ -1417,7 +1558,7 @@
 					"title": "Action: SOAP Request",
 					"type": "object",
 					"required": ["url", "content"],
-					"additionalProperties": false,
+					"unevaluatedProperties": false,
 					"properties": {
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
@@ -1432,6 +1573,78 @@
 								"path": { "$ref": "#/definitions/common/file_path" }
 							},
 							"additionalProperties": false
+						},
+						"sla_profile": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of the SLA profile to apply to the request"
+						},
+						"assertions": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
+							"description": "The list of assertions to validate the response content"
+						},
+						"duration_assertion": {
+							"$ref": "#/definitions/user_paths/duration_assertion",
+							"description": "Checks that the request completed within a given duration"
+						},
+						"content_assertions": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/content_assertion" }
+						},
+						"size_assertion": {
+							"$ref": "#/definitions/user_paths/size_assertion",
+							"description": "Checks the length of the response content, in bytes."
+						},
+						"request_security_profile": { "$ref": "#/definitions/common/name" },
+						"response_security_profile": { "$ref": "#/definitions/common/name" }
+					},
+					"allOf": [
+						{ "not": { "required": ["assertions", "content_assertions"] } },
+						{ "$ref": "#/definitions/user_paths/actions/http_based_request" }
+					]
+				},
+				"http_based_request": {
+					"title": "HTTP based request settings",
+					"description": "Settings shared by the steps sending an HTTP call: request and soap_request.",
+					"type": "object",
+					"properties": {
+						"follow_redirects": {
+							"type": "boolean",
+							"default": false,
+							"description": "When `true`, the HTTP redirections returned by the server are followed. The default value is `false`."
+						},
+						"followRedirects": {
+							"type": "boolean",
+							"default": false,
+							"deprecated": true,
+							"description": "Deprecated: use follow_redirects."
+						},
+						"charset": { "$ref": "#/definitions/common/text" },
+						"response_storage": { "$ref": "#/definitions/user_paths/actions/response_storage" }
+					},
+					"not": { "required": ["followRedirects", "follow_redirects"] }
+				},
+				"response_storage": {
+					"title": "Response storage",
+					"type": "object",
+					"required": ["path"],
+					"additionalProperties": false,
+					"properties": {
+						"path": {
+							"allOf": [
+								{ "$ref": "#/definitions/common/file_path" },
+								{ "minLength": 1 }
+							]
+						},
+						"variable": {
+							"allOf": [
+								{ "$ref": "#/definitions/common/name" },
+								{ "minLength": 1 }
+							]
+						},
+						"delete_when_test_finished": {
+							"type": "boolean",
+							"default": false
 						}
 					}
 				},
@@ -1565,6 +1778,7 @@
 						"value": { "$ref": "#/definitions/common/text" },
 						"case": {
 							"type": "array",
+							"description": "Case list. A Case contains steps executed when Case value equals Switch value",
 							"items": { "$ref": "#/definitions/user_paths/case" }
 						},
 						"default": { "$ref": "#/definitions/user_paths/container" }
@@ -1648,7 +1862,7 @@
 						"description": { "$ref": "#/definitions/common/text" },
 						"copy_variables": {
 							"type": "boolean",
-							"default": true,
+							"default": false,
 							"description": "When `true`, existing values of variables are copied locally so that modifications in another thread do not affect this Fork. Default is `false`."
 						},
 						"steps": {
@@ -1727,23 +1941,6 @@
 					"additionalProperties": false,
 					"description": "The Debug Logger Action writes a text entry to a log file, for debugging purposes."
 				},
-				"rendezvous": {
-					"title": "Action: Rendezvous",
-					"type": "object",
-					"required": ["name"],
-					"properties": {
-						"name": {
-							"$ref": "#/definitions/common/name",
-							"description": "Name of the rendezvous point. Defaults to `rendezvous`."
-						},
-						"description": {
-							"$ref": "#/definitions/common/text",
-							"description": "An optional description, for information purposes only."
-						}
-					},
-					"additionalProperties": false,
-					"description": "A Rendezvous point synchronizes Virtual Users at a common meeting point so they carry out tasks simultaneously, creating an intense load on the server at a specific point in the application."
-				},
 				"try_catch": {
 					"title": "Action: Try Catch",
 					"type": "object",
@@ -1775,7 +1972,7 @@
 						},
 						"description": { "$ref": "#/definitions/common/text" },
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
+							"$ref": "#/definitions/common/name",
 							"description": "The name of the SLA profile to apply to the Web Page (will not be applied to children)"
 						},
 						"think_time": {
@@ -1896,7 +2093,7 @@
 					},
 					"default": {
 						"type": "string",
-						"default": "",
+						"default": "<NOT FOUND>",
 						"description": "The value to return when not extracted. The default value is \"<NOT FOUND>\"."
 					},
 					"throw_assertion_error": {
@@ -1996,6 +2193,10 @@
 					"pacing": {
 						"$ref": "#/definitions/user_paths/actions/duration",
 						"description": "The minimum duration enforced for the case. A random pacing `max` must be strictly greater than `min`."
+					},
+					"sla_profile": {
+						"$ref": "#/definitions/common/name",
+						"description": "The name of the SLA profile to apply to the Case (will not be applied to children)"
 					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {

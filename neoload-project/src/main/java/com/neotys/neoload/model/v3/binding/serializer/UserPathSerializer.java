@@ -34,7 +34,7 @@ public final class UserPathSerializer extends StdSerializer<UserPath> {
 	public void serialize(final UserPath userPath, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		generator.writeStartObject();
         
-		generator.writeStringField(NAME, userPath.getName());
+		SerializerHelper.writeStringIfPresent(generator, NAME, userPath.getName());
         final Optional<String> description = userPath.getDescription();
         if (description.isPresent()) {
         	generator.writeStringField(DESCRIPTION, description.get());

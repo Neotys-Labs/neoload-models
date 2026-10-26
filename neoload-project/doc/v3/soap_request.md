@@ -15,6 +15,16 @@ external XML file referenced by `content.path`.
 | [parameters](#parameters)| The query string parameter list                                     | &#x2713;        | -        | 2026.3|
 | [headers](#headers)      | The request header list                                              | &#x2713;        | -        | 2026.3|
 | [content](#content)      | The external XML file used as the request body                      | -               | &#x2713; | 2026.3|
+| [content_assertions](content_assertion.md) | The list of assertions to validate the response content | -         | -        | 2026.3|
+| assertions               | Deprecated alias of `content_assertions`, read-only. Use `content_assertions` instead. | - | -   | 2026.3|
+| [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration | -   | -        | 2026.3|
+| [size_assertion](size_assertion.md) | The assertion to validate the response size                  | -               | -        | 2026.3|
+| sla_profile              | The name of the SLA profile to apply to the request                 | -               | -        | 2026.3|
+| follow_redirects         | When `true`, the HTTP redirections are followed. See [follow_redirects](request.md#follow_redirects) | - | - | 2026.3|
+| charset                  | The charset used to encode the request body. See [charset](request.md#charset) | - | -  | 2026.3|
+| response_storage         | Stores the response body in a file. See [response_storage](request.md#response_storage) | - | - | 2026.3|
+| request_security_profile | The name of the [request profile](web_services_security.md#request_profiles) applied to the request | - | - | 2026.3|
+| response_security_profile | The name of the [response profile](web_services_security.md#response_profiles) used to process the response | - | - | 2026.3|
 
 #### Example 1
 
@@ -39,6 +49,38 @@ soap_request:
   server: server_petstore
   content:
     path: ./requests/mySOAPRequest.xml
+```
+
+#### Example 3
+
+Defining a SOAP request with assertions and an SLA profile.
+
+```yaml
+soap_request:
+  url: http://petstore.swagger.io:80/
+  content:
+    path: ./requests/mySOAPRequest.xml
+  sla_profile: MySlaProfile
+  content_assertions:
+  - contains: Success
+  duration_assertion:
+    less_than: 2048
+  size_assertion:
+    less_than: 4096
+```
+
+#### Example 4
+
+Defining a SOAP request secured by [Web Services Security](web_services_security.md) profiles.
+
+```yaml
+soap_request:
+  url: /soap
+  server: server_petstore
+  content:
+    path: ./requests/mySOAPRequest.xml
+  request_security_profile: MyRequestProfile
+  response_security_profile: MyResponseProfile
 ```
 
 ## url
@@ -106,3 +148,9 @@ Define the external XML file used as the SOAP request body.
 | Name              | Description                                                                 | Accept variable | Required | Since |
 |:----------------- |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | path              | The path of the XML file used as the request body, relative to the project folder | -         | &#x2713; | 2026.3|
+
+## follow_redirects, charset and response_storage
+
+These settings work as on an HTTP request, see [request](request.md#follow_redirects). A SOAP request always
+has a body, so `charset` is always kept. When `charset` is not set, the request body is encoded as `ISO-8859-1`,
+even if the XML file declares another encoding.

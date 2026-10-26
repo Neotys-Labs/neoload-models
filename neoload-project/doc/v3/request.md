@@ -20,7 +20,10 @@ A request defines a plain HTTP request.
 | [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration                 | -               | -        | 2026.3 |
 | [size_assertion](size_assertion.md) | The assertion to validate the response size                                   | -               | -        | 2026.3 |
 | sla_profile                         | The name of the SLA profile to apply to the request                           | -               | -        | 6.9   |
-| followRedirects                     | When `true`, the HTTP redirections returned by the server are followed.</br>The default value is `false`. | -               | -        |       |
+| [follow_redirects](#follow_redirects) | When `true`, the HTTP redirections returned by the server are followed.</br>The default value is `false`. | -               | -        | 2026.3|
+| [followRedirects](#follow_redirects) | **Deprecated**, use `follow_redirects`.                                      | -               | -        |       |
+| [charset](#charset)                 | The charset used to encode the request body. Only for requests with a body    | -               | -        | 2026.3|
+| [response_storage](#response_storage) | Stores the response body in a file                                          | -               | -        | 2026.3|
 
 #### Example 1
 
@@ -318,3 +321,79 @@ request:
     source_filename: upload.jpg
 ```
 
+## follow_redirects
+
+When `true`, the HTTP redirections returned by the server are followed. The default value is `false`.
+
+The key `followRedirects` is the former name of this setting. It is still accepted when reading a
+project but is deprecated, and it is always written back as `follow_redirects`. A request cannot
+declare both keys: reading such a request fails and the schema reports it as invalid.
+
+#### Example
+
+```yaml
+request:
+  url: http://www.neotys.com/select
+  follow_redirects: true
+```
+
+## charset
+
+The charset used to encode the request body, for example `UTF-8`.
+
+When `charset` is not set, the request body is encoded as `ISO-8859-1`.
+
+The charset only applies to requests that have a body. It is ignored when there is no body.
+
+Any text is accepted when reading a project: the value is not checked against a list of charsets. Use a standard charset name such as `UTF-8` or `ISO-8859-1`.
+
+#### Example
+
+```yaml
+request:
+  url: /select
+  server: neotys
+  method: POST
+  body: My Body
+  charset: UTF-8
+```
+
+## response_storage
+
+Stores the response body of the request in a file.
+
+| Name                      | Description                                                                         | Accept variable | Required | Since |
+|:------------------------- |:------------------------------------------------------------------------------------|:---------------:|:--------:|:-----:|
+| path                      | The path of the file the response is stored in                                      | &#x2713;        | &#x2713; | 2026.3|
+| variable                  | The name of the variable receiving the path of the stored file.</br>It follows the same rules as element names: it cannot be empty, and it cannot contain forbidden characters or exceed 100 characters.</br>The default value is `responseFilePath`. | - | -  | 2026.3|
+| delete_when_test_finished | When `true`, the stored files are deleted when the test finishes.</br>The default value is `false`. | -               | -        | 2026.3|
+
+The `path` can contain:
+
+- the `{ID}` placeholder, replaced by a unique number for each stored file, so that every response is stored in its own file,
+- variables, for example `${orderId}`.
+
+A relative `path` is resolved against the data folder of the load generator. An absolute `path` is also allowed.
+
+The `variable` receives the absolute path of the stored file:
+
+- it is created automatically when the response is stored, there is no need to declare it in `variables`,
+- it holds a single text value, not a list: each stored response replaces the previous path,
+- its value is kept per virtual user: each virtual user only sees the path of its own last stored response,
+- before the first response is stored, it has no value.
+
+Do not give it the name of a variable declared in `variables`: once a response is stored, the path takes
+precedence over the declared variable for that virtual user, and the declared values are no longer used.
+Storing every path in a list variable is not supported.
+
+#### Example
+
+```yaml
+request:
+  url: /login
+  server: neotys
+  response_storage:
+    path: responses/login_{ID}.html
+    variable: loginResponseFile
+    delete_when_test_finished: true
+```

@@ -50,30 +50,26 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 	}
 
 	protected static UserPath.UserSession asUserSession(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
-		UserPath.UserSession userSession = asObject(codec, node, USER_SESSION, UserPath.UserSession.class);
-		if (userSession == null) {
-			userSession = DEFAULT_USER_SESSION;
-		}
-		return userSession;
+		return asObject(codec, node, USER_SESSION, UserPath.UserSession.class).orElse(DEFAULT_USER_SESSION);
 	}
 
 	/**
 	 * Reads a failure policy, rejecting anything but one of its names with a message pointing at the user path.
 	 * Jackson alone would map a number to the policy at that position.
 	 */
-	protected static UserPath.FailurePolicy asFailurePolicy(final JsonNode node, final String fieldName, final String userPathName) throws IOException {
+	protected static Optional<UserPath.FailurePolicy> asFailurePolicy(final JsonNode node, final String fieldName, final String userPathName) throws IOException {
 		final JsonNode policyNode = node.get(fieldName);
 		if (policyNode == null || policyNode.isNull()) {
-			return null;
+			return Optional.empty();
 		}
 		final UserPath.FailurePolicy policy = FAILURE_POLICIES.get(policyNode.textValue());
 		if (policy == null) {
 			throw incorrectValue(fieldName, userPathName, "must be '" + String.join("' or '", FAILURE_POLICIES.keySet()) + "'", policyNode);
 		}
-		return policy;
+		return Optional.of(policy);
 	}
 
-	protected static UserPathThinkTime asThinkTime(final ObjectCodec codec, final JsonNode node, final String userPathName) throws IOException {
+	protected static Optional<UserPathThinkTime> asThinkTime(final ObjectCodec codec, final JsonNode node, final String userPathName) throws IOException {
 		final JsonNode thinkTimeNode = node.get(THINK_TIME);
 		if (thinkTimeNode != null && !thinkTimeNode.isNull() && !thinkTimeNode.isObject()) {
 			throw incorrectValue(THINK_TIME, userPathName, "must be an object with '" + OVERRIDE + "', '" + FACTOR + "' and/or '" + RANDOM + "'", thinkTimeNode);
@@ -93,12 +89,8 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		return new IOException("Incorrect value for '" + fieldName + "' in User Path '" + userPathName + "': " + expectation + " (found: " + found + ").");
 	}
 
-	protected static Container asContainer(final ObjectCodec codec, final JsonNode node, final String fieldName) throws JsonProcessingException {
-		Container container = asObject(codec, node, fieldName, Container.class);
-		if (container != null) {
-			container = renamed(container, fieldName);
-		}
-		return container;
+	protected static Optional<Container> asContainer(final ObjectCodec codec, final JsonNode node, final String fieldName) throws JsonProcessingException {
+		return asObject(codec, node, fieldName, Container.class).map(container -> renamed(container, fieldName));
 	}
 	
 	/**
@@ -139,30 +131,19 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		final ObjectCodec codec = parser.getCodec();
 		final JsonNode node = codec.readTree(parser);
 
-		final String name = asText(node, NAME);
-		final String description = asText(node, DESCRIPTION);
-		final UserPath.UserSession userSession = asUserSession(codec, node);
-		final UserPath.FailurePolicy onError = asFailurePolicy(node, ON_ERROR, name);
-		final UserPath.FailurePolicy onAssertionFailure = asFailurePolicy(node, ON_ASSERTION_FAILURE, name);
-		final UserPathThinkTime thinkTime = asThinkTime(codec, node, name);
-		final Container init = asContainer(codec, node, INIT);
-		final Container actions = asContainer(codec, node, ACTIONS);
-		final Container end = asContainer(codec, node, END);
-		final List<ContentAssertion> legacyAssertions = asLegacyAssertions(codec, node);
-		final Optional<List<ContentAssertion>> contentAssertions = asContentAssertions(codec, node);
-
+		final Optional<String> name = asText(node, NAME);
 		final UserPath.Builder builder = UserPath.builder()
-				.name(name)
-				.description(Optional.ofNullable(description))
-				.userSession(userSession)
-				.onError(Optional.ofNullable(onError))
-				.onAssertionFailure(Optional.ofNullable(onAssertionFailure))
-				.thinkTime(Optional.ofNullable(thinkTime))
-				.init(Optional.ofNullable(init))
-				.actions(actions)
-				.end(Optional.ofNullable(end))
-				.addAllLegacyAssertions(legacyAssertions);
-		contentAssertions.ifPresent(builder::addAllContentAssertions);
+				.description(asText(node, DESCRIPTION))
+				.userSession(asUserSession(codec, node))
+				.onError(asFailurePolicy(node, ON_ERROR, name.orElse(null)))
+				.onAssertionFailure(asFailurePolicy(node, ON_ASSERTION_FAILURE, name.orElse(null)))
+				.thinkTime(asThinkTime(codec, node, name.orElse(null)))
+				.init(asContainer(codec, node, INIT))
+				.end(asContainer(codec, node, END))
+				.addAllLegacyAssertions(asLegacyAssertions(codec, node));
+		name.ifPresent(builder::name);
+		asContainer(codec, node, ACTIONS).ifPresent(builder::actions);
+		asContentAssertions(codec, node).ifPresent(builder::addAllContentAssertions);
 		return builder.build();
 	}
-}
+}

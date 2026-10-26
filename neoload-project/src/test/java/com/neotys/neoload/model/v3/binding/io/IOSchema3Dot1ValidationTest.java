@@ -107,6 +107,10 @@ public class IOSchema3Dot1ValidationTest {
             "test-userpaths-think-time-invalid-usage.yaml",
             "test-userpaths-think-time-invalid-values.yaml",
             "test-userpaths-think-time-unknown-key.yaml",
+            "test-request-redirect-keys-conflict.yaml",
+            "test-request-redirect-keys-conflict.json",
+            "test-soap-request-redirect-keys-conflict.yaml",
+            "test-soap-request-redirect-keys-conflict.json",
             "test-empty-collections.yaml",
             "test-empty-collections.json"
     );
