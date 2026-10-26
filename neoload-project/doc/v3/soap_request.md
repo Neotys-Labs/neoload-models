@@ -20,6 +20,9 @@ external XML file referenced by `content.path`.
 | [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration | -   | -        | 2026.3|
 | [size_assertion](size_assertion.md) | The assertion to validate the response size                  | -               | -        | 2026.3|
 | sla_profile              | The name of the SLA profile to apply to the request                 | -               | -        | 2026.3|
+| follow_redirects         | When `true`, the HTTP redirections are followed. See [follow_redirects](request.md#follow_redirects) | - | - | 2026.3|
+| charset                  | The charset used to encode the request body. See [charset](request.md#charset) | - | -  | 2026.3|
+| response_storage         | Stores the response body in a file. See [response_storage](request.md#response_storage) | - | - | 2026.3|
 
 #### Example 1
 
@@ -129,3 +132,9 @@ Define the external XML file used as the SOAP request body.
 | Name              | Description                                                                 | Accept variable | Required | Since |
 |:----------------- |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | path              | The path of the XML file used as the request body, relative to the project folder | -         | &#x2713; | 2026.3|
+
+## follow_redirects, charset and response_storage
+
+These settings work as on an HTTP request, see [request](request.md#follow_redirects). A SOAP request always
+has a body, so `charset` is always kept. When `charset` is not set, the request body is encoded as `ISO-8859-1`,
+even if the XML file declares another encoding.

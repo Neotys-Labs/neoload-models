@@ -181,6 +181,31 @@ public class IOSoapRequestSchemaValidationTest {
                         + extraKeys);
     }
 
+    @Test
+    public void soapRequestAdvancedSettingsAcceptedBySchema3Dot1() throws IOException {
+        assertTrue(schema31.validate(soapRequestDocumentWith(
+                "        follow_redirects: true\n"
+                        + "        charset: UTF-8\n"
+                        + "        response_storage:\n"
+                        + "          path: responses/order_${orderId}_{ID}.xml\n")).isEmpty());
+        assertTrue(schema31.validate(soapRequestDocumentWith("        followRedirects: true\n")).isEmpty());
+    }
+
+    @Test
+    public void soapRequestUnknownKeyRejectedBySchema3Dot1() throws IOException {
+        assertFalse(schema31.validate(soapRequestDocumentWith("        unknown_key: true\n")).isEmpty());
+    }
+
+    @Test
+    public void soapRequestBothRedirectKeysRejectedBySchema3Dot1() throws IOException {
+        assertFalse(schema31.validate(soapRequestDocumentWith("        followRedirects: true\n        follow_redirects: false\n")).isEmpty());
+    }
+
+    @Test
+    public void soapRequestResponseStorageWithoutPathRejectedBySchema3Dot1() throws IOException {
+        assertFalse(schema31.validate(soapRequestDocumentWith("        response_storage:\n          variable: myFile\n")).isEmpty());
+    }
+
     private static Path locateSchemasDir() throws URISyntaxException {
         final URL testClassesUrl = IOSoapRequestSchemaValidationTest.class.getProtectionDomain().getCodeSource().getLocation();
         final Path moduleDir = Paths.get(testClassesUrl.toURI()).getParent().getParent();
