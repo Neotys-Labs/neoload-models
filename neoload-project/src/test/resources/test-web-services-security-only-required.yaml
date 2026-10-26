@@ -1,0 +1,9 @@
+name: MyProject
+web_services_security:
+  keystores:
+  - path: ./wss-keystores/server.p12
+  request_profiles:
+  - name: MyRequestProfile
+  response_profiles:
+  - name: MyResponseProfile
+    keystore: ./wss-keystores/server.p12

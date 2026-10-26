@@ -3,16 +3,24 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.NameValue;
+import com.neotys.neoload.model.v3.project.userpath.ResponseStorage;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequestContent;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertion;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 
 public class IOSoapRequestTest extends AbstractIOElementsTest {
@@ -50,6 +58,14 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 								.addHeaders(NameValue.builder().name("SOAPAction").value("http://example.com/action").build())
 								.addHeaders(NameValue.builder().name("Content-Type").value("text/xml; charset=utf-8").build())
 								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_1").contains("Design").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_2").not(true).contains("Maintenance").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_3").contains("^Analyze.*$").regexp(true).build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_4").xPath("xpath").contains("DevOps").build())
+								.addContentAssertions(ContentAssertion.builder().name("assertion_5").jsonPath("jsonpath").contains("Automation").build())
+								.durationAssertion(DurationAssertion.builder().lessThan(2048L).build())
+								.sizeAssertion(SizeAssertion.builder().greaterThan(1024L).lessThan(2048L).build())
+								.slaProfile("MySla")
 								.build())
 						.build())
 				.build();
@@ -58,6 +74,33 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 				.name("MyProject")
 				.addUserPaths(userPath)
 				.build();
+	}
+
+	private static Project getSoapRequestLegacyAssertions() {
+		final UserPath userPath = UserPath.builder()
+				.name("MyUserPath")
+				.actions(Container.builder()
+						.name("actions")
+						.addSteps(SoapRequest.builder()
+								.url("http://host:80/")
+								.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+								.addContentAssertions(ContentAssertion.builder().name("soap_legacy").contains("legacy").build())
+								.build())
+						.build())
+				.build();
+
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(userPath)
+				.build();
+	}
+
+	@Test
+	public void readSoapRequestLegacyAssertions() throws IOException {
+		final Project expectedProject = getSoapRequestLegacyAssertions();
+		assertNotNull(expectedProject);
+
+		read("test-soap-request-legacy-assertions", expectedProject);
 	}
 
 	@Test
@@ -252,5 +295,53 @@ public class IOSoapRequestTest extends AbstractIOElementsTest {
 		assertEquals(expectedSoapRequest.getParameters(), actualSoapRequest.getParameters());
 		assertEquals(expectedSoapRequest.getHeaders(), actualSoapRequest.getHeaders());
 		assertEquals(expectedDescriptor.toString(), actualDescriptor.toString());
+	}
+
+	private static Project getSoapRequestAdvanced() {
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(UserPath.builder()
+						.name("MyUserPath")
+						.actions(Container.builder()
+								.name("actions")
+								.addSteps(SoapRequest.builder()
+										.url("http://host:80/")
+										.content(SoapRequestContent.builder().path("./requests/mySOAPRequest.xml").build())
+										.followRedirects(true)
+										.charset("UTF-8")
+										.responseStorage(ResponseStorage.builder().path("responses/order_${orderId}_{ID}.xml").build())
+										.build())
+								.build())
+						.build())
+				.build();
+	}
+
+	@Test
+	public void readSoapRequestAdvanced() throws IOException {
+		final Project expectedProject = getSoapRequestAdvanced();
+		assertNotNull(expectedProject);
+
+		read("test-soap-request-advanced", expectedProject);
+	}
+
+	@Test
+	public void writeSoapRequestAdvanced() throws IOException {
+		final Project expectedProject = getSoapRequestAdvanced();
+		assertNotNull(expectedProject);
+
+		write("test-soap-request-advanced", expectedProject);
+	}
+
+	@Test
+	public void readSoapRequestWithBothFollowRedirectsKeysFails() throws IOException {
+		for (final String extension : new String[] { "yaml", "json" }) {
+			final String content = getContent(getFile("test-soap-request-redirect-keys-conflict", extension), StandardCharsets.UTF_8);
+			try {
+				new IO().read(content);
+				fail("Reading the " + extension + " fixture must fail");
+			} catch (final JsonMappingException e) {
+				assertTrue(e.getMessage(), e.getMessage().contains("followRedirects") && e.getMessage().contains("follow_redirects"));
+			}
+		}
 	}
 }
