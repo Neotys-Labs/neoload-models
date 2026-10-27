@@ -228,7 +228,7 @@
 			},
 			"duration": {
 				"title": "Duration",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
+				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "$ref": "#/definitions/common/iterations" }]
 			},
 			"stop_after_options": {
 				"title": "variation_policy.stop_after values",
@@ -237,11 +237,6 @@
 			"start_after_options": {
 				"title": "Start after",
 				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "$ref": "#/definitions/common/text" }]
-			},
-			"time": {
-				"title": "Time",
-				"type": "string",
-				"pattern": "^((\\d{1,2}[hms]{1}){1,3})+$"
 			},
 			"iterations": {
 				"title": "Iterations",

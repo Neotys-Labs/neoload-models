@@ -7,15 +7,21 @@ import static com.neotys.neoload.model.v3.project.variable.OrderVariable.Order.*
 import static com.neotys.neoload.model.v3.project.variable.OutOfValueVariable.OutOfValue.*;
 import static com.neotys.neoload.model.v3.project.variable.ScopeVariable.Scope.*;
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.variable.*;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Arrays;
 import org.junit.Test;
 
 public class IOVariableTest extends AbstractIOElementsTest {
@@ -209,7 +215,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
                         .name("MyCurrentDate")
                         .description("now plus 5 minutes")
                         .pattern("yyyy-MM-dd'T'HH:mm:ss")
-                        .offset("5m")
+                        .offset(Offset.parse("5m").get())
                         .build())
                 .build();
     }
@@ -223,18 +229,55 @@ public class IOVariableTest extends AbstractIOElementsTest {
     }
 
     @Test
-    public void readCurrentDateVariableRejectsEveryInvalidOffset() throws IOException {
-        final ProjectDescriptor descriptor = new IO().read(getFile("test-current-date-variable-offsets-invalid", "yaml"));
-        final int variableCount = descriptor.getProject().getVariables().size();
+    public void readCurrentDateVariableReadsEveryUnitAndKeepsNegativeAmounts() throws IOException {
+        final String[] offsets = {"-5d", "3ms", "10s", "2m", "4h", "1mo", "2y"};
+        final int[] amounts = {-5, 3, 10, 2, 4, 1, 2};
+        final IncrementTimeUnit[] units = {IncrementTimeUnit.DAY, IncrementTimeUnit.MILLISECOND, IncrementTimeUnit.SECOND, IncrementTimeUnit.MINUTE,
+                IncrementTimeUnit.HOUR, IncrementTimeUnit.MONTH, IncrementTimeUnit.YEAR};
 
-        final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
-        assertFalse(validation.isValid());
+        for (int i = 0; i < offsets.length; i++) {
+            final Project project = new IO().read(currentDateYaml(offsets[i])).getProject();
 
-        final String message = validation.getMessage().get();
-        assertTrue(message, message.contains("Violation Number: " + variableCount + "."));
-        for (int index = 0; index < variableCount; index++) {
-            assertTrue(message, message.contains("variables[" + index + "].offset"));
+            final Offset offset = ((CurrentDateVariable) project.getVariables().get(0)).getOffset().get();
+            assertEquals(offsets[i], amounts[i], offset.getAmount());
+            assertEquals(offsets[i], units[i], offset.getUnit());
         }
+    }
+
+    @Test
+    public void readCurrentDateVariableFailsTheReadOnEveryInvalidOffset() throws IOException {
+        final String fixture = new String(Files.readAllBytes(getFile("test-current-date-variable-offsets-invalid", "yaml").toPath()), StandardCharsets.UTF_8);
+        final String[] variables = fixture.split("(?m)^(?=- current_date:)");
+
+        for (final String variable : Arrays.copyOfRange(variables, 1, variables.length)) {
+            final String yaml = "name: MyProject\nvariables:\n" + variable;
+            final String message = assertThrows(yaml, JsonMappingException.class, () -> new IO().read(yaml)).getMessage();
+            assertTrue(message, message.startsWith("Incorrect offset: '"));
+            assertTrue(message, message.contains("[\"offset\"]"));
+        }
+    }
+
+    @Test
+    public void readCurrentDateVariableNamesTheInvalidOffsetInTheError() {
+        for (final String offset : new String[] {"5x", "abc", "1h30m", "99999999999d"}) {
+            final String message = assertThrows(JsonMappingException.class, () -> new IO().read(currentDateYaml(offset))).getMessage();
+            assertTrue(message, message.contains("'" + offset + "'"));
+            assertTrue(message, message.contains("[\"offset\"]"));
+        }
+    }
+
+    @Test
+    public void currentDateOffsetIsWrittenBackUnchanged() throws IOException {
+        final ProjectDescriptor descriptor = new IO().read(currentDateYaml("-5d"));
+
+        final String written = new IO().write(descriptor, IO.Format.YAML);
+
+        assertTrue(written, written.contains("offset: -5d"));
+        assertEquals(descriptor, new IO().read(written));
+    }
+
+    private static String currentDateYaml(final String offset) {
+        return "name: P\nvariables:\n- current_date:\n    name: D\n    offset: " + offset + "\n";
     }
 
     @Test
@@ -287,7 +330,7 @@ public class IOVariableTest extends AbstractIOElementsTest {
                         .description("start of year plus 5 minutes")
                         .pattern("yyyy-MM-dd'T'HH:mm:ss")
                         .startDate("2024-01-01T00:00:00")
-                        .changeStep("5m")
+                        .changeStep(Offset.parse("5m").get())
                         .changePolicy(EACH_USE)
                         .scope(LOCAL)
                         .build())
@@ -295,12 +338,23 @@ public class IOVariableTest extends AbstractIOElementsTest {
     }
 
     @Test
-    public void readDateVariableRejectsInvalidChangeStep() throws IOException {
-        final ProjectDescriptor descriptor = new IO().read(getFile("test-date-variable-invalid-change-step", "yaml"));
+    public void readDateVariableFailsTheReadOnInvalidChangeStep() {
+        final String message = assertThrows(JsonMappingException.class, () -> new IO().read(getFile("test-date-variable-invalid-change-step", "yaml"))).getMessage();
 
-        final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
-        assertFalse(validation.isValid());
-        assertTrue(validation.getMessage().get(), validation.getMessage().get().contains("variables[0].change_step"));
+        assertTrue(message, message.contains("'bogus'"));
+        assertTrue(message, message.contains("[\"change_step\"]"));
+    }
+
+    @Test
+    public void readDateVariableReadsANegativeChangeStepAndWritesItBack() throws IOException {
+        final ProjectDescriptor descriptor = new IO().read("name: P\nvariables:\n- date:\n    name: D\n    start_date: 01/01/2024 00:00:00\n    change_step: -5d\n");
+
+        final Offset changeStep = ((DateVariable) descriptor.getProject().getVariables().get(0)).getChangeStep().get();
+        assertEquals(-5, changeStep.getAmount());
+        assertEquals(IncrementTimeUnit.DAY, changeStep.getUnit());
+        final String written = new IO().write(descriptor, IO.Format.YAML);
+        assertTrue(written, written.contains("change_step: -5d"));
+        assertEquals(descriptor, new IO().read(written));
     }
 
     @Test

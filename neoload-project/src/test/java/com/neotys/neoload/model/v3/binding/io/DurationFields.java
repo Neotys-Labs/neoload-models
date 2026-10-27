@@ -12,6 +12,14 @@ enum DurationFields {
 			+ "      maximum:\n        users: 5\n        duration: 1 iteration\n      start: maximum\n      duration: 15 iterations\n      step_rampup: " + value + "\n")),
 	RAMPUP_INCREMENT_RAMPUP("increment_rampup", true, value -> scenario("  populations:\n  - name: R\n    rampup_load:\n      min_users: 1\n      max_users: 5\n      increment_users: 1\n"
 			+ "      increment_every: 1 iteration\n      duration: 15 iterations\n      increment_rampup: " + value + "\n")),
+	CONSTANT_DURATION("duration", true, value -> scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      duration: " + value + "\n")),
+	RAMPUP_INCREMENT_EVERY("increment_every", true, value -> scenario("  populations:\n  - name: R\n    rampup_load:\n      min_users: 1\n      max_users: 5\n      increment_users: 1\n"
+			+ "      increment_every: " + value + "\n      duration: 15 iterations\n")),
+	PEAKS_MINIMUM_DURATION("duration", true, value -> scenario("  populations:\n  - name: K\n    peaks_load:\n      minimum:\n        users: 1\n        duration: " + value + "\n"
+			+ "      maximum:\n        users: 5\n        duration: 1 iteration\n      start: maximum\n      duration: 15 iterations\n")),
+	PEAKS_MAXIMUM_DURATION("duration", true, value -> scenario("  populations:\n  - name: K\n    peaks_load:\n      minimum:\n        users: 1\n        duration: 1 iteration\n"
+			+ "      maximum:\n        users: 5\n        duration: " + value + "\n      start: maximum\n      duration: 15 iterations\n")),
+	CUSTOM_STEP_WHEN("when", true, value -> scenario("  populations:\n  - name: C\n    custom_load:\n      steps:\n      - when: " + value + "\n        users: 300\n")),
 	MONITORING_BEFORE("before", true, value -> scenario("  monitoring:\n    before: " + value + "\n")),
 	MONITORING_AFTER("after", true, value -> scenario("  monitoring:\n    after: " + value + "\n")),
 	RENDEZVOUS_TIMEOUT("timeout", true, value -> scenario("  rendezvous_policies:\n  - name: r\n    timeout: " + value + "\n")),

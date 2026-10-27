@@ -53,7 +53,7 @@ public abstract class LoadPolicyWriter {
         Optional.ofNullable(loadPolicy.getDuration()).ifPresent(duration -> {
         	if (duration.getType() == LoadDuration.Type.TIME) {
         		xmlElement.setAttribute(XML_ATTR_TYPE, "2");
-                xmlElement.setAttribute(XML_ATTR_TIME, String.valueOf(duration.getValue()));
+                xmlElement.setAttribute(XML_ATTR_TIME, String.valueOf(duration.getAmount()));
                 xmlElement.setAttribute(XML_ATTR_TIMEUNIT, "0");
         	}
         	else {

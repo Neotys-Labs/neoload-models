@@ -11,7 +11,7 @@ import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.DynatraceAnomalyRule;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
-import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.IterationLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.MonitoringParameters;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
@@ -23,6 +23,7 @@ import com.neotys.neoload.model.v3.project.scenario.RendezvousPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import com.neotys.neoload.model.v3.project.scenario.TimeLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
 import java.io.IOException;
 import java.time.Duration;
@@ -45,10 +46,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.loadPolicy(RampupLoadPolicy.builder()
 						.minUsers(1)
 						.incrementUsers(10)
-						.incrementEvery(LoadDuration.builder()
-								.value(5)
-								.type(LoadDuration.Type.TIME)
-								.build())
+						.incrementEvery(TimeLoadDuration.builder().value(Duration.ofSeconds(5)).build())
 						.build())
 				.build();
 
@@ -57,26 +55,17 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.loadPolicy(PeaksLoadPolicy.builder()
 						.minimum(PeakLoadPolicy.builder()
 								.users(100)
-								.duration(LoadDuration.builder()
-										.value(120)
-										.type(LoadDuration.Type.TIME)
-										.build())
+								.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(120)).build())
 								.build())
 						.maximum(PeakLoadPolicy.builder()
 								.users(500)
-								.duration(LoadDuration.builder()
-										.value(120)
-										.type(LoadDuration.Type.TIME)
-										.build())
+								.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(120)).build())
 								.build())
 						.start(Peak.MINIMUM)
 						.build())
 				.build();
 
-		ImmutableLoadDuration loadDuration = LoadDuration.builder()
-				.value(100)
-				.type(LoadDuration.Type.TIME)
-				.build();
+		LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(100)).build();
 		ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
 				.when(loadDuration)
 				.users(300)
@@ -100,10 +89,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.name("MyPopulation1")
 				.loadPolicy(ConstantLoadPolicy.builder()
 						.users(500)
-						.duration(LoadDuration.builder()
-								.value(900)
-								.type(LoadDuration.Type.TIME)
-								.build())
+						.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(900)).build())
 						.startAfter(StartAfter.builder()
 								.value(Duration.ofSeconds(30))
 								.type(StartAfter.Type.TIME)
@@ -122,14 +108,8 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.minUsers(1)
 						.maxUsers(500)
 						.incrementUsers(10)
-						.incrementEvery(LoadDuration.builder()
-								.value(1)
-								.type(LoadDuration.Type.ITERATION)
-								.build())
-						.duration(LoadDuration.builder()
-								.value(15)
-								.type(LoadDuration.Type.ITERATION)
-								.build())
+						.incrementEvery(IterationLoadDuration.builder().count(1).build())
+						.duration(IterationLoadDuration.builder().count(15).build())
 						.startAfter(StartAfter.builder()
 								.value("MyPopulation1")
 								.type(StartAfter.Type.POPULATION)
@@ -146,23 +126,14 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.loadPolicy(PeaksLoadPolicy.builder()
 						.minimum(PeakLoadPolicy.builder()
 								.users(100)
-								.duration(LoadDuration.builder()
-										.value(1)
-										.type(LoadDuration.Type.ITERATION)
-										.build())
+								.duration(IterationLoadDuration.builder().count(1).build())
 								.build())
 						.maximum(PeakLoadPolicy.builder()
 								.users(500)
-								.duration(LoadDuration.builder()
-										.value(1)
-										.type(LoadDuration.Type.ITERATION)
-										.build())
+								.duration(IterationLoadDuration.builder().count(1).build())
 								.build())
 						.start(Peak.MAXIMUM)
-						.duration(LoadDuration.builder()
-								.value(15)
-								.type(LoadDuration.Type.ITERATION)
-								.build())
+						.duration(IterationLoadDuration.builder().count(15).build())
 						.startAfter(StartAfter.builder()
 								.value(Duration.ofSeconds(60))
 								.type(StartAfter.Type.TIME)
@@ -175,10 +146,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 						.build())
 				.build();
 
-		ImmutableLoadDuration loadDuration = LoadDuration.builder()
-				.value(100)
-				.type(LoadDuration.Type.TIME)
-				.build();
+		LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(100)).build();
 		ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
 				.when(loadDuration)
 				.users(300)

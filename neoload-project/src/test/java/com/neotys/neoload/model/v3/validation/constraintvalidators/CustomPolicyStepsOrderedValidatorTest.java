@@ -1,16 +1,16 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
-import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
-import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
-import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
-import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
+import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.TimeLoadDuration;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+import org.junit.Test;
 
 public class CustomPolicyStepsOrderedValidatorTest {
 
@@ -26,10 +26,7 @@ public class CustomPolicyStepsOrderedValidatorTest {
 
     @Test
     public void stepsWithoutDurationIsValid() {
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
-                .type(LoadDuration.Type.TIME)
-                .build();
+        LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(100)).build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
                 .when(loadDuration)
                 .users(100)
@@ -41,39 +38,10 @@ public class CustomPolicyStepsOrderedValidatorTest {
     }
 
     @Test
-    public void stepsWithoutDurationValueIsValid() {
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableLoadDuration loadDurationWithoutValue = LoadDuration.builder()
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
-                .when(loadDuration)
-                .users(100)
-                .build();
-        ImmutableCustomPolicyStep customPolicyStepWithoutDurationValue = CustomPolicyStep.builder()
-                .when(loadDurationWithoutValue)
-                .users(100)
-                .build();
-        assertTrue(new CustomPolicyStepsOrderedValidator().isValid(Arrays.asList(customPolicyStep, customPolicyStep, customPolicyStepWithoutDurationValue), null));
-    }
-
-    @Test
     public void orderedListIsValid() {
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableLoadDuration loadDuration2 = LoadDuration.builder()
-                .value(200)
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableLoadDuration loadDuration3 = LoadDuration.builder()
-                .value(300)
-                .type(LoadDuration.Type.TIME)
-                .build();
+        LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(100)).build();
+        LoadDuration loadDuration2 = TimeLoadDuration.builder().value(Duration.ofSeconds(200)).build();
+        LoadDuration loadDuration3 = TimeLoadDuration.builder().value(Duration.ofSeconds(300)).build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
                 .when(loadDuration)
                 .users(100)
@@ -91,18 +59,9 @@ public class CustomPolicyStepsOrderedValidatorTest {
 
     @Test
     public void unorderedListIsInvalid() {
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableLoadDuration loadDuration2 = LoadDuration.builder()
-                .value(200)
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableLoadDuration loadDuration3 = LoadDuration.builder()
-                .value(300)
-                .type(LoadDuration.Type.TIME)
-                .build();
+        LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(100)).build();
+        LoadDuration loadDuration2 = TimeLoadDuration.builder().value(Duration.ofSeconds(200)).build();
+        LoadDuration loadDuration3 = TimeLoadDuration.builder().value(Duration.ofSeconds(300)).build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
                 .when(loadDuration)
                 .users(100)
@@ -120,22 +79,10 @@ public class CustomPolicyStepsOrderedValidatorTest {
 
     @Test
     public void orderedListWithSomeIdenticalDurationIsValid() {
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableLoadDuration loadDuration2 = LoadDuration.builder()
-                .value(200)
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableLoadDuration loadDuration2bis = LoadDuration.builder()
-                .value(200)
-                .type(LoadDuration.Type.TIME)
-                .build();
-        ImmutableLoadDuration loadDuration3 = LoadDuration.builder()
-                .value(300)
-                .type(LoadDuration.Type.TIME)
-                .build();
+        LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(100)).build();
+        LoadDuration loadDuration2 = TimeLoadDuration.builder().value(Duration.ofSeconds(200)).build();
+        LoadDuration loadDuration2bis = TimeLoadDuration.builder().value(Duration.ofSeconds(200)).build();
+        LoadDuration loadDuration3 = TimeLoadDuration.builder().value(Duration.ofSeconds(300)).build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
                 .when(loadDuration)
                 .build();

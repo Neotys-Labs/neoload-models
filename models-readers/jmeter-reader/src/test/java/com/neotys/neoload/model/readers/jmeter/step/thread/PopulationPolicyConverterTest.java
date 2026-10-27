@@ -39,9 +39,8 @@ public class PopulationPolicyConverterTest {
 
         PopulationPolicy actual = PopulationPolicyConverter.convert(threadGroup);
 
-        LoadDuration loadDuration = LoadDuration.builder()
-                .type(LoadDuration.Type.ITERATION)
-                .value(Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")))
+        LoadDuration loadDuration = IterationLoadDuration.builder()
+                .count(Integer.parseInt(threadGroup.getSamplerController().getPropertyAsString("LoopController.loops")))
                 .build();
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(threadGroup.getNumThreads())
@@ -77,10 +76,7 @@ public class PopulationPolicyConverterTest {
 
         PopulationPolicy actual = PopulationPolicyConverter.convert(threadGroup);
 
-        LoadDuration loadDuration = LoadDuration.builder()
-                .type(LoadDuration.Type.TIME)
-                .value((int) threadGroup.getDuration())
-                .build();
+        LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds((int) threadGroup.getDuration())).build();
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(threadGroup.getNumThreads())
                 .duration(loadDuration)
@@ -119,11 +115,8 @@ public class PopulationPolicyConverterTest {
 
         PopulationPolicy actual = PopulationPolicyConverter.convert(threadGroup);
 
-        LoadDuration loadDuration = LoadDuration.builder().build();
-
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(numThreads)
-                .duration(loadDuration)
                 .rampup(Duration.ofSeconds(rampup))
                 .startAfter(StartAfter.builder()
                         .value(Duration.ofSeconds(delay))

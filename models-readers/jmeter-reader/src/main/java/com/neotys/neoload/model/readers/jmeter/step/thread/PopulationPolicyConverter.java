@@ -76,22 +76,20 @@ class PopulationPolicyConverter {
         } else if (loop != -1) {
             return getLoadDuration(loop);
         }
-        return LoadDuration.builder().build();// empty load duration
+        return null;
     }
 
     private static LoadDuration getLoadDuration(final int loop) {
         EventListenerUtils.readSupportedAction("IterationDuration");
-        return LoadDuration.builder()
-                .type(LoadDuration.Type.ITERATION)
-                .value(loop)
+        return IterationLoadDuration.builder()
+                .count(loop)
                 .build();
     }
 
     private static LoadDuration getTimeLoadDuration(final ThreadGroup threadGroup) {
         EventListenerUtils.readSupportedAction("TimeDuration");
-        return LoadDuration.builder()
-                .type(LoadDuration.Type.TIME)
-                .value((int) threadGroup.getDuration())
+        return TimeLoadDuration.builder()
+                .value(Duration.ofSeconds(threadGroup.getDuration()))
                 .build();
     }
 

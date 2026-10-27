@@ -10,7 +10,6 @@ import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
-import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.MonitoringParameters;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
@@ -22,6 +21,7 @@ import com.neotys.neoload.model.v3.project.scenario.RendezvousPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import com.neotys.neoload.model.v3.project.scenario.TimeLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.time.Duration;
@@ -223,7 +223,7 @@ public class ScenarioTest {
         		.name("MyPopulation11")
         		.loadPolicy(ConstantLoadPolicy.builder()
         				.users(500)
-        				.duration(LoadDuration.builder().build())
+        				.duration(TimeLoadDuration.builder().value(Duration.ZERO).build())
         				.startAfter(StartAfter.builder().build())
         				.rampup(Duration.ofSeconds(60))
         				.stopAfter(StopAfter.builder().build())
@@ -236,8 +236,8 @@ public class ScenarioTest {
         				.minUsers(10)
         				.maxUsers(500)
         				.incrementUsers(10)
-        				.incrementEvery(LoadDuration.builder().build())
-        				.duration(LoadDuration.builder().build())
+        				.incrementEvery(TimeLoadDuration.builder().value(Duration.ZERO).build())
+        				.duration(TimeLoadDuration.builder().value(Duration.ZERO).build())
         				.startAfter(StartAfter.builder().build())
         				.rampup(Duration.ofSeconds(90))
         				.stopAfter(StopAfter.builder().build())
@@ -249,24 +249,21 @@ public class ScenarioTest {
         		.loadPolicy(PeaksLoadPolicy.builder()
         				.minimum(PeakLoadPolicy.builder()
         						.users(100)
-        						.duration(LoadDuration.builder().build())
+        						.duration(TimeLoadDuration.builder().value(Duration.ZERO).build())
         						.build())
         				.maximum(PeakLoadPolicy.builder()
         						.users(500)
-        						.duration(LoadDuration.builder().build())
+        						.duration(TimeLoadDuration.builder().value(Duration.ZERO).build())
         						.build())
         				.start(Peak.MAXIMUM)
-        				.duration(LoadDuration.builder().build())
+        				.duration(TimeLoadDuration.builder().value(Duration.ZERO).build())
         				.startAfter(StartAfter.builder().build())
         				.rampup(Duration.ofSeconds(15))
         				.stopAfter(StopAfter.builder().build())
         				.build())
         		.build();
 
-		ImmutableLoadDuration loadDuration = LoadDuration.builder()
-				.value(100)
-				.type(LoadDuration.Type.TIME)
-				.build();
+		LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(100)).build();
 		ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
 				.when(loadDuration)
 				.users(-1)

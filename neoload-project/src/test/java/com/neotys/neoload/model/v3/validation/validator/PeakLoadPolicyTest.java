@@ -5,14 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
-import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.TimeLoadDuration;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import java.time.Duration;
+import org.junit.Test;
 
 public class PeakLoadPolicyTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -38,10 +35,7 @@ public class PeakLoadPolicyTest {
 		final Validator validator = new Validator();
 		
 		PeakLoadPolicy loadPolicy = PeakLoadPolicy.builder()
-				.duration(LoadDuration.builder()
-						.value(1)
-						.type(LoadDuration.Type.TIME)
-						.build())
+				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 				.build();
 		Validation validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -49,10 +43,7 @@ public class PeakLoadPolicyTest {
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(-10)
-				.duration(LoadDuration.builder()
-						.value(1)
-						.type(LoadDuration.Type.TIME)
-						.build())
+				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -60,10 +51,7 @@ public class PeakLoadPolicyTest {
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(0)
-				.duration(LoadDuration.builder()
-						.value(1)
-						.type(LoadDuration.Type.TIME)
-						.build())
+				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
@@ -71,10 +59,7 @@ public class PeakLoadPolicyTest {
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(1)
-				.duration(LoadDuration.builder()
-						.value(1)
-						.type(LoadDuration.Type.TIME)
-						.build())
+				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertTrue(validation.isValid());
@@ -102,10 +87,7 @@ public class PeakLoadPolicyTest {
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(1)
-				.duration(LoadDuration.builder()
-						.value(1)
-						.type(LoadDuration.Type.TIME)
-						.build())
+				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertTrue(validation.isValid());

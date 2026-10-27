@@ -1,31 +1,29 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.neotys.neoload.model.v3.binding.converter.DurationToStringConverter;
-import com.neotys.neoload.model.v3.binding.converter.StringToDurationConverter;
-import com.neotys.neoload.model.v3.project.Composite;
+import com.neotys.neoload.model.v3.binding.serializer.LoadDurationDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.LoadDurationSerializer;
 import com.neotys.neoload.model.v3.validation.constraints.CompositeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
+/**
+ * The length of a load: either a {@link TimeLoadDuration} or an {@link IterationLoadDuration}.
+ * A plain number in YAML is a number of seconds.
+ */
 @CompositeCheck(groups={NeoLoad.class}, message="{com.neotys.neoload.model.v3.validation.constraints.CompositeCheck.duration.message}")
-@JsonSerialize(converter=DurationToStringConverter.class)
-@JsonDeserialize(converter=StringToDurationConverter.class)
-@Value.Immutable
-@Value.Style(validationMethod = ValidationMethod.NONE)
-@Gson.TypeAdapters
-public interface LoadDuration extends Composite<Integer, LoadDuration.Type> {
+@JsonSerialize(using = LoadDurationSerializer.class)
+@JsonDeserialize(using = LoadDurationDeserializer.class)
+public interface LoadDuration {
 	enum Type {
 		ITERATION,
 		TIME
 	}
 
-	class Builder extends ImmutableLoadDuration.Builder {}
-	public static Builder builder() {
-		return new Builder();
-	}
+	Type getType();
+
+	/**
+	 * @return the whole seconds of a time duration, the count of an iteration duration
+	 */
+	long getAmount();
 }

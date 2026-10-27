@@ -1,5 +1,10 @@
 package com.neotys.neoload.model.v3.project.variable;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.binding.serializer.OffsetDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.OffsetSerializer;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 
@@ -7,6 +12,8 @@ import java.util.regex.Matcher;
  * Shared "&lt;amount&gt;&lt;unit&gt;" encoding used by both CurrentDateVariable's offset and
  * DateVariable's change_step.
  */
+@JsonSerialize(using = OffsetSerializer.class)
+@JsonDeserialize(using = OffsetDeserializer.class)
 public final class Offset {
 
 	private final int amount;
@@ -44,5 +51,24 @@ public final class Offset {
 
 	public IncrementTimeUnit getUnit() {
 		return unit;
+	}
+
+	@Override
+	public boolean equals(final Object other) {
+		if (!(other instanceof Offset)) {
+			return false;
+		}
+		final Offset offset = (Offset) other;
+		return amount == offset.amount && unit == offset.unit;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(amount, unit);
+	}
+
+	@Override
+	public String toString() {
+		return amount + unit.getCode();
 	}
 }

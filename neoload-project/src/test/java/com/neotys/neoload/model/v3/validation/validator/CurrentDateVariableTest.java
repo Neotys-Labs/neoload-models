@@ -26,7 +26,6 @@ public class CurrentDateVariableTest {
 		assertFalse(validation.getMessage().isPresent());
 		assertEquals(CurrentDateVariable.DEFAULT_PATTERN, variable.getPattern());
 		assertFalse(variable.getOffset().isPresent());
-		assertFalse(variable.getParsedOffset().isPresent());
 	}
 
 	@Test
@@ -64,10 +63,10 @@ public class CurrentDateVariableTest {
 			final String offset = "-5" + unit.getCode();
 			final CurrentDateVariable variable = CurrentDateVariable.builder()
 					.name("MyCurrentDate")
-					.offset(offset)
+					.offset(Offset.parse(offset).get())
 					.build();
 
-			final Optional<Offset> parsed = variable.getParsedOffset();
+			final Optional<Offset> parsed = variable.getOffset();
 			assertTrue(offset, parsed.isPresent());
 			assertEquals(-5, parsed.get().getAmount());
 			assertEquals(unit, parsed.get().getUnit());

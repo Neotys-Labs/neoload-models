@@ -2,19 +2,19 @@ package com.neotys.neoload.model.v3.util;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
+import com.neotys.neoload.model.v3.project.scenario.IterationLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
-import com.neotys.neoload.model.v3.project.scenario.LoadDuration.Type;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.TimeLoadDuration;
+import java.time.Duration;
+import java.util.Arrays;
+import org.junit.Test;
 
 public class ScenarioUtilsTest {
 	// Users
@@ -22,22 +22,10 @@ public class ScenarioUtilsTest {
 	private static final int MAX_USERS = 50;
 	
 	// Load Duration
-	private static final LoadDuration DURATION_30_SECONDS = LoadDuration.builder()
-			.type(Type.TIME)
-			.value(30)
-			.build();
-	private static final LoadDuration DURATION_60_SECONDS = LoadDuration.builder()
-			.type(Type.TIME)
-			.value(60)
-			.build();
-	private static final LoadDuration DURATION_50_ITERATIONS = LoadDuration.builder()
-			.type(Type.ITERATION)
-			.value(50)
-			.build();
-	private static final LoadDuration DURATION_100_ITERATIONS = LoadDuration.builder()
-			.type(Type.ITERATION)
-			.value(100)
-			.build();
+	private static final LoadDuration DURATION_30_SECONDS = TimeLoadDuration.builder().value(Duration.ofSeconds(30)).build();
+	private static final LoadDuration DURATION_60_SECONDS = TimeLoadDuration.builder().value(Duration.ofSeconds(60)).build();
+	private static final LoadDuration DURATION_50_ITERATIONS = IterationLoadDuration.builder().count(50).build();
+	private static final LoadDuration DURATION_100_ITERATIONS = IterationLoadDuration.builder().count(100).build();
 	
 	// Population Policy
 	// Constant Load Policy
@@ -102,10 +90,7 @@ public class ScenarioUtilsTest {
 			.name("MyPopulation")
 			.loadPolicy(RampupLoadPolicy.builder()
 					.minUsers(MIN_USERS)
-					.incrementEvery(LoadDuration.builder()
-							.type(Type.TIME)
-							.value(1)
-							.build())
+					.incrementEvery(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 					.incrementUsers(1)
 					.build())
 			.build();
@@ -113,10 +98,7 @@ public class ScenarioUtilsTest {
 			.name("MyPopulation")
 			.loadPolicy(RampupLoadPolicy.builder()
 					.minUsers(MIN_USERS)
-					.incrementEvery(LoadDuration.builder()
-							.type(Type.TIME)
-							.value(1)
-							.build())
+					.incrementEvery(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 					.incrementUsers(1)
 					.duration(DURATION_60_SECONDS)
 					.build())
@@ -125,10 +107,7 @@ public class ScenarioUtilsTest {
 			.name("MyPopulation")
 			.loadPolicy(RampupLoadPolicy.builder()
 					.minUsers(MIN_USERS)
-					.incrementEvery(LoadDuration.builder()
-							.type(Type.TIME)
-							.value(1)
-							.build())
+					.incrementEvery(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 					.incrementUsers(1)
 					.duration(DURATION_100_ITERATIONS)
 					.build())
@@ -137,10 +116,7 @@ public class ScenarioUtilsTest {
 			.name("MyPopulation")
 			.loadPolicy(RampupLoadPolicy.builder()
 					.minUsers(MIN_USERS)
-					.incrementEvery(LoadDuration.builder()
-							.type(Type.TIME)
-							.value(1)
-							.build())
+					.incrementEvery(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 					.incrementUsers(1)
 					.maxUsers(MAX_USERS)
 					.build())
@@ -149,10 +125,7 @@ public class ScenarioUtilsTest {
 			.name("MyPopulation")
 			.loadPolicy(RampupLoadPolicy.builder()
 					.minUsers(MIN_USERS)
-					.incrementEvery(LoadDuration.builder()
-							.type(Type.TIME)
-							.value(1)
-							.build())
+					.incrementEvery(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 					.incrementUsers(1)
 					.maxUsers(MAX_USERS)
 					.duration(DURATION_60_SECONDS)
@@ -162,10 +135,7 @@ public class ScenarioUtilsTest {
 			.name("MyPopulation")
 			.loadPolicy(RampupLoadPolicy.builder()
 					.minUsers(MIN_USERS)
-					.incrementEvery(LoadDuration.builder()
-							.type(Type.TIME)
-							.value(1)
-							.build())
+					.incrementEvery(TimeLoadDuration.builder().value(Duration.ofSeconds(1)).build())
 					.incrementUsers(1)
 					.maxUsers(MAX_USERS)
 					.duration(DURATION_100_ITERATIONS)
@@ -259,10 +229,7 @@ public class ScenarioUtilsTest {
 	public void getSummaryFromPopulationPolicies() {
 		LoadSummary expecedLoadSummary = LoadSummary.builder()
 				.maxUsers(0)
-				.duration(LoadDuration.builder()
-						.type(Type.TIME)
-						.value(0)
-						.build())
+				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(0)).build())
 				.build();
 		assertEquals(expecedLoadSummary, ScenarioUtils.getSummaryFromPopulationPolicies(Arrays.asList()));
 		
@@ -322,10 +289,7 @@ public class ScenarioUtilsTest {
 	public void getSummaryFromLoadSummaries() {
 		LoadSummary expecedLoadSummary = LoadSummary.builder()
 				.maxUsers(0)
-				.duration(LoadDuration.builder()
-						.type(Type.TIME)
-						.value(0)
-						.build())
+				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(0)).build())
 				.build();
 		assertEquals(expecedLoadSummary, ScenarioUtils.getSummaryFromLoadSummaries(Arrays.asList()));
 		

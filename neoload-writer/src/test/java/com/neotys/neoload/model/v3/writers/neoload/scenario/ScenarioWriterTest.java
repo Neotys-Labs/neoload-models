@@ -7,7 +7,7 @@ import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.DynatraceAnomalyRule;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
-import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.IterationLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.MonitoringParameters;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
@@ -18,6 +18,7 @@ import com.neotys.neoload.model.v3.project.scenario.RendezvousPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import com.neotys.neoload.model.v3.project.scenario.TimeLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -140,10 +141,7 @@ public class ScenarioWriterTest {
                 		.name("myPopulation1")
                 		.loadPolicy(ConstantLoadPolicy.builder()
                 				.users(25)
-                				.duration(LoadDuration.builder()
-                						.value(240)
-                						.type(LoadDuration.Type.TIME)
-                						.build())
+                				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(240)).build())
                 				.startAfter(StartAfter.builder()
                 						.value(Duration.ofSeconds(60))
                 						.type(StartAfter.Type.TIME)
@@ -189,10 +187,7 @@ public class ScenarioWriterTest {
                 		.name("myPopulation1")
                 		.loadPolicy(ConstantLoadPolicy.builder()
                 				.users(25)
-                				.duration(LoadDuration.builder()
-                						.value(12)
-                						.type(LoadDuration.Type.ITERATION)
-                						.build())
+                				.duration(IterationLoadDuration.builder().count(12).build())
                 				.startAfter(StartAfter.builder()
                 						.value("myPopulation0")
                 						.type(StartAfter.Type.POPULATION)
@@ -244,17 +239,11 @@ public class ScenarioWriterTest {
                 		.loadPolicy(PeaksLoadPolicy.builder()
                 				.minimum(PeakLoadPolicy.builder()
                 						.users(10)
-                						.duration(LoadDuration.builder()
-                								.value(10)
-                								.type(LoadDuration.Type.TIME)
-                								.build())
+                						.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(10)).build())
                 						.build())
                 				.maximum(PeakLoadPolicy.builder()
                 						.users(25)
-                						.duration(LoadDuration.builder()
-                								.value(20)
-                								.type(LoadDuration.Type.TIME)
-                								.build())
+                						.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(20)).build())
                 						.build())
                 				.start(PeaksLoadPolicy.Peak.MINIMUM)
                 				.build())
@@ -300,22 +289,13 @@ public class ScenarioWriterTest {
                 		.loadPolicy(PeaksLoadPolicy.builder()
                 				.minimum(PeakLoadPolicy.builder()
                 						.users(10)
-                						.duration(LoadDuration.builder()
-                								.value(10)
-                								.type(LoadDuration.Type.TIME)
-                								.build())
+                						.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(10)).build())
                 						.build())
                 				.maximum(PeakLoadPolicy.builder()
                 						.users(25)
-                						.duration(LoadDuration.builder()
-                								.value(20)
-                								.type(LoadDuration.Type.TIME)
-                								.build())
+                						.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(20)).build())
                 						.build())
-                				.duration(LoadDuration.builder()
-                						.value(240)
-                						.type(LoadDuration.Type.TIME)
-                						.build())
+                				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(240)).build())
                 				.start(PeaksLoadPolicy.Peak.MINIMUM)
                 				.startAfter(StartAfter.builder()
                 						.value(Duration.ofSeconds(60))
@@ -371,22 +351,13 @@ public class ScenarioWriterTest {
                 		.loadPolicy(PeaksLoadPolicy.builder()
                 				.minimum(PeakLoadPolicy.builder()
                 						.users(10)
-                						.duration(LoadDuration.builder()
-                								.value(2)
-                								.type(LoadDuration.Type.ITERATION)
-                								.build())
+                						.duration(IterationLoadDuration.builder().count(2).build())
                 						.build())
                 				.maximum(PeakLoadPolicy.builder()
                 						.users(25)
-                						.duration(LoadDuration.builder()
-                								.value(2)
-                								.type(LoadDuration.Type.ITERATION)
-                								.build())
+                						.duration(IterationLoadDuration.builder().count(2).build())
                 						.build())
-                				.duration(LoadDuration.builder()
-                						.value(20)
-                						.type(LoadDuration.Type.ITERATION)
-                						.build())
+                				.duration(IterationLoadDuration.builder().count(20).build())
                 				.start(PeaksLoadPolicy.Peak.MAXIMUM)
                 		    	.startAfter(StartAfter.builder()
                 						.value("myPopulation0")
@@ -447,10 +418,7 @@ public class ScenarioWriterTest {
                 				.minUsers(10)
                 				.maxUsers(50)
                 				.incrementUsers(15)
-                				.incrementEvery(LoadDuration.builder()
-                						.value(15)
-                						.type(LoadDuration.Type.TIME)
-                						.build())
+                				.incrementEvery(TimeLoadDuration.builder().value(Duration.ofSeconds(15)).build())
                 				.build())
                 		.build())
                 .build();
@@ -494,14 +462,8 @@ public class ScenarioWriterTest {
                 				.minUsers(10)
                 				.maxUsers(50)
                 				.incrementUsers(15)
-                				.incrementEvery(LoadDuration.builder()
-                						.value(15)
-                						.type(LoadDuration.Type.TIME)
-                						.build())
-                				.duration(LoadDuration.builder()
-                						.value(240)
-                						.type(LoadDuration.Type.TIME)
-                						.build())
+                				.incrementEvery(TimeLoadDuration.builder().value(Duration.ofSeconds(15)).build())
+                				.duration(TimeLoadDuration.builder().value(Duration.ofSeconds(240)).build())
                 				.startAfter(StartAfter.builder()
                 						.value(Duration.ofSeconds(60))
                 						.type(StartAfter.Type.TIME)
@@ -553,14 +515,8 @@ public class ScenarioWriterTest {
                 				.minUsers(10)
                 				.maxUsers(50)
                 				.incrementUsers(15)
-                				.incrementEvery(LoadDuration.builder()
-                						.value(2)
-                						.type(LoadDuration.Type.ITERATION)
-                						.build())
-                				.duration(LoadDuration.builder()
-                						.value(20)
-                						.type(LoadDuration.Type.ITERATION)
-                						.build())
+                				.incrementEvery(IterationLoadDuration.builder().count(2).build())
+                				.duration(IterationLoadDuration.builder().count(20).build())
                    		    	.startAfter(StartAfter.builder()
                     					.value("myPopulation0")
                     					.type(StartAfter.Type.POPULATION)
@@ -609,10 +565,7 @@ public class ScenarioWriterTest {
 
     @Test
     public void writeScenarioCustomTimeTest() throws ParserConfigurationException {
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(240)
-                .type(LoadDuration.Type.TIME)
-                .build();
+        LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(240)).build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
                 .when(loadDuration)
                 .users(300)
@@ -662,10 +615,7 @@ public class ScenarioWriterTest {
 
     @Test
     public void writeScenarioCustomIterationTest() throws ParserConfigurationException {
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(240)
-                .type(LoadDuration.Type.ITERATION)
-                .build();
+        LoadDuration loadDuration = IterationLoadDuration.builder().count(240).build();
         ImmutableCustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
                 .when(loadDuration)
                 .users(300)

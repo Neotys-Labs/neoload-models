@@ -1,25 +1,23 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
-import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
-import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
-import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
-import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
+import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
+import com.neotys.neoload.model.v3.project.scenario.TimeLoadDuration;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.time.Duration;
+import org.assertj.core.api.Condition;
+import org.junit.Test;
 
 public class CustomPolicyStepTest {
 
     @Test
     public void isValid() {
         final Validator validator = new Validator();
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .type(LoadDuration.Type.TIME)
-                .value(100)
-                .build();
+        LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(100)).build();
         CustomPolicyStep customPolicyStep = CustomPolicyStep.builder()
                 .when(loadDuration)
                 .users(300)
@@ -62,9 +60,7 @@ public class CustomPolicyStepTest {
     @Test
     public void CustomStepDurationCheckIsExecuted() {
         final Validator validator = new Validator();
-        ImmutableLoadDuration loadDuration = LoadDuration.builder()
-                .value(100)
-                .build();
+        LoadDuration loadDuration = TimeLoadDuration.builder().value(Duration.ofSeconds(-1)).build();
         CustomPolicyStep customPolicyStep = CustomPolicyStep.builder().when(loadDuration).users(0).build();
         Validation validation = validator.validate(customPolicyStep, NeoLoad.class);
         assertFalse(validation.isValid());

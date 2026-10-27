@@ -250,7 +250,7 @@ public class IOSchema3Dot1ValidationTest {
 
     @Test
     public void schemaAndJavaModelAcceptAndRejectTheSameDurationValues() throws IOException {
-        final String[] values = {"90", "90s", "1h30m", "120m", "500ms", "1s1h", "abc", "5x", "-5", "${v}"};
+        final String[] values = {"90", "90s", "1h30m", "120m", "500ms", "1s1h", "abc", "5x", "-5", "-5s", "10 iterations", "${v}"};
         final List<String> mismatches = new ArrayList<>();
 
         for (final DurationFields field : DurationFields.values()) {
@@ -264,6 +264,32 @@ public class IOSchema3Dot1ValidationTest {
         }
 
         Assert.assertTrue("Schema and Java verdicts differ for: " + mismatches, mismatches.isEmpty());
+    }
+
+    @Test
+    public void schemaAndJavaModelAcceptAndRejectTheSameOffsetValues() throws IOException {
+        final String[] values = {"-5d", "3ms", "10s", "2m", "4h", "1mo", "2y", "2mo", "5x", "abc", "1h30m", "5", "d", "+3h", "1.5h"};
+        final String[] templates = {
+                "name: P\nvariables:\n- current_date:\n    name: D\n    offset: %s\n",
+                "name: P\nvariables:\n- date:\n    name: D\n    start_date: 01/01/2024 00:00:00\n    change_step: %s\n"};
+        final List<String> mismatches = new ArrayList<>();
+
+        for (final String template : templates) {
+            for (final String value : values) {
+                final String yaml = String.format(template, value);
+                final boolean schemaValid = SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty();
+                if (schemaValid != isValidForJava(yaml)) {
+                    mismatches.add(template.split("\n")[2] + "=" + value + " (schema " + (schemaValid ? "valid" : "invalid") + ")");
+                }
+            }
+        }
+
+        Assert.assertTrue("Schema and Java verdicts differ for: " + mismatches, mismatches.isEmpty());
+    }
+
+    @Test
+    public void schemaNoLongerDefinesCommonTime() {
+        Assert.assertTrue(SCHEMA.getSchemaNode().at("/definitions/common/time").isMissingNode());
     }
 
     private static boolean isValidForJava(final String yaml) {

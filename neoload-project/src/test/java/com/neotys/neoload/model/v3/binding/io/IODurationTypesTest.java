@@ -14,6 +14,7 @@ import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.IterationLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.MonitoringParameters;
@@ -24,6 +25,7 @@ import com.neotys.neoload.model.v3.project.scenario.RendezvousPolicy;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
+import com.neotys.neoload.model.v3.project.scenario.TimeLoadDuration;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
@@ -34,6 +36,7 @@ import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.WaitUntil;
 import com.neotys.neoload.model.v3.project.userpath.WebPage;
 import com.neotys.neoload.model.v3.project.variable.CurrentDateVariable;
+import com.neotys.neoload.model.v3.project.variable.Offset;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -295,8 +298,8 @@ public class IODurationTypesTest {
 		assertEquals(variable("${d}"), valueOf(steps(project).get(1)));
 		final ConstantLoadPolicy constant = (ConstantLoadPolicy) loadPolicy(project, 0);
 		assertEquals(Duration.ofSeconds(120), constant.getRampup());
-		assertEquals(LoadDuration.builder().type(LoadDuration.Type.TIME).value(600).build(), constant.getDuration());
-		assertEquals(java.util.Optional.of("3h"), ((CurrentDateVariable) project.getVariables().get(0)).getOffset());
+		assertEquals(TimeLoadDuration.builder().value(Duration.ofSeconds(600)).build(), constant.getDuration());
+		assertEquals(Offset.parse("3h"), ((CurrentDateVariable) project.getVariables().get(0)).getOffset());
 		assertEquals(Arrays.asList(DurationLiteral.class, DurationVariable.class), implementationsOfDurationOrVariable());
 	}
 
@@ -329,5 +332,104 @@ public class IODurationTypesTest {
 		assertEquals(Duration.ofSeconds(60), ((CustomLoadPolicy) loadPolicy(project, 0)).getRampup());
 		assertNotEquals(Duration.ofSeconds(1), ((CustomLoadPolicy) loadPolicy(project, 0)).getRampup());
 		assertThrows(JsonMappingException.class, () -> read(DurationFields.scenario("  populations:\n  - name: C\n    custom_load:\n      rampup: 1m1h\n      steps:\n      - when: 1m40s\n        users: 300\n")));
+	}
+
+	private static LoadDuration time(final long seconds) {
+		return TimeLoadDuration.builder().value(Duration.ofSeconds(seconds)).build();
+	}
+
+	private static LoadDuration iterations(final int count) {
+		return IterationLoadDuration.builder().count(count).build();
+	}
+
+	private static String rampupYaml(final String incrementEvery) {
+		return DurationFields.RAMPUP_INCREMENT_EVERY.yaml(incrementEvery);
+	}
+
+	@Test
+	public void plainNumbersOnLoadDurationFieldsAreSeconds() throws IOException {
+		final Project constant = read(DurationFields.CONSTANT_DURATION.yaml("90"));
+		final Project rampup = read(rampupYaml("30"));
+
+		assertEquals(time(90), loadPolicy(constant, 0).getDuration());
+		assertEquals(time(30), ((RampupLoadPolicy) loadPolicy(rampup, 0)).getIncrementEvery());
+		assertEquals(LoadDuration.Type.TIME, loadPolicy(constant, 0).getDuration().getType());
+	}
+
+	@Test
+	public void loadDurationFieldsAcceptOrderedHoursMinutesAndSeconds() throws IOException {
+		final String[] texts = {"90s", "1h30m", "120m", "1h2m3s"};
+		final long[] seconds = {90, 5400, 7200, 3723};
+
+		for (int i = 0; i < texts.length; i++) {
+			final Project constant = read(DurationFields.CONSTANT_DURATION.yaml(texts[i]));
+			final Project rampup = read(rampupYaml(texts[i]));
+
+			assertEquals(texts[i], time(seconds[i]), loadPolicy(constant, 0).getDuration());
+			assertEquals(texts[i], time(seconds[i]), ((RampupLoadPolicy) loadPolicy(rampup, 0)).getIncrementEvery());
+			assertTrue(texts[i], validate(constant).isValid());
+			assertTrue(texts[i], validate(rampup).isValid());
+		}
+	}
+
+	@Test
+	public void loadDurationFieldsRejectUnitsOutOfOrderAtRead() {
+		assertInvalidDurationRead(() -> read(rampupYaml("1s1h")), "1s1h", "increment_every");
+		assertInvalidDurationRead(() -> read(DurationFields.CONSTANT_DURATION.yaml("1s1h")), "1s1h", "duration");
+	}
+
+	@Test
+	public void loadDurationFieldsReportAMillisecondsPartAsNotWholeSeconds() throws IOException {
+		final Project project = read(DurationFields.CONSTANT_DURATION.yaml("500ms"));
+
+		assertViolations(validate(project), invalidValue("project.scenarios[0].populations[0].constant_load.duration", "must be a whole number of seconds."));
+	}
+
+	@Test
+	public void loadDurationFieldsAcceptTheIterationForm() throws IOException {
+		final Project constant = read(DurationFields.CONSTANT_DURATION.yaml("10 iterations"));
+		final Project rampup = read(rampupYaml("1 iteration"));
+
+		assertEquals(iterations(10), loadPolicy(constant, 0).getDuration());
+		assertEquals(iterations(1), ((RampupLoadPolicy) loadPolicy(rampup, 0)).getIncrementEvery());
+		assertEquals(LoadDuration.Type.ITERATION, loadPolicy(constant, 0).getDuration().getType());
+	}
+
+	@Test
+	public void invalidLoadDurationsFailTheReadAndAreNeverReplacedByZero() {
+		for (final String value : new String[] {"abc", "5x", "-5s", "99999999999999999999h", "99999999999999999999 iterations"}) {
+			assertInvalidDurationRead(() -> read(DurationFields.CONSTANT_DURATION.yaml(value)), value, "duration");
+		}
+	}
+
+	@Test
+	public void peaksPhasesAndCustomStepMomentsFollowTheLoadDurationGrammar() throws IOException {
+		final Project peaks = read(DurationFields.PEAKS_MINIMUM_DURATION.yaml("1m30s").replace("duration: 1 iteration", "duration: 2 iterations"));
+		final Project custom = read(DurationFields.CUSTOM_STEP_WHEN.yaml("120m"));
+
+		final PeaksLoadPolicy peaksPolicy = (PeaksLoadPolicy) loadPolicy(peaks, 0);
+		assertEquals(time(90), peaksPolicy.getMinimum().getDuration());
+		assertEquals(iterations(2), peaksPolicy.getMaximum().getDuration());
+		assertEquals(time(7200), ((CustomLoadPolicy) loadPolicy(custom, 0)).getSteps().get(0).getWhen());
+		assertInvalidDurationRead(() -> read(DurationFields.CUSTOM_STEP_WHEN.yaml("1s1h")), "1s1h", "when");
+	}
+
+	@Test
+	public void writtenLoadDurationsAreCompactAndReadBackEqual() throws IOException {
+		final String yaml = DurationFields.scenario("  populations:\n"
+				+ "  - name: C\n    constant_load:\n      users: 1\n      duration: 90\n"
+				+ "  - name: R\n    rampup_load:\n      min_users: 1\n      max_users: 5\n      increment_users: 1\n      increment_every: 3600\n      duration: 15 iterations\n"
+				+ "  - name: K\n    peaks_load:\n      minimum:\n        users: 1\n        duration: 1 iteration\n"
+				+ "      maximum:\n        users: 5\n        duration: 5 iterations\n      start: maximum\n      duration: 15 iterations\n")
+				+ "variables:\n- current_date:\n    name: D\n    offset: -5d\n"
+				+ "- date:\n    name: E\n    start_date: 01/01/2024 00:00:00\n    change_step: 2mo\n";
+
+		final Project project = read(yaml);
+		final String written = write(project);
+
+		for (final String expected : new String[] {"duration: 1m30s", "increment_every: 1h", "duration: 5 iterations", "offset: -5d", "change_step: 2mo"}) {
+			assertTrue(written, written.contains(expected));
+		}
+		assertEquals(project, read(written));
 	}
 }
