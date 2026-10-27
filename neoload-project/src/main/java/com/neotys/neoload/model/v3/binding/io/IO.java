@@ -7,6 +7,7 @@ import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.WRITE_
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -203,6 +204,7 @@ public final class IO {
         objectMapper.registerModule(newPathModule());
         objectMapper.registerModule(newBinaryModule());
         objectMapper.setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.SKIP));
+        objectMapper.disable(DeserializationFeature.ACCEPT_FLOAT_AS_INT);
 	}
 
 	/**

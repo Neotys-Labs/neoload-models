@@ -20,6 +20,6 @@ public final class OffsetValidator extends AbstractConstraintValidator<OffsetChe
 			return true;
 		}
 
-		return object instanceof String && Offset.parse((String) object).isPresent();
+		return object instanceof String && Offset.parse((String) object).filter(offset -> offset.getAmount() != 0).isPresent();
 	}
 }

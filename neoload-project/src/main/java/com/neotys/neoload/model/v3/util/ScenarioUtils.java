@@ -2,9 +2,6 @@ package com.neotys.neoload.model.v3.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.google.common.primitives.Doubles;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
@@ -15,6 +12,8 @@ import com.neotys.neoload.model.v3.project.scenario.LoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import java.util.List;
+import java.util.Optional;
 
 public final class ScenarioUtils {
 	private static final int UNDETERMINED_MAX_VUS = -1;
@@ -176,14 +175,14 @@ public final class ScenarioUtils {
 	}
 	
 	private static int getMaxUsers(final PeaksLoadPolicy loadPolicy) {
-		return loadPolicy.getMaximum().getUsers();
+		return loadPolicy.getMaximum().getUsers().orElse(0);
 	}
 	
 	private static int getMaxUsers(final RampupLoadPolicy loadPolicy) {
 		final Integer maxUsers = loadPolicy.getMaxUsers();
 		final LoadDuration duration = loadPolicy.getDuration();
 		if (duration != null) {
-			final int minUsers = loadPolicy.getMinUsers();
+			final int minUsers = loadPolicy.getMinUsers().orElse(0);
 			final int incrementUsers = loadPolicy.getIncrementUsers();
 			final Integer delayIncrement = loadPolicy.getIncrementEvery().getValue();
 			return computeMaxUsersFromRampupLoadPolicy(minUsers, incrementUsers, delayIncrement, maxUsers, duration.getValue());

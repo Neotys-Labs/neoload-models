@@ -1,13 +1,5 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import java.util.Optional;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,6 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.validation.constraints.UserPathThinkTimeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.Optional;
+import javax.validation.constraints.Pattern;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 /**
  * Think time policy of a User Path, mirroring the "Waiting time" settings of the designer's User Path
@@ -24,7 +20,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
  * Without {@code override} nor {@code factor}, the think times defined on pages and delays apply, and without
  * {@code random} no random delay is added.
  * <p>
- * {@code override} is a constant {@link Duration}, in milliseconds or a variable. {@code factor} and
+ * {@code override} is a constant {@link Duration}, in milliseconds or a variable; {@code 0} removes every think time,
+ * so it is not held to the positive think time of pages and delays. {@code factor} and
  * {@code random} are kept as written: an integer percentage with an optional {@code %}, or a variable.
  */
 @UserPathThinkTimeCheck(groups = {NeoLoad.class})
@@ -46,7 +43,6 @@ public interface UserPathThinkTime {
 	String RANDOM_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.ThinkTimeRandomPattern.message}";
 
 	@JsonProperty(OVERRIDE)
-	@Valid
 	Optional<DurationConstant> getOverride();
 
 	@JsonProperty(FACTOR)

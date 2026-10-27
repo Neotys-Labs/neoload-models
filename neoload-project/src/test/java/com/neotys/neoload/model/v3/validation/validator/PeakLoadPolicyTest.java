@@ -5,14 +5,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import org.junit.Test;
 
 public class PeakLoadPolicyTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -44,8 +40,18 @@ public class PeakLoadPolicyTest {
 						.build())
 				.build();
 		Validation validation = validator.validate(loadPolicy, NeoLoad.class);
+		assertTrue(validation.isValid());
+
+		loadPolicy = PeakLoadPolicy.builder()
+				.users(0)
+				.duration(LoadDuration.builder()
+						.value(1)
+						.type(LoadDuration.Type.TIME)
+						.build())
+				.build();
+		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_USERS, validation.getMessage().get());	
+		assertEquals(CONSTRAINTS_USERS, validation.getMessage().get());
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(-10)

@@ -33,3 +33,6 @@ variables:
 - current_date:
     name: offset_beyond_int_range
     offset: 99999999999d
+- current_date:
+    name: offset_zero
+    offset: 0s

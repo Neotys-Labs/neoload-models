@@ -236,8 +236,10 @@ public class IODurationTypesTest {
 		assertEquals(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(30)).build(), startAfter("30"));
 		assertEquals(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(60)).build(), startAfter("1m"));
 		assertEquals(StartAfter.builder().type(StartAfter.Type.POPULATION).value("my_population").build(), startAfter("my_population"));
-		assertEquals(StartAfter.builder().type(StartAfter.Type.POPULATION).value("1s1h").build(), startAfter("1s1h"));
-		assertInvalidDurationRead(() -> startAfter("-5"), "-5", "start_after");
+		assertEquals(StartAfter.builder().type(StartAfter.Type.POPULATION).value("other_population").build(), startAfter("other_population"));
+		for (final String value : new String[] {"-5", "-5s", "5x", "1s1h"}) {
+			assertInvalidDurationRead(() -> startAfter(value), value, "start_after");
+		}
 	}
 
 	private static StartAfter startAfter(final String value) throws IOException {

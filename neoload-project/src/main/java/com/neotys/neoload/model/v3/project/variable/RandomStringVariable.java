@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.validation.constraints.MinNotGreaterThanMaxCheck;
-import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
+import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
 
@@ -24,14 +24,14 @@ public interface RandomStringVariable extends ChangePolicyVariable {
 
 	@JsonProperty(MIN_LENGTH)
 	@Value.Default
-	@PositiveCheck(unit = "character", groups = {NeoLoad.class})
+	@RangeCheck(min = 1, max = 1000, groups = {NeoLoad.class})
 	default int getMinLength() {
 		return 5;
 	}
 
 	@JsonProperty(MAX_LENGTH)
 	@Value.Default
-	@PositiveCheck(unit = "character", groups = {NeoLoad.class})
+	@RangeCheck(min = 1, max = 1000, groups = {NeoLoad.class})
 	default int getMaxLength() {
 		return 10;
 	}

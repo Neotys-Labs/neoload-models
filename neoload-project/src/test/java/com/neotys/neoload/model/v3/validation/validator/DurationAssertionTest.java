@@ -24,7 +24,7 @@ public class DurationAssertionTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'less_than': must be greater than or equal to 0.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'less_than': must be greater than or equal to 1.").append(LINE_SEPARATOR);
 		CONSTRAINTS_DURATION_ASSERTION_LESS_THAN_NEGATIVE = sb.toString();
 	}
 
@@ -40,6 +40,13 @@ public class DurationAssertionTest {
 
 		assertion = DurationAssertion.builder()
 				.lessThan(-1L)
+				.build();
+		validation = validator.validate(assertion, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_DURATION_ASSERTION_LESS_THAN_NEGATIVE, validation.getMessage().get());
+
+		assertion = DurationAssertion.builder()
+				.lessThan(0L)
 				.build();
 		validation = validator.validate(assertion, NeoLoad.class);
 		assertFalse(validation.isValid());
