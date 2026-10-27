@@ -15,7 +15,7 @@ import org.junit.function.ThrowingRunnable;
  * Also asserts the errors raised while reading a duration.
  */
 final class ViolationsAssert {
-	static final String MAX_NOT_GREATER_THAN_MIN = "'max' must be strictly greater than 'min'.";
+	static final String MIN_GREATER_THAN_MAX = "duration 'min' must be less than or equal to 'max'.";
 	static final String MISSING_VALUE = "missing value or value is empty.";
 	static final String VALUE_COMBINED_WITH_BOUNDS = "Incorrect duration: 'value' cannot be combined with 'min' or 'max'.";
 	static final String NAME_NOT_ALLOWED = "Incorrect duration: 'name' and 'description' are not allowed.";

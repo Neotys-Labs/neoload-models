@@ -419,7 +419,8 @@
 								"type": "number"
 							},
 							"max": {
-								"type": "number"
+								"type": "number",
+								"description": "Must be greater than or equal to `min`."
 							},
 							"predictable": {
 								"type": "boolean",
@@ -445,7 +446,7 @@
 							},
 							"max_length": {
 								"type": "number",
-								"description": "The maximum number of characters of the generated value. The default value is `10`."
+								"description": "The maximum number of characters of the generated value. The default value is `10`. Must be greater than or equal to `min_length`."
 							},
 							"predictable": {
 								"type": "boolean",
@@ -1042,7 +1043,7 @@
 					},
 					"max_users": {
 						"$ref": "#/definitions/common/positive_number",
-						"description": "The maximum number of Virtual Users"
+						"description": "The maximum number of Virtual Users. Must be greater than or equal to `min_users`."
 					},
 					"increment_users": {
 						"type": "integer",
@@ -1324,7 +1325,7 @@
 					},
 					"pacing": {
 						"$ref": "#/definitions/user_paths/actions/duration",
-						"description": "The minimum duration enforced for the Container. A random pacing `max` must be strictly greater than `min`."
+						"description": "The minimum duration enforced for the Container. A random pacing `max` must be greater than or equal to `min`."
 					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
@@ -1455,7 +1456,7 @@
 						},
 						"pacing": {
 							"$ref": "#/definitions/user_paths/actions/duration",
-							"description": "The minimum duration enforced for the Transaction. A random pacing `max` must be strictly greater than `min`."
+							"description": "The minimum duration enforced for the Transaction. A random pacing `max` must be greater than or equal to `min`."
 						},
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": {
@@ -1672,7 +1673,10 @@
 									"$ref": "#/definitions/common/duration_value",
 									"description": "The minimum duration. The default value is `0`."
 								},
-								"max": { "$ref": "#/definitions/common/duration_value" }
+								"max": {
+									"$ref": "#/definitions/common/duration_value",
+									"description": "The maximum duration. Must be greater than or equal to `min`."
+								}
 							}
 						}
 					],
@@ -2173,7 +2177,7 @@
 					},
 					"pacing": {
 						"$ref": "#/definitions/user_paths/actions/duration",
-						"description": "The minimum duration enforced for the case. A random pacing `max` must be strictly greater than `min`."
+						"description": "The minimum duration enforced for the case. A random pacing `max` must be greater than or equal to `min`."
 					},
 					"sla_profile": {
 						"$ref": "#/definitions/common/name",

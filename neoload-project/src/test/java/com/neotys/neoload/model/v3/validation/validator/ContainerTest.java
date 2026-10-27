@@ -17,6 +17,14 @@ import org.junit.Test;
 public class ContainerTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
+	private static final String CONSTRAINTS_CONTAINER_PACING_MIN_GREATER_THAN_MAX;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'pacing': duration 'min' must be less than or equal to 'max'.").append(LINE_SEPARATOR);
+		CONSTRAINTS_CONTAINER_PACING_MIN_GREATER_THAN_MAX = sb.toString();
+	}
+
 	private static final String CONSTRAINTS_CONTAINER_ASSERTIONS_NAMES;
 	static {
 		final StringBuilder sb = new StringBuilder();
@@ -254,5 +262,20 @@ public class ContainerTest {
 				.build();
 		validation = validator.validate(container, NeoLoad.class);
 		assertTrue(validation.getMessage().orElse(""), validation.isValid());
+
+		container = Container.builder()
+				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
+				.pacing(DurationRandom.builder().min(Durations.of("3000")).max(Durations.of("3000")).build())
+				.build();
+		validation = validator.validate(container, NeoLoad.class);
+		assertTrue(validation.getMessage().orElse(""), validation.isValid());
+
+		container = Container.builder()
+				.addSteps(Request.builder().url("http://www.neotys.com:80/select?name=neoload").build())
+				.pacing(DurationRandom.builder().min(Durations.of("3000")).max(Durations.of("1000")).build())
+				.build();
+		validation = validator.validate(container, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_CONTAINER_PACING_MIN_GREATER_THAN_MAX, validation.getMessage().get());
 	}
 }

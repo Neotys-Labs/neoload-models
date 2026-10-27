@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
+import com.neotys.neoload.model.v3.validation.constraints.MinNotGreaterThanMaxCheck;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -23,6 +24,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 @Gson.TypeAdapters
+@MinNotGreaterThanMaxCheck(element = PopulationPolicy.RAMPUP_LOAD, min = RampupLoadPolicy.MIN_USERS, max = RampupLoadPolicy.MAX_USERS, groups = {NeoLoad.class})
 public interface RampupLoadPolicy extends LoadPolicy {
 	String MIN_USERS = "min_users";
 	String MAX_USERS = "max_users";

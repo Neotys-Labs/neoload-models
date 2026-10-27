@@ -1,6 +1,6 @@
 package com.neotys.neoload.model.v3.binding.io;
 
-import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.MAX_NOT_GREATER_THAN_MIN;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.MIN_GREATER_THAN_MAX;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.VALUE_COMBINED_WITH_BOUNDS;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertInvalidDurationRead;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertReadError;
@@ -203,7 +203,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readDurationRandomRangesWhereMaxIsGreaterThanMinAreAccepted() throws IOException {
+	public void readDurationRandomRangesWhereMinIsNotGreaterThanMaxAreAccepted() throws IOException {
 		final ProjectDescriptor descriptor = new IO().read(getFile("test-pacing-random-valid-ranges", "yaml"));
 		assertNotNull(descriptor);
 
@@ -212,13 +212,13 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readDurationRandomRangesWhereMaxIsNotGreaterThanMinAreRejected() throws IOException {
+	public void readDurationRandomRangesWhereMinIsGreaterThanMaxAreRejected() throws IOException {
 		final ProjectDescriptor descriptor = new IO().read(getFile("test-pacing-random-invalid-ranges", "yaml"));
 
 		assertViolations(new Validator().validate(descriptor, NeoLoad.class),
-				invalidValue("project.user_paths[0].actions.steps[0].pacing", MAX_NOT_GREATER_THAN_MIN),
-				invalidValue("project.user_paths[0].actions.steps[1].pacing", MAX_NOT_GREATER_THAN_MIN),
-				invalidValue("project.user_paths[0].actions.steps[2].pacing", MAX_NOT_GREATER_THAN_MIN));
+				invalidValue("project.user_paths[0].actions.steps[0].pacing", MIN_GREATER_THAN_MAX),
+				invalidValue("project.user_paths[0].actions.steps[1].pacing", MIN_GREATER_THAN_MAX),
+				invalidValue("project.user_paths[0].actions.steps[2].pacing", MIN_GREATER_THAN_MAX));
 	}
 
 	@Test
@@ -281,9 +281,17 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readPacingMaxNotGreaterThanMinIsRejected() throws IOException {
-		for (final String pacing : new String[] {"{ min: 5s, max: 5s }", "{ min: 10s, max: 5s }", "{ max: 0 }"}) {
-			assertViolations(validate(readPacing(pacing)), invalidValue("project.user_paths[0].actions.pacing", MAX_NOT_GREATER_THAN_MIN));
+	public void readPacingMinGreaterThanMaxIsRejected() throws IOException {
+		for (final String pacing : new String[] {"{ min: 10s, max: 5s }", "{ min: 1s, max: 999 }"}) {
+			assertViolations(validate(readPacing(pacing)), invalidValue("project.user_paths[0].actions.pacing", MIN_GREATER_THAN_MAX));
+		}
+	}
+
+	@Test
+	public void readPacingMinEqualToMaxIsAccepted() throws IOException {
+		for (final String pacing : new String[] {"{ min: 5s, max: 5s }", "{ min: 1s, max: 1000 }", "{ max: 0 }"}) {
+			final Validation validation = validate(readPacing(pacing));
+			assertTrue(validation.getMessage().orElse(""), validation.isValid());
 		}
 	}
 

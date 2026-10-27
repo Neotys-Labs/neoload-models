@@ -25,9 +25,18 @@ public class RampupLoadPolicyTest {
 	private static final String CONSTRAINTS_MAX_USERS;
 	static {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'max_users': must be greater than or equal to 1 user.").append(LINE_SEPARATOR);
+		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for '': rampup_load 'min_users' must be less than or equal to 'max_users'.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'max_users': must be greater than or equal to 1 user.").append(LINE_SEPARATOR);
 		CONSTRAINTS_MAX_USERS = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_MIN_USERS_GREATER_THAN_MAX_USERS;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for '': rampup_load 'min_users' must be less than or equal to 'max_users'.").append(LINE_SEPARATOR);
+		CONSTRAINTS_MIN_USERS_GREATER_THAN_MAX_USERS = sb.toString();
 	}
 
 	private static final String CONSTRAINTS_INCREMENT_USERS;
@@ -159,8 +168,49 @@ public class RampupLoadPolicyTest {
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertTrue(validation.isValid());
-		assertFalse(validation.getMessage().isPresent());	
-	}	
+		assertFalse(validation.getMessage().isPresent());
+	}
+
+	@Test
+	public void validateMinUsersNotGreaterThanMaxUsers() {
+		final Validator validator = new Validator();
+
+		RampupLoadPolicy loadPolicy = RampupLoadPolicy.builder()
+				.minUsers(10)
+				.maxUsers(5)
+				.incrementUsers(1)
+				.incrementEvery(LoadDuration.builder()
+						.value(1)
+						.type(LoadDuration.Type.TIME)
+						.build())
+				.build();
+		Validation validation = validator.validate(loadPolicy, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_MIN_USERS_GREATER_THAN_MAX_USERS, validation.getMessage().get());
+
+		loadPolicy = RampupLoadPolicy.builder()
+				.minUsers(10)
+				.maxUsers(10)
+				.incrementUsers(1)
+				.incrementEvery(LoadDuration.builder()
+						.value(1)
+						.type(LoadDuration.Type.TIME)
+						.build())
+				.build();
+		validation = validator.validate(loadPolicy, NeoLoad.class);
+		assertTrue(validation.getMessage().orElse(""), validation.isValid());
+
+		loadPolicy = RampupLoadPolicy.builder()
+				.minUsers(10)
+				.incrementUsers(1)
+				.incrementEvery(LoadDuration.builder()
+						.value(1)
+						.type(LoadDuration.Type.TIME)
+						.build())
+				.build();
+		validation = validator.validate(loadPolicy, NeoLoad.class);
+		assertTrue(validation.getMessage().orElse(""), validation.isValid());
+	}
 
 	@Test
 	public void validateIncrementUsers() {

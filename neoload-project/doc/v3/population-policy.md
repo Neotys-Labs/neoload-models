@@ -78,7 +78,7 @@ This load policy generates a load with a number of Virtual Users that increases 
 | Name             | Description                                                 | Accept variable   | Required | Since |
 |:---------------- |:----------------------------------------------------------- |:-----------------:|:--------:|:-----:|
 | min_users        | The initial number of Virtual Users                         | -                 | &#x2713; |       |
-| max_users        | The maximum number of Virtual Users                         | -                 | -        |       |
+| max_users        | The maximum number of Virtual Users. Must be greater than or equal to `min_users` | -                 | -        |       |
 | increment_users  | The number of Virtual Users to increment                    | -                 | &#x2713; |       |
 | increment_every  | The incrementation frequency: [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
 | duration         | The duration of the load policy: unlimited, [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | - |  |
