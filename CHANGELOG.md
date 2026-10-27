@@ -106,11 +106,18 @@ otherwise.
 ```
 
 **`soap_request`** — a SOAP request. Its body is read from an external XML file referenced by
-`content.path`. Like `request`, `url` is required, absolute or relative to `server`.
+`content.path`. Like `request`, `url` is required, absolute or relative to `server`. Optional
+`parameters` (query string) and `headers` each take a list of single-key maps, name to value. It
+accepts the same `content_assertions`, `duration_assertion`, `size_assertion` and `sla_profile` keys
+as `request`, and still reads the legacy `assertions` key.
 
 ```yaml
 - soap_request:
     url: http://petstore.swagger.io:80/
+    parameters:
+    - id: "42"
+    headers:
+    - SOAPAction: http://example.com/action
     content:
       path: ./requests/mySOAPRequest.xml
 ```
@@ -186,6 +193,54 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
       content_type: image/jpeg
       filename: upload.jpg
       source_filename: upload.jpg
+```
+
+**`follow_redirects`, `charset` and `response_storage`** — advanced settings available on both
+`request` and `soap_request`.
+
+- `follow_redirects` (default `false`) follows the HTTP redirections. It replaces `followRedirects`,
+  which is still read but deprecated and always written back as `follow_redirects`. Declaring both
+  keys on one step is an error.
+- `charset` is the charset used to encode the request body. It only applies to requests with a
+  body (`POST`, `PUT` and every `soap_request`) and is ignored otherwise. Defaults to `ISO-8859-1`.
+- `response_storage` stores the response body in a file: `path` (required, may contain `{ID}`,
+  replaced by a unique number per stored file, and variables), `variable` (default
+  `responseFilePath`) and `delete_when_test_finished` (default `false`).
+
+```yaml
+- request:
+    url: /login
+    server: neotys
+    follow_redirects: true
+    response_storage:
+      path: responses/login_{ID}.html
+      variable: loginResponseFile
+      delete_when_test_finished: true
+```
+
+#### Web Services Security
+
+A new root key, `web_services_security`, declares WS-Security keystores, request profiles
+(`username` and `timestamp` tokens) and response profiles. A `soap_request` selects them by
+name with `request_security_profile` and `response_security_profile`. Both are optional, and the
+section is absent from files that do not use it.
+
+```yaml
+web_services_security:
+  keystores:
+  - path: ./wss-keystores/server.p12
+    password: secret
+  request_profiles:
+  - name: MyRequestProfile
+    headers:
+    - tokens:
+      - username:
+          username: user
+          password: secret
+          password_type: digest
+  response_profiles:
+  - name: MyResponseProfile
+    keystore: ./wss-keystores/server.p12
 ```
 
 #### Assertions

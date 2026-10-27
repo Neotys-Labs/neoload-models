@@ -1,23 +1,22 @@
 package com.neotys.neoload.model.v3.util;
 
-import com.google.common.base.Strings;
-import com.neotys.neoload.model.v3.project.server.Server;
-import com.neotys.neoload.model.v3.project.server.Server.Scheme;
-import com.neotys.neoload.model.v3.project.userpath.Header;
-import com.neotys.neoload.model.v3.project.userpath.Request.Method;
-import org.slf4j.LoggerFactory;
-
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTPS_PORT;
 import static com.neotys.neoload.model.v3.project.server.Server.DEFAULT_HTTP_PORT;
 import static com.neotys.neoload.model.v3.util.VariableUtils.getVariableName;
 import static com.neotys.neoload.model.v3.util.VariableUtils.isVariableSyntax;
+
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.v3.project.server.Server;
+import com.neotys.neoload.model.v3.project.server.Server.Scheme;
+import com.neotys.neoload.model.v3.project.userpath.NameValue;
+import com.neotys.neoload.model.v3.project.userpath.Request.Method;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.slf4j.LoggerFactory;
 
 public class RequestUtils {
 
@@ -99,34 +98,28 @@ public class RequestUtils {
 	 * Gets the parameters from URL query or form body (<name>=<value>&<name>=<value>).
 	 *
 	 * @param query the part of the URL or the form body that contains all the parameters
-	 * @return list
+	 * @return name/value pairs, in query order
 	 */
-	public static List<Parameter> getParameters(final String query) {
-		final List<Parameter> urlParameters = new ArrayList<>();
-		if (Strings.isNullOrEmpty(query)) {
-			return urlParameters;
+	public static List<NameValue> getParameters(final String query) {
+		final ImmutableList.Builder<NameValue> urlParameters = ImmutableList.builder();
+		if (Strings.isNullOrEmpty(query) || query.trim().isEmpty()) {
+			return urlParameters.build();
 		}
-		final String cleanedQuery = query.trim();
-		if (cleanedQuery.isEmpty()) {
-			return urlParameters;
-		}		
 		for (String param : query.split("&")) {
-			final Parameter.Builder parameterBuilder = Parameter.builder();
 			if (param.contains("=")) {
 				final String[] pair = param.split("=");
 				if (pair.length > 1) {
-					parameterBuilder.name(pair[0]).value(pair[1]);
+					urlParameters.add(NameValue.builder().name(pair[0]).value(pair[1]).build());
 				} else if (pair.length == 1) {
-					parameterBuilder.name(pair[0]).value("");
-				} else{
-					parameterBuilder.name("").value("");
+					urlParameters.add(NameValue.builder().name(pair[0]).value("").build());
+				} else {
+					urlParameters.add(NameValue.builder().name("").value("").build());
 				}
 			} else {
-				parameterBuilder.name(param);
+				urlParameters.add(NameValue.builder().name(param).build());
 			}
-			urlParameters.add(parameterBuilder.build());
 		}
-		return urlParameters;
+		return urlParameters.build();
 	}
 
 	public static Optional<String> getEncodeUrlValue(final String syntax) {
@@ -188,17 +181,14 @@ public class RequestUtils {
 		}
 	}
 
-	public static boolean containFormHeader(final List<Header> headers) {
-		final Optional<Header> contentType = findHeader(headers, RequestUtils.HEADER_CONTENT_TYPE);
-		return contentType.filter(header -> isForm(header.getValue().orElse(null))).isPresent();
-	}
-
-	public static Optional<Header> findHeader(final List<Header> headers, final String name) {
-		if ((headers == null) || (headers.isEmpty())) return Optional.empty();
-		if (Strings.isNullOrEmpty(name)) return Optional.empty();
+	public static boolean containFormHeader(final List<NameValue> headers) {
+		if (headers == null) return false;
 		return headers.stream()
-				.filter(header -> name.trim().equals(header.getName()))
-				.findFirst();
+				.filter(header -> HEADER_CONTENT_TYPE.equals(header.getName()))
+				.map(NameValue::getValue)
+				.findFirst()
+				.filter(value -> isForm(value.orElse(null)))
+				.isPresent();
 	}
 
 	public static boolean isBinary(final String contentType) {

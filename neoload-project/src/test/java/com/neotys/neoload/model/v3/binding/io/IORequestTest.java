@@ -1,15 +1,17 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
-import com.neotys.neoload.model.v3.project.userpath.Container;
-import com.neotys.neoload.model.v3.project.userpath.Header;
-import com.neotys.neoload.model.v3.project.userpath.Request;
+import com.neotys.neoload.model.v3.project.userpath.*;
 import com.neotys.neoload.model.v3.project.userpath.Request.Method;
-import com.neotys.neoload.model.v3.project.userpath.UserPath;
-import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -47,14 +49,8 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/select?name=neoload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("text/html; charset=utf-8")
-										.build())
-								.addHeaders(Header.builder()
-										.name("Accept-Encoding")
-										.value("gzip, compress, br")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("text/html; charset=utf-8").build())
+								.addHeaders(NameValue.builder().name("Accept-Encoding").value("gzip, compress, br").build())
 								.body("My Body\nline 1\nline 2\n")
 								.addExtractors(VariableExtractor.builder()
 										.name("MyVariable1")
@@ -70,14 +66,8 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/select?name=neoload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("text/html; charset=utf-8")
-										.build())
-								.addHeaders(Header.builder()
-										.name("Accept-Encoding")
-										.value("gzip, compress, br")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("text/html; charset=utf-8").build())
+								.addHeaders(NameValue.builder().name("Accept-Encoding").value("gzip, compress, br").build())
 								.body("My Body line 1 line 2")
 								.addExtractors(VariableExtractor.builder()
 										.name("MyVariable1")
@@ -123,20 +113,14 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/upload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("application/octet-stream")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.bodyBinary(TEXT_PAYLOAD)
 								.build())
 						.addSteps(Request.builder()
 								.url("/upload-raw")
 								.server("neotys")
 								.method(Method.PUT.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("application/octet-stream")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.bodyBinary(RAW_PAYLOAD)
 								.slaProfile("MySlaProfile")
 								.build())
@@ -174,20 +158,14 @@ public class IORequestTest extends AbstractIOElementsTest {
 								.url("/upload")
 								.server("neotys")
 								.method(Method.POST.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("application/octet-stream")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.binarySourceFile("payloads/hello.bin")
 								.build())
 						.addSteps(Request.builder()
 								.url("/upload-raw")
 								.server("neotys")
 								.method(Method.PUT.name())
-								.addHeaders(Header.builder()
-										.name("Content-Type")
-										.value("application/octet-stream")
-										.build())
+								.addHeaders(NameValue.builder().name("Content-Type").value("application/octet-stream").build())
 								.binarySourceFile("payload.bin")
 								.slaProfile("MySlaProfile")
 								.build())
@@ -230,5 +208,155 @@ public class IORequestTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		write("test-request-required-and-optional", expectedProject);
+	}
+
+	private static final String TEST_URL = "http://www.neotys.com/select";
+	private static final String SOAP_URL = "http://host:80/";
+	private static final String SOAP_PATH = "./requests/mySOAPRequest.xml";
+
+	private static SoapRequest.Builder soapRequest() {
+		return SoapRequest.builder().url(SOAP_URL).content(SoapRequestContent.builder().path(SOAP_PATH).build());
+	}
+
+	private static Project projectOf(final Step... steps) {
+		return Project.builder()
+				.name("MyProject")
+				.addUserPaths(UserPath.builder()
+						.name("MyUserPath")
+						.actions(Container.builder().name("actions").addSteps(steps).build())
+						.build())
+				.build();
+	}
+
+	private static Project getFollowRedirects() {
+		return projectOf(Request.builder().url(TEST_URL).followRedirects(true).build(),
+				soapRequest().followRedirects(true).build());
+	}
+
+	private static Project getCharset() {
+		return projectOf(
+				Request.builder().url(TEST_URL).method(Method.POST.name()).body("My Body").charset("UTF-8").build(),
+				Request.builder().url(TEST_URL).method(Method.PUT.name()).body("My Body").charset("UTF-8").build(),
+				soapRequest().charset("UTF-8").build());
+	}
+
+	private static Project getResponseStorage() {
+		return projectOf(
+				Request.builder().url(TEST_URL)
+						.responseStorage(ResponseStorage.builder()
+								.path("responses/login_{ID}.html")
+								.variable("loginResponseFile")
+								.deleteWhenTestFinished(true)
+								.build())
+						.build(),
+				soapRequest()
+						.responseStorage(ResponseStorage.builder().path("responses/order_${orderId}_{ID}.xml").build())
+						.build());
+	}
+
+
+	@Test
+	public void readFollowRedirects() throws IOException {
+		final Project expectedProject = getFollowRedirects();
+		assertNotNull(expectedProject);
+
+		read("test-request-follow-redirects", expectedProject);
+	}
+
+	@Test
+	public void writeFollowRedirects() throws IOException {
+		final Project expectedProject = getFollowRedirects();
+		assertNotNull(expectedProject);
+
+		write("test-request-follow-redirects", expectedProject);
+	}
+
+	@Test
+	public void readDeprecatedFollowRedirectsAlias() throws IOException {
+		final Project expectedProject = getFollowRedirects();
+		assertNotNull(expectedProject);
+
+		read("test-request-follow-redirects-deprecated", expectedProject);
+	}
+
+	@Test
+	public void readBothFollowRedirectsKeysFails() throws IOException {
+		for (final String extension : new String[] { "yaml", "json" }) {
+			final String content = getContent(getFile("test-request-redirect-keys-conflict", extension), StandardCharsets.UTF_8);
+			try {
+				new IO().read(content);
+				fail("Reading the " + extension + " fixture must fail");
+			} catch (final JsonMappingException e) {
+				assertTrue(e.getMessage(), e.getMessage().contains("followRedirects") && e.getMessage().contains("follow_redirects"));
+			}
+		}
+	}
+
+	@Test
+	public void readCharset() throws IOException {
+		final Project expectedProject = getCharset();
+		assertNotNull(expectedProject);
+
+		read("test-request-charset", expectedProject);
+	}
+
+	@Test
+	public void writeCharset() throws IOException {
+		final Project expectedProject = getCharset();
+		assertNotNull(expectedProject);
+
+		write("test-request-charset", expectedProject);
+	}
+
+	@Test
+	public void readCharsetIgnoredWithoutBody() throws IOException {
+		final Project expectedProject = projectOf(Request.builder().url(TEST_URL).build());
+		assertNotNull(expectedProject);
+
+		read("test-request-charset-get-ignored", expectedProject);
+	}
+
+	@Test
+	public void writeCharsetIgnoredWithoutBody() throws IOException {
+		final Request request = Request.builder().url("http://www.neotys.com/select?name:neoload").charset("UTF-8").build();
+		assertFalse(request.getCharset().isPresent());
+		write("test-request-only-required", projectOf(request));
+	}
+
+	@Test
+	public void readResponseStorage() throws IOException {
+		final Project expectedProject = getResponseStorage();
+		assertNotNull(expectedProject);
+
+		read("test-request-response-storage", expectedProject);
+	}
+
+	@Test
+	public void writeResponseStorage() throws IOException {
+		final Project expectedProject = getResponseStorage();
+		assertNotNull(expectedProject);
+
+		write("test-request-response-storage", expectedProject);
+	}
+
+	@Test
+	public void defaultAdvancedSettingsAreNotWritten() throws IOException {
+		final Project project = projectOf(Request.builder().url(TEST_URL).build(), soapRequest().build());
+		final IO io = new IO();
+		for (final Format format : Format.values()) {
+			final String written = io.write(project, format);
+			for (final String key : new String[] { "follow_redirects", "followRedirects", "charset", "response_storage" }) {
+				assertFalse(format + " must not contain " + key, written.contains(key));
+			}
+		}
+		final Project readBack = io.read(io.write(project, Format.YAML)).getProject();
+		final Request request = (Request) (readBack.getUserPaths().get(0).getActions()).getSteps().get(0);
+		final SoapRequest soap = (SoapRequest) (readBack.getUserPaths().get(0).getActions()).getSteps().get(1);
+		assertEquals(false, request.getFollowRedirects());
+		assertFalse(request.getCharset().isPresent());
+		assertFalse(request.getResponseStorage().isPresent());
+		assertEquals(false, soap.getFollowRedirects());
+		assertFalse(soap.getCharset().isPresent());
+		assertFalse(soap.getResponseStorage().isPresent());
 	}
 }

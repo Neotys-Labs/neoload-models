@@ -4,6 +4,8 @@ import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.MINIMI
 import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.USE_NATIVE_TYPE_ID;
 import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.WRITE_DOC_START_MARKER;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -83,6 +85,7 @@ public final class IO {
 		if (isProjectType(type)) {
 			final JsonNode root = mapper.readTree(content);
 			checkSchemaVersionSupported(root);
+			DeprecatedKeys.normalize(root);
 			return mapper.treeToValue(root, type);
 		}
 		// Deserialize
@@ -95,7 +98,7 @@ public final class IO {
 
 	private static void checkSchemaVersionSupported(final JsonNode root) throws UnsupportedSchemaVersionException {
 		final JsonNode schemaVersionNode = root == null ? null : root.get(Project.SCHEMA_VERSION);
-		final String schemaVersion = schemaVersionNode == null
+		final String schemaVersion = schemaVersionNode == null || schemaVersionNode.isNull()
 				? Project.DEFAULT_SCHEMA_VERSION
 				: schemaVersionNode.asText();
 		final SchemaSupport support = SchemaSupport.getDefault();
@@ -199,6 +202,7 @@ public final class IO {
         objectMapper.registerModule(jdk8Module);
         objectMapper.registerModule(newPathModule());
         objectMapper.registerModule(newBinaryModule());
+        objectMapper.setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.SKIP));
 	}
 
 	/**

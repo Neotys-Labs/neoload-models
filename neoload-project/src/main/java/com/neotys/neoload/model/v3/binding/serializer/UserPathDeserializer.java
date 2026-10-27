@@ -35,19 +35,11 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 	}
 
 	protected static UserPath.UserSession asUserSession(final ObjectCodec codec, final JsonNode node) throws JsonProcessingException {
-		UserPath.UserSession userSession = asObject(codec, node, USER_SESSION, UserPath.UserSession.class);
-		if (userSession == null) {
-			userSession = DEFAULT_USER_SESSION;
-		}
-		return userSession;
+		return asObject(codec, node, USER_SESSION, UserPath.UserSession.class).orElse(DEFAULT_USER_SESSION);
 	}
 
-	protected static Container asContainer(final ObjectCodec codec, final JsonNode node, final String fieldName) throws JsonProcessingException {
-		Container container = asObject(codec, node, fieldName, Container.class);
-		if (container != null) {
-			container = renamed(container, fieldName);
-		}
-		return container;
+	protected static Optional<Container> asContainer(final ObjectCodec codec, final JsonNode node, final String fieldName) throws JsonProcessingException {
+		return asObject(codec, node, fieldName, Container.class).map(container -> renamed(container, fieldName));
 	}
 	
 	/**
@@ -88,24 +80,15 @@ public final class UserPathDeserializer extends StdDeserializer<UserPath> {
 		final ObjectCodec codec = parser.getCodec();
 		final JsonNode node = codec.readTree(parser);
 
-		final String name = asText(node, NAME);
-		final String description = asText(node, DESCRIPTION);
-		final UserPath.UserSession userSession = asUserSession(codec, node);
-		final Container init = asContainer(codec, node, INIT);
-		final Container actions = asContainer(codec, node, ACTIONS);
-		final Container end = asContainer(codec, node, END);
-		final List<ContentAssertion> legacyAssertions = asLegacyAssertions(codec, node);
-		final Optional<List<ContentAssertion>> contentAssertions = asContentAssertions(codec, node);
-
 		final UserPath.Builder builder = UserPath.builder()
-				.name(name)
-				.description(Optional.ofNullable(description))
-				.userSession(userSession)
-				.init(Optional.ofNullable(init))
-				.actions(actions)
-				.end(Optional.ofNullable(end))
-				.addAllLegacyAssertions(legacyAssertions);
-		contentAssertions.ifPresent(builder::addAllContentAssertions);
+				.description(asText(node, DESCRIPTION))
+				.userSession(asUserSession(codec, node))
+				.init(asContainer(codec, node, INIT))
+				.end(asContainer(codec, node, END))
+				.addAllLegacyAssertions(asLegacyAssertions(codec, node));
+		asText(node, NAME).ifPresent(builder::name);
+		asContainer(codec, node, ACTIONS).ifPresent(builder::actions);
+		asContentAssertions(codec, node).ifPresent(builder::addAllContentAssertions);
 		return builder.build();
 	}
-}
+}

@@ -20,7 +20,7 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_DEFAULT)
-@JsonPropertyOrder({Request.NAME, UrlServerElement.URL, UrlServerElement.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.BODYBINARY, Request.BINARY_SOURCE_FILE, Request.PARTS, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, Request.FOLLOW_REDIRECTS, Request.INTERNAL_RECORDED_ID, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.NAME, UrlServerElement.URL, UrlServerElement.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.BODYBINARY, Request.BINARY_SOURCE_FILE, Request.PARTS, Request.EXTRACTORS, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, HttpBasedRequest.FOLLOW_REDIRECTS, HttpBasedRequest.CHARSET, HttpBasedRequest.RESPONSE_STORAGE, Request.INTERNAL_RECORDED_ID, SlaElement.SLA_PROFILE})
 @JsonSerialize(as = ImmutableRequest.class)
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
@@ -29,7 +29,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 // property value (not another filter instance), which is how the CUSTOM value filter selects the default
 // value to omit; a real class check would always be false and defeat the omission.
 @SuppressWarnings("java:S2097")
-public interface Request extends Step, UrlServerElement, SlaElement, AssertionsElement, DurationAssertionElement, SizeAssertionElement {
+public interface Request extends Step, HttpBasedRequest, SlaElement, AssertionsElement, DurationAssertionElement, SizeAssertionElement {
 	String NAME = "name";
 	String METHOD = "method";
 	String HEADERS = "headers";
@@ -38,7 +38,6 @@ public interface Request extends Step, UrlServerElement, SlaElement, AssertionsE
 	String BINARY_SOURCE_FILE = "binary_source_file";
 	String PARTS = "parts";
 	String EXTRACTORS = "extractors";
-	String FOLLOW_REDIRECTS = "followRedirects";
 	String INTERNAL_RECORDED_ID = "_internal_recorded_id";
 
 	String DEFAULT_NAME = "request";
@@ -85,8 +84,9 @@ public interface Request extends Step, UrlServerElement, SlaElement, AssertionsE
 	}
 	
 	@JsonProperty(HEADERS)
+	@JsonInclude(Include.NON_EMPTY)
 	@Valid
-	List<Header> getHeaders();
+	List<NameValue> getHeaders();
 	
 	@JsonProperty(BODY)
 	Optional<String> getBody();
@@ -105,10 +105,11 @@ public interface Request extends Step, UrlServerElement, SlaElement, AssertionsE
 	@Valid
 	List<VariableExtractor> getExtractors();
 	
-	@JsonProperty(FOLLOW_REDIRECTS)
-	@Valid
-	@Value.Default
-	default Boolean getFollowRedirects() { return false; }
+	@Value.Check
+	default Request dropCharsetWithoutBody() {
+		final boolean hasBody = Method.POST.name().equalsIgnoreCase(getMethod()) || Method.PUT.name().equalsIgnoreCase(getMethod());
+		return !hasBody && getCharset().isPresent() ? ImmutableRequest.copyOf(this).withCharset(Optional.empty()) : this;
+	}
 
 	@JsonProperty(INTERNAL_RECORDED_ID)
 	Optional<String> getInternalRecordedId();

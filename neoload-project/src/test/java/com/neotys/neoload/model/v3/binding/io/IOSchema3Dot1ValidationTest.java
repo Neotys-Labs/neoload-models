@@ -100,7 +100,13 @@ public class IOSchema3Dot1ValidationTest {
             "test-shared-elements-missing-name-while.yaml",
             "test-shared-elements-missing-name-fork.yaml",
             "test-shared-elements-rejected-below-3-1.yaml",
-            "test-shared-element-reference-step-rejected-below-3-1.yaml"
+            "test-shared-element-reference-step-rejected-below-3-1.yaml",
+            "test-request-redirect-keys-conflict.yaml",
+            "test-request-redirect-keys-conflict.json",
+            "test-soap-request-redirect-keys-conflict.yaml",
+            "test-soap-request-redirect-keys-conflict.json",
+            "test-empty-collections.yaml",
+            "test-empty-collections.json"
     );
 
     @BeforeClass

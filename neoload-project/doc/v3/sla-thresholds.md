@@ -4,6 +4,8 @@ A KPI threshold is a set of conditions that applies to a single Key Performance 
 
 Use the following syntax to define a KPI threshold: [`kpi`](#kpi) [`conditions`](#conditions) [`scope`](#scope).
 
+Each KPI+scope combination must appear **at most once** in a profile.
+
 #### Example
 Defining a list of KPI thresholds:
 ```yaml

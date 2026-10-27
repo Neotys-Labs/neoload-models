@@ -73,8 +73,8 @@ public class IORequestSchemaValidationTest {
 
     @Test
     public void requestSchemaDeclaresFollowRedirects() {
-        assertFollowRedirects(schema30Tree);
-        assertFollowRedirects(schema31Tree);
+        assertFollowRedirects(requestProperties(schema30Tree).path("followRedirects"));
+        assertFollowRedirects(schema31Tree.at("/definitions/user_paths/actions/http_based_request/properties/followRedirects"));
     }
 
     @Test
@@ -190,6 +190,77 @@ public class IORequestSchemaValidationTest {
                         + "        " + extraFields);
     }
 
+    private static JsonNode requestDocument(String requestBody) throws IOException {
+        return YAML_MAPPER.readTree(
+                "name: MyProject\n"
+                        + "user_paths:\n"
+                        + "- name: MyUserPath\n"
+                        + "  actions:\n"
+                        + "    steps:\n"
+                        + "    - request:\n"
+                        + "        url: http://www.neotys.com/select\n"
+                        + requestBody);
+    }
+
+    @Test
+    public void schema3Dot1AcceptsAdvancedSettings() throws IOException {
+        JsonNode node = requestDocument(
+                "        follow_redirects: true\n"
+                        + "        charset: UTF-8\n"
+                        + "        response_storage:\n"
+                        + "          path: responses/login_{ID}.html\n"
+                        + "          variable: loginResponseFile\n"
+                        + "          delete_when_test_finished: true\n");
+        assertTrue(schema31.validate(node).isEmpty());
+        assertTrue(schema31.validate(requestDocument("        followRedirects: true\n")).isEmpty());
+    }
+
+    @Test
+    public void schema3Dot1RejectsBothRedirectKeys() throws IOException {
+        JsonNode node = requestDocument("        followRedirects: true\n        follow_redirects: false\n");
+        assertFalse(schema31.validate(node).isEmpty());
+    }
+
+    @Test
+    public void schema3Dot1RejectsResponseStorageWithoutPath() throws IOException {
+        JsonNode node = requestDocument("        response_storage:\n          variable: myFile\n");
+        assertFalse(schema31.validate(node).isEmpty());
+    }
+
+    @Test
+    public void schema3Dot1RejectsResponseStorageEmptyPath() throws IOException {
+        JsonNode node = requestDocument("        response_storage:\n          path: \"\"\n");
+        assertFalse(schema31.validate(node).isEmpty());
+    }
+
+    @Test
+    public void schema3Dot1RejectsResponseStorageBlankVariable() throws IOException {
+        JsonNode node = requestDocument("        response_storage:\n          path: responses/a.html\n          variable: \"\"\n");
+        assertFalse(schema31.validate(node).isEmpty());
+    }
+
+    @Test
+    public void schema3Dot1RejectsResponseStorageVariableWithForbiddenCharacter() throws IOException {
+        JsonNode node = requestDocument("        response_storage:\n          path: responses/a.html\n          variable: my$file\n");
+        assertFalse(schema31.validate(node).isEmpty());
+    }
+
+    @Test
+    public void schema3Dot1AcceptsResponseStorageVariable() throws IOException {
+        JsonNode node = requestDocument("        response_storage:\n          path: responses/a.html\n          variable: myFile\n");
+        assertTrue(schema31.validate(node).isEmpty());
+    }
+
+    @Test
+    public void schema3Dot1RejectsUnknownKey() throws IOException {
+        assertFalse(schema31.validate(requestDocument("        unknown_key: true\n")).isEmpty());
+    }
+
+    @Test
+    public void schema3Dot0KeepsFollowRedirects() throws IOException {
+        assertTrue(schema30.validate(requestDocument("        followRedirects: true\n")).isEmpty());
+    }
+
     private static JsonNode requestProperties(JsonNode schemaTree) {
         JsonNode properties = schemaTree.at("/definitions/user_paths/actions/request/properties");
         assertTrue("request.properties must exist", properties.isObject());
@@ -205,9 +276,8 @@ public class IORequestSchemaValidationTest {
                 method.has("enum"));
     }
 
-    private static void assertFollowRedirects(JsonNode schemaTree) {
-        JsonNode followRedirects = requestProperties(schemaTree).get("followRedirects");
-        assertNotNull("request.properties.followRedirects must be declared", followRedirects);
+    private static void assertFollowRedirects(JsonNode followRedirects) {
+        assertFalse("followRedirects must be declared", followRedirects.isMissingNode());
         assertEquals("boolean", followRedirects.get("type").asText());
         assertFalse(followRedirects.get("default").asBoolean());
     }
