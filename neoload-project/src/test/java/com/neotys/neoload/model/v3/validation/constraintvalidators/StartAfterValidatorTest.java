@@ -4,11 +4,9 @@ package com.neotys.neoload.model.v3.validation.constraintvalidators;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
-import com.neotys.neoload.model.v3.validation.constraintvalidators.StartAfterValidator;
-
+import java.time.Duration;
+import org.junit.Test;
 
 public class StartAfterValidatorTest {
 	@Test
@@ -21,11 +19,11 @@ public class StartAfterValidatorTest {
 		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.POPULATION).build(), null));
 		
 		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.TIME).value("").build(), null));
-		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.TIME).value(-1).build(), null));
-		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.TIME).value(0).build(), null));
-		assertTrue(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.TIME).value(1).build(), null));
+		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(-1)).build(), null));
+		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(0)).build(), null));
+		assertTrue(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(1)).build(), null));
 		
-		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.POPULATION).value(0).build(), null));
+		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.POPULATION).value(Duration.ofSeconds(0)).build(), null));
 		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.POPULATION).value("").build(), null));
 		assertFalse(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.POPULATION).value(" \t\r\n").build(), null));
 		assertTrue(new StartAfterValidator().isValid(StartAfter.builder().type(StartAfter.Type.POPULATION).value("value").build(), null));

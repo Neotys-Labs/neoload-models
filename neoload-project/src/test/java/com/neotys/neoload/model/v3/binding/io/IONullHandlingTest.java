@@ -11,6 +11,7 @@ import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
@@ -134,9 +135,9 @@ public class IONullHandlingTest {
 				.name("P")
 				.addServers(Server.builder().name("S").host("h").port("80").build())
 				.addUserPaths(UserPath.builder().name("U").actions(Container.builder().name("actions")
-						.pacing(DurationRandom.builder().max("2000").build())
+						.pacing(DurationRandom.builder().max(Durations.of("2000")).build())
 						.addSteps(Request.builder().url("http://h:80/").addHeaders(NameValue.builder().name("Accept").build()).build())
-						.addSteps(Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max("2000").build()).build())
+						.addSteps(Delay.builder().isThinkTime(true).duration(DurationRandom.builder().max(Durations.of("2000")).build()).build())
 						.build()).build())
 				.build();
 
@@ -164,7 +165,7 @@ public class IONullHandlingTest {
 
 	@Test
 	public void unset_user_path_name_is_not_written_and_read_back_as_violation() throws IOException {
-		final Project project = IOHelper.buildProject(Delay.builder().duration(DurationConstant.builder().value("1000").build()).build());
+		final Project project = IOHelper.buildProject(Delay.builder().duration(DurationConstant.builder().value(Durations.of("1000")).build()).build());
 		final Project unnamed = Project.builder().from(project).userPaths(java.util.List.of(UserPath.builder().actions(project.getUserPaths().get(0).getActions()).build())).build();
 
 		for (final IO.Format format : IO.Format.values()) {

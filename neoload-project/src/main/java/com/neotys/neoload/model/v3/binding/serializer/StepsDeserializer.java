@@ -5,9 +5,11 @@ import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.*;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.google.common.collect.ImmutableMap;
+import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import java.io.IOException;
@@ -118,10 +120,20 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 			return null;
 		}
 		final JsonNode delayNode = stepNode.get(key);
-		final Delay.Builder builder = Delay.builder().isThinkTime(thinkTime).duration(DurationDeserializer.read(delayNode));
+		final Delay.Builder builder = Delay.builder().isThinkTime(thinkTime).duration(readDuration(delayNode, key));
 		DeserializerHelper.asText(delayNode, Element.NAME).ifPresent(builder::name);
 		DeserializerHelper.asText(delayNode, Element.DESCRIPTION).ifPresent(builder::description);
 		return builder.build();
+	}
+
+	private static Duration readDuration(final JsonNode delayNode, final String key) throws JsonMappingException {
+		try {
+			return DurationDeserializer.read(delayNode);
+		} catch (final InvalidDurationException e) {
+			final JsonMappingException exception = JsonMappingException.from((JsonParser) null, e.getMessage(), e);
+			exception.prependPath(Delay.class, key);
+			throw exception;
+		}
 	}
 
 	private static Step parseRendezvous(final JsonNode stepNode) {

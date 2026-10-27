@@ -5,13 +5,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import java.time.Duration;
+import org.junit.Test;
 
 public class StopAfterTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -52,7 +49,7 @@ public class StopAfterTest {
 		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
 
 		stopAfter = StopAfter.builder()
-				.value(-10)
+				.value(Duration.ofSeconds(-10))
 				.type(StopAfter.Type.TIME)
 				.build();
 		validation = validator.validate(stopAfter, NeoLoad.class);
@@ -60,7 +57,7 @@ public class StopAfterTest {
 		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
 
 		stopAfter = StopAfter.builder()
-				.value(0)
+				.value(Duration.ofSeconds(0))
 				.type(StopAfter.Type.TIME)
 				.build();
 		validation = validator.validate(stopAfter, NeoLoad.class);
@@ -68,7 +65,7 @@ public class StopAfterTest {
 		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
 
 		stopAfter = StopAfter.builder()
-				.value(1)
+				.value(Duration.ofSeconds(1))
 				.type(StopAfter.Type.TIME)
 				.build();
 		validation = validator.validate(stopAfter, NeoLoad.class);
@@ -76,7 +73,7 @@ public class StopAfterTest {
 		assertFalse(validation.getMessage().isPresent());	
 
 		stopAfter = StopAfter.builder()
-				.value(1)
+				.value(Duration.ofSeconds(1))
 				.type(StopAfter.Type.CURRENT_ITERATION)
 				.build();
 		validation = validator.validate(stopAfter, NeoLoad.class);
@@ -104,14 +101,14 @@ public class StopAfterTest {
 		final Validator validator = new Validator();
 		
 		StopAfter stopAfter = StopAfter.builder()
-				.value(1)
+				.value(Duration.ofSeconds(1))
 				.build();
 		Validation validation = validator.validate(stopAfter, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_TYPE, validation.getMessage().get());	
 
 		stopAfter = StopAfter.builder()
-				.value(1)
+				.value(Duration.ofSeconds(1))
 				.type(null)
 				.build();
 		validation = validator.validate(stopAfter, NeoLoad.class);
@@ -126,7 +123,7 @@ public class StopAfterTest {
 		assertFalse(validation.getMessage().isPresent());	
 
 		stopAfter = StopAfter.builder()
-				.value(1)
+				.value(Duration.ofSeconds(1))
 				.type(StopAfter.Type.TIME)
 				.build();
 		validation = validator.validate(stopAfter, NeoLoad.class);

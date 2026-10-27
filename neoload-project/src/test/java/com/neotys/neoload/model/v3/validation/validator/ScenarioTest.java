@@ -1,6 +1,10 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
@@ -20,14 +24,9 @@ import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.junit.Test;
-
+import java.time.Duration;
 import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Test;
 
 public class ScenarioTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -90,7 +89,7 @@ public class ScenarioTest {
 	public void validateName() {
 		final Validator validator = new Validator();
 
-		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(Duration.ofSeconds(100)).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		Scenario scenario = Scenario.builder()
 				.addPopulations(PopulationPolicy.builder()
 						.name("MyPopulation")
@@ -148,7 +147,7 @@ public class ScenarioTest {
 	@Test
 	public void validatePopulations() {
 		final Validator validator = new Validator();
-		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(Duration.ofSeconds(100)).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		Scenario scenario = Scenario.builder()
 				.name("MyScenario")
 				.build();
@@ -174,7 +173,7 @@ public class ScenarioTest {
 	@Test
 	public void validatePopulationsNames() {
 		final Validator validator = new Validator();
-		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(Duration.ofSeconds(100)).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		Scenario scenario = Scenario.builder()
 				.name("MyScenario")
 				.addPopulations(PopulationPolicy.builder()
@@ -226,7 +225,7 @@ public class ScenarioTest {
         				.users(500)
         				.duration(LoadDuration.builder().build())
         				.startAfter(StartAfter.builder().build())
-        				.rampup(60)
+        				.rampup(Duration.ofSeconds(60))
         				.stopAfter(StopAfter.builder().build())
         				.build())
         		.build();
@@ -240,7 +239,7 @@ public class ScenarioTest {
         				.incrementEvery(LoadDuration.builder().build())
         				.duration(LoadDuration.builder().build())
         				.startAfter(StartAfter.builder().build())
-        				.rampup(90)
+        				.rampup(Duration.ofSeconds(90))
         				.stopAfter(StopAfter.builder().build())
         				.build())
         		.build();
@@ -259,7 +258,7 @@ public class ScenarioTest {
         				.start(Peak.MAXIMUM)
         				.duration(LoadDuration.builder().build())
         				.startAfter(StartAfter.builder().build())
-        				.rampup(15)
+        				.rampup(Duration.ofSeconds(15))
         				.stopAfter(StopAfter.builder().build())
         				.build())
         		.build();
@@ -278,19 +277,19 @@ public class ScenarioTest {
 				.loadPolicy(CustomLoadPolicy.builder()
 						.steps(Arrays.asList(customPolicyStep, customPolicyStep, customPolicyStep))
 						.startAfter(StartAfter.builder().build())
-						.rampup(60)
+						.rampup(Duration.ofSeconds(60))
 						.stopAfter(StopAfter.builder().build())
 						.build())
 				.build();
 
-		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(100).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
+		RendezvousPolicy rendezvousPolicy = RendezvousPolicy.builder().name("rdv").timeout(Duration.ofSeconds(100)).when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build()).build();
 		final Scenario scenario1 = Scenario.builder()
         		.name("MyScenario1")
         		.description("My scenario 1 with 4 populations")
         		.slaProfile("MySlaProfile")
         		.addPopulations(population11, population12, population13, population14)
 				.addRendezvousPolicies(rendezvousPolicy)
-				.monitoringParameters(MonitoringParameters.builder().afterLastVus(0).beforeFirstVu(0).build())
+				.monitoringParameters(MonitoringParameters.builder().afterLastVus(Duration.ofSeconds(0)).beforeFirstVu(Duration.ofSeconds(0)).build())
 				.isStoredVariables(true)
 				.build();
         

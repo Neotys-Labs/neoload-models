@@ -11,11 +11,11 @@ import com.neotys.neoload.model.v3.validation.constraints.MinNotGreaterThanMaxCh
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.time.Duration;
+import javax.validation.Valid;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
-
-import javax.validation.Valid;
 
 @JsonInclude(value=Include.NON_EMPTY)
 @JsonPropertyOrder({RampupLoadPolicy.MIN_USERS, RampupLoadPolicy.MAX_USERS, RampupLoadPolicy.INCREMENT_USERS, RampupLoadPolicy.INCREMENT_EVERY, DurationPolicy.DURATION, StartStopPolicy.START_AFTER, RampupLoadPolicy.INCREMENT_RAMPUP, StartStopPolicy.STOP_AFTER})
@@ -46,7 +46,7 @@ public interface RampupLoadPolicy extends LoadPolicy {
 	@JsonProperty(INCREMENT_EVERY)
 	LoadDuration getIncrementEvery();
 	@JsonProperty(INCREMENT_RAMPUP)
-	Integer getRampup();
+	Duration getRampup();
 
 	@Override
 	@Value.Default

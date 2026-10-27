@@ -1,21 +1,5 @@
 package com.neotys.neoload.model.v3.writers.neoload.scenario;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import com.google.common.collect.ImmutableList;
 import com.neotys.neoload.model.v3.project.scenario.Apm;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
@@ -35,6 +19,20 @@ import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class ScenarioWriterTest {
 
@@ -147,12 +145,12 @@ public class ScenarioWriterTest {
                 						.type(LoadDuration.Type.TIME)
                 						.build())
                 				.startAfter(StartAfter.builder()
-                						.value(60)
+                						.value(Duration.ofSeconds(60))
                 						.type(StartAfter.Type.TIME)
                 						.build())
-                				.rampup(120)
+                				.rampup(Duration.ofSeconds(120))
                 				.stopAfter(StopAfter.builder()
-                						.value(180)
+                						.value(Duration.ofSeconds(180))
                 						.type(StopAfter.Type.TIME)
                 						.build())
                 				.build())
@@ -199,7 +197,7 @@ public class ScenarioWriterTest {
                 						.value("myPopulation0")
                 						.type(StartAfter.Type.POPULATION)
                 						.build())
-                				.rampup(120)
+                				.rampup(Duration.ofSeconds(120))
                 				.stopAfter(StopAfter.builder()
                 						.type(StopAfter.Type.CURRENT_ITERATION)
                 						.build())
@@ -320,12 +318,12 @@ public class ScenarioWriterTest {
                 						.build())
                 				.start(PeaksLoadPolicy.Peak.MINIMUM)
                 				.startAfter(StartAfter.builder()
-                						.value(60)
+                						.value(Duration.ofSeconds(60))
                 						.type(StartAfter.Type.TIME)
                 						.build())
-                				.rampup(120)
+                				.rampup(Duration.ofSeconds(120))
                 				.stopAfter(StopAfter.builder()
-                						.value(180)
+                						.value(Duration.ofSeconds(180))
                 						.type(StopAfter.Type.TIME)
                 						.build())
                 				.build())
@@ -394,7 +392,7 @@ public class ScenarioWriterTest {
                 						.value("myPopulation0")
                 						.type(StartAfter.Type.POPULATION)
                 						.build())
-                				.rampup(120)
+                				.rampup(Duration.ofSeconds(120))
                 				.stopAfter(StopAfter.builder()
                 						.type(StopAfter.Type.CURRENT_ITERATION)
                 						.build())
@@ -505,12 +503,12 @@ public class ScenarioWriterTest {
                 						.type(LoadDuration.Type.TIME)
                 						.build())
                 				.startAfter(StartAfter.builder()
-                						.value(60)
+                						.value(Duration.ofSeconds(60))
                 						.type(StartAfter.Type.TIME)
                 						.build())
-                				.rampup(120)
+                				.rampup(Duration.ofSeconds(120))
                 				.stopAfter(StopAfter.builder()
-                						.value(180)
+                						.value(Duration.ofSeconds(180))
                 						.type(StopAfter.Type.TIME)
                 						.build())
                 				.build())
@@ -567,7 +565,7 @@ public class ScenarioWriterTest {
                     					.value("myPopulation0")
                     					.type(StartAfter.Type.POPULATION)
                     					.build())
-                    			.rampup(120)
+                    			.rampup(Duration.ofSeconds(120))
                     			.stopAfter(StopAfter.builder()
                     					.type(StopAfter.Type.CURRENT_ITERATION)
                     					.build())
@@ -627,12 +625,12 @@ public class ScenarioWriterTest {
                         .loadPolicy(CustomLoadPolicy.builder()
                                 .steps(Collections.singletonList(customPolicyStep))
                                 .startAfter(StartAfter.builder()
-                                        .value(60)
+                                        .value(Duration.ofSeconds(60))
                                         .type(StartAfter.Type.TIME)
                                         .build())
-                                .rampup(120)
+                                .rampup(Duration.ofSeconds(120))
                                 .stopAfter(StopAfter.builder()
-                                        .value(180)
+                                        .value(Duration.ofSeconds(180))
                                         .type(StopAfter.Type.TIME)
                                         .build())
                                 .build())
@@ -685,7 +683,7 @@ public class ScenarioWriterTest {
                                         .value("myPopulation0")
                                         .type(StartAfter.Type.POPULATION)
                                         .build())
-                                .rampup(120)
+                                .rampup(Duration.ofSeconds(120))
                                 .stopAfter(StopAfter.builder()
                                         .type(StopAfter.Type.CURRENT_ITERATION)
                                         .build())
@@ -810,7 +808,7 @@ public class ScenarioWriterTest {
 					    .value(15)
 					    .build())
 			    .name("percentage")
-			    .timeout(200)
+			    .timeout(Duration.ofSeconds(200))
 			    .build());
 	    listRendezvous.add(RendezvousPolicy.builder()
 			    .when(WhenRelease.builder()
@@ -824,7 +822,7 @@ public class ScenarioWriterTest {
 					    .type(WhenRelease.Type.MANUAL)
 					    .build())
 			    .name("manually")
-			    .timeout(150)
+			    .timeout(Duration.ofSeconds(150))
 			    .build());
 	    Scenario scenario = Scenario.builder()
                 .name("myScenario")
@@ -887,7 +885,7 @@ public class ScenarioWriterTest {
 				.name("myScenario")
 				.description("myDescription")
 				.slaProfile("mySlaProfile")
-				.monitoringParameters(MonitoringParameters.builder().afterLastVus(50).beforeFirstVu(10).build())
+				.monitoringParameters(MonitoringParameters.builder().afterLastVus(Duration.ofSeconds(50)).beforeFirstVu(Duration.ofSeconds(10)).build())
 				.build();
 
 		// write the repository

@@ -2,9 +2,9 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.MIN_GREATER_THAN_MAX;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.VALUE_COMBINED_WITH_BOUNDS;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertInvalidDurationRead;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertReadError;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertViolations;
-import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidDuration;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -15,6 +15,7 @@ import static org.junit.Assert.fail;
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -25,14 +26,14 @@ import org.junit.Test;
 public class IOPacingTest extends AbstractIOElementsTest {
 
 	private static Container withPacing(final Duration pacing) {
-		return Container.builder().pacing(pacing).addSteps(Delay.builder().duration(DurationConstant.builder().value("100").build()).build()).build();
+		return Container.builder().pacing(pacing).addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("100")).build()).build()).build();
 	}
 
 	private static Project buildProjectWithPacingEverywhere(final Duration pacing) {
 		final Container transaction = Container.builder()
 				.name("MyTransaction")
 				.pacing(pacing)
-				.addSteps(Delay.builder().duration(DurationConstant.builder().value("100").build()).build())
+				.addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("100")).build()).build())
 				.build();
 
 		final TryCatch tryCatch = TryCatch.builder()
@@ -46,7 +47,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 						.value("0")
 						.isBreak(true)
 						.pacing(pacing)
-						.addSteps(Delay.builder().duration(DurationConstant.builder().value("100").build()).build())
+						.addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("100")).build()).build())
 						.build())
 				.getDefault(withPacing(pacing))
 				.build();
@@ -59,9 +60,9 @@ public class IOPacingTest extends AbstractIOElementsTest {
 
 		final UserPath userPath = UserPath.builder()
 				.name("MyUserPath")
-				.init(Container.builder().name("init").pacing(pacing).addSteps(Delay.builder().duration(DurationConstant.builder().value("100").build()).build()).build())
+				.init(Container.builder().name("init").pacing(pacing).addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("100")).build()).build()).build())
 				.actions(actions)
-				.end(Container.builder().name("end").pacing(pacing).addSteps(Delay.builder().duration(DurationConstant.builder().value("100").build()).build()).build())
+				.end(Container.builder().name("end").pacing(pacing).addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("100")).build()).build()).build())
 				.build();
 
 		return Project.builder().name("MyProject").addUserPaths(userPath).build();
@@ -86,7 +87,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readConstantPacingOnEveryContainerType() throws IOException {
-		final Project expectedProject = buildProjectWithPacingEverywhere(DurationConstant.builder().value("30000").build());
+		final Project expectedProject = buildProjectWithPacingEverywhere(DurationConstant.builder().value(Durations.of("30000")).build());
 		assertNotNull(expectedProject);
 
 		read("test-pacing-constant", expectedProject);
@@ -95,7 +96,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	@Test
 	public void readRandomPacingOnEveryContainerType() throws IOException {
 		final Project expectedProject = buildProjectWithPacingEverywhere(
-				DurationRandom.builder().min("1000").max("3000").build());
+				DurationRandom.builder().min(Durations.of("1000")).max(Durations.of("3000")).build());
 		assertNotNull(expectedProject);
 
 		read("test-pacing-random", expectedProject);
@@ -103,7 +104,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readConstantPacingOnIfThenElse() throws IOException {
-		final Project expectedProject = buildProjectWithPacingOnIfThenElse(DurationConstant.builder().value("30000").build());
+		final Project expectedProject = buildProjectWithPacingOnIfThenElse(DurationConstant.builder().value(Durations.of("30000")).build());
 		assertNotNull(expectedProject);
 
 		read("test-pacing-if-constant", expectedProject);
@@ -112,7 +113,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	@Test
 	public void readRandomPacingOnIfThenElse() throws IOException {
 		final Project expectedProject = buildProjectWithPacingOnIfThenElse(
-				DurationRandom.builder().min("1000").max("3000").build());
+				DurationRandom.builder().min(Durations.of("1000")).max(Durations.of("3000")).build());
 		assertNotNull(expectedProject);
 
 		read("test-pacing-if-random", expectedProject);
@@ -122,8 +123,8 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	public void readRandomPacingWithoutMinDefaultsToZero() throws IOException {
 		final Project expectedProject = IOHelper.buildProject(
 				Container.builder().name("actions")
-						.pacing(DurationRandom.builder().max("3000").build())
-						.addSteps(Delay.builder().duration(DurationConstant.builder().value("100").build()).build())
+						.pacing(DurationRandom.builder().max(Durations.of("3000")).build())
+						.addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("100")).build()).build())
 						.build());
 		assertNotNull(expectedProject);
 
@@ -133,8 +134,8 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	@Test
 	public void readConstantPacingAsVariablePassesThroughUnchanged() throws IOException {
 		final Step transaction = Container.builder().name("MyTransaction")
-				.pacing(DurationConstant.builder().value("${my_pacing}").build())
-				.addSteps(Delay.builder().duration(DurationConstant.builder().value("100").build()).build())
+				.pacing(DurationConstant.builder().value(Durations.of("${my_pacing}")).build())
+				.addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("100")).build()).build())
 				.build();
 		final Project expectedProject = IOHelper.buildProject(transaction);
 		assertNotNull(expectedProject);
@@ -146,8 +147,8 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	public void readRandomPacingBoundsAsVariablesPassThroughUnchanged() throws IOException {
 		final Project expectedProject = IOHelper.buildProject(
 				Container.builder().name("actions")
-						.pacing(DurationRandom.builder().min("${min_pacing}").max("${max_pacing}").build())
-						.addSteps(Delay.builder().duration(DurationConstant.builder().value("100").build()).build())
+						.pacing(DurationRandom.builder().min(Durations.of("${min_pacing}")).max(Durations.of("${max_pacing}")).build())
+						.addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("100")).build()).build())
 						.build());
 		assertNotNull(expectedProject);
 
@@ -158,7 +159,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	public void writeAbsentPacingProducesNoPacingKey() throws IOException {
 		final Project project = IOHelper.buildProject(
 				Container.builder().name("actions")
-						.addSteps(Delay.builder().duration(DurationConstant.builder().value("100").build()).build())
+						.addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("100")).build()).build())
 						.build());
 
 		final String yaml = new IO().write(ProjectDescriptor.builder().project(project).build(), Format.YAML);
@@ -178,32 +179,18 @@ public class IOPacingTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readPacingValuesRejectedByThePattern() throws IOException {
-		final ProjectDescriptor descriptor = new IO().read(getFile("test-pacing-invalid-values", "yaml"));
-
-		assertViolations(new Validator().validate(descriptor, NeoLoad.class),
-				invalidDuration("project.user_paths[0].actions.steps[0].pacing.value", "abc"),
-				invalidDuration("project.user_paths[0].actions.steps[1].pacing.value", "-5s"),
-				invalidDuration("project.user_paths[0].actions.steps[2].pacing.value", "1.5s"),
-				invalidDuration("project.user_paths[0].actions.steps[3].pacing.value", "1.5"));
-	}
-
-	@Test
-	public void readPacingWithMisorderedOrRepeatedUnitsIsRejectedInsteadOfReadAsZero() throws IOException {
-		final ProjectDescriptor descriptor = new IO().read(getFile("test-pacing-malformed-units", "yaml"));
-
-		assertViolations(new Validator().validate(descriptor, NeoLoad.class),
-				invalidDuration("project.user_paths[0].actions.steps[0].pacing.value", "1m1h"),
-				invalidDuration("project.user_paths[0].actions.steps[1].pacing.value", "1s1s"),
-				invalidDuration("project.user_paths[0].actions.steps[2].pacing.value", "1s5"));
+	public void readPacingValuesRejectedAtRead() {
+		for (final String value : new String[] {"abc", "-5s", "1.5s", "\"1.5\"", "1m1h", "1s1s", "1s5"}) {
+			assertInvalidDurationRead(() -> readPacing(value), value.replace("\"", ""), "pacing");
+		}
 	}
 
 	@Test
 	public void readDurationsWithSpacesBetweenUnitsAndWriteThemWithoutSpaces() throws IOException {
 		final Project expectedProject = IOHelper.buildProject(
 				Container.builder().name("actions")
-						.pacing(DurationRandom.builder().min("90000").max("3725000").build())
-						.addSteps(Delay.builder().duration(DurationConstant.builder().value("5415000").build()).build())
+						.pacing(DurationRandom.builder().min(Durations.of("90000")).max(Durations.of("3725000")).build())
+						.addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("5415000")).build()).build())
 						.build());
 		assertNotNull(expectedProject);
 
@@ -260,36 +247,36 @@ public class IOPacingTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readPacingFormsAreNormalizedToMilliseconds() throws IOException {
-		assertEquals(DurationConstant.builder().value("2000").build(), pacingOf(readPacing("2s")));
-		assertEquals(DurationConstant.builder().value("2000").build(), pacingOf(readPacing("{ value: 2s }")));
-		assertEquals(DurationRandom.builder().min("1000").max("3000").build(), pacingOf(readPacing("{ min: 1s, max: 3s }")));
-		assertEquals(DurationConstant.builder().value("${myPacing}").build(), pacingOf(readPacing("${myPacing}")));
-		assertEquals(DurationConstant.builder().value("3601000").build(), pacingOf(readPacing("1h 1s")));
+		assertEquals(DurationConstant.builder().value(Durations.of("2000")).build(), pacingOf(readPacing("2s")));
+		assertEquals(DurationConstant.builder().value(Durations.of("2000")).build(), pacingOf(readPacing("{ value: 2s }")));
+		assertEquals(DurationRandom.builder().min(Durations.of("1000")).max(Durations.of("3000")).build(), pacingOf(readPacing("{ min: 1s, max: 3s }")));
+		assertEquals(DurationConstant.builder().value(Durations.of("${myPacing}")).build(), pacingOf(readPacing("${myPacing}")));
+		assertEquals(DurationConstant.builder().value(Durations.of("3601000")).build(), pacingOf(readPacing("1h 1s")));
 	}
 
 	@Test
 	public void readPlainNumberPacingAsMillisecondsAndWriteItBack() throws IOException {
 		final Project project = readPacing("1500");
 
-		assertEquals(DurationConstant.builder().value("1500").build(), pacingOf(project));
+		assertEquals(DurationConstant.builder().value(Durations.of("1500")).build(), pacingOf(project));
 		final String yaml = new IO().write(ProjectDescriptor.builder().project(project).build(), Format.YAML);
 		assertTrue(yaml, yaml.contains("pacing: 1s500ms"));
 	}
 
 	@Test
-	public void readInvalidPacingDurationsAreReportedByValidation() throws IOException {
-		assertViolations(validate(readPacing("abc")), invalidDuration("project.user_paths[0].actions.pacing.value", "abc"));
-		assertViolations(validate(readPacing("5x")), invalidDuration("project.user_paths[0].actions.pacing.value", "5x"));
-		assertViolations(validate(readPacing("{ value: abc }")), invalidDuration("project.user_paths[0].actions.pacing.value", "abc"));
-		assertViolations(validate(readPacing("{ min: abc, max: 5s }")), invalidDuration("project.user_paths[0].actions.pacing.min", "abc"));
-		assertViolations(validate(readPacing("{ max: 1.5.2 }")), invalidDuration("project.user_paths[0].actions.pacing.max", "1.5.2"));
+	public void readInvalidPacingDurationsFailTheRead() {
+		assertInvalidDurationRead(() -> readPacing("abc"), "abc", "pacing");
+		assertInvalidDurationRead(() -> readPacing("5x"), "5x", "pacing");
+		assertInvalidDurationRead(() -> readPacing("{ value: abc }"), "abc", "pacing");
+		assertInvalidDurationRead(() -> readPacing("{ min: abc, max: 5s }"), "abc", "pacing");
+		assertInvalidDurationRead(() -> readPacing("{ max: 1.5.2 }"), "1.5.2", "pacing");
 	}
 
 	@Test
 	public void readPacingWithOnlyMaxIsValidWithEmptyMin() throws IOException {
 		final Project project = readPacing("{ max: 5s }");
 
-		assertEquals(DurationRandom.builder().max("5000").build(), pacingOf(project));
+		assertEquals(DurationRandom.builder().max(Durations.of("5000")).build(), pacingOf(project));
 		assertTrue(validate(project).getMessage().orElse(""), validate(project).isValid());
 	}
 

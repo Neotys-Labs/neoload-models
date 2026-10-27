@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.variable.RandomNumberVariable;
 import com.neotys.neoload.model.v3.project.variable.RandomStringVariable;
 import org.junit.Test;
@@ -24,13 +25,13 @@ public class MinNotGreaterThanMaxValidatorsTest {
 		final DurationRandomMinNotGreaterThanMaxValidator validator = new DurationRandomMinNotGreaterThanMaxValidator();
 
 		assertTrue(validator.isValid(null, null));
-		assertTrue(validator.isValid(DurationRandom.builder().min("1000").max("3000").build(), null));
-		assertTrue(validator.isValid(DurationRandom.builder().min("3000").max("3000").build(), null));
-		assertTrue(validator.isValid(DurationRandom.builder().max("0").build(), null));
-		assertFalse(validator.isValid(DurationRandom.builder().min("3000").max("1000").build(), null));
+		assertTrue(validator.isValid(DurationRandom.builder().min(Durations.of("1000")).max(Durations.of("3000")).build(), null));
+		assertTrue(validator.isValid(DurationRandom.builder().min(Durations.of("3000")).max(Durations.of("3000")).build(), null));
+		assertTrue(validator.isValid(DurationRandom.builder().max(Durations.of("0")).build(), null));
+		assertFalse(validator.isValid(DurationRandom.builder().min(Durations.of("3000")).max(Durations.of("1000")).build(), null));
 
-		assertTrue(validator.isValid(DurationRandom.builder().min("${min_pacing}").max("1000").build(), null));
-		assertTrue(validator.isValid(DurationRandom.builder().min("5000").max("abc").build(), null));
+		assertTrue(validator.isValid(DurationRandom.builder().min(Durations.of("${min_pacing}")).max(Durations.of("1000")).build(), null));
+		assertTrue(validator.isValid(DurationRandom.builder().min(Durations.of("5000")).max(Durations.of("${max_pacing}")).build(), null));
 	}
 
 	@Test

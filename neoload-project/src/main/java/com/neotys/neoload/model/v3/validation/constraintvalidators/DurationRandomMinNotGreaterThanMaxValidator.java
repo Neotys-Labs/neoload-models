@@ -1,28 +1,31 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
+import com.neotys.neoload.model.v3.project.userpath.DurationLiteral;
+import com.neotys.neoload.model.v3.project.userpath.DurationOrVariable;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
 import com.neotys.neoload.model.v3.validation.constraints.MinNotGreaterThanMaxCheck;
-import java.math.BigInteger;
-import java.util.regex.Pattern;
+import java.time.Duration;
+import java.util.Optional;
 import javax.validation.ConstraintValidatorContext;
 
 public final class DurationRandomMinNotGreaterThanMaxValidator extends AbstractConstraintValidator<MinNotGreaterThanMaxCheck, DurationRandom> {
-	private static final Pattern MILLISECONDS = Pattern.compile("\\d+");
-
 	@Override
 	public boolean isValid(final DurationRandom duration, final ConstraintValidatorContext context) {
 		if (duration == null) {
 			return true;
 		}
-		final String min = duration.getMin().orElse("0");
-		final String max = duration.getMax();
-		if (!isMilliseconds(min) || !isMilliseconds(max)) {
+		final Optional<Duration> min = duration.getMin().map(DurationRandomMinNotGreaterThanMaxValidator::toDuration).orElse(Optional.of(Duration.ZERO));
+		final Optional<Duration> max = toDuration(duration.getMax());
+		if (!min.isPresent() || !max.isPresent()) {
 			return true;
 		}
-		return new BigInteger(min).compareTo(new BigInteger(max)) <= 0;
+		return min.get().compareTo(max.get()) <= 0;
 	}
 
-	private static boolean isMilliseconds(final String value) {
-		return value != null && MILLISECONDS.matcher(value).matches();
+	private static Optional<Duration> toDuration(final DurationOrVariable value) {
+		if (value instanceof DurationLiteral) {
+			return Optional.ofNullable(((DurationLiteral) value).getValue());
+		}
+		return Optional.empty();
 	}
 }
