@@ -22,7 +22,7 @@ public class IORealBrowserActionTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getRealBrowserActions());
 		assertNotNull(expectedProject);
 
-		read("test-real-browser-actions", expectedProject);
+		assertRead("test-real-browser-actions", expectedProject);
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class IORealBrowserActionTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getRealBrowserActions());
 		assertNotNull(expectedProject);
 
-		read("test-real-browser-actions-as-custom-action", expectedProject);
+		assertRead("test-real-browser-actions-as-custom-action", expectedProject);
 	}
 
 	@Test
@@ -38,7 +38,7 @@ public class IORealBrowserActionTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getRealBrowserActions());
 		assertNotNull(expectedProject);
 
-		write("test-real-browser-actions", expectedProject);
+		assertWrite("test-real-browser-actions", expectedProject);
 	}
 
 	private static CustomAction[] getRealBrowserActions() {
