@@ -60,7 +60,7 @@ public class IORealBrowserActionSchemaValidationTest {
                         + "        asRequest: true\n"
                         + "        parameters:\n"
                         + "        - { name: url, value: \"https://www.tricentis.com/\" }\n"
-                        + "        - { name: waitForNavigation.until, value: networkidle }\n"
+                        + "        - { name: waitForNavigation.until, value: NETWORKIDLE }\n"
                         + "        duration_assertion:\n"
                         + "          less_than: 5000\n"
                         + "    - browser_click:\n"

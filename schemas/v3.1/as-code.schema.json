@@ -2135,7 +2135,7 @@
 					},
 					"waitForNavigation_until": {
 						"const": "waitForNavigation.until",
-						"description": "Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed."
+						"description": "Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed."
 					},
 					"waitForDownload": {
 						"const": "waitForDownload",

@@ -135,7 +135,7 @@ Type `BrowserNavigate`. Navigate to an url.
 | `unsafeUrl` | URL to visit without scheme restriction, for example a local file. Always ignored on a NeoLoad Cloud Load Generator. Advanced parameter, hidden by default in NeoLoad GUI. | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
-| `waitForNavigation.until` | Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
+| `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
 | `ignoreErrors` | Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a "If...Then...Else" or a "Try...Catch" block. Default value is "false". | - |
 
 ## browser_click
@@ -156,7 +156,7 @@ Type `BrowserClick`. Click a selector.
 | `frameSelector` | Frame selector. | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
-| `waitForNavigation.until` | Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
+| `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForDownload` | Enable waiting for a download if the parameter is set to true. Default value is "false". | - |
 | `waitForDownload.path` | The path where to save the downloaded file. Can include the filename, i.e : /home/my-downloads/my-downloaded-file.txt | - |
 | `waitForDownload.timeout` | If applicable, the download must start within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Maximum value is 200000. If the timeout is set to 0, the download will be waited indefinitely. | - |
@@ -178,7 +178,7 @@ Type `BrowserType`. Type some text inside an element.
 | `frameSelector` | Frame selector. | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
-| `waitForNavigation.until` | Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
+| `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForDownload` | Enable waiting for a download if the parameter is set to true. Default value is "false". | - |
 | `waitForDownload.path` | The path where to save the downloaded file. Can include the filename, i.e : /home/my-downloads/my-downloaded-file.txt | - |
 | `waitForDownload.timeout` | If applicable, the download must start within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Maximum value is 200000. If the timeout is set to 0, the download will be waited indefinitely. | - |
@@ -199,7 +199,7 @@ Type `BrowserPress`. Press a key on a selector.
 | `frameSelector` | Frame selector. | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
-| `waitForNavigation.until` | Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
+| `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForDownload` | Enable waiting for a download if the parameter is set to true. Default value is "false". | - |
 | `waitForDownload.path` | The path where to save the downloaded file. Can include the filename, i.e : /home/my-downloads/my-downloaded-file.txt | - |
 | `waitForDownload.timeout` | If applicable, the download must start within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Maximum value is 200000. If the timeout is set to 0, the download will be waited indefinitely. | - |
@@ -221,7 +221,7 @@ Type `BrowserSelectOption`. Select one or several options of a select element.
 | `frameSelector` | Frame selector. | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
-| `waitForNavigation.until` | Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
+| `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
 | `ignoreErrors` | Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a "If...Then...Else" or a "Try...Catch" block. Default value is "false". | - |
 
 ## browser_mouse_over
@@ -238,7 +238,7 @@ Type `BrowserMouseOver`. Positions the mouse over the specified coordinates or e
 | `frameSelector` | Frame selector. | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
-| `waitForNavigation.until` | Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
+| `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
 | `ignoreErrors` | Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a "If...Then...Else" or a "Try...Catch" block. Default value is "false". | - |
 
 ## browser_drag_and_drop
@@ -271,7 +271,7 @@ Type `BrowserScroll`. Scrolls the window to a particular place in the document.
 | `Y` | The amount of pixels to scroll on the Y axis. Positive values emulate a scroll down and negative values a scroll top event. Default value is "0". | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
-| `waitForNavigation.until` | Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
+| `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForDownload` | Enable waiting for a download if the parameter is set to true. Default value is "false". | - |
 | `waitForDownload.path` | The path where to save the downloaded file. Can include the filename, i.e : /home/my-downloads/my-downloaded-file.txt | - |
 | `waitForDownload.timeout` | If applicable, the download must start within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Maximum value is 200000. If the timeout is set to 0, the download will be waited indefinitely. | - |
@@ -320,7 +320,7 @@ Type `BrowserEvaluateJavascript`. Executes some arbitrary Javascript code in the
 | `frameSelector` | Frame selector. | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
-| `waitForNavigation.until` | Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
+| `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForDownload` | Enable waiting for a download if the parameter is set to true. Default value is "false". | - |
 | `waitForDownload.path` | The path where to save the downloaded file. Can include the filename, i.e : /home/my-downloads/my-downloaded-file.txt | - |
 | `waitForDownload.timeout` | If applicable, the download must start within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Maximum value is 200000. If the timeout is set to 0, the download will be waited indefinitely. | - |
@@ -340,7 +340,7 @@ Type `BrowserUploadFile`. Upload files to an input element.
 | `frameSelector` | Frame selector. | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
-| `waitForNavigation.until` | Allowed values are : commit, domcontentloaded, load, networkidle. Default value is load. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
+| `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
 | `ignoreErrors` | Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a "If...Then...Else" or a "Try...Catch" block. Default value is "false". | - |
 
 ## browser_handle_dialog
