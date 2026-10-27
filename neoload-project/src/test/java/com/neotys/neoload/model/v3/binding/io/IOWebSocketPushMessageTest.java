@@ -117,11 +117,11 @@ public class IOWebSocketPushMessageTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readInvalidPushMessagesRejected() throws IOException {
-		// valid_fallback, without conditions nor match, must not be reported
+		// valid_fallback, without conditions nor match, must not be reported; default_match_without_conditions
+		// is only rejected by the schema, as the model cannot tell an explicit 'match: any' from the default
 		assertInvalid("test-websocket_push_message-invalid",
 				"push message 'empty_conditions': 'conditions' must hold at least one condition; a push message without 'conditions' is the fallback.",
-				"push message 'match_without_conditions': 'match' is only used with 'conditions'",
-				"push message 'default_match_without_conditions': 'match' is only used with 'conditions'");
+				"push message 'match_without_conditions': 'match' is only used with 'conditions'");
 	}
 
 	@Test

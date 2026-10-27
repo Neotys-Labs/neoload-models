@@ -4,8 +4,6 @@ The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrad
 
 The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no `method`, `body` or `parts` settings.
 
-A channel has no identifier of its own: it is designated by its complete path, from where it is declared down to its `name` (see [Referencing a channel](websocket_request.md#referencing-a-channel)). Two channels may therefore share a `name` as long as they are in different containers.
-
 #### Available settings
 | Name                                | Description                                                                                           | Accept variable | Required | Since |
 |:----------------------------------- |:----------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
@@ -99,8 +97,6 @@ A running push message applies its `extractors` and `content_assertions` to the 
 | extractors  | Variable extractors applied to the frame, before `steps` run                                                 | -               | -        | 2026.3 |
 | content_assertions | [Content assertions](content_assertion.md) on the frame | -               | -        | 2026.3 |
 | steps       | The steps to run. May be empty: the push message then still takes the frames it matches, and is counted in the results | - | - | 2026.3 |
-
-A forgotten or misspelt `conditions` key is not an error: the push message silently becomes a fallback.
 
 Push messages run on the thread that receives the frames of the channel, so further frames wait until they are done. Put long actions inside a [fork](fork.md).
 

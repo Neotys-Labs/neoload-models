@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.binding.converter.MatchToStringConverter;
 import com.neotys.neoload.model.v3.binding.serializer.MatchDeserializer;
-import com.neotys.neoload.model.v3.binding.serializer.MatchSerializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.Element;
@@ -71,9 +71,13 @@ public interface WebSocketPushMessage extends Element, AssertionsElement {
 	 * allowed, together with {@link #getConditions() conditions}.
 	 */
 	@JsonProperty(Match.MATCH)
-	@JsonSerialize(contentUsing = MatchSerializer.class)
-	@JsonDeserialize(contentUsing = MatchDeserializer.class)
-	Optional<Match> getMatch();
+	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultMatchFilter.class)
+	@JsonSerialize(converter = MatchToStringConverter.class)
+	@JsonDeserialize(using = MatchDeserializer.class)
+	@Value.Default
+	default Match getMatch() {
+		return Match.ANY;
+	}
 
 	@JsonProperty(EXTRACTORS)
 	@Valid
@@ -94,6 +98,18 @@ public interface WebSocketPushMessage extends Element, AssertionsElement {
 	@Override
 	default Stream<Element> flattened() {
 		return Stream.concat(Stream.of(this), getSteps().stream().flatMap(Step::flattened));
+	}
+
+	class DefaultMatchFilter {
+		@Override
+		public boolean equals(final Object value) {
+			return Match.ANY.equals(value);
+		}
+
+		@Override
+		public int hashCode() {
+			return Match.ANY.hashCode();
+		}
 	}
 
 	class DefaultNameFilter {

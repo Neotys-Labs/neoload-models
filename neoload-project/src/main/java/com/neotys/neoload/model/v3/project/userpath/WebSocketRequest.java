@@ -8,7 +8,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
-import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertionElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertionElement;
 import com.neotys.neoload.model.v3.validation.constraints.WebSocketRequestCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
@@ -35,7 +36,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * NeoLoad creates it when it records a non-text frame.</p>
  */
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketRequest.CHANNEL, WebSocketRequest.MESSAGE_TYPE, WebSocketRequest.SYNCHRONOUS, WebSocketRequest.MAPPING_ID, WebSocketRequest.STATUS_CODE, WebSocketRequest.BODY, WebSocketRequest.BODYBINARY, WebSocketRequest.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketRequest.CHANNEL, WebSocketRequest.MESSAGE_TYPE, WebSocketRequest.SYNCHRONOUS, WebSocketRequest.MAPPING_ID, WebSocketRequest.STATUS_CODE, WebSocketRequest.BODY, WebSocketRequest.BODYBINARY, WebSocketRequest.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION})
 @JsonSerialize(as = ImmutableWebSocketRequest.class)
 @JsonDeserialize(as = ImmutableWebSocketRequest.class)
 @Value.Immutable
@@ -45,7 +46,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 // property value (not another filter instance), which is how the CUSTOM value filter selects the default
 // value to omit; a real class check would always be false and defeat the omission.
 @SuppressWarnings("java:S2097")
-public interface WebSocketRequest extends Step, AssertionsElement {
+public interface WebSocketRequest extends Step, AssertionsElement, DurationAssertionElement, SizeAssertionElement {
 	String CHANNEL = "channel";
 	String MESSAGE_TYPE = "message_type";
 	String SYNCHRONOUS = "synchronous";
@@ -71,7 +72,6 @@ public interface WebSocketRequest extends Step, AssertionsElement {
 
 	@JsonProperty(NAME)
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultNameFilter.class)
-	@RequiredCheck(groups={NeoLoad.class})
 	@Value.Default
 	default String getName() {
 		return DEFAULT_NAME;

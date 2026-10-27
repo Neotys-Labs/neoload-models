@@ -25,7 +25,7 @@ public class WebSocketPushMessageTest {
 		final WebSocketPushMessage pushMessage = WebSocketPushMessage.builder().build();
 		assertEquals(WebSocketPushMessage.DEFAULT_NAME, pushMessage.getName());
 		assertFalse(pushMessage.getConditions().isPresent());
-		assertFalse(pushMessage.getMatch().isPresent());
+		assertEquals(Match.ANY, pushMessage.getMatch());
 		assertTrue(pushMessage.getSteps().isEmpty());
 	}
 

@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
+import com.neotys.neoload.model.v3.project.userpath.Match;
 import com.neotys.neoload.model.v3.project.userpath.WebSocketPushMessage;
 import com.neotys.neoload.model.v3.validation.constraints.WebSocketPushMessageCheck;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public final class WebSocketPushMessageValidator extends AbstractConstraintValid
 		if (pushMessage.getConditions().map(List::isEmpty).orElse(false)) {
 			problems.add("'conditions' must hold at least one condition; a push message without 'conditions' is the fallback.");
 		}
-		if (pushMessage.isFallback() && pushMessage.getMatch().isPresent()) {
+		if (pushMessage.isFallback() && pushMessage.getMatch() != Match.ANY) {
 			problems.add("'match' is only used with 'conditions': a push message without 'conditions' is the fallback.");
 		}
 		final String prefix = "push message '" + WebSocketChannelPaths.escape(pushMessage.getName()) + "': ";

@@ -66,6 +66,8 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 						.addContentAssertions(ContentAssertion.builder()
 								.contains("welcome")
 								.build())
+						.durationAssertion(DurationAssertion.builder().lessThan(1500L).build())
+						.sizeAssertion(SizeAssertion.builder().greaterThan(10L).lessThan(1024L).build())
 						.build());
 	}
 

@@ -8,6 +8,9 @@ import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.*;
+import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertion;
+import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -37,6 +40,11 @@ public class IOWebSocketChannelTest extends AbstractIOElementsTest {
 						.name("session_id")
 						.regexp("session=([0-9]+)")
 						.build())
+				.addContentAssertions(ContentAssertion.builder()
+						.contains("101 Switching Protocols")
+						.build())
+				.durationAssertion(DurationAssertion.builder().lessThan(2000L).build())
+				.sizeAssertion(SizeAssertion.builder().lessThan(4096L).build())
 				.messagesMapping(WebSocketMessagesMapping.builder()
 						.jsonPath("$.correlationId")
 						.build())

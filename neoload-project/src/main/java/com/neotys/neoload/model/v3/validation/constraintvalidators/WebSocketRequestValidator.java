@@ -51,6 +51,12 @@ public final class WebSocketRequestValidator extends AbstractConstraintValidator
 		if (!request.getContentAssertions().isEmpty()) {
 			problems.add("'content_assertions' are only checked on a synchronous request: an asynchronous one has no response.");
 		}
+		if (request.getDurationAssertion().isPresent()) {
+			problems.add("'duration_assertion' is only checked on a synchronous request: an asynchronous one has no response.");
+		}
+		if (request.getSizeAssertion().isPresent()) {
+			problems.add("'size_assertion' is only checked on a synchronous request: an asynchronous one has no response.");
+		}
 	}
 
 	private static void checkContent(final WebSocketRequest request, final List<String> problems) {

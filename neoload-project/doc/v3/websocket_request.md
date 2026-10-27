@@ -2,7 +2,7 @@
 
 The WebSocket Request Action sends a frame on a [websocket_channel](websocket_channel.md), or closes it.
 
-A request is asynchronous unless `synchronous` is set: it sends its frame and moves on. A synchronous request waits for the inbound frame whose correlation id, extracted by the channel's `messages_mapping`, equals its `mapping_id`. Only a synchronous request has a response, so `mapping_id`, `extractors` and `content_assertions` only apply to it, as in NeoLoad, which only shows them for a synchronous request.
+A request is asynchronous unless `synchronous` is set: it sends its frame and moves on. A synchronous request waits for the inbound frame whose correlation id, extracted by the channel's `messages_mapping`, equals its `mapping_id`. Only a synchronous request has a response, so `mapping_id`, `extractors`, `content_assertions`, `duration_assertion` and `size_assertion` only apply to it, as in NeoLoad, which only shows them for a synchronous request.
 
 > **Warning:** A synchronous request placed directly in the `steps` of a [push message](websocket_channel.md#push_messages) never gets its response: the push message runs on the thread that receives the frames of the channel, so the awaited frame cannot be delivered while the request waits. The request waits until `runtime.so.timeout` expires (300s) and then fails. Put it inside a [fork](fork.md) instead, see the [example](websocket_channel.md#push_messages).
 
@@ -20,6 +20,8 @@ A request is asynchronous unless `synchronous` is set: it sends its frame and mo
 | bodybinary                          | The frame content as Base64. Mutually exclusive with `body`                                            | -               | -        | 2026.3 |
 | extractors                          | Variable extractors applied to the response, only for a synchronous request                           | -               | -        | 2026.3 |
 | content_assertions                  | [Content assertions](content_assertion.md) on the response, only for a synchronous request | -               | -        | 2026.3 |
+| [duration_assertion](duration_assertion.md) | Checks that the response was received within a given duration, only for a synchronous request | -       | -        | 2026.3 |
+| [size_assertion](size_assertion.md) | The assertion to validate the response size, only for a synchronous request                           | -               | -        | 2026.3 |
 
 #### Referencing a channel
 

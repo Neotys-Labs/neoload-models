@@ -26,3 +26,8 @@ user_paths:
           regexp: "session=([0-9]+)"
         content_assertions:
         - contains: welcome
+        duration_assertion:
+          less_than: 1500
+        size_assertion:
+          greater_than: 10
+          less_than: 1024

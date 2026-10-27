@@ -31,7 +31,7 @@ user_paths:
     - websocket_request:
         name: async_assertions
         channel: actions>chat_socket
-        assertions:
+        content_assertions:
         - contains: ok
     - websocket_request:
         name: text_status_code

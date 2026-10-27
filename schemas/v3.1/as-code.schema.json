@@ -2009,17 +2009,7 @@
 						},
 						"headers": {
 							"description": "Headers of the upgrade request, as a list of single-entry maps (`Header-Name: value`). `Upgrade: websocket` is implied and does not need to be written.",
-							"type": "array",
-							"items": {
-								"type": "object",
-								"properties": {
-									"/": {}
-								},
-								"patternProperties": {
-									".*": { "type": "string" }
-								},
-								"additionalProperties": false
-							}
+							"$ref": "#/definitions/user_paths/name_values"
 						},
 						"extractors": {
 							"description": "Variable extractors applied to the response of the upgrade request.",
@@ -2105,6 +2095,14 @@
 						"content_assertions": {
 							"$ref": "#/definitions/common/content_assertions",
 							"description": "Content assertions applied to the response, only for a synchronous request."
+							},
+							"duration_assertion": {
+								"$ref": "#/definitions/user_paths/duration_assertion",
+								"description": "Checks that the response was received within a given duration, only for a synchronous request."
+							},
+							"size_assertion": {
+								"$ref": "#/definitions/user_paths/size_assertion",
+								"description": "Checks the length of the response content, in bytes, only for a synchronous request."
 						}
 					},
 					"not": { "required": ["body", "bodybinary"] },
@@ -2117,7 +2115,9 @@
 								"properties": {
 									"mapping_id": false,
 									"extractors": { "maxItems": 0 },
-									"content_assertions": { "maxItems": 0 }
+									"content_assertions": { "maxItems": 0 },
+										"duration_assertion": false,
+										"size_assertion": false
 								}
 							}
 						},
