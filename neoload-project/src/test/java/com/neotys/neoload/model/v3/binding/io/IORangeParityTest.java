@@ -2,17 +2,10 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertEquals;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.BeforeClass;
@@ -24,9 +17,8 @@ import org.junit.Test;
  */
 public class IORangeParityTest {
 	private static final Validator VALIDATOR = new Validator();
-	private static final YAMLMapper YAML_MAPPER = new YAMLMapper();
 
-	private static JsonSchema SCHEMA;
+	private static SchemaFiles SCHEMA;
 
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
@@ -89,14 +81,7 @@ public class IORangeParityTest {
 
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
-		final Path moduleDir = Paths.get(IORangeParityTest.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent().getParent();
-		final Path schemaPath = moduleDir.resolve("../schemas/v3.1/as-code.schema.json").normalize();
-		SCHEMA = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemaPath.toUri());
-	}
-
-	private static boolean schemaAccepts(final String yaml) throws IOException {
-		final JsonNode node = YAML_MAPPER.readTree(yaml);
-		return SCHEMA.validate(node).isEmpty();
+		SCHEMA = SchemaFiles.version("v3.1");
 	}
 
 	private static boolean modelAccepts(final String yaml) {
@@ -276,7 +261,7 @@ public class IORangeParityTest {
 		for (final String[] row : rows) {
 			final String yaml = row[1].replace("%s", row[2]);
 			final boolean expected = VALID.equals(row[3]);
-			final boolean schema = schemaAccepts(yaml);
+			final boolean schema = SCHEMA.accepts(yaml);
 			final boolean model = modelAccepts(yaml);
 			if (schema != expected || model != expected) {
 				failures.add(row[0] + " = " + row[2] + ": expected " + row[3] + ", schema " + (schema ? VALID : INVALID) + ", model " + (model ? VALID : INVALID));
