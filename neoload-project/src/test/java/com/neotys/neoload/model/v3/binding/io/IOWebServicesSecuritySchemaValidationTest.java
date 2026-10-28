@@ -125,6 +125,49 @@ public class IOWebServicesSecuritySchemaValidationTest {
         assertFalse(schema31.validate(document).isEmpty());
     }
 
+    @Test
+    public void signatureAndEncryptTokensAcceptedBySchema3Dot1() throws IOException {
+        final String signature = "signature:\n            keystore: ./wss-keystores/server.p12\n            alias: ${alias}\n            key_identifier_type: direct_reference_first_certificate\n            signature_algorithm: rsa_sha256\n            digest_algorithm: sha256\n            parts:\n            - id: Body-1";
+        final String encrypt = "\n      - encryption:\n          keystore: ./wss-keystores/server.p12\n          alias: server\n          symmetric_encryption_algorithm: aes_256\n          asymmetric_encryption_algorithm: rsa_oaep\n          parts:\n          - name: Body\n            namespace: http://schemas.xmlsoap.org/soap/envelope/\n            encoding: content";
+
+        assertTrue(schema31.validate(project(requestProfile("digest", signature + encrypt))).isEmpty());
+    }
+
+    @Test
+    public void encryptWithoutKeyEncryptionAcceptedBySchema3Dot1() throws IOException {
+        final String encrypt = "encryption:\n            keystore: ./wss-keystores/server.p12\n            alias: server\n            asymmetric_encryption_algorithm: none";
+
+        assertTrue(schema31.validate(project(requestProfile("digest", encrypt))).isEmpty());
+    }
+
+    @Test
+    public void encryptWithoutAliasRejectedBySchema3Dot1() throws IOException {
+        assertFalse(schema31.validate(project(requestProfile("digest", "encryption:\n            keystore: ./wss-keystores/server.p12"))).isEmpty());
+    }
+
+    @Test
+    public void signatureWithoutKeystoreRejectedBySchema3Dot1() throws IOException {
+        assertFalse(schema31.validate(project(requestProfile("digest", "signature:\n            alias: client"))).isEmpty());
+    }
+
+    @Test
+    public void invalidPartsRejectedBySchema3Dot1() throws IOException {
+        final String token = "signature:\n            keystore: ./wss-keystores/server.p12\n            alias: client\n            parts:\n            - ";
+
+        assertFalse(schema31.validate(project(requestProfile("digest", token + "namespace: http://example.com"))).isEmpty());
+        assertFalse(schema31.validate(project(requestProfile("digest", token + "name: Body\n              encoding: other"))).isEmpty());
+        assertFalse(schema31.validate(project(requestProfile("digest", token + "id: Body-1\n              name: Body"))).isEmpty());
+    }
+
+    @Test
+    public void unsupportedEncryptFieldsRejectedBySchema3Dot1() throws IOException {
+        final String token = "encryption:\n            keystore: ./wss-keystores/server.p12\n            alias: server\n            ";
+
+        assertFalse(schema31.validate(project(requestProfile("digest", token + "embeddedKey: true"))).isEmpty());
+        assertFalse(schema31.validate(project(requestProfile("digest", token + "embeddedKeyName: true"))).isEmpty());
+        assertFalse(schema31.validate(project(requestProfile("digest", token + "key_identifier_type: direct_reference_first_certificate"))).isEmpty());
+    }
+
     private static String requestProfile(final String passwordType, final String token) {
         final String tokenWithPasswordType = token.startsWith("username")
                 ? token + "\n            password_type: " + passwordType

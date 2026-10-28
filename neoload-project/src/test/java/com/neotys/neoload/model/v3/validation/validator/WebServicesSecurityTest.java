@@ -6,9 +6,12 @@ import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.security.WebServicesSecurity;
 import com.neotys.neoload.model.v3.project.security.WsDerivedPasswordType;
+import com.neotys.neoload.model.v3.project.security.WsEncryptToken;
 import com.neotys.neoload.model.v3.project.security.WsKeystore;
+import com.neotys.neoload.model.v3.project.security.WsPart;
 import com.neotys.neoload.model.v3.project.security.WsRequestProfile;
 import com.neotys.neoload.model.v3.project.security.WsResponseProfile;
+import com.neotys.neoload.model.v3.project.security.WsSignatureToken;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.junit.Test;
 
@@ -52,6 +55,22 @@ public class WebServicesSecurityTest {
 		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
 				+ "Violation 1 - Incorrect value for 'keystores': must contain only unique paths." + LINE_SEPARATOR,
 				new Validator().validate(security, NeoLoad.class).getMessage().get());
+	}
+
+	@Test
+	public void validateTokenKeystoreAndAliasRequired() {
+		assertFalse(new Validator().validate(WsEncryptToken.builder().keystore("./wss-keystores/client.p12").build(), NeoLoad.class).isValid());
+		assertFalse(new Validator().validate(WsSignatureToken.builder().alias("client").build(), NeoLoad.class).isValid());
+	}
+
+	@Test
+	public void validateParts() {
+		assertTrue(new Validator().validate(WsPart.builder().id("Body-1").build(), NeoLoad.class).isValid());
+		assertTrue(new Validator().validate(WsPart.builder().name("Body").build(), NeoLoad.class).isValid());
+		assertTrue(new Validator().validate(WsPart.builder().name("Body").namespace("http://example.com").build(), NeoLoad.class).isValid());
+		assertFalse(new Validator().validate(WsPart.builder().namespace("http://example.com").build(), NeoLoad.class).isValid());
+		assertFalse(new Validator().validate(WsPart.builder().build(), NeoLoad.class).isValid());
+		assertFalse(new Validator().validate(WsPart.builder().id("Body-1").name("Body").build(), NeoLoad.class).isValid());
 	}
 
 	@Test
