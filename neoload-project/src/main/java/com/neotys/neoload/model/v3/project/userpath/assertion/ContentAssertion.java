@@ -1,19 +1,18 @@
 package com.neotys.neoload.model.v3.project.userpath.assertion;
 
-import java.util.Optional;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.project.UniqueOptionalNameEntity;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredContentAssertionCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueContentAssertionPathCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.Optional;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @RequiredContentAssertionCheck(groups={NeoLoad.class})
 @UniqueContentAssertionPathCheck(groups={NeoLoad.class})
@@ -23,7 +22,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(as = ImmutableContentAssertion.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface ContentAssertion extends Assertion {
+public interface ContentAssertion extends Assertion, UniqueOptionalNameEntity {
 	String NAME = "name";
 	String XPATH = "xpath";
 	String JSON_PATH = "jsonpath";

@@ -1,0 +1,6 @@
+name: MyProject
+servers:
+- name: dup
+  host: h
+- name: dup
+  host: h

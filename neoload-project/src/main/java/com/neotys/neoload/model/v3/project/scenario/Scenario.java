@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.SlaElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
-import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
+import com.neotys.neoload.model.v3.validation.constraints.UniqueNameCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public interface Scenario extends Element, SlaElement {
 
 	@JsonProperty(POPULATIONS)
 	@RequiredCheck(groups = {NeoLoad.class})
-	@UniqueElementNameCheck(groups = {NeoLoad.class})
+	@UniqueNameCheck(groups = {NeoLoad.class})
 	@Valid
 	List<PopulationPolicy> getPopulations();
 
@@ -49,6 +49,7 @@ public interface Scenario extends Element, SlaElement {
 	List<String> getExcludedUrls();
 
 	@JsonProperty(RENDEZVOUS_POLICIES)
+	@UniqueNameCheck(groups = {NeoLoad.class})
 	@Valid
 	List<RendezvousPolicy> getRendezvousPolicies();
 

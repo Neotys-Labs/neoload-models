@@ -7,7 +7,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface Element {
+public interface Element extends UniqueNameEntity {
 	String NAME = "name";
 	String DESCRIPTION = "description";
 
