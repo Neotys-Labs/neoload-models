@@ -25,6 +25,11 @@ user_paths:
             jsonpath: $.order.id
           content_assertions:
           - contains: status
+          duration_assertion:
+            less_than: 500
+          size_assertion:
+            greater_than: 10
+            less_than: 2048
           steps:
           - transaction:
               name: Order

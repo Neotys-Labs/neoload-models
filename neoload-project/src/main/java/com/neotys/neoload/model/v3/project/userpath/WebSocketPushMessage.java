@@ -13,6 +13,8 @@ import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertionElement;
+import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertionElement;
 import com.neotys.neoload.model.v3.validation.constraints.WebSocketPushMessageCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
@@ -29,14 +31,15 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * message without conditions runs: those are the fallbacks.
  *
  * <p>A running push message applies its {@link #getExtractors() extractors} and
- * {@link #getContentAssertions() assertions} to the frame, then runs its {@link #getSteps() steps},
+ * {@link #getContentAssertions() content}, {@link #getDurationAssertion() duration} and
+ * {@link #getSizeAssertion() size} assertions to the frame, then runs its {@link #getSteps() steps},
  * which may be empty.</p>
  *
  * <p>Its {@link #getName() name} is a segment of the path of the channels declared in its
  * steps, after the name of its own channel.</p>
  */
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketPushMessage.CONDITIONS, Match.MATCH, WebSocketPushMessage.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS, WebSocketPushMessage.STEPS})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WebSocketPushMessage.CONDITIONS, Match.MATCH, WebSocketPushMessage.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, WebSocketPushMessage.STEPS})
 @JsonSerialize(as = ImmutableWebSocketPushMessage.class)
 @JsonDeserialize(as = ImmutableWebSocketPushMessage.class)
 @Value.Immutable
@@ -46,7 +49,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 // property value (not another filter instance), which is how the CUSTOM value filter selects the default
 // value to omit; a real class check would always be false and defeat the omission.
 @SuppressWarnings("java:S2097")
-public interface WebSocketPushMessage extends Element, AssertionsElement {
+public interface WebSocketPushMessage extends Element, AssertionsElement, DurationAssertionElement, SizeAssertionElement {
 	String DEFAULT_NAME = "push_message";
 	String CONDITIONS = "conditions";
 	String EXTRACTORS = "extractors";

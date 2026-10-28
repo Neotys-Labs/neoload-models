@@ -1435,14 +1435,14 @@
 									"$ref": "#/definitions/common/name",
 									"description": "The name of the shared_elements entry to run here."
 								},
-                                "websocket_channel": {
-                                  "$ref": "#/definitions/user_paths/actions/websocket_channel",
-                                  "description":"The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `extractors`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request."
-                                },
-                              "websocket_request": {
-                                "$ref": "#/definitions/user_paths/actions/websocket_request",
-                                "description":"The WebSocket Request action sends a frame (text, binary or close) on a channel opened earlier by a websocket_channel of the same user path. It is asynchronous unless `synchronous` is true, in which case it waits for the response frame whose correlation id equals `mapping_id`."
-                              }
+								"websocket_channel": {
+									"$ref": "#/definitions/user_paths/actions/websocket_channel",
+									"description": "The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `extractors`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request."
+								},
+								"websocket_request": {
+									"$ref": "#/definitions/user_paths/actions/websocket_request",
+									"description": "The WebSocket Request action sends a frame (text, binary or close) on a channel opened earlier by a websocket_channel of the same user path. It is asynchronous unless `synchronous` is true, in which case it waits for the response frame whose correlation id equals `mapping_id`."
+								}
 							},
 							"additionalProperties": false
 						}
@@ -2188,6 +2188,14 @@
 					"content_assertions": {
 						"$ref": "#/definitions/common/content_assertions",
 						"description": "Content assertions applied to the frame."
+					},
+					"duration_assertion": {
+						"$ref": "#/definitions/user_paths/duration_assertion",
+						"description": "Checks the duration of the push message."
+					},
+					"size_assertion": {
+						"$ref": "#/definitions/user_paths/size_assertion",
+						"description": "Checks the length of the frame content, in bytes."
 					},
 					"steps": {
 						"$ref": "#/definitions/user_paths/steps",
