@@ -1,0 +1,8 @@
+name: MyProject
+variables:
+- constant:
+    name: Foo
+    value: a
+- constant:
+    name: foo
+    value: a

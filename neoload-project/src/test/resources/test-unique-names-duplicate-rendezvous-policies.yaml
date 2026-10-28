@@ -1,0 +1,10 @@
+name: MyProject
+scenarios:
+- name: s
+  populations:
+  - name: p
+    constant_load:
+      users: 1
+  rendezvous_policies:
+  - name: rdv
+  - name: rdv

@@ -1,0 +1,12 @@
+name: MyProject
+shared_elements:
+- transaction:
+    name: dup
+    steps:
+    - request:
+        url: http://www.neotys.com/
+- transaction:
+    name: dup
+    steps:
+    - request:
+        url: http://www.neotys.com/
