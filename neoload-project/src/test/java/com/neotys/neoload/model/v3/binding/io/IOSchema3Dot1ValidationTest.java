@@ -108,6 +108,9 @@ public class IOSchema3Dot1ValidationTest {
             "test-request-redirect-keys-conflict.json",
             "test-soap-request-redirect-keys-conflict.yaml",
             "test-soap-request-redirect-keys-conflict.json",
+            "test-request-header-empty-object.yaml",
+            "test-request-header-name-value-extra-key.yaml",
+            "test-request-header-name-value-null.yaml",
             "test-empty-collections.yaml",
             "test-empty-collections.json"
     );

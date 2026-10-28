@@ -2064,6 +2064,15 @@
 							"patternProperties": {
 								".*": { "type": "string" }
 							}
+						},
+						{
+							"type": "object",
+							"required": ["name", "value"],
+							"properties": {
+								"name": { "type": "string" },
+								"value": { "type": "string" }
+							},
+							"additionalProperties": false
 						}
 					]
 				}
