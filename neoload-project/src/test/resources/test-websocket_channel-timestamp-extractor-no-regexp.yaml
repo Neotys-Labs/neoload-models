@@ -1,0 +1,10 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: timestamp_channel
+        url: http://host:80/socket
+        timestamp_extractor:
+          template: $1$

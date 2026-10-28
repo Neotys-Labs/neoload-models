@@ -112,7 +112,13 @@ public class IOSchema3Dot1ValidationTest {
             "test-request-header-name-value-extra-key.yaml",
             "test-request-header-name-value-null.yaml",
             "test-empty-collections.yaml",
-            "test-empty-collections.json"
+            "test-empty-collections.json",
+            "test-websocket_channel-no-url.yaml",
+            "test-websocket_channel-timestamp-extractor-no-regexp.yaml",
+            "test-websocket_request-invalid-references.yaml",
+            "test-websocket_request-invalid-settings.yaml",
+            "test-websocket_request-invalid-shared-references.yaml",
+            "test-websocket_push_message-invalid.yaml"
     );
 
     @BeforeClass
