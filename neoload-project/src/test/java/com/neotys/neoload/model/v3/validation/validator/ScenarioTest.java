@@ -67,22 +67,22 @@ public class ScenarioTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 17.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'scenarios[0].monitoring_parameters.after_last_vus': must be greater than or equal to 1 second.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'scenarios[0].monitoring_parameters.before_first_vu': must be greater than or equal to 1 second.").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'scenarios[0].populations[0].constant_load.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
-		sb.append("Violation 4 - Incorrect value for 'scenarios[0].populations[0].constant_load.start_after': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
-		sb.append("Violation 5 - Incorrect value for 'scenarios[0].populations[0].constant_load.stop_after': must be between 1 and 2147483 seconds or must be current_iteration.").append(LINE_SEPARATOR);
-		sb.append("Violation 6 - Incorrect value for 'scenarios[0].populations[1].rampup_load.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
-		sb.append("Violation 7 - Incorrect value for 'scenarios[0].populations[1].rampup_load.increment_every': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
-		sb.append("Violation 8 - Incorrect value for 'scenarios[0].populations[1].rampup_load.start_after': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
-		sb.append("Violation 9 - Incorrect value for 'scenarios[0].populations[1].rampup_load.stop_after': must be between 1 and 2147483 seconds or must be current_iteration.").append(LINE_SEPARATOR);
-		sb.append("Violation 10 - Incorrect value for 'scenarios[0].populations[2].peaks_load.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
-		sb.append("Violation 11 - Incorrect value for 'scenarios[0].populations[2].peaks_load.maximum.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
-		sb.append("Violation 12 - Incorrect value for 'scenarios[0].populations[2].peaks_load.minimum.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
-		sb.append("Violation 13 - Incorrect value for 'scenarios[0].populations[2].peaks_load.start_after': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
-		sb.append("Violation 14 - Incorrect value for 'scenarios[0].populations[2].peaks_load.stop_after': must be between 1 and 2147483 seconds or must be current_iteration.").append(LINE_SEPARATOR);
-		sb.append("Violation 15 - Incorrect value for 'scenarios[0].populations[3].custom_load.start_after': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
-		sb.append("Violation 16 - Incorrect value for 'scenarios[0].populations[3].custom_load.steps[0].users': must be greater than or equal to 0.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value '-1' for 'scenarios[0].populations[3].custom_load.steps[0].users': must be greater than or equal to 0.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value '0' for 'scenarios[0].monitoring_parameters.after_last_vus': must be greater than or equal to 1 second.").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value '0' for 'scenarios[0].monitoring_parameters.before_first_vu': must be greater than or equal to 1 second.").append(LINE_SEPARATOR);
+		sb.append("Violation 4 - Incorrect value for 'scenarios[0].populations[0].constant_load.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 5 - Incorrect value for 'scenarios[0].populations[0].constant_load.start_after': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
+		sb.append("Violation 6 - Incorrect value for 'scenarios[0].populations[0].constant_load.stop_after': must be between 1 and 2147483 seconds or must be current_iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 7 - Incorrect value for 'scenarios[0].populations[1].rampup_load.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 8 - Incorrect value for 'scenarios[0].populations[1].rampup_load.increment_every': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 9 - Incorrect value for 'scenarios[0].populations[1].rampup_load.start_after': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
+		sb.append("Violation 10 - Incorrect value for 'scenarios[0].populations[1].rampup_load.stop_after': must be between 1 and 2147483 seconds or must be current_iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 11 - Incorrect value for 'scenarios[0].populations[2].peaks_load.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 12 - Incorrect value for 'scenarios[0].populations[2].peaks_load.maximum.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 13 - Incorrect value for 'scenarios[0].populations[2].peaks_load.minimum.duration': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 14 - Incorrect value for 'scenarios[0].populations[2].peaks_load.start_after': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
+		sb.append("Violation 15 - Incorrect value for 'scenarios[0].populations[2].peaks_load.stop_after': must be between 1 and 2147483 seconds or must be current_iteration.").append(LINE_SEPARATOR);
+		sb.append("Violation 16 - Incorrect value for 'scenarios[0].populations[3].custom_load.start_after': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
 		sb.append("Violation 17 - Incorrect value for 'scenarios[0].populations[3].custom_load.stop_after': must be between 1 and 2147483 seconds or must be current_iteration.").append(LINE_SEPARATOR);
 		CONSTRAINTS_FULL_VERSION = sb.toString();
 	}

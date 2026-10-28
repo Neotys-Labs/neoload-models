@@ -16,7 +16,7 @@ public class RandomStringVariableTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'min_length': must be between 1 and 1000.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value '0' for 'min_length': must be between 1 and 1000.").append(LINE_SEPARATOR);
 		CONSTRAINTS_MIN_LENGTH = sb.toString();
 	}
 
@@ -24,8 +24,8 @@ public class RandomStringVariableTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for '': random_string 'min_length' must be less than or equal to 'max_length'.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'max_length': must be between 1 and 1000.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value '-1' for 'max_length': must be between 1 and 1000.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for '': random_string 'min_length' must be less than or equal to 'max_length'.").append(LINE_SEPARATOR);
 		CONSTRAINTS_MAX_LENGTH = sb.toString();
 	}
 

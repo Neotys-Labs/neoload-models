@@ -13,12 +13,11 @@ import org.junit.Test;
 public class PeakLoadPolicyTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	
-	private static final String CONSTRAINTS_USERS;
-	static {
+	private static String usersViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'users': must be greater than or equal to 1 user.").append(LINE_SEPARATOR);
-		CONSTRAINTS_USERS = sb.toString();
+		sb.append("Violation 1 - Incorrect value '" + value + "' for 'users': must be greater than or equal to 1 user.").append(LINE_SEPARATOR);
+		return sb.toString();
 	}
 
 	private static final String CONSTRAINTS_DURATION;
@@ -51,7 +50,7 @@ public class PeakLoadPolicyTest {
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_USERS, validation.getMessage().get());
+		assertEquals(usersViolation("0"), validation.getMessage().get());
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(-10)
@@ -62,7 +61,7 @@ public class PeakLoadPolicyTest {
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_USERS, validation.getMessage().get());	
+		assertEquals(usersViolation("-10"), validation.getMessage().get());	
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(0)
@@ -73,7 +72,7 @@ public class PeakLoadPolicyTest {
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_USERS, validation.getMessage().get());	
+		assertEquals(usersViolation("0"), validation.getMessage().get());	
 
 		loadPolicy = PeakLoadPolicy.builder()
 				.users(1)

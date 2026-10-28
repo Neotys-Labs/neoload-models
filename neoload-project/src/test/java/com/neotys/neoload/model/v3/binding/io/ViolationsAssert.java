@@ -29,6 +29,10 @@ final class ViolationsAssert {
 		return "Incorrect value for '" + path + "': " + message;
 	}
 
+	static String invalidValue(final String value, final String path, final String message) {
+		return "Incorrect value '" + value + "' for '" + path + "': " + message;
+	}
+
 	/**
 	 * Asserts a read error: its message and the field the Jackson reference chain ends on.
 	 */
