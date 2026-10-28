@@ -7,7 +7,7 @@ The Rendezvous policy to be applied on the already defined Rendezvous in the Use
 
 | Name                                                   | Description                                                                                                               | Accept variable | Required | Since |
 |:------------------------------------------------------ |:--------------------------------------------------------------------------------------------------------------------------|:---------------:|:--------:|:-----:|
-| name                                                   | The name of the Rendezvous.                                                                                               | -               | &#x2713; |  7.6  |
+| name                                                   | The name of the Rendezvous. Names are unique within a scenario.                                                           | -               | &#x2713; |  7.6  |
 | when                                                   | When to release the Rendezvous. Possible values are: "manual", percentage or positive number. </br>The default value is 100%.            | -               | -               |  7.6  |
 | timeout                                                | The timeout between Virtual Users. Timeout duration is expressed in hours (h), minutes (m), seconds (s). </br>The default value is 300s. | -          | -        |  7.6  |
 

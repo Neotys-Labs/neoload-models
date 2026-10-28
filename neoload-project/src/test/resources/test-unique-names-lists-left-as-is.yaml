@@ -1,0 +1,24 @@
+name: MyProject
+populations:
+- name: p
+  user_paths:
+  - name: up
+  - name: up
+user_paths:
+- name: up
+  actions:
+    steps:
+    - request:
+        url: http://www.neotys.com/
+        headers:
+        - A: '1'
+        - A: '1'
+        extractors:
+        - name: v
+          jsonpath: a
+        - name: v
+          jsonpath: a
+    - request:
+        url: http://www.neotys.com/
+    - request:
+        url: http://www.neotys.com/

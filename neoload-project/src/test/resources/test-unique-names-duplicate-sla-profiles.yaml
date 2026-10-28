@@ -1,0 +1,8 @@
+name: MyProject
+sla_profiles:
+- name: dup
+  thresholds:
+  - avg-request-resp-time warn >= 1 per test
+- name: dup
+  thresholds:
+  - avg-request-resp-time warn >= 1 per test
