@@ -19,7 +19,8 @@ enum DurationFields {
 	THINK_TIME("think_time", false, value -> actions("    - think_time: " + value + "\n")),
 	PACING("pacing", false, value -> actions("    - transaction:\n        name: T\n        pacing: " + value + "\n        steps:\n        - delay: 1s\n")),
 	WEB_PAGE_THINK_TIME("think_time", false, value -> actions("    - web_page:\n        think_time: " + value + "\n        steps:\n        - request:\n            url: http://host:80/\n")),
-	WAIT_UNTIL_TIMEOUT("timeout", false, value -> actions(waitUntil("        timeout: " + value + "\n")));
+	WAIT_UNTIL_TIMEOUT("timeout", false, value -> actions(waitUntil("        timeout: " + value + "\n"))),
+	USER_PATH_THINK_TIME_OVERRIDE("override", false, value -> "name: P\nuser_paths:\n- name: U\n  think_time:\n    override: " + value + "\n  actions:\n    steps:\n    - delay: 1s\n");
 
 	final String key;
 	final boolean seconds;
