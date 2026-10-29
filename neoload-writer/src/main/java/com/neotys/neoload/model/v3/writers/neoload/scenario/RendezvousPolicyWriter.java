@@ -51,7 +51,7 @@ class RendezvousPolicyWriter {
         // Name attribute
         xmlRendezvousPolicy.setAttribute(XML_ATTR_NAME, rendezvousPolicy.getName());
         // Timeout attribute
-        xmlRendezvousPolicy.setAttribute(XML_ATTR_TIMEOUT, String.valueOf(rendezvousPolicy.getTimeout()));
+        xmlRendezvousPolicy.setAttribute(XML_ATTR_TIMEOUT, String.valueOf(rendezvousPolicy.getTimeout().getSeconds()));
         // Enabled attribute
         xmlRendezvousPolicy.setAttribute(XML_ATTR_ENABLED, "true");
 

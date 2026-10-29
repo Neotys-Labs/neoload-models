@@ -173,6 +173,34 @@ Real Browser type is still read, and is written back as its `browser_*` step. A 
 parameter `name` now accepts any character, so indexed names such as `options[0].text` validate.
 See [Real Browser actions](neoload-project/doc/v3/real_browser_actions.md) for the full reference.
 
+#### User paths
+
+The runtime parameters of a User Path, set in the "Runtime parameters" panel of the NeoLoad GUI, are
+now writable in as-code as three optional User Path keys.
+
+- **`on_error`** and **`on_assertion_failure`** — what the Virtual User does when an error occurs
+  or an assertion fails: `go_to_next_iteration` or `stop_and_start_new_vu`. When omitted, the
+  Virtual User does nothing.
+- **`think_time`** — replaces (`override`) or scales (`factor`) all the think times of the User
+  Path, optionally adding a `random` delay of +/- a percentage. It applies to the web pages and the
+  `think_time` steps of the User Path; `delay` steps are not affected.
+
+```yaml
+user_paths:
+- name: MyUserPath
+  on_error: go_to_next_iteration
+  on_assertion_failure: stop_and_start_new_vu
+  think_time:
+    override: 5s
+    random: 10%
+  actions:
+    steps:
+    - request:
+        url: https://www.tricentis.com/
+```
+
+See [User Paths](neoload-project/doc/v3/user-paths.md) for the full reference.
+
 #### Requests
 
 **`parts`** — a multipart/form-data body on an HTTP request, as in the NeoLoad GUI. Use `parts`
@@ -221,9 +249,11 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
 #### Web Services Security
 
 A new root key, `web_services_security`, declares WS-Security keystores, request profiles
-(`username` and `timestamp` tokens) and response profiles. A `soap_request` selects them by
-name with `request_security_profile` and `response_security_profile`. Both are optional, and the
-section is absent from files that do not use it.
+(`username`, `timestamp`, `signature` and `encryption` tokens) and response profiles. A `soap_request`
+selects them by name with `request_security_profile` and `response_security_profile`. Both are
+optional, and the section is absent from files that do not use it. A `signature` or `encryption` token
+requires a `keystore` declared in `keystores` and an `alias`, and may list the `parts` to sign or
+encrypt. An `encryption` token sets `asymmetric_encryption_algorithm: none` to send the symmetric key unencrypted.
 
 ```yaml
 web_services_security:

@@ -2,20 +2,19 @@ package com.neotys.neoload.model.v3.binding.converter;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
-import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.converter.StringToStartAfterConverter;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter.Type;
-
+import java.time.Duration;
+import org.junit.Test;
 
 public class StringToStartAfterConverterTest {
 	private static final StartAfter ERROR = StartAfter.builder().build();
 
 	private static StartAfter convertToStartAfter(final int input) {
 		return StartAfter.builder()
-				.value(input)
+				.value(Duration.ofSeconds(input))
 				.type(Type.TIME)
 				.build();
 	}
@@ -79,8 +78,7 @@ public class StringToStartAfterConverterTest {
 		// Input: 0 - Output: 0 
 		assertEquals(convertToStartAfter(0), converter.convert("0"));
 		
-		// Input: -1 - Output: -1
-		assertEquals(convertToStartAfter("-1"), converter.convert("-1"));
+		assertThrows(InvalidDurationException.class, () -> converter.convert("-1"));
 
 		// POPULATION
 		// Input: population - Output: population

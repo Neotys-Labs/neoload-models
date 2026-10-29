@@ -9,6 +9,7 @@ import com.neotys.neoload.model.v3.project.userpath.Condition;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.userpath.If;
 import com.neotys.neoload.model.v3.project.userpath.Match;
 import com.neotys.neoload.model.v3.project.userpath.Request;
@@ -37,7 +38,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 						.name("container")
 						.addSteps(Delay
 								.builder()
-								.duration(DurationConstant.builder().value(String.valueOf(3*60*1000+200)).build())
+								.duration(DurationConstant.builder().value(Durations.of(String.valueOf(3*60*1000+200))).build())
 								.build()
 						).build())
 				.build();
@@ -129,7 +130,7 @@ public class IOIfTest extends AbstractIOElementsTest {
 				.slaProfile("MySLAProfile")
 				.addSteps(Delay
 						.builder()
-						.duration(DurationConstant.builder().value(String.valueOf(3*60*1000+200)).build())
+						.duration(DurationConstant.builder().value(Durations.of(String.valueOf(3*60*1000+200))).build())
 						.build())
 				.addContentAssertions(ContentAssertion.builder()
 						.contains("ElseAssertion")

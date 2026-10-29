@@ -6,12 +6,22 @@ import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.security.WebServicesSecurity;
+import com.neotys.neoload.model.v3.project.security.WsAsymmetricEncryptionAlgorithm;
+import com.neotys.neoload.model.v3.project.security.WsCanonicalizationAlgorithm;
 import com.neotys.neoload.model.v3.project.security.WsDerivedPasswordType;
+import com.neotys.neoload.model.v3.project.security.WsDigestAlgorithm;
+import com.neotys.neoload.model.v3.project.security.WsEncryptToken;
+import com.neotys.neoload.model.v3.project.security.WsKeyIdentifierType;
 import com.neotys.neoload.model.v3.project.security.WsKeystore;
+import com.neotys.neoload.model.v3.project.security.WsPart;
+import com.neotys.neoload.model.v3.project.security.WsPartEncoding;
 import com.neotys.neoload.model.v3.project.security.WsRequestProfile;
 import com.neotys.neoload.model.v3.project.security.WsResponseProfile;
 import com.neotys.neoload.model.v3.project.security.WsSecurityHeader;
+import com.neotys.neoload.model.v3.project.security.WsSignatureAlgorithm;
+import com.neotys.neoload.model.v3.project.security.WsSignatureToken;
 import com.neotys.neoload.model.v3.project.security.WsSimplePasswordType;
+import com.neotys.neoload.model.v3.project.security.WsSymmetricEncryptionAlgorithm;
 import com.neotys.neoload.model.v3.project.security.WsTimestampToken;
 import com.neotys.neoload.model.v3.project.security.WsUsernameToken;
 import com.neotys.neoload.model.v3.project.userpath.Container;
@@ -87,6 +97,84 @@ public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
 				.build();
 	}
 
+	private static Project getSignatureAndEncryptTokens() {
+		return Project.builder()
+				.name("MyProject")
+				.webServicesSecurity(WebServicesSecurity.builder()
+						.addKeystores(WsKeystore.builder().path("./wss-keystores/client.p12").build())
+						.addRequestProfiles(WsRequestProfile.builder()
+								.name("MyRequestProfile")
+								.addHeaders(WsSecurityHeader.builder()
+										.addTokens(WsSignatureToken.builder()
+												.keystore("./wss-keystores/client.p12")
+												.alias("${alias}")
+												.keyIdentifierType(WsKeyIdentifierType.DIRECT_REFERENCE_FIRST_CERTIFICATE)
+												.signatureAlgorithm(WsSignatureAlgorithm.RSA_SHA256)
+												.digestAlgorithm(WsDigestAlgorithm.SHA256)
+												.canonicalizationAlgorithm(WsCanonicalizationAlgorithm.CANONICAL_XML_WITH_COMMENTS)
+												.addParts(WsPart.builder().id("Body-1").build())
+												.build())
+										.addTokens(WsEncryptToken.builder()
+												.keystore("./wss-keystores/client.p12")
+												.alias("server")
+												.keyIdentifierType(WsKeyIdentifierType.X509_KEY_IDENTIFIER)
+												.symmetricEncryptionAlgorithm(WsSymmetricEncryptionAlgorithm.AES_256)
+												.asymmetricEncryptionAlgorithm(WsAsymmetricEncryptionAlgorithm.RSA_OAEP)
+												.addParts(WsPart.builder()
+														.name("Body")
+														.namespace("http://schemas.xmlsoap.org/soap/envelope/")
+														.encoding(WsPartEncoding.CONTENT)
+														.build())
+												.build())
+										.build())
+								.build())
+						.build())
+				.build();
+	}
+
+	private static Project getSignatureAndEncryptTokensDefaults() {
+		return Project.builder()
+				.name("MyProject")
+				.webServicesSecurity(WebServicesSecurity.builder()
+						.addKeystores(WsKeystore.builder().path("./wss-keystores/client.p12").build())
+						.addRequestProfiles(WsRequestProfile.builder()
+								.name("MyRequestProfile")
+								.addHeaders(WsSecurityHeader.builder()
+										.addTokens(WsSignatureToken.builder()
+												.keystore("./wss-keystores/client.p12")
+												.alias("client")
+												.addParts(WsPart.builder().id("Body-1").build())
+												.build())
+										.addTokens(WsEncryptToken.builder()
+												.keystore("./wss-keystores/client.p12")
+												.alias("server")
+												.addParts(WsPart.builder().name("Body").build())
+												.build())
+										.build())
+								.build())
+						.build())
+				.build();
+	}
+
+	private static Project getEncryptWithoutKeyEncryption() {
+		return Project.builder()
+				.name("MyProject")
+				.webServicesSecurity(WebServicesSecurity.builder()
+						.addKeystores(WsKeystore.builder().path("./wss-keystores/client.p12").build())
+						.addRequestProfiles(WsRequestProfile.builder()
+								.name("MyRequestProfile")
+								.addHeaders(WsSecurityHeader.builder()
+										.addTokens(WsEncryptToken.builder()
+												.keystore("./wss-keystores/client.p12")
+												.alias("server")
+												.asymmetricEncryptionAlgorithm(WsAsymmetricEncryptionAlgorithm.NONE)
+												.build())
+										.build())
+								.build())
+						.build())
+				.build();
+	}
+
 	private static Project getSoapRequestSecurityProfiles() {
 		return Project.builder()
 				.name("MyProject")
@@ -135,6 +223,49 @@ public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
 	@Test
 	public void writeWebServicesSecurityDerivedPasswordType() throws IOException {
 		assertWrite("test-web-services-security-derived-password-type", getWebServicesSecurityDerivedPasswordType());
+	}
+
+	@Test
+	public void readSignatureAndEncryptTokens() throws IOException {
+		assertRead("test-web-services-security-signature-encrypt", getSignatureAndEncryptTokens());
+	}
+
+	@Test
+	public void writeSignatureAndEncryptTokens() throws IOException {
+		assertWrite("test-web-services-security-signature-encrypt", getSignatureAndEncryptTokens());
+	}
+
+	@Test
+	public void readSignatureAndEncryptTokensDefaults() throws IOException {
+		assertRead("test-web-services-security-signature-encrypt-defaults", getSignatureAndEncryptTokensDefaults());
+	}
+
+	@Test
+	public void writeSignatureAndEncryptTokensDefaults() throws IOException {
+		assertWrite("test-web-services-security-signature-encrypt-defaults", getSignatureAndEncryptTokensDefaults());
+	}
+
+	@Test
+	public void readEncryptWithoutKeyEncryption() throws IOException {
+		assertRead("test-web-services-security-encrypt-without-key-encryption", getEncryptWithoutKeyEncryption());
+	}
+
+	@Test
+	public void writeEncryptWithoutKeyEncryption() throws IOException {
+		assertWrite("test-web-services-security-encrypt-without-key-encryption", getEncryptWithoutKeyEncryption());
+	}
+
+	@Test
+	public void signatureAndEncryptDefaultsNotWritten() throws IOException {
+		final String written = new IO().write(getSignatureAndEncryptTokensDefaults(), IO.Format.YAML);
+
+		assertFalse(written.contains(WsSignatureToken.KEY_IDENTIFIER_TYPE));
+		assertFalse(written.contains(WsSignatureToken.SIGNATURE_ALGORITHM));
+		assertFalse(written.contains(WsSignatureToken.DIGEST_ALGORITHM));
+		assertFalse(written.contains(WsSignatureToken.CANONICALIZATION_ALGORITHM));
+		assertFalse(written.contains(WsEncryptToken.SYMMETRIC_ENCRYPTION_ALGORITHM));
+		assertFalse(written.contains(WsEncryptToken.ASYMMETRIC_ENCRYPTION_ALGORITHM));
+		assertFalse(written.contains(WsPart.ENCODING));
 	}
 
 	@Test

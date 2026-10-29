@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
+import com.neotys.neoload.model.readers.jmeter.step.timer.TimerDuration;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class SwitchControllerConverterTest {
                 .description("Hunt or be hunted")
                 .value("Geralt")
                 .getDefault(Container.builder()
-                        .addSteps(Delay.builder().name("").duration(DurationConstant.builder().value("26081997").build()).build())
+                        .addSteps(Delay.builder().name("").duration(DurationConstant.builder().value(TimerDuration.of("26081997")).build()).build())
                         .build())
                 .addCases(Case.builder()
                         .value("Geralt")
@@ -61,7 +62,7 @@ public class SwitchControllerConverterTest {
 								Container.builder()
 										.name("Geralt")
 										.description("")
-										.addSteps(Delay.builder().name("").duration(DurationConstant.builder().value("26081997").build()).build())
+										.addSteps(Delay.builder().name("").duration(DurationConstant.builder().value(TimerDuration.of("26081997")).build()).build())
 										.build()
 								)
 						)

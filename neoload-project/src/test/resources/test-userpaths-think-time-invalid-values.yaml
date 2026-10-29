@@ -1,0 +1,44 @@
+name: MyProject
+user_paths:
+- name: FactorNegative
+  think_time:
+    factor: -10%
+  actions:
+    steps:
+    - delay: 1s
+- name: FactorDecimal
+  think_time:
+    factor: 1.5
+  actions:
+    steps:
+    - delay: 1s
+- name: FactorPercentAfterVariable
+  think_time:
+    factor: "${my_factor}%"
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomNegative
+  think_time:
+    random: -1
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomDoublePercent
+  think_time:
+    random: 10%%
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomText
+  think_time:
+    random: abc
+  actions:
+    steps:
+    - delay: 1s
+- name: RandomZero
+  think_time:
+    random: 0%
+  actions:
+    steps:
+    - delay: 1s

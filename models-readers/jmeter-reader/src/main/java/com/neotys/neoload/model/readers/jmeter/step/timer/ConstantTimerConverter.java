@@ -24,6 +24,6 @@ public class ConstantTimerConverter implements BiFunction<ConstantTimer, HashTre
     public List<Step> apply(final ConstantTimer constantTimer, final HashTree hashtree) {
         LOGGER.info("Constant timer Correctly converted");
         EventListenerUtils.readSupportedFunction("ConstantTimer","ConstantTimer");
-        return List.of(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build());
+        return List.of(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(TimerDuration.of(constantTimer.getDelay())).build()).build());
     }
 }

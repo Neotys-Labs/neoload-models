@@ -5,9 +5,9 @@ import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.MISSING_VALUE;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.NAME_NOT_ALLOWED;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.VALUE_COMBINED_WITH_BOUNDS;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertInvalidDurationRead;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertReadError;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertViolations;
-import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidDuration;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -17,6 +17,7 @@ import static org.junit.Assert.fail;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.DurationRandom;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.userpath.ExecuteResources;
 import com.neotys.neoload.model.v3.project.userpath.Playback;
 import com.neotys.neoload.model.v3.project.userpath.Request;
@@ -76,7 +77,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeConstant() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(DurationConstant.builder().value("2000").build())
+				.thinkTime(DurationConstant.builder().value(Durations.of("2000")).build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -87,7 +88,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeRandom() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(DurationRandom.builder().min("1000").max("5000").build())
+				.thinkTime(DurationRandom.builder().min(Durations.of("1000")).max(Durations.of("5000")).build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -98,7 +99,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	@Test
 	public void readWebPageThinkTimeRandomDefaultsMin() throws IOException {
 		final Project expectedProject = buildProject(WebPage.builder()
-				.thinkTime(DurationRandom.builder().max("5000").build())
+				.thinkTime(DurationRandom.builder().max(Durations.of("5000")).build())
 				.addSteps(Request.builder().url("http://host:80/").build())
 				.build());
 		assertNotNull(expectedProject);
@@ -110,15 +111,15 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	public void readWebPageThinkTimeValuesPreservedVerbatim() throws IOException {
 		final Project expectedProject = buildProject(
 				WebPage.builder()
-						.thinkTime(DurationConstant.builder().value("2").build())
+						.thinkTime(DurationConstant.builder().value(Durations.of("2")).build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build(),
 				WebPage.builder()
-						.thinkTime(DurationConstant.builder().value("500").build())
+						.thinkTime(DurationConstant.builder().value(Durations.of("500")).build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build(),
 				WebPage.builder()
-						.thinkTime(DurationConstant.builder().value("${max_think_time}").build())
+						.thinkTime(DurationConstant.builder().value(Durations.of("${max_think_time}")).build())
 						.addSteps(Request.builder().url("http://host:80/").build())
 						.build());
 		assertNotNull(expectedProject);
@@ -172,13 +173,10 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readWebPageThinkTimeInvalidValueRejected() throws IOException {
-		final IO io = new IO();
+	public void readWebPageThinkTimeInvalidValueRejected() {
 		final File file = getFile("test-web_page-think-time-invalid-value", "yaml");
-		final ProjectDescriptor descriptor = io.read(file);
 
-		assertViolations(VALIDATOR.validate(descriptor, NeoLoad.class),
-				invalidDuration("project.user_paths[0].actions.steps[0].think_time.value", "soon"));
+		assertInvalidDurationRead(() -> new IO().read(file), "soon", "think_time");
 	}
 
 	@Test
@@ -260,7 +258,7 @@ public class IOWebPageTest extends AbstractIOElementsTest {
 				.name("MyWebPage")
 				.description("My Web Page")
 				.slaProfile("MySlaProfile")
-				.thinkTime(DurationConstant.builder().value("2000").build())
+				.thinkTime(DurationConstant.builder().value(Durations.of("2000")).build())
 				.playback(Playback.SEQUENTIAL)
 				.executeResources(ExecuteResources.DYNAMIC)
 				.addSteps(

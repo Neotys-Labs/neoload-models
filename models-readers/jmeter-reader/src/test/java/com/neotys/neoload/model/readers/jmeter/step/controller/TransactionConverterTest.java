@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.StepConverters;
+import com.neotys.neoload.model.readers.jmeter.step.timer.TimerDuration;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
@@ -44,7 +45,7 @@ public class TransactionConverterTest {
         List<Step> result = testcontrol.apply(transactionController, hashTree);
         List<Step> expected = new ArrayList<>();
         expected.add(Container.builder()
-                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(constantTimer.getDelay()).build()).build())
+                .addSteps(Delay.builder().name(constantTimer.getName()).duration(DurationConstant.builder().value(TimerDuration.of(constantTimer.getDelay())).build()).build())
                 .name("my thread group")
                 .description("My comment")
                 .build());

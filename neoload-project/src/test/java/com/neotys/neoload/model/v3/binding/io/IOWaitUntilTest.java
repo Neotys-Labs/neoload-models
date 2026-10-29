@@ -6,6 +6,7 @@ import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Condition;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.userpath.Match;
 import com.neotys.neoload.model.v3.project.userpath.WaitUntil;
 import java.io.IOException;
@@ -79,7 +80,7 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 						.operand2("200")
 						.build())
 				.match(Match.ALL)
-				.timeout("30000")
+				.timeout(Durations.of("30000"))
 				.build();
 		final WaitUntil myWaitUntil1 = WaitUntil.builder()
 				.name("MyWaitUntil1")
@@ -90,7 +91,7 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 						.operand2("200")
 						.build())
 				.match(Match.ALL)
-				.timeout("30000")
+				.timeout(Durations.of("30000"))
 				.build();
 		final WaitUntil myWaitUntil2 = WaitUntil.builder()
 				.name("MyWaitUntil2")
@@ -101,7 +102,7 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 						.operand2("200")
 						.build())
 				.match(Match.ALL)
-				.timeout("${timeout}")
+				.timeout(Durations.of("${timeout}"))
 				.build();
 
 		if (readOnly) {

@@ -1,0 +1,11 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: my_channel
+        url: https://host:443/socket
+        messages_mapping:
+          xpath: /message/@id
+          jsonpath: $.correlationId

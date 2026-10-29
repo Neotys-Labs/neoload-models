@@ -15,7 +15,7 @@ public class SwitchTest {
                 .addCases(Case.builder()
                         .value("Geralt")
                         .isBreak(true)
-                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("500").build()).build(), Delay.builder().duration(DurationConstant.builder().value("2500").build()).build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("500")).build()).build(), Delay.builder().duration(DurationConstant.builder().value(Durations.of("2500")).build()).build())
                         .build())
                 .build();
         assertEquals(4, aSwitch.flattened().count());
@@ -30,10 +30,10 @@ public class SwitchTest {
                 .addCases(Case.builder()
                         .value("Geralt")
                         .isBreak(true)
-                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("500").build()).build(), Delay.builder().duration(DurationConstant.builder().value("2500").build()).build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("500")).build()).build(), Delay.builder().duration(DurationConstant.builder().value(Durations.of("2500")).build()).build())
                         .build())
                 .getDefault(Container.builder()
-                        .addSteps(Delay.builder().duration(DurationConstant.builder().value("5000").build()).build())
+                        .addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("5000")).build()).build())
                         .build())
                 .build();
         assertEquals(6, aSwitch.flattened().count());

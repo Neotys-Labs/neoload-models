@@ -78,7 +78,7 @@ model but not merged; **—** = not implemented anywhere.
 | Dynatrace integration settings (`dynatrace.enabled` / `url` / `token`) | 3.0 |
 | qTest integration settings (`qtest.*`) | 3.0 |
 | Certificates (`CertificateSettings`) | — |
-| Web Services security / WSS (`WSSSettings`) | 3.1 draft (`web_services_security`: keystores, username and timestamp tokens; no signature/encryption) |
+| Web Services security / WSS (`WSSSettings`) | 3.1 draft (`web_services_security`: keystores, username, timestamp, signature and encryption tokens; no embedded key, variable keystores) |
 | Page naming policy (`PageNamingSettings`) | — |
 | JavaScript policy (`JSPolicySettings`) | — |
 | Error handling policy (`ErrorHandlingSettings`) | — |
@@ -132,9 +132,9 @@ The GUI offers fourteen types (`VariablesPane#initialize`).
 | User session reset policy (`reset_on` / `reset_off` / `reset_auto`) | 3.0 |
 | Containers and transactions, nested | 3.0 |
 | SLA profile on User Path container, transaction and request | 3.0 |
-| Think time policy overridden per User Path (`getThinkTimePolicy`) | — |
-| Error policy per User Path (`getErrorPolicy`) | — |
-| Failed-assertion policy per User Path (`getFailedAssertionPolicy`) | — |
+| Think time policy overridden per User Path (`getThinkTimePolicy`) | 3.1 (`think_time`) |
+| Error policy per User Path (`getErrorPolicy`) | 3.1 (`on_error`) |
+| Failed-assertion policy per User Path (`getFailedAssertionPolicy`) | 3.1 (`on_assertion_failure`) |
 | Action enabled / disabled flag | — |
 | Breakpoints | — |
 | Shared elements (`SharedElementsContainer`) | 3.1 (`shared_elements` / `shared_element`) |
@@ -178,7 +178,10 @@ and protocol action catalogues.
 | Raw request | — |
 | SOAP request | 3.1 (`soap_request`, with `content_assertions`, `duration_assertion`, `size_assertion` and `sla_profile`) |
 | Silverlight SOAP request | — |
-| WebSocket channel, WebSocket request, push message | — |
+| WebSocket channel and request, the request referencing its channel by path | 3.1 draft (`websocket_channel`, `websocket_request`) |
+| WebSocket channel inside a shared container (`shared_elements>Name>...` reference) | 3.1 draft |
+| WebSocket push message (conditional or fallback, with a body of steps) | 3.1 draft (`websocket_channel.push_messages`) |
+| WebSocket timestamp extractor (server send time of an inbound frame) | 3.1 draft (`websocket_channel.timestamp_extractor`) |
 | Media / RTMP, RTMPT requests | — |
 | Siebel request | — |
 | Recorded artifacts (screenshots, recorded response) | — |

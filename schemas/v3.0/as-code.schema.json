@@ -357,7 +357,8 @@
 								"type": "number"
 							},
 							"max": {
-								"type": "number"
+								"type": "number",
+								"description": "Must be greater than or equal to `min`."
 							},
 							"predictable": {
 								"type": "boolean",
@@ -574,7 +575,7 @@
 					},
 					"max_users": {
 						"$ref": "#/definitions/common/positive_number",
-						"description": "The maximum number of Virtual Users"
+						"description": "The maximum number of Virtual Users. Must be greater than or equal to `min_users`."
 					},
 					"increment_users": {
 						"type": "integer",
