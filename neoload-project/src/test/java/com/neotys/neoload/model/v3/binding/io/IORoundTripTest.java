@@ -40,6 +40,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-date-variable-required-and-optional",
 			"test-custom-action-only-required",
 			"test-custom-action-required-and-optional",
+			"test-real-browser-actions",
 			"test-debug-logger-only-required",
 			"test-debug-logger-required-and-optional",
 			"test-delay-without-unit-only-required",

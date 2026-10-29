@@ -145,6 +145,34 @@ user_paths:
 
 See [shared_elements](neoload-project/doc/v3/shared_elements.md) for the full reference.
 
+#### Real Browser actions
+
+Each Real Browser action of NeoLoad GUI now has its own step, named after the action:
+`browser_open`, `browser_navigate`, `browser_click`, `browser_type`, `browser_upload_file`... (20
+steps). The step name gives the type, so there is no `type` property; the other properties are
+the ones of `custom_action` (`name`, `description`, `parameters`, `asRequest`,
+`duration_assertion`, `size_assertion`). `name` is optional and defaults to the action type
+(`BrowserClick`, `BrowserOpen`...); an action without any setting can be written as a bare
+scalar, for example `- browser_open_tab`. The JSON Schema suggests the parameter names of each
+action with their NeoLoad GUI description, rejects the names the action does not know, and
+requires its mandatory parameters (for example `url` on `browser_navigate`, `selector` and
+`filePaths` on `browser_upload_file`).
+
+```yaml
+- browser_upload_file:
+    name: Upload files
+    parameters:
+    - name: selector
+      value: "input[type=file]"
+    - name: filePaths
+      value: "${NL-CustomResources}/a.txt;${NL-CustomResources}/b.txt"
+```
+
+`custom_action` stays the generic step and accepts any type and parameter: a `custom_action` of a
+Real Browser type is still read, and is written back as its `browser_*` step. A custom action
+parameter `name` now accepts any character, so indexed names such as `options[0].text` validate.
+See [Real Browser actions](neoload-project/doc/v3/real_browser_actions.md) for the full reference.
+
 #### User paths
 
 The runtime parameters of a User Path, set in the "Runtime parameters" panel of the NeoLoad GUI, are
