@@ -40,8 +40,7 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 			cause = cause.getCause();
 		}
 		Assert.assertNotNull(exception.toString(), cause);
-		Assert.assertTrue(exception.getMessage(), exception.getMessage().startsWith("Incorrect duration: '1m1h' is not a valid duration."));
-		Assert.assertTrue(exception.getMessage(), exception.getMessage().contains("ImmutableWaitUntil$Json[\"timeout\"]"));
+		Assert.assertEquals("Incorrect value for 'user_paths[0].steps.timeout': Incorrect duration: '1m1h' is not a valid duration.", exception.getMessage());
 	}
 
 	@Test

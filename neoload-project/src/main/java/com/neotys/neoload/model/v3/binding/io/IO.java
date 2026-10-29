@@ -7,6 +7,7 @@ import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.WRITE_
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
 import com.neotys.neoload.model.v3.compatibility.SchemaSupport;
 import com.neotys.neoload.model.v3.project.Project;
 import java.io.File;
@@ -80,6 +82,33 @@ public final class IO {
 	}
 	
 	private <T> T read(final String content, final Format format, final Class<T> type) throws IOException {
+		try {
+			return readValue(content, format, type);
+		} catch (final JsonMappingException e) {
+			throw withInvalidDurationPath(e);
+		}
+	}
+
+	/**
+	 * Names the field of an invalid duration by its path in the file, such as {@code scenarios[0].monitoring.before}.
+	 * Other mapping errors are returned unchanged.
+	 */
+	private static JsonMappingException withInvalidDurationPath(final JsonMappingException exception) {
+		if (!(exception.getCause() instanceof InvalidDurationException) || exception.getPath().isEmpty()) {
+			return exception;
+		}
+		final StringBuilder path = new StringBuilder();
+		for (final JsonMappingException.Reference reference : exception.getPath()) {
+			if (reference.getFieldName() != null) {
+				path.append(path.length() == 0 ? "" : ".").append(reference.getFieldName());
+			} else if (reference.getIndex() >= 0) {
+				path.append('[').append(reference.getIndex()).append(']');
+			}
+		}
+		return new JsonMappingException(null, "Incorrect value for '" + path + "': " + exception.getCause().getMessage(), exception);
+	}
+
+	private <T> T readValue(final String content, final Format format, final Class<T> type) throws IOException {
 		// Gets the mapper from the format
 		final ObjectMapper mapper = getMapper(format);
 		if (isProjectType(type)) {

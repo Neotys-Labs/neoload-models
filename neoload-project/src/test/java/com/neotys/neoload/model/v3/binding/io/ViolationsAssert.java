@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import java.io.IOException;
+import java.util.regex.Pattern;
 import org.junit.function.ThrowingRunnable;
 
 /**
@@ -39,12 +40,15 @@ final class ViolationsAssert {
 	}
 
 	/**
-	 * Asserts that a read fails on a raw duration text, the Jackson reference chain ending on the field.
+	 * Asserts that a read fails on a raw duration text, the message naming the path of the field in the file.
 	 */
 	static void assertInvalidDurationRead(final ThrowingRunnable read, final String rawValue, final String field) {
 		final String actual = assertThrows(JsonMappingException.class, read).getMessage();
-		assertTrue(actual, actual.startsWith("Incorrect duration: '" + rawValue + "' is not a valid duration."));
-		assertTrue(actual, actual.contains("[\"" + field + "\"]"));
+		assertTrue(actual, actual.matches("Incorrect value for '(.+\\.)?" + Pattern.quote(field + "': " + invalidDuration(rawValue))));
+	}
+
+	static String invalidDuration(final String rawValue) {
+		return "Incorrect duration: '" + rawValue + "' is not a valid duration.";
 	}
 
 	static void assertViolations(final Validation validation, final String... violations) {

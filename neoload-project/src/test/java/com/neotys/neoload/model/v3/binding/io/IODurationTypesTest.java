@@ -2,6 +2,7 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertInvalidDurationRead;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertViolations;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidDuration;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -153,7 +154,7 @@ public class IODurationTypesTest {
 		final Project project = read(DurationFields.RENDEZVOUS_TIMEOUT.yaml("1s500ms"));
 
 		assertEquals(Duration.ofMillis(1500), scenario(project).getRendezvousPolicies().get(0).getTimeout());
-		assertViolations(validate(project), invalidValue("project.scenarios[0].rendezvous_policies[0].timeout", "must be a whole number of seconds."));
+		assertViolations(validate(project), invalidValue("project.scenarios[0].rendezvous_policies[0].timeout", "'1s500ms' must be a whole number of seconds."));
 	}
 
 	@Test
@@ -179,7 +180,7 @@ public class IODurationTypesTest {
 			if (thinkTime instanceof JsonMappingException) {
 				assertTrue(value, waitUntil instanceof JsonMappingException);
 				assertTrue(value, ((JsonMappingException) waitUntil).getMessage().contains("'" + value + "'"));
-				assertTrue(value, ((JsonMappingException) waitUntil).getMessage().contains("[\"timeout\"]"));
+				assertTrue(value, ((JsonMappingException) waitUntil).getMessage().contains("timeout': "));
 			} else {
 				assertEquals(value, thinkTime, waitUntil);
 			}
@@ -232,6 +233,23 @@ public class IODurationTypesTest {
 	}
 
 	@Test
+	public void invalidDurationReadErrorNamesTheFieldPathInTheFile() {
+		final JsonMappingException exception = assertThrows(JsonMappingException.class, () -> read(DurationFields.MONITORING_BEFORE.yaml("abc")));
+
+		assertEquals(invalidValue("scenarios[0].monitoring.before", invalidDuration("abc")), exception.getMessage());
+	}
+
+	@Test
+	public void durationViolationNamesTheFieldByItsKeyInTheFileAndQuotesTheValue() {
+		final Project project = Project.builder().name("P").addScenarios(Scenario.builder().name("S")
+				.monitoringParameters(MonitoringParameters.builder().beforeFirstVu(Duration.ofMillis(1500)).afterLastVus(Duration.ofSeconds(2)).build())
+				.addPopulations(PopulationPolicy.builder().name("C").loadPolicy(ConstantLoadPolicy.builder().users(1).build()).build())
+				.build()).build();
+
+		assertViolations(validate(project), invalidValue("project.scenarios[0].monitoring.before", "'1s500ms' must be a whole number of seconds."));
+	}
+
+	@Test
 	public void startAfterIsAPositiveDelayInSecondsOrAPopulationName() throws IOException {
 		assertEquals(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(30)).build(), startAfter("30"));
 		assertEquals(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(60)).build(), startAfter("1m"));
@@ -251,7 +269,7 @@ public class IODurationTypesTest {
 				.addRendezvousPolicies(RendezvousPolicy.builder().name("r").timeout(Duration.ofSeconds(2)).build())
 				.build()).build();
 
-		assertViolations(validate(project), invalidValue("project.scenarios[0].populations[0].constant_load.rampup", "must be a whole number of seconds."));
+		assertViolations(validate(project), invalidValue("project.scenarios[0].populations[0].constant_load.rampup", "'1s500ms' must be a whole number of seconds."));
 	}
 
 	@Test

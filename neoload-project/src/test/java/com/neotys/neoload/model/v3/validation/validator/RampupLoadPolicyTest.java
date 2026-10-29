@@ -55,12 +55,11 @@ public class RampupLoadPolicyTest {
 		CONSTRAINTS_INCREMENT_EVERY = sb.toString();
 	}
 
-	private static final String CONSTRAINTS_INCREMENT_RAMPUP;
-	static {
+	private static String constraintsIncrementRampup(final String rampup) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'rampup': must be greater than or equal to 1 second.").append(LINE_SEPARATOR);
-		CONSTRAINTS_INCREMENT_RAMPUP = sb.toString();
+		sb.append("Violation 1 - Incorrect value for 'rampup': '" + rampup + "' must be greater than or equal to 1 second.").append(LINE_SEPARATOR);
+		return sb.toString();
 	}
 
 	@Test
@@ -313,7 +312,7 @@ public class RampupLoadPolicyTest {
 				.build();
 		Validation validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_INCREMENT_RAMPUP, validation.getMessage().get());	
+		assertEquals(constraintsIncrementRampup("-1s"), validation.getMessage().get());	
 
 		loadPolicy = RampupLoadPolicy.builder()
 				.minUsers(1)
@@ -326,7 +325,7 @@ public class RampupLoadPolicyTest {
 				.build();
 		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_INCREMENT_RAMPUP, validation.getMessage().get());	
+		assertEquals(constraintsIncrementRampup("0"), validation.getMessage().get());	
 
 		loadPolicy = RampupLoadPolicy.builder()
 				.minUsers(1)
