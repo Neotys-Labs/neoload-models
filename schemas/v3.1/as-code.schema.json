@@ -219,17 +219,24 @@
 					{ "$ref": "#/definitions/common/positive_number" }
 				]
 			},
+			"duration_seconds": {
+				"title": "Duration in seconds",
+				"anyOf": [
+					{ "type": "string", "pattern": "^\\s*(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?)\\s*$" },
+					{ "$ref": "#/definitions/common/positive_number" }
+				]
+			},
 			"duration": {
 				"title": "Duration",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
 			},
 			"stop_after_options": {
 				"title": "variation_policy.stop_after values",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "type": "string", "enum": ["current_iteration"] }]
+				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "type": "string", "enum": ["current_iteration"] }]
 			},
 			"start_after_options": {
 				"title": "Start after",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/text" }]
+				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "$ref": "#/definitions/common/text" }]
 			},
 			"time": {
 				"title": "Time",
@@ -412,7 +419,8 @@
 								"type": "number"
 							},
 							"max": {
-								"type": "number"
+								"type": "number",
+								"description": "Must be greater than or equal to `min`."
 							},
 							"predictable": {
 								"type": "boolean",
@@ -438,7 +446,7 @@
 							},
 							"max_length": {
 								"type": "number",
-								"description": "The maximum number of characters of the generated value. The default value is `10`."
+								"description": "The maximum number of characters of the generated value. The default value is `10`. Must be greater than or equal to `min_length`."
 							},
 							"predictable": {
 								"type": "boolean",
@@ -808,6 +816,47 @@
 																}
 															}
 														}
+													},
+													{
+														"type": "object",
+														"required": ["signature"],
+														"additionalProperties": false,
+														"properties": {
+															"signature": {
+																"type": "object",
+																"required": ["keystore", "alias"],
+																"additionalProperties": false,
+																"properties": {
+																	"keystore": { "$ref": "#/definitions/common/file_path" },
+																	"alias": { "$ref": "#/definitions/common/text" },
+																	"key_identifier_type": { "type": "string", "enum": ["direct_reference", "direct_reference_first_certificate", "issuer_reference", "x509_key_identifier", "subject_key_identifier", "thumbprint_sha1", "encrypted_key_sha1"] },
+																	"signature_algorithm": { "type": "string", "enum": ["rsa_sha1", "rsa_sha256", "rsa_sha384", "rsa_sha512", "rsa_ripemd160", "rsa_md5", "hmac_md5", "hmac_ripemd160", "hmac_sha1", "hmac_sha256", "hmac_sha384", "hmac_sha512", "dsa_sha1", "ecdsa_sha1", "ecdsa_sha256", "ecdsa_sha384", "ecdsa_sha512"] },
+																	"digest_algorithm": { "type": "string", "enum": ["sha1", "sha256", "sha384", "sha512", "ripemd160"] },
+																	"canonicalization_algorithm": { "type": "string", "enum": ["canonical_xml_omit_comments", "canonical_xml_with_comments", "exclusive_canonical_xml_omit_comments", "exclusive_canonical_xml_with_comments"] },
+																	"parts": { "$ref": "#/definitions/web_services_security_parts" }
+																}
+															}
+														}
+													},
+													{
+														"type": "object",
+														"required": ["encryption"],
+														"additionalProperties": false,
+														"properties": {
+															"encryption": {
+																"type": "object",
+																"required": ["keystore", "alias"],
+																"additionalProperties": false,
+																"properties": {
+																	"keystore": { "$ref": "#/definitions/common/file_path" },
+																	"alias": { "$ref": "#/definitions/common/text" },
+																	"key_identifier_type": { "type": "string", "enum": ["direct_reference", "issuer_reference", "x509_key_identifier", "subject_key_identifier", "thumbprint_sha1", "encrypted_key_sha1"] },
+																	"symmetric_encryption_algorithm": { "type": "string", "enum": ["triple_des", "aes_128", "aes_192", "aes_256"] },
+																	"asymmetric_encryption_algorithm": { "type": "string", "enum": ["rsa_v1_5", "rsa_oaep", "none"] },
+																	"parts": { "$ref": "#/definitions/web_services_security_parts" }
+																}
+															}
+														}
 													}
 												]
 											}
@@ -831,6 +880,33 @@
 						}
 					}
 				}
+			}
+		},
+		"web_services_security_parts": {
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"oneOf": [
+					{
+						"type": "object",
+						"required": ["id"],
+						"additionalProperties": false,
+						"properties": {
+							"id": { "type": "string", "minLength": 1 },
+							"encoding": { "type": "string", "enum": ["element", "content"] }
+						}
+					},
+					{
+						"type": "object",
+						"required": ["name"],
+						"additionalProperties": false,
+						"properties": {
+							"name": { "type": "string", "minLength": 1 },
+							"namespace": { "type": "string", "minLength": 1 },
+							"encoding": { "type": "string", "enum": ["element", "content"] }
+						}
+					}
+				]
 			}
 		},
 		"server": {
@@ -1007,7 +1083,7 @@
 						"description": "The fixed number of Virtual Users"
 					},
 					"rampup": {
-						"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/positive_number" }],
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay."
 					}
 				}
@@ -1035,7 +1111,7 @@
 					},
 					"max_users": {
 						"$ref": "#/definitions/common/positive_number",
-						"description": "The maximum number of Virtual Users"
+						"description": "The maximum number of Virtual Users. Must be greater than or equal to `min_users`."
 					},
 					"increment_users": {
 						"type": "integer",
@@ -1047,7 +1123,7 @@
 						"description": "The incrementation frequency: time length or number of iterations."
 					},
 					"increment_rampup": {
-						"$ref": "#/definitions/common/time",
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "Define how Virtual Users start: simultaneously or with a preset delay. This rule is used each time new Virtual Users are created, at each load increase for a ramp-up load policy."
 					}
 				},
@@ -1073,7 +1149,7 @@
 						"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population."
 					},
 					"step_rampup": {
-						"$ref": "#/definitions/common/text",
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay. This rule is used each time new Virtual Users are created, at each load peak for a peak load policy."
 					},
 					"stop_after": {
@@ -1111,7 +1187,7 @@
 						"description": "Steps to define the Virtual Users count for a specific period"
 					},
 					"rampup": {
-						"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/positive_number" }],
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "Simultaneously or with a preset delay.There are different behaviours depending on duration mode (unlimited, time length, iterations) - unlimited/time length: This rule is used each time Virtual Users count is updated - iterations: This rule is used each time a new step starts"
 					},
 					"start_after": {
@@ -1252,11 +1328,11 @@
 				"type": "object",
 				"properties": {
 					"before": {
-						"$ref": "#/definitions/common/time",
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "The monitoring time before the first Virtual User starts. Monitoring time is expressed in hours (h), minutes (m), seconds (s)."
 					},
 					"after": {
-						"$ref": "#/definitions/common/time",
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "The monitoring time after the last Virtual User stops. Monitoring time is expressed in hours (h), minutes (m), seconds (s)."
 					}
 				},
@@ -1273,7 +1349,7 @@
 						"description": "When to release the Rendezvous. Possible values are: \"manual\", percentage or positive number. The default value is 100%."
 					},
 					"timeout": {
-						"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/positive_number" }],
+						"$ref": "#/definitions/common/duration_seconds",
 						"description": "The timeout between Virtual Users. Timeout duration is expressed in hours (h), minutes (m), seconds (s). The default value is 300s."
 					}
 				},
@@ -1343,7 +1419,7 @@
 					},
 					"pacing": {
 						"$ref": "#/definitions/user_paths/actions/duration",
-						"description": "The minimum duration enforced for the Container. A random pacing `max` must be strictly greater than `min`."
+						"description": "The minimum duration enforced for the Container. A random pacing `max` must be greater than or equal to `min`."
 					},
 					"steps": { "$ref": "#/definitions/user_paths/steps" },
 					"assertions": {
@@ -1452,6 +1528,14 @@
 								"shared_element": {
 									"$ref": "#/definitions/common/name",
 									"description": "The name of the shared_elements entry to run here."
+								},
+								"websocket_channel": {
+									"$ref": "#/definitions/user_paths/actions/websocket_channel",
+									"description": "The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `extractors`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request."
+								},
+								"websocket_request": {
+									"$ref": "#/definitions/user_paths/actions/websocket_request",
+									"description": "The WebSocket Request action sends a frame (text, binary or close) on a channel opened earlier by a websocket_channel of the same user path. It is asynchronous unless `synchronous` is true, in which case it waits for the response frame whose correlation id equals `mapping_id`."
 								}
 							},
 							"additionalProperties": false
@@ -1474,7 +1558,7 @@
 						},
 						"pacing": {
 							"$ref": "#/definitions/user_paths/actions/duration",
-							"description": "The minimum duration enforced for the Transaction. A random pacing `max` must be strictly greater than `min`."
+							"description": "The minimum duration enforced for the Transaction. A random pacing `max` must be greater than or equal to `min`."
 						},
 						"steps": { "$ref": "#/definitions/user_paths/steps" },
 						"assertions": {
@@ -1691,7 +1775,10 @@
 									"$ref": "#/definitions/common/duration_value",
 									"description": "The minimum duration. The default value is `0`."
 								},
-								"max": { "$ref": "#/definitions/common/duration_value" }
+								"max": {
+									"$ref": "#/definitions/common/duration_value",
+									"description": "The maximum duration. Must be greater than or equal to `min`."
+								}
 							}
 						}
 					],
@@ -1887,7 +1974,7 @@
 							"default": "any"
 						},
 						"timeout": {
-							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"$ref": "#/definitions/common/duration_value",
 							"description": "The maximum time to wait for the conditions to be verified. The default value is `1m` (60000 ms)."
 						}
 					},
@@ -1996,6 +2083,145 @@
 					},
 					"additionalProperties": false,
 					"description": "The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back."
+				},
+				"websocket_channel": {
+					"title": "Action: WebSocket Channel",
+					"description": "The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `extractors`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request.",
+					"type": "object",
+					"required": ["name", "url"],
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"url": {
+							"$ref": "#/definitions/common/text",
+							"description": "The channel URL, with the `http` or `https` scheme (`ws` and `wss` are not accepted), or a path relative to `server`. Variables are accepted."
+						},
+						"server": {
+							"$ref": "#/definitions/common/text",
+							"description": "The name of a server defined in `servers`, used when `url` is a relative path."
+						},
+						"headers": {
+							"description": "Headers of the upgrade request, as a list of single-entry maps (`Header-Name: value`). `Upgrade: websocket` is implied and does not need to be written.",
+							"$ref": "#/definitions/user_paths/name_values"
+						},
+						"extractors": {
+							"description": "Variable extractors applied to the response of the upgrade request.",
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"assertions": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
+							"description": "Deprecated alias of `content_assertions`, read-only."
+						},
+						"content_assertions": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
+							"description": "The list of assertions to validate the response of the upgrade request"
+						},
+						"duration_assertion": {
+							"$ref": "#/definitions/user_paths/duration_assertion",
+							"description": "Checks that the upgrade request completed within a given duration"
+						},
+						"size_assertion": {
+							"$ref": "#/definitions/user_paths/size_assertion",
+							"description": "Checks the length of the response content, in bytes."
+						},
+						"messages_mapping": {
+							"$ref": "#/definitions/user_paths/websocket_messages_mapping",
+							"description": "How to extract the correlation id from each inbound frame. It is compared with the `mapping_id` of a synchronous websocket_request. Mandatory as soon as a synchronous websocket_request uses this channel."
+						},
+						"timestamp_extractor": {
+							"$ref": "#/definitions/user_paths/websocket_timestamp_extractor",
+							"description": "Where the time the server sent a frame is found in the frame, as a number of milliseconds since the epoch. It is the start time of the push message that handles the frame; without it the push message is measured from the reception of the frame, which gives a time of zero."
+						},
+						"push_messages": {
+							"description": "The handlers of the frames the channel receives. A frame that answers a waiting synchronous websocket_request goes to that request and no push message runs. Otherwise every push message whose `conditions` are true runs, in order; only if none matched, every push message without `conditions` (the fallbacks) runs.",
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/websocket_push_message" }
+						}
+					},
+					"not": { "required": ["assertions", "content_assertions"] }
+				},
+				"websocket_request": {
+					"title": "Action: WebSocket Request",
+					"description": "The WebSocket Request action sends a frame (text, binary or close) on a channel opened earlier by a websocket_channel of the same user path. It is asynchronous unless `synchronous` is true, in which case it waits for the response frame whose correlation id equals `mapping_id`.",
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"name": { "$ref": "#/definitions/common/name" },
+						"description": { "$ref": "#/definitions/common/text" },
+						"channel": { "$ref": "#/definitions/user_paths/websocket_channel_reference" },
+						"message_type": {
+							"description": "The kind of frame: `text` (default), `binary` or `close`. A `close` ends the connection: it cannot be synchronous, and may carry a `status_code` and a reason in `body`.",
+							"type": "string",
+							"enum": ["text", "binary", "close"],
+							"default": "text"
+						},
+						"synchronous": {
+							"description": "When true, the request waits for the inbound frame whose correlation id equals `mapping_id`; the channel must then declare `messages_mapping`. Defaults to false. WARNING: inside a push message, a synchronous request must be inside a `fork`, otherwise it blocks the thread that receives the frames and fails after `runtime.so.timeout`.",
+							"type": "boolean",
+							"default": false
+						},
+						"mapping_id": {
+							"$ref": "#/definitions/common/text",
+							"description": "The correlation id of the awaited response. Required when `synchronous` is true, and only allowed then. Variables are accepted."
+						},
+						"status_code": {
+							"description": "The close status code, only for a `close`. Defaults to 1000 (normal closure).",
+							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"default": "1000"
+						},
+						"body": {
+							"$ref": "#/definitions/common/textblob",
+							"description": "The frame content as text, or the reason of a `close`. Mutually exclusive with `bodybinary`."
+						},
+						"bodybinary": {
+							"$ref": "#/definitions/common/base64blob",
+							"description": "The frame content as Base64, for a binary frame. Mutually exclusive with `body`."
+						},
+						"extractors": {
+							"description": "Variable extractors applied to the response, only for a synchronous request.",
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/extractor" }
+						},
+						"content_assertions": {
+							"$ref": "#/definitions/common/content_assertions",
+							"description": "Content assertions applied to the response, only for a synchronous request."
+							},
+							"duration_assertion": {
+								"$ref": "#/definitions/user_paths/duration_assertion",
+								"description": "Checks that the response was received within a given duration, only for a synchronous request."
+							},
+							"size_assertion": {
+								"$ref": "#/definitions/user_paths/size_assertion",
+								"description": "Checks the length of the response content, in bytes, only for a synchronous request."
+						}
+					},
+					"not": { "required": ["body", "bodybinary"] },
+					"allOf": [
+						{
+							"$comment": "Only a synchronous request has a response: it needs mapping_id, and only it may carry mapping_id, extractors and content_assertions",
+							"if": { "required": ["synchronous"], "properties": { "synchronous": { "const": true } } },
+							"then": { "required": ["mapping_id"] },
+							"else": {
+								"properties": {
+									"mapping_id": false,
+									"extractors": { "maxItems": 0 },
+									"content_assertions": { "maxItems": 0 },
+										"duration_assertion": false,
+										"size_assertion": false
+								}
+							}
+						},
+						{
+							"$comment": "A close cannot be synchronous, and only a close may set a status_code other than the default",
+							"if": { "required": ["message_type"], "properties": { "message_type": { "const": "close" } } },
+							"then": { "properties": { "synchronous": { "const": false } } },
+							"else": { "properties": { "status_code": { "enum": ["1000", 1000] } } }
+						}
+					]
 				}
 			},
 			"name_values": {
@@ -2011,8 +2237,115 @@
 							"patternProperties": {
 								".*": { "type": "string" }
 							}
+						},
+						{
+							"type": "object",
+							"required": ["name", "value"],
+							"properties": {
+								"name": { "type": "string" },
+								"value": { "type": "string" }
+							},
+							"additionalProperties": false
 						}
 					]
+				}
+			},
+			"websocket_channel_reference": {
+				"title": "WebSocket Channel Reference",
+				"description": "The complete path of the channel to use: segments joined with '>', with no space around it. It starts with where the channel is declared: init, actions or end for a channel declared in a user path, or shared_elements>SharedElementName for one declared inside a shared element. Then comes the name of each step on the way down to the channel (for instance a transaction, a loop, a while or a fork), and last the name of the channel itself. Fixed segments: the branches of an if are then and else; the branches of a try_catch are try and catch; the default branch of a switch is default, while a switch case is designated by its name. A channel declared inside a push message is designated by the name of the outer channel, then the name of the push message (push_messages and steps are keys, not segments). A shared_element step is not part of a path. Two sibling steps on the path must not share a name. A request can only use a channel of its own user path.",
+				"examples": [
+					"actions>chat_socket",
+					"actions>Login>chat_socket",
+					"actions>has_notifications>then>notify_socket",
+					"actions>router>second_case>routed_socket",
+					"actions>chat_socket>on_redirect>room_socket",
+					"shared_elements>OpenChat>chat_socket"
+				],
+				"type": "string",
+				"pattern": "^((init|actions|end)(>[^>]+)+|shared_elements(>[^>]+){2,})$"
+			},
+			"websocket_push_message": {
+				"title": "WebSocket Push Message",
+				"description": "A handler of the frames received by its channel. With conditions it runs when they are true; without conditions it is a fallback, which runs only when no push message with conditions matched",
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"name": { "$ref": "#/definitions/common/name" },
+					"description": { "$ref": "#/definitions/common/text" },
+					"conditions": {
+						"description": "The conditions on the frame, written like those of an `if`; at least one when present. The variable `${NL-MessageContent}` holds the content of the frame. Without `conditions` the push message is a fallback.",
+						"allOf": [{ "$ref": "#/definitions/common/conditions" }],
+						"minItems": 1
+					},
+					"match": {
+						"description": "How the `conditions` are combined: `any` (default) or `all`. Only allowed with `conditions`.",
+						"type": "string",
+						"enum": ["any", "all"],
+						"default": "any"
+					},
+					"extractors": {
+						"description": "Variable extractors applied to the frame, before `steps` run.",
+						"type": "array",
+						"items": { "$ref": "#/definitions/user_paths/extractor" }
+					},
+					"content_assertions": {
+						"$ref": "#/definitions/common/content_assertions",
+						"description": "Content assertions applied to the frame."
+					},
+					"duration_assertion": {
+						"$ref": "#/definitions/user_paths/duration_assertion",
+						"description": "Checks the duration of the push message."
+					},
+					"size_assertion": {
+						"$ref": "#/definitions/user_paths/size_assertion",
+						"description": "Checks the length of the frame content, in bytes."
+					},
+					"steps": {
+						"$ref": "#/definitions/user_paths/steps",
+						"description": "The steps to run for a matching frame; may be empty. These steps run on the thread that receives the frames of the channel, so a long action should be inside a `fork`. A synchronous websocket_request must always be inside a `fork`: otherwise it waits for a frame that this thread cannot deliver, and fails after `runtime.so.timeout`."
+					}
+				},
+				"dependentRequired": { "match": ["conditions"] }
+			},
+			"websocket_messages_mapping": {
+				"title": "WebSocket Messages Mapping",
+				"description": "Tells a channel how to extract the correlation id from an inbound frame. The extracted value is compared with the `mapping_id` of a synchronous websocket_request to pair a response with the request waiting for it. `xpath` and `jsonpath` are mutually exclusive.",
+				"type": "object",
+				"additionalProperties": false,
+				"properties": {
+					"xpath": {
+						"$ref": "#/definitions/common/text",
+						"description": "XPath expression applied to the frame. Mutually exclusive with `jsonpath`."
+					},
+					"jsonpath": {
+						"$ref": "#/definitions/common/text",
+						"description": "JSONPath expression applied to the frame. Mutually exclusive with `xpath`."
+					},
+					"regexp": {
+						"$ref": "#/definitions/common/text",
+						"description": "Regular expression applied to the frame, or to the `xpath` / `jsonpath` result. Defaults to `(.*)`."
+					},
+					"template": {
+						"$ref": "#/definitions/common/text",
+						"description": "Template applied to the result of `regexp`: `$1$` is the first captured group, `$2$` the second. Defaults to `$1$`."
+					}
+				}
+			},
+			"websocket_timestamp_extractor": {
+				"title": "WebSocket Timestamp Extractor",
+				"description": "Finds, in each inbound frame, the time the server sent it, as a number of milliseconds since the epoch. It is the start time of the push message that handles the frame. The clocks of the server and of the load generator must be synchronized: a value that is not a number, or that is in the future, gives a time of zero.",
+				"type": "object",
+				"required": ["regexp"],
+				"additionalProperties": false,
+				"properties": {
+					"regexp": {
+						"$ref": "#/definitions/common/text",
+						"description": "Regular expression applied to the content of the frame."
+					},
+					"template": {
+						"$ref": "#/definitions/common/text",
+						"description": "Builds the value from the groups `regexp` captured: `$1$` is the first group, `$2$` the second, any other text is kept as it is. Defaults to `$1$`."
+					}
 				}
 			},
 			"part": {
@@ -2184,6 +2517,7 @@
 				"type": "object",
 				"required": ["value"],
 				"properties": {
+					"name": { "$ref": "#/definitions/common/name" },
 					"description": { "$ref": "#/definitions/common/text" },
 					"value": { "anyOf": [{ "$ref": "#/definitions/common/text" }, "number"] },
 					"break": {
@@ -2192,7 +2526,7 @@
 					},
 					"pacing": {
 						"$ref": "#/definitions/user_paths/actions/duration",
-						"description": "The minimum duration enforced for the case. A random pacing `max` must be strictly greater than `min`."
+						"description": "The minimum duration enforced for the case. A random pacing `max` must be greater than or equal to `min`."
 					},
 					"sla_profile": {
 						"$ref": "#/definitions/common/name",

@@ -8,7 +8,7 @@
     <parent>
         <artifactId>models-readers</artifactId>
         <groupId>com.neotys.neoload</groupId>
-        <version>3.4.25-SNAPSHOT</version>
+        <version>3.4.30-SNAPSHOT</version>
     </parent>
 
     <dependencies>

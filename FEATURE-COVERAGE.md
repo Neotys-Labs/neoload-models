@@ -78,7 +78,7 @@ model but not merged; **—** = not implemented anywhere.
 | Dynatrace integration settings (`dynatrace.enabled` / `url` / `token`) | 3.0 |
 | qTest integration settings (`qtest.*`) | 3.0 |
 | Certificates (`CertificateSettings`) | — |
-| Web Services security / WSS (`WSSSettings`) | 3.1 draft (`web_services_security`: keystores, username and timestamp tokens; no signature/encryption) |
+| Web Services security / WSS (`WSSSettings`) | 3.1 draft (`web_services_security`: keystores, username, timestamp, signature and encryption tokens; no embedded key, variable keystores) |
 | Page naming policy (`PageNamingSettings`) | — |
 | JavaScript policy (`JSPolicySettings`) | — |
 | Error handling policy (`ErrorHandlingSettings`) | — |
@@ -177,7 +177,10 @@ and protocol action catalogues.
 | Raw request | — |
 | SOAP request | 3.1 (`soap_request`, with `content_assertions`, `duration_assertion`, `size_assertion` and `sla_profile`) |
 | Silverlight SOAP request | — |
-| WebSocket channel, WebSocket request, push message | — |
+| WebSocket channel and request, the request referencing its channel by path | 3.1 draft (`websocket_channel`, `websocket_request`) |
+| WebSocket channel inside a shared container (`shared_elements>Name>...` reference) | 3.1 draft |
+| WebSocket push message (conditional or fallback, with a body of steps) | 3.1 draft (`websocket_channel.push_messages`) |
+| WebSocket timestamp extractor (server send time of an inbound frame) | 3.1 draft (`websocket_channel.timestamp_extractor`) |
 | Media / RTMP, RTMPT requests | — |
 | Siebel request | — |
 | Recorded artifacts (screenshots, recorded response) | — |

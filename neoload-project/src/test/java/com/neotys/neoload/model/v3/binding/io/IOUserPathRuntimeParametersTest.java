@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.binding.io;
 
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertInvalidDurationRead;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -9,6 +10,7 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath.FailurePolicy;
 import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
@@ -25,7 +27,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 	private static Container actions() {
 		return Container.builder()
 				.name("actions")
-				.addSteps(Delay.builder().duration(DurationConstant.builder().value("1000").build()).build())
+				.addSteps(Delay.builder().duration(DurationConstant.builder().value(Durations.of("1000")).build()).build())
 				.build();
 	}
 
@@ -36,7 +38,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 						.name("MyUserPath1")
 						.onError(FailurePolicy.GO_TO_NEXT_ITERATION)
 						.onAssertionFailure(FailurePolicy.STOP_AND_START_NEW_VU)
-						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value("5000").build()).random("10%").build())
+						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("5000")).build()).random("10%").build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
@@ -53,7 +55,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath4")
 						.onError(FailurePolicy.STOP_AND_START_NEW_VU)
-						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value("90000").build()).build())
+						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("90000")).build()).build())
 						.actions(actions())
 						.build())
 				.build();
@@ -64,7 +66,7 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 				.name("MyProject")
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath1")
-						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value("${my_think_time}").build()).random("${my_random_delay}").build())
+						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("${my_think_time}")).build()).random("${my_random_delay}").build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
@@ -120,11 +122,17 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 		assertFalse(validation.isValid());
 
 		final String message = validation.getMessage().get();
-		assertTrue(message, message.contains("Violation Number: 14."));
-		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[0].think_time.override.value': '-100' " + ViolationsAssert.INVALID_DURATION));
-		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[7].think_time.factor': must be a non-negative integer percentage (e.g. 150%) or a variable."));
-		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[10].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
-		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[13].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
+		assertTrue(message, message.contains("Violation Number: 7."));
+		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[0].think_time.factor': must be a non-negative integer percentage (e.g. 150%) or a variable."));
+		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[3].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
+		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[6].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
+	}
+
+	@Test
+	public void readInvalidThinkTimeOverrideFailsTheRead() {
+		for (final String value : new String[] {"-100", "-5s", "5d", "1.5s", "5 s", "30s1m", "abc"}) {
+			assertInvalidDurationRead(() -> new IO().read(userPathWith("think_time:\n    override: " + value)), value, "override");
+		}
 	}
 
 	@Test

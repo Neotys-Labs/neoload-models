@@ -1,0 +1,59 @@
+name: MyProject
+variables:
+- random_number:
+    name: MyRandomNumber
+    min: 5
+    max: 5
+- random_string:
+    name: MyRandomString
+    min_length: 10
+    max_length: 10
+user_paths:
+- name: MyUserPath
+  actions:
+    pacing:
+      min: 1s
+      max: "1000"
+    steps:
+    - delay:
+        min: 1s
+        max: 1000ms
+    - delay:
+        min: 3s
+        max: "${max_delay}"
+    - think_time:
+        min: 1m
+        max: 60s
+    - think_time:
+        min: "${min_think_time}"
+        max: 1s
+    - web_page:
+        think_time:
+          min: "1500"
+          max: 1500ms
+        steps:
+        - request:
+            url: http://host:80/
+    - web_page:
+        think_time:
+          min: 3s
+          max: "${max_think_time}"
+        steps:
+        - request:
+            url: http://host:80/
+    - transaction:
+        name: MyTransaction
+        pacing:
+          min: "${min_pacing}"
+          max: 1s
+        steps:
+        - delay: 100
+scenarios:
+- name: MyScenario
+  populations:
+  - name: MyPopulation
+    rampup_load:
+      min_users: 5
+      max_users: 5
+      increment_users: 1
+      increment_every: 5s

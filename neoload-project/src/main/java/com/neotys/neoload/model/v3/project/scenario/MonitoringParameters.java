@@ -1,17 +1,17 @@
 package com.neotys.neoload.model.v3.project.scenario;
 
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationConverter;
-import com.neotys.neoload.model.v3.binding.converter.TimeDurationToStringConverter;
-import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
+import com.neotys.neoload.model.v3.binding.serializer.JavaDurationDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.JavaDurationSerializer;
+import com.neotys.neoload.model.v3.validation.constraints.WholeSecondsCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.time.Duration;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
 
 @JsonInclude(value= JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({MonitoringParameters.BEFORE_FIRST, MonitoringParameters.AFTER_LAST})
@@ -26,17 +26,17 @@ public interface MonitoringParameters {
 	String AFTER_LAST = "after";
 
 	@JsonProperty(BEFORE_FIRST)
-	@PositiveCheck(unit="second", groups={NeoLoad.class})
-	@JsonSerialize(converter= TimeDurationToStringConverter.class)
-	@JsonDeserialize(converter= StringToTimeDurationConverter.class)
-	Integer getBeforeFirstVu();
+	@WholeSecondsCheck(groups={NeoLoad.class})
+	@JsonSerialize(using=JavaDurationSerializer.class)
+	@JsonDeserialize(using=JavaDurationDeserializer.class)
+	Duration getBeforeFirstVu();
 
 
 	@JsonProperty(AFTER_LAST)
-	@PositiveCheck(unit="second", groups={NeoLoad.class})
-	@JsonSerialize(converter=TimeDurationToStringConverter.class)
-	@JsonDeserialize(converter=StringToTimeDurationConverter.class)
-	Integer getAfterLastVus();
+	@WholeSecondsCheck(groups={NeoLoad.class})
+	@JsonSerialize(using=JavaDurationSerializer.class)
+	@JsonDeserialize(using=JavaDurationDeserializer.class)
+	Duration getAfterLastVus();
 
 
 	static ImmutableMonitoringParameters.Builder builder() {

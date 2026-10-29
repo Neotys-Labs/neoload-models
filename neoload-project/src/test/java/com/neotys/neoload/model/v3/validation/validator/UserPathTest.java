@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
@@ -61,9 +62,8 @@ public class UserPathTest {
 	private static final String CONSTRAINTS_USER_PATH_THINK_TIME_VALUES;
 	static {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'think_time.override.value': '-5s' is not a valid duration, expected ordered units such as 1h30m15s, a number of milliseconds or a variable such as ${name}.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'think_time.random': must be a positive integer percentage (e.g. 10%) or a variable.").append(LINE_SEPARATOR);
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'think_time.random': must be a positive integer percentage (e.g. 10%) or a variable.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_THINK_TIME_VALUES = sb.toString();
 	}
 
@@ -246,7 +246,7 @@ public class UserPathTest {
 
 		UserPath userPath = UserPath.builder()
 				.name("MyUserPath")
-				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value("5000").build()).factor("150%").build())
+				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("5000")).build()).factor("150%").build())
 				.actions(actions)
 				.build();
 		Validation validation = validator.validate(userPath, NeoLoad.class);
@@ -264,7 +264,7 @@ public class UserPathTest {
 
 		userPath = UserPath.builder()
 				.name("MyUserPath")
-				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value("-5s").build()).random("abc").build())
+				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("5000")).build()).random("abc").build())
 				.actions(actions)
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -275,7 +275,7 @@ public class UserPathTest {
 				.name("MyUserPath")
 				.onError(UserPath.FailurePolicy.GO_TO_NEXT_ITERATION)
 				.onAssertionFailure(UserPath.FailurePolicy.STOP_AND_START_NEW_VU)
-				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value("${my_think_time}").build()).random("10%").build())
+				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("${my_think_time}")).build()).random("10%").build())
 				.actions(actions)
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);

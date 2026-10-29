@@ -6,6 +6,7 @@ import static org.mockito.Mockito.spy;
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.readers.jmeter.step.*;
+import com.neotys.neoload.model.readers.jmeter.step.timer.TimerDuration;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
@@ -90,7 +91,7 @@ public class ThreadGroupConverterTest {
         Container container = Container.builder()
                 .addSteps(Delay.builder()
                         .name(constantTimer.getName())
-                        .duration(DurationConstant.builder().value(constantTimer.getDelay()).build())
+                        .duration(DurationConstant.builder().value(TimerDuration.of(constantTimer.getDelay())).build())
                         .build())
                 .build();
         userPath.actions(container);

@@ -45,7 +45,7 @@ public class UniformerRandomTimerConverterTest {
         Delay delay = Delay.builder()
                 .name(uniformRandomTimer.getName())
                 .description(uniformRandomTimer.getComment())
-                .duration(DurationConstant.builder().value("69").build())
+                .duration(DurationConstant.builder().value(TimerDuration.of("69")).build())
                 .build();
         List<Step> expected = new ArrayList<>();
         expected.add(delay);
