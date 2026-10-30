@@ -17,16 +17,22 @@ public class StartAfterTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for '': must be greater than or equal to 1 second or must be an existing population.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for '': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
 		CONSTRAINTS_VALUE = sb.toString();
 	}
 
-	private static final String CONSTRAINTS_TYPE;
-	static {
+	private static String valueViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for '': must be greater than or equal to 1 second or must be an existing population.").append(LINE_SEPARATOR);
-		CONSTRAINTS_TYPE = sb.toString();
+		sb.append("Violation 1 - Incorrect value '" + value + "' for '': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
+		return sb.toString();
+	}
+
+	private static String typeViolation(final String value) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value '" + value + "' for '': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
+		return sb.toString();
 	}
 
 	@Test
@@ -69,7 +75,7 @@ public class StartAfterTest {
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
+		assertEquals(valueViolation("-10s"), validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
 				.value(Duration.ofSeconds(-10))
@@ -77,7 +83,7 @@ public class StartAfterTest {
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
+		assertEquals(valueViolation("-10s"), validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
 				.value(Duration.ofSeconds(0))
@@ -85,7 +91,7 @@ public class StartAfterTest {
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
+		assertEquals(valueViolation("0"), validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
 				.value(Duration.ofSeconds(0))
@@ -93,7 +99,7 @@ public class StartAfterTest {
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
+		assertEquals(valueViolation("0"), validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
 				.value(Duration.ofSeconds(1))
@@ -109,7 +115,7 @@ public class StartAfterTest {
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE, validation.getMessage().get());	
+		assertEquals(valueViolation("1s"), validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
 				.value(" \t\r\n")
@@ -137,7 +143,7 @@ public class StartAfterTest {
 				.build();
 		Validation validation = validator.validate(startAfter, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_TYPE, validation.getMessage().get());	
+		assertEquals(typeViolation("1s"), validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
 				.value(Duration.ofSeconds(1))
@@ -145,7 +151,7 @@ public class StartAfterTest {
 				.build();
 		validation = validator.validate(startAfter, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_TYPE, validation.getMessage().get());	
+		assertEquals(typeViolation("1s"), validation.getMessage().get());	
 
 		startAfter = StartAfter.builder()
 				.value("My Population")

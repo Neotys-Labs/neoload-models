@@ -153,7 +153,7 @@ public class IODurationTypesTest {
 		final Project project = read(DurationFields.RENDEZVOUS_TIMEOUT.yaml("1s500ms"));
 
 		assertEquals(Duration.ofMillis(1500), scenario(project).getRendezvousPolicies().get(0).getTimeout());
-		assertViolations(validate(project), invalidValue("project.scenarios[0].rendezvous_policies[0].timeout", "must be a whole number of seconds."));
+		assertViolations(validate(project), invalidValue("1s500ms", "project.scenarios[0].rendezvous_policies[0].timeout", "must be a whole number of seconds."));
 	}
 
 	@Test
@@ -236,8 +236,10 @@ public class IODurationTypesTest {
 		assertEquals(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(30)).build(), startAfter("30"));
 		assertEquals(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(60)).build(), startAfter("1m"));
 		assertEquals(StartAfter.builder().type(StartAfter.Type.POPULATION).value("my_population").build(), startAfter("my_population"));
-		assertEquals(StartAfter.builder().type(StartAfter.Type.POPULATION).value("1s1h").build(), startAfter("1s1h"));
-		assertInvalidDurationRead(() -> startAfter("-5"), "-5", "start_after");
+		assertEquals(StartAfter.builder().type(StartAfter.Type.POPULATION).value("other_population").build(), startAfter("other_population"));
+		for (final String value : new String[] {"-5", "-5s", "5x", "1s1h"}) {
+			assertInvalidDurationRead(() -> startAfter(value), value, "start_after");
+		}
 	}
 
 	private static StartAfter startAfter(final String value) throws IOException {
@@ -251,7 +253,7 @@ public class IODurationTypesTest {
 				.addRendezvousPolicies(RendezvousPolicy.builder().name("r").timeout(Duration.ofSeconds(2)).build())
 				.build()).build();
 
-		assertViolations(validate(project), invalidValue("project.scenarios[0].populations[0].constant_load.rampup", "must be a whole number of seconds."));
+		assertViolations(validate(project), invalidValue("1s500ms", "project.scenarios[0].populations[0].constant_load.rampup", "must be a whole number of seconds."));
 	}
 
 	@Test

@@ -170,6 +170,7 @@
 				},
 				"qtest.project_id": {
 					"type": "integer",
+					"minimum": 1,
 					"description": "The qTest unique identifier of the qTest project in which the result will be transferred"
 				},
 				"qtest.create_defects": {
@@ -178,6 +179,7 @@
 				},
 				"qtest.cycle_id": {
 					"type": "integer",
+					"minimum": 1,
 					"description": "The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier."
 				}
 			},
@@ -212,6 +214,24 @@
 				"type": "integer",
 				"minimum": 1
 			},
+			"user_count": {
+				"title": "User count",
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 2147483647
+			},
+			"user_count_or_zero": {
+				"title": "User count, possibly 0",
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 2147483647
+			},
+			"int": {
+				"title": "Integer",
+				"type": "integer",
+				"minimum": -2147483648,
+				"maximum": 2147483647
+			},
 			"duration_value": {
 				"title": "Duration value",
 				"anyOf": [
@@ -219,16 +239,30 @@
 					{ "$ref": "#/definitions/common/positive_number" }
 				]
 			},
-			"duration_seconds": {
-				"title": "Duration in seconds",
+			"positive_duration_value": {
+				"title": "Duration value greater than 0",
 				"anyOf": [
-					{ "type": "string", "pattern": "^\\s*(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?)\\s*$" },
-					{ "$ref": "#/definitions/common/positive_number" }
+					{ "type": "string", "pattern": "^\\s*((?=.*[1-9])(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s\\s*)?(\\d+ms)?)|\\$\\{[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\.}]+(\\.[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\.}]+)*\\})\\s*$" },
+					{ "type": "integer", "minimum": 1 }
+				]
+			},
+			"duration_seconds": {
+				"title": "Duration in seconds, from 1 second to 2147483 seconds",
+				"anyOf": [
+					{ "type": "string", "pattern": "^\\s*(?=.*[1-9])(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?)\\s*$" },
+					{ "type": "integer", "minimum": 1, "maximum": 2147483 }
 				]
 			},
 			"duration": {
 				"title": "Duration",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
+				"anyOf": [
+					{ "type": "string", "pattern": "^(?=.*[1-9])((\\d{1,2}[hms]{1}){1,3})+$" },
+					{ "type": "string", "pattern": "^(?=.*[1-9])(\\d+ iterations?)$" }
+				]
+			},
+			"duration_or_zero": {
+				"title": "Duration, possibly 0",
+				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }, { "const": 0 }]
 			},
 			"stop_after_options": {
 				"title": "variation_policy.stop_after values",
@@ -236,7 +270,10 @@
 			},
 			"start_after_options": {
 				"title": "Start after",
-				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "$ref": "#/definitions/common/text" }]
+				"anyOf": [
+					{ "$ref": "#/definitions/common/duration_seconds" },
+					{ "type": "string", "pattern": "^(?!\\s*-?\\d).*$" }
+				]
 			},
 			"time": {
 				"title": "Time",
@@ -356,6 +393,7 @@
 							},
 							"start_from_line": {
 								"type": "integer",
+								"minimum": 1,
 								"default": 1
 							},
 							"delimiter": {
@@ -387,14 +425,11 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"start": {
-								"type": "number"
-							},
-							"end": {
-								"type": "number"
-							},
+							"start": { "$ref": "#/definitions/common/int" },
+							"end": { "$ref": "#/definitions/common/int" },
 							"increment": {
-								"type": "number"
+								"$ref": "#/definitions/common/int",
+								"not": { "const": 0 }
 							},
 							"scope": { "$ref": "#/definitions/common/var_scope" },
 							"out_of_value": {
@@ -415,11 +450,9 @@
 					{ "$ref": "#/definitions/variables/generic" },
 					{
 						"properties": {
-							"min": {
-								"type": "number"
-							},
+							"min": { "$ref": "#/definitions/common/int" },
 							"max": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "Must be greater than or equal to `min`."
 							},
 							"predictable": {
@@ -441,11 +474,15 @@
 					{
 						"properties": {
 							"min_length": {
-								"type": "number",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 1000,
 								"description": "The minimum number of characters of the generated value. The default value is `5`."
 							},
 							"max_length": {
-								"type": "number",
+								"type": "integer",
+								"minimum": 1,
+								"maximum": 1000,
 								"description": "The maximum number of characters of the generated value. The default value is `10`. Must be greater than or equal to `min_length`."
 							},
 							"predictable": {
@@ -494,7 +531,7 @@
 							},
 							"change_step": {
 								"type": "string",
-								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$",
+								"pattern": "^-?(?=\\d*[1-9])\\d+(ms|s|m|h|d|mo|y)$",
 								"description": "The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes."
 							},
 							"scope": { "$ref": "#/definitions/common/var_scope" },
@@ -527,6 +564,7 @@
 							},
 							"start_from_line": {
 								"type": "integer",
+								"minimum": 1,
 								"default": 1,
 								"description": "The first row of `values` to be used. The default value is \"1\"."
 							},
@@ -690,7 +728,7 @@
 							},
 							"offset": {
 								"type": "string",
-								"pattern": "^-?\\d+(ms|mo|s|m|h|d|y)$",
+								"pattern": "^-?(?=\\d*[1-9])\\d+(ms|mo|s|m|h|d|y)$",
 								"description": "The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Absent means no offset."
 							}
 						}
@@ -922,7 +960,10 @@
 					"enum": ["http", "https"]
 				},
 				"port": {
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+					"anyOf": [
+						{ "type": "string", "pattern": "^(\\$\\{.+\\}|(6553[0-5]|655[0-2]\\d|65[0-4]\\d{2}|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3}))$" },
+						{ "type": "integer", "minimum": 1, "maximum": 65535 }
+					],
 					"description": "The port of the server. The default value is \"80\" (for http scheme) or \"443\" (for https scheme)."
 				},
 				"basic_authentication": {
@@ -1013,7 +1054,7 @@
 				"title": "Threshold",
 				"type": "string",
 				"description": "Format: [kpi] (warn|fail) >=|==|<= [value][unit] ... per test|interval\n\nMultiple conditions (warn and/or fail) can be combined on the same line. Units: s, ms, /s, Mbps, MB, %.\n\nKPIs per test:\n  avg-request-resp-time    — average request response time (s, ms)\n  avg-page-resp-time       — average page response time (s, ms)\n  avg-transaction-resp-time — average transaction response time (s, ms)\n  perc-transaction-resp-time (p{N}) — Nth-percentile transaction response time, default p90 (s, ms)\n  avg-request-per-sec      — average requests per second (/s)\n  avg-throughput-per-sec   — average throughput per second (Mbps)\n  errors-count             — total number of errors\n  count                    — total element count\n  throughput               — total throughput (MB)\n  error-rate               — error rate (%)\n\nKPIs per interval:\n  avg-resp-time            — average response time (s, ms)\n  avg-elt-per-sec          — average elements per second (/s)\n  avg-throughput-per-sec   — average throughput per second (Mbps)\n  errors-per-sec           — errors per second (/s)\n  error-rate               — error rate (%)",
-				"pattern": "^(.*?)\\s((warn|fail)\\s(>=|==|<=))(?=\\s)(.*?)per\\s(test|interval)$",
+				"pattern": "^(?!.*(>=|==|<=)\\s*-)(?!.*\\(p(?![1-9]\\d?\\)))(.*?)\\s((warn|fail)\\s(>=|==|<=))(?=\\s)(.*?)per\\s(test|interval)$",
 				"examples": [
 					"avg-request-resp-time warn >= 200ms fail >= 500ms per test",
 					"perc-transaction-resp-time (p90) warn >= 1s fail >= 2s per test",
@@ -1048,7 +1089,7 @@
 								"name": { "$ref": "#/definitions/common/name" },
 								"distribution": {
 									"anyOf": [
-										{ "type": "string", "pattern": "^\\d{1,3}(\\.\\d)?%?$" },
+										{ "type": "string", "pattern": "^(100(\\.0)?|\\d{1,2}(\\.\\d)?)%?$" },
 										{ "type": "number", "minimum": 0, "maximum": 100 }
 									],
 									"description": "The percentage of the User Path in Population. The value is a percentage and may be set within precision of 0.1%. If the distribution is not present, its value will be proportionally calculated."
@@ -1078,7 +1119,7 @@
 						"description": "Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset delay to finish the current iteration or allow the population to end the current iteration for each Virtual User."
 					},
 					"users": {
-						"type": "integer",
+						"$ref": "#/definitions/common/user_count",
 						"default": 1,
 						"description": "The fixed number of Virtual Users"
 					},
@@ -1091,7 +1132,7 @@
 			"rampup_load": {
 				"title": "Ramp-up Load",
 				"type": "object",
-				"required": ["min_users", "increment_users", "increment_every"],
+				"required": ["increment_users", "increment_every"],
 				"properties": {
 					"duration": {
 						"$ref": "#/definitions/common/duration",
@@ -1106,15 +1147,15 @@
 						"description": "Define how Virtual Users should be started: the population immediately stop the executing of the current iteration, give a preset delay to finish the current iteration or allow the population to end the current iteration for each Virtual User."
 					},
 					"min_users": {
-						"$ref": "#/definitions/common/positive_number",
-						"description": "The initial number of Virtual Users"
+						"$ref": "#/definitions/common/user_count",
+						"description": "The initial number of Virtual Users. Left out, no Virtual User runs at the start."
 					},
 					"max_users": {
-						"$ref": "#/definitions/common/positive_number",
+						"$ref": "#/definitions/common/user_count",
 						"description": "The maximum number of Virtual Users. Must be greater than or equal to `min_users`."
 					},
 					"increment_users": {
-						"type": "integer",
+						"$ref": "#/definitions/common/user_count",
 						"default": 1,
 						"description": "The number of Virtual Users to increment"
 					},
@@ -1134,7 +1175,7 @@
 				"type": "object",
 				"required": ["minimum", "maximum", "start"],
 				"properties": {
-					"minimum": { "$ref": "#/definitions/populations/peaks_phase" },
+					"minimum": { "$ref": "#/definitions/populations/peaks_minimum_phase" },
 					"maximum": { "$ref": "#/definitions/populations/peaks_phase" },
 					"start": {
 						"type": "string",
@@ -1166,8 +1207,24 @@
 				"additionalProperties": false,
 				"properties": {
 					"users": {
-						"$ref": "#/definitions/common/positive_number",
+						"$ref": "#/definitions/common/user_count",
 						"description": "The fixed number of Virtual Users"
+					},
+					"duration": {
+						"$ref": "#/definitions/common/duration",
+						"description": "The duration of the phase: time length or number of iterations."
+					}
+				}
+			},
+			"peaks_minimum_phase": {
+				"title": "Peak Minimum Phase",
+				"type": "object",
+				"required": ["duration"],
+				"additionalProperties": false,
+				"properties": {
+					"users": {
+						"$ref": "#/definitions/common/user_count",
+						"description": "The fixed number of Virtual Users. Left out, no Virtual User runs during the phase."
 					},
 					"duration": {
 						"$ref": "#/definitions/common/duration",
@@ -1207,11 +1264,11 @@
 				"required": ["when", "users"],
 				"properties": {
 					"when": {
-						"$ref": "#/definitions/common/duration",
+						"$ref": "#/definitions/common/duration_or_zero",
 						"description": "The moment when Virtual Users count will reach the specified number: time length or number of iterations."
 					},
 					"users": {
-						"$ref": "#/definitions/common/positive_number",
+						"$ref": "#/definitions/common/user_count_or_zero",
 						"description": "The fixed number of Virtual Users at the specified moment"
 					}
 				},
@@ -1345,8 +1402,11 @@
 				"properties": {
 					"name": { "$ref": "#/definitions/common/name" },
 					"when": {
-						"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
-						"description": "When to release the Rendezvous. Possible values are: \"manual\", percentage or positive number. The default value is 100%."
+						"anyOf": [
+							{ "type": "string", "pattern": "^([Mm][Aa][Nn][Uu][Aa][Ll]|([1-9]\\d?|100)%|[1-9]\\d{0,9})$" },
+							{ "$ref": "#/definitions/common/user_count" }
+						],
+						"description": "When to release the Rendezvous. Possible values are: \"manual\", a percentage from 1% to 100% or a number of Virtual Users greater than or equal to 1. The default value is 100%."
 					},
 					"timeout": {
 						"$ref": "#/definitions/common/duration_seconds",
@@ -1823,7 +1883,7 @@
 				"duration_action": {
 					"title": "Duration Action",
 					"oneOf": [
-						{ "$ref": "#/definitions/common/duration_value" },
+						{ "$ref": "#/definitions/common/positive_duration_value" },
 						{
 							"$ref": "#/definitions/user_paths/actions/duration_object",
 							"properties": {
@@ -1838,7 +1898,7 @@
 				"duration": {
 					"title": "Duration",
 					"oneOf": [
-						{ "$ref": "#/definitions/common/duration_value" },
+						{ "$ref": "#/definitions/common/positive_duration_value" },
 						{
 							"$ref": "#/definitions/user_paths/actions/duration_object",
 							"unevaluatedProperties": false
@@ -1853,7 +1913,7 @@
 						{
 							"required": ["value"],
 							"properties": {
-								"value": { "$ref": "#/definitions/common/duration_value" }
+								"value": { "$ref": "#/definitions/common/positive_duration_value" }
 							}
 						},
 						{
@@ -1864,7 +1924,7 @@
 									"description": "The minimum duration. The default value is `0`."
 								},
 								"max": {
-									"$ref": "#/definitions/common/duration_value",
+									"$ref": "#/definitions/common/positive_duration_value",
 									"description": "The maximum duration. Must be greater than or equal to `min`."
 								}
 							}
@@ -1935,7 +1995,10 @@
 						"name": { "$ref": "#/definitions/common/name" },
 						"description": { "$ref": "#/definitions/common/text" },
 						"count": {
-							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"anyOf": [
+								{ "type": "string", "pattern": "^(\\$\\{\\w+\\}|[1-9]\\d{0,9})$" },
+								{ "$ref": "#/definitions/common/user_count" }
+							],
 							"description": "The number of times to execute"
 						},
 						"steps": { "$ref": "#/definitions/user_paths/steps" }
@@ -2062,7 +2125,7 @@
 							"default": "any"
 						},
 						"timeout": {
-							"$ref": "#/definitions/common/duration_value",
+							"$ref": "#/definitions/common/positive_duration_value",
 							"description": "The maximum time to wait for the conditions to be verified. The default value is `1m` (60000 ms)."
 						}
 					},
@@ -2585,7 +2648,7 @@
 			"size_assertion_bound": {
 				"title": "Size Assertion Bound",
 				"type": "integer",
-				"minimum": 0
+				"minimum": 1
 			},
 			"duration_assertion": {
 				"title": "Duration Assertion",
@@ -2594,7 +2657,7 @@
 				"properties": {
 					"less_than": {
 						"type": "integer",
-						"minimum": 0,
+						"minimum": 1,
 						"description": "The maximum allowed duration, in milliseconds."
 					}
 				},

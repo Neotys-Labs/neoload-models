@@ -12,6 +12,7 @@ import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.time.Duration;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.gson.Gson;
 import org.immutables.value.Value;
@@ -32,9 +33,8 @@ public interface RampupLoadPolicy extends LoadPolicy {
 	String INCREMENT_EVERY = "increment_every";
 	String INCREMENT_RAMPUP = "increment_rampup";
 
-	@PositiveCheck(unit="user", groups={NeoLoad.class})
 	@JsonProperty(MIN_USERS)
-	int getMinUsers();
+	Optional<@PositiveCheck(unit="user", groups={NeoLoad.class}) Integer> getMinUsers();
 	@PositiveCheck(unit="user", groups={NeoLoad.class})
 	@JsonProperty(MAX_USERS)
 	Integer getMaxUsers();

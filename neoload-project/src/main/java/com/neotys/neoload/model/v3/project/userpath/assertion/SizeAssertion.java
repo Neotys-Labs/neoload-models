@@ -1,12 +1,5 @@
 package com.neotys.neoload.model.v3.project.userpath.assertion;
 
-import java.util.Optional;
-
-import javax.validation.constraints.PositiveOrZero;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,6 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.validation.constraints.ValidSizeAssertionCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.Optional;
+import javax.validation.constraints.Positive;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 /**
  * Response size constraint in bytes, mirroring the designer's "Content length" panel:
@@ -34,13 +31,13 @@ public interface SizeAssertion {
 	String LESS_THAN = "less_than";
 
 	@JsonProperty(EQUALS_PROPERTY)
-	Optional<@PositiveOrZero(groups = {NeoLoad.class}) Long> getEquals();
+	Optional<@Positive(groups = {NeoLoad.class}) Long> getEquals();
 
 	@JsonProperty(GREATER_THAN)
-	Optional<@PositiveOrZero(groups = {NeoLoad.class}) Long> getGreaterThan();
+	Optional<@Positive(groups = {NeoLoad.class}) Long> getGreaterThan();
 
 	@JsonProperty(LESS_THAN)
-	Optional<@PositiveOrZero(groups = {NeoLoad.class}) Long> getLessThan();
+	Optional<@Positive(groups = {NeoLoad.class}) Long> getLessThan();
 
 	class Builder extends ImmutableSizeAssertion.Builder {}
 	static Builder builder() {
