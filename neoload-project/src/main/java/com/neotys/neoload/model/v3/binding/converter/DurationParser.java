@@ -11,8 +11,18 @@ import java.util.regex.Pattern;
  * {@code 0}. Whether a field accepts a milliseconds part is checked by validation, not here.
  */
 public final class DurationParser {
-	private static final Pattern PLAIN_NUMBER = Pattern.compile("\\d+");
-	private static final Pattern UNITS = Pattern.compile("(?=\\d)(?:(\\d+)h\\s*)?(?:(\\d+)m\\s*)?(?:(\\d+)s\\s*)?(?:(\\d+)ms)?");
+	public static final String PLAIN_NUMBER_GRAMMAR = "\\d+";
+	/** Ordered units {@code h m s ms}: what Java parses for every duration field. */
+	public static final String MILLISECOND_GRAMMAR = "(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s\\s*)?(\\d+ms)?";
+	/**
+	 * Ordered units {@code h m s}: the Java reference of the {@code duration_seconds} pattern of the JSON schema. Java
+	 * still parses second fields with {@link #MILLISECOND_GRAMMAR}; {@code WholeSecondsCheck} rejects the ms part.
+	 */
+	public static final String SECOND_GRAMMAR = "(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?";
+
+	private static final Pattern PLAIN_NUMBER = Pattern.compile(PLAIN_NUMBER_GRAMMAR);
+	private static final Pattern UNITS = Pattern.compile(MILLISECOND_GRAMMAR);
+	private static final Pattern NON_DIGITS = Pattern.compile("\\D");
 
 	private DurationParser() {
 	}
@@ -43,8 +53,8 @@ public final class DurationParser {
 	}
 
 	private static long amount(final Matcher matcher, final int group) {
-		final String digits = matcher.group(group);
-		return digits == null ? 0 : Long.parseLong(digits);
+		final String part = matcher.group(group);
+		return part == null ? 0 : Long.parseLong(NON_DIGITS.matcher(part).replaceAll(""));
 	}
 
 	public static String format(final Duration duration) {
