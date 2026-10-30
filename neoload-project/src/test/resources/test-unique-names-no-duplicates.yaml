@@ -1,0 +1,15 @@
+name: MyProject
+variables:
+- constant:
+    name: a
+    value: a
+- constant:
+    name: b
+    value: a
+web_services_security:
+  keystores:
+  - path: ./wss-keystores/a.p12
+  - path: ./wss-keystores/b.p12
+  request_profiles:
+  - name: r1
+  - name: r2

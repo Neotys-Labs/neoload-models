@@ -1,23 +1,20 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
-import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.project.security.WsKeystore;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueWsKeystorePathCheck;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public final class UniqueWsKeystorePathValidator extends AbstractConstraintValidator<UniqueWsKeystorePathCheck, List<WsKeystore>> {
+public final class UniqueWsKeystorePathValidator extends AbstractUniqueKeyValidator<WsKeystore>
+		implements ConstraintValidator<UniqueWsKeystorePathCheck, List<? extends WsKeystore>> {
 	@Override
-	public boolean isValid(final List<WsKeystore> keystores, final ConstraintValidatorContext context) {
-		if (keystores == null) {
-			return true;
-		}
-		final Set<String> paths = new HashSet<>();
-		return keystores.stream()
-				.map(WsKeystore::getPath)
-				.filter(path -> !Strings.isNullOrEmpty(path))
-				.allMatch(paths::add);
+	public boolean isValid(final List<? extends WsKeystore> items, final ConstraintValidatorContext context) {
+		return hasUniqueKeys(items, context);
+	}
+
+	@Override
+	String key(final WsKeystore item) {
+		return item.getPath();
 	}
 }

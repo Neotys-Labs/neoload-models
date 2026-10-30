@@ -1,0 +1,5 @@
+name: MyProject
+web_services_security:
+  request_profiles:
+  - name: dup
+  - name: dup

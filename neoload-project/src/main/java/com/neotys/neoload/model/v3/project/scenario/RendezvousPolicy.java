@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.serializer.JavaDurationDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.JavaDurationSerializer;
+import com.neotys.neoload.model.v3.project.UniqueNameEntity;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.WholeSecondsCheck;
@@ -25,7 +26,7 @@ import org.immutables.value.Value;
 // property value (not another filter instance), which is how the CUSTOM value filter selects the default
 // value to omit; a real class check would always be false and defeat the omission.
 @SuppressWarnings("java:S2097")
-public interface RendezvousPolicy {
+public interface RendezvousPolicy extends UniqueNameEntity {
 
 	String TIMEOUT = "timeout";
 	String NAME = "name";

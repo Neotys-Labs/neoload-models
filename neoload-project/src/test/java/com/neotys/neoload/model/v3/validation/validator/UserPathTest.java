@@ -71,7 +71,7 @@ public class UserPathTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_ASSERTIONS_NAMES = sb.toString();
 	}
 	
@@ -79,7 +79,7 @@ public class UserPathTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'init.content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'init.content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_INIT_ASSERTIONS_NAMES = sb.toString();
 	}
 
@@ -87,7 +87,7 @@ public class UserPathTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'actions.content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'actions.content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_ACTIONS_ASSERTIONS_NAMES = sb.toString();
 	}
 
@@ -95,7 +95,7 @@ public class UserPathTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'end.content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'end.content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		CONSTRAINTS_USER_PATH_END_ASSERTIONS_NAMES = sb.toString();
 	}
 	
@@ -137,16 +137,16 @@ public class UserPathTest {
 		sb.append("Data Model is invalid. Violation Number: 15.").append(LINE_SEPARATOR);
 		sb.append("Violation 1 - Incorrect value for 'user_paths[0].actions': missing value or value is empty.").append(LINE_SEPARATOR);
 		sb.append("Violation 2 - Incorrect value for 'user_paths[0].name': missing value or value is empty.").append(LINE_SEPARATOR);
-		sb.append("Violation 3 - Incorrect value for 'user_paths[1].actions.content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 3 - Incorrect value for 'user_paths[1].actions.content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		sb.append("Violation 4 - Incorrect value for 'user_paths[1].actions.content_assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
 		sb.append("Violation 5 - Incorrect value for 'user_paths[1].actions.content_assertions[1]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
-		sb.append("Violation 6 - Incorrect value for 'user_paths[1].content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 6 - Incorrect value for 'user_paths[1].content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		sb.append("Violation 7 - Incorrect value for 'user_paths[1].content_assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
 		sb.append("Violation 8 - Incorrect value for 'user_paths[1].content_assertions[1]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
-		sb.append("Violation 9 - Incorrect value for 'user_paths[1].end.content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 9 - Incorrect value for 'user_paths[1].end.content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		sb.append("Violation 10 - Incorrect value for 'user_paths[1].end.content_assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
 		sb.append("Violation 11 - Incorrect value for 'user_paths[1].end.content_assertions[1]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
-		sb.append("Violation 12 - Incorrect value for 'user_paths[1].init.content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 12 - Incorrect value for 'user_paths[1].init.content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		sb.append("Violation 13 - Incorrect value for 'user_paths[1].init.content_assertions[0]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
 		sb.append("Violation 14 - Incorrect value for 'user_paths[1].init.content_assertions[1]': invalid attributes usage (xpath, jsonpath or contains must be specified).").append(LINE_SEPARATOR);
 		sb.append("Violation 15 - Incorrect value for 'user_paths[1].name': missing value or value is empty.").append(LINE_SEPARATOR);
