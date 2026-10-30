@@ -377,7 +377,10 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "constant_variable", "value": 12345}
+				]
 			},
 			"file": {
 				"title": "File",
@@ -430,7 +433,11 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "products", "path": "data/list_of_products.csv"},
+					{"name": "cities_file", "column_names": ["City", "Country", "Population", "Longitude", "Latitude"], "is_first_line_column_names": false, "start_from_line": 1, "delimiter": ";", "path": "data/list_of_cities.csv", "change_policy": "each_iteration", "scope": "global", "order": "any", "out_of_value": "cycle"}
+				]
 			},
 			"counter": {
 				"title": "Counter",
@@ -467,7 +474,10 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "counter_variable", "start": 0, "end": 100, "increment": 2, "change_policy": "each_iteration", "scope": "local", "out_of_value": "cycle"}
+				]
 			},
 			"random_number": {
 				"title": "Random Number",
@@ -496,7 +506,10 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "random_number_variable", "min": 0, "max": 999, "predictable": false, "change_policy": "each_request"}
+				]
 			},
 			"random_string": {
 				"title": "Random String",
@@ -525,7 +538,11 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "random_string_variable", "min_length": 5, "max_length": 10, "predictable": false, "change_policy": "each_use"},
+					{"name": "random_string_variable", "description": "MyRandomStringDescription", "min_length": 10, "max_length": 20, "predictable": true, "change_policy": "each_use"}
+				]
 			},
 			"password": {
 				"title": "Password",
@@ -542,7 +559,11 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "password_variable", "value": "s3cr3t"},
+					{"name": "password_variable", "description": "MyPasswordDescription", "value": "s3cr3t"}
+				]
 			},
 			"date": {
 				"title": "Date",
@@ -577,7 +598,11 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "date_variable", "start_date": "01/01/2024 00:00:00"},
+					{"name": "date_variable", "description": "5 days before the new year, once per iteration", "pattern": "yyyy-MM-dd'T'HH:mm:ss", "start_date": "2024-01-01 00:00:00", "change_step": "-5d", "change_policy": "each_iteration", "scope": "global"}
+				]
 			},
 			"list": {
 				"title": "List",
@@ -624,7 +649,10 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "cities_list", "column_names": ["City", "Country"], "values": [["Paris", "France"], ["London", "UK"]], "start_from_line": 1, "change_policy": "each_iteration", "scope": "global", "order": "any", "out_of_value": "cycle"}
+				]
 			},
 			"sql": {
 				"title": "SQL",
@@ -678,7 +706,10 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "sql_variable", "driver": "com.mysql.jdbc.Driver", "url": "jdbc:mysql://localhost:3306/mydb", "login": "login_admin", "password": "password_admin", "query": "SELECT username, email FROM users", "column_names": ["username", "email"], "change_policy": "each_iteration", "scope": "global", "order": "any", "out_of_value": "cycle"}
+				]
 			},
 			"javascript": {
 				"title": "Javascript",
@@ -700,7 +731,11 @@
 					}
 				],
 				"unevaluatedProperties": false,
-				"description": "Execution of a Javascript script."
+				"description": "Execution of a Javascript script.",
+				"examples": [
+					{"name": "My Javascript", "description": "My description", "script": "// Get variable value from VariableManager\nvar myVar = context.variableManager.getValue(\"CounterVariable_1\");\nlogger.debug(\"ComputedValue=\"+myVar);\n"},
+					{"name": "My JSVar", "description": "This is a js var", "script": "function evaluate() {\n\tlogger.debug(\"Computing value of js variable\");\n\treturn new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField = myLibraryFunction();\n\t};\n}", "change_policy": "each_iteration"}
+				]
 			},
 			"random_uuid": {
 				"title": "Random UUID",
@@ -726,7 +761,11 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "random_uuid_variable", "upper_case": false, "predictable": false, "change_policy": "each_use"},
+					{"name": "random_uuid_variable", "description": "MyRandomUUIDDescription", "upper_case": true, "predictable": true, "change_policy": "each_use"}
+				]
 			},
 			"shared_queue": {
 				"title": "Shared Queue",
@@ -776,7 +815,10 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "MySharedQueue", "description": "MySharedQueueDescription", "queue_size": 5000, "consumer_timeout": 2000, "swap_file": {"path": "data/my_queue.csv", "delimiter": ",", "load_from_file": true, "save_to_file": false}}
+				]
 			},
 			"current_date": {
 				"title": "Current Date",
@@ -798,7 +840,11 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "current_date_variable"},
+					{"name": "current_date_variable", "description": "now plus 5 minutes", "pattern": "yyyy-MM-dd'T'HH:mm:ss", "offset": "5m"}
+				]
 			},
 			"secret_vault": {
 				"title": "Secret Vault",
@@ -819,7 +865,10 @@
 						}
 					}
 				],
-				"unevaluatedProperties": false
+				"unevaluatedProperties": false,
+				"examples": [
+					{"name": "db_password", "provider_id": "665f1a2b3c4d5e6f7a8b9c0d", "secret_id": "my-app/db"}
+				]
 			},
 			"description": "Definitions of the variable types that can be declared under `variables`."
 		},
@@ -1274,7 +1323,10 @@
 					"errors-count fail >= 10 per test"
 ]
 			},
-			"description": "An SLA profile: a named set of thresholds applied to a test, scenario, transaction or web page."
+			"description": "An SLA profile: a named set of thresholds applied to a test, scenario, transaction or web page.",
+			"examples": [
+				{"name": "MySlaProfile", "thresholds": ["avg-request-resp-time warn >= 200ms fail >= 500ms per test", "perc-transaction-resp-time (p90) warn >= 1s fail >= 2s per test", "error-rate warn >= 2% fail >= 5% per test", "error-rate warn >= 5% per interval"]}
+			]
 		},
 		"populations": {
 			"population": {
@@ -1319,7 +1371,11 @@
 						},
 						"description": "The list of User Path distributions"
 					}
-				}
+				},
+				"examples": [
+					{"name": "population1", "user_paths": [{"name": "user_path_1"}]},
+					{"name": "population1", "user_paths": [{"name": "user_path_1", "distribution": "33.3%"}, {"name": "user_path_2", "distribution": "66.7%"}]}
+				]
 			},
 			"constant_load": {
 				"title": "Constant Load",
@@ -1643,7 +1699,11 @@
 				},
 				"additionalProperties": false
 			},
-			"description": "Definitions of a scenario and of the settings it groups: monitoring, rendezvous policies and Dynatrace anomaly rules."
+			"description": "Definitions of a scenario and of the settings it groups: monitoring, rendezvous policies and Dynatrace anomaly rules.",
+			"examples": [
+				{"name": "MyScenario", "populations": [{"name": "MyPopulation", "constant_load": {"users": 500}}]},
+				{"name": "MyScenario", "description": "My scenario with 1 SLA profile and 1 population", "sla_profile": "MySlaProfile", "store_variables_for_raw_data": true, "monitoring": {"before": "30s", "after": "1m30s"}, "populations": [{"name": "MyPopulation", "constant_load": {"users": 500, "duration": "5m"}}], "rendezvous_policies": [{"name": "rendezvous", "when": "50%", "timeout": "50s"}], "apm_configuration": {"dynatrace_tags": ["myDynatraceTag"]}, "excluded_urls": [".*\\.jpg", ".*\\.jpeg", ".*\\.gif", ".*\\.png"]}
+			]
 		},
 		"user_paths": {
 			"user_path": {
@@ -2000,7 +2060,11 @@
 					},
 					"not": { "required": ["assertions", "content_assertions"] },
 					"additionalProperties": false,
-					"description": "The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics."
+					"description": "The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics.",
+					"examples": [
+						{"name": "Login", "steps": [{"request": {"url": "https://www.tricentis.com/login"}}]},
+						{"name": "SendChat", "steps": [{"websocket_request": {"channel": "shared_elements>OpenChat>chat_socket", "body": "hello"}}]}
+					]
 				},
 				"request": {
 					"title": "Action: HTTP/s Request",
@@ -2082,7 +2146,11 @@
 						{ "not": { "required": ["bodybinary", "binary_source_file"] } },
 						{ "$ref": "#/definitions/user_paths/actions/http_based_request" }
 					],
-					"description": "A request defines a plain HTTP request."
+					"description": "A request defines a plain HTTP request.",
+					"examples": [
+						{"url": "/login"},
+						{"url": "https://petstore.swagger.io/v2/pet", "method": "POST", "headers": [{"accept": "application/json"}, {"Content-Type": "application/json"}], "body": "{\n  \"id\": 0,\n  \"category\": {\n    \"id\": ${var_category_id},\n    \"name\": \"${var_category_name}\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"${var_status}\"\n}  \n"}
+					]
 				},
 				"soap_request": {
 					"title": "Action: SOAP Request",
@@ -2160,6 +2228,10 @@
 					"allOf": [
 						{ "not": { "required": ["assertions", "content_assertions"] } },
 						{ "$ref": "#/definitions/user_paths/actions/http_based_request" }
+					],
+					"examples": [
+						{"url": "http://petstore.swagger.io:80/", "content": {"path": "./requests/mySOAPRequest.xml"}},
+						{"url": "http://petstore.swagger.io:80/", "content": {"path": "./requests/mySOAPRequest.xml"}, "sla_profile": "MySlaProfile", "content_assertions": [{"contains": "Success"}], "duration_assertion": {"less_than": 2048}, "size_assertion": {"less_than": 4096}}
 					]
 				},
 				"http_based_request": {
@@ -2235,7 +2307,11 @@
 							"unevaluatedProperties": false
 						}
 					],
-					"description": "The `delay` and `think_time` actions: a `duration`, optionally named and described when written as an object."
+					"description": "The `delay` and `think_time` actions: a `duration`, optionally named and described when written as an object.",
+					"examples": [
+						"1s",
+						{"name": "MyRandomThinkTime", "description": "Random reflection", "min": "1s", "max": "3s"}
+					]
 				},
 				"duration": {
 					"title": "Duration",
@@ -2296,7 +2372,10 @@
 							"description": "The Javascript script"
 						}
 					},
-					"description": "Execution of a Javascript script."
+					"description": "Execution of a Javascript script.",
+					"examples": [
+						{"name": "My Javascript", "description": "My description", "script": "// Get variable value from VariableManager\nvar myVar = context.variableManager.getValue(\"CounterVariable_1\");\nlogger.debug(\"ComputedValue=\"+myVar);\n"}
+					]
 				},
 				"if": {
 					"title": "Action: If",
@@ -2331,7 +2410,10 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "A conditional structure \"If - Then - Else\". If the conditions are true, the Then container is executed, otherwise, the Else container is executed."
+					"description": "A conditional structure \"If - Then - Else\". If the conditions are true, the Then container is executed, otherwise, the Else container is executed.",
+					"examples": [
+						{"name": "has_notifications", "conditions": ["'${notifications}' == 'on'"], "then": {"steps": [{"websocket_channel": {"name": "notify_socket", "url": "https://host:443/notify"}}, {"websocket_request": {"channel": "actions>has_notifications>then>notify_socket", "body": "subscribe"}}]}}
+					]
 				},
 				"while": {
 					"title": "Action: While",
@@ -2362,7 +2444,10 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "A repetition structure \"While - do\". The steps contained in the structure are executed in sequence until the condition is not verified any more."
+					"description": "A repetition structure \"While - do\". The steps contained in the structure are executed in sequence until the condition is not verified any more.",
+					"examples": [
+						{"name": "My While", "description": "My description", "conditions": ["'${variable1}' equals 'value'", "'variable6' exists"], "match": "all", "steps": [{"request": {"url": "https://www.tricentis.com/"}}]}
+					]
 				},
 				"loop": {
 					"title": "Action: Loop",
@@ -2387,7 +2472,10 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "A repetition structure which executes steps sequentially a specific number of times."
+					"description": "A repetition structure which executes steps sequentially a specific number of times.",
+					"examples": [
+						{"name": "RetryLogin", "count": 3, "steps": [{"shared_element": "Login"}]}
+					]
 				},
 				"switch": {
 					"title": "Action: Switch",
@@ -2417,7 +2505,10 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "The Switch action is used to execute conditional actions based on a selection control mechanism. It allows the Switch value to change the control flow of the User Path execution via a multiway branch, named Case statements. The Switch action is fall-through, which means that if a Break flag is disabled on a Case, then the next Case statement is executed."
+					"description": "The Switch action is used to execute conditional actions based on a selection control mechanism. It allows the Switch value to change the control flow of the User Path execution via a multiway branch, named Case statements. The Switch action is fall-through, which means that if a Break flag is disabled on a Case, then the next Case statement is executed.",
+					"examples": [
+						{"name": "MySwitch", "value": "${pageNumber}", "case": [{"value": "0", "break": true, "steps": [{"request": {"url": "http://${var_host}:${var_port}/page0"}}, {"delay": "3ms"}]}, {"value": "1", "steps": [{"request": {"url": "http://${var_host}:${var_port}/page1"}}, {"delay": "6ms"}]}], "default": {"steps": [{"delay": "100ms"}]}}
+					]
 				},
 				"custom_action": {
 					"title": "Action: Custom Action",
@@ -2460,7 +2551,11 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "Custom action can be an Advanced Action, a SAP GUI Action, a Citrix Action, a RealBrowser Action or an RTE Action. A Custom Advanced action can also be developed using Java."
+					"description": "Custom action can be an Advanced Action, a SAP GUI Action, a Citrix Action, a RealBrowser Action or an RTE Action. A Custom Advanced action can also be developed using Java.",
+					"examples": [
+						{"name": "sql action", "type": "SQL", "duration_assertion": {"less_than": 500}},
+						{"name": "sql action", "type": "SQL", "parameters": [{"name": "connectionURL", "value": "jdbc:mysql://localhost:3306/"}, {"name": "connection.user", "value": "admin"}, {"name": "connection.password", "value": "myPassword", "type": "PASSWORD"}, {"name": "type", "value": "QUERY"}, {"name": "sqlStatement", "value": "select * from table"}]}
+					]
 				},
 				"rendezvous": {
 					"title": "Action: Rendezvous",
@@ -2476,12 +2571,19 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "A Rendezvous point synchronizes Virtual Users at a common meeting point so they carry out tasks simultaneously, creating an intense load on the server at a specific point in the application."
+					"description": "A Rendezvous point synchronizes Virtual Users at a common meeting point so they carry out tasks simultaneously, creating an intense load on the server at a specific point in the application.",
+					"examples": [
+						{"name": "BeforeCheckout"},
+						{"name": "MyRendezVous", "description": "Synchronize users before hitting the account-balance endpoint"}
+					]
 				},
 				"go_to_next_iteration": {
 					"title": "Action: Go to next iteration",
 					"type": "string",
-					"enum": ["go_to_next_iteration"]
+					"enum": ["go_to_next_iteration"],
+					"examples": [
+						"go_to_next_iteration"
+					]
 				},
 				"stop_vu": {
 					"title": "Action: Stop Virtual User",
@@ -2494,7 +2596,10 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "The Stop Virtual User action stops the current virtual user. By default, a new virtual user is started to replace the one that has been stopped, so that the number of running virtual users remains stable. Set `start_new_vu` to `false` to stop the current virtual user without starting a replacement."
+					"description": "The Stop Virtual User action stops the current virtual user. By default, a new virtual user is started to replace the one that has been stopped, so that the number of running virtual users remains stable. Set `start_new_vu` to `false` to stop the current virtual user without starting a replacement.",
+					"examples": [
+						{"start_new_vu": false}
+					]
 				},
 				"fork": {
 					"title": "Action: Fork",
@@ -2520,7 +2625,10 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "The Fork action is used to play actions in a different execution thread to the current one. This execution thread is parallel to the main chain used by the Virtual User. When the current iteration of the Virtual User stops, all the threads created using Fork actions in the Actions Container are immediately halted."
+					"description": "The Fork action is used to play actions in a different execution thread to the current one. This execution thread is parallel to the main chain used by the Virtual User. When the current iteration of the Virtual User stops, all the threads created using Fork actions in the Actions Container are immediately halted.",
+					"examples": [
+						{"name": "My Fork", "description": "My description", "copy_variables": true, "steps": [{"request": {"url": "https://www.tricentis.com/"}}]}
+					]
 				},
 				"wait_until": {
 					"title": "Action: Wait Until",
@@ -2551,7 +2659,10 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "The Wait Until action pauses the current execution thread until certain conditions have been verified. You may also set a maximum timeout delay: once this delay is timed out, the thread is restarted and the following action is executed, even if the conditions have not been verified."
+					"description": "The Wait Until action pauses the current execution thread until certain conditions have been verified. You may also set a maximum timeout delay: once this delay is timed out, the thread is restarted and the following action is executed, even if the conditions have not been verified.",
+					"examples": [
+						{"name": "My Wait Until", "description": "My description", "conditions": ["'${variable1}' equals 'value'", "'${variable2}' equals '2'", "'${variable3}' == 'string with space'", "'${variable4}' != stringwithoutspace", "'variable5' not_exists", "'variable6' exists", "'${variable7}' == ''", "'${status_code}' == '200'"], "match": "all", "timeout": "30s"}
+					]
 				},
 				"variable_modifier": {
 					"title": "Action: Variable Modifier",
@@ -2588,7 +2699,11 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "A Variable Modifier action makes it possible to change the value of a variable separately from its value changing policy. For example, the value of a variable may be modified in a loop for a User Path."
+					"description": "A Variable Modifier action makes it possible to change the value of a variable separately from its value changing policy. For example, the value of a variable may be modified in a loop for a User Path.",
+					"examples": [
+						{"variable_name": "MyVariableToModify"},
+						{"name": "MyVariableModifier", "description": "MyVariableModifierDescription", "category": "predefined", "mode": "init_value", "variable_name": "MyVariableToModify"}
+					]
 				},
 				"debug_logger": {
 					"title": "Action: Debug Logger",
@@ -2605,7 +2720,10 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "The Debug Logger Action writes a text entry to a log file, for debugging purposes."
+					"description": "The Debug Logger Action writes a text entry to a log file, for debugging purposes.",
+					"examples": [
+						{"text": "Current user: ${user_id}", "file": "logs/custom.txt"}
+					]
 				},
 				"try_catch": {
 					"title": "Action: Try Catch",
@@ -2635,7 +2753,10 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "A logical action that executes a Try container and, if one of the caught exception types occurs while running it, executes the Catch container."
+					"description": "A logical action that executes a Try container and, if one of the caught exception types occurs while running it, executes the Catch container.",
+					"examples": [
+						{"name": "My Try Catch", "description": "My description", "caught_exceptions": "all", "try": {"steps": [{"request": {"url": "https://www.tricentis.com/"}}, {"request": {"url": "https://www.tricentis.com/neoload"}}]}, "catch": {"steps": [{"delay": "1s"}]}}
+					]
 				},
 				"web_page": {
 					"title": "Action: Web Page",
@@ -2674,7 +2795,11 @@
 						}
 					},
 					"additionalProperties": false,
-					"description": "The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back."
+					"description": "The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back.",
+					"examples": [
+						{"steps": [{"request": {"url": "http://host:80/resource"}}]},
+						{"name": "MyWebPage", "description": "My First web page", "sla_profile": "MySlaProfile", "think_time": {"value": "2s"}, "playback": "sequential", "execute_resources": "dynamic", "steps": [{"request": {"url": "http://host:80/"}}, {"web_page": {"steps": [{"request": {"url": "http://host:80/resource"}}]}}]}
+					]
 				},
 				"websocket_channel": {
 					"title": "Action: WebSocket Channel",
@@ -2740,7 +2865,11 @@
 							"items": { "$ref": "#/definitions/user_paths/websocket_push_message" }
 						}
 					},
-					"not": { "required": ["assertions", "content_assertions"] }
+					"not": { "required": ["assertions", "content_assertions"] },
+					"examples": [
+						{"name": "chat_socket", "url": "https://host:443/chat"},
+						{"name": "chat_socket", "url": "https://host:443/chat", "push_messages": [{"name": "on_ping", "conditions": ["'${NL-MessageContent}' contains 'ping'"], "steps": [{"websocket_request": {"channel": "actions>chat_socket", "body": "pong"}}]}, {"name": "on_redirect", "conditions": ["'${NL-MessageContent}' contains 'redirect'"], "steps": [{"websocket_channel": {"name": "room_socket", "url": "https://host:443/room"}}]}]}
+					]
 				},
 				"websocket_request": {
 					"title": "Action: WebSocket Request",
@@ -2846,6 +2975,10 @@
 								"description": "The close status code, only for a `close`. Defaults to `1000` (normal closure)"
 							} } }
 						}
+					],
+					"examples": [
+						{"channel": "actions>MyChannel", "body": "pong"},
+						{"name": "SendHello", "channel": "actions>MyChannel", "synchronous": true, "mapping_id": "${correlation_id}", "body": "{\"op\":\"hello\",\"correlationId\":\"${correlation_id}\"}", "content_assertions": [{"contains": "welcome"}]}
 					]
 				}
 			},
