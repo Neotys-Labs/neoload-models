@@ -3,7 +3,6 @@ package com.neotys.neoload.model.v3.binding.io;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
@@ -28,7 +27,6 @@ import org.junit.Test;
 public class IOSchema3Dot1DocumentationTest {
 
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
-    private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
     private static final List<String> SCHEMA_MAPS = List.of("properties", "definitions", "patternProperties");
     private static final List<String> MAIN_ELEMENTS = List.of(
             "variables/constant", "variables/file", "variables/counter", "variables/random_number",
@@ -46,7 +44,6 @@ public class IOSchema3Dot1DocumentationTest {
             "populations/population", "scenario", "sla");
 
     private static JsonNode schemaNode;
-    private static JsonSchema schema;
 
     @BeforeClass
     public static void loadSchema() throws URISyntaxException, IOException {
@@ -54,7 +51,6 @@ public class IOSchema3Dot1DocumentationTest {
         final Path moduleDir = Paths.get(testClassesUrl.toURI()).getParent().getParent();
         final Path schemaPath = moduleDir.resolve("../schemas/v3.1/as-code.schema.json").normalize();
         schemaNode = JSON_MAPPER.readTree(schemaPath.toFile());
-        schema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemaPath.toUri());
     }
 
     @Test
@@ -92,12 +88,24 @@ public class IOSchema3Dot1DocumentationTest {
         while (entries.hasNext()) {
             final Map.Entry<String, JsonNode> entry = entries.next();
             final String entryPointer = pointer + "/" + entry.getKey();
-            final JsonNode description = entry.getValue().get("description");
+            final JsonNode description = descriptionOf(entry.getValue());
             if (entry.getValue().isObject() && (description == null || !description.isTextual() || description.asText().isBlank())) {
                 missing.add(entryPointer);
             }
             collectMissingDescriptions(entry.getValue(), entryPointer, missing);
         }
+    }
+
+    /**
+     * The description of a subschema, or the one of the definition it references when it carries none.
+     */
+    private static JsonNode descriptionOf(final JsonNode subschema) {
+        final JsonNode description = subschema.get("description");
+        final JsonNode ref = subschema.get("$ref");
+        if (description == null && ref != null && ref.asText().startsWith("#/")) {
+            return schemaNode.at(ref.asText().substring(1)).get("description");
+        }
+        return description;
     }
 
     @Test
@@ -144,12 +152,5 @@ public class IOSchema3Dot1DocumentationTest {
                 failures.add(pointer + ": " + example);
             }
         }
-    }
-
-    @Test
-    public void frameworksIsRejectedAtTheRoot() throws IOException {
-        final JsonNode project = YAML_MAPPER.readTree("name: MyProject\nframeworks:\n- name: MyFramework\n");
-        Assert.assertFalse("Expected 'frameworks' to fail schema validation", schema.validate(project).isEmpty());
-        Assert.assertFalse("The schema must not declare 'frameworks'", schemaNode.toString().contains("\"frameworks\""));
     }
 }

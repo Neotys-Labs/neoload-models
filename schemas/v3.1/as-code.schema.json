@@ -102,8 +102,7 @@
 						"description": "A queue shared between virtual users, usable as a producer/consumer channel, with optional persistence to a file."
 					},
 					"javascript": {
-						"$ref": "#/definitions/variables/javascript",
-						"description": "Execution of a Javascript script."
+						"$ref": "#/definitions/variables/javascript"
 					},
 					"secret_vault": {
 						"$ref": "#/definitions/variables/secret_vault",
@@ -265,10 +264,12 @@
 			},
 			"stop_after_options": {
 				"title": "variation_policy.stop_after values",
+				"description": "Define how the population is stopped: the population immediately stops the execution of the current iteration, give a preset delay to finish the current iteration or allow the population to end the current iteration for each Virtual User.",
 				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "type": "string", "enum": ["current_iteration"] }]
 			},
 			"start_after_options": {
 				"title": "Start after",
+				"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population.",
 				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "$ref": "#/definitions/common/text" }]
 			},
 			"time": {
@@ -282,6 +283,7 @@
 				"pattern": "^(\\d+ iterations?)$"
 			},
 			"conditions": {
+				"description": "The list of conditions to evaluate",
 				"title": "Conditions list",
 				"type": "array",
 				"items": {
@@ -317,33 +319,61 @@
 				"type": "string",
 				"pattern": "^[^<>\"|?*\\x00-\\x1F]*$"
 			},
+			"conditions_match": {
+				"type": "string",
+				"enum": ["any", "all"],
+				"default": "any",
+				"description": "How the conditions are combined: `any` or `all`. The default value is `any`."
+			},
+			"var_predictable": {
+				"type": "boolean",
+				"default": false,
+				"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
+			},
+			"var_column_names": {
+				"type": "array",
+				"items": { "type": "string" },
+				"description": "The list of column names. Use `${<variableName>.<columnName>}` to access variable values."
+			},
+			"var_date_pattern": {
+				"$ref": "#/definitions/common/text",
+				"default": "dd/MM/yyyy HH:mm:ss",
+				"description": "The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`."
+			},
 			"var_change_policy": {
+				"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable.",
 				"type": "string",
 				"default": "each_iteration",
 				"enum": ["each_use", "each_request", "each_page", "each_iteration", "each_user"]
 			},
 			"var_scope": {
+				"description": "The value scope. Accepted values: `local`, `global`, `unique`. The default value is `global`. Does not accept a variable.",
 				"type": "string",
 				"default": "global",
 				"enum": ["local", "global", "unique"]
 			},
 			"var_order": {
+				"description": "The order in which the values are distributed. Accepted values: `sequential`, `random`, `any`. The default value is `any`. Does not accept a variable.",
 				"type": "string",
 				"default": "any",
 				"enum": ["sequential", "random", "any"]
 			},
 			"var_out_of_value": {
+				"description": "Policy applied when no values are left.",
 				"type": "string",
 				"default": "cycle",
 				"enum": ["cycle", "stop_test", "no_value_code"]
 			},
 			"assertions": {
 				"type": "array",
-				"items": { "$ref": "#/definitions/user_paths/content_assertion" }
+				"items": { "$ref": "#/definitions/user_paths/content_assertion" },
+				"deprecated": true,
+				"description": "Deprecated alias of `content_assertions`, read-only. Use `content_assertions` instead."
 			},
 			"content_assertions": {
 				"type": "array",
-				"items": { "$ref": "#/definitions/user_paths/content_assertion" }
+				"items": { "$ref": "#/definitions/user_paths/content_assertion" },
+				"description": "The list of assertions to validate the response content."
 			},
 			"description": "Definitions shared by the other parts of the schema: scalar types, names, durations, conditions and assertions."
 		},
@@ -391,9 +421,7 @@
 					{
 						"properties": {
 							"column_names": {
-								"type": "array",
-								"items": [{ "type": "string" }],
-								"description": "The list of column names. Use `${<variableName>.<columnName>}` to access variable values."
+								"$ref": "#/definitions/common/var_column_names"
 							},
 							"is_first_line_column_names": {
 								"type": "boolean",
@@ -415,28 +443,24 @@
 								"description": "The path of the source file, relative to the project folder. The file must be inside the project folder."
 							},
 							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope. Accepted values: `local`, `global`, `unique`. The default value is `global`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_scope"
 							},
 							"order": {
-								"$ref": "#/definitions/common/var_order",
-								"description": "The order in which the values are distributed. Accepted values: `sequential`, `random`, `any`. The default value is `any`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_order"
 							},
 							"out_of_value": {
-								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "Policy applied when no values are left."
+								"$ref": "#/definitions/common/var_out_of_value"
 							},
 							"change_policy": {
-								"$ref": "#/definitions/common/var_change_policy",
-								"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_change_policy"
 							}
 						}
 					}
 				],
 				"unevaluatedProperties": false,
 				"examples": [
-					{"name": "products", "path": "data/list_of_products.csv"},
-					{"name": "cities_file", "column_names": ["City", "Country", "Population", "Longitude", "Latitude"], "is_first_line_column_names": false, "start_from_line": 1, "delimiter": ";", "path": "data/list_of_cities.csv", "change_policy": "each_iteration", "scope": "global", "order": "any", "out_of_value": "cycle"}
+					{"name": "products", "column_names": ["Product", "Price"], "path": "data/list_of_products.csv"},
+					{"name": "cities_file", "is_first_line_column_names": true, "start_from_line": 2, "delimiter": ";", "path": "data/list_of_cities.csv", "change_policy": "each_user", "scope": "local", "order": "sequential", "out_of_value": "stop_test"}
 				]
 			},
 			"counter": {
@@ -460,23 +484,20 @@
 								"description": "The variable increment value. Required. Does not accept a variable."
 							},
 							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope. Accepted values: `local`, `global`, `unique`. The default value is `global`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_scope"
 							},
 							"out_of_value": {
-								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "Policy applied when no values are left."
+								"$ref": "#/definitions/common/var_out_of_value"
 							},
 							"change_policy": {
-								"$ref": "#/definitions/common/var_change_policy",
-								"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_change_policy"
 							}
 						}
 					}
 				],
 				"unevaluatedProperties": false,
 				"examples": [
-					{"name": "counter_variable", "start": 0, "end": 100, "increment": 2, "change_policy": "each_iteration", "scope": "local", "out_of_value": "cycle"}
+					{"name": "counter_variable", "start": 0, "end": 100, "increment": 2, "change_policy": "each_user", "scope": "local", "out_of_value": "stop_test"}
 				]
 			},
 			"random_number": {
@@ -496,19 +517,17 @@
 								"description": "Must be greater than or equal to `min`."
 							},
 							"predictable": {
-								"type": "boolean",
-								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
+								"$ref": "#/definitions/common/var_predictable"
 							},
 							"change_policy": {
-								"$ref": "#/definitions/common/var_change_policy",
-								"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_change_policy"
 							}
 						}
 					}
 				],
 				"unevaluatedProperties": false,
 				"examples": [
-					{"name": "random_number_variable", "min": 0, "max": 999, "predictable": false, "change_policy": "each_request"}
+					{"name": "random_number_variable", "min": 0, "max": 999, "predictable": true, "change_policy": "each_request"}
 				]
 			},
 			"random_string": {
@@ -528,19 +547,17 @@
 								"description": "The maximum number of characters of the generated value. The default value is `10`. Must be greater than or equal to `min_length`."
 							},
 							"predictable": {
-								"type": "boolean",
-								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
+								"$ref": "#/definitions/common/var_predictable"
 							},
 							"change_policy": {
-								"$ref": "#/definitions/common/var_change_policy",
-								"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_change_policy"
 							}
 						}
 					}
 				],
 				"unevaluatedProperties": false,
 				"examples": [
-					{"name": "random_string_variable", "min_length": 5, "max_length": 10, "predictable": false, "change_policy": "each_use"},
+					{"name": "random_string_variable", "min_length": 5, "max_length": 10, "predictable": true, "change_policy": "each_use"},
 					{"name": "random_string_variable", "description": "MyRandomStringDescription", "min_length": 10, "max_length": 20, "predictable": true, "change_policy": "each_use"}
 				]
 			},
@@ -574,9 +591,7 @@
 					{
 						"properties": {
 							"pattern": {
-								"$ref": "#/definitions/common/text",
-								"default": "dd/MM/yyyy HH:mm:ss",
-								"description": "The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`."
+								"$ref": "#/definitions/common/var_date_pattern"
 							},
 							"start_date": {
 								"$ref": "#/definitions/common/text",
@@ -588,12 +603,10 @@
 								"description": "The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes."
 							},
 							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope. Accepted values: `local`, `global`, `unique`. The default value is `global`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_scope"
 							},
 							"change_policy": {
-								"$ref": "#/definitions/common/var_change_policy",
-								"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_change_policy"
 							}
 						}
 					}
@@ -601,7 +614,7 @@
 				"unevaluatedProperties": false,
 				"examples": [
 					{"name": "date_variable", "start_date": "01/01/2024 00:00:00"},
-					{"name": "date_variable", "description": "5 days before the new year, once per iteration", "pattern": "yyyy-MM-dd'T'HH:mm:ss", "start_date": "2024-01-01 00:00:00", "change_step": "-5d", "change_policy": "each_iteration", "scope": "global"}
+					{"name": "date_variable", "description": "5 days before the new year, once per Virtual User", "pattern": "yyyy-MM-dd'T'HH:mm:ss", "start_date": "2024-01-01T00:00:00", "change_step": "-5d", "change_policy": "each_user", "scope": "local"}
 				]
 			},
 			"list": {
@@ -613,9 +626,7 @@
 					{
 						"properties": {
 							"column_names": {
-								"type": "array",
-								"items": { "type": "string" },
-								"description": "The list of column names. Use `${<variableName>.<columnName>}` to access variable values."
+								"$ref": "#/definitions/common/var_column_names"
 							},
 							"values": {
 								"type": "array",
@@ -631,27 +642,23 @@
 								"description": "The first row of `values` to be used. The default value is \"1\"."
 							},
 							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope. Accepted values: `local`, `global`, `unique`. The default value is `global`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_scope"
 							},
 							"order": {
-								"$ref": "#/definitions/common/var_order",
-								"description": "The order in which the values are distributed. Accepted values: `sequential`, `random`, `any`. The default value is `any`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_order"
 							},
 							"out_of_value": {
-								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "Policy applied when no values are left."
+								"$ref": "#/definitions/common/var_out_of_value"
 							},
 							"change_policy": {
-								"$ref": "#/definitions/common/var_change_policy",
-								"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_change_policy"
 							}
 						}
 					}
 				],
 				"unevaluatedProperties": false,
 				"examples": [
-					{"name": "cities_list", "column_names": ["City", "Country"], "values": [["Paris", "France"], ["London", "UK"]], "start_from_line": 1, "change_policy": "each_iteration", "scope": "global", "order": "any", "out_of_value": "cycle"}
+					{"name": "cities_list", "column_names": ["City", "Country"], "values": [["Paris", "France"], ["London", "UK"]], "change_policy": "each_user", "scope": "local", "order": "sequential", "out_of_value": "stop_test"}
 				]
 			},
 			"sql": {
@@ -688,27 +695,23 @@
 								"description": "Overrides the column names taken from the query result set. When omitted, NeoLoad names each column after the matching column of the result set. Use `${<variableName>.<columnName>}` to access variable values."
 							},
 							"scope": {
-								"$ref": "#/definitions/common/var_scope",
-								"description": "The value scope. Accepted values: `local`, `global`, `unique`. The default value is `global`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_scope"
 							},
 							"order": {
-								"$ref": "#/definitions/common/var_order",
-								"description": "The order in which the values are distributed. Accepted values: `sequential`, `random`, `any`. The default value is `any`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_order"
 							},
 							"out_of_value": {
-								"$ref": "#/definitions/common/var_out_of_value",
-								"description": "Policy applied when no values are left."
+								"$ref": "#/definitions/common/var_out_of_value"
 							},
 							"change_policy": {
-								"$ref": "#/definitions/common/var_change_policy",
-								"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_change_policy"
 							}
 						}
 					}
 				],
 				"unevaluatedProperties": false,
 				"examples": [
-					{"name": "sql_variable", "driver": "com.mysql.jdbc.Driver", "url": "jdbc:mysql://localhost:3306/mydb", "login": "login_admin", "password": "password_admin", "query": "SELECT username, email FROM users", "column_names": ["username", "email"], "change_policy": "each_iteration", "scope": "global", "order": "any", "out_of_value": "cycle"}
+					{"name": "sql_variable", "driver": "com.mysql.jdbc.Driver", "url": "jdbc:mysql://localhost:3306/mydb", "login": "login_admin", "password": "password_admin", "query": "SELECT username, email FROM users", "column_names": ["username", "email"], "change_policy": "each_user", "scope": "local", "order": "sequential", "out_of_value": "stop_test"}
 				]
 			},
 			"javascript": {
@@ -721,20 +724,19 @@
 						"properties": {
 							"script": {
 								"$ref": "#/definitions/common/textblob",
-								"description": "The Javascript script"
+								"description": "The Javascript script that computes the value of the variable"
 							},
 							"change_policy": {
-								"$ref": "#/definitions/common/var_change_policy",
-								"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_change_policy"
 							}
 						}
 					}
 				],
 				"unevaluatedProperties": false,
-				"description": "Execution of a Javascript script.",
+				"description": "A variable whose value is the result of the execution of a Javascript script.",
 				"examples": [
 					{"name": "My Javascript", "description": "My description", "script": "// Get variable value from VariableManager\nvar myVar = context.variableManager.getValue(\"CounterVariable_1\");\nlogger.debug(\"ComputedValue=\"+myVar);\n"},
-					{"name": "My JSVar", "description": "This is a js var", "script": "function evaluate() {\n\tlogger.debug(\"Computing value of js variable\");\n\treturn new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField = myLibraryFunction();\n\t};\n}", "change_policy": "each_iteration"}
+					{"name": "My JSVar", "description": "This is a js var", "script": "function evaluate() {\n\tlogger.debug(\"Computing value of js variable\");\n\treturn new function() {\n\t\tthis.firstField = \"a value\";\n\t\tthis.secondField = myLibraryFunction();\n\t};\n}", "change_policy": "each_request"}
 				]
 			},
 			"random_uuid": {
@@ -750,20 +752,17 @@
 								"description": "When true, the generated UUID is uppercase. The default value is `false`."
 							},
 							"predictable": {
-								"type": "boolean",
-								"default": false,
-								"description": "When true, randomly generated values will have comparable values for two identical tests. The default value is `false`."
+								"$ref": "#/definitions/common/var_predictable"
 							},
 							"change_policy": {
-								"$ref": "#/definitions/common/var_change_policy",
-								"description": "The policy when the value must change. Accepted values: `each_use`, `each_request`, `each_page`, `each_iteration`, `each_user`. The default value is `each_iteration`. Does not accept a variable."
+								"$ref": "#/definitions/common/var_change_policy"
 							}
 						}
 					}
 				],
 				"unevaluatedProperties": false,
 				"examples": [
-					{"name": "random_uuid_variable", "upper_case": false, "predictable": false, "change_policy": "each_use"},
+					{"name": "random_uuid_variable", "upper_case": true, "change_policy": "each_use"},
 					{"name": "random_uuid_variable", "description": "MyRandomUUIDDescription", "upper_case": true, "predictable": true, "change_policy": "each_use"}
 				]
 			},
@@ -828,9 +827,7 @@
 					{
 						"properties": {
 							"pattern": {
-								"$ref": "#/definitions/common/text",
-								"default": "dd/MM/yyyy HH:mm:ss",
-								"description": "The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`."
+								"$ref": "#/definitions/common/var_date_pattern"
 							},
 							"offset": {
 								"type": "string",
@@ -1140,6 +1137,11 @@
 			},
 			"description": "Web Services Security (WS-Security) settings: the keystores, and the request and response profiles applied to SOAP requests."
 		},
+		"web_services_security_part_encoding": {
+			"type": "string",
+			"enum": ["element", "content"],
+			"description": "How the part is processed: the whole element or only its content."
+		},
 		"web_services_security_parts": {
 			"type": "array",
 			"minItems": 1,
@@ -1156,9 +1158,7 @@
 								"description": "The part is the element with this identifier."
 							},
 							"encoding": {
-								"type": "string",
-								"enum": ["element", "content"],
-								"description": "How the part is processed: the whole element or only its content."
+								"$ref": "#/definitions/web_services_security_part_encoding"
 							}
 						}
 					},
@@ -1178,9 +1178,7 @@
 								"description": "The namespace of the element that is the part."
 							},
 							"encoding": {
-								"type": "string",
-								"enum": ["element", "content"],
-								"description": "How the part is processed: the whole element or only its content."
+								"$ref": "#/definitions/web_services_security_part_encoding"
 							}
 						}
 					}
@@ -1388,12 +1386,10 @@
 						"description": "The duration of the load policy: unlimited (the default value), time length or number of iterations."
 					},
 					"start_after": {
-						"$ref": "#/definitions/common/start_after_options",
-						"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population."
+						"$ref": "#/definitions/common/start_after_options"
 					},
 					"stop_after": {
-						"$ref": "#/definitions/common/stop_after_options",
-						"description": "Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset delay to finish the current iteration or allow the population to end the current iteration for each Virtual User."
+						"$ref": "#/definitions/common/stop_after_options"
 					},
 					"users": {
 						"type": "integer",
@@ -1412,16 +1408,13 @@
 				"required": ["min_users", "increment_users", "increment_every"],
 				"properties": {
 					"duration": {
-						"$ref": "#/definitions/common/duration",
-						"description": "The duration of the load policy: unlimited, time length or number of iterations."
+						"$ref": "#/definitions/populations/load_duration"
 					},
 					"start_after": {
-						"$ref": "#/definitions/common/start_after_options",
-						"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population."
+						"$ref": "#/definitions/common/start_after_options"
 					},
 					"stop_after": {
-						"$ref": "#/definitions/common/stop_after_options",
-						"description": "Define how Virtual Users should be started: the population immediately stop the executing of the current iteration, give a preset delay to finish the current iteration or allow the population to end the current iteration for each Virtual User."
+						"$ref": "#/definitions/common/stop_after_options"
 					},
 					"min_users": {
 						"$ref": "#/definitions/common/positive_number",
@@ -1466,23 +1459,24 @@
 						"description": "The phase the test starts with: `minimum` or `maximum`."
 					},
 					"duration": {
-						"$ref": "#/definitions/common/duration",
-						"description": "The duration of the load policy: unlimited, time length or number of iterations."
+						"$ref": "#/definitions/populations/load_duration"
 					},
 					"start_after": {
-						"$ref": "#/definitions/common/start_after_options",
-						"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population."
+						"$ref": "#/definitions/common/start_after_options"
 					},
 					"step_rampup": {
 						"$ref": "#/definitions/common/duration_seconds",
 						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay. This rule is used each time new Virtual Users are created, at each load peak for a peak load policy."
 					},
 					"stop_after": {
-						"$ref": "#/definitions/common/stop_after_options",
-						"description": "Define how the population is stopped: the population immediately stop the executing of the current iteration, give a preset delay to finish the current iteration or allow the population to end the current iteration for each Virtual User."
+						"$ref": "#/definitions/common/stop_after_options"
 					}
 				},
 				"additionalProperties": false
+			},
+			"load_duration": {
+				"$ref": "#/definitions/common/duration",
+				"description": "The duration of the load policy: unlimited, time length or number of iterations."
 			},
 			"peaks_phase": {
 				"title": "Peak Phase",
@@ -1492,7 +1486,7 @@
 				"properties": {
 					"users": {
 						"$ref": "#/definitions/common/positive_number",
-						"description": "The fixed number of Virtual Users"
+						"description": "The fixed number of Virtual Users during the phase"
 					},
 					"duration": {
 						"$ref": "#/definitions/common/duration",
@@ -1750,12 +1744,10 @@
 						"description": "The end container, executed once when the Virtual User stops."
 					},
 					"assertions": {
-						"$ref": "#/definitions/common/assertions",
-						"description": "The list of assertions to validate the response content of all requests matching criteria within the User Path. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
+						"$ref": "#/definitions/common/assertions"
 					},
 					"content_assertions": {
-						"$ref": "#/definitions/common/content_assertions",
-						"description": "The assertions validating the response content of the requests of the whole User Path."
+						"$ref": "#/definitions/common/content_assertions"
 					}
 				},
 				"not": { "required": ["assertions", "content_assertions"] }
@@ -1811,12 +1803,10 @@
 						"description": "The steps of the container."
 					},
 					"assertions": {
-						"$ref": "#/definitions/common/assertions",
-						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
+						"$ref": "#/definitions/common/assertions"
 					},
 					"content_assertions": {
-						"$ref": "#/definitions/common/content_assertions",
-						"description": "The assertions validating the response content of the requests of the container."
+						"$ref": "#/definitions/common/content_assertions"
 					}
 				},
 				"not": { "required": ["assertions", "content_assertions"] }
@@ -1849,12 +1839,10 @@
 							"maxProperties": 1,
 							"properties": {
 								"transaction": {
-									"$ref": "#/definitions/user_paths/actions/transaction",
-									"description": "The Transaction Action is used to group together certain actions, namely those relating to a business transaction, in order to extract statistics."
+									"$ref": "#/definitions/user_paths/actions/transaction"
 								},
 								"request": {
-									"$ref": "#/definitions/user_paths/actions/request",
-									"description": "A request defines a plain HTTP request."
+									"$ref": "#/definitions/user_paths/actions/request"
 								},
 								"soap_request": {
 									"$ref": "#/definitions/user_paths/actions/soap_request",
@@ -1869,152 +1857,116 @@
 									"description": "Think time is the time the user normally takes to make a decision to do the next task."
 								},
 								"javascript": {
-									"$ref": "#/definitions/user_paths/actions/javascript",
-									"description": "Execution of a Javascript script."
+									"$ref": "#/definitions/user_paths/actions/javascript"
 								},
 								"if": {
-									"$ref": "#/definitions/user_paths/actions/if",
-									"description": "A conditional structure \"If - Then - Else\". If the conditions are true, the Then container is executed, otherwise, the Else container is executed."
+									"$ref": "#/definitions/user_paths/actions/if"
 								},
 								"while": {
-									"$ref": "#/definitions/user_paths/actions/while",
-									"description": "A repetition structure \"While - do\". The steps contained in the structure are executed in sequence until the condition is not verified any more."
+									"$ref": "#/definitions/user_paths/actions/while"
 								},
 								"loop": {
-									"$ref": "#/definitions/user_paths/actions/loop",
-									"description": "A repetition structure which executes steps sequentially a specific number of times."
+									"$ref": "#/definitions/user_paths/actions/loop"
 								},
 								"switch": {
-									"$ref": "#/definitions/user_paths/actions/switch",
-									"description": "The Switch action is used to execute conditional actions based on a selection control mechanism. It allows the Switch value to change the control flow of the User Path execution via a multiway branch, named Case statements. The Switch action is fall-through, which means that if a Break flag is disabled on a Case, then the next Case statement is executed."
+									"$ref": "#/definitions/user_paths/actions/switch"
 								},
 								"custom_action": {
-									"$ref": "#/definitions/user_paths/actions/custom_action",
-									"description": "Custom action can be an Advanced Action, a SAP GUI Action, a Citrix Action, a RealBrowser Action or an RTE Action. A Custom Advanced action can also be developed using Java."
+									"$ref": "#/definitions/user_paths/actions/custom_action"
 								},
 								"browser_open": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_open",
-									"description": "Real Browser action BrowserOpen. Open a new browser."
+									"$ref": "#/definitions/user_paths/real_browser/browser_open"
 								},
 								"browser_close": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_close",
-									"description": "Real Browser action BrowserClose. Close the browser. This action is useful for avoiding stacking browser instances on a single VU. The recommended configurations is : If the OpenBrowser action is at the beginning of the ACTIONS container, put the CloseBrowser action at end of the ACTIONS container."
+									"$ref": "#/definitions/user_paths/real_browser/browser_close"
 								},
 								"browser_navigate": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_navigate",
-									"description": "Real Browser action BrowserNavigate. Navigate to an url."
+									"$ref": "#/definitions/user_paths/real_browser/browser_navigate"
 								},
 								"browser_click": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_click",
-									"description": "Real Browser action BrowserClick. Click a selector."
+									"$ref": "#/definitions/user_paths/real_browser/browser_click"
 								},
 								"browser_type": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_type",
-									"description": "Real Browser action BrowserType. Type some text inside an element."
+									"$ref": "#/definitions/user_paths/real_browser/browser_type"
 								},
 								"browser_press": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_press",
-									"description": "Real Browser action BrowserPress. Press a key on a selector."
+									"$ref": "#/definitions/user_paths/real_browser/browser_press"
 								},
 								"browser_select_option": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_select_option",
-									"description": "Real Browser action BrowserSelectOption. Select one or several options of a select element."
+									"$ref": "#/definitions/user_paths/real_browser/browser_select_option"
 								},
 								"browser_mouse_over": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_mouse_over",
-									"description": "Real Browser action BrowserMouseOver. Positions the mouse over the specified coordinates or element location. Scrolls the window when that position is out of the current viewport. Both parameters can be set at the same time, in that case the mouse will be positioned at the specified coordinates relative to the located element instead of the page origin."
+									"$ref": "#/definitions/user_paths/real_browser/browser_mouse_over"
 								},
 								"browser_drag_and_drop": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_drag_and_drop",
-									"description": "Real Browser action BrowserDragAndDrop. Drag and drop an element onto another element."
+									"$ref": "#/definitions/user_paths/real_browser/browser_drag_and_drop"
 								},
 								"browser_scroll": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_scroll",
-									"description": "Real Browser action BrowserScroll. Scrolls the window to a particular place in the document."
+									"$ref": "#/definitions/user_paths/real_browser/browser_scroll"
 								},
 								"browser_read": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_read",
-									"description": "Real Browser action BrowserRead. Read the text content of an Element."
+									"$ref": "#/definitions/user_paths/real_browser/browser_read"
 								},
 								"browser_wait_selector": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_wait_selector",
-									"description": "Real Browser action BrowserWaitSelector. Wait for a selector."
+									"$ref": "#/definitions/user_paths/real_browser/browser_wait_selector"
 								},
 								"browser_evaluate_javascript": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_evaluate_javascript",
-									"description": "Real Browser action BrowserEvaluateJavascript. Executes some arbitrary Javascript code in the current page context."
+									"$ref": "#/definitions/user_paths/real_browser/browser_evaluate_javascript"
 								},
 								"browser_upload_file": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_upload_file",
-									"description": "Real Browser action BrowserUploadFile. Upload files to an input element."
+									"$ref": "#/definitions/user_paths/real_browser/browser_upload_file"
 								},
 								"browser_handle_dialog": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_handle_dialog",
-									"description": "Real Browser action BrowserHandleDialog. Set dialog behavior."
+									"$ref": "#/definitions/user_paths/real_browser/browser_handle_dialog"
 								},
 								"browser_open_tab": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_open_tab",
-									"description": "Real Browser action BrowserOpenTab. Open a new tab at the rightmost position."
+									"$ref": "#/definitions/user_paths/real_browser/browser_open_tab"
 								},
 								"browser_switch_tab": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_switch_tab",
-									"description": "Real Browser action BrowserSwitchTab. Switch tab to the given index."
+									"$ref": "#/definitions/user_paths/real_browser/browser_switch_tab"
 								},
 								"browser_close_tab": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_close_tab",
-									"description": "Real Browser action BrowserCloseTab. Close tab at the given index."
+									"$ref": "#/definitions/user_paths/real_browser/browser_close_tab"
 								},
 								"browser_capture_requests": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_capture_requests",
-									"description": "Real Browser action BrowserCaptureRequests. Configure the capture of HTTP requests metrics for analysis purpose. It allows to capture the metrics (duration, TTFB, success...) of the requests sent and responses received between the browser and the server. By default when no regexp/url/resourceType parameter is specified, then all the HTTP request metrics are aggregated in a single group. When a matching criteria is defined (regexp/url/resourceType), the metrics of all HTTP requests matching it are aggregated in a group, and the non-matching one in a different group (for example with regexp (.*)\\.html then requests will be split in two different groups: one for all HTML pages and another one for all other resources). When multiple matching criteria are defined (regexp/url/resourceType), they are applied in order they are defined."
+									"$ref": "#/definitions/user_paths/real_browser/browser_capture_requests"
 								},
 								"browser_capture_web_vitals": {
-									"$ref": "#/definitions/user_paths/real_browser/browser_capture_web_vitals",
-									"description": "Real Browser action BrowserCaptureWebVitals. Captures Core Web Vitals metrics during Virtual User navigation. This helps detect performance issues that affect the user experience. NeoLoad collects the following metrics for each defined URL: Largest Contentful Paint (LCP), Interaction to Next Paint (INP), Cumulative Layout Shift (CLS). If you don't define a URL, NeoLoad aggregates metrics across all visited pages. To collect all metrics, place this action before the first Navigate action. The Virtual User needs to stay a minimum amount of time and perform at least one interaction to ensure Web Vitals were collected for a given page."
+									"$ref": "#/definitions/user_paths/real_browser/browser_capture_web_vitals"
 								},
 								"try_catch": {
-									"$ref": "#/definitions/user_paths/actions/try_catch",
-									"description": "A logical action that executes a Try container and, if one of the caught exception types occurs while running it, executes the Catch container."
+									"$ref": "#/definitions/user_paths/actions/try_catch"
 								},
 								"fork": {
-									"$ref": "#/definitions/user_paths/actions/fork",
-									"description": "The Fork action is used to play actions in a different execution thread to the current one. This execution thread is parallel to the main chain used by the Virtual User. When the current iteration of the Virtual User stops, all the threads created using Fork actions in the Actions Container are immediately halted."
+									"$ref": "#/definitions/user_paths/actions/fork"
 								},
 								"wait_until": {
-									"$ref": "#/definitions/user_paths/actions/wait_until",
-									"description": "The Wait Until action pauses the current execution thread until certain conditions have been verified. You may also set a maximum timeout delay: once this delay is timed out, the thread is restarted and the following action is executed, even if the conditions have not been verified."
+									"$ref": "#/definitions/user_paths/actions/wait_until"
 								},
 								"variable_modifier": {
-									"$ref": "#/definitions/user_paths/actions/variable_modifier",
-									"description": "A Variable Modifier action makes it possible to change the value of a variable separately from its value changing policy. For example, the value of a variable may be modified in a loop for a User Path."
+									"$ref": "#/definitions/user_paths/actions/variable_modifier"
 								},
 								"debug_logger": {
-									"$ref": "#/definitions/user_paths/actions/debug_logger",
-									"description": "The Debug Logger Action writes a text entry to a log file, for debugging purposes."
+									"$ref": "#/definitions/user_paths/actions/debug_logger"
 								},
 								"rendezvous": {
-									"$ref": "#/definitions/user_paths/actions/rendezvous",
-									"description": "A Rendezvous point synchronizes Virtual Users at a common meeting point so they carry out tasks simultaneously, creating an intense load on the server at a specific point in the application."
+									"$ref": "#/definitions/user_paths/actions/rendezvous"
 								},
 								"stop_vu": {
-									"$ref": "#/definitions/user_paths/actions/stop_vu",
-									"description": "The Stop Virtual User action stops the current virtual user. By default, a new virtual user is started to replace the one that has been stopped, so that the number of running virtual users remains stable. Set `start_new_vu` to `false` to stop the current virtual user without starting a replacement."
+									"$ref": "#/definitions/user_paths/actions/stop_vu"
 								},
 								"web_page": {
-									"$ref": "#/definitions/user_paths/actions/web_page",
-									"description": "The Web Page Action is used to group together the requests and resources that make up a single page load, along with options controlling how its resources are played back."
+									"$ref": "#/definitions/user_paths/actions/web_page"
 								},
 								"shared_element": {
 									"$ref": "#/definitions/common/name",
 									"description": "The name of the shared_elements entry to run here."
 								},
 								"websocket_channel": {
-									"$ref": "#/definitions/user_paths/actions/websocket_channel",
-									"description": "The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `extractors`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request."
+									"$ref": "#/definitions/user_paths/actions/websocket_channel"
 								},
 								"websocket_request": {
-									"$ref": "#/definitions/user_paths/actions/websocket_request",
-									"description": "The WebSocket Request action sends a frame (text, binary or close) on a channel opened earlier by a websocket_channel of the same user path. It is asynchronous unless `synchronous` is true, in which case it waits for the response frame whose correlation id equals `mapping_id`."
+									"$ref": "#/definitions/user_paths/actions/websocket_request"
 								}
 							},
 							"additionalProperties": false
@@ -2050,12 +2002,10 @@
 							"description": "Steps of the Transaction. Required. Does not accept a variable."
 						},
 						"assertions": {
-							"$ref": "#/definitions/common/assertions",
-							"description": "The list of assertions to validate the response content of all requests matching criteria within the Transaction. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
+							"$ref": "#/definitions/common/assertions"
 						},
 						"content_assertions": {
-							"$ref": "#/definitions/common/content_assertions",
-							"description": "The list of assertions to validate the response content of all requests matching criteria within the Transaction. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project). Does not accept a variable."
+							"$ref": "#/definitions/common/content_assertions"
 						}
 					},
 					"not": { "required": ["assertions", "content_assertions"] },
@@ -2073,12 +2023,10 @@
 					"unevaluatedProperties": false,
 					"properties": {
 						"url": {
-							"$ref": "#/definitions/common/text",
-							"description": "The URL to hit"
+							"$ref": "#/definitions/user_paths/request_url"
 						},
 						"server": {
-							"$ref": "#/definitions/common/text",
-							"description": "The server name to use"
+							"$ref": "#/definitions/user_paths/request_server"
 						},
 						"method": {
 							"type": "string",
@@ -2086,12 +2034,10 @@
 							"description": "The request method"
 						},
 						"headers": {
-							"$ref": "#/definitions/user_paths/name_values",
-							"description": "The request header list"
+							"$ref": "#/definitions/user_paths/request_headers"
 						},
 						"sla_profile": {
-							"$ref": "#/definitions/common/name",
-							"description": "The name of the SLA profile to apply to the request"
+							"$ref": "#/definitions/user_paths/request_sla_profile"
 						},
 						"body": {
 							"$ref": "#/definitions/common/textblob",
@@ -2121,22 +2067,16 @@
 							"$ref": "#/definitions/common/text"
 						},
 						"assertions": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
-							"description": "The list of assertions to validate the response content"
+							"$ref": "#/definitions/common/assertions"
 						},
 						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the request completed within a given duration"
+							"$ref": "#/definitions/user_paths/duration_assertion"
 						},
 						"content_assertions": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
-							"description": "The list of assertions to validate the response content"
+							"$ref": "#/definitions/common/content_assertions"
 						},
 						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
+							"$ref": "#/definitions/user_paths/size_assertion"
 						}
 					},
 					"allOf": [
@@ -2167,20 +2107,17 @@
 							"description": "The Soap Request description"
 						},
 						"url": {
-							"$ref": "#/definitions/common/url",
-							"description": "The URL to hit"
+							"$ref": "#/definitions/user_paths/request_url"
 						},
 						"server": {
-							"$ref": "#/definitions/common/name",
-							"description": "The server name to use"
+							"$ref": "#/definitions/user_paths/request_server"
 						},
 						"parameters": {
 							"$ref": "#/definitions/user_paths/name_values",
 							"description": "The query string parameter list"
 						},
 						"headers": {
-							"$ref": "#/definitions/user_paths/name_values",
-							"description": "The request header list"
+							"$ref": "#/definitions/user_paths/request_headers"
 						},
 						"content": {
 							"type": "object",
@@ -2195,26 +2132,19 @@
 							"description": "The external XML file used as the request body"
 						},
 						"sla_profile": {
-							"$ref": "#/definitions/common/text",
-							"description": "The name of the SLA profile to apply to the request"
+							"$ref": "#/definitions/user_paths/request_sla_profile"
 						},
 						"assertions": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
-							"description": "The list of assertions to validate the response content"
+							"$ref": "#/definitions/common/assertions"
 						},
 						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the request completed within a given duration"
+							"$ref": "#/definitions/user_paths/duration_assertion"
 						},
 						"content_assertions": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
-							"description": "The list of assertions to validate the response content"
+							"$ref": "#/definitions/common/content_assertions"
 						},
 						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
+							"$ref": "#/definitions/user_paths/size_assertion"
 						},
 						"request_security_profile": {
 							"$ref": "#/definitions/common/name",
@@ -2392,14 +2322,10 @@
 							"description": "The description of the If"
 						},
 						"conditions": {
-							"$ref": "#/definitions/common/conditions",
-							"description": "The list of conditions to evaluate"
+							"$ref": "#/definitions/common/conditions"
 						},
 						"match": {
-							"type": "string",
-							"enum": ["any", "all"],
-							"default": "any",
-							"description": "How the conditions are combined: `any` or `all`. The default value is `any`."
+							"$ref": "#/definitions/common/conditions_match"
 						},
 						"then": {
 							"$ref": "#/definitions/user_paths/container",
@@ -2430,14 +2356,10 @@
 							"description": "The description of the While"
 						},
 						"conditions": {
-							"$ref": "#/definitions/common/conditions",
-							"description": "The list of conditions to evaluate"
+							"$ref": "#/definitions/common/conditions"
 						},
 						"match": {
-							"type": "string",
-							"enum": ["any", "all"],
-							"default": "any",
-							"description": "How the conditions are combined: `any` or `all`. The default value is `any`."
+							"$ref": "#/definitions/common/conditions_match"
 						},
 						"steps": {
 							"$ref": "#/definitions/user_paths/steps",
@@ -2534,21 +2456,17 @@
 							"description": "The action parameter list"
 						},
 						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
+							"$ref": "#/definitions/user_paths/as_request"
 						},
 						"libraryPath": {
 							"$ref": "#/definitions/common/text",
 							"description": "The path to the JAR file containing the Custom Advanced Action, relative to the project folder. The file must be inside the project folder."
 						},
 						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
+							"$ref": "#/definitions/user_paths/duration_assertion"
 						},
 						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
+							"$ref": "#/definitions/user_paths/size_assertion"
 						}
 					},
 					"additionalProperties": false,
@@ -2645,14 +2563,10 @@
 							"description": "The description of the Wait Until"
 						},
 						"conditions": {
-							"$ref": "#/definitions/common/conditions",
-							"description": "The list of conditions to evaluate"
+							"$ref": "#/definitions/common/conditions"
 						},
 						"match": {
-							"type": "string",
-							"enum": ["any", "all"],
-							"default": "any",
-							"description": "How the conditions are combined: `any` or `all`. The default value is `any`."
+							"$ref": "#/definitions/common/conditions_match"
 						},
 						"timeout": {
 							"$ref": "#/definitions/common/duration_value",
@@ -2792,7 +2706,7 @@
 						},
 						"steps": {
 							"$ref": "#/definitions/user_paths/steps",
-							"description": "Steps of the Web Page. Only request and nested `web_page` steps are supported"
+							"description": "Steps of the Web Page. Only request, nested `web_page` and soap_request steps are supported"
 						}
 					},
 					"additionalProperties": false,
@@ -2835,9 +2749,7 @@
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
 						},
 						"assertions": {
-							"type": "array",
-							"items": { "$ref": "#/definitions/user_paths/content_assertion" },
-							"description": "Deprecated alias of `content_assertions`, read-only."
+							"$ref": "#/definitions/common/assertions"
 						},
 						"content_assertions": {
 							"type": "array",
@@ -2849,8 +2761,7 @@
 							"description": "Checks that the upgrade request completed within a given duration"
 						},
 						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
+							"$ref": "#/definitions/user_paths/size_assertion"
 						},
 						"messages_mapping": {
 							"$ref": "#/definitions/user_paths/websocket_messages_mapping",
@@ -2924,8 +2835,7 @@
 							"items": { "$ref": "#/definitions/user_paths/extractor" }
 						},
 						"content_assertions": {
-							"$ref": "#/definitions/common/content_assertions",
-							"description": "Content assertions applied to the response, only for a synchronous request."
+							"$ref": "#/definitions/common/content_assertions"
 							},
 							"duration_assertion": {
 								"$ref": "#/definitions/user_paths/duration_assertion",
@@ -2969,7 +2879,7 @@
 							} } },
 							"then": { "properties": { "synchronous": {
 								"const": false,
-								"description": "Whether the request waits for its response. The default value is `false`."
+								"description": "The request does not wait for its response. This is the default behaviour."
 							} } },
 							"else": { "properties": { "status_code": {
 								"enum": ["1000", 1000],
@@ -2982,6 +2892,22 @@
 						{"name": "SendHello", "channel": "actions>MyChannel", "synchronous": true, "mapping_id": "${correlation_id}", "body": "{\"op\":\"hello\",\"correlationId\":\"${correlation_id}\"}", "content_assertions": [{"contains": "welcome"}]}
 					]
 				}
+			},
+			"request_url": {
+				"$ref": "#/definitions/common/url",
+				"description": "The URL to hit"
+			},
+			"request_server": {
+				"$ref": "#/definitions/common/name",
+				"description": "The server name to use"
+			},
+			"request_sla_profile": {
+				"$ref": "#/definitions/common/name",
+				"description": "The name of the SLA profile to apply to the request"
+			},
+			"request_headers": {
+				"$ref": "#/definitions/user_paths/name_values",
+				"description": "The request header list"
 			},
 			"name_values": {
 				"title": "Name/Value List",
@@ -3063,8 +2989,7 @@
 						"items": { "$ref": "#/definitions/user_paths/extractor" }
 					},
 					"content_assertions": {
-						"$ref": "#/definitions/common/content_assertions",
-						"description": "Content assertions applied to the frame."
+						"$ref": "#/definitions/common/content_assertions"
 					},
 					"duration_assertion": {
 						"$ref": "#/definitions/user_paths/duration_assertion",
@@ -3252,6 +3177,7 @@
 			},
 			"size_assertion": {
 				"title": "Size Assertion",
+				"description": "Checks the length of the response content, in bytes.",
 				"type": "object",
 				"minProperties": 1,
 				"properties": {
@@ -3281,6 +3207,11 @@
 				"title": "Size Assertion Bound",
 				"type": "integer",
 				"minimum": 0
+			},
+			"as_request": {
+				"type": "boolean",
+				"default": false,
+				"description": "Consider the executions as requests in the calculation of the statistics and graphs"
 			},
 			"duration_assertion": {
 				"title": "Duration Assertion",
@@ -3329,12 +3260,10 @@
 						"description": "The steps to be executed. Required."
 					},
 					"assertions": {
-						"$ref": "#/definitions/common/assertions",
-						"description": "The list of assertions to validate the response content of all requests matching criteria within the Container. By default, the validation is applied only on response with content-type text/html or text/xhtml. List of content-types used for response matching can be customized in the Project Settings / Runtime Parameters from the GUI project (cannot be customized with As-code only project)."
+						"$ref": "#/definitions/common/assertions"
 					},
 					"content_assertions": {
-						"$ref": "#/definitions/common/content_assertions",
-						"description": "The assertions validating the response content of the requests of the case."
+						"$ref": "#/definitions/common/content_assertions"
 					}
 				},
 				"not": { "required": ["assertions", "content_assertions"] },
@@ -3361,6 +3290,10 @@
 				},
 				"additionalProperties": false
 			},
+			"selector_parameter_name": {
+				"const": "selector",
+				"description": "Requires the `selector` parameter."
+			},
 			"real_browser": {
 				"action": {
 					"type": "object",
@@ -3374,17 +3307,13 @@
 							"description": "The description of the action."
 						},
 						"asRequest": {
-							"type": "boolean",
-							"default": false,
-							"description": "Consider the executions as requests in the calculation of the statistics and graphs"
+							"$ref": "#/definitions/user_paths/as_request"
 						},
 						"duration_assertion": {
-							"$ref": "#/definitions/user_paths/duration_assertion",
-							"description": "Checks that the action completed within a given duration"
+							"$ref": "#/definitions/user_paths/duration_assertion"
 						},
 						"size_assertion": {
-							"$ref": "#/definitions/user_paths/size_assertion",
-							"description": "Checks the length of the response content, in bytes."
+							"$ref": "#/definitions/user_paths/size_assertion"
 						}
 					}
 				},
@@ -3729,10 +3658,7 @@
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": {
-								"const": "selector",
-								"description": "Requires the `selector` parameter."
-							} }, "required": ["name"] } }],
+							"allOf": [{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } }],
 							"description": "The parameters of the BrowserType action, as a list of name/value pairs."
 						}
 					},
@@ -3771,10 +3697,7 @@
 								}
 							},
 							"allOf": [
-								{ "contains": { "properties": { "name": {
-									"const": "selector",
-									"description": "Requires the `selector` parameter."
-								} }, "required": ["name"] } },
+								{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } },
 								{ "contains": { "properties": { "name": {
 									"const": "key",
 									"description": "Requires the `key` parameter."
@@ -3826,10 +3749,7 @@
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": {
-								"const": "selector",
-								"description": "Requires the `selector` parameter."
-							} }, "required": ["name"] } }],
+							"allOf": [{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } }],
 							"description": "The parameters of the BrowserSelectOption action, as a list of name/value pairs."
 						}
 					},
@@ -3986,10 +3906,7 @@
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": {
-								"const": "selector",
-								"description": "Requires the `selector` parameter."
-							} }, "required": ["name"] } }],
+							"allOf": [{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } }],
 							"description": "The parameters of the BrowserRead action, as a list of name/value pairs."
 						}
 					},
@@ -4028,10 +3945,7 @@
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": {
-								"const": "selector",
-								"description": "Requires the `selector` parameter."
-							} }, "required": ["name"] } }],
+							"allOf": [{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } }],
 							"description": "The parameters of the BrowserWaitSelector action, as a list of name/value pairs."
 						}
 					},
@@ -4104,10 +4018,7 @@
 								}
 							},
 							"allOf": [
-								{ "contains": { "properties": { "name": {
-									"const": "selector",
-									"description": "Requires the `selector` parameter."
-								} }, "required": ["name"] } },
+								{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } },
 								{ "contains": { "properties": { "name": {
 									"const": "filePaths",
 									"description": "Requires the `filePaths` parameter."
