@@ -1,2 +1,0 @@
-The first line is skippped when reading headers
-propertyKey=propertyValue

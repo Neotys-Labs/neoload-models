@@ -1,6 +1,0 @@
-name: MyProject
-variables:
-- date:
-    name: MyDate
-    pattern: yyyy-MM-dd
-    start_date: not-a-date

@@ -1,4 +1,0 @@
-name: MyProject
-variables:
-- current_date:
-    name: MyCurrentDate

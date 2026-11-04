@@ -1,1 +1,0 @@
-{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"switch":{"value":"${MySwitchVariable}","case":[{"value":"0","break":true,"steps":[{"delay":"1s"}]}],"default":{"steps":[{"delay":"3s"}]}}}]}}]}
