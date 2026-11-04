@@ -1,4 +1,0 @@
-name: MyProject
-variables:
-- random_uuid:
-    name: MyRandomUUID

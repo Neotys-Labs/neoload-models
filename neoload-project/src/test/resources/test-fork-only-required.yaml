@@ -1,8 +1,0 @@
-name: MyProject
-user_paths:
-- name: MyUserPath
-  actions:
-    steps:
-    - fork:
-        steps:
-        - delay: 1s

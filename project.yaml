@@ -1,0 +1,45 @@
+name: multi_population_delay
+
+user_paths:
+- name: ShortDelay
+  actions:
+    steps:
+    - delay: 2s
+
+- name: LongDelay
+  actions:
+    steps:
+    - delay: 10s
+
+populations:
+- name: SmallCities
+  user_paths:
+  - name: ShortDelay
+- name: BigCities
+  user_paths:
+  - name: LongDelay
+- name: MixedCities
+  user_paths:
+  - name: ShortDelay
+    distribution: 50%
+  - name: LongDelay
+    distribution: 50%
+
+scenarios:
+- name: MultiPopulationScenario
+  populations:
+  - name: SmallCities
+    constant_load:
+      users: 10
+      rampup: 1m
+      duration: 5m
+  - name: BigCities
+    constant_load:
+      users: 5
+      rampup: 1m
+      duration: 5m
+  - name: MixedCities
+    constant_load:
+      users: 8
+      rampup: 1m
+      duration: 5m
