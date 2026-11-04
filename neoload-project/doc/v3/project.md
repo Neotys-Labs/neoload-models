@@ -10,7 +10,6 @@ The optional `schemaVersion` attribute at the root of an as-code file declares t
 Schema versions:
 - 3.0 is published as `schemas/v3.0/as-code.schema.json`
 - 3.1 is published as `schemas/v3.1/as-code.schema.json` (supported since NeoLoad 2026.3)
-- The runtime copy of the latest schema also lives in `neoload-project/src/main/resources/as-code.latest.schema.json`
 
 ## Definition
 
