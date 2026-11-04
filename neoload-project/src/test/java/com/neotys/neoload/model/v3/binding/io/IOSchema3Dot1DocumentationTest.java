@@ -12,7 +12,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
@@ -63,9 +62,7 @@ public class IOSchema3Dot1DocumentationTest {
 
     private static void collectMissingDescriptions(final JsonNode node, final String pointer, final List<String> missing) {
         if (node.isObject()) {
-            final Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
-            while (fields.hasNext()) {
-                final Map.Entry<String, JsonNode> field = fields.next();
+            for (final Map.Entry<String, JsonNode> field : node.properties()) {
                 final String childPointer = pointer + "/" + field.getKey();
                 if (SCHEMA_MAPS.contains(field.getKey()) && field.getValue().isObject()) {
                     collectMissingDescriptionsOfMap(field.getValue(), childPointer, missing);
@@ -84,9 +81,7 @@ public class IOSchema3Dot1DocumentationTest {
      * A boolean subschema such as {@code "mapping_id": false} cannot carry annotations, so only object subschemas are checked.
      */
     private static void collectMissingDescriptionsOfMap(final JsonNode map, final String pointer, final List<String> missing) {
-        final Iterator<Map.Entry<String, JsonNode>> entries = map.fields();
-        while (entries.hasNext()) {
-            final Map.Entry<String, JsonNode> entry = entries.next();
+        for (final Map.Entry<String, JsonNode> entry : map.properties()) {
             final String entryPointer = pointer + "/" + entry.getKey();
             final JsonNode description = descriptionOf(entry.getValue());
             if (entry.getValue().isObject() && (description == null || !description.isTextual() || description.asText().isBlank())) {
@@ -133,7 +128,7 @@ public class IOSchema3Dot1DocumentationTest {
             if (examples != null && examples.isArray() && pointer.startsWith("/definitions/")) {
                 validateExamples(examples, pointer, failures);
             }
-            node.fields().forEachRemaining(field -> collectExampleFailures(field.getValue(), pointer + "/" + field.getKey(), failures));
+            node.properties().forEach(field -> collectExampleFailures(field.getValue(), pointer + "/" + field.getKey(), failures));
         } else if (node.isArray()) {
             for (int i = 0; i < node.size(); i++) {
                 collectExampleFailures(node.get(i), pointer + "/" + i, failures);
