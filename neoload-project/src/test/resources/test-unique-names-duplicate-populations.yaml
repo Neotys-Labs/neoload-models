@@ -1,0 +1,4 @@
+name: MyProject
+populations:
+- name: dup
+- name: dup

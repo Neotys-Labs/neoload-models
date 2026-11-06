@@ -1,0 +1,12 @@
+name: MyProject
+scenarios:
+- name: dup
+  populations:
+  - name: p
+    constant_load:
+      users: 1
+- name: dup
+  populations:
+  - name: p
+    constant_load:
+      users: 1

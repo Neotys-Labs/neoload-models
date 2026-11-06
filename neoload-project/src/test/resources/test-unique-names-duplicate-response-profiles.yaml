@@ -1,0 +1,7 @@
+name: MyProject
+web_services_security:
+  response_profiles:
+  - name: dup
+    keystore: ./k.p12
+  - name: dup
+    keystore: ./k.p12
