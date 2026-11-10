@@ -35,3 +35,43 @@ user_paths:
         channel: actions>chat_socket
         synchronous: true
         mapping_id: m1
+    - switch:
+        name: router
+        value: "${room}"
+        case:
+        - value: vip
+          break: true
+          steps:
+          - websocket_channel:
+              name: vip_socket
+              url: https://host:443/vip
+        - value: a>b
+          break: true
+          steps:
+          - websocket_channel:
+              name: odd_socket
+              url: https://host:443/odd
+        - value: dup
+          break: false
+          steps:
+          - websocket_channel:
+              name: dup_socket
+              url: https://host:443/dup1
+        - value: dup
+          break: true
+          steps:
+          - websocket_channel:
+              name: dup_socket
+              url: https://host:443/dup2
+        default:
+          steps:
+          - delay: 1s
+    - websocket_request:
+        name: case_named_by_old_key
+        channel: actions>router>vip>vip_socket
+    - websocket_request:
+        name: case_value_with_separator
+        channel: actions>router>Case a>b>odd_socket
+    - websocket_request:
+        name: duplicated_case_value
+        channel: actions>router>Case dup>dup_socket

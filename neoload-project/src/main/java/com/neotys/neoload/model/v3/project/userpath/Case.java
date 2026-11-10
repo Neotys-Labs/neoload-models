@@ -18,28 +18,31 @@ import java.util.stream.Stream;
 import javax.validation.Valid;
 import org.immutables.value.Value;
 
+// A case has no name in the as-code: NeoLoad names it after its value (see displayName()). The name that the
+// Element contract requires is a constant, and a name written in a file is ignored.
+@JsonIgnoreProperties(Element.NAME)
 @JsonInclude(value= JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({Element.DESCRIPTION, Case.VALUE, Case.BREAK, PacingElement.PACING, Case.STEPS, AssertionsElement.ASSERTIONS})
-@JsonIgnoreProperties(Element.NAME)
 @JsonSerialize(as = ImmutableCase.class)
 @JsonDeserialize(as = ImmutableCase.class)
 @Value.Immutable
 @Value.Style(validationMethod = Value.Style.ValidationMethod.NONE)
 public interface Case extends Element, SlaElement, PacingElement, AssertionsElement {
 
+    String DEFAULT_NAME = "case";
     String NAME_PREFIX = "Case ";
     String VALUE = "value";
     String BREAK = "break";
     String STEPS = "steps";
 
-    @Value.Derived
+    /**
+     * A constant, only here because {@link Element} requires a name. It is neither read nor written in the
+     * as-code file, and a value given to the builder or to {@code withName} is not used by anything: use
+     * {@link #displayName()} for the name NeoLoad gives to the case.
+     */
+    @Value.Default
     default String getName() {
-        return NAME_PREFIX + getValue();
-    }
-
-    @Override
-    default Case withName(final String name) {
-        return this;
+        return DEFAULT_NAME;
     }
 
     @RequiredCheck(groups={NeoLoad.class})
@@ -63,6 +66,21 @@ public interface Case extends Element, SlaElement, PacingElement, AssertionsElem
     @Override
     default Stream<Element> flattened() {
         return Stream.concat(Stream.of(this),getSteps().stream().flatMap(Step::flattened));
+    }
+
+    /**
+     * The name under which NeoLoad shows the case: {@code Case <value>}.
+     *
+     * <p>This is not {@link #getName()}. NeoLoad does not let the user name a case: it always names it after
+     * its value and renames it each time the value changes (NLGui's {@code CaseStatement#getGUILabel}), so a
+     * case has no name in the as-code file, and {@link #getName()} is only the constant that {@link Element}
+     * requires. Anything that must designate a case the way NeoLoad does, such as a websocket channel path,
+     * therefore has to use this name and not {@link #getName()}.</p>
+     *
+     * <p>It is not a bean property (no {@code get} prefix): it is neither read nor written in the as-code file.</p>
+     */
+    default String displayName() {
+        return NAME_PREFIX + getValue();
     }
 
     class Builder extends ImmutableCase.Builder{}

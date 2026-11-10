@@ -18,7 +18,7 @@ The Switch action is fall-through, which means that if a Break flag is disabled 
 
 | Name              | Description                 | Accept variable | Required | Since |
 |:------------------|:----------------------------|:---------------:|:--------:|:-----:|
-| value             | The value of the case, compared literally to the Switch value, unique within the Switch |        -        | &#x2713; |       |
+| value             | The value of the case, compared literally to the Switch value |        -        | &#x2713; |       |
 | break             | Enable the break            |        -        |          |       |
 | description       | The description of the case |        -        |    -     |       |
 | [pacing](pacing.md) | The minimum duration enforced for the case | &#x2713; | - | 2026.3 |

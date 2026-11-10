@@ -121,6 +121,9 @@ public class IOSchema3Dot1ValidationTest {
             "test-empty-collections.json",
             "test-websocket_channel-no-url.yaml",
             "test-websocket_channel-timestamp-extractor-no-regexp.yaml",
+            "test-element-name-forbidden-character.yaml",
+            // A case name is ignored by the model (the schema no longer has it)
+            "test-switch-case-name-ignored.yaml",
             "test-websocket_request-invalid-references.yaml",
             "test-websocket_request-invalid-settings.yaml",
             "test-websocket_request-invalid-shared-references.yaml",

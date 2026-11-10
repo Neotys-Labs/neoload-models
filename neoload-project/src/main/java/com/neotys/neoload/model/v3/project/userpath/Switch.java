@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
-import com.neotys.neoload.model.v3.validation.constraints.UniqueCaseValueCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
 import java.util.stream.Stream;
@@ -43,7 +42,6 @@ public interface Switch extends Step {
         String getValue();
 
         @RequiredCheck(groups={NeoLoad.class})
-        @UniqueCaseValueCheck(groups={NeoLoad.class})
         @JsonProperty(CASE)
         @Valid
         List<Case> getCases();

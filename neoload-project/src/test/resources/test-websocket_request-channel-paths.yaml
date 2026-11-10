@@ -38,6 +38,10 @@ user_paths:
           - websocket_channel:
               name: vip_socket
               url: https://host:443/vip
+        - value: vip
+          break: true
+          steps:
+          - delay: 1s
         default:
           steps:
           - websocket_channel:

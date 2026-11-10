@@ -151,7 +151,13 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 		assertInvalid("test-websocket_request-invalid-references",
 				"websocket_request 'bare_name': 'chat_socket' is not a channel path: it must start with init, actions, end",
 				"websocket_request 'wrong_path': no websocket_channel at 'actions>Login>chat_socket'; use 'actions>chat_socket'.",
-				"websocket_request 'ambiguous': 'actions>Twin>twin_socket' designates 2 channels: two sibling steps on this path share a name.",
+				"websocket_request 'ambiguous': 'actions>Twin>twin_socket' designates 2 channels: two sibling steps on this path share a name, or two cases of a switch share a value.",
+				// two cases of a switch with the same value share a path segment, like two steps with the same name
+				"websocket_request 'duplicated_case_value': 'actions>router>Case dup>dup_socket' designates 2 channels: two sibling steps on this path share a name, or two cases of a switch share a value.",
+				// a case is named 'Case <value>': its former name key designates nothing, and the message gives the right path
+				"websocket_request 'case_named_by_old_key': no websocket_channel at 'actions>router>vip>vip_socket'; use 'actions>router>Case vip>vip_socket'.",
+				// the separator cannot be part of a segment
+				"websocket_request 'case_value_with_separator': 'actions>router>Case a>b>odd_socket' is the path of a channel declared in a switch case whose value contains '>'",
 				// The reference is user text: it must reach the message as written, not be interpolated
 				"websocket_request 'with_variable': no websocket_channel at 'actions>${channel}'.",
 				"websocket_request 'no_messages_mapping': a synchronous request needs its channel 'actions>chat_socket' to declare 'messages_mapping'."
@@ -175,7 +181,7 @@ public class IOWebSocketRequestTest extends AbstractIOElementsTest {
 				"websocket_request 'not_used_here' in user path 'Standalone': shared element 'OpenChat' is not used in user path 'Standalone', so this channel is never opened there.",
 				"websocket_request 'wrong_inner_path' in user path 'ChatUser': no websocket_channel at 'shared_elements>OpenChat>Sub>chat_socket'; use 'shared_elements>OpenChat>chat_socket'.",
 				"websocket_request 'too_short' in user path 'ChatUser': 'shared_elements>OpenChat' is not a channel path",
-				"websocket_request 'ambiguous_inside' in shared element 'Twins': 'shared_elements>Twins>Twin>twin_socket' designates 2 channels: two sibling steps on this path share a name.",
+				"websocket_request 'ambiguous_inside' in shared element 'Twins': 'shared_elements>Twins>Twin>twin_socket' designates 2 channels: two sibling steps on this path share a name, or two cases of a switch share a value.",
 				"websocket_request 'different_channels' in shared element 'SendInline': 'init>own_socket' designates a different channel in each user path using this shared element (ChatUser, Listener), but a request can only have one channel.",
 				"websocket_request 'missing_in_one_user_path' in shared element 'SendMissing': in user path 'Listener', no websocket_channel at 'init>solo_socket'.",
 				"websocket_request 'bare_inside' in shared element 'SendBare': 'chat_socket' is not a channel path",

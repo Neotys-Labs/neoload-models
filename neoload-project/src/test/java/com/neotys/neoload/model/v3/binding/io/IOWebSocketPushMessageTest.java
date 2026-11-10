@@ -133,7 +133,7 @@ public class IOWebSocketPushMessageTest extends AbstractIOElementsTest {
 		assertInvalid("test-websocket_push_message-invalid-references",
 				"websocket_request 'wrong_inside': no websocket_channel at 'actions>on_ping>chat_socket'; use 'actions>chat_socket'.",
 				"websocket_request 'sync_without_mapping': a synchronous request needs its channel 'actions>chat_socket' to declare 'messages_mapping'.",
-				"websocket_request 'through_twins': 'actions>chat_socket>twin>inner' designates 2 channels: two sibling steps on this path share a name.",
+				"websocket_request 'through_twins': 'actions>chat_socket>twin>inner' designates 2 channels: two sibling steps on this path share a name, or two cases of a switch share a value.",
 				"no websocket_channel at 'shared_elements>OpenSupport>on_agent>support_socket'; use 'shared_elements>OpenSupport>support_socket'.");
 	}
 

@@ -29,7 +29,7 @@ A request is asynchronous unless `synchronous` is set: it sends its frame and mo
 
 - it starts with where the channel is declared: `init`, `actions` or `end` for a channel declared in a User Path, `shared_elements>SharedElementName` for a channel declared inside a [shared element](shared_elements.md);
 - then comes the `name` of each step on the way, for instance a transaction, a loop or a fork;
-- the branches of an `if` are `then` and `else`, those of a `try_catch` are `try` and `catch`, and the default branch of a `switch` is `default`. A `switch` case has no name of its own: it is designated by `Case <value>`, for instance `Case vip`;
+- the branches of an `if` are `then` and `else`, those of a `try_catch` are `try` and `catch`, and the default branch of a `switch` is `default`. A `switch` case has no name of its own, NeoLoad names it after its value: it is designated by `Case <value>`, for instance `Case vip`. A channel in a case whose value contains `>` cannot be designated, as `>` separates the segments of a path;
 - a channel declared inside a [push message](websocket_channel.md#push_messages) is designated through the `name` of the outer channel, then the `name` of the push message;
 - the last part is the channel's `name`.
 
@@ -135,7 +135,7 @@ A shared element that is not declared in the file, for instance one that only ex
 
 ##### Rejected references
 
-A reference is rejected when it does not start with `init`, `actions`, `end` or `shared_elements>SharedElementName`, when no channel has that path (the message then names the paths of the channels with the same `name`), when two sibling steps on the path share a name, when its shared element is not used by a User Path that runs the request, or when it designates a different channel in each User Path that runs it.
+A reference is rejected when it does not start with `init`, `actions`, `end` or `shared_elements>SharedElementName`, when no channel has that path (the message then names the paths of the channels with the same `name`), when two sibling steps on the path share a name or two cases of a switch share a value, when its shared element is not used by a User Path that runs the request, or when it designates a different channel in each User Path that runs it.
 
 #### Example
 

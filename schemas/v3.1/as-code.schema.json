@@ -2946,12 +2946,12 @@
 			},
 			"websocket_channel_reference": {
 				"title": "WebSocket Channel Reference",
-				"description": "The complete path of the channel to use: segments joined with '>', with no space around it. It starts with where the channel is declared: init, actions or end for a channel declared in a user path, or shared_elements>SharedElementName for one declared inside a shared element. Then comes the name of each step on the way down to the channel (for instance a transaction, a loop, a while or a fork), and last the name of the channel itself. Fixed segments: the branches of an if are then and else; the branches of a try_catch are try and catch; the default branch of a switch is default, while a switch case is designated by its name. A channel declared inside a push message is designated by the name of the outer channel, then the name of the push message (push_messages and steps are keys, not segments). A shared_element step is not part of a path. Two sibling steps on the path must not share a name. A request can only use a channel of its own user path.",
+				"description": "The complete path of the channel to use: segments joined with '>', with no space around it. It starts with where the channel is declared: init, actions or end for a channel declared in a user path, or shared_elements>SharedElementName for one declared inside a shared element. Then comes the name of each step on the way down to the channel (for instance a transaction, a loop, a while or a fork), and last the name of the channel itself. Fixed segments: the branches of an if are then and else; the branches of a try_catch are try and catch; the default branch of a switch is default, while a switch case is designated by `Case <value>` (NeoLoad names a case after its value, so a case has no name of its own; a channel in a case whose value contains '>' cannot be designated). A channel declared inside a push message is designated by the name of the outer channel, then the name of the push message (push_messages and steps are keys, not segments). A shared_element step is not part of a path. Two sibling steps on the path must not share a name, nor two cases of a switch a value. A request can only use a channel of its own user path.",
 				"examples": [
 					"actions>chat_socket",
 					"actions>Login>chat_socket",
 					"actions>has_notifications>then>notify_socket",
-					"actions>router>second_case>routed_socket",
+					"actions>router>Case vip>vip_socket",
 					"actions>chat_socket>on_redirect>room_socket",
 					"shared_elements>OpenChat>chat_socket"
 				],

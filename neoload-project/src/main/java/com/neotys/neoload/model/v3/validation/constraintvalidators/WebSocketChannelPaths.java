@@ -33,7 +33,7 @@ import javax.validation.ConstraintValidatorContext;
  * {@code shared_elements>Name} for one declared inside the shared element {@code Name}. The
  * children of an {@code if}, a {@code try_catch} and the default branch of a {@code switch} are
  * designated by their YAML key ({@code then}, {@code else}, {@code try}, {@code catch},
- * {@code default}), a case by its name, and a push message by its name after its channel's
+ * {@code default}), a case by {@code Case <value>} (NeoLoad names a case after its value), and a push message by its name after its channel's
  * name. A {@code shared_element} step is not a segment: a channel
  * inside a shared element is always designated from the shared element's own root.
  */
@@ -111,7 +111,11 @@ final class WebSocketChannelPaths {
 		}
 		if (found.size() > 1) {
 			return Resolution.problem("'" + escape(reference) + "' designates " + found.size()
-					+ " channels: two sibling steps on this path share a name.");
+					+ " channels: two sibling steps on this path share a name, or two cases of a switch share a value.");
+		}
+		if (declaredBehindSeparator(reference)) {
+			return Resolution.problem("'" + escape(reference) + "' is the path of a channel declared in a switch case whose value"
+					+ " contains '" + SEPARATOR + "', which a path cannot designate: remove it from the case value.");
 		}
 		final String name = segments.get(segments.size() - 1);
 		final List<String> candidates = channels.keySet().stream()
@@ -121,6 +125,16 @@ final class WebSocketChannelPaths {
 				.collect(Collectors.toList());
 		return Resolution.problem("no websocket_channel at '" + escape(reference) + "'"
 				+ (candidates.isEmpty() ? "." : "; use " + String.join(" or ", candidates) + "."));
+	}
+
+	/**
+	 * Whether a channel is declared under a segment holding the separator (a case value such as
+	 * {@code a>b}): joined, its path is the reference, but the reference splits into other segments.
+	 */
+	private boolean declaredBehindSeparator(final String reference) {
+		return channels.keySet().stream()
+				.filter(path -> path.stream().anyMatch(segment -> segment.contains(SEPARATOR)))
+				.anyMatch(path -> String.join(SEPARATOR, path).equals(reference));
 	}
 
 	private void walkContainer(final Container container, final List<String> path) {
@@ -185,7 +199,7 @@ final class WebSocketChannelPaths {
 		} else if (step instanceof Switch) {
 			final Switch switchStep = (Switch) step;
 			for (final Case caseStep : switchStep.getCases()) {
-				walkSteps(caseStep.getSteps(), child(path, caseStep.getName()));
+				walkSteps(caseStep.getSteps(), child(path, caseStep.displayName()));
 			}
 			walkContainer(switchStep.getDefault(), child(path, Switch.DEFAULT));
 		}

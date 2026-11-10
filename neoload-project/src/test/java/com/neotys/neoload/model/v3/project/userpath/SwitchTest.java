@@ -40,9 +40,10 @@ public class SwitchTest {
     }
 
     @Test
-    public void testCaseNameIsDerivedFromValue(){
+    public void testCaseDisplayNameIsDerivedFromValue(){
         Case aCase = Case.builder().value("toto").isBreak(true).build();
-        assertEquals("Case toto", aCase.getName());
-        assertEquals("Case toto", aCase.withName("other").getName());
+        assertEquals("Case toto", aCase.displayName());
+        assertEquals(Case.DEFAULT_NAME, aCase.getName());
+        assertEquals("other", aCase.withName("other").getName());
     }
 }
