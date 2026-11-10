@@ -2627,17 +2627,17 @@
 					"properties": {
 						"text": {
 							"$ref": "#/definitions/common/text",
-							"description": "The text to log"
+							"description": "The text to log. Accepts a variable."
 						},
 						"file": {
 							"$ref": "#/definitions/common/text",
-							"description": "The path of the log file, relative to the project folder. The file must be inside the project folder."
+							"description": "The path of the log file. Does not accept a variable. A relative path is resolved against the NeoLoad logs folder (app data folder) of the Load Generator; an absolute path is used as-is."
 						}
 					},
 					"additionalProperties": false,
 					"description": "The Debug Logger Action writes a text entry to a log file, for debugging purposes.",
 					"examples": [
-						{"text": "Current user: ${user_id}", "file": "logs/custom.txt"}
+						{"text": "Current user: ${user_id}", "file": "custom.txt"}
 					]
 				},
 				"try_catch": {
@@ -3231,17 +3231,13 @@
 				"type": "object",
 				"required": ["value"],
 				"properties": {
-					"name": {
-						"$ref": "#/definitions/common/name",
-						"description": "The name of the case."
-					},
 					"description": {
 						"$ref": "#/definitions/common/text",
 						"description": "The description of the case."
 					},
 					"value": {
 						"anyOf": [{ "$ref": "#/definitions/common/text" }, "number"],
-						"description": "The value of the case. Accepts a variable."
+						"description": "The value of the case. Does not accept a variable: compared literally to the Switch value."
 					},
 					"break": {
 						"type": "boolean",
