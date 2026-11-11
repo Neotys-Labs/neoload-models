@@ -27,13 +27,13 @@ jobs:
       skip-tests: ${{ fromJSON(github.event.inputs.skip-tests || 'false') }}
       release: ${{ fromJSON(github.event.inputs.release || 'false') }}
     secrets:
-      RUNNER_FULL_TAG: ${{ secrets.RUNNER_FULL_TAG }}
       CLOUDSMITH_OIDC_NAMESPACE: ${{ secrets.CLOUDSMITH_OIDC_NAMESPACE }}
       CLOUDSMITH_OIDC_SERVICE_SLUG: ${{ secrets.CLOUDSMITH_OIDC_SERVICE_SLUG }}
       MVN_NEXUS_PUBLIC_USERNAME: ${{ secrets.MVN_NEXUS_PUBLIC_USERNAME }}
       MVN_NEXUS_PUBLIC_PASSWORD: ${{ secrets.MVN_NEXUS_PUBLIC_PASSWORD }}
       MVN_OSSRH_USERNAME: ${{ secrets.MVN_OSSRH_USERNAME }}
       MVN_OSSRH_PASSWORD: ${{ secrets.MVN_OSSRH_PASSWORD }}
+      PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
       PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       GH_APP_NEOLOAD_PUBLISHER_CLIENT_ID: ${{ secrets.GH_APP_NEOLOAD_PUBLISHER_CLIENT_ID }}
