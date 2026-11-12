@@ -609,7 +609,7 @@
 							},
 							"change_step": {
 								"type": "string",
-								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$",
+								"pattern": "^-?(?=\\d*[1-9])\\d+(ms|s|m|h|d|mo|y)$",
 								"description": "The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes."
 							},
 							"scope": {

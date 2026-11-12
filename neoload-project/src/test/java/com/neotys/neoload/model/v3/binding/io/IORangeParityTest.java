@@ -29,6 +29,7 @@ public class IORangeParityTest {
 	private static final String LOOP_COUNT = DurationFields.actions("    - loop:\n        count: %s\n        steps:\n        - delay: 1s\n");
 	private static final String COUNTER_INCREMENT = variable("counter", "start: 0\n    end: 10\n    increment: %s\n    scope: local\n");
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
+	private static final String DATE_CHANGE_STEP = variable("date", "pattern: yyyy-MM-dd'T'HH:mm:ss\n    start_date: 2024-01-01T00:00:00\n    change_step: %s\n");
 
 	private static String variable(final String type, final String properties) {
 		return "name: P\nvariables:\n- " + type + ":\n    name: V\n    " + properties;
@@ -95,6 +96,9 @@ public class IORangeParityTest {
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "0d", INVALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "5d", VALID));
+		rows.add(row("date.change_step", DATE_CHANGE_STEP, "0s", INVALID));
+		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-1h", VALID));
+		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-5d", VALID));
 		return rows;
 	}
 
@@ -106,6 +110,7 @@ public class IORangeParityTest {
 		rows.add(row("start_after", CONSTANT_START_AFTER, "\"-5\"", INVALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "-1", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
+		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-5d", VALID));
 		return rows;
 	}
 
