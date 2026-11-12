@@ -166,7 +166,8 @@ runs:
           SONAR_ARGS="$DEFAULT_ARGS \
           -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
           -Dsonar.pullrequest.branch=${{ github.head_ref }} \
-          -Dsonar.pullrequest.base=${{ github.base_ref }}"
+          -Dsonar.pullrequest.base=${{ github.base_ref }} \
+          -Dsonar.pullrequest.provider=github"
         else
           SONAR_ARGS="$DEFAULT_ARGS \
           -Dsonar.branch.name=${{ github.ref_name }}"
