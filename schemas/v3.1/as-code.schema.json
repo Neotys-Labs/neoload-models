@@ -252,10 +252,10 @@
 				]
 			},
 			"duration_seconds": {
-				"title": "Duration in seconds",
+				"title": "Duration in seconds, from 1 second to 2147483 seconds",
 				"anyOf": [
-					{ "type": "string", "pattern": "^\\s*(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?)\\s*$" },
-					{ "$ref": "#/definitions/common/positive_number" }
+					{ "type": "string", "pattern": "^\\s*(?=.*[1-9])(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?)\\s*$" },
+					{ "type": "integer", "minimum": 1, "maximum": 2147483 }
 				]
 			},
 			"duration": {
