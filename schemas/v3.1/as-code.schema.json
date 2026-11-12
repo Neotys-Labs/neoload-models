@@ -106,7 +106,7 @@
 					},
 					"secret_vault": {
 						"$ref": "#/definitions/variables/secret_vault",
-						"description": "A reference to a secret stored in an external vault provider configured in NeoLoad Web (HashiCorp Vault or AWS Secrets Manager). The provider type is resolved server-side from provider_id; it is not stored in the as-code file."
+						"description": "A reference to a secret stored in an external vault provider configured in NeoLoad Web (HashiCorp Vault or AWS Secrets Manager). The provider type is resolved server-side from provider_id; it is not stored in the as-code file.\n\nUse the following syntax to add SecretVault variables to a User Path:\n- Single-value secret: Use the syntax `${<variable name>}`.\n- Key/value secret: Select a key to build with the syntax `${<variable name>.<key>}`. For example: `${SecretVault_Variable.password}`."
 					}
 				}
 			},
