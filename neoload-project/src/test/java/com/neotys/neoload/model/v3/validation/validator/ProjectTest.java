@@ -29,7 +29,7 @@ public class ProjectTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'sla_profiles': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'sla_profiles': must contain only unique names. Duplicates: MySlaProfile.").append(LINE_SEPARATOR);
 		CONSTRAINTS_PROJECT_SLA_PROFILES_NAMES = sb.toString();
 	}
 
@@ -38,7 +38,7 @@ public class ProjectTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'user_paths': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'user_paths': must contain only unique names. Duplicates: MyUserPath.").append(LINE_SEPARATOR);
 		CONSTRAINTS_PROJECT_USER_PATHS_NAMES = sb.toString();
 	}
 
@@ -47,7 +47,7 @@ public class ProjectTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'populations': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'populations': must contain only unique names. Duplicates: MyPopulation.").append(LINE_SEPARATOR);
 		CONSTRAINTS_PROJECT_POPULATIONS_NAMES = sb.toString();
 	}
 
@@ -56,7 +56,7 @@ public class ProjectTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'scenarios': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'scenarios': must contain only unique names. Duplicates: MyScenario.").append(LINE_SEPARATOR);
 		CONSTRAINTS_PROJECT_SCENARIOS_NAMES = sb.toString();
 	}
 
@@ -65,7 +65,7 @@ public class ProjectTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'shared_elements': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'shared_elements': must contain only unique names. Duplicates: Login.").append(LINE_SEPARATOR);
 		CONSTRAINTS_PROJECT_SHARED_ELEMENTS_NAMES = sb.toString();
 	}
 

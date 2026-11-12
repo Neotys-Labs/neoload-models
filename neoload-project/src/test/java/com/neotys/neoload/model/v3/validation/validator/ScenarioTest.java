@@ -59,7 +59,7 @@ public class ScenarioTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'populations': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'populations': must contain only unique names. Duplicates: MyPopulation.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SCENARIO_POPULATIONS_NAMES = sb.toString();
 	}
 
