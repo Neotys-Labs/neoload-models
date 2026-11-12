@@ -7,9 +7,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.LoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
+import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
@@ -26,6 +29,11 @@ import org.junit.Test;
  */
 public class IORangeRulesTest {
 	private static final Validator VALIDATOR = new Validator();
+
+	private static final String MINIMUM_USERS_OMITTED = DurationFields.scenario("  populations:\n"
+			+ "  - name: R\n    rampup_load:\n      max_users: 5\n      increment_users: 1\n      increment_every: 1 iteration\n      duration: 15 iterations\n"
+			+ "  - name: K\n    peaks_load:\n      minimum:\n        duration: 1 iteration\n      maximum:\n        users: 5\n        duration: 1 iteration\n"
+			+ "      start: maximum\n      duration: 15 iterations\n");
 
 	private static final String START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
 
@@ -49,6 +57,28 @@ public class IORangeRulesTest {
 
 	private static LoadPolicy loadPolicy(final Project project, final int population) {
 		return project.getScenarios().get(0).getPopulations().get(population).getLoadPolicy();
+	}
+
+	@Test
+	public void minimumUsersOmittedMeansNoMinimumUsers() throws IOException {
+		assertTrue(schema31.accepts(MINIMUM_USERS_OMITTED));
+		final Project project = read(MINIMUM_USERS_OMITTED);
+
+		assertTrue(validate(project).getMessage().orElse(""), validate(project).isValid());
+		assertFalse(((RampupLoadPolicy) loadPolicy(project, 0)).getMinUsers().isPresent());
+		assertFalse(((PeaksLoadPolicy) loadPolicy(project, 1)).getMinimum().getUsers().isPresent());
+	}
+
+	@Test
+	public void omittedMinimumUsersAreNotWrittenBack() throws IOException {
+		final Project project = read(MINIMUM_USERS_OMITTED);
+
+		final String written = new IO().write(ProjectDescriptor.builder().project(project).build(), Format.YAML);
+
+		assertFalse(written, written.contains("min_users"));
+		assertFalse(written, written.contains("minimum:\n        users"));
+		assertTrue(written, written.contains("users: 5"));
+		assertTrue(written, schema31.accepts(written));
 	}
 
 	@Test

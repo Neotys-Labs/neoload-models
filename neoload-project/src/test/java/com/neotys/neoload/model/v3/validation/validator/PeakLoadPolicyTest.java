@@ -39,6 +39,16 @@ public class PeakLoadPolicyTest {
 						.build())
 				.build();
 		Validation validation = validator.validate(loadPolicy, NeoLoad.class);
+		assertTrue(validation.isValid());
+
+		loadPolicy = PeakLoadPolicy.builder()
+				.users(0)
+				.duration(LoadDuration.builder()
+						.value(1)
+						.type(LoadDuration.Type.TIME)
+						.build())
+				.build();
+		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(usersViolation("0"), validation.getMessage().get());
 

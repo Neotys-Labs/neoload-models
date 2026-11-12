@@ -25,11 +25,23 @@ public class IORangeParityTest {
 
 	private static final String CONSTANT_START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
 	private static final String CONSTANT_STOP_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      stop_after: %s\n");
+	private static final String RAMPUP_MIN_USERS = rampup("%s", "1", "1 iteration");
+	private static final String PEAKS_MINIMUM_USERS = peaks("%s", "1 iteration", "1", "1 iteration");
 	private static final String SERVER_PORT = "name: P\nservers:\n- name: S\n  host: myserver.intranet.neotys.com\n  port: %s\n";
 	private static final String LOOP_COUNT = DurationFields.actions("    - loop:\n        count: %s\n        steps:\n        - delay: 1s\n");
 	private static final String COUNTER_INCREMENT = variable("counter", "start: 0\n    end: 10\n    increment: %s\n    scope: local\n");
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
 	private static final String DATE_CHANGE_STEP = variable("date", "pattern: yyyy-MM-dd'T'HH:mm:ss\n    start_date: 2024-01-01T00:00:00\n    change_step: %s\n");
+
+	private static String rampup(final String minUsers, final String incrementUsers, final String incrementEvery) {
+		return DurationFields.scenario("  populations:\n  - name: R\n    rampup_load:\n      min_users: " + minUsers + "\n      max_users: 5\n      increment_users: " + incrementUsers
+				+ "\n      increment_every: " + incrementEvery + "\n      duration: 15 iterations\n");
+	}
+
+	private static String peaks(final String minUsers, final String minDuration, final String maxUsers, final String maxDuration) {
+		return DurationFields.scenario("  populations:\n  - name: K\n    peaks_load:\n      minimum:\n        users: " + minUsers + "\n        duration: " + minDuration
+				+ "\n      maximum:\n        users: " + maxUsers + "\n        duration: " + maxDuration + "\n      start: maximum\n      duration: 15 iterations\n");
+	}
 
 	private static String variable(final String type, final String properties) {
 		return "name: P\nvariables:\n- " + type + ":\n    name: V\n    " + properties;
@@ -55,6 +67,10 @@ public class IORangeParityTest {
 
 	private static List<String[]> boundaries() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("rampup_load.min_users", RAMPUP_MIN_USERS, "0", INVALID));
+		rows.add(row("rampup_load.min_users", RAMPUP_MIN_USERS, "1", VALID));
+		rows.add(row("peaks_load.minimum.users", PEAKS_MINIMUM_USERS, "0", INVALID));
+		rows.add(row("peaks_load.minimum.users", PEAKS_MINIMUM_USERS, "1", VALID));
 		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "0", INVALID));
 		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "1", VALID));
 		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "2147483", VALID));

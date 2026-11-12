@@ -1418,7 +1418,7 @@
 			"rampup_load": {
 				"title": "Ramp-up Load",
 				"type": "object",
-				"required": ["min_users", "increment_users", "increment_every"],
+				"required": ["increment_users", "increment_every"],
 				"properties": {
 					"duration": {
 						"$ref": "#/definitions/populations/load_duration"
@@ -1430,8 +1430,8 @@
 						"$ref": "#/definitions/common/stop_after_options"
 					},
 					"min_users": {
-						"$ref": "#/definitions/common/positive_number",
-						"description": "The initial number of Virtual Users"
+						"$ref": "#/definitions/common/user_count",
+						"description": "The initial number of Virtual Users. Left out, no Virtual User runs at the start."
 					},
 					"max_users": {
 						"$ref": "#/definitions/common/positive_number",
@@ -1459,7 +1459,7 @@
 				"required": ["minimum", "maximum", "start"],
 				"properties": {
 					"minimum": {
-						"$ref": "#/definitions/populations/peaks_phase",
+						"$ref": "#/definitions/populations/peaks_minimum_phase",
 						"description": "The phase of low load."
 					},
 					"maximum": {
@@ -1500,6 +1500,22 @@
 					"users": {
 						"$ref": "#/definitions/common/positive_number",
 						"description": "The fixed number of Virtual Users during the phase"
+					},
+					"duration": {
+						"$ref": "#/definitions/common/duration",
+						"description": "The duration of the phase: time length or number of iterations."
+					}
+				}
+			},
+			"peaks_minimum_phase": {
+				"title": "Peak Minimum Phase",
+				"type": "object",
+				"required": ["duration"],
+				"additionalProperties": false,
+				"properties": {
+					"users": {
+						"$ref": "#/definitions/common/user_count",
+						"description": "The fixed number of Virtual Users. Left out, no Virtual User runs during the phase."
 					},
 					"duration": {
 						"$ref": "#/definitions/common/duration",

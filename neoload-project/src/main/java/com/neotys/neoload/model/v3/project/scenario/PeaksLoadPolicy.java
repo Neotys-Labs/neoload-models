@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.constraints.RequiredUsersCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.time.Duration;
 import javax.validation.Valid;
@@ -40,6 +41,7 @@ public interface PeaksLoadPolicy extends LoadPolicy {
 	@Valid
     PeakLoadPolicy getMinimum();
 	@RequiredCheck(groups={NeoLoad.class})
+	@RequiredUsersCheck(groups={NeoLoad.class})
     @Valid
     PeakLoadPolicy getMaximum();
 	@RequiredCheck(groups={NeoLoad.class})
