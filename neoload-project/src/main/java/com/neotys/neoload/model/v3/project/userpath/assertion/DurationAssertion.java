@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Positive;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
@@ -20,7 +20,7 @@ public interface DurationAssertion {
 
 	@JsonProperty(LESS_THAN)
 	@RequiredCheck(groups = {NeoLoad.class})
-	@PositiveOrZero(groups = {NeoLoad.class})
+	@Positive(groups = {NeoLoad.class})
 	Long getLessThan();
 
 	class Builder extends ImmutableDurationAssertion.Builder {}

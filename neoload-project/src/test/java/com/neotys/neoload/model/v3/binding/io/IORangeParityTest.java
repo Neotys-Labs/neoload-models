@@ -29,6 +29,10 @@ public class IORangeParityTest {
 	private static final String PEAKS_MINIMUM_USERS = peaks("%s", "1 iteration", "1", "1 iteration");
 	private static final String SERVER_PORT = "name: P\nservers:\n- name: S\n  host: myserver.intranet.neotys.com\n  port: %s\n";
 	private static final String LOOP_COUNT = DurationFields.actions("    - loop:\n        count: %s\n        steps:\n        - delay: 1s\n");
+	private static final String DURATION_ASSERTION = DurationFields.actions("    - request:\n        url: http://host:80/\n        duration_assertion:\n          less_than: %s\n");
+	private static final String SIZE_EQUALS = sizeAssertion("equals");
+	private static final String SIZE_GREATER_THAN = sizeAssertion("greater_than");
+	private static final String SIZE_LESS_THAN = sizeAssertion("less_than");
 	private static final String COUNTER_INCREMENT = variable("counter", "start: 0\n    end: 10\n    increment: %s\n    scope: local\n");
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
 	private static final String DATE_CHANGE_STEP = variable("date", "pattern: yyyy-MM-dd'T'HH:mm:ss\n    start_date: 2024-01-01T00:00:00\n    change_step: %s\n");
@@ -43,6 +47,10 @@ public class IORangeParityTest {
 	private static String peaks(final String minUsers, final String minDuration, final String maxUsers, final String maxDuration) {
 		return DurationFields.scenario("  populations:\n  - name: K\n    peaks_load:\n      minimum:\n        users: " + minUsers + "\n        duration: " + minDuration
 				+ "\n      maximum:\n        users: " + maxUsers + "\n        duration: " + maxDuration + "\n      start: maximum\n      duration: 15 iterations\n");
+	}
+
+	private static String sizeAssertion(final String key) {
+		return DurationFields.actions("    - request:\n        url: http://host:80/\n        size_assertion:\n          " + key + ": %s\n");
 	}
 
 	private static String variable(final String type, final String properties) {
@@ -118,6 +126,14 @@ public class IORangeParityTest {
 		rows.add(row("servers[].port", SERVER_PORT, "65535", VALID));
 		rows.add(row("servers[].port", SERVER_PORT, "65536", INVALID));
 		rows.add(row("servers[].port", SERVER_PORT, "70000", INVALID));
+		rows.add(row("duration_assertion.less_than", DURATION_ASSERTION, "0", INVALID));
+		rows.add(row("duration_assertion.less_than", DURATION_ASSERTION, "1", VALID));
+		rows.add(row("size_assertion.equals", SIZE_EQUALS, "0", INVALID));
+		rows.add(row("size_assertion.equals", SIZE_EQUALS, "1", VALID));
+		rows.add(row("size_assertion.greater_than", SIZE_GREATER_THAN, "0", INVALID));
+		rows.add(row("size_assertion.greater_than", SIZE_GREATER_THAN, "1", VALID));
+		rows.add(row("size_assertion.less_than", SIZE_LESS_THAN, "0", INVALID));
+		rows.add(row("size_assertion.less_than", SIZE_LESS_THAN, "1", VALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "0", INVALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "-1", VALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "1", VALID));
@@ -140,6 +156,7 @@ public class IORangeParityTest {
 		rows.add(row("servers[].port", SERVER_PORT, "\"-80\"", INVALID));
 		rows.add(row("loop.count", LOOP_COUNT, "\"-1\"", INVALID));
 		rows.add(row("start_after", CONSTANT_START_AFTER, "\"-5\"", INVALID));
+		rows.add(row("duration_assertion.less_than", DURATION_ASSERTION, "-1", INVALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "-1", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-5d", VALID));
