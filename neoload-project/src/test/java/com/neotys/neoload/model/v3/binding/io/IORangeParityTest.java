@@ -79,6 +79,7 @@ public class IORangeParityTest {
 
 	private static List<String[]> negatives() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("start_after", CONSTANT_START_AFTER, "\"-5\"", INVALID));
 		return rows;
 	}
 
