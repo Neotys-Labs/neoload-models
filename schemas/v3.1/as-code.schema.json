@@ -259,6 +259,13 @@
 					{ "$ref": "#/definitions/common/positive_number" }
 				]
 			},
+			"positive_duration_value": {
+				"title": "Duration value greater than 0",
+				"anyOf": [
+					{ "type": "string", "pattern": "^\\s*((?=.*[1-9])(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s\\s*)?(\\d+ms)?)|\\$\\{[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\.}]+(\\.[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\.}]+)*\\})\\s*$" },
+					{ "type": "integer", "minimum": 1 }
+				]
+			},
 			"duration_seconds": {
 				"title": "Duration in seconds, from 1 second to 2147483 seconds",
 				"anyOf": [
@@ -2253,7 +2260,7 @@
 				"duration_action": {
 					"title": "Duration Action",
 					"oneOf": [
-						{ "$ref": "#/definitions/common/duration_value" },
+						{ "$ref": "#/definitions/common/positive_duration_value" },
 						{
 							"$ref": "#/definitions/user_paths/actions/duration_object",
 							"properties": {
@@ -2278,7 +2285,7 @@
 				"duration": {
 					"title": "Duration",
 					"oneOf": [
-						{ "$ref": "#/definitions/common/duration_value" },
+						{ "$ref": "#/definitions/common/positive_duration_value" },
 						{
 							"$ref": "#/definitions/user_paths/actions/duration_object",
 							"unevaluatedProperties": false
@@ -2294,7 +2301,7 @@
 							"required": ["value"],
 							"properties": {
 								"value": {
-									"$ref": "#/definitions/common/duration_value",
+									"$ref": "#/definitions/common/positive_duration_value",
 									"description": "The fixed duration of the delay or think time, in the format `3m 100ms` (hours `h`, minutes `m`, seconds `s`, milliseconds `ms`), or a plain integer in milliseconds. Required. Accepts a variable."
 								}
 							}
@@ -2307,7 +2314,7 @@
 									"description": "The minimum duration. The default value is `0`."
 								},
 								"max": {
-									"$ref": "#/definitions/common/duration_value",
+									"$ref": "#/definitions/common/positive_duration_value",
 									"description": "The maximum duration. Must be greater than or equal to `min`."
 								}
 							}
@@ -2603,7 +2610,7 @@
 							"$ref": "#/definitions/common/conditions_match"
 						},
 						"timeout": {
-							"$ref": "#/definitions/common/duration_value",
+							"$ref": "#/definitions/common/positive_duration_value",
 							"description": "The maximum time to wait for the conditions to be verified. The default value is `1m` (60000 ms)."
 						}
 					},

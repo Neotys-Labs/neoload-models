@@ -101,6 +101,16 @@ public class IORangeParityTest {
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "1", VALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147483", VALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147484", INVALID));
+		rows.add(row("delay", DurationFields.DELAY.yaml("%s"), "0", INVALID));
+		rows.add(row("delay", DurationFields.DELAY.yaml("%s"), "1", VALID));
+		rows.add(row("think_time", DurationFields.THINK_TIME.yaml("%s"), "0", INVALID));
+		rows.add(row("think_time", DurationFields.THINK_TIME.yaml("%s"), "1", VALID));
+		rows.add(row("web page think_time", DurationFields.WEB_PAGE_THINK_TIME.yaml("%s"), "0", INVALID));
+		rows.add(row("web page think_time", DurationFields.WEB_PAGE_THINK_TIME.yaml("%s"), "1", VALID));
+		rows.add(row("pacing", DurationFields.PACING.yaml("%s"), "0", INVALID));
+		rows.add(row("pacing", DurationFields.PACING.yaml("%s"), "1", VALID));
+		rows.add(row("wait_until.timeout", DurationFields.WAIT_UNTIL_TIMEOUT.yaml("%s"), "0", INVALID));
+		rows.add(row("wait_until.timeout", DurationFields.WAIT_UNTIL_TIMEOUT.yaml("%s"), "1", VALID));
 		rows.add(row("loop.count", LOOP_COUNT, "0", INVALID));
 		rows.add(row("loop.count", LOOP_COUNT, "1", VALID));
 		rows.add(row("servers[].port", SERVER_PORT, "0", INVALID));
@@ -140,6 +150,10 @@ public class IORangeParityTest {
 		final List<String[]> rows = new ArrayList<>();
 		rows.add(row("servers[].port", SERVER_PORT, "\"${myVar}\"", VALID));
 		rows.add(row("loop.count", LOOP_COUNT, "\"${myVar}\"", VALID));
+		rows.add(row("delay", DurationFields.DELAY.yaml("%s"), "\"${myVar}\"", VALID));
+		rows.add(row("think_time", DurationFields.THINK_TIME.yaml("%s"), "\"${myVar}\"", VALID));
+		rows.add(row("pacing", DurationFields.PACING.yaml("%s"), "\"${myVar}\"", VALID));
+		rows.add(row("wait_until.timeout", DurationFields.WAIT_UNTIL_TIMEOUT.yaml("%s"), "\"${myVar}\"", VALID));
 		return rows;
 	}
 
