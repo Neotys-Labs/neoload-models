@@ -252,6 +252,12 @@
 				"minimum": 1,
 				"maximum": 2147483647
 			},
+			"user_count_or_zero": {
+				"title": "User count, possibly 0",
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 2147483647
+			},
 			"int": {
 				"title": "Integer",
 				"type": "integer",
@@ -461,6 +467,7 @@
 							},
 							"start_from_line": {
 								"type": "integer",
+								"minimum": 1,
 								"default": 1,
 								"description": "The first line of the file to be used. The default value is `1`. Does not accept a variable."
 							},
@@ -674,6 +681,7 @@
 							},
 							"start_from_line": {
 								"type": "integer",
+								"minimum": 1,
 								"default": 1,
 								"description": "The first row of `values` to be used. The default value is \"1\"."
 							},
@@ -1399,7 +1407,7 @@
 								},
 								"distribution": {
 									"anyOf": [
-										{ "type": "string", "pattern": "^\\d{1,3}(\\.\\d)?%?$" },
+										{ "type": "string", "pattern": "^(100(\\.0)?|\\d{1,2}(\\.\\d)?)%?$" },
 										{ "type": "number", "minimum": 0, "maximum": 100 }
 									],
 									"description": "The percentage of the User Path in Population. The value is a percentage and may be set within precision of 0.1%. If the distribution is not present, its value will be proportionally calculated."
@@ -1431,7 +1439,7 @@
 						"$ref": "#/definitions/common/stop_after_options"
 					},
 					"users": {
-						"type": "integer",
+						"$ref": "#/definitions/common/user_count",
 						"default": 1,
 						"description": "The fixed number of Virtual Users"
 					},
@@ -1460,11 +1468,11 @@
 						"description": "The initial number of Virtual Users. Left out, no Virtual User runs at the start."
 					},
 					"max_users": {
-						"$ref": "#/definitions/common/positive_number",
+						"$ref": "#/definitions/common/user_count",
 						"description": "The maximum number of Virtual Users. Must be greater than or equal to `min_users`."
 					},
 					"increment_users": {
-						"type": "integer",
+						"$ref": "#/definitions/common/user_count",
 						"default": 1,
 						"description": "The number of Virtual Users to increment"
 					},
@@ -1524,7 +1532,7 @@
 				"additionalProperties": false,
 				"properties": {
 					"users": {
-						"$ref": "#/definitions/common/positive_number",
+						"$ref": "#/definitions/common/user_count",
 						"description": "The fixed number of Virtual Users during the phase"
 					},
 					"duration": {
@@ -1585,7 +1593,7 @@
 						"description": "The moment when Virtual Users count will reach the specified number: time length or number of iterations."
 					},
 					"users": {
-						"$ref": "#/definitions/common/positive_number",
+						"$ref": "#/definitions/common/user_count_or_zero",
 						"description": "The fixed number of Virtual Users at the specified moment"
 					}
 				},
@@ -1738,8 +1746,11 @@
 						"description": "The name of the rendezvous the policy applies to."
 					},
 					"when": {
-						"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
-						"description": "When to release the Rendezvous. Possible values are: \"manual\", percentage or positive number. The default value is 100%."
+						"anyOf": [
+							{ "type": "string", "pattern": "^([Mm][Aa][Nn][Uu][Aa][Ll]|([1-9]\\d?|100)%|[1-9]\\d{0,9})$" },
+							{ "$ref": "#/definitions/common/user_count" }
+						],
+						"description": "When to release the Rendezvous. Possible values are: \"manual\", a percentage from 1% to 100% or a number of Virtual Users greater than or equal to 1. The default value is 100%."
 					},
 					"timeout": {
 						"$ref": "#/definitions/common/duration_seconds",

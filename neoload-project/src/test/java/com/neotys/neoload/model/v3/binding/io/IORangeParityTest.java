@@ -23,14 +23,19 @@ public class IORangeParityTest {
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
 
+	private static final String CONSTANT_USERS = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: %s\n");
 	private static final String CONSTANT_DURATION = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      duration: %s\n");
 	private static final String CONSTANT_START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
 	private static final String CONSTANT_STOP_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      stop_after: %s\n");
 	private static final String RAMPUP_MIN_USERS = rampup("%s", "1", "1 iteration");
+	private static final String RAMPUP_INCREMENT_USERS = rampup("1", "%s", "1 iteration");
 	private static final String RAMPUP_INCREMENT_EVERY = rampup("1", "1", "%s");
 	private static final String PEAKS_MINIMUM_USERS = peaks("%s", "1 iteration", "1", "1 iteration");
+	private static final String PEAKS_MAXIMUM_USERS = peaks("1", "1 iteration", "%s", "1 iteration");
 	private static final String PEAKS_MAXIMUM_DURATION = peaks("1", "1 iteration", "5", "%s");
 	private static final String CUSTOM_WHEN = DurationFields.scenario("  populations:\n  - name: C\n    custom_load:\n      steps:\n      - when: %s\n        users: 1\n      - when: 10s\n        users: 2\n");
+	private static final String CUSTOM_USERS = DurationFields.scenario("  populations:\n  - name: C\n    custom_load:\n      steps:\n      - when: 0s\n        users: %s\n      - when: 10s\n        users: 1\n");
+	private static final String RENDEZVOUS_WHEN = DurationFields.scenario("  rendezvous_policies:\n  - name: r\n    when: %s\n");
 	private static final String SERVER_PORT = "name: P\nservers:\n- name: S\n  host: myserver.intranet.neotys.com\n  port: %s\n";
 	private static final String LOOP_COUNT = DurationFields.actions("    - loop:\n        count: %s\n        steps:\n        - delay: 1s\n");
 	private static final String DURATION_ASSERTION = DurationFields.actions("    - request:\n        url: http://host:80/\n        duration_assertion:\n          less_than: %s\n");
@@ -44,10 +49,13 @@ public class IORangeParityTest {
 	private static final String RANDOM_NUMBER_MAX = variable("random_number", "min: -10\n    max: %s\n    predictable: false\n");
 	private static final String RANDOM_STRING_MIN = variable("random_string", "min_length: %s\n    max_length: 10\n    predictable: false\n");
 	private static final String RANDOM_STRING_MAX = variable("random_string", "min_length: 1\n    max_length: %s\n    predictable: false\n");
+	private static final String FILE_START_FROM_LINE = variable("file", "path: data/cities.csv\n    is_first_line_column_names: true\n    start_from_line: %s\n");
+	private static final String LIST_START_FROM_LINE = variable("list", "column_names:\n    - city\n    values:\n    - - Paris\n    start_from_line: %s\n");
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
 	private static final String DATE_CHANGE_STEP = variable("date", "pattern: yyyy-MM-dd'T'HH:mm:ss\n    start_date: 2024-01-01T00:00:00\n    change_step: %s\n");
 	private static final String SLA_THRESHOLD = "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - avg-request-resp-time warn >= %s per test\n";
 	private static final String SLA_PERCENTILE = "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - perc-transaction-resp-time (p%s) warn >= 1 per test\n";
+	private static final String DISTRIBUTION = "name: P\npopulations:\n- name: Pop\n  user_paths:\n  - name: U\n    distribution: %s\n";
 	private static final String QTEST_PROJECT_ID = "name: P\nproject_settings:\n  qtest.project_id: %s\n";
 	private static final String QTEST_CYCLE_ID = "name: P\nproject_settings:\n  qtest.cycle_id: %s\n";
 
@@ -89,6 +97,14 @@ public class IORangeParityTest {
 
 	private static List<String[]> boundaries() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("constant_load.users", CONSTANT_USERS, "0", INVALID));
+		rows.add(row("constant_load.users", CONSTANT_USERS, "1", VALID));
+		rows.add(row("constant_load.users", CONSTANT_USERS, "2147483647", VALID));
+		rows.add(row("constant_load.users", CONSTANT_USERS, "2147483648", INVALID));
+		rows.add(row("rampup_load.increment_users", RAMPUP_INCREMENT_USERS, "0", INVALID));
+		rows.add(row("rampup_load.increment_users", RAMPUP_INCREMENT_USERS, "1", VALID));
+		rows.add(row("peaks_load.maximum.users", PEAKS_MAXIMUM_USERS, "0", INVALID));
+		rows.add(row("peaks_load.maximum.users", PEAKS_MAXIMUM_USERS, "1", VALID));
 		rows.add(row("rampup_load.min_users", RAMPUP_MIN_USERS, "0", INVALID));
 		rows.add(row("rampup_load.min_users", RAMPUP_MIN_USERS, "1", VALID));
 		rows.add(row("peaks_load.minimum.users", PEAKS_MINIMUM_USERS, "0", INVALID));
@@ -130,6 +146,13 @@ public class IORangeParityTest {
 		rows.add(row("peaks_load.maximum.duration", PEAKS_MAXIMUM_DURATION, "1s", VALID));
 		rows.add(row("custom_load.steps[].when", CUSTOM_WHEN, "0", VALID));
 		rows.add(row("custom_load.steps[].when", CUSTOM_WHEN, "0s", VALID));
+		rows.add(row("custom_load.steps[].users", CUSTOM_USERS, "0", VALID));
+		rows.add(row("custom_load.steps[].users", CUSTOM_USERS, "-1", INVALID));
+		rows.add(row("rendezvous_policies[].when", RENDEZVOUS_WHEN, "0", INVALID));
+		rows.add(row("rendezvous_policies[].when", RENDEZVOUS_WHEN, "1", VALID));
+		rows.add(row("rendezvous_policies[].when", RENDEZVOUS_WHEN, "1%", VALID));
+		rows.add(row("rendezvous_policies[].when", RENDEZVOUS_WHEN, "100%", VALID));
+		rows.add(row("rendezvous_policies[].when", RENDEZVOUS_WHEN, "101%", INVALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "0", INVALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "1", VALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147483", VALID));
@@ -173,6 +196,10 @@ public class IORangeParityTest {
 		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1001", INVALID));
 		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "2000", INVALID));
 		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "-1", INVALID));
+		rows.add(row("file start_from_line", FILE_START_FROM_LINE, "0", INVALID));
+		rows.add(row("file start_from_line", FILE_START_FROM_LINE, "1", VALID));
+		rows.add(row("list start_from_line", LIST_START_FROM_LINE, "0", INVALID));
+		rows.add(row("list start_from_line", LIST_START_FROM_LINE, "1", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "0d", INVALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "5d", VALID));
@@ -185,6 +212,9 @@ public class IORangeParityTest {
 		rows.add(row("SLA percentile", SLA_PERCENTILE, "1", VALID));
 		rows.add(row("SLA percentile", SLA_PERCENTILE, "99", VALID));
 		rows.add(row("SLA percentile", SLA_PERCENTILE, "100", INVALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "0", VALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "100%", VALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "101%", INVALID));
 		rows.add(row("qtest.project_id", QTEST_PROJECT_ID, "0", INVALID));
 		rows.add(row("qtest.project_id", QTEST_PROJECT_ID, "1", VALID));
 		rows.add(row("qtest.cycle_id", QTEST_CYCLE_ID, "0", INVALID));
@@ -197,6 +227,7 @@ public class IORangeParityTest {
 		rows.add(row("servers[].port", SERVER_PORT, "-80", INVALID));
 		rows.add(row("servers[].port", SERVER_PORT, "\"-80\"", INVALID));
 		rows.add(row("loop.count", LOOP_COUNT, "\"-1\"", INVALID));
+		rows.add(row("rendezvous_policies[].when", RENDEZVOUS_WHEN, "\"-5\"", INVALID));
 		rows.add(row("start_after", CONSTANT_START_AFTER, "\"-5\"", INVALID));
 		rows.add(row("duration_assertion.less_than", DURATION_ASSERTION, "-1", INVALID));
 		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "-1", INVALID));
