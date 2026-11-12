@@ -480,8 +480,8 @@ _Secret Vault variable_ is supported in NeoLoad from version 2026.3 (schema 3.1)
 A reference to a secret stored in an external vault provider configured in NeoLoad Web (HashiCorp Vault or AWS Secrets Manager). The provider type is resolved server-side from `provider_id`; it is not stored in the as-code file.
 
 Use the following syntax to add SecretVault variables to a User Path:
-- **Single-value secret**: Use the syntax `${<variable name>}`.
-- **Key/value secret**: Select a key to build with the syntax `${<variable name>.<key>}`. For example: `${SecretVault_Variable.password}`.
+- **Single-value secret**: `${variable_name}`.
+- **Key/value secret**: select a key with `${variable_name.key}`, for example `${SecretVault_Variable.password}`.
 
 | Name               | Description                                                                 | Accept variable | Required | Since |
 |:------------------ |:--------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
