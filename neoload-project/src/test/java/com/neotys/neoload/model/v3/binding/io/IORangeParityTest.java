@@ -28,6 +28,7 @@ public class IORangeParityTest {
 	private static final String SERVER_PORT = "name: P\nservers:\n- name: S\n  host: myserver.intranet.neotys.com\n  port: %s\n";
 	private static final String LOOP_COUNT = DurationFields.actions("    - loop:\n        count: %s\n        steps:\n        - delay: 1s\n");
 	private static final String COUNTER_INCREMENT = variable("counter", "start: 0\n    end: 10\n    increment: %s\n    scope: local\n");
+	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
 
 	private static String variable(final String type, final String properties) {
 		return "name: P\nvariables:\n- " + type + ":\n    name: V\n    " + properties;
@@ -91,6 +92,9 @@ public class IORangeParityTest {
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "0", INVALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "-1", VALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "1", VALID));
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "0d", INVALID));
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "5d", VALID));
 		return rows;
 	}
 
@@ -101,6 +105,7 @@ public class IORangeParityTest {
 		rows.add(row("loop.count", LOOP_COUNT, "\"-1\"", INVALID));
 		rows.add(row("start_after", CONSTANT_START_AFTER, "\"-5\"", INVALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "-1", VALID));
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		return rows;
 	}
 
