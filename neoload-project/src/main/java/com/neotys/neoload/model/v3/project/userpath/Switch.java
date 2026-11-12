@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.constraints.UniqueCaseValueCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.immutables.value.Value;
-
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Stream;
+import javax.validation.Valid;
+import org.immutables.value.Value;
 
 @JsonInclude(value= JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, Switch.VALUE, Switch.CASE, Switch.DEFAULT})
@@ -43,6 +43,7 @@ public interface Switch extends Step {
         String getValue();
 
         @RequiredCheck(groups={NeoLoad.class})
+        @UniqueCaseValueCheck(groups={NeoLoad.class})
         @JsonProperty(CASE)
         @Valid
         List<Case> getCases();

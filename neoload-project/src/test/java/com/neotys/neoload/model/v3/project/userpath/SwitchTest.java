@@ -38,4 +38,10 @@ public class SwitchTest {
                 .build();
         assertEquals(6, aSwitch.flattened().count());
     }
+
+    @Test
+    public void testCaseDisplayNameIsDerivedFromValue(){
+        Case aCase = Case.builder().value("toto").isBreak(true).build();
+        assertEquals("Case toto", aCase.displayName());
+    }
 }

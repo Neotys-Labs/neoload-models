@@ -185,7 +185,7 @@ final class WebSocketChannelPaths {
 		} else if (step instanceof Switch) {
 			final Switch switchStep = (Switch) step;
 			for (final Case caseStep : switchStep.getCases()) {
-				walkSteps(caseStep.getSteps(), child(path, caseStep.getName()));
+				walkSteps(caseStep.getSteps(), child(path, caseStep.displayName()));
 			}
 			walkContainer(switchStep.getDefault(), child(path, Switch.DEFAULT));
 		}
