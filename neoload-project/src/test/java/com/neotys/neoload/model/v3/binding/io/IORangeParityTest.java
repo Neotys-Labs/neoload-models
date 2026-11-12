@@ -51,6 +51,8 @@ public class IORangeParityTest {
 	private static final String RANDOM_STRING_MAX = variable("random_string", "min_length: 1\n    max_length: %s\n    predictable: false\n");
 	private static final String FILE_START_FROM_LINE = variable("file", "path: data/cities.csv\n    is_first_line_column_names: true\n    start_from_line: %s\n");
 	private static final String LIST_START_FROM_LINE = variable("list", "column_names:\n    - city\n    values:\n    - - Paris\n    start_from_line: %s\n");
+	private static final String QUEUE_SIZE = variable("shared_queue", "queue_size: %s\n    consumer_timeout: 5000\n");
+	private static final String CONSUMER_TIMEOUT = variable("shared_queue", "queue_size: 10\n    consumer_timeout: %s\n");
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
 	private static final String DATE_CHANGE_STEP = variable("date", "pattern: yyyy-MM-dd'T'HH:mm:ss\n    start_date: 2024-01-01T00:00:00\n    change_step: %s\n");
 	private static final String SLA_THRESHOLD = "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - avg-request-resp-time warn >= %s per test\n";
@@ -200,6 +202,10 @@ public class IORangeParityTest {
 		rows.add(row("file start_from_line", FILE_START_FROM_LINE, "1", VALID));
 		rows.add(row("list start_from_line", LIST_START_FROM_LINE, "0", INVALID));
 		rows.add(row("list start_from_line", LIST_START_FROM_LINE, "1", VALID));
+		rows.add(row("shared_queue.queue_size", QUEUE_SIZE, "0", INVALID));
+		rows.add(row("shared_queue.queue_size", QUEUE_SIZE, "1", VALID));
+		rows.add(row("shared_queue.consumer_timeout", CONSUMER_TIMEOUT, "0", VALID));
+		rows.add(row("shared_queue.consumer_timeout", CONSUMER_TIMEOUT, "-1", INVALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "0d", INVALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "5d", VALID));
