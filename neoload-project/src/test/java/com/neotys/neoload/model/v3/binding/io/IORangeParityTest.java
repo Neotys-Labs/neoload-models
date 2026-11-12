@@ -32,6 +32,8 @@ public class IORangeParityTest {
 	private static final String COUNTER_INCREMENT = variable("counter", "start: 0\n    end: 10\n    increment: %s\n    scope: local\n");
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
 	private static final String DATE_CHANGE_STEP = variable("date", "pattern: yyyy-MM-dd'T'HH:mm:ss\n    start_date: 2024-01-01T00:00:00\n    change_step: %s\n");
+	private static final String QTEST_PROJECT_ID = "name: P\nproject_settings:\n  qtest.project_id: %s\n";
+	private static final String QTEST_CYCLE_ID = "name: P\nproject_settings:\n  qtest.cycle_id: %s\n";
 
 	private static String rampup(final String minUsers, final String incrementUsers, final String incrementEvery) {
 		return DurationFields.scenario("  populations:\n  - name: R\n    rampup_load:\n      min_users: " + minUsers + "\n      max_users: 5\n      increment_users: " + incrementUsers
@@ -115,6 +117,10 @@ public class IORangeParityTest {
 		rows.add(row("date.change_step", DATE_CHANGE_STEP, "0s", INVALID));
 		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-1h", VALID));
 		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-5d", VALID));
+		rows.add(row("qtest.project_id", QTEST_PROJECT_ID, "0", INVALID));
+		rows.add(row("qtest.project_id", QTEST_PROJECT_ID, "1", VALID));
+		rows.add(row("qtest.cycle_id", QTEST_CYCLE_ID, "0", INVALID));
+		rows.add(row("qtest.cycle_id", QTEST_CYCLE_ID, "1", VALID));
 		return rows;
 	}
 
