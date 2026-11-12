@@ -34,6 +34,8 @@ public class IORangeParityTest {
 	private static final String SIZE_GREATER_THAN = sizeAssertion("greater_than");
 	private static final String SIZE_LESS_THAN = sizeAssertion("less_than");
 	private static final String COUNTER_INCREMENT = variable("counter", "start: 0\n    end: 10\n    increment: %s\n    scope: local\n");
+	private static final String RANDOM_STRING_MIN = variable("random_string", "min_length: %s\n    max_length: 10\n    predictable: false\n");
+	private static final String RANDOM_STRING_MAX = variable("random_string", "min_length: 1\n    max_length: %s\n    predictable: false\n");
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
 	private static final String DATE_CHANGE_STEP = variable("date", "pattern: yyyy-MM-dd'T'HH:mm:ss\n    start_date: 2024-01-01T00:00:00\n    change_step: %s\n");
 	private static final String SLA_THRESHOLD = "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - avg-request-resp-time warn >= %s per test\n";
@@ -139,6 +141,12 @@ public class IORangeParityTest {
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "0", INVALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "-1", VALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "1", VALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "0", INVALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "1", VALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1000", VALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1001", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "2000", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "-1", INVALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "0d", INVALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "5d", VALID));
@@ -165,6 +173,7 @@ public class IORangeParityTest {
 		rows.add(row("loop.count", LOOP_COUNT, "\"-1\"", INVALID));
 		rows.add(row("start_after", CONSTANT_START_AFTER, "\"-5\"", INVALID));
 		rows.add(row("duration_assertion.less_than", DURATION_ASSERTION, "-1", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "-1", INVALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "-1", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-5d", VALID));
