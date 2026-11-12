@@ -1,6 +1,8 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertInvalidDurationRead;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertViolations;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -9,6 +11,9 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.LoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.validation.validator.Validation;
+import com.neotys.neoload.model.v3.validation.validator.Validator;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import org.junit.BeforeClass;
@@ -20,8 +25,12 @@ import org.junit.Test;
  * unchanged 3.0 schema.
  */
 public class IORangeRulesTest {
+	private static final Validator VALIDATOR = new Validator();
 
 	private static final String START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
+
+	private static final String PORT_AND_LOOP_COUNT = "name: P\nservers:\n- name: S\n  host: myserver.intranet.neotys.com\n  port: 70000\n"
+			+ "user_paths:\n- name: U\n  actions:\n    steps:\n    - loop:\n        count: 0\n        steps:\n        - delay: 1s\n";
 
 	private static SchemaFiles schema31;
 
@@ -32,6 +41,10 @@ public class IORangeRulesTest {
 
 	private static Project read(final String yaml) throws IOException {
 		return new IO().read(yaml).getProject();
+	}
+
+	private static Validation validate(final Project project) {
+		return VALIDATOR.validate(ProjectDescriptor.builder().project(project).build(), NeoLoad.class);
 	}
 
 	private static LoadPolicy loadPolicy(final Project project, final int population) {
@@ -56,6 +69,16 @@ public class IORangeRulesTest {
 
 		assertEquals(StartAfter.builder().type(StartAfter.Type.POPULATION).value("other_population").build(), policy.getStartAfter());
 		assertTrue(schema31.accepts(yaml));
+	}
+
+	@Test
+	public void outOfRangeLiteralIsReportedWithItsFieldAndValueAndKept() throws IOException {
+		final Project project = read(PORT_AND_LOOP_COUNT);
+
+		assertViolations(validate(project),
+				invalidValue("project.servers[0].port", "must be a number between 1 and 65535, got 70000."),
+				invalidValue("project.user_paths[0].actions.steps[0].count", "must be a number between 1 and 2147483647, got 0."));
+		assertEquals("70000", project.getServers().get(0).getPort());
 	}
 
 }

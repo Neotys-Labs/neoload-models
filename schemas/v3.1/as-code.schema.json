@@ -244,6 +244,12 @@
 				"type": "integer",
 				"minimum": 1
 			},
+			"user_count": {
+				"title": "User count",
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 2147483647
+			},
 			"duration_value": {
 				"title": "Duration value",
 				"anyOf": [
@@ -1209,7 +1215,10 @@
 					"description": "The scheme used to reach the server: `http` or `https`."
 				},
 				"port": {
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+					"anyOf": [
+						{ "type": "string", "pattern": "^(\\$\\{.+\\}|(6553[0-5]|655[0-2]\\d|65[0-4]\\d{2}|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3}))$" },
+						{ "type": "integer", "minimum": 1, "maximum": 65535 }
+					],
 					"description": "The port of the server. The default value is \"80\" (for http scheme) or \"443\" (for https scheme)."
 				},
 				"basic_authentication": {
@@ -2389,7 +2398,10 @@
 							"description": "The description of the Loop. Does not accept a variable."
 						},
 						"count": {
-							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"anyOf": [
+								{ "type": "string", "pattern": "^(\\$\\{\\w+\\}|[1-9]\\d{0,9})$" },
+								{ "$ref": "#/definitions/common/user_count" }
+							],
 							"description": "The number of times to execute"
 						},
 						"steps": {
