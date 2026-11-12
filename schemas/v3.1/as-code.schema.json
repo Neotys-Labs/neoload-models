@@ -252,6 +252,12 @@
 				"minimum": 1,
 				"maximum": 2147483647
 			},
+			"int": {
+				"title": "Integer",
+				"type": "integer",
+				"minimum": -2147483648,
+				"maximum": 2147483647
+			},
 			"duration_value": {
 				"title": "Duration value",
 				"anyOf": [
@@ -490,16 +496,16 @@
 					{
 						"properties": {
 							"start": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable start value. Required. Does not accept a variable."
 							},
 							"end": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable end value. Required. Does not accept a variable."
 							},
 							"increment": {
-								"type": "number",
-"not": { "const": 0 },
+								"$ref": "#/definitions/common/int",
+								"not": { "const": 0 },
 								"description": "The variable increment value. Required. Does not accept a variable."
 							},
 							"scope": {
@@ -528,11 +534,11 @@
 					{
 						"properties": {
 							"min": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable min value. Required. Does not accept a variable."
 							},
 							"max": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "Must be greater than or equal to `min`."
 							},
 							"predictable": {

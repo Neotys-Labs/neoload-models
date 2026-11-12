@@ -33,7 +33,11 @@ public class IORangeParityTest {
 	private static final String SIZE_EQUALS = sizeAssertion("equals");
 	private static final String SIZE_GREATER_THAN = sizeAssertion("greater_than");
 	private static final String SIZE_LESS_THAN = sizeAssertion("less_than");
+	private static final String COUNTER_START = variable("counter", "start: %s\n    end: 10\n    increment: 1\n    scope: local\n");
+	private static final String COUNTER_END = variable("counter", "start: 0\n    end: %s\n    increment: 1\n    scope: local\n");
 	private static final String COUNTER_INCREMENT = variable("counter", "start: 0\n    end: 10\n    increment: %s\n    scope: local\n");
+	private static final String RANDOM_NUMBER_MIN = variable("random_number", "min: %s\n    max: 10\n    predictable: false\n");
+	private static final String RANDOM_NUMBER_MAX = variable("random_number", "min: -10\n    max: %s\n    predictable: false\n");
 	private static final String RANDOM_STRING_MIN = variable("random_string", "min_length: %s\n    max_length: 10\n    predictable: false\n");
 	private static final String RANDOM_STRING_MAX = variable("random_string", "min_length: 1\n    max_length: %s\n    predictable: false\n");
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
@@ -141,6 +145,11 @@ public class IORangeParityTest {
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "0", INVALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "-1", VALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "1", VALID));
+		rows.add(row("counter.start", COUNTER_START, "-10", VALID));
+		rows.add(row("counter.start", COUNTER_START, "1.5", INVALID));
+		rows.add(row("counter.end", COUNTER_END, "-5", VALID));
+		rows.add(row("random_number.min", RANDOM_NUMBER_MIN, "-10", VALID));
+		rows.add(row("random_number.max", RANDOM_NUMBER_MAX, "-1", VALID));
 		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "0", INVALID));
 		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "1", VALID));
 		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1000", VALID));
@@ -174,7 +183,9 @@ public class IORangeParityTest {
 		rows.add(row("start_after", CONSTANT_START_AFTER, "\"-5\"", INVALID));
 		rows.add(row("duration_assertion.less_than", DURATION_ASSERTION, "-1", INVALID));
 		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "-1", INVALID));
+		rows.add(row("counter.end", COUNTER_END, "-5", VALID));
 		rows.add(row("counter.increment", COUNTER_INCREMENT, "-1", VALID));
+		rows.add(row("random_number.max", RANDOM_NUMBER_MAX, "-1", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-5d", VALID));
 		return rows;
