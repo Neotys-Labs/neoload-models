@@ -281,7 +281,14 @@
 			},
 			"duration": {
 				"title": "Duration",
-				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
+				"anyOf": [
+					{ "type": "string", "pattern": "^(?=.*[1-9])((\\d{1,2}[hms]{1}){1,3})+$" },
+					{ "type": "string", "pattern": "^(?=.*[1-9])(\\d+ iterations?)$" }
+				]
+			},
+			"duration_or_zero": {
+				"title": "Duration, possibly 0",
+				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }, { "const": 0 }]
 			},
 			"stop_after_options": {
 				"title": "variation_policy.stop_after values",
@@ -1574,7 +1581,7 @@
 				"required": ["when", "users"],
 				"properties": {
 					"when": {
-						"$ref": "#/definitions/common/duration",
+						"$ref": "#/definitions/common/duration_or_zero",
 						"description": "The moment when Virtual Users count will reach the specified number: time length or number of iterations."
 					},
 					"users": {

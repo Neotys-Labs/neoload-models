@@ -23,10 +23,14 @@ public class IORangeParityTest {
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
 
+	private static final String CONSTANT_DURATION = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      duration: %s\n");
 	private static final String CONSTANT_START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
 	private static final String CONSTANT_STOP_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      stop_after: %s\n");
 	private static final String RAMPUP_MIN_USERS = rampup("%s", "1", "1 iteration");
+	private static final String RAMPUP_INCREMENT_EVERY = rampup("1", "1", "%s");
 	private static final String PEAKS_MINIMUM_USERS = peaks("%s", "1 iteration", "1", "1 iteration");
+	private static final String PEAKS_MAXIMUM_DURATION = peaks("1", "1 iteration", "5", "%s");
+	private static final String CUSTOM_WHEN = DurationFields.scenario("  populations:\n  - name: C\n    custom_load:\n      steps:\n      - when: %s\n        users: 1\n      - when: 10s\n        users: 2\n");
 	private static final String SERVER_PORT = "name: P\nservers:\n- name: S\n  host: myserver.intranet.neotys.com\n  port: %s\n";
 	private static final String LOOP_COUNT = DurationFields.actions("    - loop:\n        count: %s\n        steps:\n        - delay: 1s\n");
 	private static final String DURATION_ASSERTION = DurationFields.actions("    - request:\n        url: http://host:80/\n        duration_assertion:\n          less_than: %s\n");
@@ -113,6 +117,19 @@ public class IORangeParityTest {
 		rows.add(row("monitoring.after", DurationFields.MONITORING_AFTER.yaml("%s"), "0", INVALID));
 		rows.add(row("monitoring.after", DurationFields.MONITORING_AFTER.yaml("%s"), "2147483", VALID));
 		rows.add(row("monitoring.after", DurationFields.MONITORING_AFTER.yaml("%s"), "2147484", INVALID));
+		rows.add(row("increment_every", RAMPUP_INCREMENT_EVERY, "0s", INVALID));
+		rows.add(row("increment_every", RAMPUP_INCREMENT_EVERY, "0 iterations", INVALID));
+		rows.add(row("increment_every", RAMPUP_INCREMENT_EVERY, "1s", VALID));
+		rows.add(row("increment_every", RAMPUP_INCREMENT_EVERY, "1 iteration", VALID));
+		rows.add(row("population duration", CONSTANT_DURATION, "0s", INVALID));
+		rows.add(row("population duration", CONSTANT_DURATION, "0 iterations", INVALID));
+		rows.add(row("population duration", CONSTANT_DURATION, "1s", VALID));
+		rows.add(row("population duration", CONSTANT_DURATION, "1 iteration", VALID));
+		rows.add(row("peaks_load.maximum.duration", PEAKS_MAXIMUM_DURATION, "0s", INVALID));
+		rows.add(row("peaks_load.maximum.duration", PEAKS_MAXIMUM_DURATION, "0 iterations", INVALID));
+		rows.add(row("peaks_load.maximum.duration", PEAKS_MAXIMUM_DURATION, "1s", VALID));
+		rows.add(row("custom_load.steps[].when", CUSTOM_WHEN, "0", VALID));
+		rows.add(row("custom_load.steps[].when", CUSTOM_WHEN, "0s", VALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "0", INVALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "1", VALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147483", VALID));
