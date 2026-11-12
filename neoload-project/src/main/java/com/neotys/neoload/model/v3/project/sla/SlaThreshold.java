@@ -1,17 +1,6 @@
 package com.neotys.neoload.model.v3.project.sla;
 
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.validation.Valid;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -25,6 +14,14 @@ import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SlaThresholdCheck.UsageType;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import javax.validation.Valid;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_EMPTY)
 @JsonSerialize(using = SlaThresholdSerializer.class)
@@ -149,7 +146,7 @@ public interface SlaThreshold  {
 	@RequiredCheck(groups = {NeoLoad.class})
 	KPI getKpi();
 
-	@RangeCheck(min = 0, max = 100, groups = {NeoLoad.class})
+	@RangeCheck(min = 1, max = 99, groups = {NeoLoad.class})
 	Optional<Integer> getPercent();
 
 	@RequiredCheck(groups = {NeoLoad.class})

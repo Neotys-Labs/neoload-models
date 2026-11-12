@@ -36,6 +36,8 @@ public class IORangeParityTest {
 	private static final String COUNTER_INCREMENT = variable("counter", "start: 0\n    end: 10\n    increment: %s\n    scope: local\n");
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
 	private static final String DATE_CHANGE_STEP = variable("date", "pattern: yyyy-MM-dd'T'HH:mm:ss\n    start_date: 2024-01-01T00:00:00\n    change_step: %s\n");
+	private static final String SLA_THRESHOLD = "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - avg-request-resp-time warn >= %s per test\n";
+	private static final String SLA_PERCENTILE = "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - perc-transaction-resp-time (p%s) warn >= 1 per test\n";
 	private static final String QTEST_PROJECT_ID = "name: P\nproject_settings:\n  qtest.project_id: %s\n";
 	private static final String QTEST_CYCLE_ID = "name: P\nproject_settings:\n  qtest.cycle_id: %s\n";
 
@@ -143,6 +145,12 @@ public class IORangeParityTest {
 		rows.add(row("date.change_step", DATE_CHANGE_STEP, "0s", INVALID));
 		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-1h", VALID));
 		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-5d", VALID));
+		rows.add(row("SLA threshold value", SLA_THRESHOLD, "0", VALID));
+		rows.add(row("SLA threshold value", SLA_THRESHOLD, "-1", INVALID));
+		rows.add(row("SLA percentile", SLA_PERCENTILE, "0", INVALID));
+		rows.add(row("SLA percentile", SLA_PERCENTILE, "1", VALID));
+		rows.add(row("SLA percentile", SLA_PERCENTILE, "99", VALID));
+		rows.add(row("SLA percentile", SLA_PERCENTILE, "100", INVALID));
 		rows.add(row("qtest.project_id", QTEST_PROJECT_ID, "0", INVALID));
 		rows.add(row("qtest.project_id", QTEST_PROJECT_ID, "1", VALID));
 		rows.add(row("qtest.cycle_id", QTEST_CYCLE_ID, "0", INVALID));

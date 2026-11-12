@@ -1333,7 +1333,7 @@
 				"title": "Threshold",
 				"type": "string",
 				"description": "Format: [kpi] (warn|fail) >=|==|<= [value][unit] ... per test|interval\n\nMultiple conditions (warn and/or fail) can be combined on the same line. Units: s, ms, /s, Mbps, MB, %.\n\nKPIs per test:\n  avg-request-resp-time    — average request response time (s, ms)\n  avg-page-resp-time       — average page response time (s, ms)\n  avg-transaction-resp-time — average transaction response time (s, ms)\n  perc-transaction-resp-time (p{N}) — Nth-percentile transaction response time, default p90 (s, ms)\n  avg-request-per-sec      — average requests per second (/s)\n  avg-throughput-per-sec   — average throughput per second (Mbps)\n  errors-count             — total number of errors\n  count                    — total element count\n  throughput               — total throughput (MB)\n  error-rate               — error rate (%)\n\nKPIs per interval:\n  avg-resp-time            — average response time (s, ms)\n  avg-elt-per-sec          — average elements per second (/s)\n  avg-throughput-per-sec   — average throughput per second (Mbps)\n  errors-per-sec           — errors per second (/s)\n  error-rate               — error rate (%)",
-				"pattern": "^(.*?)\\s((warn|fail)\\s(>=|==|<=))(?=\\s)(.*?)per\\s(test|interval)$",
+				"pattern": "^(?!.*(>=|==|<=)\\s*-)(?!.*\\(p(?![1-9]\\d?\\)))(.*?)\\s((warn|fail)\\s(>=|==|<=))(?=\\s)(.*?)per\\s(test|interval)$",
 				"examples": [
 					"avg-request-resp-time warn >= 200ms fail >= 500ms per test",
 					"perc-transaction-resp-time (p90) warn >= 1s fail >= 2s per test",
