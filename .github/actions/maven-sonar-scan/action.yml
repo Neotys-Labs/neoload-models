@@ -1,0 +1,218 @@
+---
+name: SonarCloud Scan (mvn)
+description: SonarScanner for Maven
+
+inputs:
+  working-directory:
+    description: 'The directory to run the Maven commands in.'
+    required: false
+    type: string
+    default: '.'
+  skip-default-exclusions:
+    description: 'Whether to skip default exclusions in Sonar analysis, which include common generated code and third-party libraries. Not recommended to set to true.'
+    required: false
+    default: 'false'
+  default-sonar-exclusions:
+    description: >
+      Default Sonar exclusions to apply to the analysis. This is useful to exclude
+      common files and directories across all projects, such as generated code,
+      third-party libraries, or specific patterns that are not relevant for analysis.
+      These exclusions are applied in addition to any project-specific exclusions
+      defined in the pom.xml or sonar-project.properties file.
+    required: false
+    default: '**/*VertxRxProxyServer.java,**/*VertxRxProxyClient.java,**/*VertxEBProxy.java,**/*VertxProxyHandler.java,service-api-archetype/**/*java,service-family-archetype/**/*java,web-security-platform-archetype/**/*java,**/*fullcalendar*.js,**/*file-uploader*.js,**/jquery-ui.js,**/pdf.js,**/swagger-initializer.js,**/error.html,**/oauth2-redirect.html'
+  default-cpd-exclusions:
+    description: >
+      Default Sonar CPD (copy-paste detection) exclusions to apply to the analysis.
+      This is useful to exclude common files and directories across all projects that
+      should not be considered for duplicate code detection, such as generated code,
+      third-party libraries, or specific patterns that are not relevant for CPD analysis.
+      These exclusions are applied in addition to any project-specific CPD exclusions
+      defined in the pom.xml or sonar-project.properties file.
+    required: false
+    default: '**/data/**/*.java,**/model/**/*.java,**/request/*Request.java,**/result/*Result.java,**/html/*.html,**/translations.js'
+  sonar-token:
+    required: true
+    type: string
+  sonar-organization:
+    description: 'SonarCloud organization key (-Dsonar.organization)'
+    required: true
+    type: string
+  github-token:
+    required: true
+    type: string
+  sonar-scanner-opts:
+    description: >
+      SonarScanner JVM and Maven options. Values starting with -D are passed to
+      mvn sonar:sonar; other flags (e.g. -Xmx8192m) are exported to
+      SONAR_SCANNER_JAVA_OPTS (SonarScanner for Maven 5.0+) and
+      SONAR_SCANNER_OPTS (older scanners). When no JVM flags are provided,
+      defaults to -Xms512m -Xmx4096m -XX:MaxMetaspaceSize=512m.
+    required: false
+    default: ''
+  skip-jacoco-analysis:
+    description: Whether to skip Jacoco analysis.
+    required: false
+    default: 'false'
+  jacoco-classfiles-excludes:
+    description: >
+      Comma-separated find -path patterns excluded from JaCoCo --classfiles.
+      Needed when modules ship intentional duplicate FQCNs (e.g. test stubs).
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Check Jacoco is present
+      id: jacoco-test
+      if: inputs.skip-jacoco-analysis != 'true'
+      shell: bash
+      run: |
+        if [ ! -f "$GITHUB_WORKSPACE/target/jacoco.exec" ]; then
+          echo "Jacoco file not found, skipping Jacoco analysis."
+          echo "skip=true" >> $GITHUB_OUTPUT
+        else
+          echo "skip=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Run Jacoco analysis
+      id: jacoco-analysis
+      if: inputs.skip-jacoco-analysis != 'true' && steps.jacoco-test.outputs.skip != 'true'
+      shell: bash
+      run: |
+        set -euo pipefail
+        jacoco_jar="${JACOCO_CLI_JAR:-}"
+        if [[ -z "${jacoco_jar}" ]]; then
+          for candidate in /opt/jacoco.cli.jar /usr/local/lib/jacoco.cli.jar /root/jacoco.cli.jar; do
+            if [[ -f "${candidate}" ]]; then
+              jacoco_jar="${candidate}"
+              break
+            fi
+          done
+        fi
+        if [[ ! -f "${jacoco_jar}" ]]; then
+          echo "::error::JaCoCo CLI jar not found (set JACOCO_CLI_JAR or place jar at /opt/jacoco.cli.jar)" >&2
+          exit 1
+        fi
+        # Exclude intentional duplicate FQCNs (e.g. e2e stubs) so JaCoCo does not fail with
+        # "Can't add different class with same name".
+        find_args=(. -name classes -type d)
+        IFS=',' read -ra exclude_patterns <<< "${{ inputs.jacoco-classfiles-excludes }}"
+        for pattern in "${exclude_patterns[@]}"; do
+          pattern="${pattern#"${pattern%%[![:space:]]*}"}"
+          pattern="${pattern%"${pattern##*[![:space:]]}"}"
+          [[ -z "${pattern}" ]] && continue
+          find_args+=(-not -path "${pattern}")
+        done
+        classfiles="$(find "${find_args[@]}" | awk '{print "--classfiles " $1}' ORS=' ')"
+        # shellcheck disable=SC2086
+        java -jar "${jacoco_jar}" report target/jacoco.exec --xml jacoco.xml ${classfiles}
+
+        # Set the path to the generated Jacoco XML report
+        if [ -f "jacoco.xml" ]; then
+          echo "Jacoco XML report generated successfully."
+          echo "jacoco_report_path=${{ github.workspace }}/jacoco.xml" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Run Sonar with Maven
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        SONAR_SCANNER_OPTS_INPUT: ${{ inputs.sonar-scanner-opts }}
+      run: |
+        # Respect skip-default-exclusions first. When true, never pass default exclusion args.
+        if [ "${{ inputs.skip-default-exclusions }}" = "true" ]; then
+          default_sonar_exclusions=""
+          default_cpd_exclusions=""
+        else
+          # Check if default exclusion inputs are set, if not keep them empty.
+          if [ -z "${{ inputs.default-sonar-exclusions }}" ]; then
+            default_sonar_exclusions=""
+          else
+            default_sonar_exclusions="-Dsonar.exclusions=${{ inputs.default-sonar-exclusions }}"
+          fi
+
+          if [ -z "${{ inputs.default-cpd-exclusions }}" ]; then
+            default_cpd_exclusions=""
+          else
+            default_cpd_exclusions="-Dsonar.cpd.exclusions=${{ inputs.default-cpd-exclusions }}"
+          fi
+        fi
+
+        # Define default Sonar arguments
+        DEFAULT_ARGS="${default_sonar_exclusions} ${default_cpd_exclusions} \
+        -Dsonar.issue.ignore.multicriteria=e1,e2,e3,e4,e5,e6 \
+        -Dsonar.issue.ignore.multicriteria.e1.ruleKey=common-java:DuplicatedBlocks \
+        -Dsonar.issue.ignore.multicriteria.e1.resourceKey=**/data/**/*.java \
+        -Dsonar.issue.ignore.multicriteria.e2.ruleKey=common-java:DuplicatedBlocks \
+        -Dsonar.issue.ignore.multicriteria.e2.resourceKey=**/model/**/*.java \
+        -Dsonar.issue.ignore.multicriteria.e3.ruleKey=common-java:DuplicatedBlocks \
+        -Dsonar.issue.ignore.multicriteria.e3.resourceKey=**/request/*Request.java \
+        -Dsonar.issue.ignore.multicriteria.e4.ruleKey=common-java:DuplicatedBlocks \
+        -Dsonar.issue.ignore.multicriteria.e4.resourceKey=**/result/*Result.java \
+        -Dsonar.issue.ignore.multicriteria.e5.ruleKey=common-java:DuplicatedBlocks \
+        -Dsonar.issue.ignore.multicriteria.e5.resourceKey=**/rest/common/error/*.java \
+        -Dsonar.issue.ignore.multicriteria.e6.ruleKey=squid:S2187 \
+        -Dsonar.issue.ignore.multicriteria.e6.resourceKey=**/vertxproxy/*ApiMethodTest.java \
+        -Dsonar.ws.timeout=300 \
+        -Dsonar.organization=${{ inputs.sonar-organization }} \
+        -Dsonar.host.url=https://sonarcloud.io"
+
+        # Build complete arguments based on event type.
+        # Non-PR analyses must set sonar.branch.name; otherwise SonarCloud treats the
+        # upload as a main-branch analysis (e.g. develop) even when CI ran on another branch.
+        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          SONAR_ARGS="$DEFAULT_ARGS \
+          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
+          -Dsonar.pullrequest.branch=${{ github.head_ref }} \
+          -Dsonar.pullrequest.base=${{ github.base_ref }} \
+          -Dsonar.pullrequest.provider=github"
+        else
+          SONAR_ARGS="$DEFAULT_ARGS \
+          -Dsonar.branch.name=${{ github.ref_name }}"
+        fi
+
+        SONAR_MAVEN_EXTRA_ARGS=""
+        LOCAL_SONAR_JAVA_OPTS=""
+
+        if [ -n "${SONAR_SCANNER_OPTS_INPUT}" ]; then
+          for arg in ${SONAR_SCANNER_OPTS_INPUT}; do
+            case "${arg}" in
+              -D*)
+                SONAR_MAVEN_EXTRA_ARGS="${SONAR_MAVEN_EXTRA_ARGS} ${arg}"
+                ;;
+              *)
+                LOCAL_SONAR_JAVA_OPTS="${LOCAL_SONAR_JAVA_OPTS} ${arg}"
+                ;;
+            esac
+          done
+        fi
+
+        SONAR_MAVEN_EXTRA_ARGS="${SONAR_MAVEN_EXTRA_ARGS# }"
+        LOCAL_SONAR_JAVA_OPTS="${LOCAL_SONAR_JAVA_OPTS# }"
+
+        if [ -z "${LOCAL_SONAR_JAVA_OPTS}" ]; then
+          LOCAL_SONAR_JAVA_OPTS="-Xms512m -Xmx4096m -XX:MaxMetaspaceSize=512m"
+        fi
+
+        if [ -n "${SONAR_SCANNER_JAVA_OPTS:-}" ]; then
+          export SONAR_SCANNER_JAVA_OPTS="${SONAR_SCANNER_JAVA_OPTS} ${LOCAL_SONAR_JAVA_OPTS}"
+        else
+          export SONAR_SCANNER_JAVA_OPTS="${LOCAL_SONAR_JAVA_OPTS}"
+        fi
+
+        if [ -n "${SONAR_SCANNER_OPTS:-}" ]; then
+          export SONAR_SCANNER_OPTS="${SONAR_SCANNER_OPTS} ${LOCAL_SONAR_JAVA_OPTS}"
+        else
+          export SONAR_SCANNER_OPTS="${LOCAL_SONAR_JAVA_OPTS}"
+        fi
+
+        # Run Maven with all arguments
+        # shellcheck disable=SC2086
+        set -x
+        mvn -B sonar:sonar \
+          -Dsonar.token=${{ inputs.sonar-token }} \
+          $SONAR_ARGS \
+          ${SONAR_MAVEN_EXTRA_ARGS}
+        set +x
