@@ -41,10 +41,12 @@ public class IORangeRulesTest {
 			+ "user_paths:\n- name: U\n  actions:\n    steps:\n    - loop:\n        count: 0\n        steps:\n        - delay: 1s\n";
 
 	private static SchemaFiles schema31;
+	private static SchemaFiles schema30;
 
 	@BeforeClass
 	public static void loadSchemas() throws URISyntaxException {
 		schema31 = SchemaFiles.version("v3.1");
+		schema30 = SchemaFiles.version("v3.0");
 	}
 
 	private static Project read(final String yaml) throws IOException {
@@ -111,4 +113,21 @@ public class IORangeRulesTest {
 		assertEquals("70000", project.getServers().get(0).getPort());
 	}
 
+	@Test
+	public void readStopsAtTheFirstInvalidDuration() {
+		final String yaml = DurationFields.scenario("  populations:\n"
+				+ "  - name: A\n    constant_load:\n      users: 1\n      rampup: -5s\n"
+				+ "  - name: B\n    constant_load:\n      users: 1\n      rampup: abc\n");
+
+		assertInvalidDurationRead(() -> read(yaml), "-5s", "rampup");
+	}
+
+	@Test
+	public void schema30KeepsItsAcceptance() throws IOException {
+		final String yaml = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 0\n")
+				+ "servers:\n- name: S\n  host: myserver.intranet.neotys.com\n  port: 70000\n";
+
+		assertTrue(schema30.accepts(yaml));
+		assertFalse(schema31.accepts(yaml));
+	}
 }
