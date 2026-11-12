@@ -490,6 +490,7 @@
 							},
 							"increment": {
 								"type": "number",
+"not": { "const": 0 },
 								"description": "The variable increment value. Required. Does not accept a variable."
 							},
 							"scope": {
