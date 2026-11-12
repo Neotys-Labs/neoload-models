@@ -1,0 +1,131 @@
+---
+name: Create Maven settings.xml
+description: Creates a Maven settings.xml for Neoload project
+
+runs:
+  using: composite
+  steps:
+    - name: Create Maven settings.xml
+      shell: bash {0}
+      run: |
+        mkdir -p "$HOME/.m2"
+        cat > "$HOME/.m2/settings.xml" <<'SETTINGS_EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+
+        <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+          <localRepository>/tmp/.m2/repository</localRepository>
+
+          <pluginGroups>
+            <!-- Resolve mvn sonar:sonar to the SonarSource plugin (not only org.codehaus.mojo). -->
+            <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+          </pluginGroups>
+
+          <servers>
+            <server>
+              <id>neotys-public-snapshots</id>
+              <username>${env.NEXUS_PUBLIC_USERNAME}</username>
+              <password>${env.NEXUS_PUBLIC_PASSWORD}</password>
+            </server>
+            <server>
+              <id>neotys-public-releases</id>
+              <username>${env.NEXUS_PUBLIC_USERNAME}</username>
+              <password>${env.NEXUS_PUBLIC_PASSWORD}</password>
+            </server>
+            <server>
+              <id>ossrh</id>
+              <username>${env.OSSRH_USERNAME}</username>
+              <password>${env.OSSRH_PASSWORD}</password>
+            </server>
+            <server>
+              <id>cloudsmith</id>
+              <username>token</username>
+              <password>${env.CLOUDSMITH_API_KEY}</password>
+            </server>
+          </servers>
+
+          <mirrors>
+            <mirror>
+              <id>cloudsmith</id>
+              <name>Cloudsmith Maven mirror</name>
+              <url>${env.CLOUDSMITH_MVN_REPO}</url>
+              <mirrorOf>central</mirrorOf>
+            </mirror>
+          </mirrors>
+
+          <profiles>
+            <profile>
+              <id>ci</id>
+              <repositories>
+                <repository>
+                  <id>neotys-public-releases</id>
+                  <url>https://maven.neotys.com/content/repositories/releases/</url>
+                  <releases>
+                    <enabled>true</enabled>
+                  </releases>
+                  <snapshots>
+                    <enabled>false</enabled>
+                  </snapshots>
+                </repository>
+                <repository>
+                  <id>neotys-public-snapshots</id>
+                  <url>https://maven.neotys.com/content/repositories/snapshots/</url>
+                  <releases>
+                    <enabled>false</enabled>
+                  </releases>
+                  <snapshots>
+                    <enabled>true</enabled>
+                  </snapshots>
+                </repository>
+                <repository>
+                  <id>cloudsmith</id>
+                  <url>${env.CLOUDSMITH_MVN_REPO}</url>
+                  <releases>
+                    <enabled>true</enabled>
+                  </releases>
+                  <snapshots>
+                    <enabled>true</enabled>
+                    <updatePolicy>always</updatePolicy>
+                  </snapshots>
+                </repository>
+              </repositories>
+              <pluginRepositories>
+                <pluginRepository>
+                  <id>neotys-public-releases</id>
+                  <url>https://maven.neotys.com/content/repositories/releases/</url>
+                  <releases>
+                    <enabled>true</enabled>
+                  </releases>
+                  <snapshots>
+                    <enabled>false</enabled>
+                  </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                  <id>neotys-public-snapshots</id>
+                  <url>https://maven.neotys.com/content/repositories/snapshots/</url>
+                  <releases>
+                    <enabled>false</enabled>
+                  </releases>
+                  <snapshots>
+                    <enabled>true</enabled>
+                  </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                  <id>cloudsmith</id>
+                  <url>${env.CLOUDSMITH_MVN_REPO}</url>
+                  <releases>
+                    <enabled>true</enabled>
+                  </releases>
+                  <snapshots>
+                    <enabled>true</enabled>
+                  </snapshots>
+                </pluginRepository>
+              </pluginRepositories>
+            </profile>
+          </profiles>
+
+          <activeProfiles>
+            <activeProfile>ci</activeProfile>
+          </activeProfiles>
+        </settings>
+        SETTINGS_EOF

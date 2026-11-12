@@ -19,23 +19,271 @@ on:
 
 run-name: "${{ github.event_name == 'workflow_dispatch' && (inputs.release && '🚀 Release Build' || '🔧 Dev Build') || '' }}"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}${{ fromJSON(github.event.inputs.release || 'false') && '-release' || '' }}
+  cancel-in-progress: ${{ fromJSON(github.event.inputs.release || 'false') == false }}
+
+env:
+  MAVEN_OPTS: ${{ fromJSON(github.event.inputs.release || 'false') == false && '-Dmaven.test.failure.ignore=true -Dmaven.javadoc.skip=true' || '' }}
+  MAVEN_SKIP_TESTS: ${{ (fromJSON(github.event.inputs.release || 'false') == false && fromJSON(github.event.inputs.skip-tests || 'false') == true) && '-DskipTests=true' || '' }}
+  MAVEN_SIGN_PROFILE: '-P sign-artifact'
+
 jobs:
   build:
     name: Backend
-    uses: Neotys-Labs/templates/.github/workflows/nl-mvn-build-public.yml@feature/DEVEX-2816
-    with:
-      skip-tests: ${{ fromJSON(github.event.inputs.skip-tests || 'false') }}
-      release: ${{ fromJSON(github.event.inputs.release || 'false') }}
-    secrets:
-      CLOUDSMITH_MVN_REPO: ${{ secrets.CLOUDSMITH_MVN_REPO }}
-      CLOUDSMITH_OIDC_NAMESPACE: ${{ secrets.CLOUDSMITH_OIDC_NAMESPACE }}
-      CLOUDSMITH_OIDC_SERVICE_SLUG: ${{ secrets.CLOUDSMITH_OIDC_SERVICE_SLUG }}
-      MVN_NEXUS_PUBLIC_USERNAME: ${{ secrets.MVN_NEXUS_PUBLIC_USERNAME }}
-      MVN_NEXUS_PUBLIC_PASSWORD: ${{ secrets.MVN_NEXUS_PUBLIC_PASSWORD }}
-      MVN_OSSRH_USERNAME: ${{ secrets.MVN_OSSRH_USERNAME }}
-      MVN_OSSRH_PASSWORD: ${{ secrets.MVN_OSSRH_PASSWORD }}
-      PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
-      PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      GH_APP_NEOLOAD_PUBLISHER_CLIENT_ID: ${{ secrets.GH_APP_NEOLOAD_PUBLISHER_CLIENT_ID }}
-      GH_APP_NEOLOAD_CI_REPORTER_PRIVATE_KEY: ${{ secrets.GH_APP_NEOLOAD_CI_REPORTER_PRIVATE_KEY }}
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+      checks: write
+    runs-on: ubuntu-stepsecurity-x64
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 #v2.22.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout with history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Java
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: liberica
+          java-version: '21'
+
+      - name: Install JaCoCo CLI
+        env:
+          JACOCO_VERSION: '0.8.15'
+        run: |
+          set -euo pipefail
+          jacoco_url="https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/${JACOCO_VERSION}/org.jacoco.cli-${JACOCO_VERSION}-nodeps.jar"
+          sudo mkdir -p /opt /usr/local/lib
+          sudo curl -fsSL "${jacoco_url}" -o "/opt/jacoco.cli-${JACOCO_VERSION}.jar"
+          sudo ln -sfn "/opt/jacoco.cli-${JACOCO_VERSION}.jar" /opt/jacoco.cli.jar
+          sudo install -m 0644 "/opt/jacoco.cli-${JACOCO_VERSION}.jar" /usr/local/lib/jacoco.cli.jar
+          echo "JACOCO_CLI_JAR=/opt/jacoco.cli.jar" >> "$GITHUB_ENV"
+
+      - name: Cache local Maven repository
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: /tmp/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+          fail-on-cache-miss: false
+
+      - name: Authenticate with Cloudsmith via OIDC
+        id: cloudsmith-auth
+        uses: step-security/cloudsmith-cli-action@c8efdacddbb86cc95fcc18e06ac2597a9f449828 # v3.1.0
+        with:
+          oidc-namespace: ${{ secrets.CLOUDSMITH_OIDC_NAMESPACE }}
+          oidc-service-slug: ${{ secrets.CLOUDSMITH_OIDC_SERVICE_SLUG }}
+          export-auth-token: "true"
+
+      - name: Set ENV for Maven settings
+        run: |
+          echo "CLOUDSMITH_MVN_REPO=${{ secrets.CLOUDSMITH_MVN_REPO }}" >> $GITHUB_ENV
+          echo "NEXUS_PUBLIC_USERNAME=${{ secrets.MVN_NEXUS_PUBLIC_USERNAME }}" >> $GITHUB_ENV
+          echo "NEXUS_PUBLIC_PASSWORD=${{ secrets.MVN_NEXUS_PUBLIC_PASSWORD }}" >> $GITHUB_ENV
+          echo "OSSRH_USERNAME=${{ secrets.MVN_OSSRH_USERNAME }}" >> $GITHUB_ENV
+          echo "OSSRH_PASSWORD=${{ secrets.MVN_OSSRH_PASSWORD }}" >> $GITHUB_ENV
+          echo "WORKSPACE=${{ github.workspace }}" >> $GITHUB_ENV
+
+      - name: Create Maven settings.xml
+        uses: $/.github/actions/maven-settings
+
+      - name: Import GPG key
+        env:
+          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${PGP_PRIVATE_KEY}" ]]; then
+            echo "::error::PGP_PRIVATE_KEY is empty"
+            exit 1
+          fi
+          # Quiet import: avoid printing key uid/email in public workflow logs
+          if ! echo "${PGP_PRIVATE_KEY}" | gpg --batch --quiet --import >/dev/null 2>&1; then
+            echo "::error::Failed to import GPG key"
+            exit 1
+          fi
+          echo "GPG signing key imported"
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          gpgconf --kill gpg-agent || true
+
+      - name: Set FEATURE version
+        if: ${{ github.ref_name != 'v3' }}
+        env:
+          BRANCH_PREFIX_REGEX: '^feature(group)?/|dependabot/|snyk-'
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" ]]; then
+            branch="${GITHUB_HEAD_REF}"
+          else
+            branch="${GITHUB_REF#refs/heads/}"
+          fi
+
+          echo "::group::Determine FEATURE_PREFIX from branch ${branch}"
+          if [[ ! "${branch}" =~ ${BRANCH_PREFIX_REGEX} ]]; then
+            echo "Skipping feature version for branch \"${branch}\""
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          branch_name_cut=$(echo "${branch}" | cut -d '/' -f2-)
+          FEATURE_PREFIX=$(echo "${branch_name_cut}" | tr '/_' '-' | tr '[:upper:]' '[:lower:]')
+          echo "FEATURE_PREFIX=${FEATURE_PREFIX}"
+          echo "::endgroup::"
+
+          echo "::group::Set Maven project version to FEATURE_PREFIX-SNAPSHOT"
+          mvn -B build-helper:parse-version versions:set \
+            "-DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}-${FEATURE_PREFIX}-SNAPSHOT" \
+            -DgenerateBackupPoms=false
+          echo "::endgroup::"
+
+      - name: Set RELEASE version
+        if: ${{ fromJSON(github.event.inputs.release || 'false') && github.ref_name == 'v3' }}
+        id: prepare-release
+        run: |
+          set -euo pipefail
+
+          echo "::group::Maven set Release version"
+          mvn -B build-helper:parse-version versions:set \
+            "-DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}" \
+            -DgenerateBackupPoms=false
+          updated_pom_files=$(git diff --name-only -- ':(glob)**/pom.xml' | paste -sd ' ' -)
+          echo "changed-files=${updated_pom_files}" >> "$GITHUB_OUTPUT"
+          echo "::endgroup::"
+
+          echo "::group::Enforce release-ready dependencies"
+          if ! mvn -B \
+            org.apache.maven.plugins:maven-enforcer-plugin:enforce \
+            -Denforcer.rules=requireReleaseDeps \
+            -DfailWhenParentIsSnapshot=true; then
+            echo "::error::Release blocked: pom.xml references SNAPSHOT dependencies."
+            exit 1
+          fi
+          echo "::endgroup::"
+
+          release_version=$(mvn -B -q -DforceStdout help:evaluate -Dexpression=project.version)
+          echo "release-version=${release_version}" >> "$GITHUB_OUTPUT"
+          echo "Release version: ${release_version}"
+
+      - name: Maven Build
+        id: maven-build
+        env:
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          set -x
+          mvn -B ${{ env.MAVEN_SKIP_TESTS }} ${{ env.MAVEN_OPTS }} ${{ env.MAVEN_SIGN_PROFILE }} clean deploy
+          set +x
+
+      - name: SonarCloud Scan
+        uses: $/.github/actions/maven-sonar-scan
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+          sonar-organization: ${{ secrets.SONAR_ORG }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Authorize GitHub App for write operations
+        if: ${{ !cancelled() && (!fromJSON(github.event.inputs.skip-tests || 'false') || fromJSON(github.event.inputs.release || 'false')) }}
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        id: github-app-token
+        with:
+          client-id: ${{ secrets.GH_APP_NEOLOAD_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.GH_APP_NEOLOAD_CI_REPORTER_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-checks: write
+          permission-pull-requests: write
+          permission-contents: write
+
+      - name: Publish Test Results
+        if: ${{ !cancelled() && !fromJSON(github.event.inputs.skip-tests || 'false') }}
+        id: publish-test-results
+        uses: step-security/action-junit-report@ad689e2519ae786be0701ec51cbeb3642d17576a # v6.4.2
+        with:
+          token: ${{ steps.github-app-token.outputs.token }}
+          check_name: "JUnit Test Report"
+          report_paths: "**/target/*-reports/*.xml"
+          comment: true
+          detailed_summary: true
+          include_time_in_summary: true
+
+      - name: Commit and push release changes
+        if: ${{ fromJSON(github.event.inputs.release || 'false') && github.ref_name == 'v3' }}
+        env:
+          GITHUB_TOKEN: ${{ steps.github-app-token.outputs.token }}
+          CHANGED_FILES: ${{ steps.prepare-release.outputs.changed-files }}
+          RELEASE_VERSION: ${{ steps.prepare-release.outputs.release-version }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          set -euo pipefail
+          git config user.name "neoload-publisher[bot]"
+          git config user.email "neoload-publisher[bot]@users.noreply.github.com"
+
+          remote_url=$(git config --get remote.origin.url)
+          clean_url=$(echo "$remote_url" | sed -E 's|https://[^@]*@github.com|https://github.com|')
+          auth_remote_url=${clean_url/https:\/\/github.com/https:\/\/x-access-token:${GITHUB_TOKEN}@github.com}
+          git remote set-url origin "$auth_remote_url"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+
+          # shellcheck disable=SC2086
+          git add ${CHANGED_FILES}
+          if git diff --cached --quiet; then
+            echo "No release pom changes to commit"
+          else
+            git commit -m "[maven-ci] Release ${RELEASE_VERSION} [skip ci]"
+            target_ref=$(git rev-parse --abbrev-ref HEAD)
+            git pull --rebase origin "${target_ref}"
+            git push origin "HEAD:refs/heads/${target_ref}"
+          fi
+
+          tag="${REPO_NAME}-${RELEASE_VERSION}"
+          git fetch --tags
+          if git tag -l | grep -q "^${tag}$"; then
+            echo "::warning::Tag ${tag} already exists, skipping"
+          else
+            git tag "${tag}"
+            git push origin "${tag}"
+          fi
+
+      - name: Prepare next Snapshot version
+        if: ${{ fromJSON(github.event.inputs.release || 'false') && github.ref_name == 'v3' }}
+        env:
+          GITHUB_TOKEN: ${{ steps.github-app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+
+          echo "::group::Maven set Next Snapshot version"
+          mvn -B build-helper:parse-version versions:set \
+            "-DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}-SNAPSHOT" \
+            -DgenerateBackupPoms=false
+          updated_pom_files=$(git diff --name-only -- ':(glob)**/pom.xml' | paste -sd ' ' -)
+          echo "Changed: ${updated_pom_files}"
+          echo "::endgroup::"
+
+          git config user.name "neoload-publisher[bot]"
+          git config user.email "neoload-publisher[bot]@users.noreply.github.com"
+
+          remote_url=$(git config --get remote.origin.url)
+          clean_url=$(echo "$remote_url" | sed -E 's|https://[^@]*@github.com|https://github.com|')
+          auth_remote_url=${clean_url/https:\/\/github.com/https:\/\/x-access-token:${GITHUB_TOKEN}@github.com}
+          git remote set-url origin "$auth_remote_url"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+
+          # shellcheck disable=SC2086
+          git add ${updated_pom_files}
+          if git diff --cached --quiet; then
+            echo "No next-snapshot pom changes to commit"
+            exit 0
+          fi
+          git commit -m "[maven-ci] Prepare next Snapshot"
+          target_ref=$(git rev-parse --abbrev-ref HEAD)
+          git pull --rebase origin "${target_ref}"
+          git push origin "HEAD:refs/heads/${target_ref}"
