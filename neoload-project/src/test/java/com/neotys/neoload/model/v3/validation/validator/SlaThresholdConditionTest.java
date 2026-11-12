@@ -5,13 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Operator;
 import com.neotys.neoload.model.v3.project.sla.SlaThresholdCondition.Severity;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-
+import org.junit.Test;
 
 public class SlaThresholdConditionTest {
 	private static final String LINE_SEPARATOR = System.lineSeparator();
@@ -45,7 +43,7 @@ public class SlaThresholdConditionTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'value': must be greater than or equal to 0.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value '-1.0' for 'value': must be greater than or equal to 0.").append(LINE_SEPARATOR);
 		CONSTRAINTS_SLA_THRESHOLD_CONDITION_VALUE_NEGATIVE = sb.toString();
 	}
 
