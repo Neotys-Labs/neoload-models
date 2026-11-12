@@ -22,11 +22,12 @@ run-name: "${{ github.event_name == 'workflow_dispatch' && (inputs.release && 'ð
 jobs:
   build:
     name: Backend
-    uses: tricentis-neoload/templates/.github/workflows/nl-mvn-build-public.yml@feature/DEVEX-2816-neotyslabs
+    uses: Neotys-Labs/templates/.github/workflows/nl-mvn-build-public.yml@feature/DEVEX-2816
     with:
       skip-tests: ${{ fromJSON(github.event.inputs.skip-tests || 'false') }}
       release: ${{ fromJSON(github.event.inputs.release || 'false') }}
     secrets:
+      CLOUDSMITH_MVN_REPO: ${{ secrets.CLOUDSMITH_MVN_REPO }}
       CLOUDSMITH_OIDC_NAMESPACE: ${{ secrets.CLOUDSMITH_OIDC_NAMESPACE }}
       CLOUDSMITH_OIDC_SERVICE_SLUG: ${{ secrets.CLOUDSMITH_OIDC_SERVICE_SLUG }}
       MVN_NEXUS_PUBLIC_USERNAME: ${{ secrets.MVN_NEXUS_PUBLIC_USERNAME }}
