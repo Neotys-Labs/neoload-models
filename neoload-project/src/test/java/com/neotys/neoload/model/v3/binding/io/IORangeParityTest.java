@@ -24,6 +24,7 @@ public class IORangeParityTest {
 	private static final String INVALID = "invalid";
 
 	private static final String CONSTANT_START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
+	private static final String CONSTANT_STOP_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      stop_after: %s\n");
 
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
@@ -59,6 +60,10 @@ public class IORangeParityTest {
 		rows.add(row("start_after", CONSTANT_START_AFTER, "1", VALID));
 		rows.add(row("start_after", CONSTANT_START_AFTER, "2147483", VALID));
 		rows.add(row("start_after", CONSTANT_START_AFTER, "2147484", INVALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "0", INVALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "1", VALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "2147483", VALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "2147484", INVALID));
 		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "0", INVALID));
 		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "2147483", VALID));
 		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "2147484", INVALID));
