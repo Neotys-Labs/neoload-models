@@ -55,6 +55,12 @@ jobs:
           distribution: liberica
           java-version: '21'
 
+      # Maven 3.10 writes local-repo metadata into the Central bundle. Plugin 0.9.0 does not strip it, and Central rejects the deployment.
+      - name: Set up Maven
+        uses: step-security/setup-maven@952ce6ada26435ad361053035d888477856de677 # v5.0.1
+        with:
+          maven-version: '3.9.16'
+
       - name: Install JaCoCo CLI
         env:
           JACOCO_VERSION: '0.8.15'
