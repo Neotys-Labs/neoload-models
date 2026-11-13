@@ -285,6 +285,17 @@ web_services_security:
       less_than: 2048
 ```
 
+**`content_assertions` on `custom_action`** — a custom action can now validate its response
+content, with the same content assertions as a request.
+
+```yaml
+- custom_action:
+    name: sql action
+    type: SQL
+    content_assertions:
+    - contains: expected text
+```
+
 #### Variables
 
 Four variable types that already existed in the NeoLoad GUI are now writable in as-code.
