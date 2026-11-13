@@ -96,13 +96,13 @@ Virtual User count stays stable; set `start_new_vu: false` to stop without a rep
     start_new_vu: false
 ```
 
-**`debug_logger`** — writes a line to a log file, `logs/runTimeLog.txt` unless `file` says
+**`debug_logger`** — writes a line to a log file, `logs/runTimeLog.txt` (relative to the NeoLoad logs folder) unless `file` says
 otherwise.
 
 ```yaml
 - debug_logger:
     text: "Current user: ${user_id}"
-    file: logs/custom.txt
+    file: custom.txt
 ```
 
 **`soap_request`** — a SOAP request. Its body is read from an external XML file referenced by

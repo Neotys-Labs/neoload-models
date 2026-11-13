@@ -127,8 +127,7 @@ user_paths:
         name: room_router
         value: "${room}"
         case:
-        - name: vip                           # a case on a path needs a name;
-          value: vip                          # unnamed cases would all be called "case"
+        - value: vip
           break: true
           steps:
           - websocket_channel:
@@ -136,8 +135,8 @@ user_paths:
               url: https://chat.example.com:443/vip
           - websocket_request:
               name: join_vip
-              # CASE: a switch case: the case's name is the segment.
-              channel: actions>room_router>vip>vip_socket
+              # CASE: a switch case: the case segment is `Case <value>`.
+              channel: actions>room_router>Case vip>vip_socket
               message_type: text
               body: '{"op":"join","room":"vip"}'
         default:

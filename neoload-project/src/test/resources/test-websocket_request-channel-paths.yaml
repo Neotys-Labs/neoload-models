@@ -32,8 +32,7 @@ user_paths:
         name: router
         value: "${room}"
         case:
-        - name: vip
-          value: vip
+        - value: vip
           break: true
           steps:
           - websocket_channel:
@@ -85,7 +84,7 @@ user_paths:
         channel: actions>has_notifications>else>notify_socket
     - websocket_request:
         name: in_case
-        channel: actions>router>vip>vip_socket
+        channel: actions>router>Case vip>vip_socket
     - websocket_request:
         name: in_default
         channel: actions>router>default>lobby_socket
