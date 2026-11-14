@@ -60,6 +60,9 @@ public class IOSchema3Dot1ValidationTest {
      * <p><b>Encoding-specific fixtures</b>: exercise non-UTF-8 encoding handling; their content is
      * valid but cannot be parsed by the standard UTF-8 Jackson mapper used here.</p>
      *
+     * <p><b>Out-of-range fixtures</b> ({@code test-scenarios-*-version}): carry {@code min_users: 0}, which schema 3.1
+     * rejects, and are shared with the previous model tests.</p>
+     *
      * <p><b>Voluntarily invalid files for unit-test</b>: used for some other unit testing.</p>
      *
      * <p>Do not add new fixtures here without a clear justification.</p>
@@ -78,10 +81,15 @@ public class IOSchema3Dot1ValidationTest {
             // Encoding-specific: ISO-8859-1 encoded; tests charset handling, not schema conformance
             "test-scenarios-iso-8859-1.yaml",
             "test-scenarios-iso-8859-1.json",
+            "test-scenarios-full-version.yaml",
+            "test-scenarios-full-version.json",
+            "test-scenarios-light-version.yaml",
+            "test-scenarios-light-version.json",
             // Voluntarily invalid files for unit-test:
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
             "test-pacing-invalid-values.yaml",
+            "test-pacing-random-invalid-ranges.yaml",
             "test-waituntil-invalid-timeout.yaml",
             "test-pacing-malformed-units.yaml",
             "test-pacing-mixed.yaml",

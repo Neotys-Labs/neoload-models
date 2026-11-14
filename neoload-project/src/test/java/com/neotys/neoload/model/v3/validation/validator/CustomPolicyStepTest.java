@@ -1,15 +1,15 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class CustomPolicyStepTest {
 
@@ -54,7 +54,7 @@ public class CustomPolicyStepTest {
         assertFalse(validation.isValid());
         assertThat(validation.getMessage())
                 .hasValueSatisfying(new Condition<>(
-                        string -> string.contains("Incorrect value for 'users': must be greater than or equal to 0."),
+                        string -> string.contains("Incorrect value '-1' for 'users': must be greater than or equal to 0."),
                         "Users field is a positive number or equal to zero")
                 );
     }
@@ -70,7 +70,7 @@ public class CustomPolicyStepTest {
         assertFalse(validation.isValid());
         assertThat(validation.getMessage())
                 .hasValueSatisfying(new Condition<>(
-                        string -> string.contains("Incorrect value for 'when': must be greater than or equal to 0 second or 0 iteration."),
+                        string -> string.contains("Incorrect value '100' for 'when': must be greater than or equal to 0 second or 0 iteration."),
                         "Sub validation on field when are executed")
                 );
     }

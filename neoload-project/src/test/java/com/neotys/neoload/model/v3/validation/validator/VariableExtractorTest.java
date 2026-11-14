@@ -1,12 +1,11 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
 
+import static org.junit.Assert.*;
+
 import com.neotys.neoload.model.v3.project.userpath.VariableExtractor;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 
 public class VariableExtractorTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -31,7 +30,7 @@ public class VariableExtractorTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'match_number': must be greater than or equal to -1").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value '-20' for 'match_number': must be greater than or equal to -1").append(LINE_SEPARATOR);
 		CONSTRAINTS_VARIABLE_EXTRACTOR_MATCH_NUMBER = sb.toString();
 	}
 

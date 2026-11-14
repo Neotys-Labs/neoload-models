@@ -2,10 +2,9 @@ package com.neotys.neoload.model.v3.writers.neoload.scenario;
 
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import java.util.Optional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Optional;
 
 public class RampupLoadPolicyWriter extends LoadPolicyWriter {
 
@@ -28,7 +27,7 @@ public class RampupLoadPolicyWriter extends LoadPolicyWriter {
         Element xmlElement = document.createElement(XML_TAG_NAME);
 
         // Initial User Number attribute
-        xmlElement.setAttribute(XML_ATTR_INITIALUSERNUMBER, String.valueOf(rampupLoadPolicy.getMinUsers()));
+        xmlElement.setAttribute(XML_ATTR_INITIALUSERNUMBER, String.valueOf(rampupLoadPolicy.getMinUsers().orElse(0)));
         // User Increment attribute
         xmlElement.setAttribute(XML_ATTR_USERINCREMENT, String.valueOf(rampupLoadPolicy.getIncrementUsers()));
         // Delay Increment & Delay Type Increment attribute

@@ -7,35 +7,27 @@ import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 /**
- * A number of seconds or a valid duration text is a time delay, a negative or oversized number failing the read;
- * any other text is a population name.
+ * A text starting with a digit, or a sign followed by a digit, is a time delay in seconds: an invalid duration
+ * fails the read instead of being taken for a population name. Any other text is a population name.
  */
 public final class StringToStartAfterConverter extends StdConverter<String, StartAfter> {
 	private static final StartAfter ERROR_VALUE = StartAfter.builder().build();
-	private static final Pattern NUMBER = Pattern.compile("\\s*-?\\d+\\s*");
+	private static final Pattern DURATION_LIKE = Pattern.compile("\\s*-?\\d.*", Pattern.DOTALL);
 
 	@Override
 	public StartAfter convert(final String input) {
 		if (Strings.isNullOrEmpty(input)) {
 			return ERROR_VALUE;
 		}
-		if (NUMBER.matcher(input).matches()) {
-			return time(input);
-		}
-		try {
-			return time(input);
-		} catch (final InvalidDurationException e) {
+		if (DURATION_LIKE.matcher(input).matches()) {
 			return StartAfter.builder()
-					.value(input)
-					.type(StartAfter.Type.POPULATION)
+					.value(DurationParser.parse(input, ChronoUnit.SECONDS))
+					.type(StartAfter.Type.TIME)
 					.build();
 		}
-	}
-
-	private static StartAfter time(final String input) {
 		return StartAfter.builder()
-				.value(DurationParser.parse(input, ChronoUnit.SECONDS))
-				.type(StartAfter.Type.TIME)
+				.value(input)
+				.type(StartAfter.Type.POPULATION)
 				.build();
 	}
 }
