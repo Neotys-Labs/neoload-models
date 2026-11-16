@@ -55,7 +55,6 @@ public interface Browser {
 		@JsonProperty("pack200_gzip") PACK200_GZIP,
 		@JsonProperty("bzip2") BZIP2,
 		@JsonProperty("lzma") LZMA,
-		@JsonProperty("peerdist") PEERDIST,
 		@JsonProperty("xz") XZ,
 		@JsonProperty("brotli") BROTLI,
 		@JsonProperty("identity") IDENTITY
