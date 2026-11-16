@@ -201,6 +201,33 @@ user_paths:
 
 See [User Paths](neoload-project/doc/v3/user-paths.md) for the full reference.
 
+#### Populations
+
+The browser and the cache of each User Path of a Population, set in the "Browser", "HTTP/2" and
+"Handle Cache" columns of the Population table in the NeoLoad GUI, are now writable in as-code as two
+optional keys of a Population User Path.
+
+- **`browser`** — the browser emulated by the Virtual Users: `name` (the label shown in NeoLoad),
+  `user_agent`, `connections` (6 by default), `cookies` and `http2` (`true` by default) and
+  `accept_encoding`. When omitted, the recorded browser is used; without `user_agent`, the other
+  settings apply to the recorded browser.
+- **`cache`** — `as_recorded` (the default), `new_user` (empty cache) or `returning_user` (cache
+  already filled).
+
+```yaml
+populations:
+- name: MyPopulation
+  user_paths:
+  - name: MyUserPath
+    browser:
+      name: Chrome 124.0
+      user_agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+      http2: false
+    cache: new_user
+```
+
+See [Population](neoload-project/doc/v3/population.md) for the full reference.
+
 #### Requests
 
 **`parts`** — a multipart/form-data body on an HTTP request, as in the NeoLoad GUI. Use `parts`

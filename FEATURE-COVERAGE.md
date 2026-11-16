@@ -213,6 +213,9 @@ and protocol action catalogues.
 |:------------|:--------|
 | Population name, description | 3.0 |
 | User Path list with `distribution` percentage | 3.0 |
+| Browser per User Path — user agent, connections, cookies, HTTP/2, accept encoding (`browser`) | 3.1 |
+| Cache per User Path — as recorded, new user, returning user (`cache`) | 3.1 |
+| WAN emulation per User Path | — |
 
 ## Scenarios and load policies
 

@@ -124,7 +124,11 @@ public class IOSchema3Dot1ValidationTest {
             "test-websocket_request-invalid-references.yaml",
             "test-websocket_request-invalid-settings.yaml",
             "test-websocket_request-invalid-shared-references.yaml",
-            "test-websocket_push_message-invalid.yaml"
+            "test-websocket_push_message-invalid.yaml",
+            "test-populations-browser-invalid-connections.yaml",
+            "test-populations-browser-invalid-encoding.yaml",
+            "test-populations-browser-unknown-key.yaml",
+            "test-populations-invalid-cache.yaml"
     );
 
     @BeforeClass

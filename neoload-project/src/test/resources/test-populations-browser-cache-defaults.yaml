@@ -1,0 +1,11 @@
+name: MyProject
+populations:
+- name: MyPopulation1
+  user_paths:
+  - name: MyUserPath11
+    browser:
+      connections: 6
+      cookies: true
+      http2: true
+      accept_encoding: []
+    cache: as_recorded
