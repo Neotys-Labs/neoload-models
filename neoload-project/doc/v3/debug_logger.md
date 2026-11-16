@@ -7,7 +7,7 @@ The Debug Logger Action writes a text entry to a log file, for debugging purpose
 | Name        | Description                         | Accept variable | Required | Since |
 |:----------- |:------------------------------------|:---------------:|:--------:|:-----:|
 | text        | The text to log                     | &#x2713;         | &#x2713; | 2026.3 |
-| file        | The path of the log file. A relative path is resolved against the NeoLoad logs folder (app data folder) of the Load Generator; an absolute path is used as-is. |        -        |    -     | 2026.3 |
+| file        | The path of the log file. A relative path is resolved against the NeoLoad logs folder (app data folder) of the Load Generator. |        -        |    -     | 2026.3 |
 
 #### Default value
 When `file` is not set, the text is written to `logs/runTimeLog.txt`, relative to the NeoLoad logs folder.

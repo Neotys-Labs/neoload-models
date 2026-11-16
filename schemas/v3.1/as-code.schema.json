@@ -2631,7 +2631,7 @@
 						},
 						"file": {
 							"$ref": "#/definitions/common/text",
-							"description": "The path of the log file. Does not accept a variable. A relative path is resolved against the NeoLoad logs folder (app data folder) of the Load Generator; an absolute path is used as-is."
+							"description": "The path of the log file. Does not accept a variable. A relative path is resolved against the NeoLoad logs folder (app data folder) of the Load Generator."
 						}
 					},
 					"additionalProperties": false,
