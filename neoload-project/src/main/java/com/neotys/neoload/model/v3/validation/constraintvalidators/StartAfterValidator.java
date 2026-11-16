@@ -1,9 +1,9 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
-import javax.validation.ConstraintValidatorContext;
-
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.validation.constraints.CompositeCheck;
+import java.time.Duration;
+import javax.validation.ConstraintValidatorContext;
 
 public final class StartAfterValidator extends AbstractConstraintValidator<CompositeCheck, StartAfter> {
 	@Override
@@ -22,10 +22,11 @@ public final class StartAfterValidator extends AbstractConstraintValidator<Compo
 			return false;
 		}
 		if (type == StartAfter.Type.TIME) {
-			if (!(value instanceof Integer)) {
+			if (!(value instanceof Duration)) {
 				return false;
 			}
-			return ((Integer) value > 0);
+			final Duration time = (Duration) value;
+			return !time.isZero() && !time.isNegative() && time.getNano() == 0;
 		}
 		else {
 			if (!(value instanceof String)) {

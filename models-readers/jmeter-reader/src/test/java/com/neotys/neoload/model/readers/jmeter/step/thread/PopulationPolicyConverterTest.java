@@ -1,15 +1,16 @@
 package com.neotys.neoload.model.readers.jmeter.step.thread;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
+
 import com.neotys.neoload.model.listener.TestEventListener;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.scenario.*;
+import java.time.Duration;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.spy;
 
 public class PopulationPolicyConverterTest {
 
@@ -45,8 +46,8 @@ public class PopulationPolicyConverterTest {
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(threadGroup.getNumThreads())
                 .duration(loadDuration)
-                .rampup(rampup)
-                .startAfter(StartAfter.builder().type(StartAfter.Type.TIME).value(69).build())
+                .rampup(Duration.ofSeconds(rampup))
+                .startAfter(StartAfter.builder().type(StartAfter.Type.TIME).value(Duration.ofSeconds(69)).build())
                 .build();
 
         PopulationPolicy expected = PopulationPolicy.builder()
@@ -83,9 +84,9 @@ public class PopulationPolicyConverterTest {
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(threadGroup.getNumThreads())
                 .duration(loadDuration)
-                .rampup(rampup)
+                .rampup(Duration.ofSeconds(rampup))
                 .startAfter(StartAfter.builder()
-                        .value(delay)
+                        .value(Duration.ofSeconds(delay))
                         .type(StartAfter.Type.TIME)
                         .build())
                 .build();
@@ -123,9 +124,9 @@ public class PopulationPolicyConverterTest {
         LoadPolicy loadPolicy = ConstantLoadPolicy.builder()
                 .users(numThreads)
                 .duration(loadDuration)
-                .rampup(rampup)
+                .rampup(Duration.ofSeconds(rampup))
                 .startAfter(StartAfter.builder()
-                        .value(delay)
+                        .value(Duration.ofSeconds(delay))
                         .type(StartAfter.Type.TIME)
                         .build()
                 ).build();

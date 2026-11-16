@@ -1,9 +1,8 @@
 # Switch
+_Switch_ is supported in NeoLoad from version 2025.1 onwards.
 
 The Switch action is used to execute conditional actions based on a selection control mechanism. It allows the Switch value to change the control flow of the User Path execution via a multiway branch, named Case statements.
 The Switch action is fall-through, which means that if a Break flag is disabled on a Case, then the next Case statement is executed.
-
-Switches are supported in NeoLoad from version 2025.1 onwards.
 
 #### Available settings
 
@@ -19,7 +18,7 @@ Switches are supported in NeoLoad from version 2025.1 onwards.
 
 | Name              | Description                 | Accept variable | Required | Since |
 |:------------------|:----------------------------|:---------------:|:--------:|:-----:|
-| value             | The value of the case       |        -        | &#x2713; |       |
+| value             | The value of the case, compared literally to the Switch value, unique within the Switch |        -        | &#x2713; |       |
 | break             | Enable the break            |        -        |          |       |
 | description       | The description of the case |        -        |    -     |       |
 | [pacing](pacing.md) | The minimum duration enforced for the case | &#x2713; | - | 2026.3 |

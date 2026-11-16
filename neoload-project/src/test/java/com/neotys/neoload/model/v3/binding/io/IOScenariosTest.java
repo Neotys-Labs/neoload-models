@@ -1,6 +1,9 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 
+import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
+import static org.junit.Assert.assertNotNull;
+
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.scenario.Apm;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
@@ -21,16 +24,11 @@ import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
-
-import org.junit.Test;
-
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-
-import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
-import static org.junit.Assert.assertNotNull;
-
+import org.junit.Test;
 
 public class IOScenariosTest extends AbstractIOElementsTest {
 
@@ -107,12 +105,12 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.type(LoadDuration.Type.TIME)
 								.build())
 						.startAfter(StartAfter.builder()
-								.value(30)
+								.value(Duration.ofSeconds(30))
 								.type(StartAfter.Type.TIME)
 								.build())
-						.rampup(60)
+						.rampup(Duration.ofSeconds(60))
 						.stopAfter(StopAfter.builder()
-								.value(30)
+								.value(Duration.ofSeconds(30))
 								.type(StopAfter.Type.TIME)
 								.build())
 						.build())
@@ -136,7 +134,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.value("MyPopulation1")
 								.type(StartAfter.Type.POPULATION)
 								.build())
-						.rampup(90)
+						.rampup(Duration.ofSeconds(90))
 						.stopAfter(StopAfter.builder()
 								.type(StopAfter.Type.CURRENT_ITERATION)
 								.build())
@@ -166,12 +164,12 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 								.type(LoadDuration.Type.ITERATION)
 								.build())
 						.startAfter(StartAfter.builder()
-								.value(60)
+								.value(Duration.ofSeconds(60))
 								.type(StartAfter.Type.TIME)
 								.build())
-						.rampup(15)
+						.rampup(Duration.ofSeconds(15))
 						.stopAfter(StopAfter.builder()
-								.value(60)
+								.value(Duration.ofSeconds(60))
 								.type(StopAfter.Type.TIME)
 								.build())
 						.build())
@@ -191,12 +189,12 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 				.loadPolicy(CustomLoadPolicy.builder()
 						.steps(Collections.singletonList(customPolicyStep))
 						.startAfter(StartAfter.builder()
-								.value(30)
+								.value(Duration.ofSeconds(30))
 								.type(StartAfter.Type.TIME)
 								.build())
-						.rampup(60)
+						.rampup(Duration.ofSeconds(60))
 						.stopAfter(StopAfter.builder()
-								.value(30)
+								.value(Duration.ofSeconds(30))
 								.type(StopAfter.Type.TIME)
 								.build())
 						.build())
@@ -226,7 +224,7 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 										.type(WhenRelease.Type.MANUAL)
 										.value("manual")
 										.build())
-								.timeout(900)
+								.timeout(Duration.ofSeconds(900))
 								.build(),
 						RendezvousPolicy.builder()
 								.name("rdv_percentage")
@@ -241,10 +239,10 @@ public class IOScenariosTest extends AbstractIOElementsTest {
 										.type(WhenRelease.Type.VU_NUMBER)
 										.value("200")
 										.build())
-								.timeout(100)
+								.timeout(Duration.ofSeconds(100))
 								.build()
 				)
-				.monitoringParameters(MonitoringParameters.builder().beforeFirstVu(6).afterLastVus(99).build())
+				.monitoringParameters(MonitoringParameters.builder().beforeFirstVu(Duration.ofSeconds(6)).afterLastVus(Duration.ofSeconds(99)).build())
 				.isStoredVariables(true)
 				.excludedUrls(List.of(".*\\.abcd"))
 				.build();

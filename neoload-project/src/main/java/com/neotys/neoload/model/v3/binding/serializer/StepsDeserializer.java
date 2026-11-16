@@ -1,14 +1,16 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
-import static com.neotys.neoload.model.v3.binding.converter.StringToTimeDurationInMsOrInVariableConverter.STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE;
 import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.*;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
+import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.*;
 import java.io.IOException;
@@ -17,9 +19,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class StepsDeserializer extends StdDeserializer<List<Step>> {
 	private static final long serialVersionUID = -5696608939252369276L;
@@ -29,6 +28,7 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		final ImmutableMap.Builder<String, Class<? extends Step>> builder = new ImmutableMap.Builder<>();
 		builder.put(TRANSACTION, Container.class);
 		builder.put(REQUEST, Request.class);
+		builder.put(SOAP_REQUEST, SoapRequest.class);
 		builder.put(JAVASCRIPT, JavaScript.class);
 		builder.put(IF, If.class);
 		builder.put(LOOP, Loop.class);
@@ -43,16 +43,19 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		builder.put(STOP_VU, StopVU.class);
 		builder.put(WEB_PAGE, WebPage.class);
 		builder.put(WAIT_UNTIL, WaitUntil.class);
+		builder.put(WEBSOCKET_CHANNEL, WebSocketChannel.class);
+		builder.put(WEBSOCKET_REQUEST, WebSocketRequest.class);
 		STEPS = builder.build();
 	}
 
-	private static final List<Function<JsonNode, Step>> SIMPLE_STEP_PARSERS = Arrays.asList(
+	private static final List<StepParser> SIMPLE_STEP_PARSERS = Arrays.asList(
 			StepsDeserializer::parseGoToNextIteration,
 			StepsDeserializer::parseDelay,
 			StepsDeserializer::parseThinkTime,
 			StepsDeserializer::parseRendezvous,
 			StepsDeserializer::parseStopVU,
-			StepsDeserializer::parseSharedElementRef
+			StepsDeserializer::parseSharedElementRef,
+			StepsDeserializer::parseBareCustomActionStep
 	);
 
 	public StepsDeserializer() {
@@ -86,12 +89,19 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		return parseRegisteredStep(codec, stepNode);
 	}
 
-	private Step parseSimpleStep(final JsonNode stepNode) {
-		return SIMPLE_STEP_PARSERS.stream()
-				.map(parser -> parser.apply(stepNode))
-				.filter(Objects::nonNull)
-				.findFirst()
-				.orElse(null);
+	private Step parseSimpleStep(final JsonNode stepNode) throws IOException {
+		for (final StepParser parser : SIMPLE_STEP_PARSERS) {
+			final Step step = parser.parse(stepNode);
+			if (step != null) {
+				return step;
+			}
+		}
+		return null;
+	}
+
+	@FunctionalInterface
+	private interface StepParser {
+		Step parse(JsonNode stepNode) throws IOException;
 	}
 
 	private static Step parseGoToNextIteration(final JsonNode stepNode) {
@@ -101,64 +111,33 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		return null;
 	}
 
-	// delay is polymorphic: a scalar is a DelayConstant; an object with min/max is a DelayRandom,
-	// otherwise a DelayConstant (with its value under the `value` key). Both object forms may carry
-	// an optional name/description.
-	private static Step parseDelay(final JsonNode stepNode) {
-		if (!stepNode.has(DELAY)) {
+	private static Step parseDelay(final JsonNode stepNode) throws IOException {
+		return parseDelay(stepNode, DELAY, false);
+	}
+
+	private static Step parseThinkTime(final JsonNode stepNode) throws IOException {
+		return parseDelay(stepNode, THINK_TIME, true);
+	}
+
+	private static Step parseDelay(final JsonNode stepNode, final String key, final boolean thinkTime) throws IOException {
+		if (!stepNode.has(key)) {
 			return null;
 		}
-		final JsonNode delayNode = stepNode.get(DELAY);
-		if (!delayNode.isObject()) {
-			return DelayConstant.builder().value(convertDuration(delayNode)).build();
-		}
-		if (delayNode.has(DelayRandom.MIN) || delayNode.has(DelayRandom.MAX)) {
-			final DelayRandom.Builder builder = DelayRandom.builder();
-			applyNameDescription(delayNode, builder::name, builder::description);
-			if (delayNode.has(DelayRandom.MIN)) {
-				builder.min(convertDuration(delayNode.get(DelayRandom.MIN)));
-			}
-			if (delayNode.has(DelayRandom.MAX)) {
-				builder.max(convertDuration(delayNode.get(DelayRandom.MAX)));
-			}
-			return builder.build();
-		}
-		final DelayConstant.Builder builder = DelayConstant.builder();
-		applyNameDescription(delayNode, builder::name, builder::description);
-		if (delayNode.has(DelayConstant.VALUE)) {
-			builder.value(convertDuration(delayNode.get(DelayConstant.VALUE)));
-		}
+		final JsonNode delayNode = stepNode.get(key);
+		final Delay.Builder builder = Delay.builder().isThinkTime(thinkTime).duration(readDuration(delayNode, key));
+		DeserializerHelper.asText(delayNode, Element.NAME).ifPresent(builder::name);
+		DeserializerHelper.asText(delayNode, Element.DESCRIPTION).ifPresent(builder::description);
 		return builder.build();
 	}
 
-	// think_time is polymorphic: a scalar is a ThinkTimeConstant; an object with min/max is a
-	// ThinkTimeRandom, otherwise a ThinkTimeConstant (with its value under the `value` key). Both
-	// object forms may carry an optional name/description.
-	private static Step parseThinkTime(final JsonNode stepNode) {
-		if (!stepNode.has(THINK_TIME)) {
-			return null;
+	private static Duration readDuration(final JsonNode delayNode, final String key) throws JsonMappingException {
+		try {
+			return DurationDeserializer.read(delayNode);
+		} catch (final InvalidDurationException e) {
+			final JsonMappingException exception = JsonMappingException.from((JsonParser) null, e.getMessage(), e);
+			exception.prependPath(Delay.class, key);
+			throw exception;
 		}
-		final JsonNode thinkTimeNode = stepNode.get(THINK_TIME);
-		if (!thinkTimeNode.isObject()) {
-			return ThinkTimeConstant.builder().value(convertDuration(thinkTimeNode)).build();
-		}
-		if (thinkTimeNode.has(ThinkTimeRandom.MIN) || thinkTimeNode.has(ThinkTimeRandom.MAX)) {
-			final ThinkTimeRandom.Builder builder = ThinkTimeRandom.builder();
-			applyNameDescription(thinkTimeNode, builder::name, builder::description);
-			if (thinkTimeNode.has(ThinkTimeRandom.MIN)) {
-				builder.min(convertDuration(thinkTimeNode.get(ThinkTimeRandom.MIN)));
-			}
-			if (thinkTimeNode.has(ThinkTimeRandom.MAX)) {
-				builder.max(convertDuration(thinkTimeNode.get(ThinkTimeRandom.MAX)));
-			}
-			return builder.build();
-		}
-		final ThinkTimeConstant.Builder builder = ThinkTimeConstant.builder();
-		applyNameDescription(thinkTimeNode, builder::name, builder::description);
-		if (thinkTimeNode.has(ThinkTimeConstant.VALUE)) {
-			builder.value(convertDuration(thinkTimeNode.get(ThinkTimeConstant.VALUE)));
-		}
-		return builder.build();
 	}
 
 	private static Step parseRendezvous(final JsonNode stepNode) {
@@ -176,32 +155,45 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 	}
 
 	private static Step parseSharedElementRef(final JsonNode stepNode) {
-		if (stepNode.has(SHARED_ELEMENT)) {
-			return SharedElementRef.builder().name(stepNode.get(SHARED_ELEMENT).asText()).build();
+		if (!stepNode.has(SHARED_ELEMENT)) {
+			return null;
 		}
-		return null;
+		final SharedElementRef.Builder builder = SharedElementRef.builder();
+		DeserializerHelper.asText(stepNode, SHARED_ELEMENT).ifPresent(builder::name);
+		return builder.build();
 	}
 
-	private static String convertDuration(final JsonNode node) {
-		return STRING_TO_TIME_DURATION_IN_MS_OR_IN_VARIABLE.convert(node.asText());
-	}
-
-	private static void applyNameDescription(final JsonNode node, final Consumer<String> nameSetter, final Consumer<String> descriptionSetter) {
-		if (node.has(Element.NAME)) {
-			nameSetter.accept(node.get(Element.NAME).asText());
+	private static Step parseBareCustomActionStep(final JsonNode stepNode) {
+		if (!stepNode.isTextual()) {
+			return null;
 		}
-		if (node.has(Element.DESCRIPTION)) {
-			descriptionSetter.accept(node.get(Element.DESCRIPTION).asText());
+		final String type = CustomActionSteps.typeOf(stepNode.asText());
+		if (type == null) {
+			return null;
 		}
+		return CustomAction.builder().name(type).type(type).build();
 	}
 
 	private Step parseRegisteredStep(final ObjectCodec codec, final JsonNode stepNode) throws IOException {
 		final String stepName = stepNode.fieldNames().next();
+		final JsonNode stepValue = stepNode.get(stepName);
+		final String customActionType = CustomActionSteps.typeOf(stepName);
+		if (customActionType != null) {
+			return parseCustomActionStep(codec, stepValue, customActionType);
+		}
 		final Class<? extends Step> stepClass = STEPS.get(stepName);
 		if (stepClass == null) {
 			return null;
 		}
-		final JsonNode stepValue = stepNode.get(stepName);
 		return codec.treeToValue(stepValue, stepClass);
+	}
+
+	private static Step parseCustomActionStep(final ObjectCodec codec, final JsonNode stepValue, final String type) throws IOException {
+		final ObjectNode customActionNode = stepValue.isObject() ? ((ObjectNode) stepValue).deepCopy() : (ObjectNode) codec.createObjectNode();
+		customActionNode.put(CustomAction.TYPE, type);
+		if (!customActionNode.has(Element.NAME)) {
+			customActionNode.put(Element.NAME, type);
+		}
+		return codec.treeToValue(customActionNode, CustomAction.class);
 	}
 }

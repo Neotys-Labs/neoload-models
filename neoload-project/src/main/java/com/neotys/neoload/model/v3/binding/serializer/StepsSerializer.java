@@ -1,10 +1,11 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
-import static com.neotys.neoload.model.v3.binding.converter.TimeDurationInMsOrInVariableToStringConverter.TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING;
 import static com.neotys.neoload.model.v3.binding.serializer.StepsConstants.*;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.util.TokenBuffer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.google.common.collect.ImmutableMap;
 import com.neotys.neoload.model.v3.project.Element;
@@ -21,6 +22,7 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		final ImmutableMap.Builder<Class<? extends Step>, String> builder = new ImmutableMap.Builder<>();
 		builder.put(ImmutableContainer.class, TRANSACTION);
 		builder.put(ImmutableRequest.class, REQUEST);
+		builder.put(ImmutableSoapRequest.class, SOAP_REQUEST);
 		builder.put(ImmutableJavaScript.class, JAVASCRIPT);
 		builder.put(ImmutableIf.class, IF);
 		builder.put(ImmutableLoop.class, LOOP);
@@ -35,6 +37,8 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		builder.put(ImmutableDebugLogger.class, DEBUG_LOGGER);
 		builder.put(ImmutableWebPage.class, WEB_PAGE);
 		builder.put(ImmutableWaitUntil.class, WAIT_UNTIL);
+		builder.put(ImmutableWebSocketChannel.class, WEBSOCKET_CHANNEL);
+		builder.put(ImmutableWebSocketRequest.class, WEBSOCKET_REQUEST);
 		STEPS = builder.build();
 	}
 
@@ -51,16 +55,14 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 	public void serialize(final List<Step> steps, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		generator.writeStartArray();
 		for (final Step step : steps) {
-			serializeStep(step, generator);
+			serializeStep(step, generator, provider);
 		}
 		generator.writeEndArray();
 	}
 
-	private void serializeStep(final Step step, final JsonGenerator generator) throws IOException {
+	private void serializeStep(final Step step, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
 		if (step instanceof Delay) {
 			serializeDelay((Delay) step, generator);
-		} else if (step instanceof ThinkTime) {
-			serializeThinkTime((ThinkTime) step, generator);
 		} else if (step instanceof GoToNextIteration) {
 			// GoToNextIteration has no properties, serialized as a bare scalar string
 			generator.writeString(GO_TO_NEXT_ITERATION);
@@ -72,6 +74,8 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 			generator.writeStartObject();
 			generator.writeStringField(SHARED_ELEMENT, step.getName());
 			generator.writeEndObject();
+		} else if (step instanceof CustomAction && CustomActionSteps.stepOf(((CustomAction) step).getType()) != null) {
+			serializeCustomActionStep((CustomAction) step, generator, provider);
 		} else {
 			final String stepName = STEPS.get(step.getClass());
 			if (stepName != null) {
@@ -82,72 +86,50 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 		}
 	}
 
+	private void serializeCustomActionStep(final CustomAction customAction, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
+		final ObjectNode customActionNode;
+		try (final TokenBuffer buffer = new TokenBuffer(generator.getCodec(), false)) {
+			provider.defaultSerializeValue(customAction, buffer);
+			customActionNode = buffer.asParser(generator.getCodec()).readValueAsTree();
+		}
+		customActionNode.remove(CustomAction.TYPE);
+		if (customAction.getType().equals(customAction.getName())) {
+			customActionNode.remove(Element.NAME);
+		}
+		final String stepName = CustomActionSteps.stepOf(customAction.getType());
+		if (customActionNode.isEmpty()) {
+			generator.writeString(stepName);
+			return;
+		}
+		generator.writeStartObject();
+		generator.writeFieldName(stepName);
+		generator.writeTree(customActionNode);
+		generator.writeEndObject();
+	}
+
 	private void serializeDelay(final Delay delay, final JsonGenerator generator) throws IOException {
-		if (delay instanceof DelayConstant) {
-			serializeDelayConstant((DelayConstant) delay, generator);
-		} else if (delay instanceof DelayRandom) {
-			serializeDelayRandom((DelayRandom) delay, generator);
-		}
-	}
-
-	// A constant duration uses the simplified scalar syntax when it has no name/description,
-	// and the expanded object syntax (value under the `value` key) otherwise.
-	private void serializeDelayConstant(final DelayConstant delay, final JsonGenerator generator) throws IOException {
 		generator.writeStartObject();
-		if (Delay.DEFAULT_NAME.equals(delay.getName()) && delay.getDescription().isEmpty()) {
-			generator.writeStringField(DELAY, toDuration(delay.getValue()));
-		} else {
-			generator.writeObjectFieldStart(DELAY);
-			writeNameAndDescription(generator, Delay.DEFAULT_NAME, delay.getName(), delay.getDescription().orElse(null));
-			generator.writeStringField(DelayConstant.VALUE, toDuration(delay.getValue()));
-			generator.writeEndObject();
-		}
+		generator.writeFieldName(delay.isThinkTime() ? THINK_TIME : DELAY);
+		writeDelay(generator, delay);
 		generator.writeEndObject();
 	}
 
-	// A random duration is always an object with min/max (min omitted when it keeps its default).
-	private void serializeDelayRandom(final DelayRandom delay, final JsonGenerator generator) throws IOException {
+	private void writeDelay(final JsonGenerator generator, final Delay delay) throws IOException {
+		final Duration duration = delay.getDuration();
+		final boolean implicit = delay.defaultName().equals(delay.getName()) && delay.getDescription().isEmpty();
+		if (duration instanceof DurationConstant && implicit) {
+			generator.writeString(DurationSerializer.toText(((DurationConstant) duration).getValue()));
+			return;
+		}
 		generator.writeStartObject();
-		generator.writeObjectFieldStart(DELAY);
-		writeNameAndDescription(generator, Delay.DEFAULT_NAME, delay.getName(), delay.getDescription().orElse(null));
-		if (!DelayRandom.DEFAULT_MIN.equals(delay.getMin())) {
-			generator.writeStringField(DelayRandom.MIN, toDuration(delay.getMin()));
+		if (!delay.defaultName().equals(delay.getName())) {
+			generator.writeStringField(Element.NAME, delay.getName());
 		}
-		generator.writeStringField(DelayRandom.MAX, toDuration(delay.getMax()));
-		generator.writeEndObject();
-		generator.writeEndObject();
-	}
-
-	private void serializeThinkTime(final ThinkTime thinkTime, final JsonGenerator generator) throws IOException {
-		if (thinkTime instanceof ThinkTimeConstant) {
-			serializeThinkTimeConstant((ThinkTimeConstant) thinkTime, generator);
-		} else if (thinkTime instanceof ThinkTimeRandom) {
-			serializeThinkTimeRandom((ThinkTimeRandom) thinkTime, generator);
+		final String description = delay.getDescription().orElse(null);
+		if (description != null && !description.trim().isEmpty()) {
+			generator.writeStringField(Element.DESCRIPTION, description.trim());
 		}
-	}
-
-	private void serializeThinkTimeConstant(final ThinkTimeConstant thinkTime, final JsonGenerator generator) throws IOException {
-		generator.writeStartObject();
-		if (ThinkTime.DEFAULT_NAME.equals(thinkTime.getName()) && thinkTime.getDescription().isEmpty()) {
-			generator.writeStringField(THINK_TIME, toDuration(thinkTime.getValue()));
-		} else {
-			generator.writeObjectFieldStart(THINK_TIME);
-			writeNameAndDescription(generator, ThinkTime.DEFAULT_NAME, thinkTime.getName(), thinkTime.getDescription().orElse(null));
-			generator.writeStringField(ThinkTimeConstant.VALUE, toDuration(thinkTime.getValue()));
-			generator.writeEndObject();
-		}
-		generator.writeEndObject();
-	}
-
-	private void serializeThinkTimeRandom(final ThinkTimeRandom thinkTime, final JsonGenerator generator) throws IOException {
-		generator.writeStartObject();
-		generator.writeObjectFieldStart(THINK_TIME);
-		writeNameAndDescription(generator, ThinkTime.DEFAULT_NAME, thinkTime.getName(), thinkTime.getDescription().orElse(null));
-		if (!ThinkTimeRandom.DEFAULT_MIN.equals(thinkTime.getMin())) {
-			generator.writeStringField(ThinkTimeRandom.MIN, toDuration(thinkTime.getMin()));
-		}
-		generator.writeStringField(ThinkTimeRandom.MAX, toDuration(thinkTime.getMax()));
-		generator.writeEndObject();
+		DurationSerializer.writeFields(generator, duration);
 		generator.writeEndObject();
 	}
 
@@ -173,19 +155,5 @@ public class StepsSerializer extends StdSerializer<List<Step>> {
 			generator.writeEndObject();
 			generator.writeEndObject();
 		}
-	}
-
-	private static void writeNameAndDescription(final JsonGenerator generator, final String defaultName,
-												final String name, final String description) throws IOException {
-		if (!defaultName.equals(name)) {
-			generator.writeStringField(Element.NAME, name);
-		}
-		if (description != null && !description.trim().isEmpty()) {
-			generator.writeStringField(Element.DESCRIPTION, description.trim());
-		}
-	}
-
-	private static String toDuration(final String valueInMs) {
-		return TIME_DURATION_IN_MS_OR_IN_VARIABLE_TO_STRING.convert(valueInMs);
 	}
 }

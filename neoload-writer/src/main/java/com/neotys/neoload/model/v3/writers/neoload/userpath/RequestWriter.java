@@ -1,10 +1,10 @@
 package com.neotys.neoload.model.v3.writers.neoload.userpath;
 
 import com.google.common.net.MediaType;
+import com.neotys.neoload.model.v3.project.userpath.NameValue;
 import com.neotys.neoload.model.v3.project.userpath.Part;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
-import com.neotys.neoload.model.v3.util.Parameter;
 import com.neotys.neoload.model.v3.util.RequestUtils;
 import com.neotys.neoload.model.v3.util.URL;
 import com.neotys.neoload.model.v3.writers.neoload.ElementWriter;
@@ -91,7 +91,7 @@ public class RequestWriter extends ElementWriter {
 		}
 		final Optional<String> parameterTag = bodySupportedByMethod ? Optional.of(XML_URL_PARAMETER_TAG_NAME) : Optional.empty();
 		url.getQuery().ifPresent(s -> writeParameters(RequestUtils.getParameters(s), parameterTag, document, xmlRequest));
-		theRequest.getHeaders().forEach(header -> HeaderWriter.writeXML(document, xmlRequest, header));
+		theRequest.getHeaders().forEach(header -> HeaderWriter.writeXML(document, xmlRequest, header.getName(), header.getValue()));
 	}
 
 	private boolean isBodySupportedByMethod(final Request theRequest) {
@@ -116,8 +116,8 @@ public class RequestWriter extends ElementWriter {
 	}
 
 
-	public void writeParameters(final List<Parameter> parameters, Optional<String> xmlTag, final Document document, Element xmlRequest) {
-			parameters.forEach(param -> ParameterWriter.of(param).writeXML(document, xmlRequest, xmlTag));
+	public void writeParameters(final List<NameValue> parameters, Optional<String> xmlTag, final Document document, Element xmlRequest) {
+			parameters.forEach(param -> ParameterWriter.writeXML(document, xmlRequest, xmlTag, param.getName(), param.getValue()));
 	}
 
 	public void writePostTextBody(final String body, final Document document, Element xmlRequest) {

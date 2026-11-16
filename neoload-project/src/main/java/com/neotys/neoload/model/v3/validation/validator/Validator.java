@@ -1,5 +1,13 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
+import com.google.common.base.Strings;
+import com.neotys.neoload.model.v3.binding.converter.DurationParser;
+import com.neotys.neoload.model.v3.validation.naming.DurationStrategy;
+import com.neotys.neoload.model.v3.validation.naming.JsonPropertyStrategy;
+import com.neotys.neoload.model.v3.validation.naming.LoadPolicyStrategy;
+import com.neotys.neoload.model.v3.validation.naming.PropertyNamingStrategy;
+import com.neotys.neoload.model.v3.validation.naming.RampupStrategy;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,18 +15,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.validation.Configuration;
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.Path.Node;
 import javax.validation.ValidatorFactory;
-
-import com.google.common.base.Strings;
-import com.neotys.neoload.model.v3.validation.naming.LoadPolicyStrategy;
-import com.neotys.neoload.model.v3.validation.naming.PropertyNamingStrategy;
-import com.neotys.neoload.model.v3.validation.naming.RampupStrategy;
-import com.neotys.neoload.model.v3.validation.naming.SnakeCaseStrategy;
 
 public final class Validator {
 	private static final String PROPERTY_PATH_SEPARATOR = ".";
@@ -29,9 +30,10 @@ public final class Validator {
 		PROPERTY_NAMING_STRATEGIES = new HashMap<>();
 		PROPERTY_NAMING_STRATEGIES.put("loadPolicy", new LoadPolicyStrategy());
 		PROPERTY_NAMING_STRATEGIES.put("rampup", new RampupStrategy());
+		PROPERTY_NAMING_STRATEGIES.put("duration", new DurationStrategy());
 	}
 	
-	private static final PropertyNamingStrategy defaultNamingStrategy = new SnakeCaseStrategy();
+	private static final PropertyNamingStrategy defaultNamingStrategy = new JsonPropertyStrategy();
 	
 	public Validator() {
 		super();
@@ -73,13 +75,26 @@ public final class Validator {
 	protected <T> List<String> normalizeErrors(final Set<ConstraintViolation<T>> violations) {
 		final Set<String> errors = new HashSet<>(); // --> Only one same error Validation <-> Immutable
     	for (final ConstraintViolation<T> violation : violations) {
-    		errors.add("Incorrect value for '"+ normalizePath(violation.getPropertyPath()) + "': " + violation.getMessage());
+    		errors.add("Incorrect value for '"+ normalizePath(violation.getPropertyPath()) + "': " + invalidValue(violation) + violation.getMessage());
     	}
     	final List<String> sortedErrors = new ArrayList<>(errors);
     	Collections.sort(sortedErrors);
     	return sortedErrors;
 	}
 	
+	/**
+	 * Quotes an invalid duration as written in the YAML, such as {@code '1s500ms' }. Other values are not quoted.
+	 */
+	private static String invalidValue(final ConstraintViolation<?> violation) {
+		final Object value = violation.getInvalidValue();
+		if (!(value instanceof Duration)) {
+			return "";
+		}
+		final Duration duration = (Duration) value;
+		final String text = duration.isNegative() ? "-" + DurationParser.format(duration.negated()) : DurationParser.format(duration);
+		return "'" + text + "' ";
+	}
+
 	protected String normalizePath(final Path path) {
 		if (path == null) {
 			return "N/A";

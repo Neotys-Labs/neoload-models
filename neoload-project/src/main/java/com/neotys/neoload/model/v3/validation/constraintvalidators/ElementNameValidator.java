@@ -2,6 +2,8 @@ package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.validation.constraints.ElementNameCheck;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.validation.ConstraintValidatorContext;
 
 /**
@@ -10,8 +12,9 @@ import javax.validation.ConstraintValidatorContext;
  * NameValidator does not enforce. Keep both lists in sync if either changes.
  */
 public final class ElementNameValidator extends AbstractConstraintValidator<ElementNameCheck, String> {
-	private static final char[] FORBIDDEN_CHARS = { '£', '€', '$', '"', '[', ']', '<', '>', '|', '*', '¤', '?', '§',
-			'µ', '#', '`', '@', '^', '²', '°', '¨', '\\' };
+	/** Forbidden chars, regex-escaped to be used inside a character class. */
+	public static final String FORBIDDEN_CHARS = "£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\";
+	private static final Pattern FORBIDDEN_CHAR = Pattern.compile("[" + FORBIDDEN_CHARS + "]");
 	private static final int MAX_NAME_LENGTH = 100;
 
 	@Override
@@ -23,22 +26,12 @@ public final class ElementNameValidator extends AbstractConstraintValidator<Elem
 			report(context, "element name '" + name + "' exceeds " + MAX_NAME_LENGTH + " characters.");
 			return false;
 		}
-		for (final char c : name.toCharArray()) {
-			if (isForbidden(c)) {
-				report(context, "element name '" + name + "' contains forbidden character '" + c + "'.");
-				return false;
-			}
+		final Matcher forbidden = FORBIDDEN_CHAR.matcher(name);
+		if (forbidden.find()) {
+			report(context, "element name '" + name + "' contains forbidden character '" + forbidden.group() + "'.");
+			return false;
 		}
 		return true;
-	}
-
-	private static boolean isForbidden(final char c) {
-		for (final char forbidden : FORBIDDEN_CHARS) {
-			if (c == forbidden) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private static void report(final ConstraintValidatorContext context, final String message) {

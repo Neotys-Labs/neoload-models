@@ -36,7 +36,7 @@ product version each contract needs.
 
 #### Steps
 
-Six logical actions that already existed in the NeoLoad GUI are now writable in as-code.
+Seven logical actions that already existed in the NeoLoad GUI are now writable in as-code.
 
 **`try_catch`** — runs the `try` container and, when a caught exception occurs, the `catch`
 container instead. `caught_exceptions` selects `errors` (default), `assertions` or `all`.
@@ -96,13 +96,30 @@ Virtual User count stays stable; set `start_new_vu: false` to stop without a rep
     start_new_vu: false
 ```
 
-**`debug_logger`** — writes a line to a log file, `logs/runTimeLog.txt` unless `file` says
+**`debug_logger`** — writes a line to a log file, `logs/runTimeLog.txt` (relative to the NeoLoad logs folder) unless `file` says
 otherwise.
 
 ```yaml
 - debug_logger:
     text: "Current user: ${user_id}"
-    file: logs/custom.txt
+    file: custom.txt
+```
+
+**`soap_request`** — a SOAP request. Its body is read from an external XML file referenced by
+`content.path`. Like `request`, `url` is required, absolute or relative to `server`. Optional
+`parameters` (query string) and `headers` each take a list of single-key maps, name to value. It
+accepts the same `content_assertions`, `duration_assertion`, `size_assertion` and `sla_profile` keys
+as `request`, and still reads the legacy `assertions` key.
+
+```yaml
+- soap_request:
+    url: http://petstore.swagger.io:80/
+    parameters:
+    - id: "42"
+    headers:
+    - SOAPAction: http://example.com/action
+    content:
+      path: ./requests/mySOAPRequest.xml
 ```
 
 #### Shared elements
@@ -128,6 +145,62 @@ user_paths:
 
 See [shared_elements](neoload-project/doc/v3/shared_elements.md) for the full reference.
 
+#### Real Browser actions
+
+Each Real Browser action of NeoLoad GUI now has its own step, named after the action:
+`browser_open`, `browser_navigate`, `browser_click`, `browser_type`, `browser_upload_file`... (20
+steps). The step name gives the type, so there is no `type` property; the other properties are
+the ones of `custom_action` (`name`, `description`, `parameters`, `asRequest`,
+`duration_assertion`, `size_assertion`). `name` is optional and defaults to the action type
+(`BrowserClick`, `BrowserOpen`...); an action without any setting can be written as a bare
+scalar, for example `- browser_open_tab`. The JSON Schema suggests the parameter names of each
+action with their NeoLoad GUI description, rejects the names the action does not know, and
+requires its mandatory parameters (for example `url` on `browser_navigate`, `selector` and
+`filePaths` on `browser_upload_file`).
+
+```yaml
+- browser_upload_file:
+    name: Upload files
+    parameters:
+    - name: selector
+      value: "input[type=file]"
+    - name: filePaths
+      value: "${NL-CustomResources}/a.txt;${NL-CustomResources}/b.txt"
+```
+
+`custom_action` stays the generic step and accepts any type and parameter: a `custom_action` of a
+Real Browser type is still read, and is written back as its `browser_*` step. A custom action
+parameter `name` now accepts any character, so indexed names such as `options[0].text` validate.
+See [Real Browser actions](neoload-project/doc/v3/real_browser_actions.md) for the full reference.
+
+#### User paths
+
+The runtime parameters of a User Path, set in the "Runtime parameters" panel of the NeoLoad GUI, are
+now writable in as-code as three optional User Path keys.
+
+- **`on_error`** and **`on_assertion_failure`** — what the Virtual User does when an error occurs
+  or an assertion fails: `go_to_next_iteration` or `stop_and_start_new_vu`. When omitted, the
+  Virtual User does nothing.
+- **`think_time`** — replaces (`override`) or scales (`factor`) all the think times of the User
+  Path, optionally adding a `random` delay of +/- a percentage. It applies to the web pages and the
+  `think_time` steps of the User Path; `delay` steps are not affected.
+
+```yaml
+user_paths:
+- name: MyUserPath
+  on_error: go_to_next_iteration
+  on_assertion_failure: stop_and_start_new_vu
+  think_time:
+    override: 5s
+    random: 10%
+  actions:
+    steps:
+    - request:
+        url: https://www.tricentis.com/
+```
+
+See [User Paths](neoload-project/doc/v3/user-paths.md) for the full reference.
+
 #### Requests
 
 **`parts`** — a multipart/form-data body on an HTTP request, as in the NeoLoad GUI. Use `parts`
@@ -148,6 +221,56 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
       content_type: image/jpeg
       filename: upload.jpg
       source_filename: upload.jpg
+```
+
+**`follow_redirects`, `charset` and `response_storage`** — advanced settings available on both
+`request` and `soap_request`.
+
+- `follow_redirects` (default `false`) follows the HTTP redirections. It replaces `followRedirects`,
+  which is still read but deprecated and always written back as `follow_redirects`. Declaring both
+  keys on one step is an error.
+- `charset` is the charset used to encode the request body. It only applies to requests with a
+  body (`POST`, `PUT` and every `soap_request`) and is ignored otherwise. Defaults to `ISO-8859-1`.
+- `response_storage` stores the response body in a file: `path` (required, may contain `{ID}`,
+  replaced by a unique number per stored file, and variables), `variable` (default
+  `responseFilePath`) and `delete_when_test_finished` (default `false`).
+
+```yaml
+- request:
+    url: /login
+    server: neotys
+    follow_redirects: true
+    response_storage:
+      path: responses/login_{ID}.html
+      variable: loginResponseFile
+      delete_when_test_finished: true
+```
+
+#### Web Services Security
+
+A new root key, `web_services_security`, declares WS-Security keystores, request profiles
+(`username`, `timestamp`, `signature` and `encryption` tokens) and response profiles. A `soap_request`
+selects them by name with `request_security_profile` and `response_security_profile`. Both are
+optional, and the section is absent from files that do not use it. A `signature` or `encryption` token
+requires a `keystore` declared in `keystores` and an `alias`, and may list the `parts` to sign or
+encrypt. An `encryption` token sets `asymmetric_encryption_algorithm: none` to send the symmetric key unencrypted.
+
+```yaml
+web_services_security:
+  keystores:
+  - path: ./wss-keystores/server.p12
+    password: secret
+  request_profiles:
+  - name: MyRequestProfile
+    headers:
+    - tokens:
+      - username:
+          username: user
+          password: secret
+          password_type: digest
+  response_profiles:
+  - name: MyResponseProfile
+    keystore: ./wss-keystores/server.p12
 ```
 
 #### Assertions

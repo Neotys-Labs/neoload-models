@@ -18,6 +18,7 @@ import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.SharedElementRef;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.time.Duration;
 import org.junit.Test;
 
 public class ProjectTest {
@@ -356,7 +357,7 @@ public class ProjectTest {
 								.build())
 						.addRendezvousPolicies(RendezvousPolicy.builder()
 								.name("rdv")
-								.timeout(100)
+								.timeout(Duration.ofSeconds(100))
 								.when(WhenRelease.builder().type(WhenRelease.Type.VU_NUMBER).value(200).build())
 								.build())
 						.build())

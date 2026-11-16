@@ -3,6 +3,7 @@ package com.neotys.neoload.model.v3.binding.serializer;
 class StepsConstants {
 	protected static final String TRANSACTION = "transaction";
 	protected static final String REQUEST = "request";
+	protected static final String SOAP_REQUEST = "soap_request";
 	protected static final String DELAY = "delay";
 	protected static final String THINK_TIME = "think_time";
 	protected static final String JAVASCRIPT = "javascript";
@@ -21,6 +22,8 @@ class StepsConstants {
 	protected static final String WEB_PAGE = "web_page";
 	protected static final String SHARED_ELEMENT = "shared_element";
 	protected static final String WAIT_UNTIL = "wait_until";
+	protected static final String WEBSOCKET_CHANNEL = "websocket_channel";
+	protected static final String WEBSOCKET_REQUEST = "websocket_request";
 
 	private StepsConstants() {
 		super();

@@ -1,0 +1,46 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - browser_open:
+        parameters:
+        - name: browser
+          value: chromium
+        - name: resolution
+          value: 1920x1080
+    - browser_navigate:
+        name: Go to home
+        description: Home page
+        parameters:
+        - name: url
+          value: https://www.tricentis.com/
+        asRequest: true
+        duration_assertion:
+          less_than: 5000
+    - browser_type:
+        name: Type password
+        parameters:
+        - name: selector
+          value: "#password"
+        - name: encryptedText
+          value: myPassword
+          type: PASSWORD
+    - browser_select_option:
+        name: Select country
+        parameters:
+        - name: selector
+          value: "#country"
+        - name: "options[0].text"
+          value: France
+    - browser_upload_file:
+        name: Upload files
+        parameters:
+        - name: selector
+          value: "input[type=file]"
+        - name: filePaths
+          value: "${NL-CustomResources}/a.txt;${NL-CustomResources}/b.txt"
+    - browser_open_tab
+    - custom_action:
+        name: sql action
+        type: SQL

@@ -1,20 +1,5 @@
 package com.neotys.neoload.model.v3.binding.serializer;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.neotys.neoload.model.v3.project.server.Authentication;
-import com.neotys.neoload.model.v3.project.server.BasicAuthentication;
-import com.neotys.neoload.model.v3.project.server.NegotiateAuthentication;
-import com.neotys.neoload.model.v3.project.server.NtlmAuthentication;
-import com.neotys.neoload.model.v3.project.server.Server;
-
-import java.io.IOException;
-import java.util.Optional;
-
 import static com.google.common.collect.Lists.newArrayList;
 import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication.BASIC_AUTHENTICATION;
 import static com.neotys.neoload.model.v3.project.server.LoginPasswordAuthentication.NEGOTIATE_AUTHENTICATION;
@@ -26,6 +11,20 @@ import static com.neotys.neoload.model.v3.project.server.Server.HOST;
 import static com.neotys.neoload.model.v3.project.server.Server.NAME;
 import static com.neotys.neoload.model.v3.project.server.Server.PORT;
 import static com.neotys.neoload.model.v3.project.server.Server.SCHEME;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.neotys.neoload.model.v3.project.server.Authentication;
+import com.neotys.neoload.model.v3.project.server.BasicAuthentication;
+import com.neotys.neoload.model.v3.project.server.NegotiateAuthentication;
+import com.neotys.neoload.model.v3.project.server.NtlmAuthentication;
+import com.neotys.neoload.model.v3.project.server.Server;
+import java.io.IOException;
+import java.util.Optional;
 
 public class ServerDeserializer extends StdDeserializer<Server> {
 	private static final long serialVersionUID = 3661407425897246832L;
@@ -41,42 +40,30 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 
 		checkMandatoryFieldsForServer(jsonNode);
 
-		final String name = jsonNode.get(NAME).asText();
-		final String host = jsonNode.findValue(HOST).asText();
 		final Server.Scheme scheme = getScheme(codec, jsonNode);
-		final String port = getPort(jsonNode, scheme);
-
-		return Server.builder()
-				.name(name)
-				.host(host)
+		final Server.Builder builder = Server.builder()
 				.scheme(scheme)
-				.port(port)
-				.authentication(getAuthentication(codec, jsonNode))
-				.build();
+				.port(getPort(jsonNode, scheme))
+				.authentication(getAuthentication(codec, jsonNode));
+		DeserializerHelper.asText(jsonNode, NAME).ifPresent(builder::name);
+		DeserializerHelper.asText(jsonNode.findValue(HOST)).ifPresent(builder::host);
+		return builder.build();
 	}
 
 	private void checkMandatoryFieldsForServer(final JsonNode jsonNode) throws IOException {
 		for (String field : newArrayList(NAME, HOST)) {
-			if (!jsonNode.hasNonNull(field)) {
+			if (!DeserializerHelper.asText(jsonNode, field).isPresent()) {
 				throw new IOException("'" + field + "'" + " field is mandatory for Server");
 			}
 		}
 	}
 
 	private String getPort(final JsonNode jsonNode, final Server.Scheme scheme) {
-		final JsonNode jsonNodePort = jsonNode.get(PORT);
-		if (jsonNodePort != null) {
-			return jsonNodePort.asText();
-		}
-		return scheme == Server.Scheme.HTTPS ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
+		return DeserializerHelper.asText(jsonNode, PORT).orElse(scheme == Server.Scheme.HTTPS ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT);
 	}
 
 	private Server.Scheme getScheme(final ObjectCodec codec, final JsonNode jsonNode) throws JsonProcessingException {
-		Server.Scheme scheme = DeserializerHelper.asObject(codec, jsonNode, SCHEME, Server.Scheme.class);
-		if (scheme == null) {
-			scheme = DEFAULT_SCHEME;
-		}
-		return scheme;
+		return DeserializerHelper.asObject(codec, jsonNode, SCHEME, Server.Scheme.class).orElse(DEFAULT_SCHEME);
 	}
 
 	private Optional<Authentication> getAuthentication(final ObjectCodec objectCodec, final JsonNode jsonNode) throws IOException {

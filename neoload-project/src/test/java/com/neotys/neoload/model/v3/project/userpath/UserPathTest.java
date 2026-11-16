@@ -1,14 +1,13 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
 
-import com.neotys.neoload.model.v3.project.Element;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
+import com.neotys.neoload.model.v3.project.Element;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Test;
 
 public class UserPathTest {
 	@Test
@@ -21,6 +20,12 @@ public class UserPathTest {
 		assertEquals("reset_off", UserPath.RESET_OFF);
 		assertEquals("reset_auto", UserPath.RESET_AUTO);
 
+		assertEquals("on_error", UserPath.ON_ERROR);
+		assertEquals("on_assertion_failure", UserPath.ON_ASSERTION_FAILURE);
+		assertEquals("go_to_next_iteration", UserPath.GO_TO_NEXT_ITERATION);
+		assertEquals("stop_and_start_new_vu", UserPath.STOP_AND_START_NEW_VU);
+		assertEquals("think_time", UserPath.THINK_TIME);
+
 		assertEquals("init", UserPath.INIT);
 		assertEquals("actions", UserPath.ACTIONS);
 		assertEquals("end", UserPath.END);
@@ -31,6 +36,9 @@ public class UserPathTest {
 		
 		final UserPath userPath1 = UserPath.builder().build();
 		assertEquals(UserPath.DEFAULT_USER_SESSION, userPath1.getUserSession());
+		assertFalse(userPath1.getOnError().isPresent());
+		assertFalse(userPath1.getOnAssertionFailure().isPresent());
+		assertFalse(userPath1.getThinkTime().isPresent());
 
 		final UserPath userPath2 = UserPath.builder().userSession(UserPath.UserSession.RESET_ON).build();
 		assertEquals(UserPath.UserSession.RESET_ON, userPath2.getUserSession());
@@ -46,7 +54,7 @@ public class UserPathTest {
 	public void flattened() {
 		final UserPath userPath = UserPath.builder().actions(Container.builder()
 				.addSteps(Request.builder().build())
-				.addSteps(DelayConstant.builder().build())
+				.addSteps(Delay.builder().build())
 				.build())
 				.build();
 

@@ -1,0 +1,12 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - soap_request:
+        url: http://host:80/
+        content:
+          path: ./requests/mySOAPRequest.xml
+        assertions:
+        - name: soap_legacy
+          contains: legacy

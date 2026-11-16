@@ -10,6 +10,7 @@ import javax.validation.ConstraintValidatorContext;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorContextImpl;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.hibernate.validator.messageinterpolation.ExpressionLanguageFeatureLevel;
+import org.hibernate.validator.messageinterpolation.MessageParameterEscaping;
 import org.junit.Test;
 
 public class AssertionsFieldValidatorTest {
@@ -21,7 +22,8 @@ public class AssertionsFieldValidatorTest {
 				null,
 				null,
 				ExpressionLanguageFeatureLevel.DEFAULT,
-				ExpressionLanguageFeatureLevel.DEFAULT);
+				ExpressionLanguageFeatureLevel.DEFAULT,
+				MessageParameterEscaping.NONE);
 	}
 
 	@Test

@@ -1,0 +1,14 @@
+name: MyProject
+user_paths:
+- name: OverrideAndFactor
+  think_time:
+    override: 5s
+    factor: 150%
+  actions:
+    steps:
+    - delay: 1s
+- name: NoSetting
+  think_time: {}
+  actions:
+    steps:
+    - delay: 1s

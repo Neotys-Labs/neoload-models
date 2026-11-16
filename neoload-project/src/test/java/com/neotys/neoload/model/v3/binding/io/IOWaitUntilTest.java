@@ -3,17 +3,16 @@ package com.neotys.neoload.model.v3.binding.io;
 
 import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-
+import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Condition;
+import com.neotys.neoload.model.v3.project.userpath.Durations;
 import com.neotys.neoload.model.v3.project.userpath.Match;
 import com.neotys.neoload.model.v3.project.userpath.WaitUntil;
-
+import java.io.IOException;
+import java.util.List;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class IOWaitUntilTest extends AbstractIOElementsTest {
 
@@ -31,6 +30,17 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 		Assert.assertNotNull(expectedProject);
 
 		read("test-readonly-waituntil-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void readWaitUntilWithInvalidTimeoutFails() {
+		final Exception exception = Assert.assertThrows(Exception.class, () -> new IO().read(getFile("test-waituntil-invalid-timeout", "yaml")));
+		Throwable cause = exception;
+		while (cause != null && !(cause instanceof InvalidDurationException)) {
+			cause = cause.getCause();
+		}
+		Assert.assertNotNull(exception.toString(), cause);
+		Assert.assertEquals("Incorrect value for 'user_paths[0].steps.timeout': Incorrect duration: '1m1h' is not a valid duration.", exception.getMessage());
 	}
 
 	@Test
@@ -69,7 +79,7 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 						.operand2("200")
 						.build())
 				.match(Match.ALL)
-				.timeout("30000")
+				.timeout(Durations.of("30000"))
 				.build();
 		final WaitUntil myWaitUntil1 = WaitUntil.builder()
 				.name("MyWaitUntil1")
@@ -80,7 +90,7 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 						.operand2("200")
 						.build())
 				.match(Match.ALL)
-				.timeout("30000")
+				.timeout(Durations.of("30000"))
 				.build();
 		final WaitUntil myWaitUntil2 = WaitUntil.builder()
 				.name("MyWaitUntil2")
@@ -91,7 +101,7 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 						.operand2("200")
 						.build())
 				.match(Match.ALL)
-				.timeout("${timeout}")
+				.timeout(Durations.of("${timeout}"))
 				.build();
 
 		if (readOnly) {
