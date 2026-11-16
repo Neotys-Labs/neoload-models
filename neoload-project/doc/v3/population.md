@@ -68,7 +68,7 @@ The browser emulated by the Virtual Users of a User Path, as the "Browser" and "
 | connections     | The maximum number of connections the browser opens at the same time to a server. It must be greater than or equal to 1. The default value is 6. | - | - | 2027.1 |
 | cookies         | Whether the browser stores and sends the cookies. The default value is `true`. | - | - | 2027.1 |
 | http2           | Whether the browser uses HTTP/2 when the server supports it. The default value is `true`. | - | - | 2027.1 |
-| accept_encoding | The content encodings the browser accepts, among `gzip`, `xgzip`, `zip`, `deflate`, `deflate_rfc1951`, `exi`, `compress`, `pack200_gzip`, `bzip2`, `lzma`, `peerdist`, `xz`, `brotli` and `identity`. By default, the ones of the recording. | - | - | 2027.1 |
+| accept_encoding | The content encodings the browser accepts, among `gzip`, `xgzip`, `zip`, `deflate`, `deflate_rfc1951`, `exi`, `compress`, `pack200_gzip`, `bzip2`, `lzma`, `peerdist`, `xz`, `brotli` and `identity`. The default value is `[gzip, deflate, brotli]`; an empty list is the default list. | - | - | 2027.1 |
 
 #### Example 1
 
@@ -82,7 +82,6 @@ populations:
     browser:
       name: Chrome 124.0
       user_agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
-      accept_encoding: [gzip, deflate, brotli]
     cache: new_user
 ```
 

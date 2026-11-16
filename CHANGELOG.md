@@ -209,8 +209,8 @@ optional keys of a Population User Path.
 
 - **`browser`** — the browser emulated by the Virtual Users: `name` (the label shown in NeoLoad),
   `user_agent`, `connections` (6 by default), `cookies` and `http2` (`true` by default) and
-  `accept_encoding`. When omitted, the recorded browser is used; without `user_agent`, the other
-  settings apply to the recorded browser.
+  `accept_encoding` (`[gzip, deflate, brotli]` by default). When omitted, the recorded browser
+  is used; without `user_agent`, the other settings apply to the recorded browser.
 - **`cache`** — `as_recorded` (the default), `new_user` (empty cache) or `returning_user` (cache
   already filled).
 

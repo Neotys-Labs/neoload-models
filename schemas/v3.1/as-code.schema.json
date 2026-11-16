@@ -1400,12 +1400,13 @@
 												"type": "string",
 												"enum": ["gzip", "xgzip", "zip", "deflate", "deflate_rfc1951", "exi", "compress", "pack200_gzip", "bzip2", "lzma", "peerdist", "xz", "brotli", "identity"]
 											},
-											"description": "The content encodings the browser accepts. Without accept_encoding, the ones of the recording."
+											"default": ["gzip", "deflate", "brotli"],
+											"description": "The content encodings the browser accepts: gzip, deflate and brotli by default. An empty list is the default list."
 										}
 									},
 									"description": "The browser emulated by the Virtual Users of the User Path. Without browser, the recorded browser is used.",
 									"examples": [
-										{"name": "Chrome 124.0", "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36", "accept_encoding": ["gzip", "deflate", "brotli"]},
+										{"name": "Chrome 124.0", "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36", "accept_encoding": ["gzip", "deflate"]},
 										{"http2": false}
 									]
 								},

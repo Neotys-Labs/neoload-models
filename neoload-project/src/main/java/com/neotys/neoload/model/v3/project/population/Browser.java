@@ -61,6 +61,8 @@ public interface Browser {
 		@JsonProperty("identity") IDENTITY
 	}
 
+	List<Encoding> DEFAULT_ACCEPT_ENCODING = List.of(Encoding.GZIP, Encoding.DEFLATE, Encoding.BROTLI);
+
 	/**
 	 * The label of the browser profile shown in NeoLoad. Empty: the profile is shown as customized
 	 * (or as the recorded one without user agent).
@@ -106,10 +108,23 @@ public interface Browser {
 	}
 
 	/**
-	 * The content encodings the browser accepts. Empty: the ones of the recording.
+	 * The content encodings the browser accepts: gzip, deflate and brotli by default, as in NeoLoad.
 	 */
 	@JsonProperty(ACCEPT_ENCODING)
-	List<Encoding> getAcceptEncoding();
+	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultAcceptEncodingFilter.class)
+	@Value.Default
+	default List<Encoding> getAcceptEncoding() {
+		return DEFAULT_ACCEPT_ENCODING;
+	}
+
+	/**
+	 * NeoLoad has no browser accepting no encoding: an empty list is its default list, as when NeoLoad reads a
+	 * project.
+	 */
+	@Value.Check
+	default Browser emptyAcceptEncodingIsTheDefault() {
+		return getAcceptEncoding().isEmpty() ? ImmutableBrowser.copyOf(this).withAcceptEncoding(DEFAULT_ACCEPT_ENCODING) : this;
+	}
 
 	// Jackson value filters excluding each property's default value from serialization:
 	// a property is omitted when the filter's equals(value) returns true.
@@ -118,6 +133,13 @@ public interface Browser {
 		public boolean equals(final Object value) { return Integer.valueOf(DEFAULT_CONNECTIONS).equals(value); }
 		@Override
 		public int hashCode() { return Integer.hashCode(DEFAULT_CONNECTIONS); }
+	}
+
+	class DefaultAcceptEncodingFilter {
+		@Override
+		public boolean equals(final Object value) { return DEFAULT_ACCEPT_ENCODING.equals(value); }
+		@Override
+		public int hashCode() { return DEFAULT_ACCEPT_ENCODING.hashCode(); }
 	}
 
 	class DefaultTrueFilter {

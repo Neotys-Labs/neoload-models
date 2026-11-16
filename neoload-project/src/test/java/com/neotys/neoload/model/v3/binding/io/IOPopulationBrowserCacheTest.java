@@ -13,6 +13,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
 import java.io.IOException;
+import java.util.List;
 import org.junit.Test;
 
 /**
@@ -35,7 +36,7 @@ public class IOPopulationBrowserCacheTest extends AbstractIOElementsTest {
 										.connections(8)
 										.cookies(false)
 										.http2(false)
-										.addAcceptEncoding(Browser.Encoding.GZIP, Browser.Encoding.DEFLATE, Browser.Encoding.BROTLI)
+										.addAcceptEncoding(Browser.Encoding.GZIP, Browser.Encoding.DEFLATE)
 										.build())
 								.cache(UserPathPolicy.Cache.NEW_USER)
 								.build())
@@ -103,7 +104,7 @@ public class IOPopulationBrowserCacheTest extends AbstractIOElementsTest {
 		assertEquals(6, browser.getConnections());
 		assertTrue(browser.getCookies());
 		assertTrue(browser.getHttp2());
-		assertTrue(browser.getAcceptEncoding().isEmpty());
+		assertEquals(List.of(Browser.Encoding.GZIP, Browser.Encoding.DEFLATE, Browser.Encoding.BROTLI), browser.getAcceptEncoding());
 	}
 
 	@Test
