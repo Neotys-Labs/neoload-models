@@ -111,6 +111,8 @@ public class IOSchema3Dot1ValidationTest {
             "test-userpaths-think-time-invalid-usage.yaml",
             "test-userpaths-think-time-invalid-values.yaml",
             "test-userpaths-think-time-unknown-key.yaml",
+            "test-project-settings-keys-conflict.yaml",
+            "test-project-settings-keys-conflict.json",
             "test-request-redirect-keys-conflict.yaml",
             "test-request-redirect-keys-conflict.json",
             "test-soap-request-redirect-keys-conflict.yaml",
@@ -198,8 +200,16 @@ public class IOSchema3Dot1ValidationTest {
 
     @Test
     public void nonBooleanApplyGlobalAssertionsOnCustomActionsFailsSchemaValidation() throws IOException {
-        Assert.assertFalse("Expected a non-boolean 'global_assertions.apply_on_custom_actions' to fail schema validation",
+        Assert.assertFalse("Expected a non-boolean 'global_assertions: apply_on_custom_actions' to fail schema validation",
                 validate("test-project-settings-global-assertions-invalid").isEmpty());
+    }
+
+    @Test
+    public void dottedAndNestedProjectSettingFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected 'qtest.enabled' declared with 'qtest: enabled' to fail schema validation",
+                validate("test-project-settings-keys-conflict").isEmpty());
+        Assert.assertFalse("Expected the dotted 'global_assertions.content_types' to fail schema validation",
+                SCHEMA.validate(YAML_MAPPER.readTree("name: P\nproject_settings:\n  global_assertions.content_types: text/html\n")).isEmpty());
     }
 
     @Test

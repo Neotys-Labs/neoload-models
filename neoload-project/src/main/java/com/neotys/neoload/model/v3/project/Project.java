@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.binding.serializer.ProjectSettingsDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.ProjectSettingsSerializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.population.Population;
@@ -113,8 +115,13 @@ public interface Project {
 	@Valid
 	List<Scenario> getScenarios();
 
+	/**
+	 * The project settings, keyed by their dotted path (such as {@code qtest.enabled}); read and written as nested maps.
+	 */
 	@JsonProperty(PROJECT_SETTINGS)
 	@Valid
+	@JsonSerialize(using = ProjectSettingsSerializer.class)
+	@JsonDeserialize(using = ProjectSettingsDeserializer.class)
 	Map<String,String> getProjectSettings();
 
 	@JsonIgnore

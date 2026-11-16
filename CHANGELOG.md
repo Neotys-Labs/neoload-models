@@ -285,16 +285,22 @@ web_services_security:
       less_than: 2048
 ```
 
-**Global assertion settings** — two new `project_settings` keys choose which responses the
-global assertions (the assertions of a User Path) are applied to: `global_assertions.content_types`
-(comma-separated, NeoLoad default `text/html,text/xhtml`) and
-`global_assertions.apply_on_custom_actions` (NeoLoad default `false`).
+**Global assertion settings** — a new `global_assertions` project setting chooses which responses the
+global assertions (the assertions of a User Path, Container or Transaction) are applied to:
+`content_types` (comma-separated, default `text/html,text/xhtml`) and `apply_on_custom_actions`
+(default `false`).
 
 ```yaml
 project_settings:
-  global_assertions.content_types: text/html,text/xhtml,application/json
-  global_assertions.apply_on_custom_actions: true
+  global_assertions:
+    content_types: text/html,text/xhtml,application/json
+    apply_on_custom_actions: true
 ```
+
+**Nested project settings** — `project_settings` are now written as nested maps
+(`qtest:` / `enabled: true`) instead of dotted keys (`qtest.enabled: true`). The dotted `dynatrace.*` and
+`qtest.*` keys stay readable as deprecated aliases; declaring a setting in both forms is an error.
+Booleans and integers are written with their type instead of as strings.
 
 #### Variables
 

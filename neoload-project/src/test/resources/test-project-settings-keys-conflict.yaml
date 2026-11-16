@@ -1,0 +1,5 @@
+name: MyProject
+project_settings:
+  qtest.enabled: true
+  qtest:
+    enabled: false
