@@ -11,6 +11,7 @@ import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Durations;
+import com.neotys.neoload.model.v3.project.userpath.Percentages;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPath.FailurePolicy;
 import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
@@ -38,18 +39,18 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 						.name("MyUserPath1")
 						.onError(FailurePolicy.GO_TO_NEXT_ITERATION)
 						.onAssertionFailure(FailurePolicy.STOP_AND_START_NEW_VU)
-						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("5000")).build()).random("10%").build())
+						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("5000")).build()).random(Percentages.of("10")).build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath2")
 						.onAssertionFailure(FailurePolicy.GO_TO_NEXT_ITERATION)
-						.thinkTime(UserPathThinkTime.builder().factor("150%").build())
+						.thinkTime(UserPathThinkTime.builder().factor(Percentages.of("150")).build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath3")
-						.thinkTime(UserPathThinkTime.builder().random("20%").build())
+						.thinkTime(UserPathThinkTime.builder().random(Percentages.of("20")).build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
@@ -66,12 +67,12 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 				.name("MyProject")
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath1")
-						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("${my_think_time}")).build()).random("${my_random_delay}").build())
+						.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("${my_think_time}")).build()).random(Percentages.of("${my_random_delay}")).build())
 						.actions(actions())
 						.build())
 				.addUserPaths(UserPath.builder()
 						.name("MyUserPath2")
-						.thinkTime(UserPathThinkTime.builder().factor("${my_think_time_factor}").build())
+						.thinkTime(UserPathThinkTime.builder().factor(Percentages.of("${my_think_time_factor}")).build())
 						.actions(actions())
 						.build())
 				.build();
@@ -122,10 +123,10 @@ public class IOUserPathRuntimeParametersTest extends AbstractIOElementsTest {
 		assertFalse(validation.isValid());
 
 		final String message = validation.getMessage().get();
-		assertTrue(message, message.contains("Violation Number: 7."));
+		assertTrue(message, message.contains("Violation Number: 3."));
 		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[0].think_time.factor': must be a non-negative integer percentage (e.g. 150%) or a variable."));
-		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[3].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
-		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[6].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
+		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[1].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
+		assertTrue(message, message.contains("Incorrect value for 'project.user_paths[2].think_time.random': must be a positive integer percentage (e.g. 10%) or a variable."));
 	}
 
 	@Test

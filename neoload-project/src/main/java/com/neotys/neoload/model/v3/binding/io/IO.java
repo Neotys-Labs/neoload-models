@@ -20,6 +20,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
+import com.neotys.neoload.model.v3.binding.converter.InvalidPercentageException;
 import com.neotys.neoload.model.v3.compatibility.SchemaSupport;
 import com.neotys.neoload.model.v3.project.Project;
 import java.io.File;
@@ -85,16 +86,17 @@ public final class IO {
 		try {
 			return readValue(content, format, type);
 		} catch (final JsonMappingException e) {
-			throw withInvalidDurationPath(e);
+			throw withInvalidValuePath(e);
 		}
 	}
 
 	/**
-	 * Names the field of an invalid duration by its path in the file, such as {@code scenarios[0].monitoring.before}.
+	 * Names the field of an invalid duration or percentage by its path in the file, such as {@code scenarios[0].monitoring.before}.
 	 * Other mapping errors are returned unchanged.
 	 */
-	private static JsonMappingException withInvalidDurationPath(final JsonMappingException exception) {
-		if (!(exception.getCause() instanceof InvalidDurationException) || exception.getPath().isEmpty()) {
+	private static JsonMappingException withInvalidValuePath(final JsonMappingException exception) {
+		final boolean invalidValue = exception.getCause() instanceof InvalidDurationException || exception.getCause() instanceof InvalidPercentageException;
+		if (!invalidValue || exception.getPath().isEmpty()) {
 			return exception;
 		}
 		final StringBuilder path = new StringBuilder();
