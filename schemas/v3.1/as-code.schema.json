@@ -3260,7 +3260,7 @@
 			"size_assertion_bound": {
 				"title": "Size Assertion Bound",
 				"type": "integer",
-				"minimum": 0
+				"minimum": 1
 			},
 			"as_request": {
 				"type": "boolean",
@@ -3274,7 +3274,7 @@
 				"properties": {
 					"less_than": {
 						"type": "integer",
-						"minimum": 0,
+						"minimum": 1,
 						"description": "The maximum allowed duration, in milliseconds."
 					}
 				},
