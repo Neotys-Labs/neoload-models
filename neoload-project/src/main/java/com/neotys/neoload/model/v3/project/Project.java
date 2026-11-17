@@ -18,6 +18,7 @@ import com.neotys.neoload.model.v3.project.userpath.Step;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.variable.Variable;
 import com.neotys.neoload.model.v3.validation.constraints.ProjectNameCheck;
+import com.neotys.neoload.model.v3.validation.constraints.QTestIdsCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SharedElementCycleCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SharedElementDefaultNameCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SharedElementStepTypeCheck;
@@ -114,6 +115,7 @@ public interface Project {
 	List<Scenario> getScenarios();
 
 	@JsonProperty(PROJECT_SETTINGS)
+	@QTestIdsCheck(groups={NeoLoad.class})
 	@Valid
 	Map<String,String> getProjectSettings();
 
