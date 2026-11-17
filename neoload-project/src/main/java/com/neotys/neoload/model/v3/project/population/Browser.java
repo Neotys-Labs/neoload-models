@@ -42,17 +42,23 @@ public interface Browser {
 	boolean DEFAULT_HTTP2 = true;
 
 	/**
-	 * The content encodings the browser can accept: the ones offered by the NeoLoad browser profile editor, named as
-	 * in NeoLoad.
+	 * The content encodings the browser can accept, named as in NeoLoad. The NeoLoad browser profile editor offers gzip,
+	 * deflate, brotli, exi, bzip2, lzma and xz; the others are only available in as-code.
 	 */
 	enum Encoding {
 		@JsonProperty("gzip") GZIP,
+		@JsonProperty("xgzip") XGZIP,
+		@JsonProperty("zip") ZIP,
 		@JsonProperty("deflate") DEFLATE,
-		@JsonProperty("brotli") BROTLI,
+		@JsonProperty("deflate_rfc1951") DEFLATE_RFC1951,
 		@JsonProperty("exi") EXI,
+		@JsonProperty("compress") COMPRESS,
+		@JsonProperty("pack200_gzip") PACK200_GZIP,
 		@JsonProperty("bzip2") BZIP2,
 		@JsonProperty("lzma") LZMA,
-		@JsonProperty("xz") XZ
+		@JsonProperty("xz") XZ,
+		@JsonProperty("brotli") BROTLI,
+		@JsonProperty("identity") IDENTITY
 	}
 
 	List<Encoding> DEFAULT_ACCEPT_ENCODING = List.of(Encoding.GZIP, Encoding.DEFLATE, Encoding.BROTLI);

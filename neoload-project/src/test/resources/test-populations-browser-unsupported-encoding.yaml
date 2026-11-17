@@ -4,4 +4,4 @@ populations:
   user_paths:
   - name: MyUserPath11
     browser:
-      accept_encoding: [gzip, identity]
+      accept_encoding: [gzip, peerdist]

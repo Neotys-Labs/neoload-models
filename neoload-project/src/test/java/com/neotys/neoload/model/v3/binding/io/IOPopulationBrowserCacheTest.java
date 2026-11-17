@@ -127,11 +127,11 @@ public class IOPopulationBrowserCacheTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readEncodingNotOfferedByNeoLoadFails() {
+	public void readEncodingUnknownToNeoLoadFails() {
 		final String message = readFailure("test-populations-browser-unsupported-encoding");
 
-		assertTrue(message, message.contains("\"identity\""));
-		assertTrue(message, message.contains("xz"));
+		assertTrue(message, message.contains("\"peerdist\""));
+		assertTrue(message, message.contains("identity"));
 	}
 
 	@Test
