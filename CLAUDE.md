@@ -9,7 +9,7 @@ Java model, JSON schema and docs of the NeoLoad as-code YAML DSL. Consumed by `n
 | Area | Rule |
 |---|---|
 | Modules | Change `neoload-project` only. Touch `neoload-writer`, `models-readers`, `neoload-project-model` only when they stop compiling because of a `neoload-project` change. |
-| JSON schema | Change `schemas/v3.1/as-code.schema.json` only. Older schemas are frozen. |
+| JSON schema | Change `schemas/v3.2/as-code.schema.json` only. Older schemas, 3.1 included (shipped with NeoLoad 2026.3), are frozen. |
 | Docs | `neoload-project/doc/v3/*.md` is updated in the same change as the model and the schema. |
 | Object references | Cross-object checks (a population policy naming a population, a shared element reference…) live in `neoload-root`, after NLP + YAML files are merged into one project. This repo validates each element on its own. |
 
@@ -28,5 +28,6 @@ Every validation made in this repo is tested in this repo, by loading real YAML 
 - Nominal and every error case: one YAML fixture each (plus its `.json` twin for the schema tests).
 - Read then write gives back the same YAML (`IORoundTripTest`, `XXXRoundTripTest`).
 - Defaults are not written back: a fixture with defaults omitted round-trips unchanged.
-- Voluntarily invalid fixtures go in `IOSchema3Dot1ValidationTest.EXCLUDED_FIXTURES`.
+- Voluntarily invalid fixtures go in `IOSchema3Dot1ValidationTest.EXCLUDED_FIXTURES` (shared by `IOSchema3Dot2ValidationTest`).
+- A fixture using a 3.2 construct declares `schemaVersion: "3.2"`: each schema test only validates the fixtures without `schemaVersion` or declaring its own version.
 - Assert inside the test method: Sonar does not see assertions hidden in helpers.
