@@ -89,6 +89,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
             "test-pacing-invalid-values.yaml",
+            "test-pacing-random-invalid-ranges.yaml",
             "test-waituntil-invalid-timeout.yaml",
             "test-pacing-malformed-units.yaml",
             "test-pacing-mixed.yaml",
