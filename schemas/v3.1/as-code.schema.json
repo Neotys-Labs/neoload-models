@@ -264,6 +264,12 @@
 					{ "type": "string", "pattern": "^([1-9]\\d{0,8}|1\\d{9}|20\\d{8}|21[0-3]\\d{7}|214[0-6]\\d{6}|2147[0-3]\\d{5}|21474[0-7]\\d{4}|214748[0-2]\\d{3}|2147483[0-5]\\d{2}|21474836[0-3]\\d|214748364[0-7])$" }
 				]
 			},
+			"int": {
+				"title": "Integer",
+				"type": "integer",
+				"minimum": -2147483648,
+				"maximum": 2147483647
+			},
 			"duration_value": {
 				"title": "Duration value",
 				"anyOf": [
@@ -505,16 +511,16 @@
 					{
 						"properties": {
 							"start": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable start value. Required. Does not accept a variable."
 							},
 							"end": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable end value. Required. Does not accept a variable."
 							},
 							"increment": {
-								"type": "number",
-"not": { "const": 0 },
+								"$ref": "#/definitions/common/int",
+								"not": { "const": 0 },
 								"description": "The variable increment value. Required. Does not accept a variable."
 							},
 							"scope": {
@@ -543,11 +549,11 @@
 					{
 						"properties": {
 							"min": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable min value. Required. Does not accept a variable."
 							},
 							"max": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "Must be greater than or equal to `min`."
 							},
 							"predictable": {
