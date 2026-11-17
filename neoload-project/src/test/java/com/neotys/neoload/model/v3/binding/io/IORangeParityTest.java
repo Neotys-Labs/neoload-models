@@ -23,6 +23,9 @@ public class IORangeParityTest {
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
 
+	private static final String CONSTANT_START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
+	private static final String CONSTANT_STOP_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      stop_after: %s\n");
+
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
 		SCHEMA = SchemaFiles.version("v3.1");
@@ -43,6 +46,34 @@ public class IORangeParityTest {
 
 	private static List<String[]> boundaries() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "0", INVALID));
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "1", VALID));
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "2147483", VALID));
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "2147484", INVALID));
+		rows.add(row("increment_rampup", DurationFields.RAMPUP_INCREMENT_RAMPUP.yaml("%s"), "0", INVALID));
+		rows.add(row("increment_rampup", DurationFields.RAMPUP_INCREMENT_RAMPUP.yaml("%s"), "2147483", VALID));
+		rows.add(row("increment_rampup", DurationFields.RAMPUP_INCREMENT_RAMPUP.yaml("%s"), "2147484", INVALID));
+		rows.add(row("step_rampup", DurationFields.PEAKS_STEP_RAMPUP.yaml("%s"), "0", INVALID));
+		rows.add(row("step_rampup", DurationFields.PEAKS_STEP_RAMPUP.yaml("%s"), "2147483", VALID));
+		rows.add(row("step_rampup", DurationFields.PEAKS_STEP_RAMPUP.yaml("%s"), "2147484", INVALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "0", INVALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "1", VALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "2147483", VALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "2147484", INVALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "0", INVALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "1", VALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "2147483", VALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "2147484", INVALID));
+		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "0", INVALID));
+		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "2147483", VALID));
+		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "2147484", INVALID));
+		rows.add(row("monitoring.after", DurationFields.MONITORING_AFTER.yaml("%s"), "0", INVALID));
+		rows.add(row("monitoring.after", DurationFields.MONITORING_AFTER.yaml("%s"), "2147483", VALID));
+		rows.add(row("monitoring.after", DurationFields.MONITORING_AFTER.yaml("%s"), "2147484", INVALID));
+		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "0", INVALID));
+		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "1", VALID));
+		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147483", VALID));
+		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147484", INVALID));
 		return rows;
 	}
 

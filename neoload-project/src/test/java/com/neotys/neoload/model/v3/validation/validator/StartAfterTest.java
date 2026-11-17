@@ -17,21 +17,21 @@ public class StartAfterTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for '': must be greater than or equal to 1 second or must be an existing population.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for '': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
 		CONSTRAINTS_VALUE = sb.toString();
 	}
 
 	private static String valueViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value '" + value + "' for '': must be greater than or equal to 1 second or must be an existing population.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value '" + value + "' for '': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
 		return sb.toString();
 	}
 
 	private static String typeViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value '" + value + "' for '': must be greater than or equal to 1 second or must be an existing population.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value '" + value + "' for '': must be between 1 and 2147483 seconds or must be an existing population.").append(LINE_SEPARATOR);
 		return sb.toString();
 	}
 
