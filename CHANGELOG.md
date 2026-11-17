@@ -7,6 +7,30 @@ against a NeoLoad GUI `.nlp` project.
 
 ---
 
+## [3.2] — Upcoming version in 2027
+
+Requires **NeoLoad 2027.1**, **CheckVU CLI 2027.1** and **NeoLoad Web On-premise 2027.1** or
+later; NeoLoad Web SaaS accepts it as soon as it is deployed. Declare it with
+`schemaVersion: "3.2"`. Schema 3.1 is frozen with NeoLoad 2026.3: the new constructs are added to
+3.2 only.
+
+### Added
+
+#### Schema contract
+
+The 3.2 contract is published as `schemas/v3.2/as-code.schema.json`. It accepts the same
+constructs as 3.1, with `schemaVersion: "3.2"`.
+
+```yaml
+$schema: https://raw.githubusercontent.com/Neotys-Labs/neoload-models/refs/heads/v3/schemas/v3.2/as-code.schema.json
+schemaVersion: "3.2"
+name: MyProject
+```
+
+A file declaring `3.0`, `3.1` or no `schemaVersion` keeps working unchanged.
+
+---
+
 ## [3.1] — Upcoming version in 2026
 
 Shipped in `neoload-models` **x.x.x**. Requires **NeoLoad 2026.3**, **CheckVU CLI 2026.3** and

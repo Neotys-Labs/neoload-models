@@ -73,6 +73,7 @@ public class IOSchemaVersionFailFastTest {
 		assertEquals("99.0", exception.getDeclaredSchemaVersion());
 		assertTrue(exception.getSupportedSchemaVersions().contains("3.0"));
 		assertTrue(exception.getSupportedSchemaVersions().contains("3.1"));
+		assertTrue(exception.getSupportedSchemaVersions().contains("3.2"));
 		assertTrue(exception.getMessage().contains("99.0"));
 		assertTrue(exception.getMessage().contains("compatibility.json"));
 	}
