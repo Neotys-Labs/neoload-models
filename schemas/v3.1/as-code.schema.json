@@ -223,6 +223,11 @@
 				"type": "string",
 				"pattern": "^.*$"
 			},
+			"variable": {
+				"title": "Variable reference",
+				"type": "string",
+				"pattern": "^\\$\\{[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\.}]+(\\.[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\.}]+)*\\}$"
+			},
 			"textblob": {
 				"title": "Blob",
 				"type": "string",
@@ -243,6 +248,13 @@
 				"title": "Strictly Positive Number",
 				"type": "integer",
 				"minimum": 1
+			},
+			"strictly_positive_int": {
+				"title": "Integer from 1 to 2147483647, written as a number (8) or as text (\"8\")",
+				"anyOf": [
+					{ "type": "integer", "minimum": 1, "maximum": 2147483647 },
+					{ "type": "string", "pattern": "^([1-9]\\d{0,8}|1\\d{9}|20\\d{8}|21[0-3]\\d{7}|214[0-6]\\d{6}|2147[0-3]\\d{5}|21474[0-7]\\d{4}|214748[0-2]\\d{3}|2147483[0-5]\\d{2}|21474836[0-3]\\d|214748364[0-7])$" }
+				]
 			},
 			"duration_value": {
 				"title": "Duration value",
@@ -1212,7 +1224,11 @@
 					"description": "The scheme used to reach the server: `http` or `https`."
 				},
 				"port": {
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+					"anyOf": [
+						{ "$ref": "#/definitions/common/variable" },
+						{ "type": "string", "pattern": "^(6553[0-5]|655[0-2]\\d|65[0-4]\\d{2}|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3})$" },
+						{ "type": "integer", "minimum": 1, "maximum": 65535 }
+					],
 					"description": "The port of the server. The default value is \"80\" (for http scheme) or \"443\" (for https scheme)."
 				},
 				"basic_authentication": {
@@ -2392,7 +2408,7 @@
 							"description": "The description of the Loop. Does not accept a variable."
 						},
 						"count": {
-							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"anyOf": [{ "$ref": "#/definitions/common/variable" }, { "$ref": "#/definitions/common/strictly_positive_int" }],
 							"description": "The number of times to execute"
 						},
 						"steps": {

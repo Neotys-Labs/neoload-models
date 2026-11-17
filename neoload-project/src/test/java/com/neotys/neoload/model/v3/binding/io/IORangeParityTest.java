@@ -25,6 +25,8 @@ public class IORangeParityTest {
 
 	private static final String CONSTANT_START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
 	private static final String CONSTANT_STOP_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      stop_after: %s\n");
+	private static final String SERVER_PORT = "name: P\nservers:\n- name: S\n  host: myserver.intranet.neotys.com\n  port: %s\n";
+	private static final String LOOP_COUNT = DurationFields.actions("    - loop:\n        count: %s\n        steps:\n        - delay: 1s\n");
 
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
@@ -76,17 +78,43 @@ public class IORangeParityTest {
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "1", VALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147483", VALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147484", INVALID));
+		rows.add(row("loop.count", LOOP_COUNT, "0", INVALID));
+		rows.add(row("loop.count", LOOP_COUNT, "1", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"1\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"0\"", INVALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"2147483647\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"2147483648\"", INVALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"9999999999\"", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "0", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "1", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "65535", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "65536", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "70000", INVALID));
 		return rows;
 	}
 
 	private static List<String[]> negatives() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("servers[].port", SERVER_PORT, "-80", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"-80\"", INVALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"-1\"", INVALID));
 		rows.add(row("start_after", CONSTANT_START_AFTER, "\"-5\"", INVALID));
 		return rows;
 	}
 
 	private static List<String[]> variables() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("servers[].port", SERVER_PORT, "\"${myVar}\"", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"${file.col}\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"${myVar}\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"${file.col}\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"${my-var}\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"${a.}\"", INVALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"${}\"", INVALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"${a}b${c}\"", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"${my-var}\"", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"${a}b${c}\"", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"${a.}\"", INVALID));
 		return rows;
 	}
 

@@ -6,6 +6,23 @@ They may be combined with other variables or with static content (e.g. `${produc
 :warning: If the project already have a variable with the same name from NeoLoad, the variable will be __replaced__ by the as-code one.
 Variables that does not exist in the project will be added.
 
+## Using variables
+A variable is referenced with the same syntax everywhere a field accepts it:
+
+| Syntax | Meaning |
+|--------|---------|
+| `${NAME}` | The current value of the variable `NAME`. |
+| `${NAME.FIELD}` | A field of the variable `NAME`, for variables that expose several values (e.g. a column of a File variable). |
+
+Rules:
+- `NAME` and `FIELD` follow the same rules as an element name: they can not be empty, can not contain a `.` or a `}`, and can not contain any of the characters forbidden in names. Spaces and `-` are accepted, so `${my-var}` is valid.
+- `${NAME.FIELD}` is accepted on every field that accepts a variable, as `${NAME}` is.
+- A variable can be combined with static content or with other variables (e.g. `https://${host}/${product_${productID}}`) in the fields that accept free text.
+- Fields that expect a number or a duration (e.g. a loop `count`, a server `port`, a `delay`, a `think_time` or a `pacing`) accept either a value or a single variable reference, the whole value being the reference: `${count}` is valid, `${count}0` is not.
+- A variable that is not defined at runtime is left as is in the resulting text.
+
+Examples: `${user}`, `${users.login}`, `${my-var}`.
+
 #### Example
 Defining 11 variables: a Constant variable, a Password variable, a File variable, a List variable, a Counter variable, a RandomNumber variable, a RandomString variable, a RandomUUID variable, a SQL variable, a JavaScript variable and a Secret Vault variable.
 
