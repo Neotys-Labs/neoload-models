@@ -24,6 +24,7 @@ public class IOPopulationBrowserCacheTest extends AbstractIOElementsTest {
 
 	private static Project getBrowserAndCache() {
 		return Project.builder()
+				.schemaVersion("3.2")
 				.name("MyProject")
 				.addPopulations(Population.builder()
 						.name("MyPopulation1")
@@ -52,6 +53,7 @@ public class IOPopulationBrowserCacheTest extends AbstractIOElementsTest {
 
 	private static Project getDefaults() {
 		return Project.builder()
+				.schemaVersion("3.2")
 				.name("MyProject")
 				.addPopulations(Population.builder()
 						.name("MyPopulation1")

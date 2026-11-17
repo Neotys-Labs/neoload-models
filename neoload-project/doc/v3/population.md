@@ -31,6 +31,8 @@ populations:
 | [browser](#browser) | The browser emulated by the Virtual Users of the User Path. By default, the recorded browser. | - | - | 2027.1 |
 | cache        | How the Virtual Users handle the browser cache: `as_recorded` (the default value), `new_user` (empty cache, as for a first visit) or `returning_user` (cache already filled). | - | - | 2027.1 |
 
+`browser` and `cache` need `schemaVersion: "3.2"`.
+
 #### Example 1
 
 Defining a population with 2 User Paths: `user_path_1` takes 30.3% and `user_path_2` takes 66.7%.

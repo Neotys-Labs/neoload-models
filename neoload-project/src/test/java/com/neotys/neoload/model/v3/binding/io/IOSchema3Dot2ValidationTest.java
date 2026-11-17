@@ -1,12 +1,12 @@
 package com.neotys.neoload.model.v3.binding.io;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
@@ -33,6 +33,9 @@ import org.junit.Test;
  *
  * <p>Fixtures declaring another {@code schemaVersion} are validated by the schema of their version only. The
  * fixtures excluded from the v3.1 validation are excluded here too, for the same reasons.</p>
+ *
+ * <p>Schema 3.1 is frozen: the constructs added since are in 3.2 only, and their fixtures declare
+ * {@code schemaVersion: "3.2"}.</p>
  */
 public class IOSchema3Dot2ValidationTest {
 
@@ -97,11 +100,8 @@ public class IOSchema3Dot2ValidationTest {
     @Test
     public void schemaVersion32ConformsTo32AndNotTo31() throws IOException {
         final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource("test-schema-version-3-2.yaml"));
-        final JsonSchema schema31 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)
-                .getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());
-
         assertTrue(schema.validate(node).toString(), schema.validate(node).isEmpty());
-        assertFalse(schema31.validate(node).isEmpty());
+        assertFalse(schema31().validate(node).isEmpty());
     }
 
     @Test
@@ -112,14 +112,18 @@ public class IOSchema3Dot2ValidationTest {
     }
 
     @Test
-    public void schema32IsSchema31WithItsOwnVersion() throws IOException {
-        final String schema31 = Files.readString(schemasDir.resolve("v3.1/as-code.schema.json"))
-                .replace("schemas/v3.1/as-code.schema.json", "schemas/v3.2/as-code.schema.json")
-                .replace("\"const\": \"3.1\"", "\"const\": \"3.2\"")
-                .replace("\"const\": 3.1", "\"const\": 3.2")
-                .replace("Must be 3.1 as a string", "Must be 3.2 as a string");
+    public void populationBrowserAndCacheAreIn32Only() throws IOException {
+        final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource("test-populations-browser-cache.yaml"));
+        final ObjectNode as31 = node.deepCopy();
+        as31.put("schemaVersion", "3.1");
 
-        assertEquals("v3.2 must stay v3.1 with its own version until 3.2 features are added: update or remove this test then",
-                schema31, Files.readString(schemasDir.resolve("v3.2/as-code.schema.json")));
+        assertTrue(schema.validate(node).toString(), schema.validate(node).isEmpty());
+        final String errors31 = schema31().validate(as31).toString();
+        assertTrue(errors31, errors31.contains("browser") && errors31.contains("cache"));
+    }
+
+    private static JsonSchema schema31() {
+        return JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)
+                .getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());
     }
 }
