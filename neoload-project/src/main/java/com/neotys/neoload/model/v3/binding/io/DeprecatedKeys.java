@@ -3,24 +3,27 @@ package com.neotys.neoload.model.v3.binding.io;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.ImmutableSet;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.HttpBasedRequest;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
  * Rewrites deprecated keys to their current form before binding, and rejects a file declaring both forms:
  * <ul>
  *   <li>the {@code followRedirects} key of {@code request} and {@code soap_request} steps becomes {@code follow_redirects};</li>
- *   <li>the dotted {@code project_settings} keys ({@code qtest.enabled: true}) become nested maps
- *       ({@code qtest: {enabled: true}}).</li>
+ *   <li>the dotted {@code dynatrace} and {@code qtest} keys of {@code project_settings} ({@code qtest.enabled: true})
+ *       become nested maps ({@code qtest: {enabled: true}}); other dotted settings are rejected.</li>
  * </ul>
  */
 final class DeprecatedKeys {
 	private static final String REQUEST = "request";
 	private static final String SOAP_REQUEST = "soap_request";
 	private static final String SETTING_SEPARATOR = ".";
+	private static final Set<String> DOTTED_SETTING_GROUPS = ImmutableSet.of("dynatrace", "qtest");
 
 	private DeprecatedKeys() {
 	}
@@ -60,10 +63,22 @@ final class DeprecatedKeys {
 		final Iterator<Map.Entry<String, JsonNode>> fields = settings.fields();
 		while (fields.hasNext()) {
 			final Map.Entry<String, JsonNode> field = fields.next();
+			checkDottedKeyIsDeprecatedAlias(field.getKey());
 			put(nested, field.getKey(), field.getValue(), field.getKey());
 		}
 		settings.removeAll();
 		settings.setAll(nested);
+	}
+
+	/**
+	 * Only the settings that existed before the nested form ({@code dynatrace}, {@code qtest}) accept dotted keys.
+	 */
+	private static void checkDottedKeyIsDeprecatedAlias(final String key) throws JsonMappingException {
+		final int separator = key.indexOf(SETTING_SEPARATOR);
+		if (separator >= 0 && !DOTTED_SETTING_GROUPS.contains(key.substring(0, separator))) {
+			throw new JsonMappingException(null, "The project setting '" + key + "' must be declared in its nested form, e.g. '"
+					+ key.replace(SETTING_SEPARATOR, ": ") + "'.");
+		}
 	}
 
 	/**

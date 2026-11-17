@@ -113,6 +113,8 @@ public class IOSchema3Dot1ValidationTest {
             "test-userpaths-think-time-unknown-key.yaml",
             "test-project-settings-keys-conflict.yaml",
             "test-project-settings-keys-conflict.json",
+            "test-project-settings-global-assertions-dotted.yaml",
+            "test-project-settings-global-assertions-dotted.json",
             "test-request-redirect-keys-conflict.yaml",
             "test-request-redirect-keys-conflict.json",
             "test-soap-request-redirect-keys-conflict.yaml",
@@ -208,8 +210,12 @@ public class IOSchema3Dot1ValidationTest {
     public void dottedAndNestedProjectSettingFailsSchemaValidation() throws IOException {
         Assert.assertFalse("Expected 'qtest.enabled' declared with 'qtest: enabled' to fail schema validation",
                 validate("test-project-settings-keys-conflict").isEmpty());
+    }
+
+    @Test
+    public void dottedGlobalAssertionsProjectSettingFailsSchemaValidation() throws IOException {
         Assert.assertFalse("Expected the dotted 'global_assertions.content_types' to fail schema validation",
-                SCHEMA.validate(YAML_MAPPER.readTree("name: P\nproject_settings:\n  global_assertions.content_types: text/html\n")).isEmpty());
+                validate("test-project-settings-global-assertions-dotted").isEmpty());
     }
 
     @Test

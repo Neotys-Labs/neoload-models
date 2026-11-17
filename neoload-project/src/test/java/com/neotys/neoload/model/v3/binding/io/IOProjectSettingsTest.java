@@ -63,6 +63,20 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 		}
 	}
 
+	@Test
+	public void readDottedGlobalAssertionsProjectSettingFails() throws IOException {
+		for (final String extension : new String[] { "yaml", "json" }) {
+			final String content = getContent(getFile("test-project-settings-global-assertions-dotted", extension), StandardCharsets.UTF_8);
+			try {
+				new IO().read(content);
+				fail("Reading the " + extension + " fixture must fail");
+			} catch (final JsonMappingException e) {
+				assertTrue(e.getMessage(), e.getMessage().contains("global_assertions.content_types")
+						&& e.getMessage().contains("global_assertions: content_types"));
+			}
+		}
+	}
+
 	private static Project getProjectWithGlobalAssertionsProjectSettings() {
 		return Project.builder()
 				.name("MyProject")
