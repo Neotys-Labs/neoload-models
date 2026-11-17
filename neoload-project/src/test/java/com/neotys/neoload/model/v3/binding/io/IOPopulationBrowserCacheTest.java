@@ -127,6 +127,14 @@ public class IOPopulationBrowserCacheTest extends AbstractIOElementsTest {
 	}
 
 	@Test
+	public void readEncodingNotOfferedByNeoLoadFails() {
+		final String message = readFailure("test-populations-browser-unsupported-encoding");
+
+		assertTrue(message, message.contains("\"identity\""));
+		assertTrue(message, message.contains("xz"));
+	}
+
+	@Test
 	public void readUnknownCacheFails() {
 		final String message = readFailure("test-populations-invalid-cache");
 

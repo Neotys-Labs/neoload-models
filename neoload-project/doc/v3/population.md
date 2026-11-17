@@ -68,7 +68,7 @@ The browser emulated by the Virtual Users of a User Path, as the "Browser" and "
 | connections     | The maximum number of connections the browser opens at the same time to a server. It must be greater than or equal to 1. The default value is 6. | - | - | 2027.1 |
 | cookies         | Whether the browser stores and sends the cookies. The default value is `true`. | - | - | 2027.1 |
 | http2           | Whether the browser uses HTTP/2 when the server supports it. The default value is `true`. | - | - | 2027.1 |
-| accept_encoding | The content encodings the browser accepts, among `gzip`, `xgzip`, `zip`, `deflate`, `deflate_rfc1951`, `exi`, `compress`, `pack200_gzip`, `bzip2`, `lzma`, `xz`, `brotli` and `identity`. The default value is `[gzip, deflate, brotli]`; an empty list is the default list. | - | - | 2027.1 |
+| accept_encoding | The content encodings the browser accepts, among `gzip`, `deflate`, `brotli`, `exi`, `bzip2`, `lzma` and `xz` (the ones offered by the NeoLoad browser profile editor). NeoLoad decodes the responses in these encodings, and sends them as the value of the `Accept-Encoding` header of the requests that have one (as recorded requests do); it does not add the header to a request without it. The default value is `[gzip, deflate, brotli]`; an empty list is the default list. | - | - | 2027.1 |
 
 #### Example 1
 

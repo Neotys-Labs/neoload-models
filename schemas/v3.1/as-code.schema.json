@@ -1398,10 +1398,10 @@
 											"type": "array",
 											"items": {
 												"type": "string",
-												"enum": ["gzip", "xgzip", "zip", "deflate", "deflate_rfc1951", "exi", "compress", "pack200_gzip", "bzip2", "lzma", "xz", "brotli", "identity"]
+												"enum": ["gzip", "deflate", "brotli", "exi", "bzip2", "lzma", "xz"]
 											},
 											"default": ["gzip", "deflate", "brotli"],
-											"description": "The content encodings the browser accepts: gzip, deflate and brotli by default. An empty list is the default list."
+											"description": "The content encodings the browser accepts: gzip, deflate and brotli by default. NeoLoad decodes the responses in these encodings and sends them as the value of the Accept-Encoding header of the requests that have one; it does not add the header to a request without it. An empty list is the default list."
 										}
 									},
 									"description": "The browser emulated by the Virtual Users of the User Path. Without browser, the recorded browser is used.",

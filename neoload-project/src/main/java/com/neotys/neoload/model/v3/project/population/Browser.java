@@ -42,22 +42,17 @@ public interface Browser {
 	boolean DEFAULT_HTTP2 = true;
 
 	/**
-	 * The content encodings the browser accepts, named as in NeoLoad.
+	 * The content encodings the browser can accept: the ones offered by the NeoLoad browser profile editor, named as
+	 * in NeoLoad.
 	 */
 	enum Encoding {
 		@JsonProperty("gzip") GZIP,
-		@JsonProperty("xgzip") XGZIP,
-		@JsonProperty("zip") ZIP,
 		@JsonProperty("deflate") DEFLATE,
-		@JsonProperty("deflate_rfc1951") DEFLATE_RFC1951,
+		@JsonProperty("brotli") BROTLI,
 		@JsonProperty("exi") EXI,
-		@JsonProperty("compress") COMPRESS,
-		@JsonProperty("pack200_gzip") PACK200_GZIP,
 		@JsonProperty("bzip2") BZIP2,
 		@JsonProperty("lzma") LZMA,
-		@JsonProperty("xz") XZ,
-		@JsonProperty("brotli") BROTLI,
-		@JsonProperty("identity") IDENTITY
+		@JsonProperty("xz") XZ
 	}
 
 	List<Encoding> DEFAULT_ACCEPT_ENCODING = List.of(Encoding.GZIP, Encoding.DEFLATE, Encoding.BROTLI);
@@ -107,7 +102,9 @@ public interface Browser {
 	}
 
 	/**
-	 * The content encodings the browser accepts: gzip, deflate and brotli by default, as in NeoLoad.
+	 * The content encodings the browser accepts: gzip, deflate and brotli by default, as in NeoLoad. NeoLoad decodes the
+	 * responses in these encodings and sends them as the value of the Accept-Encoding header of the requests that have
+	 * one; it does not add the header to a request without it.
 	 */
 	@JsonProperty(ACCEPT_ENCODING)
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultAcceptEncodingFilter.class)
