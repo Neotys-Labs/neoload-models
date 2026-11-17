@@ -270,7 +270,13 @@
 			"start_after_options": {
 				"title": "Start after",
 				"description": "Define how the population is started: the population starts at the start of the test, after a preset delay or after the end of the selected population.",
-				"anyOf": [{ "$ref": "#/definitions/common/duration_seconds" }, { "$ref": "#/definitions/common/text" }]
+				"anyOf": [
+					{ "$ref": "#/definitions/common/duration_seconds" },
+					{
+						"$ref": "#/definitions/common/name",
+						"not": { "pattern": "^\\s*(-?\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s\\s*)?(\\d+ms)?)\\s*$" }
+					}
+				]
 			},
 			"time": {
 				"title": "Time",

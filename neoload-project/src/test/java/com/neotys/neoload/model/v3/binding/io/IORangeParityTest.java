@@ -60,6 +60,8 @@ public class IORangeParityTest {
 		rows.add(row("start_after", CONSTANT_START_AFTER, "1", VALID));
 		rows.add(row("start_after", CONSTANT_START_AFTER, "2147483", VALID));
 		rows.add(row("start_after", CONSTANT_START_AFTER, "2147484", INVALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "0s", INVALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "500ms", INVALID));
 		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "0", INVALID));
 		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "1", VALID));
 		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "2147483", VALID));
@@ -79,6 +81,7 @@ public class IORangeParityTest {
 
 	private static List<String[]> negatives() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("start_after", CONSTANT_START_AFTER, "\"-5\"", INVALID));
 		return rows;
 	}
 
