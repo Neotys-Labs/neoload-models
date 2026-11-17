@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.neotys.neoload.model.v3.validation.constraints.NonZeroCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import org.immutables.value.Value;
@@ -29,6 +30,7 @@ public interface CounterVariable extends ChangePolicyVariable, ScopeVariable, Ou
 	int getEnd();
 
 	@JsonProperty(INCREMENT)
+	@NonZeroCheck(groups={NeoLoad.class})
 	@RequiredCheck(groups = {NeoLoad.class})
 	int getIncrement();
 
