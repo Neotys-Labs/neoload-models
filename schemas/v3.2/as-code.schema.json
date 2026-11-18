@@ -202,6 +202,7 @@
 				},
 				"qtest.project_id": {
 					"type": "integer",
+					"minimum": 1,
 					"description": "The qTest unique identifier of the qTest project in which the result will be transferred"
 				},
 				"qtest.create_defects": {
@@ -210,6 +211,7 @@
 				},
 				"qtest.cycle_id": {
 					"type": "integer",
+					"minimum": 1,
 					"description": "The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier."
 				}
 			},

@@ -23,6 +23,9 @@ public class IORangeParityTest {
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
 
+	private static final String QTEST_PROJECT_ID = "name: P\nproject_settings:\n  qtest.project_id: %s\n";
+	private static final String QTEST_CYCLE_ID = "name: P\nproject_settings:\n  qtest.cycle_id: %s\n";
+
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
 		SCHEMA = SchemaFiles.version("v3.2");
@@ -43,11 +46,17 @@ public class IORangeParityTest {
 
 	private static List<String[]> boundaries() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("qtest.project_id", QTEST_PROJECT_ID, "0", INVALID));
+		rows.add(row("qtest.project_id", QTEST_PROJECT_ID, "1", VALID));
+		rows.add(row("qtest.cycle_id", QTEST_CYCLE_ID, "0", INVALID));
+		rows.add(row("qtest.cycle_id", QTEST_CYCLE_ID, "1", VALID));
 		return rows;
 	}
 
 	private static List<String[]> negatives() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("qtest.project_id", QTEST_PROJECT_ID, "-1", INVALID));
+		rows.add(row("qtest.cycle_id", QTEST_CYCLE_ID, "-1", INVALID));
 		return rows;
 	}
 
