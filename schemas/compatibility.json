@@ -10,5 +10,11 @@
 		"NeoLoad CheckVU CLI": ">=2026.3",
 		"NeoLoad Web Onpremise": ">=2026.3",
 		"NeoLoad Web Saas": "*"
+	},
+	"3.2": {
+		"NeoLoad": ">=2027.1",
+		"NeoLoad CheckVU CLI": ">=2027.1",
+		"NeoLoad Web Onpremise": ">=2027.1",
+		"NeoLoad Web Saas": "*"
 	}
 }
