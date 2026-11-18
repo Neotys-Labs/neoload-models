@@ -2,11 +2,14 @@ package com.neotys.neoload.model.v3.binding.io;
 
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertViolations;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidValue;
 import static com.neotys.neoload.model.v3.project.variable.ChangePolicyVariable.ChangePolicy.*;
 import static com.neotys.neoload.model.v3.project.variable.OrderVariable.Order.*;
 import static com.neotys.neoload.model.v3.project.variable.OutOfValueVariable.OutOfValue.*;
 import static com.neotys.neoload.model.v3.project.variable.ScopeVariable.Scope.*;
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -16,6 +19,7 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
 import java.io.IOException;
+import java.util.Optional;
 import org.junit.Test;
 
 public class IOVariableTest extends AbstractIOElementsTest {
@@ -301,6 +305,16 @@ public class IOVariableTest extends AbstractIOElementsTest {
         final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
         assertFalse(validation.isValid());
         assertTrue(validation.getMessage().get(), validation.getMessage().get().contains("variables[0].change_step"));
+    }
+
+    @Test
+    public void readDateVariableRejectsZeroChangeStep() throws IOException {
+        final ProjectDescriptor descriptor = new IO().read(getFile("test-date-variable-zero-change-step", "yaml"));
+
+        final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
+        assertViolations(validation, invalidValue("project.variables[0].change_step",
+                "must be an optional sign, a non-zero number and a unit among ms, s, m, h, d, mo, y (e.g. \"-5d\", \"3h\", \"2y\"), got \"0s\"."));
+        assertEquals(Optional.of("0s"), ((DateVariable) descriptor.getProject().getVariables().get(0)).getChangeStep());
     }
 
     @Test

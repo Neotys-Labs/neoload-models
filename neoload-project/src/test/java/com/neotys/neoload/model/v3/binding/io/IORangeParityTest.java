@@ -24,6 +24,7 @@ public class IORangeParityTest {
 	private static final String INVALID = "invalid";
 
 	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
+	private static final String DATE_CHANGE_STEP = variable("date", "pattern: yyyy-MM-dd'T'HH:mm:ss\n    start_date: 2024-01-01T00:00:00\n    change_step: %s\n");
 
 	private static String variable(final String type, final String properties) {
 		return "name: P\nvariables:\n- " + type + ":\n    name: V\n    " + properties;
@@ -54,12 +55,17 @@ public class IORangeParityTest {
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-0d", INVALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "5d", VALID));
+		rows.add(row("date.change_step", DATE_CHANGE_STEP, "0s", INVALID));
+		rows.add(row("date.change_step", DATE_CHANGE_STEP, "00h", INVALID));
+		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-1h", VALID));
+		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-5d", VALID));
 		return rows;
 	}
 
 	private static List<String[]> negatives() {
 		final List<String[]> rows = new ArrayList<>();
 		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
+		rows.add(row("date.change_step", DATE_CHANGE_STEP, "-5d", VALID));
 		return rows;
 	}
 
