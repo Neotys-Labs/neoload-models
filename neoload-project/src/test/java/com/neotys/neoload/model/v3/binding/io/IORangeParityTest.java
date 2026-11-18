@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
@@ -23,6 +24,9 @@ public class IORangeParityTest {
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
 
+	private static final String SLA_THRESHOLD = "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - avg-request-resp-time warn >= %s per test\n";
+	private static final String SLA_PERCENTILE = "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - perc-transaction-resp-time (p%s) warn >= 1 per test\n";
+
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
 		SCHEMA = SchemaFiles.version("v3.2");
@@ -43,11 +47,17 @@ public class IORangeParityTest {
 
 	private static List<String[]> boundaries() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("SLA percentile", SLA_PERCENTILE, "0", INVALID));
+		rows.add(row("SLA percentile", SLA_PERCENTILE, "1", VALID));
+		rows.add(row("SLA percentile", SLA_PERCENTILE, "99", VALID));
+		rows.add(row("SLA percentile", SLA_PERCENTILE, "100", INVALID));
 		return rows;
 	}
 
 	private static List<String[]> negatives() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("SLA threshold value", SLA_THRESHOLD, "0", VALID));
+		rows.add(row("SLA threshold value", SLA_THRESHOLD, "-1", INVALID));
 		return rows;
 	}
 
@@ -83,5 +93,13 @@ public class IORangeParityTest {
 	@Test
 	public void variableReferenceStaysAcceptedOnEveryCheckedField() throws IOException {
 		assertParity(variables());
+	}
+
+	@Test
+	public void frozenSchemasKeepAcceptingTheSlaPercentileOutsideOneToNinetyNine() throws IOException, URISyntaxException {
+		final String yaml = SLA_PERCENTILE.replace("%s", "100");
+
+		assertTrue(SchemaFiles.version("v3.0").accepts(yaml));
+		assertTrue(SchemaFiles.version("v3.1").accepts(yaml));
 	}
 }
