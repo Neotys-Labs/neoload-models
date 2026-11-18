@@ -65,6 +65,10 @@ public class IORangeParityTest {
 			rows.add(row("servers[].port", SERVER_PORT, "\"" + malformed + "\"", INVALID));
 			rows.add(row("loop.count", LOOP_COUNT, "\"" + malformed + "\"", INVALID));
 		}
+		rows.add(row("servers[].port", SERVER_PORT, "80", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"80\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "3", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"3\"", VALID));
 		return rows;
 	}
 
