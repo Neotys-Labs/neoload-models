@@ -3,10 +3,9 @@ package com.neotys.neoload.model.v3.writers.neoload.scenario;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
+import java.util.Optional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Optional;
 
 public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
 
@@ -33,7 +32,7 @@ public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
 
         // Default User Number attribute
         final PeakLoadPolicy minimumLoadPolicy = peaksLoadPolicy.getMinimum();
-        xmlElement.setAttribute(XML_ATTR_MINLOAD, String.valueOf(minimumLoadPolicy.getUsers()));
+        xmlElement.setAttribute(XML_ATTR_MINLOAD, String.valueOf(minimumLoadPolicy.getUsers().orElse(0)));
         // Default Delay attribute
         final LoadDuration minimumDuration = minimumLoadPolicy.getDuration();
         xmlElement.setAttribute(XML_ATTR_MINDURATION, String.valueOf(minimumDuration.getValue()));
@@ -46,7 +45,7 @@ public class PeaksLoadPolicyWriter extends LoadPolicyWriter {
 
         // Peak User Number attribute
         final PeakLoadPolicy maximumLoadPolicy = peaksLoadPolicy.getMaximum();
-        xmlElement.setAttribute(XML_ATTR_MAXLOAD, String.valueOf(maximumLoadPolicy.getUsers()));
+        xmlElement.setAttribute(XML_ATTR_MAXLOAD, String.valueOf(maximumLoadPolicy.getUsers().orElse(0)));
         // Peak Delay attribute
         final LoadDuration maximumDuration = maximumLoadPolicy.getDuration();
         xmlElement.setAttribute(XML_ATTR_MAXDURATION, String.valueOf(maximumDuration.getValue()));
