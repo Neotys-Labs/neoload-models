@@ -11,6 +11,7 @@ import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 
@@ -67,5 +68,13 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 		final ProjectDescriptor descriptor = read("test-project-settings-without-qtest-ids");
 
 		assertTrue(validateNeoLoad(descriptor).isValid());
+	}
+
+	@Test
+	public void schemas30And31StillAcceptAQTestIdOfZero() throws IOException, URISyntaxException {
+		final String json = "{\"name\": \"MyProject\", \"project_settings\": {\"qtest.project_id\": 0, \"qtest.cycle_id\": 0}}";
+
+		assertTrue(SchemaFiles.version("v3.0").accepts(json));
+		assertTrue(SchemaFiles.version("v3.1").accepts(json));
 	}
 }
