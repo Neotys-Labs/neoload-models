@@ -19,9 +19,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Schema-level coverage for the settings of {@code websocket_request} that depend on each other,
@@ -30,17 +35,28 @@ import org.junit.Test;
  * fixture, and each push message of the invalid push message fixture, which the model rejects,
  * must also be rejected by the schema on its own.
  */
+@RunWith(Parameterized.class)
 public class IOWebSocketRequestSchemaValidationTest {
 	private static final String INVALID_SETTINGS_FIXTURE = "test-websocket_request-invalid-settings.yaml";
 	private static final String INVALID_PUSH_MESSAGES_FIXTURE = "test-websocket_push_message-invalid.yaml";
 	private static final String VALID_FALLBACK = "valid_fallback";
 	private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
-	private static JsonSchema schema31;
+	private final String version;
+	private JsonSchema schema;
 
-	@BeforeClass
-	public static void loadSchema() throws URISyntaxException {
-		final Path schema31Path = locateSchemasDir().resolve("v3.1/as-code.schema.json");
-		schema31 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schema31Path.toUri());
+	public IOWebSocketRequestSchemaValidationTest(final String version) {
+		this.version = version;
+	}
+
+	@Parameters(name = "schema {0}")
+	public static Collection<String> schemaVersions() {
+		return List.of("3.1", "3.2");
+	}
+
+	@Before
+	public void loadSchema() throws URISyntaxException {
+		final Path schemaPath = locateSchemasDir().resolve("v" + version + "/as-code.schema.json");
+		schema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemaPath.toUri());
 	}
 
 	@Test
@@ -54,8 +70,8 @@ public class IOWebSocketRequestSchemaValidationTest {
 			}
 			requests++;
 			final String name = step.get("websocket_request").get("name").asText();
-			assertFalse("the 3.1 schema must reject websocket_request '" + name + "'",
-					schema31.validate(projectWith(channel, step)).isEmpty());
+			assertFalse("the " + version + " schema must reject websocket_request '" + name + "'",
+					schema.validate(projectWith(channel, step)).isEmpty());
 		}
 		assertEquals("one request per setting rule", 7, requests);
 	}
@@ -98,8 +114,8 @@ public class IOWebSocketRequestSchemaValidationTest {
 		assertValid(projectWithChannelReference("shared_elements>OpenChat>chat_socket"));
 		assertValid(projectWithChannelReference("shared_elements>OpenChat>Login>chat_socket"));
 		for (final String reference : new String[] {"my_channel", "shared_elements>OpenChat", "Listener>init>my_channel", "actions>", "actions>>my_channel"}) {
-			assertFalse("the 3.1 schema must reject channel '" + reference + "'",
-					schema31.validate(projectWithChannelReference(reference)).isEmpty());
+			assertFalse("the " + version + " schema must reject channel '" + reference + "'",
+					schema.validate(projectWithChannelReference(reference)).isEmpty());
 		}
 	}
 
@@ -116,7 +132,7 @@ public class IOWebSocketRequestSchemaValidationTest {
 				assertValid(project);
 			} else {
 				rejected++;
-				assertFalse("the 3.1 schema must reject push message '" + name + "'", schema31.validate(project).isEmpty());
+				assertFalse("the " + version + " schema must reject push message '" + name + "'", schema.validate(project).isEmpty());
 			}
 		}
 		assertEquals("one push message per D1 rule", 3, rejected);
@@ -128,7 +144,7 @@ public class IOWebSocketRequestSchemaValidationTest {
 		assertValid(readFixture("test-websocket_push_message-channel-paths.yaml"));
 	}
 
-	private static JsonNode projectWithChannelReference(final String reference) throws IOException {
+	private JsonNode projectWithChannelReference(final String reference) throws IOException {
 		final JsonNode request = YAML_MAPPER.readTree("websocket_request:\n  body: hello\n");
 		((ObjectNode) request.get("websocket_request")).put("channel", reference);
 		return projectWith(YAML_MAPPER.readTree("delay: 1s\n"), request);
@@ -141,15 +157,19 @@ public class IOWebSocketRequestSchemaValidationTest {
 		return project;
 	}
 
-	private static void assertValid(final JsonNode document) {
-		final Set<ValidationMessage> messages = schema31.validate(document);
+	private void assertValid(final JsonNode document) {
+		final Set<ValidationMessage> messages = schema.validate(document);
 		assertTrue("unexpected schema errors: " + messages, messages.isEmpty());
 	}
 
-	private static JsonNode readFixture(final String resourceName) throws IOException, URISyntaxException {
+	private JsonNode readFixture(final String resourceName) throws IOException, URISyntaxException {
 		final URL fixtureUrl = IOWebSocketRequestSchemaValidationTest.class.getClassLoader().getResource(resourceName);
 		assertNotNull("Missing classpath resource " + resourceName, fixtureUrl);
-		return YAML_MAPPER.readTree(new File(fixtureUrl.toURI()));
+		final JsonNode node = YAML_MAPPER.readTree(new File(fixtureUrl.toURI()));
+		if (node.isObject() && node.has("schemaVersion")) {
+			((com.fasterxml.jackson.databind.node.ObjectNode) node).put("schemaVersion", version);
+		}
+		return node;
 	}
 
 	private static Path locateSchemasDir() throws URISyntaxException {

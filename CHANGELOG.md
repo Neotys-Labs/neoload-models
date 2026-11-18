@@ -7,7 +7,21 @@ against a NeoLoad GUI `.nlp` project.
 
 ---
 
-## [3.1] — Upcoming version in 2026
+## [3.2] — Upcoming version in 2027
+
+Requires **NeoLoad 2027.1**, **CheckVU CLI 2027.1** and **NeoLoad Web On-premise 2027.1** or later;
+NeoLoad Web SaaS accepts it as soon as it is deployed. Declare it with `schemaVersion: "3.2"`.
+
+Files declaring 3.0 or 3.1 (or none, read as 3.0) keep working unchanged. The 3.2 schema is published as
+`schemas/v3.2/as-code.schema.json`.
+
+### Added
+
+_Nothing yet._
+
+---
+
+## [3.1] — NeoLoad 2026.3
 
 Shipped in `neoload-models` **x.x.x**. Requires **NeoLoad 2026.3**, **CheckVU CLI 2026.3** and
 **NeoLoad Web On-premise 2026.3** or later; NeoLoad Web SaaS accepts it as soon as it is deployed.

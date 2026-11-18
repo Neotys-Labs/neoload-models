@@ -24,13 +24,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.Collection;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * Validates every YAML and JSON fixture in {@code neoload-project/src/test/resources} against the canonical
- * as-code v3.1 JSON Schema ({@code schemas/v3.1/as-code.schema.json}).
+ * as-code JSON Schemas ({@code schemas/v3.1/} and {@code schemas/v3.2/}), one run per version.
  *
  * <p>A failure means one of two things:
  * <ul>
@@ -44,9 +48,11 @@ import org.junit.Test;
  * not conform to the current schema (e.g. SLA thresholds without the required
  * {@code "per test/interval"} suffix), or they are voluntarily invalid and used in some unit-test...
  */
-public class IOSchema3Dot1ValidationTest {
+@RunWith(Parameterized.class)
+public class IOSchemaValidationTest {
 
-    private static JsonSchema SCHEMA;
+    private final String version;
+    private JsonSchema schema;
     private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
@@ -127,13 +133,30 @@ public class IOSchema3Dot1ValidationTest {
             "test-websocket_push_message-invalid.yaml"
     );
 
-    @BeforeClass
-    public static void loadSchema() throws URISyntaxException {
+    public IOSchemaValidationTest(final String version) {
+        this.version = version;
+    }
+
+    @Parameters(name = "schema {0}")
+    public static Collection<String> schemaVersions() {
+    	return List.of("3.1", "3.2");
+    }
+
+    @Before
+    public void loadSchema() throws URISyntaxException {
         // Resolve schema relative to the module root: target/test-classes -> target -> neoload-project -> ../schemas/
-        URL testClassesUrl = IOSchema3Dot1ValidationTest.class.getProtectionDomain().getCodeSource().getLocation();
+        URL testClassesUrl = IOSchemaValidationTest.class.getProtectionDomain().getCodeSource().getLocation();
         Path moduleDir = Paths.get(testClassesUrl.toURI()).getParent().getParent();
-        Path schemaPath = moduleDir.resolve("../schemas/v3.1/as-code.schema.json").normalize();
-        SCHEMA = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemaPath.toUri());
+        Path schemaPath = moduleDir.resolve("../schemas/v" + version + "/as-code.schema.json").normalize();
+        schema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemaPath.toUri());
+    }
+
+    /** Fixtures declare one schemaVersion; the schema under test accepts only its own. */
+    private JsonNode withSchemaVersion(final JsonNode node) {
+        if (node.isObject() && node.has("schemaVersion")) {
+            ((ObjectNode) node).put("schemaVersion", version);
+        }
+        return node;
     }
 
     @Test
@@ -157,7 +180,7 @@ public class IOSchema3Dot1ValidationTest {
                      try {
                          ObjectMapper mapper = fileName.endsWith(".yaml") ? YAML_MAPPER : JSON_MAPPER;
                          JsonNode node = mapper.readTree(file.toFile());
-                         Set<ValidationMessage> errors = SCHEMA.validate(node);
+                         Set<ValidationMessage> errors = schema.validate(withSchemaVersion(node));
                          if (!errors.isEmpty()) {
                              String details = errors.stream()
                                      .map(ValidationMessage::getMessage)
@@ -180,7 +203,7 @@ public class IOSchema3Dot1ValidationTest {
     private Set<ValidationMessage> validate(final String fixture) throws IOException {
         final File file = new File(getClass().getClassLoader().getResource(fixture + ".yaml").getFile());
         final JsonNode node = YAML_MAPPER.readTree(file);
-        return SCHEMA.validate(node);
+        return schema.validate(withSchemaVersion(node));
     }
 
     @Test
@@ -221,7 +244,7 @@ public class IOSchema3Dot1ValidationTest {
             final ObjectNode project = YAML_MAPPER.createObjectNode().put("name", "MyProject");
             project.putArray("user_paths").add(userPath);
             Assert.assertFalse("Expected user path '" + userPath.get("name").asText() + "' of " + fixture + " to fail schema validation",
-                    SCHEMA.validate(project).isEmpty());
+                    schema.validate(project).isEmpty());
         }
     }
 
@@ -277,20 +300,20 @@ public class IOSchema3Dot1ValidationTest {
         }
     }
 
-    private static void assertStep(final String step, final boolean valid) throws IOException {
+    private void assertStep(final String step, final boolean valid) throws IOException {
         final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - " + step + "\n";
-        Assert.assertEquals(step, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+        Assert.assertEquals(step, valid, schema.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
     }
 
-    private static void assertPacing(final String pacing, final boolean valid) throws IOException {
+    private void assertPacing(final String pacing, final boolean valid) throws IOException {
         final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    pacing: " + pacing + "\n    steps:\n    - delay: 1s\n";
-        Assert.assertEquals(pacing, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+        Assert.assertEquals(pacing, valid, schema.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
     }
 
-    private static void assertWebPageThinkTime(final String thinkTime, final boolean valid) throws IOException {
+    private void assertWebPageThinkTime(final String thinkTime, final boolean valid) throws IOException {
         final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - web_page:\n"
                 + "        think_time: " + thinkTime + "\n        steps:\n        - request:\n            url: http://host:80/\n";
-        Assert.assertEquals(thinkTime, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+        Assert.assertEquals(thinkTime, valid, schema.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
     }
 
     @Test
@@ -301,7 +324,7 @@ public class IOSchema3Dot1ValidationTest {
         for (final DurationFields field : DurationFields.values()) {
             for (final String value : values) {
                 final String yaml = field.yaml(value);
-                final boolean schemaValid = SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty();
+                final boolean schemaValid = schema.validate(YAML_MAPPER.readTree(yaml)).isEmpty();
                 if (schemaValid != isValidForJava(yaml)) {
                     mismatches.add(field + "=" + value + " (schema " + (schemaValid ? "valid" : "invalid") + ")");
                 }

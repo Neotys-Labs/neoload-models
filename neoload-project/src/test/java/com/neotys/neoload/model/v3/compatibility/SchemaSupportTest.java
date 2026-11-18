@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 
 public class SchemaSupportTest {
@@ -16,6 +15,7 @@ public class SchemaSupportTest {
 	public void default_instance_supported_versions() {
 		assertTrue(SchemaSupport.getDefault().isSupported("3.0"));
 		assertTrue(SchemaSupport.getDefault().isSupported("3.1"));
+		assertTrue(SchemaSupport.getDefault().isSupported("3.2"));
 	}
 
 	@Test

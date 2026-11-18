@@ -16,8 +16,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.junit.BeforeClass;
+import java.util.Collection;
+import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Schema-level coverage for {@code shared_elements} / {@code shared_element}: restricted to
@@ -26,48 +31,59 @@ import org.junit.Test;
  * declared {@code schemaVersion} (see FEATURE-COVERAGE.md); these two concerns are gated by the
  * published JSON Schemas, exercised here exactly like {@link IORequestSchemaValidationTest}.
  */
+@RunWith(Parameterized.class)
 public class IOSharedElementsSchemaValidationTest {
 
 	private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
 
-	private static JsonSchema schema30;
-	private static JsonSchema schema31;
+	private JsonSchema schema30;
+	private final String version;
+	private JsonSchema schema;
 
-	@BeforeClass
-	public static void loadSchemas() throws URISyntaxException {
+	public IOSharedElementsSchemaValidationTest(final String version) {
+		this.version = version;
+	}
+
+	@Parameters(name = "schema {0}")
+	public static Collection<String> schemaVersions() {
+		return List.of("3.1", "3.2");
+	}
+
+	@Before
+	public void loadSchemas() throws URISyntaxException {
 		final Path schemasDir = locateSchemasDir();
 		final Path schema30Path = schemasDir.resolve("v3.0/as-code.schema.json");
-		final Path schema31Path = schemasDir.resolve("v3.1/as-code.schema.json");
+		final Path schemaPath = schemasDir.resolve("v" + version + "/as-code.schema.json");
 		schema30 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(schema30Path.toUri());
-		schema31 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schema31Path.toUri());
+		schema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemaPath.toUri());
 	}
 
 	@Test
 	public void sharedElementsWithFourContainerTypesIsValidAgainst3Dot1() throws IOException, URISyntaxException {
 		final JsonNode node = readFixture("test-shared-elements-four-container-types.yaml");
-		assertTrue("valid shared_elements entry must pass the 3.1 schema", schema31.validate(node).isEmpty());
+		assertTrue("valid shared_elements entry must pass the " + version + " schema", schema.validate(node).isEmpty());
 	}
 
 	@Test
 	public void sharedElementsRejectsUnsupportedType() throws IOException, URISyntaxException {
 		final JsonNode node = readFixture("test-shared-elements-unsupported-type.yaml");
 		assertFalse("a shared_elements entry of an unsupported type ('request') must be rejected",
-				schema31.validate(node).isEmpty());
+				schema.validate(node).isEmpty());
 	}
 
 	@Test
 	public void sharedElementsRejectsMissingNameOnLoopWhileFork() throws IOException, URISyntaxException {
 		final JsonNode loopNode = readFixture("test-shared-elements-missing-name-loop.yaml");
 		assertFalse("a shared_elements loop entry without a name must be rejected",
-				schema31.validate(loopNode).isEmpty());
+				schema.validate(loopNode).isEmpty());
 
 		final JsonNode whileNode = readFixture("test-shared-elements-missing-name-while.yaml");
 		assertFalse("a shared_elements while entry without a name must be rejected",
-				schema31.validate(whileNode).isEmpty());
+				schema.validate(whileNode).isEmpty());
 
 		final JsonNode forkNode = readFixture("test-shared-elements-missing-name-fork.yaml");
 		assertFalse("a shared_elements fork entry without a name must be rejected",
-				schema31.validate(forkNode).isEmpty());
+				schema.validate(forkNode).isEmpty());
 	}
 
 	@Test
@@ -83,10 +99,14 @@ public class IOSharedElementsSchemaValidationTest {
 				schema30.validate(node).isEmpty());
 	}
 
-	private static JsonNode readFixture(final String resourceName) throws IOException, URISyntaxException {
+	private JsonNode readFixture(final String resourceName) throws IOException, URISyntaxException {
 		final URL fixtureUrl = IOSharedElementsSchemaValidationTest.class.getClassLoader().getResource(resourceName);
 		assertNotNull("Missing classpath resource " + resourceName, fixtureUrl);
-		return YAML_MAPPER.readTree(new File(fixtureUrl.toURI()));
+		final JsonNode node = YAML_MAPPER.readTree(new File(fixtureUrl.toURI()));
+		if (node.isObject() && node.has("schemaVersion")) {
+			((com.fasterxml.jackson.databind.node.ObjectNode) node).put("schemaVersion", version);
+		}
+		return node;
 	}
 
 	private static Path locateSchemasDir() throws URISyntaxException {

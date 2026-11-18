@@ -14,16 +14,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Checks the documentation annotations of the as-code v3.1 JSON Schema ({@code schemas/v3.1/as-code.schema.json}):
+ * Checks the documentation annotations of the as-code JSON Schemas ({@code schemas/v3.1/} and {@code schemas/v3.2/}), one run per version:
  * every definition and property carries a description, the main elements carry examples, and every example
  * validates against the subschema that declares it.
  */
-public class IOSchema3Dot1DocumentationTest {
+@RunWith(Parameterized.class)
+public class IOSchemaDocumentationTest {
 
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
     private static final List<String> SCHEMA_MAPS = List.of("properties", "definitions", "patternProperties");
@@ -42,13 +47,23 @@ public class IOSchema3Dot1DocumentationTest {
             "user_paths/actions/websocket_channel", "user_paths/actions/websocket_request",
             "populations/population", "scenario", "sla");
 
-    private static JsonNode schemaNode;
+    private final String version;
+    private JsonNode schemaNode;
 
-    @BeforeClass
-    public static void loadSchema() throws URISyntaxException, IOException {
-        final URL testClassesUrl = IOSchema3Dot1DocumentationTest.class.getProtectionDomain().getCodeSource().getLocation();
+    public IOSchemaDocumentationTest(final String version) {
+        this.version = version;
+    }
+
+    @Parameters(name = "schema {0}")
+    public static Collection<String> schemaVersions() {
+    	return List.of("3.1", "3.2");
+    }
+
+    @Before
+    public void loadSchema() throws URISyntaxException, IOException {
+        final URL testClassesUrl = IOSchemaDocumentationTest.class.getProtectionDomain().getCodeSource().getLocation();
         final Path moduleDir = Paths.get(testClassesUrl.toURI()).getParent().getParent();
-        final Path schemaPath = moduleDir.resolve("../schemas/v3.1/as-code.schema.json").normalize();
+        final Path schemaPath = moduleDir.resolve("../schemas/v" + version + "/as-code.schema.json").normalize();
         schemaNode = JSON_MAPPER.readTree(schemaPath.toFile());
     }
 
@@ -60,7 +75,7 @@ public class IOSchema3Dot1DocumentationTest {
                 missing.isEmpty());
     }
 
-    private static void collectMissingDescriptions(final JsonNode node, final String pointer, final List<String> missing) {
+    private void collectMissingDescriptions(final JsonNode node, final String pointer, final List<String> missing) {
         if (node.isObject()) {
             for (final Map.Entry<String, JsonNode> field : node.properties()) {
                 final String childPointer = pointer + "/" + field.getKey();
@@ -80,7 +95,7 @@ public class IOSchema3Dot1DocumentationTest {
     /**
      * A boolean subschema such as {@code "mapping_id": false} cannot carry annotations, so only object subschemas are checked.
      */
-    private static void collectMissingDescriptionsOfMap(final JsonNode map, final String pointer, final List<String> missing) {
+    private void collectMissingDescriptionsOfMap(final JsonNode map, final String pointer, final List<String> missing) {
         for (final Map.Entry<String, JsonNode> entry : map.properties()) {
             final String entryPointer = pointer + "/" + entry.getKey();
             final JsonNode description = descriptionOf(entry.getValue());
@@ -94,7 +109,7 @@ public class IOSchema3Dot1DocumentationTest {
     /**
      * The description of a subschema, or the one of the definition it references when it carries none.
      */
-    private static JsonNode descriptionOf(final JsonNode subschema) {
+    private JsonNode descriptionOf(final JsonNode subschema) {
         final JsonNode description = subschema.get("description");
         final JsonNode ref = subschema.get("$ref");
         if (description == null && ref != null && ref.asText().startsWith("#/")) {
@@ -122,7 +137,7 @@ public class IOSchema3Dot1DocumentationTest {
         Assert.assertTrue(failures.size() + " example(s) invalid:\n" + String.join("\n", failures), failures.isEmpty());
     }
 
-    private static void collectExampleFailures(final JsonNode node, final String pointer, final List<String> failures) {
+    private void collectExampleFailures(final JsonNode node, final String pointer, final List<String> failures) {
         if (node.isObject()) {
             final JsonNode examples = node.get("examples");
             if (examples != null && examples.isArray() && pointer.startsWith("/definitions/")) {
@@ -136,7 +151,7 @@ public class IOSchema3Dot1DocumentationTest {
         }
     }
 
-    private static void validateExamples(final JsonNode examples, final String pointer, final List<String> failures) {
+    private void validateExamples(final JsonNode examples, final String pointer, final List<String> failures) {
         final ObjectNode wrapper = JSON_MAPPER.createObjectNode();
         wrapper.put("$schema", schemaNode.get("$schema").asText());
         wrapper.put("$ref", "#" + pointer);
