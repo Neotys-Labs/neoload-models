@@ -30,8 +30,9 @@ populations:
 | distribution | The percentage of the User Path in Population. The value is a percentage and may be set within precision of 0.1%.<br>If the distribution is not present, its value will be proportionally calculated. | - | - |  |
 | [browser](#browser) | The browser emulated by the Virtual Users of the User Path. By default, the recorded browser. | - | - | 2027.1 |
 | cache        | How the Virtual Users handle the browser cache: `as_recorded` (the default value), `new_user` (empty cache, as for a first visit) or `returning_user` (cache already filled). | - | - | 2027.1 |
+| [wan_emulation](#wan-emulation) | The WAN emulation of the Virtual Users of the User Path: the bandwidth, latency and packet loss of the download and of the upload. By default, none. | - | - | 2027.1 |
 
-`browser` and `cache` need `schemaVersion: "3.2"`.
+`browser`, `cache` and `wan_emulation` need `schemaVersion: "3.2"`.
 
 #### Example 1
 
@@ -99,4 +100,60 @@ populations:
     browser:
       http2: false
     cache: returning_user
+```
+
+## WAN emulation
+
+The WAN emulation of the Virtual Users of a User Path, as the "WAN Emulation" columns of the Population table in NeoLoad: it limits the network between the Virtual Users and the servers. The profile is defined by its values, like in a NeoLoad project: `name` is only the label shown in NeoLoad.
+
+| Name     | Description                                                  | Accept variable  | Required | Since  |
+|:-------- |:------------------------------------------------------------ |:----------------:|:--------:|:------:|
+| name     | The label of the WAN emulation profile shown in NeoLoad. Without name, the profile is shown as customized. | - | - | 2027.1 |
+| download | The network conditions of the responses, from the servers to the Virtual Users, see [WAN emulation direction](#wan-emulation-direction). By default, no limit. | - | - | 2027.1 |
+| upload   | The network conditions of the requests, from the Virtual Users to the servers, see [WAN emulation direction](#wan-emulation-direction). By default, no limit. | - | - | 2027.1 |
+
+A WAN emulation without any limit is the same as no WAN emulation, and is not written back.
+
+:warning: The Load Generator applies the WAN emulation only when it supports it (WAN emulation enabled on a Linux or Windows Load Generator). Otherwise, the Test Run continues without WAN emulation and the Load Generator logs it, as for a project designed in NeoLoad.
+
+The mobile profiles of NeoLoad (3G, 4G...) have other values for an average and a poor signal. In as-code, a profile has one set of values: a mobile profile saved from NeoLoad is written with the values of its selected signal strength.
+
+### WAN emulation direction
+
+| Name        | Description                                                  | Accept variable  | Required | Since  |
+|:----------- |:------------------------------------------------------------ |:----------------:|:--------:|:------:|
+| bandwidth   | The bandwidth: a positive rate with up to 3 decimals in `bps`, `Kbps`, `Mbps` or `Gbps` (for example `2560Kbps` or `1.5Mbps`), or `unlimited`. The default value is `unlimited`. | - | - | 2027.1 |
+| latency     | The latency added to each packet, as a whole number of milliseconds from 0 to 1000 (for example `40ms`). The default value is `0ms`. | - | - | 2027.1 |
+| packet_loss | The percentage of packets lost, from 0 to 10% with up to 3 decimals (for example `1.5%`). The default value is `0%`. | - | - | 2027.1 |
+
+#### Example 1
+
+`user_path_1` emulates an ADSL line of 2560 Kbps down and 256 Kbps up.
+
+```yaml
+populations:
+- name: population1
+  user_paths:
+  - name: user_path_1
+    wan_emulation:
+      name: ADSL 2048
+      download:
+        bandwidth: 2560Kbps
+      upload:
+        bandwidth: 256Kbps
+```
+
+#### Example 2
+
+`user_path_1` has an unlimited bandwidth, with 100 ms of latency and 1% of lost packets on the download.
+
+```yaml
+populations:
+- name: population1
+  user_paths:
+  - name: user_path_1
+    wan_emulation:
+      download:
+        latency: 100ms
+        packet_loss: 1%
 ```

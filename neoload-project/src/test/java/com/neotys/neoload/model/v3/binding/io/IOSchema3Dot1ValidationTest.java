@@ -131,7 +131,13 @@ public class IOSchema3Dot1ValidationTest {
             "test-populations-browser-invalid-encoding.yaml",
             "test-populations-browser-unsupported-encoding.yaml",
             "test-populations-browser-unknown-key.yaml",
-            "test-populations-invalid-cache.yaml"
+            "test-populations-invalid-cache.yaml",
+            "test-populations-wan-emulation-invalid-bandwidth.yaml",
+            "test-populations-wan-emulation-zero-bandwidth.yaml",
+            "test-populations-wan-emulation-invalid-latency.yaml",
+            "test-populations-wan-emulation-latency-unit.yaml",
+            "test-populations-wan-emulation-invalid-packet-loss.yaml",
+            "test-populations-wan-emulation-unknown-key.yaml"
     );
 
     @BeforeClass
