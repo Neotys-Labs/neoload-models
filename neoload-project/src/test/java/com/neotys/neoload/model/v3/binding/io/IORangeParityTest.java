@@ -61,6 +61,10 @@ public class IORangeParityTest {
 		rows.add(row("loop.count", LOOP_COUNT, "\"${myVar}\"", VALID));
 		rows.add(row("loop.count", LOOP_COUNT, "\"${file.col}\"", VALID));
 		rows.add(row("loop.count", LOOP_COUNT, "\"${my-var}\"", VALID));
+		for (final String malformed : new String[] {"${}", "${a.}", "${a}b${c}", "${a}0", "abc"}) {
+			rows.add(row("servers[].port", SERVER_PORT, "\"" + malformed + "\"", INVALID));
+			rows.add(row("loop.count", LOOP_COUNT, "\"" + malformed + "\"", INVALID));
+		}
 		return rows;
 	}
 
