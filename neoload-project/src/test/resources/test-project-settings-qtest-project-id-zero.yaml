@@ -1,0 +1,4 @@
+name: MyProject
+project_settings:
+  qtest.enabled: true
+  qtest.project_id: 0
