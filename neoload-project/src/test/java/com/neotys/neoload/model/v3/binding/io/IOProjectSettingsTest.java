@@ -39,4 +39,13 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 
 		assertViolations(validateNeoLoad(descriptor), invalidValue("-1", PROJECT_SETTINGS + "qtest.cycle_id", QTEST_ID_MESSAGE));
 	}
+
+	@Test
+	public void bothInvalidQTestIdsAreReportedSeparately() throws IOException {
+		final ProjectDescriptor descriptor = read("test-project-settings-qtest-ids-invalid");
+
+		assertViolations(validateNeoLoad(descriptor),
+				invalidValue("-5", PROJECT_SETTINGS + "qtest.cycle_id", QTEST_ID_MESSAGE),
+				invalidValue("0", PROJECT_SETTINGS + "qtest.project_id", QTEST_ID_MESSAGE));
+	}
 }
