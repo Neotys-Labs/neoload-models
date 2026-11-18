@@ -91,6 +91,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-pacing-on-while.yaml",
             "test-date-variable-invalid-change-step.yaml",
             "test-date-variable-zero-change-step.yaml",
+            "test-date-variable-change-step-beyond-int-range.yaml",
             "test-assert-duration-unknown-property.yaml",
             "test-assertions-mutually-exclusive.yaml",
             "test-web_page-empty-steps.yaml",

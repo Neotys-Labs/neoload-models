@@ -318,6 +318,15 @@ public class IOVariableTest extends AbstractIOElementsTest {
     }
 
     @Test
+    public void readDateVariableRejectsChangeStepBeyondIntRange() throws IOException {
+        final ProjectDescriptor descriptor = new IO().read(getFile("test-date-variable-change-step-beyond-int-range", "yaml"));
+
+        final Validation validation = new Validator().validate(descriptor, NeoLoad.class);
+        assertViolations(validation, invalidValue("project.variables[0].change_step",
+                "must be an optional sign, a non-zero number and a unit among ms, s, m, h, d, mo, y (e.g. \"-5d\", \"3h\", \"2y\"), got \"99999999999d\"."));
+    }
+
+    @Test
     public void readDateVariableRejectsMismatchedStartDate() throws IOException {
         final ProjectDescriptor descriptor = new IO().read(getFile("test-date-variable-mismatched-start-date", "yaml"));
 
