@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.writers.neoload.scenario;
 
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.v3.binding.io.IO;
 import com.neotys.neoload.model.v3.project.scenario.Apm;
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
@@ -19,6 +20,7 @@ import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.scenario.StartAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -944,5 +946,24 @@ public class ScenarioWriterTest {
 		final Node item2_1 = childNodes2.item(0);
 		Assertions.assertThat(item2_1.getAttributes().getLength()).isEqualTo(4);
 		Assertions.assertThat(item2_1.getAttributes().getNamedItem("traceVariables").getNodeValue()).isEqualTo("false");
+	}
+
+	@Test
+	public void writeScenarioWithoutMinimumUsersWritesZeroUsers() throws ParserConfigurationException, IOException {
+		final String yaml = "name: P\nscenarios:\n- name: S\n  populations:\n"
+				+ "  - name: R\n    rampup_load:\n      max_users: 5\n      increment_users: 1\n      increment_every: 1 iteration\n"
+				+ "  - name: K\n    peaks_load:\n      minimum:\n        duration: 1 iteration\n      maximum:\n        users: 5\n        duration: 1 iteration\n"
+				+ "      start: maximum\n";
+		final Scenario scenario = new IO().read(yaml).getProject().getScenarios().get(0);
+
+		final Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		final Element xmlScenario = document.createElement("scenario-test");
+		ScenarioWriter.of(scenario).writeXML(document, xmlScenario);
+
+		final Element rampup = (Element) xmlScenario.getElementsByTagName("rampup-volume-policy").item(0);
+		final Element peaks = (Element) xmlScenario.getElementsByTagName("peaks-volume-policy").item(0);
+		Assertions.assertThat(rampup.getAttribute("initialUserNumber")).isEqualTo("0");
+		Assertions.assertThat(peaks.getAttribute("defaultUserNumber")).isEqualTo("0");
+		Assertions.assertThat(peaks.getAttribute("peakUserNumber")).isEqualTo("5");
 	}
 }
