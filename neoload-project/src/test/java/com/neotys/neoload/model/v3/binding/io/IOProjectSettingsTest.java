@@ -61,4 +61,11 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 		assertTrue(validateNeoLoad(descriptor).isValid());
 		assertEquals(getContent(file, StandardCharsets.UTF_8).replace("\r\n", "\n"), new IO().write(descriptor, Format.YAML));
 	}
+
+	@Test
+	public void projectSettingsWithoutQTestIdsAreAccepted() throws IOException {
+		final ProjectDescriptor descriptor = read("test-project-settings-without-qtest-ids");
+
+		assertTrue(validateNeoLoad(descriptor).isValid());
+	}
 }

@@ -1,0 +1,3 @@
+name: MyProject
+project_settings:
+  qtest.enabled: true
