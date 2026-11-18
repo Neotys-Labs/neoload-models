@@ -22,6 +22,8 @@ public class IORangeParityTest {
 
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
+	private static final String SERVER_PORT = "name: P\nservers:\n- name: S\n  host: h\n  port: %s\n";
+	private static final String LOOP_COUNT = DurationFields.actions("    - loop:\n        count: %s\n        steps:\n        - delay: 1s\n");
 
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
@@ -53,6 +55,12 @@ public class IORangeParityTest {
 
 	private static List<String[]> variables() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("servers[].port", SERVER_PORT, "\"${myVar}\"", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"${file.col}\"", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"${my-var}\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"${myVar}\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"${file.col}\"", VALID));
+		rows.add(row("loop.count", LOOP_COUNT, "\"${my-var}\"", VALID));
 		return rows;
 	}
 
