@@ -2,9 +2,11 @@ package com.neotys.neoload.model.v3.binding.io;
 
 
 import static com.neotys.neoload.model.v3.binding.io.IOHelper.buildProject;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.userpath.Delay;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Durations;
@@ -64,5 +66,31 @@ public class IOLoopTest extends AbstractIOElementsTest {
 		assertNotNull(expectedProject);
 
 		write("test-loop-required-and-optional", expectedProject);
+	}
+
+	@Test
+	public void variablePortAndLoopCountRoundTrip() throws IOException {
+		final Loop loop = Loop.builder()
+				.count("${my-var}")
+				.addSteps(Delay.builder()
+						.duration(DurationConstant.builder().value(Durations.of("1000")).build())
+						.build())
+				.build();
+		final Server server = Server.builder()
+				.name("MyServer")
+				.host("myserver.intranet.neotys.com")
+				.port("${file.col}")
+				.build();
+		final Project expectedProject = Project.builder()
+				.from(buildProject(loop))
+				.addServers(server)
+				.build();
+
+		final Project actualProject = new IO().read(getFile("test-variable-port-and-loop-count", "yaml")).getProject();
+		assertEquals("${file.col}", actualProject.getServers().get(0).getPort());
+		assertEquals("${my-var}", ((Loop) actualProject.getUserPaths().get(0).getActions().getSteps().get(0)).getCount());
+
+		assertRead("test-variable-port-and-loop-count", expectedProject);
+		assertWrite("test-variable-port-and-loop-count", expectedProject);
 	}
 }

@@ -1,0 +1,13 @@
+name: MyProject
+servers:
+- name: MyServer
+  host: myserver.intranet.neotys.com
+  port: "${file.col}"
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - loop:
+        count: "${my-var}"
+        steps:
+        - delay: 1s
