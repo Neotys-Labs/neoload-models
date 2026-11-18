@@ -5,6 +5,7 @@ import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertViol
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import com.neotys.neoload.model.v3.project.Project;
@@ -27,6 +28,10 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 
 	private static String percentileProject(final int percent) {
 		return "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - perc-transaction-resp-time (p" + percent + ") warn >= 1 per test\n";
+	}
+
+	private static String thresholdValueProject(final String value) {
+		return "name: P\nsla_profiles:\n- name: S\n  thresholds:\n  - avg-request-resp-time warn >= " + value + " per test\n";
 	}
 
 	private static ProjectDescriptor readYaml(final String yaml) throws IOException {
@@ -182,5 +187,13 @@ public class IOSlaProfilesTest extends AbstractIOElementsTest {
 		assertViolations(validationOf(p100), invalidValue("100", PERCENT, "must be between 1 and 99."));
 		assertEquals(Integer.valueOf(0), percent(p0));
 		assertEquals(Integer.valueOf(100), percent(p100));
+	}
+
+	@Test
+	public void thresholdValueZeroIsAcceptedAndNegativeIsRejectedOnLoad() throws IOException {
+		assertTrue(validationOf(readYaml(thresholdValueProject("0"))).isValid());
+
+		final IOException exception = assertThrows(IOException.class, () -> readYaml(thresholdValueProject("-1")));
+		assertTrue(exception.getMessage(), exception.getMessage().startsWith("avg-request-resp-time warn >= -1 per test is not a valid threshold"));
 	}
 }
