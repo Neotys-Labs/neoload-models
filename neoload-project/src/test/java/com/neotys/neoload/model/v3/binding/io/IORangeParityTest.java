@@ -23,6 +23,11 @@ public class IORangeParityTest {
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
 
+	private static final String RAMPUP_MIN_USERS = DurationFields.scenario("  populations:\n  - name: R\n    rampup_load:\n      min_users: %s\n"
+			+ "      increment_users: 1\n      increment_every: 1 iteration\n");
+	private static final String PEAKS_MINIMUM_USERS = DurationFields.scenario("  populations:\n  - name: K\n    peaks_load:\n      minimum:\n        users: %s\n"
+			+ "        duration: 1 iteration\n      maximum:\n        users: 5\n        duration: 1 iteration\n      start: maximum\n");
+
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
 		SCHEMA = SchemaFiles.version("v3.2");
@@ -43,11 +48,19 @@ public class IORangeParityTest {
 
 	private static List<String[]> boundaries() {
 		final List<String[]> rows = new ArrayList<>();
+		for (final String[] field : new String[][] {{"rampup_load.min_users", RAMPUP_MIN_USERS}, {"peaks_load.minimum.users", PEAKS_MINIMUM_USERS}}) {
+			rows.add(row(field[0], field[1], "0", INVALID));
+			rows.add(row(field[0], field[1], "1", VALID));
+			rows.add(row(field[0], field[1], "2147483647", VALID));
+			rows.add(row(field[0], field[1], "2147483648", INVALID));
+		}
 		return rows;
 	}
 
 	private static List<String[]> negatives() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("rampup_load.min_users", RAMPUP_MIN_USERS, "-1", INVALID));
+		rows.add(row("peaks_load.minimum.users", PEAKS_MINIMUM_USERS, "-1", INVALID));
 		return rows;
 	}
 
