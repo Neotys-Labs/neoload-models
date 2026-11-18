@@ -23,6 +23,12 @@ public class IORangeParityTest {
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
 
+	private static final String CURRENT_DATE_OFFSET = variable("current_date", "offset: %s\n");
+
+	private static String variable(final String type, final String properties) {
+		return "name: P\nvariables:\n- " + type + ":\n    name: V\n    " + properties;
+	}
+
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
 		SCHEMA = SchemaFiles.version("v3.2");
@@ -43,11 +49,17 @@ public class IORangeParityTest {
 
 	private static List<String[]> boundaries() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "0d", INVALID));
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "0s", INVALID));
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-0d", INVALID));
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "5d", VALID));
 		return rows;
 	}
 
 	private static List<String[]> negatives() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("current_date.offset", CURRENT_DATE_OFFSET, "-5d", VALID));
 		return rows;
 	}
 

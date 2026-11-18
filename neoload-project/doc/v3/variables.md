@@ -357,7 +357,7 @@ The `offset` is a single amount and unit. Units are not combined, so that fixed-
 | name                | The variable name                                                                                                                                                        | -               | &#x2713; | 2026.3|
 | description         | The variable description                                                                                                                                                 | -               | -        | 2026.3|
 | pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        | 2026.3|
-| offset              | The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Absent means no offset. | -               | -        | 2026.3|
+| offset              | The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. An amount of 0 is rejected. Absent means no offset. | -               | -        | 2026.3|
 
 #### Example
 Defining a minimal Current Date variable (only required fields).
