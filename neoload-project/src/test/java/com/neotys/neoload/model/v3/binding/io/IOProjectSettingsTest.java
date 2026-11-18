@@ -3,11 +3,15 @@ package com.neotys.neoload.model.v3.binding.io;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertViolations;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import com.neotys.neoload.model.v3.validation.validator.Validation;
 import com.neotys.neoload.model.v3.validation.validator.Validator;
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 
 /**
@@ -47,5 +51,14 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 		assertViolations(validateNeoLoad(descriptor),
 				invalidValue("-5", PROJECT_SETTINGS + "qtest.cycle_id", QTEST_ID_MESSAGE),
 				invalidValue("0", PROJECT_SETTINGS + "qtest.project_id", QTEST_ID_MESSAGE));
+	}
+
+	@Test
+	public void qTestIdsOfOneAndAboveAreAcceptedAndRoundTrip() throws IOException {
+		final File file = getFile("test-project-settings-qtest-ids", "yaml");
+		final ProjectDescriptor descriptor = new IO().read(file);
+
+		assertTrue(validateNeoLoad(descriptor).isValid());
+		assertEquals(getContent(file, StandardCharsets.UTF_8).replace("\r\n", "\n"), new IO().write(descriptor, Format.YAML));
 	}
 }
