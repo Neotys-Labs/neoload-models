@@ -29,6 +29,15 @@ name: MyProject
 
 A file declaring `3.0`, `3.1` or no `schemaVersion` keeps working unchanged.
 
+### Changed
+
+- **Breaking: qTest identifiers must be greater than or equal to 1.** `qtest.project_id` and
+  `qtest.cycle_id` of the [project settings](neoload-project/doc/v3/project_settings.md) are
+  rejected when set to `0` or a negative value, as qTest identifiers start at 1. The error names
+  the key and the value, e.g.
+  `Incorrect value '0' for 'project.project_settings.qtest.project_id': must be a number greater than or equal to 1.`
+  Leaving them out stays valid.
+
 ---
 
 ## [3.1] — Upcoming version in 2026
