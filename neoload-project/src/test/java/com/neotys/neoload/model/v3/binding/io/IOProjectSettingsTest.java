@@ -32,4 +32,11 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 		assertViolations(validateNeoLoad(descriptor), invalidValue("0", PROJECT_SETTINGS + "qtest.project_id", QTEST_ID_MESSAGE));
 		assertEquals("0", descriptor.getProject().getProjectSettings().get("qtest.project_id"));
 	}
+
+	@Test
+	public void negativeQTestCycleIdIsRejectedWithTheKeyAndTheValue() throws IOException {
+		final ProjectDescriptor descriptor = read("test-project-settings-qtest-cycle-id-negative");
+
+		assertViolations(validateNeoLoad(descriptor), invalidValue("-1", PROJECT_SETTINGS + "qtest.cycle_id", QTEST_ID_MESSAGE));
+	}
 }
