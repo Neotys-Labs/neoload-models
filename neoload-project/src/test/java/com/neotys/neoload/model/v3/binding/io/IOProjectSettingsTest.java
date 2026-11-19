@@ -77,6 +77,20 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 		}
 	}
 
+	@Test
+	public void readNonBooleanApplyGlobalAssertionsOnCustomActionsFails() throws IOException {
+		for (final String extension : new String[] { "yaml", "json" }) {
+			final String content = getContent(getFile("test-project-settings-global-assertions-invalid", extension), StandardCharsets.UTF_8);
+			try {
+				new IO().read(content);
+				fail("Reading the " + extension + " fixture must fail");
+			} catch (final JsonMappingException e) {
+				assertTrue(e.getMessage(), e.getMessage().contains("global_assertions.apply_on_custom_actions")
+						&& e.getMessage().contains("must be a boolean"));
+			}
+		}
+	}
+
 	private static Project getProjectWithGlobalAssertionsProjectSettings() {
 		return Project.builder()
 				.name("MyProject")

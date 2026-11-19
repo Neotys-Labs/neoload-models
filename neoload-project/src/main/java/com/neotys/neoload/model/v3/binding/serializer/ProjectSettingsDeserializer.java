@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Reads the nested maps of {@code project_settings} into the dotted keys used by the NeoLoad writer and
@@ -23,6 +25,11 @@ import java.util.Map;
  */
 public final class ProjectSettingsDeserializer extends StdDeserializer<Map<String, String>> {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Settings that must be a YAML boolean, as in the schema, since a value such as {@code "yes"} would be read as
+	 * {@code false}. The {@code dynatrace} and {@code qtest} booleans stay lenient: quoted values were accepted before.
+	 */
+	private static final Set<String> STRICT_BOOLEAN_SETTINGS = ImmutableSet.of("global_assertions.apply_on_custom_actions");
 
 	public ProjectSettingsDeserializer() {
 		super(Map.class);
@@ -50,6 +57,9 @@ public final class ProjectSettingsDeserializer extends StdDeserializer<Map<Strin
 				flatten(parser, key + ProjectSettingsSerializer.SEPARATOR, value, settings);
 			} else if (value.isArray()) {
 				throw JsonMappingException.from(parser, "The project setting '" + key + "' must be a value or a map, not a list.");
+			} else if (STRICT_BOOLEAN_SETTINGS.contains(key) && !value.isBoolean()) {
+				throw JsonMappingException.from(parser, "The project setting '" + key + "' must be a boolean (true or false), not '"
+						+ value.asText() + "'.");
 			} else if (!value.isNull()) {
 				settings.put(key, value.asText());
 			}

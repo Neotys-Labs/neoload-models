@@ -90,6 +90,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-date-variable-invalid-change-step.yaml",
             "test-assert-duration-unknown-property.yaml",
             "test-project-settings-global-assertions-invalid.yaml",
+            "test-project-settings-global-assertions-invalid.json",
             "test-assertions-mutually-exclusive.yaml",
             "test-web_page-empty-steps.yaml",
             "test-web_page-execute-resources-invalid.yaml",

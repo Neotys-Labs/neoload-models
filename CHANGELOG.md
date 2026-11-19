@@ -288,7 +288,7 @@ web_services_security:
 **Global assertion settings** — a new `global_assertions` project setting chooses which responses the
 global assertions (the assertions of a User Path, Container or Transaction) are applied to:
 `content_types` (comma-separated, default `text/html,text/xhtml`) and `apply_on_custom_actions`
-(default `false`).
+(default `false`, must be a boolean: a value such as `"yes"` is rejected).
 
 ```yaml
 project_settings:
