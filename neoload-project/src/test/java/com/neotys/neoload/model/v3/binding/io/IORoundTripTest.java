@@ -61,6 +61,8 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-pacing-variable-random",
 			"test-populations-only-required",
 			"test-populations-required-and-optional",
+			"test-populations-browser-cache",
+			"test-populations-browser-cache-defaults",
 			"test-readonly-slaprofiles-only-required",
 			"test-readonly-slaprofiles-required-and-optional",
 			"test-readonly-while-required-and-optional",
