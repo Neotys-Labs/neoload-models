@@ -26,6 +26,3 @@ variables:
 - current_date:
     name: offset_negative
     offset: -5d
-- current_date:
-    name: offset_zero
-    offset: 0s

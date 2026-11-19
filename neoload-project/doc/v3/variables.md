@@ -357,7 +357,7 @@ The `offset` is a single amount and unit. Units are not combined, so that fixed-
 | name                | The variable name                                                                                                                                                        | -               | &#x2713; | 2026.3|
 | description         | The variable description                                                                                                                                                 | -               | -        | 2026.3|
 | pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        | 2026.3|
-| offset              | The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Absent means no offset. | -               | -        | 2026.3|
+| offset              | The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. An amount of 0 is rejected. Absent means no offset. | -               | -        | 2026.3|
 
 #### Example
 Defining a minimal Current Date variable (only required fields).
@@ -392,7 +392,7 @@ The `change_step` is a single amount and unit. Units are not combined, so that f
 | description         | The variable description                                                                                                                                                 | -               | -        | 2026.3|
 | pattern             | The date format pattern. The default value is `dd/MM/yyyy HH:mm:ss`.                                                                                                     | -               | -        | 2026.3|
 | start_date          | The starting date, formatted according to `pattern`.                                                                                                                     | -               | &#x2713; | 2026.3|
-| change_step         | The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes. | -               | -        | 2026.3|
+| change_step         | The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. An amount of 0 is rejected. Not set, the date never changes. | -               | -        | 2026.3|
 | change_policy       | The policy when the value must change. The "change_policy" value can be: <ul><li>`each_use`</li><li>`each_request`</li><li>`each_page`</li><li>`each_iteration`</li><li>`each_user`</li></ul></br>The default value is `each_iteration`. | -               | -        | 2026.3|
 | scope               | The value scope can be: <ul><li>`local`</li><li>`global`</li><li>`unique`</li></ul></br>The default value is `global`. | -               | -        | 2026.3|
 

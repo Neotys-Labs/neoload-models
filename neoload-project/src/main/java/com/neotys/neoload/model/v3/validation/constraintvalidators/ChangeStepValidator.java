@@ -1,6 +1,5 @@
 package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
-import com.neotys.neoload.model.v3.project.variable.IncrementTimeUnit;
 import com.neotys.neoload.model.v3.validation.constraints.ChangeStepCheck;
 import java.util.Optional;
 import javax.validation.ConstraintValidatorContext;
@@ -20,6 +19,6 @@ public final class ChangeStepValidator extends AbstractConstraintValidator<Chang
 			return true;
 		}
 
-		return object instanceof String && IncrementTimeUnit.PATTERN.matcher((String) object).matches();
+		return OffsetValidator.isNonZeroOffset(object, context);
 	}
 }

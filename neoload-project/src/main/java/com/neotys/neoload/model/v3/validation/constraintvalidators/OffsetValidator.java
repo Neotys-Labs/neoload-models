@@ -4,6 +4,7 @@ import com.neotys.neoload.model.v3.project.variable.Offset;
 import com.neotys.neoload.model.v3.validation.constraints.OffsetCheck;
 import java.util.Optional;
 import javax.validation.ConstraintValidatorContext;
+import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 
 public final class OffsetValidator extends AbstractConstraintValidator<OffsetCheck, Object> {
 
@@ -20,6 +21,18 @@ public final class OffsetValidator extends AbstractConstraintValidator<OffsetChe
 			return true;
 		}
 
-		return object instanceof String && Offset.parse((String) object).isPresent();
+		return isNonZeroOffset(object, context);
+	}
+
+	/**
+	 * Whether the value is a single non-zero amount and unit, as parsed by {@link Offset#parse}. A rejected value is
+	 * exposed to the message as {@code {rejectedValue}}, since the violation does not name a text value itself.
+	 */
+	static boolean isNonZeroOffset(final Object object, final ConstraintValidatorContext context) {
+		final boolean valid = object instanceof String && Offset.parse((String) object).filter(offset -> offset.getAmount() != 0).isPresent();
+		if (!valid) {
+			context.unwrap(HibernateConstraintValidatorContext.class).addMessageParameter("rejectedValue", object);
+		}
+		return valid;
 	}
 }

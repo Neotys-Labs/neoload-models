@@ -599,8 +599,8 @@
 							},
 							"change_step": {
 								"type": "string",
-								"pattern": "^-?\\d+(ms|s|m|h|d|mo|y)$",
-								"description": "The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Not set, the date never changes."
+								"pattern": "^-?(?=\\d*[1-9])\\d+(ms|s|m|h|d|mo|y)$",
+								"description": "The step applied to the date at each change: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. An amount of 0 is rejected. Not set, the date never changes."
 							},
 							"scope": {
 								"$ref": "#/definitions/common/var_scope"
@@ -831,8 +831,8 @@
 							},
 							"offset": {
 								"type": "string",
-								"pattern": "^-?\\d+(ms|mo|s|m|h|d|y)$",
-								"description": "The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. Absent means no offset."
+								"pattern": "^-?(?=\\d*[1-9])\\d+(ms|mo|s|m|h|d|y)$",
+								"description": "The offset to apply to the current time: an optional `-` sign, a number and a unit, e.g. `-5d`, `3h`, `2y`. Unit can be: `ms`, `s`, `m`, `h`, `d`, `mo`, `y`. An amount of 0 is rejected. Absent means no offset."
 							}
 						}
 					}
