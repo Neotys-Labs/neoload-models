@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.neotys.neoload.model.v3.validation.constraints.NonNegativePercentageCheck;
+import com.neotys.neoload.model.v3.validation.constraints.PositiveOrZeroPercentageCheck;
 import com.neotys.neoload.model.v3.validation.constraints.PositivePercentageCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UserPathThinkTimeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -46,7 +46,7 @@ public interface UserPathThinkTime {
 	Optional<DurationConstant> getOverride();
 
 	@JsonProperty(FACTOR)
-	Optional<@NonNegativePercentageCheck(groups = {NeoLoad.class}) PercentageOrVariable> getFactor();
+	Optional<@PositiveOrZeroPercentageCheck(groups = {NeoLoad.class}) PercentageOrVariable> getFactor();
 
 	@JsonProperty(RANDOM)
 	Optional<@PositivePercentageCheck(groups = {NeoLoad.class}) PercentageOrVariable> getRandom();

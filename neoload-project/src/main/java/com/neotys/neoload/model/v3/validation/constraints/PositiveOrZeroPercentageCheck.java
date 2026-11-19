@@ -3,7 +3,7 @@ package com.neotys.neoload.model.v3.validation.constraints;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import com.neotys.neoload.model.v3.validation.constraintvalidators.NonNegativePercentageValidator;
+import com.neotys.neoload.model.v3.validation.constraintvalidators.PositiveOrZeroPercentageValidator;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import javax.validation.Constraint;
@@ -14,9 +14,9 @@ import javax.validation.Payload;
  */
 @Target({TYPE_USE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = NonNegativePercentageValidator.class)
-public @interface NonNegativePercentageCheck {
-	String message() default "{com.neotys.neoload.model.v3.validation.constraints.NonNegativePercentageCheck.message}";
+@Constraint(validatedBy = PositiveOrZeroPercentageValidator.class)
+public @interface PositiveOrZeroPercentageCheck {
+	String message() default "{com.neotys.neoload.model.v3.validation.constraints.PositiveOrZeroPercentageCheck.message}";
 
 	Class<?>[] groups() default {};
 
