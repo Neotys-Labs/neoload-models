@@ -59,6 +59,8 @@ public class IOSchema3Dot1ValidationTest {
      * Java parser accepts but that do not conform to the current schema (e.g. SLA thresholds
      * without the required "per test/interval" suffix).</p>
      *
+     * <p><b>Port written as a string</b> ({@code test-servers-required-and-optional.json}): the writer emits the port as a string, which schema 3.2 refuses and the model still reads.</p>
+     *
      * <p><b>Encoding-specific fixtures</b>: exercise non-UTF-8 encoding handling; their content is
      * valid but cannot be parsed by the standard UTF-8 Jackson mapper used here.</p>
      *
@@ -77,6 +79,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-readonly-while-only-required.json",
             "test-readonly-while-required-and-optional.yaml",
             "test-readonly-while-required-and-optional.json",
+            "test-servers-required-and-optional.json",
             // Encoding-specific: ISO-8859-1 encoded; tests charset handling, not schema conformance
             "test-scenarios-iso-8859-1.yaml",
             "test-scenarios-iso-8859-1.json",

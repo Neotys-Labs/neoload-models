@@ -25,6 +25,7 @@ public class IORangeParityTest {
 
 	private static final String CONSTANT_START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
 	private static final String CONSTANT_STOP_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      stop_after: %s\n");
+	private static final String SERVER_PORT = IOServerPortTest.server("%s");
 
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
@@ -77,6 +78,12 @@ public class IORangeParityTest {
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "1", VALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147483", VALID));
 		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147484", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "0", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "1", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "65535", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "65536", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "70000", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"70000\"", INVALID));
 		return rows;
 	}
 
@@ -87,6 +94,7 @@ public class IORangeParityTest {
 
 	private static List<String[]> variables() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("servers[].port", SERVER_PORT, "\"${port}\"", VALID));
 		return rows;
 	}
 
