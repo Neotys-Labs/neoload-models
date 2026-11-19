@@ -23,6 +23,12 @@ public class IORangeParityTest {
 	private static final String VALID = "valid";
 	private static final String INVALID = "invalid";
 
+	private static final String CONSTANT_START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
+	private static final String CONSTANT_STOP_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      stop_after: %s\n");
+	private static final String SERVER_PORT = IOServerPortTest.server("%s");
+	private static final String RANDOM_STRING_MIN = IORandomStringLengthTest.randomString("%s", "1000");
+	private static final String RANDOM_STRING_MAX = IORandomStringLengthTest.randomString("0", "%s");
+
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
 		SCHEMA = SchemaFiles.version("v3.2");
@@ -43,6 +49,53 @@ public class IORangeParityTest {
 
 	private static List<String[]> boundaries() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "0", INVALID));
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "1", VALID));
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "2147483", VALID));
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "2147484", INVALID));
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "0s", INVALID));
+		rows.add(row("rampup", DurationFields.CONSTANT_RAMPUP.yaml("%s"), "596h31m23s", VALID));
+		rows.add(row("increment_rampup", DurationFields.RAMPUP_INCREMENT_RAMPUP.yaml("%s"), "0", INVALID));
+		rows.add(row("increment_rampup", DurationFields.RAMPUP_INCREMENT_RAMPUP.yaml("%s"), "2147483", VALID));
+		rows.add(row("increment_rampup", DurationFields.RAMPUP_INCREMENT_RAMPUP.yaml("%s"), "2147484", INVALID));
+		rows.add(row("step_rampup", DurationFields.PEAKS_STEP_RAMPUP.yaml("%s"), "0", INVALID));
+		rows.add(row("step_rampup", DurationFields.PEAKS_STEP_RAMPUP.yaml("%s"), "2147483", VALID));
+		rows.add(row("step_rampup", DurationFields.PEAKS_STEP_RAMPUP.yaml("%s"), "2147484", INVALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "0", INVALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "1", VALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "2147483", VALID));
+		rows.add(row("start_after", CONSTANT_START_AFTER, "2147484", INVALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "0", INVALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "1", VALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "2147483", VALID));
+		rows.add(row("stop_after", CONSTANT_STOP_AFTER, "2147484", INVALID));
+		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "0", INVALID));
+		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "1", VALID));
+		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "2147483", VALID));
+		rows.add(row("monitoring.before", DurationFields.MONITORING_BEFORE.yaml("%s"), "2147484", INVALID));
+		rows.add(row("monitoring.after", DurationFields.MONITORING_AFTER.yaml("%s"), "0", INVALID));
+		rows.add(row("monitoring.after", DurationFields.MONITORING_AFTER.yaml("%s"), "2147483", VALID));
+		rows.add(row("monitoring.after", DurationFields.MONITORING_AFTER.yaml("%s"), "2147484", INVALID));
+		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "0", INVALID));
+		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "1", VALID));
+		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147483", VALID));
+		rows.add(row("rendezvous_policies[].timeout", DurationFields.RENDEZVOUS_TIMEOUT.yaml("%s"), "2147484", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "0", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "1", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "65535", VALID));
+		rows.add(row("servers[].port", SERVER_PORT, "65536", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "70000", INVALID));
+		rows.add(row("servers[].port", SERVER_PORT, "\"70000\"", INVALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "-1", INVALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "0", VALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "1000", VALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "1001", INVALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "2000", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "0", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1", VALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1000", VALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1001", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "2000", INVALID));
 		return rows;
 	}
 
@@ -53,6 +106,7 @@ public class IORangeParityTest {
 
 	private static List<String[]> variables() {
 		final List<String[]> rows = new ArrayList<>();
+		rows.add(row("servers[].port", SERVER_PORT, "\"${port}\"", VALID));
 		return rows;
 	}
 

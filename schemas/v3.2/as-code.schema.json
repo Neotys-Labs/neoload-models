@@ -234,6 +234,13 @@
 				"contentEncoding": "base64",
 				"pattern": "^[A-Za-z0-9+/\\s]*={0,2}\\s*$"
 			},
+			"integer_limits": {
+				"title": "Integer limits",
+				"description": "The limits of a Java int.",
+				"type": "integer",
+				"minimum": -2147483648,
+				"maximum": 2147483647
+			},
 			"positive_number": {
 				"title": "Positive Number",
 				"type": "integer",
@@ -252,10 +259,10 @@
 				]
 			},
 			"duration_seconds": {
-				"title": "Duration in seconds",
+				"title": "Duration in seconds, from 1 second to 2147483 seconds",
 				"anyOf": [
-					{ "type": "string", "pattern": "^\\s*(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?)\\s*$" },
-					{ "$ref": "#/definitions/common/positive_number" }
+					{ "type": "string", "pattern": "^\\s*(?=.*[1-9])(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?)\\s*$" },
+					{ "allOf": [{ "$ref": "#/definitions/common/strictly_positive_number" }, { "maximum": 2147483 }] }
 				]
 			},
 			"duration": {
@@ -539,11 +546,11 @@
 					{
 						"properties": {
 							"min_length": {
-								"type": "number",
+								"allOf": [{ "$ref": "#/definitions/common/integer_limits" }, { "$ref": "#/definitions/common/positive_number" }, { "maximum": 1000 }],
 								"description": "The minimum number of characters of the generated value. The default value is `5`."
 							},
 							"max_length": {
-								"type": "number",
+								"allOf": [{ "$ref": "#/definitions/common/integer_limits" }, { "$ref": "#/definitions/common/strictly_positive_number" }, { "maximum": 1000 }],
 								"description": "The maximum number of characters of the generated value. The default value is `10`. Must be greater than or equal to `min_length`."
 							},
 							"predictable": {
@@ -1206,8 +1213,11 @@
 					"description": "The scheme used to reach the server: `http` or `https`."
 				},
 				"port": {
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
-					"description": "The port of the server. The default value is \"80\" (for http scheme) or \"443\" (for https scheme)."
+					"anyOf": [
+						{ "type": "string", "pattern": "^\\$\\{.+\\}$" },
+						{ "allOf": [{ "$ref": "#/definitions/common/integer_limits" }, { "$ref": "#/definitions/common/strictly_positive_number" }, { "maximum": 65535 }] }
+					],
+					"description": "The port of the server, from 1 to 65535 or a variable. The default value is \"80\" (for http scheme) or \"443\" (for https scheme)."
 				},
 				"basic_authentication": {
 					"$ref": "#/definitions/authentication/basic",

@@ -47,14 +47,14 @@ public class IOViolationValueTest {
 		final Project project = Project.builder().name("P").addScenarios(Scenario.builder().name("S")
 				.addPopulations(PopulationPolicy.builder().name("C").loadPolicy(policy).build()).build()).build();
 
-		assertViolations(validate(project), invalidValue("-5s", CONSTANT_LOAD + ".stop_after", "must be greater than or equal to 1 second or must be current_iteration."));
+		assertViolations(validate(project), invalidValue("-5s", CONSTANT_LOAD + ".stop_after", "must be between 1 and 2147483 seconds or must be current_iteration."));
 	}
 
 	@Test
 	public void compositeViolationNamesTheValueItWraps() throws IOException {
 		final Validation validation = validate(DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: 0\n"));
 
-		assertViolations(validation, invalidValue("0", CONSTANT_LOAD + ".start_after", "must be greater than or equal to 1 second or must be an existing population."));
+		assertViolations(validation, invalidValue("0", CONSTANT_LOAD + ".start_after", "must be between 1 and 2147483 seconds or must be an existing population."));
 	}
 
 	@Test
