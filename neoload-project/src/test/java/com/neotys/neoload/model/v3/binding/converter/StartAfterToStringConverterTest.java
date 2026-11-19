@@ -32,8 +32,7 @@ public class StartAfterToStringConverterTest {
 		assertEquals(null, converter.convert(null));
 
 		// TIME
-		// Input: -1 - Output: 0O
-		assertEquals(ZERO, converter.convert(convertToStartAfter(-1)));
+		assertEquals("-1s", converter.convert(convertToStartAfter(-1)));
 		// Input: 0 - Output: 0
 		assertEquals(ZERO, converter.convert(convertToStartAfter(0)));
 

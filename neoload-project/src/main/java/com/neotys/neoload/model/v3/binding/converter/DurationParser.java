@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 /**
  * The single text syntax of a duration: ordered units {@code h m s ms} (for instance {@code 1h30m15s500ms}) or a
  * plain number, whose unit is the one of the field. Durations are written compact ({@code 1m30s}), zero being
- * {@code 0}. Whether a field accepts a milliseconds part is checked by validation, not here.
+ * {@code 0} and a negative duration, only ever written in an error, prefixed by {@code -}. Whether a field accepts a milliseconds part is checked by validation, not here.
  */
 public final class DurationParser {
 	private static final Pattern PLAIN_NUMBER = Pattern.compile("\\d+");
@@ -48,7 +48,10 @@ public final class DurationParser {
 	}
 
 	public static String format(final Duration duration) {
-		if (duration.isZero() || duration.isNegative()) {
+		if (duration.isNegative()) {
+			return "-" + format(duration.negated());
+		}
+		if (duration.isZero()) {
 			return "0";
 		}
 		final StringBuilder text = new StringBuilder();
