@@ -21,7 +21,7 @@ import com.neotys.neoload.model.v3.validation.constraints.RangeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, UserPathPolicy.DISTRIBUTION, UserPathPolicy.BROWSER, UserPathPolicy.CACHE})
+@JsonPropertyOrder({Element.NAME, UserPathPolicy.DISTRIBUTION, UserPathPolicy.BROWSER, UserPathPolicy.CACHE, UserPathPolicy.WAN_EMULATION})
 @JsonSerialize(as = ImmutableUserPathPolicy.class)
 @JsonDeserialize(as = ImmutableUserPathPolicy.class)
 @Value.Immutable
@@ -30,6 +30,7 @@ public interface UserPathPolicy extends Element {
 	String DISTRIBUTION = "distribution";
 	String BROWSER = "browser";
 	String CACHE = "cache";
+	String WAN_EMULATION = "wan_emulation";
 
 	String AS_RECORDED = "as_recorded";
 	String NEW_USER = "new_user";
@@ -75,14 +76,26 @@ public interface UserPathPolicy extends Element {
 	}
 
 	/**
-	 * A browser left with all its defaults is the recorded browser, the same as no browser: drop it so it is
-	 * not written back as an empty object.
+	 * The WAN emulation of the Virtual Users. Empty: none, the network is not limited.
+	 */
+	@JsonProperty(WAN_EMULATION)
+	@Valid
+	Optional<WanEmulation> getWanEmulation();
+
+	/**
+	 * Defaults are not written back as empty objects: a browser left with all its defaults is the recorded browser,
+	 * the same as no browser; a WAN emulation without any limit is the same as no WAN emulation, whatever its name.
 	 */
 	@Value.Check
-	default UserPathPolicy dropDefaultBrowser() {
-		return getBrowser().filter(Browser.builder().build()::equals).isPresent()
-				? ImmutableUserPathPolicy.copyOf(this).withBrowser(Optional.empty())
-				: this;
+	default UserPathPolicy dropDefaultBrowserAndWanEmulation() {
+		final boolean defaultBrowser = getBrowser().filter(Browser.builder().build()::equals).isPresent();
+		final boolean unlimitedWanEmulation = getWanEmulation().filter(WanEmulation::isUnlimited).isPresent();
+		if (!defaultBrowser && !unlimitedWanEmulation) {
+			return this;
+		}
+		return ImmutableUserPathPolicy.copyOf(this)
+				.withBrowser(defaultBrowser ? Optional.empty() : getBrowser())
+				.withWanEmulation(unlimitedWanEmulation ? Optional.empty() : getWanEmulation());
 	}
 
 	// Jackson value filter excluding the default cache from serialization.

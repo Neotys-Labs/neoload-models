@@ -1,0 +1,9 @@
+schemaVersion: "3.2"
+name: MyProject
+populations:
+- name: MyPopulation1
+  user_paths:
+  - name: MyUserPath11
+    wan_emulation:
+      download:
+        packet_loss: 20%

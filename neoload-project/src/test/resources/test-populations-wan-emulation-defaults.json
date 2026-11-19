@@ -1,0 +1,1 @@
+{"schemaVersion":"3.2","name":"MyProject","populations":[{"name":"MyPopulation1","user_paths":[{"name":"MyUserPath11","wan_emulation":{"name":"Unlimited","download":{"bandwidth":"unlimited","latency":"0ms","packet_loss":"0%"},"upload":{}}}]}]}
