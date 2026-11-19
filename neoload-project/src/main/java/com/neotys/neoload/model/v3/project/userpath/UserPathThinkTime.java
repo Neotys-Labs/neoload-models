@@ -3,7 +3,6 @@ package com.neotys.neoload.model.v3.project.userpath;
 import java.util.Optional;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
@@ -14,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.validation.constraints.PositiveOrZeroPercentageCheck;
+import com.neotys.neoload.model.v3.validation.constraints.PositivePercentageCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UserPathThinkTimeCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
@@ -25,7 +26,8 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
  * {@code random} no random delay is added.
  * <p>
  * {@code override} is a constant {@link Duration}, in milliseconds or a variable. {@code factor} and
- * {@code random} are kept as written: an integer percentage with an optional {@code %}, or a variable.
+ * {@code random} are a {@link PercentageOrVariable}: an integer percentage with an optional {@code %}, or a variable.
+ * {@code factor} is at least 0 and {@code random} at least 1.
  */
 @UserPathThinkTimeCheck(groups = {NeoLoad.class})
 @JsonInclude(value = Include.NON_EMPTY)
@@ -39,21 +41,15 @@ public interface UserPathThinkTime {
 	String FACTOR = "factor";
 	String RANDOM = "random";
 
-	String FACTOR_PATTERN = "(\\d+%?|\\$\\{[^}]+\\})";
-	String RANDOM_PATTERN = "([1-9]\\d*%?|\\$\\{[^}]+\\})";
-
-	String FACTOR_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.ThinkTimeFactorPattern.message}";
-	String RANDOM_MESSAGE = "{com.neotys.neoload.model.v3.validation.constraints.ThinkTimeRandomPattern.message}";
-
 	@JsonProperty(OVERRIDE)
 	@Valid
 	Optional<DurationConstant> getOverride();
 
 	@JsonProperty(FACTOR)
-	Optional<@Pattern(regexp = FACTOR_PATTERN, message = FACTOR_MESSAGE, groups = {NeoLoad.class}) String> getFactor();
+	Optional<@PositiveOrZeroPercentageCheck(groups = {NeoLoad.class}) PercentageOrVariable> getFactor();
 
 	@JsonProperty(RANDOM)
-	Optional<@Pattern(regexp = RANDOM_PATTERN, message = RANDOM_MESSAGE, groups = {NeoLoad.class}) String> getRandom();
+	Optional<@PositivePercentageCheck(groups = {NeoLoad.class}) PercentageOrVariable> getRandom();
 
 	class Builder extends ImmutableUserPathThinkTime.Builder {}
 	static Builder builder() {

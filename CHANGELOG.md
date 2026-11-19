@@ -225,6 +225,16 @@ user_paths:
 
 See [User Paths](neoload-project/doc/v3/user-paths.md) for the full reference.
 
+The `think_time` percentages (`factor` and `random`) are a shared percentage type: an integer with an
+optional `%` (`150%`, `150`) or a variable (`${name}`), always written back as `150%` when a project
+is exported. An invalid value fails the read with `Incorrect percentage: '<raw>' is not a valid
+percentage.` and names the field. The bounds are still checked by the validation: `factor` is `0` or
+more, `random` is `1` or more.
+
+The other percentage fields keep their own syntax, as they do not fit this type: the population
+`distribution` is a decimal with up to 3 decimals and takes no variable, and `when_release` is either
+an integer percentage from 1 to 100, a number of Virtual Users or `manual`.
+
 #### Requests
 
 **`parts`** — a multipart/form-data body on an HTTP request, as in the NeoLoad GUI. Use `parts`

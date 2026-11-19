@@ -9,6 +9,7 @@ import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.DurationConstant;
 import com.neotys.neoload.model.v3.project.userpath.Durations;
+import com.neotys.neoload.model.v3.project.userpath.Percentages;
 import com.neotys.neoload.model.v3.project.userpath.Request;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import com.neotys.neoload.model.v3.project.userpath.UserPathThinkTime;
@@ -246,7 +247,7 @@ public class UserPathTest {
 
 		UserPath userPath = UserPath.builder()
 				.name("MyUserPath")
-				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("5000")).build()).factor("150%").build())
+				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("5000")).build()).factor(Percentages.of("150")).build())
 				.actions(actions)
 				.build();
 		Validation validation = validator.validate(userPath, NeoLoad.class);
@@ -264,7 +265,7 @@ public class UserPathTest {
 
 		userPath = UserPath.builder()
 				.name("MyUserPath")
-				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("5000")).build()).random("abc").build())
+				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("5000")).build()).random(Percentages.of("0")).build())
 				.actions(actions)
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -275,7 +276,7 @@ public class UserPathTest {
 				.name("MyUserPath")
 				.onError(UserPath.FailurePolicy.GO_TO_NEXT_ITERATION)
 				.onAssertionFailure(UserPath.FailurePolicy.STOP_AND_START_NEW_VU)
-				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("${my_think_time}")).build()).random("10%").build())
+				.thinkTime(UserPathThinkTime.builder().override(DurationConstant.builder().value(Durations.of("${my_think_time}")).build()).random(Percentages.of("10")).build())
 				.actions(actions)
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);
@@ -284,7 +285,7 @@ public class UserPathTest {
 
 		userPath = UserPath.builder()
 				.name("MyUserPath")
-				.thinkTime(UserPathThinkTime.builder().factor("150").random("${my_random_delay}").build())
+				.thinkTime(UserPathThinkTime.builder().factor(Percentages.of("150")).random(Percentages.of("${my_random_delay}")).build())
 				.actions(actions)
 				.build();
 		validation = validator.validate(userPath, NeoLoad.class);

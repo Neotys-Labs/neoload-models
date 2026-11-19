@@ -51,6 +51,18 @@ final class ViolationsAssert {
 		return "Incorrect duration: '" + rawValue + "' is not a valid duration.";
 	}
 
+	/**
+	 * Asserts that a read fails on a raw percentage text, the message naming the path of the field in the file.
+	 */
+	static void assertInvalidPercentageRead(final ThrowingRunnable read, final String rawValue, final String field) {
+		final String actual = assertThrows(JsonMappingException.class, read).getMessage();
+		assertTrue(actual, actual.matches("Incorrect value for '(.+\\.)?" + Pattern.quote(field + "': " + invalidPercentage(rawValue))));
+	}
+
+	static String invalidPercentage(final String rawValue) {
+		return "Incorrect percentage: '" + rawValue + "' is not a valid percentage.";
+	}
+
 	static void assertViolations(final Validation validation, final String... violations) {
 		assertFalse(validation.isValid());
 		final StringBuilder expected = new StringBuilder("Data Model is invalid. Violation Number: " + violations.length + ".").append(LINE_SEPARATOR);
