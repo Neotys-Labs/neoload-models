@@ -20,6 +20,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
+import com.neotys.neoload.model.v3.binding.serializer.ServerDeserializer;
 import com.neotys.neoload.model.v3.compatibility.SchemaSupport;
 import com.neotys.neoload.model.v3.project.Project;
 import java.io.File;
@@ -113,9 +114,12 @@ public final class IO {
 		final ObjectMapper mapper = getMapper(format);
 		if (isProjectType(type)) {
 			final JsonNode root = mapper.readTree(content);
-			checkSchemaVersionSupported(root);
+			final String schemaVersion = checkSchemaVersionSupported(root);
 			DeprecatedKeys.normalize(root);
-			return mapper.treeToValue(root, type);
+			// The readers that depend on the schema version of the file, such as the server one, get it as an attribute.
+			return mapper.readerFor(type)
+					.withAttribute(ServerDeserializer.SCHEMA_VERSION_ATTRIBUTE, schemaVersion)
+					.readValue(root);
 		}
 		// Deserialize
 		return mapper.readValue(content, type);
@@ -125,7 +129,7 @@ public final class IO {
 		return Project.class.isAssignableFrom(type) || ProjectDescriptor.class.isAssignableFrom(type);
 	}
 
-	private static void checkSchemaVersionSupported(final JsonNode root) throws UnsupportedSchemaVersionException {
+	private static String checkSchemaVersionSupported(final JsonNode root) throws UnsupportedSchemaVersionException {
 		final JsonNode schemaVersionNode = root == null ? null : root.get(Project.SCHEMA_VERSION);
 		final String schemaVersion = schemaVersionNode == null || schemaVersionNode.isNull()
 				? Project.DEFAULT_SCHEMA_VERSION
@@ -134,6 +138,7 @@ public final class IO {
 		if (!support.isSupported(schemaVersion)) {
 			throw new UnsupportedSchemaVersionException(schemaVersion, support.listSupported());
 		}
+		return schemaVersion;
 	}
 
 	public String write(final Object value, final Format format) throws IOException {

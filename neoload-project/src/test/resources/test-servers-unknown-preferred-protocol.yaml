@@ -1,0 +1,9 @@
+schemaVersion: "3.2"
+name: MyProject
+servers:
+- name: backend
+  host: backend.example.com
+  authentications:
+  - login: admin
+    password: secret
+    preferred_protocol: digest

@@ -1,0 +1,8 @@
+name: MyProject
+servers:
+- name: backend
+  host: backend.example.com
+  port: 8089
+  scheme: https
+  negociate_authentication:
+    domain: example

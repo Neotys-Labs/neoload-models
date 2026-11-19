@@ -1,0 +1,6 @@
+schemaVersion: "3.2"
+name: MyProject
+servers:
+- name: backend
+  description: Pre-production backend
+  host: backend.example.com

@@ -87,6 +87,8 @@ soap_request:
 
 Define the URL of the SOAP request. A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.
 
+An absolute URL without `server` uses a declared [server](server.md) with the same host, port and scheme. When several servers match, the one named after the host is used, otherwise the first one of the list. When none matches, a server named after the host is created. To use a given server, set `server` and a relative URL.
+
 ## server
 
 Define the name of the [server](server.md) to use for the SOAP request. The `server` field is required if a relative URL is defined in the `url` field.
