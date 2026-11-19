@@ -1,0 +1,13 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: socket
+        url: /ws
+        parameters:
+        - token: abc
+        - lang: en
+        headers:
+        - Origin: https://example.com
