@@ -1,6 +1,5 @@
 package com.neotys.neoload.model.v3.binding.io;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -112,14 +111,34 @@ public class IOSchema3Dot2ValidationTest {
     }
 
     @Test
-    public void schema32IsSchema31WithItsOwnVersion() throws IOException {
-        final String schema31 = Files.readString(schemasDir.resolve("v3.1/as-code.schema.json"))
-                .replace("schemas/v3.1/as-code.schema.json", "schemas/v3.2/as-code.schema.json")
-                .replace("\"const\": \"3.1\"", "\"const\": \"3.2\"")
-                .replace("\"const\": 3.1", "\"const\": 3.2")
-                .replace("Must be 3.1 as a string", "Must be 3.2 as a string");
+    public void nonBooleanApplyGlobalAssertionsOnCustomActionsFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected a non-boolean 'global_assertions: apply_on_custom_actions' to fail schema validation",
+                validate("test-project-settings-global-assertions-invalid").isEmpty());
+    }
 
-        assertEquals("v3.2 must stay v3.1 with its own version until 3.2 features are added: update or remove this test then",
-                schema31, Files.readString(schemasDir.resolve("v3.2/as-code.schema.json")));
+    @Test
+    public void dottedAndNestedProjectSettingFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected 'qtest.enabled' declared with 'qtest: enabled' to fail schema validation",
+                validate("test-project-settings-keys-conflict").isEmpty());
+    }
+
+    @Test
+    public void dottedGlobalAssertionsProjectSettingFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected the dotted 'global_assertions.content_types' to fail schema validation",
+                validate("test-project-settings-global-assertions-dotted").isEmpty());
+    }
+
+    @Test
+    public void globalAssertionsProjectSettingsConformTo32AndNotTo31() throws IOException {
+        final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource("test-project-settings-global-assertions.yaml"));
+        final JsonSchema schema31 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)
+                .getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());
+
+        assertTrue(schema.validate(node).toString(), schema.validate(node).isEmpty());
+        assertFalse(schema31.validate(node).isEmpty());
+    }
+
+    private Set<ValidationMessage> validate(final String fixture) throws IOException {
+        return schema.validate(YAML_MAPPER.readTree(getClass().getClassLoader().getResource(fixture + ".yaml")));
     }
 }

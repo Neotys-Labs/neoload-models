@@ -76,14 +76,14 @@ model but not merged; **—** = not implemented anywhere.
 |:------------|:--------|
 | Project name, description | 3.0 |
 | Split across several files (`includes`) | 3.0 |
-| Dynatrace integration settings (`dynatrace.enabled` / `url` / `token`) | 3.0 |
-| qTest integration settings (`qtest.*`) | 3.0 |
+| Dynatrace integration settings (`dynatrace`: `enabled` / `url` / `token`) | 3.0 (nested keys 3.2; dotted `dynatrace.*` keys deprecated) |
+| qTest integration settings (`qtest`) | 3.0 (nested keys 3.2; dotted `qtest.*` keys deprecated) |
 | Certificates (`CertificateSettings`) | — |
 | Web Services security / WSS (`WSSSettings`) | 3.1 draft (`web_services_security`: keystores, username, timestamp, signature and encryption tokens; no embedded key, variable keystores) |
 | Page naming policy (`PageNamingSettings`) | — |
 | JavaScript policy (`JSPolicySettings`) | — |
 | Error handling policy (`ErrorHandlingSettings`) | — |
-| Global assertion settings (`GlobalAssertionSettings`) | — |
+| Global assertion settings (`GlobalAssertionSettings`) | 3.2 (`project_settings.global_assertions.*`) |
 | Request settings — keep-alive, timeouts, encoding (`RequestsSettings`) | — |
 | Performance and statistics settings | — |
 | Media streaming settings | — |
@@ -198,7 +198,7 @@ and protocol action catalogues.
 | JSON assertions (`JsonContentAssertion`, `JsonResponseAssertion`) | — |
 | Plugin assertions (`PluginContentAssertion`, `PluginResponseAssertion`) | — |
 | Response assertion (`ResponseAssertion`) | — |
-| Global assertion settings at project level | — |
+| Global assertion settings at project level (`project_settings.global_assertions`: `content_types` / `apply_on_custom_actions`) | 3.2 |
 
 ## Variable extraction
 
