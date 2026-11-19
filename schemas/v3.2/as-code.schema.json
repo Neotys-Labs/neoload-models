@@ -546,11 +546,11 @@
 					{
 						"properties": {
 							"min_length": {
-								"type": "number",
+								"allOf": [{ "$ref": "#/definitions/common/integer_limits" }, { "$ref": "#/definitions/common/positive_number" }, { "maximum": 1000 }],
 								"description": "The minimum number of characters of the generated value. The default value is `5`."
 							},
 							"max_length": {
-								"type": "number",
+								"allOf": [{ "$ref": "#/definitions/common/integer_limits" }, { "$ref": "#/definitions/common/strictly_positive_number" }, { "maximum": 1000 }],
 								"description": "The maximum number of characters of the generated value. The default value is `10`. Must be greater than or equal to `min_length`."
 							},
 							"predictable": {

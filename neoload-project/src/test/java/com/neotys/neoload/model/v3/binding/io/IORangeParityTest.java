@@ -26,6 +26,8 @@ public class IORangeParityTest {
 	private static final String CONSTANT_START_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: %s\n");
 	private static final String CONSTANT_STOP_AFTER = DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      stop_after: %s\n");
 	private static final String SERVER_PORT = IOServerPortTest.server("%s");
+	private static final String RANDOM_STRING_MIN = IORandomStringLengthTest.randomString("%s", "1000");
+	private static final String RANDOM_STRING_MAX = IORandomStringLengthTest.randomString("0", "%s");
 
 	@BeforeClass
 	public static void loadSchema() throws URISyntaxException {
@@ -84,6 +86,16 @@ public class IORangeParityTest {
 		rows.add(row("servers[].port", SERVER_PORT, "65536", INVALID));
 		rows.add(row("servers[].port", SERVER_PORT, "70000", INVALID));
 		rows.add(row("servers[].port", SERVER_PORT, "\"70000\"", INVALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "-1", INVALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "0", VALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "1000", VALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "1001", INVALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN, "2000", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "0", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1", VALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1000", VALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "1001", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX, "2000", INVALID));
 		return rows;
 	}
 
