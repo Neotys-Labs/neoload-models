@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.binding.io;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.neotys.neoload.model.v3.project.population.WanEmulationDirection;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
@@ -120,6 +122,23 @@ public class IOSchema3Dot2ValidationTest {
         assertTrue(schema.validate(node).toString(), schema.validate(node).isEmpty());
         final String errors31 = schema31().validate(as31).toString();
         assertTrue(errors31, errors31.contains("browser") && errors31.contains("cache"));
+    }
+
+    @Test
+    public void bandwidthPatternIsTheOneOfTheJavaModel() throws IOException {
+        final JsonNode schemaNode = JSON_MAPPER.readTree(schemasDir.resolve("v3.2/as-code.schema.json").toFile());
+
+        assertEquals(WanEmulationDirection.BANDWIDTH_PATTERN,
+                schemaNode.at("/definitions/common/wan_emulation_direction/properties/bandwidth/pattern").asText());
+    }
+
+    @Test
+    public void bandwidthAboveTheNeoLoadMaximumDoesNotConform() throws IOException {
+        final JsonNode node = YAML_MAPPER.readTree(
+                getClass().getClassLoader().getResource("test-populations-wan-emulation-bandwidth-above-max.yaml"));
+
+        final String errors = schema.validate(node).toString();
+        assertTrue(errors, errors.contains("bandwidth"));
     }
 
     private static JsonSchema schema31() {

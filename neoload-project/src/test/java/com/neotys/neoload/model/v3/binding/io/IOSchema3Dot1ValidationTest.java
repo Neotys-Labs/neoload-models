@@ -134,6 +134,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-populations-invalid-cache.yaml",
             "test-populations-wan-emulation-invalid-bandwidth.yaml",
             "test-populations-wan-emulation-zero-bandwidth.yaml",
+            "test-populations-wan-emulation-bandwidth-above-max.yaml",
             "test-populations-wan-emulation-invalid-latency.yaml",
             "test-populations-wan-emulation-latency-unit.yaml",
             "test-populations-wan-emulation-invalid-packet-loss.yaml",

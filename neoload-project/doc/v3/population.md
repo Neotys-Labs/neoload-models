@@ -122,7 +122,7 @@ The mobile profiles of NeoLoad (3G, 4G...) have other values for an average and 
 
 | Name        | Description                                                  | Accept variable  | Required | Since  |
 |:----------- |:------------------------------------------------------------ |:----------------:|:--------:|:------:|
-| bandwidth   | The bandwidth: a positive rate with up to 3 decimals in `bps`, `Kbps`, `Mbps` or `Gbps` (for example `2560Kbps` or `1.5Mbps`), or `unlimited`. The default value is `unlimited`. | - | - | 2027.1 |
+| bandwidth   | The bandwidth: a positive rate with up to 3 decimals in `bps`, `Kbps`, `Mbps` or `Gbps` (for example `2560Kbps` or `1.5Mbps`), or `unlimited`. The maximum is the one of NeoLoad: `2147483640bps`, that is `2147483.64Kbps`, `2147.483Mbps` or `2.147Gbps` with 3 decimals. The default value is `unlimited`. | - | - | 2027.1 |
 | latency     | The latency added to each packet, as a whole number of milliseconds from 0 to 1000 (for example `40ms`). The default value is `0ms`. | - | - | 2027.1 |
 | packet_loss | The percentage of packets lost, from 0 to 10% with up to 3 decimals (for example `1.5%`). The default value is `0%`. | - | - | 2027.1 |
 

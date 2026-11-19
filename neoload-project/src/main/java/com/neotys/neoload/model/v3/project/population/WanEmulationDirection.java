@@ -40,19 +40,48 @@ public interface WanEmulationDirection {
 	/** The value of {@link #getBandwidth()} meaning no bandwidth limit, the same as no bandwidth. */
 	String UNLIMITED = "unlimited";
 
-	/** A positive number, with up to 3 decimals, followed by its unit; or {@value #UNLIMITED}. */
-	String BANDWIDTH_PATTERN = "^(" + UNLIMITED + "|(?!0+(\\.0+)?[KMG]?bps$)[0-9]+(\\.[0-9]{1,3})?[KMG]?bps)$";
+	/**
+	 * The highest bandwidth NeoLoad accepts, in bps: {@code BandwidthBitRate.UNLIMITED_VALUE}, that is
+	 * {@link Integer#MAX_VALUE} rounded down to a multiple of 8. As a unit is a power of 1000, it is
+	 * {@code 2147483.64Kbps}, {@code 2147.48364Mbps} or {@code 2.14748364Gbps}.
+	 */
+	long MAX_BANDWIDTH_BPS = 2_147_483_640L;
+
+	/**
+	 * A positive number, with up to 3 decimals, followed by its unit, up to {@value #MAX_BANDWIDTH_BPS}bps; or
+	 * {@value #UNLIMITED}. A regular expression can't compare numbers: each unit lists the integer parts below
+	 * the maximum, then the decimals allowed with the integer part of the maximum. The same pattern is in the JSON
+	 * schema; {@code WanEmulationDirectionBandwidthTest} checks it against the arithmetic.
+	 */
+	String BANDWIDTH_PATTERN = "^(" + UNLIMITED + "|(?!0+(\\.0+)?[KMG]?bps$)0*("
+			// bps: up to 2147483640
+			+ "([0-9]{1,9}|1[0-9]{9}|20[0-9]{8}|21[0-3][0-9]{7}|214[0-6][0-9]{6}|2147[0-3][0-9]{5}|21474[0-7][0-9]{4}"
+			+ "|214748[0-2][0-9]{3}|2147483[0-5][0-9]{2}|21474836[0-3][0-9])(\\.[0-9]{1,3})?bps"
+			+ "|2147483640(\\.0{1,3})?bps"
+			// Kbps: up to 2147483.64
+			+ "|([0-9]{1,6}|1[0-9]{6}|20[0-9]{5}|21[0-3][0-9]{4}|214[0-6][0-9]{3}|2147[0-3][0-9]{2}|21474[0-7][0-9]"
+			+ "|214748[0-2])(\\.[0-9]{1,3})?Kbps"
+			+ "|2147483(\\.([0-5][0-9]{0,2}|6([0-3][0-9]?|40?)?))?Kbps"
+			// Mbps: up to 2147.483
+			+ "|([0-9]{1,3}|1[0-9]{3}|20[0-9]{2}|21[0-3][0-9]|214[0-6])(\\.[0-9]{1,3})?Mbps"
+			+ "|2147(\\.([0-3][0-9]{0,2}|4([0-7][0-9]?|8[0-3]?)?))?Mbps"
+			// Gbps: up to 2.147
+			+ "|[01](\\.[0-9]{1,3})?Gbps"
+			+ "|2(\\.(0[0-9]{0,2}|1([0-3][0-9]?|4[0-7]?)?))?Gbps"
+			+ "))$";
 
 	int MAX_LATENCY = 1000;
 	int MAX_PACKET_LOSS = 10;
 
 	/**
 	 * The bandwidth, as a positive rate in {@code bps}, {@code Kbps}, {@code Mbps} or {@code Gbps} (for example
-	 * {@code 2560Kbps} or {@code 1.5Mbps}), or {@value #UNLIMITED}. Empty: unlimited.
+	 * {@code 2560Kbps} or {@code 1.5Mbps}) up to {@value #MAX_BANDWIDTH_BPS}bps, or {@value #UNLIMITED}. Empty:
+	 * unlimited.
 	 */
 	@JsonProperty(BANDWIDTH)
 	Optional<@Pattern(regexp = BANDWIDTH_PATTERN, groups = {NeoLoad.class},
-			message = "must be a positive bandwidth in bps, Kbps, Mbps or Gbps (for example 2560Kbps), or unlimited.") String> getBandwidth();
+			message = "must be a positive bandwidth in bps, Kbps, Mbps or Gbps (for example 2560Kbps), up to "
+					+ MAX_BANDWIDTH_BPS + "bps (2.147Gbps), or unlimited.") String> getBandwidth();
 
 	/**
 	 * The latency added to each packet, in milliseconds, from 0 to {@value #MAX_LATENCY} as in NeoLoad. Empty: none.

@@ -120,6 +120,14 @@ public class IOPopulationWanEmulationTest extends AbstractIOElementsTest {
 	}
 
 	@Test
+	public void readBandwidthAboveTheNeoLoadMaximumFailsValidation() throws IOException {
+		final String message = validationFailure("test-populations-wan-emulation-bandwidth-above-max");
+
+		assertTrue(message, message.contains("wan_emulation.download.bandwidth': must be a positive bandwidth in bps, Kbps, "
+				+ "Mbps or Gbps (for example 2560Kbps), up to 2147483640bps (2.147Gbps), or unlimited."));
+	}
+
+	@Test
 	public void readLatencyAboveOneSecondFailsValidation() throws IOException {
 		final String message = validationFailure("test-populations-wan-emulation-invalid-latency");
 
