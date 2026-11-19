@@ -76,8 +76,8 @@ model but not merged; **—** = not implemented anywhere.
 |:------------|:--------|
 | Project name, description | 3.0 |
 | Split across several files (`includes`) | 3.0 |
-| Dynatrace integration settings (`dynatrace`: `enabled` / `url` / `token`) | 3.0 (nested keys 3.1; dotted `dynatrace.*` keys deprecated) |
-| qTest integration settings (`qtest`) | 3.0 (nested keys 3.1; dotted `qtest.*` keys deprecated) |
+| Dynatrace integration settings (`dynatrace`: `enabled` / `url` / `token`) | 3.0 (nested keys 3.2; dotted `dynatrace.*` keys deprecated) |
+| qTest integration settings (`qtest`) | 3.0 (nested keys 3.2; dotted `qtest.*` keys deprecated) |
 | Certificates (`CertificateSettings`) | — |
 | Web Services security / WSS (`WSSSettings`) | 3.1 draft (`web_services_security`: keystores, username, timestamp, signature and encryption tokens; no embedded key, variable keystores) |
 | Page naming policy (`PageNamingSettings`) | — |
