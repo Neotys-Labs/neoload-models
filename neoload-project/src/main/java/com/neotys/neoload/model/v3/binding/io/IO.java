@@ -7,11 +7,14 @@ import static com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature.WRITE_
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.exc.InputCoercionException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactoryBuilder;
@@ -20,6 +23,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.binding.converter.InvalidDurationException;
+import com.neotys.neoload.model.v3.binding.converter.InvalidValueException;
 import com.neotys.neoload.model.v3.compatibility.SchemaSupport;
 import com.neotys.neoload.model.v3.project.Project;
 import java.io.File;
@@ -52,6 +56,9 @@ public final class IO {
 	private static final String JSON_ENDS_WITH = "}";
 	
 	private static final Format DEFAULT_FORMAT = Format.YAML;
+
+	private static final String NOT_A_WHOLE_NUMBER = "must be a whole number.";
+	private static final String NOT_A_32_BIT_WHOLE_NUMBER = "must be a whole number from " + Integer.MIN_VALUE + " to " + Integer.MAX_VALUE + ".";
 	
 	public enum Format {
 		YAML,
@@ -85,18 +92,61 @@ public final class IO {
 		try {
 			return readValue(content, format, type);
 		} catch (final JsonMappingException e) {
-			throw withInvalidDurationPath(e);
+			throw withInvalidValuePath(e);
 		}
 	}
 
 	/**
-	 * Names the field of an invalid duration by its path in the file, such as {@code scenarios[0].monitoring.before}.
+	 * Names the field of an invalid duration, of an invalid value or of a number that is not a 32-bit whole number
+	 * by its path in the file, such as {@code scenarios[0].monitoring.before}, the value too when it is known.
 	 * Other mapping errors are returned unchanged.
 	 */
-	private static JsonMappingException withInvalidDurationPath(final JsonMappingException exception) {
-		if (!(exception.getCause() instanceof InvalidDurationException) || exception.getPath().isEmpty()) {
+	private static JsonMappingException withInvalidValuePath(final JsonMappingException exception) {
+		if (exception.getPath().isEmpty()) {
 			return exception;
 		}
+		final Throwable cause = exception.getCause();
+		if (cause instanceof InvalidDurationException) {
+			return new JsonMappingException(null, "Incorrect value for '" + pathOf(exception) + "': " + cause.getMessage(), exception);
+		}
+		if (cause instanceof InvalidValueException) {
+			return incorrectValue(((InvalidValueException) cause).getValue(), cause.getMessage(), exception);
+		}
+		if (cause instanceof InputCoercionException && isInt(((InputCoercionException) cause).getTargetType())) {
+			return incorrectValue(textOf((InputCoercionException) cause), NOT_A_32_BIT_WHOLE_NUMBER, exception);
+		}
+		if (exception instanceof InvalidFormatException && isDecimalToInt((InvalidFormatException) exception)) {
+			return incorrectValue(String.valueOf(((InvalidFormatException) exception).getValue()), NOT_A_WHOLE_NUMBER, exception);
+		}
+		return exception;
+	}
+
+	private static boolean isInt(final Class<?> type) {
+		return int.class.equals(type) || Integer.class.equals(type);
+	}
+
+	private static boolean isDecimalToInt(final InvalidFormatException exception) {
+		return isInt(exception.getTargetType()) && exception.getValue() instanceof Number;
+	}
+
+	private static String textOf(final InputCoercionException exception) {
+		try {
+			return exception.getProcessor().getText();
+		} catch (final IOException e) {
+			return null;
+		}
+	}
+
+	private static JsonMappingException incorrectValue(final String value, final String message, final JsonMappingException exception) {
+		if (value == null) {
+			return exception;
+		}
+		final JsonMappingException incorrectValue = new JsonMappingException(null, "Incorrect value '" + value + "' for '" + pathOf(exception) + "': " + message, exception);
+		incorrectValue.clearLocation();
+		return incorrectValue;
+	}
+
+	private static String pathOf(final JsonMappingException exception) {
 		final StringBuilder path = new StringBuilder();
 		for (final JsonMappingException.Reference reference : exception.getPath()) {
 			if (reference.getFieldName() != null) {
@@ -105,7 +155,7 @@ public final class IO {
 				path.append('[').append(reference.getIndex()).append(']');
 			}
 		}
-		return new JsonMappingException(null, "Incorrect value for '" + path + "': " + exception.getCause().getMessage(), exception);
+		return path.toString();
 	}
 
 	private <T> T readValue(final String content, final Format format, final Class<T> type) throws IOException {
@@ -232,6 +282,7 @@ public final class IO {
         objectMapper.registerModule(newPathModule());
         objectMapper.registerModule(newBinaryModule());
         objectMapper.setDefaultSetterInfo(JsonSetter.Value.forContentNulls(Nulls.SKIP));
+        objectMapper.disable(DeserializationFeature.ACCEPT_FLOAT_AS_INT);
 	}
 
 	/**
