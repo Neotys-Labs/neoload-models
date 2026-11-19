@@ -21,7 +21,7 @@ import com.neotys.neoload.model.v3.validation.constraints.ProjectNameCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SharedElementCycleCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SharedElementDefaultNameCheck;
 import com.neotys.neoload.model.v3.validation.constraints.SharedElementStepTypeCheck;
-import com.neotys.neoload.model.v3.validation.constraints.UniqueElementNameCheck;
+import com.neotys.neoload.model.v3.validation.constraints.UniqueNameCheck;
 import com.neotys.neoload.model.v3.validation.constraints.ValidSchemaVersion;
 import com.neotys.neoload.model.v3.validation.constraints.WebSocketSharedChannelReferenceCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -74,22 +74,22 @@ public interface Project {
 	Optional<WebServicesSecurity> getWebServicesSecurity();
 
 	@JsonProperty(SLA_PROFILES)
-	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@UniqueNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<SlaProfile> getSlaProfiles();
 	
 	@JsonProperty(VARIABLES)
-	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@UniqueNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<Variable> getVariables();
 
 	@JsonProperty(SERVERS)
-	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@UniqueNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<Server> getServers();
 
 	@JsonProperty(SHARED_ELEMENTS)
-	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@UniqueNameCheck(groups={NeoLoad.class})
 	@SharedElementStepTypeCheck(groups = {NeoLoad.class})
 	@SharedElementDefaultNameCheck(groups = {NeoLoad.class})
 	@SharedElementCycleCheck(groups = {NeoLoad.class})
@@ -99,17 +99,17 @@ public interface Project {
 	List<Step> getSharedElements();
 
 	@JsonProperty(USER_PATHS)
-	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@UniqueNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<UserPath> getUserPaths();
 
 	@JsonProperty(POPULATIONS)
-	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@UniqueNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<Population> getPopulations();
 	
 	@JsonProperty(SCENARIOS)
-	@UniqueElementNameCheck(groups={NeoLoad.class})
+	@UniqueNameCheck(groups={NeoLoad.class})
 	@Valid
 	List<Scenario> getScenarios();
 

@@ -53,7 +53,7 @@ public class WebServicesSecurityTest {
 				.build();
 
 		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
-				+ "Violation 1 - Incorrect value for 'keystores': must contain only unique paths." + LINE_SEPARATOR,
+				+ "Violation 1 - Incorrect value for 'keystores': must contain only unique paths. Duplicates: ./wss-keystores/server.p12." + LINE_SEPARATOR,
 				new Validator().validate(security, NeoLoad.class).getMessage().get());
 	}
 
@@ -81,7 +81,7 @@ public class WebServicesSecurityTest {
 				.build();
 
 		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
-				+ "Violation 1 - Incorrect value for 'request_profiles': must contain only unique names." + LINE_SEPARATOR,
+				+ "Violation 1 - Incorrect value for 'request_profiles': must contain only unique names. Duplicates: Profile." + LINE_SEPARATOR,
 				new Validator().validate(security, NeoLoad.class).getMessage().get());
 	}
 
@@ -93,7 +93,7 @@ public class WebServicesSecurityTest {
 				.build();
 
 		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
-				+ "Violation 1 - Incorrect value for 'response_profiles': must contain only unique names." + LINE_SEPARATOR,
+				+ "Violation 1 - Incorrect value for 'response_profiles': must contain only unique names. Duplicates: Profile." + LINE_SEPARATOR,
 				new Validator().validate(security, NeoLoad.class).getMessage().get());
 	}
 }
