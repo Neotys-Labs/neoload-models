@@ -78,7 +78,7 @@ public final class Validator {
 	protected <T> List<String> normalizeErrors(final Set<ConstraintViolation<T>> violations) {
 		final Set<String> errors = new HashSet<>(); // --> Only one same error Validation <-> Immutable
     	for (final ConstraintViolation<T> violation : violations) {
-    		final String invalidValue = describeValue(violation.getInvalidValue()).map(value -> " '" + value + "'").orElse("");
+    		final String invalidValue = describeValue(violation).map(value -> " '" + value + "'").orElse("");
     		errors.add("Incorrect value" + invalidValue + " for '"+ normalizePath(violation.getPropertyPath()) + "': " + violation.getMessage());
     	}
     	final List<String> sortedErrors = new ArrayList<>(errors);
@@ -86,6 +86,26 @@ public final class Validator {
     	return sortedErrors;
 	}
 	
+	/**
+	 * Text of the rejected value of a violation; for a violation reported on a key of a map (the project settings),
+	 * the value of that key, as written in the YAML.
+	 */
+	private static Optional<String> describeValue(final ConstraintViolation<?> violation) {
+		final Object value = violation.getInvalidValue();
+		if (value instanceof Map) {
+			return Optional.ofNullable(((Map<?, ?>) value).get(leafName(violation.getPropertyPath()))).map(Object::toString);
+		}
+		return describeValue(value);
+	}
+
+	private static String leafName(final Path path) {
+		String name = null;
+		for (final Node node : path) {
+			name = node.getName();
+		}
+		return name;
+	}
+
 	/**
 	 * Text of a rejected number or duration, so that the error names the value; empty for a missing value, a text
 	 * (whose checks name the value in their message when needed) or a whole element.

@@ -1,0 +1,4 @@
+name: MyProject
+project_settings:
+  qtest.enabled: true
+  qtest.cycle_id: -1
