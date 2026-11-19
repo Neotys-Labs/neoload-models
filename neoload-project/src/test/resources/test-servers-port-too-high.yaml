@@ -1,0 +1,6 @@
+schemaVersion: "3.2"
+name: MyProject
+servers:
+- name: backend
+  host: backend.example.com
+  port: 65536

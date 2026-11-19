@@ -1,0 +1,12 @@
+schemaVersion: "3.2"
+name: MyProject
+servers:
+- name: backend
+  host: backend.example.com
+  authentications:
+  - login: admin
+    password: secret
+    realm: CORP
+  - login: user
+    password: secret
+    realm: CORP

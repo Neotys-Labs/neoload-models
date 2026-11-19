@@ -67,7 +67,7 @@ single-value setting (`less_than`) on `request` and `custom_action`.
 ---
 
 The tables below list, per functional area, what a `.nlp` project can express and where as-code
-stands. Legend: **3.0** / **3.1** = available in that contract; **3.1 draft** = implemented in the
+stands. Legend: **3.0** / **3.1** / **3.2** = available in that contract; **3.1 draft** = implemented in the
 model but not merged; **—** = not implemented anywhere.
 
 ## Project and settings
@@ -100,9 +100,12 @@ model but not merged; **—** = not implemented anywhere.
 | NLP feature | as-code |
 |:------------|:--------|
 | Name, host, port, scheme | 3.0 |
-| Basic / NTLM / Negotiate authentication | 3.0 |
-| Server description | — (dropped by `ServerDeserializer`) |
-| URL rewriting — session argument name, path separator, path extension (`HttpServer`) | — |
+| Port limited to 1–65535 or a variable | 3.2 |
+| Basic / NTLM / Negotiate authentication (one per server) | 3.0 |
+| Several authentications per server, with the preferred protocol (Default / Kerberos / NTLM) | 3.2 (`authentications`) |
+| Regular (non-HTTP) server | 3.2 (`type: tcp`) |
+| URL rewriting — session argument name, path extension, path separator, equals sign (`HttpServer`) | 3.2 (`url_rewriting`) |
+| Server description | — (not shown in the GUI; out of as-code) |
 
 ## Variables
 

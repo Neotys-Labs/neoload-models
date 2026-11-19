@@ -1,12 +1,12 @@
 package com.neotys.neoload.model.v3.binding.io;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
@@ -112,14 +112,36 @@ public class IOSchema3Dot2ValidationTest {
     }
 
     @Test
-    public void schema32IsSchema31WithItsOwnVersion() throws IOException {
-        final String schema31 = Files.readString(schemasDir.resolve("v3.1/as-code.schema.json"))
-                .replace("schemas/v3.1/as-code.schema.json", "schemas/v3.2/as-code.schema.json")
-                .replace("\"const\": \"3.1\"", "\"const\": \"3.2\"")
-                .replace("\"const\": 3.1", "\"const\": 3.2")
-                .replace("Must be 3.1 as a string", "Must be 3.2 as a string");
+    public void serverSettingsAreIn32Only() throws IOException {
+        final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource("test-servers-all-settings.yaml"));
+        final ObjectNode as31 = node.deepCopy();
+        as31.put("schemaVersion", "3.1");
 
-        assertEquals("v3.2 must stay v3.1 with its own version until 3.2 features are added: update or remove this test then",
-                schema31, Files.readString(schemasDir.resolve("v3.2/as-code.schema.json")));
+        assertTrue(schema.validate(node).toString(), schema.validate(node).isEmpty());
+        final String errors31 = schema31().validate(as31).toString();
+        assertTrue(errors31, errors31.contains("authentications") && errors31.contains("url_rewriting") && errors31.contains("type"));
+    }
+
+    /** The 3.2 schema rejects the servers the Java reader rejects, except the duplicate realm, which a schema can't check. */
+    @Test
+    public void invalidServersDoNotConformTo32() throws IOException {
+        final List<String> accepted = new ArrayList<>();
+        for (final String fixture : List.of("test-servers-unknown-key", "test-servers-description", "test-servers-nested-host",
+                "test-servers-tcp-with-scheme", "test-servers-tcp-without-port", "test-servers-port-too-high",
+                "test-servers-port-zero", "test-servers-two-authentication-forms",
+                "test-servers-url-rewriting-separator-without-in-path",
+                "test-servers-url-rewriting-without-session-argument", "test-servers-unknown-preferred-protocol")) {
+            final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource(fixture + ".yaml"));
+            if (schema.validate(node).isEmpty()) {
+                accepted.add(fixture);
+            }
+        }
+
+        assertTrue("Accepted by the 3.2 schema: " + accepted, accepted.isEmpty());
+    }
+
+    private static JsonSchema schema31() {
+        return JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)
+                .getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());
     }
 }

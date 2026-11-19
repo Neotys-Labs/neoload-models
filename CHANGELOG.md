@@ -29,6 +29,45 @@ name: MyProject
 
 A file declaring `3.0`, `3.1` or no `schemaVersion` keeps working unchanged.
 
+#### Servers
+
+- `type: tcp` defines a regular server (the GUI "Server"), with a host and a required port only.
+  Without `type`, a server is an http server, as before.
+- `authentications`: a list of authentications, one per row of the GUI "Authorization" table, with
+  `login`, `password`, an optional `realm` and an optional `preferred_protocol` (`kerberos` or
+  `ntlm`, used when the server sends a Negotiate challenge). Two items can't share a realm. It
+  can't be used with `basic_authentication`, `ntlm_authentication` or `negotiate_authentication`,
+  which keep working.
+- `url_rewriting`: the GUI "HTTP URL rewriting", with `session_argument`, `in_path`,
+  `path_separator` and `equals_sign`. Present means enabled.
+- `port` must be a whole number from 1 to 65535, or a variable.
+
+```yaml
+schemaVersion: "3.2"
+servers:
+- name: backend
+  host: ${backend_host}
+  scheme: https
+  port: 8443
+  authentications:
+  - login: ${user}
+    password: ${password}
+    realm: CORP
+    preferred_protocol: kerberos
+  url_rewriting:
+    session_argument: jsessionid
+- name: media
+  type: tcp
+  host: media.example.com
+  port: 1935
+```
+
+### Changed
+
+- **Servers are read strictly**, whatever the declared `schemaVersion`: an unknown key in a server
+  (for example a misspelled `prot:` or a `description`) is rejected instead of being silently
+  ignored, and `host` must be a key of the server itself.
+
 ---
 
 ## [3.1] — Upcoming version in 2026

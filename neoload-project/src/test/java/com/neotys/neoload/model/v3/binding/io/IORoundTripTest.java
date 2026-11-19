@@ -133,7 +133,9 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-password-only-required",
 			"test-password-required-and-optional",
 			"test-sql-only-required",
-			"test-sql-required-and-optional"
+			"test-sql-required-and-optional",
+			"test-servers-all-settings",
+			"test-servers-url-rewriting-defaults"
 	};
 
 	@Test

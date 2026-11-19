@@ -1,0 +1,6 @@
+schemaVersion: "3.2"
+name: MyProject
+servers:
+- name: media
+  type: tcp
+  host: media.example.com
