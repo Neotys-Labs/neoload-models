@@ -20,7 +20,7 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value=Include.NON_DEFAULT)
-@JsonPropertyOrder({Request.NAME, UrlServerElement.URL, UrlServerElement.SERVER, Request.METHOD, Request.HEADERS, Request.BODY, Request.BODYBINARY, Request.BINARY_SOURCE_FILE, Request.PARTS, Request.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, HttpBasedRequest.FOLLOW_REDIRECTS, HttpBasedRequest.CHARSET, HttpBasedRequest.RESPONSE_STORAGE, Request.INTERNAL_RECORDED_ID, SlaElement.SLA_PROFILE})
+@JsonPropertyOrder({Request.NAME, HttpBasedRequest.URL, HttpBasedRequest.SERVER, Request.METHOD, HttpBasedRequest.PARAMETERS, HttpBasedRequest.HEADERS, Request.BODY, Request.BODYBINARY, Request.BINARY_SOURCE_FILE, Request.PARTS, HttpBasedRequestWithResponse.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, HttpBasedRequestWithResponse.FOLLOW_REDIRECTS, Request.CHARSET, HttpBasedRequestWithResponse.RESPONSE_STORAGE, Request.INTERNAL_RECORDED_ID, SlaElement.SLA_PROFILE})
 @JsonSerialize(as = ImmutableRequest.class)
 @JsonDeserialize(as = ImmutableRequest.class)
 @Value.Immutable
@@ -29,15 +29,14 @@ import org.immutables.value.Value.Style.ValidationMethod;
 // property value (not another filter instance), which is how the CUSTOM value filter selects the default
 // value to omit; a real class check would always be false and defeat the omission.
 @SuppressWarnings("java:S2097")
-public interface Request extends Step, HttpBasedRequest, SlaElement, AssertionsElement, DurationAssertionElement, SizeAssertionElement {
+public interface Request extends Step, HttpBasedRequestWithResponse, SlaElement {
 	String NAME = "name";
 	String METHOD = "method";
-	String HEADERS = "headers";
 	String BODY = "body";
 	String BODYBINARY = "bodybinary";
 	String BINARY_SOURCE_FILE = "binary_source_file";
 	String PARTS = "parts";
-	String EXTRACTORS = "extractors";
+	String CHARSET = "charset";
 	String INTERNAL_RECORDED_ID = "_internal_recorded_id";
 
 	String DEFAULT_NAME = "request";
@@ -83,11 +82,6 @@ public interface Request extends Step, HttpBasedRequest, SlaElement, AssertionsE
 		return DEFAULT_METHOD;
 	}
 	
-	@JsonProperty(HEADERS)
-	@JsonInclude(Include.NON_EMPTY)
-	@Valid
-	List<NameValue> getHeaders();
-	
 	@JsonProperty(BODY)
 	Optional<String> getBody();
 
@@ -101,14 +95,26 @@ public interface Request extends Step, HttpBasedRequest, SlaElement, AssertionsE
 	@Valid
 	Optional<List<Part>> getParts();
 	
-	@JsonProperty(EXTRACTORS)
-	@Valid
-	List<VariableExtractor> getExtractors();
-	
+	/**
+	 * The charset used to encode the request body.
+	 * <p>
+	 * It only applies when the request has a body: it is dropped when there is none (see {@link #normalize()}).
+	 */
+	@JsonProperty(CHARSET)
+	Optional<String> getCharset();
+
 	@Value.Check
-	default Request dropCharsetWithoutBody() {
-		final boolean hasBody = Method.POST.name().equalsIgnoreCase(getMethod()) || Method.PUT.name().equalsIgnoreCase(getMethod());
-		return !hasBody && getCharset().isPresent() ? ImmutableRequest.copyOf(this).withCharset(Optional.empty()) : this;
+	default Request normalize() {
+		return dropCharsetWithoutBody(moveUrlQueryToParameters());
+	}
+
+	private Request moveUrlQueryToParameters() {
+		return hasUrlQuery() ? ImmutableRequest.copyOf(this).withUrl(urlWithoutQuery()).withParameters(parametersWithUrlQuery()) : this;
+	}
+
+	private static Request dropCharsetWithoutBody(final Request request) {
+		final boolean hasBody = Method.POST.name().equalsIgnoreCase(request.getMethod()) || Method.PUT.name().equalsIgnoreCase(request.getMethod());
+		return !hasBody && request.getCharset().isPresent() ? ImmutableRequest.copyOf(request).withCharset(Optional.empty()) : request;
 	}
 
 	@JsonProperty(INTERNAL_RECORDED_ID)

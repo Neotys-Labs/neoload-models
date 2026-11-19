@@ -248,7 +248,8 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
 ```
 
 **`follow_redirects`, `charset` and `response_storage`** — advanced settings available on both
-`request` and `soap_request`.
+`request` and `soap_request`. `follow_redirects` and `response_storage` are also available on
+`websocket_channel`; `charset` is not.
 
 - `follow_redirects` (default `false`) follows the HTTP redirections. It replaces `followRedirects`,
   which is still read but deprecated and always written back as `follow_redirects`. Declaring both
@@ -268,6 +269,29 @@ the server). Optional per part: `content_type`, `charset`, `transfer_encoding`.
       path: responses/login_{ID}.html
       variable: loginResponseFile
       delete_when_test_finished: true
+```
+
+**`parameters` and `extractors` on every HTTP step** — `request`, `soap_request` and
+`websocket_channel` all take `url`, `server`, `headers` and `parameters`; `soap_request` also takes
+`extractors`. A query written in `url` is moved to the start of `parameters` when the project is
+loaded, so a saved file always has a `url` without query. Existing files keep loading unchanged.
+A form-encoded `body` is not a query and stays in `body`.
+
+```yaml
+- request:
+    url: /search?q=neoload
+    parameters:
+    - lang: en
+```
+
+is saved as
+
+```yaml
+- request:
+    url: /search
+    parameters:
+    - q: neoload
+    - lang: en
 ```
 
 #### Web Services Security

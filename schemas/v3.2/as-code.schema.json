@@ -2033,6 +2033,10 @@
 							"default": "GET",
 							"description": "The request method"
 						},
+						"parameters": {
+							"$ref": "#/definitions/user_paths/name_values",
+							"description": "The query string parameter list. A query written in `url` is moved here, ahead of these parameters."
+						},
 						"headers": {
 							"$ref": "#/definitions/user_paths/request_headers"
 						},
@@ -2114,7 +2118,7 @@
 						},
 						"parameters": {
 							"$ref": "#/definitions/user_paths/name_values",
-							"description": "The query string parameter list"
+							"description": "The query string parameter list. A query written in `url` is moved here, ahead of these parameters."
 						},
 						"headers": {
 							"$ref": "#/definitions/user_paths/request_headers"
@@ -2130,6 +2134,11 @@
 							},
 							"additionalProperties": false,
 							"description": "The external XML file used as the request body"
+						},
+						"extractors": {
+							"type": "array",
+							"items": { "$ref": "#/definitions/user_paths/extractor" },
+							"description": "The extractor list"
 						},
 						"sla_profile": {
 							"$ref": "#/definitions/user_paths/request_sla_profile"
@@ -2718,7 +2727,7 @@
 				},
 				"websocket_channel": {
 					"title": "Action: WebSocket Channel",
-					"description": "The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `extractors`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request.",
+					"description": "The WebSocket Channel action opens a WebSocket connection (HTTP upgrade) and keeps it open for the rest of the iteration. It is defined like a request (`url`, `server`, `headers`, `parameters`, `extractors`, `follow_redirects`, `response_storage`) plus `messages_mapping`, `timestamp_extractor` and `push_messages`. A channel is designated by its complete path, written in the `channel` property of a websocket_request.",
 					"type": "object",
 					"required": ["name", "url"],
 					"additionalProperties": false,
@@ -2742,6 +2751,19 @@
 						"headers": {
 							"description": "Headers of the upgrade request, as a list of single-entry maps (`Header-Name: value`). `Upgrade: websocket` is implied and does not need to be written.",
 							"$ref": "#/definitions/user_paths/name_values"
+						},
+						"parameters": {
+							"$ref": "#/definitions/user_paths/name_values",
+							"description": "The query string parameter list. A query written in `url` is moved here, ahead of these parameters."
+						},
+						"follow_redirects": {
+							"type": "boolean",
+							"default": false,
+							"description": "When `true`, the HTTP redirections returned by the server are followed. The default value is `false`."
+						},
+						"response_storage": {
+							"$ref": "#/definitions/user_paths/actions/response_storage",
+							"description": "Stores the response body in a file."
 						},
 						"extractors": {
 							"description": "Variable extractors applied to the response of the upgrade request.",

@@ -3,7 +3,7 @@ package com.neotys.neoload.model.v3.binding.io;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.neotys.neoload.model.v3.project.userpath.HttpBasedRequest;
+import com.neotys.neoload.model.v3.project.userpath.HttpBasedRequestWithResponse;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -43,13 +43,13 @@ final class DeprecatedKeys {
 	}
 
 	private static void renameFollowRedirects(final ObjectNode request) throws JsonMappingException {
-		if (!request.has(HttpBasedRequest.DEPRECATED_FOLLOW_REDIRECTS)) {
+		if (!request.has(HttpBasedRequestWithResponse.DEPRECATED_FOLLOW_REDIRECTS)) {
 			return;
 		}
-		if (request.has(HttpBasedRequest.FOLLOW_REDIRECTS)) {
-			throw new JsonMappingException(null, "A request cannot declare both '" + HttpBasedRequest.DEPRECATED_FOLLOW_REDIRECTS
-					+ "' and '" + HttpBasedRequest.FOLLOW_REDIRECTS + "'. Use '" + HttpBasedRequest.FOLLOW_REDIRECTS + "' only.");
+		if (request.has(HttpBasedRequestWithResponse.FOLLOW_REDIRECTS)) {
+			throw new JsonMappingException(null, "A request cannot declare both '" + HttpBasedRequestWithResponse.DEPRECATED_FOLLOW_REDIRECTS
+					+ "' and '" + HttpBasedRequestWithResponse.FOLLOW_REDIRECTS + "'. Use '" + HttpBasedRequestWithResponse.FOLLOW_REDIRECTS + "' only.");
 		}
-		request.set(HttpBasedRequest.FOLLOW_REDIRECTS, request.remove(HttpBasedRequest.DEPRECATED_FOLLOW_REDIRECTS));
+		request.set(HttpBasedRequestWithResponse.FOLLOW_REDIRECTS, request.remove(HttpBasedRequestWithResponse.DEPRECATED_FOLLOW_REDIRECTS));
 	}
 }

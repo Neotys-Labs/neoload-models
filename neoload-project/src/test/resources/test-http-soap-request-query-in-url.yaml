@@ -1,0 +1,13 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - soap_request:
+        url: /quote?symbol=TCS
+        parameters:
+        - lang: en
+        headers:
+        - SOAPAction: getQuote
+        content:
+          path: ./requests/mySOAPRequest.xml
