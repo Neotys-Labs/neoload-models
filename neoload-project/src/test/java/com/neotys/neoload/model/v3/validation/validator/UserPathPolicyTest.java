@@ -5,13 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.population.UserPathPolicy;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import org.junit.Test;
 
 public class UserPathPolicyTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -32,29 +28,26 @@ public class UserPathPolicyTest {
 		CONSTRAINTS_NAME_BLANK = sb.toString();
 	}
 
-	private static final String CONSTRAINTS_DISTRIBUTION_RANGE;
-	static {
+	private static String distributionRangeViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'distribution': must be between 0 and 100.").append(LINE_SEPARATOR);
-		CONSTRAINTS_DISTRIBUTION_RANGE = sb.toString();
+		sb.append("Violation 1 - Incorrect value '").append(value).append("' for 'distribution': must be between 0 and 100.").append(LINE_SEPARATOR);
+		return sb.toString();
 	}
 
-	private static final String CONSTRAINTS_DISTRIBUTION_DIGITS;
-	static {
+	private static String distributionDigitsViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'distribution': numeric value out of bounds (<3 digits>.<1 digits> expected).").append(LINE_SEPARATOR);
-		CONSTRAINTS_DISTRIBUTION_DIGITS = sb.toString();
+		sb.append("Violation 1 - Incorrect value '").append(value).append("' for 'distribution': numeric value out of bounds (<3 digits>.<1 digits> expected).").append(LINE_SEPARATOR);
+		return sb.toString();
 	}
 
-	private static final String CONSTRAINTS_DISTRIBUTION_RANGE_AND_DIGITS;
-	static {
+	private static String distributionRangeAndDigitsViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'distribution': must be between 0 and 100.").append(LINE_SEPARATOR);
-		sb.append("Violation 2 - Incorrect value for 'distribution': numeric value out of bounds (<3 digits>.<1 digits> expected).").append(LINE_SEPARATOR);
-		CONSTRAINTS_DISTRIBUTION_RANGE_AND_DIGITS = sb.toString();
+		sb.append("Violation 1 - Incorrect value '").append(value).append("' for 'distribution': must be between 0 and 100.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value '").append(value).append("' for 'distribution': numeric value out of bounds (<3 digits>.<1 digits> expected).").append(LINE_SEPARATOR);
+		return sb.toString();
 	}
 
 
@@ -110,7 +103,7 @@ public class UserPathPolicyTest {
 				.build();
 		validation = validator.validate(userPathPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_DISTRIBUTION_RANGE, validation.getMessage().get());	
+		assertEquals(distributionRangeViolation("-1.0"), validation.getMessage().get());	
 
 		userPathPolicy = UserPathPolicy.builder()
 				.name("MyUserPath")
@@ -118,7 +111,7 @@ public class UserPathPolicyTest {
 				.build();
 		validation = validator.validate(userPathPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_DISTRIBUTION_RANGE, validation.getMessage().get());	
+		assertEquals(distributionRangeViolation("101.0"), validation.getMessage().get());	
 
 		userPathPolicy = UserPathPolicy.builder()
 				.name("MyUserPath")
@@ -126,7 +119,7 @@ public class UserPathPolicyTest {
 				.build();
 		validation = validator.validate(userPathPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_DISTRIBUTION_DIGITS, validation.getMessage().get());	
+		assertEquals(distributionDigitsViolation("0.15"), validation.getMessage().get());	
 
 		userPathPolicy = UserPathPolicy.builder()
 				.name("MyUserPath")
@@ -134,7 +127,7 @@ public class UserPathPolicyTest {
 				.build();
 		validation = validator.validate(userPathPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_DISTRIBUTION_RANGE_AND_DIGITS, validation.getMessage().get());	
+		assertEquals(distributionRangeAndDigitsViolation("1000.0"), validation.getMessage().get());	
 		
 		userPathPolicy = UserPathPolicy.builder()
 				.name("MyUserPath")
