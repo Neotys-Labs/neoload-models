@@ -77,7 +77,7 @@ This load policy generates a load with a number of Virtual Users that increases 
 
 | Name             | Description                                                 | Accept variable   | Required | Since |
 |:---------------- |:----------------------------------------------------------- |:-----------------:|:--------:|:-----:|
-| min_users        | The initial number of Virtual Users                         | -                 | &#x2713; |       |
+| min_users        | The initial number of Virtual Users, from 1 to 2147483647. Left out, no Virtual User runs at the start. | -                 | -        |       |
 | max_users        | The maximum number of Virtual Users. Must be greater than or equal to `min_users` | -                 | -        |       |
 | increment_users  | The number of Virtual Users to increment                    | -                 | &#x2713; |       |
 | increment_every  | The incrementation frequency: [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
@@ -121,7 +121,7 @@ This load policy generates a load with a fixed number of Virtual Users with peri
 
 | Name     | Description                                                  | Accept variable   | Required | Since |
 |:-------- |:------------------------------------------------------------ |:-----------------:|:--------:|:-----:|
-| users    | The fixed number of Virtual Users                            | -                 | &#x2713; |       |
+| users    | The fixed number of Virtual Users. Required in the maximum phase. In the minimum phase, from 1 to 2147483647; left out, no Virtual User runs during the phase. | - | maximum phase only |  |
 | duration | The duration of the phase: [time length](#human-readable-time-specifications) or number of [iterations](#human-readable-iteration-specifications). | - | &#x2713; |  |
 
 #### Example

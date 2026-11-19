@@ -71,6 +71,17 @@ public class RampupLoadPolicyTest {
 						.build())
 				.build();
 		Validation validation = validator.validate(loadPolicy, NeoLoad.class);
+		assertTrue(validation.isValid());
+
+		loadPolicy = RampupLoadPolicy.builder()
+				.minUsers(0)
+				.incrementUsers(1)
+				.incrementEvery(LoadDuration.builder()
+						.value(1)
+						.type(LoadDuration.Type.TIME)
+						.build())
+				.build();
+		validation = validator.validate(loadPolicy, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(minUsersViolation("0"), validation.getMessage().get());
 

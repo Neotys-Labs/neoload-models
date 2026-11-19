@@ -2,10 +2,6 @@ package com.neotys.neoload.model.v3.util;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.scenario.ConstantLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
@@ -15,6 +11,8 @@ import com.neotys.neoload.model.v3.project.scenario.PeakLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PeaksLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.PopulationPolicy;
 import com.neotys.neoload.model.v3.project.scenario.RampupLoadPolicy;
+import java.util.Arrays;
+import org.junit.Test;
 
 public class ScenarioUtilsTest {
 	// Users
@@ -222,6 +220,27 @@ public class ScenarioUtilsTest {
 		assertEquals(LOAD_SUMMARY_MAX_USERS_AND_100_ITERATIONS, ScenarioUtils.getSummary(POPULATION_RAMPUP_MAX_USERS_AND_100_ITERATIONS));
 	}
 	
+	@Test
+	public void getSummaryForRampupLoadPolicyWithoutMinUsersCountsFromZeroUsers() {
+		assertEquals(ScenarioUtils.getSummary(rampupFrom60Seconds(RampupLoadPolicy.builder().minUsers(0))),
+				ScenarioUtils.getSummary(rampupFrom60Seconds(RampupLoadPolicy.builder())));
+	}
+
+	private static PopulationPolicy rampupFrom60Seconds(final RampupLoadPolicy.Builder rampup) {
+		return PopulationPolicy.builder()
+				.name("MyPopulation")
+				.loadPolicy(rampup
+						.incrementUsers(2)
+						.incrementEvery(LoadDuration.builder()
+								.type(Type.TIME)
+								.value(10)
+								.build())
+						.maxUsers(100)
+						.duration(DURATION_60_SECONDS)
+						.build())
+				.build();
+	}
+
 	@Test
 	public void getSummaryForCustomLoadPolicy() {
 		PopulationPolicy populationPolicy = PopulationPolicy.builder()

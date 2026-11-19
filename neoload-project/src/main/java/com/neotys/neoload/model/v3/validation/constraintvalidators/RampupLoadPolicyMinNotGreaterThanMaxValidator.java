@@ -8,6 +8,6 @@ public final class RampupLoadPolicyMinNotGreaterThanMaxValidator extends Abstrac
 
 	@Override
 	public boolean isValid(final RampupLoadPolicy policy, final ConstraintValidatorContext context) {
-		return policy == null || policy.getMaxUsers() == null || policy.getMinUsers() <= policy.getMaxUsers();
+		return policy == null || policy.getMaxUsers() == null || policy.getMinUsers().orElse(0) <= policy.getMaxUsers();
 	}
 }
