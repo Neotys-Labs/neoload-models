@@ -1,0 +1,7 @@
+schemaVersion: "3.2"
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - delay: 1s

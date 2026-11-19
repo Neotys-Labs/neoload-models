@@ -15,15 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
- * Checks the documentation annotations of the as-code v3.1 JSON Schema ({@code schemas/v3.1/as-code.schema.json}):
+ * Checks the documentation annotations of the as-code JSON Schemas ({@code schemas/v3.1/}, {@code schemas/v3.2/}):
  * every definition and property carries a description, the main elements carry examples, and every example
  * validates against the subschema that declares it.
  */
-public class IOSchema3Dot1DocumentationTest {
+@RunWith(Parameterized.class)
+public class IOSchemaDocumentationTest {
 
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
     private static final List<String> SCHEMA_MAPS = List.of("properties", "definitions", "patternProperties");
@@ -44,11 +47,17 @@ public class IOSchema3Dot1DocumentationTest {
 
     private static JsonNode schemaNode;
 
-    @BeforeClass
-    public static void loadSchema() throws URISyntaxException, IOException {
-        final URL testClassesUrl = IOSchema3Dot1DocumentationTest.class.getProtectionDomain().getCodeSource().getLocation();
+    /** The schema versions whose documentation is checked: the current one and the frozen ones still published. */
+    @Parameters(name = "v{0}")
+    public static List<String> schemaVersions() {
+        return List.of("3.1", "3.2");
+    }
+
+    public IOSchemaDocumentationTest(final String schemaVersion) throws URISyntaxException, IOException {
+        final URL testClassesUrl = IOSchemaDocumentationTest.class.getProtectionDomain().getCodeSource().getLocation();
         final Path moduleDir = Paths.get(testClassesUrl.toURI()).getParent().getParent();
-        final Path schemaPath = moduleDir.resolve("../schemas/v3.1/as-code.schema.json").normalize();
+        final Path schemaPath = moduleDir.resolve("../schemas/v" + schemaVersion + "/as-code.schema.json").normalize();
+        // The helpers are static: the schema of the current parameter is set before each test of that parameter.
         schemaNode = JSON_MAPPER.readTree(schemaPath.toFile());
     }
 

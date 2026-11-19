@@ -27,7 +27,8 @@ tab is out of scope.
 `schemaVersion` declares which contract a file targets. It does **not** gate the parser: the model
 accepts every construct it knows about regardless of the declared version, and only checks that the
 declared version is one this build knows (`supported-schemas.json`). Version gating happens in the
-published JSON Schemas (`schemas/v3.0/`, `schemas/v3.1/`), which editors use.
+published JSON Schemas (`schemas/v3.0/`, `schemas/v3.1/`, `schemas/v3.2/`), which editors use.
+Schema 3.1 is frozen with NeoLoad 2026.3: new constructs go to 3.2.
 
 ## In the 3.1 draft
 

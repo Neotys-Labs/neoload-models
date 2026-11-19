@@ -46,6 +46,8 @@ import org.junit.Test;
  */
 public class IOSchema3Dot1ValidationTest {
 
+    private static final String SCHEMA_VERSION = "3.1";
+
     private static JsonSchema SCHEMA;
     private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
@@ -64,7 +66,7 @@ public class IOSchema3Dot1ValidationTest {
      *
      * <p>Do not add new fixtures here without a clear justification.</p>
      */
-    private static final Set<String> EXCLUDED_FIXTURES = Set.of(
+    static final Set<String> EXCLUDED_FIXTURES = Set.of(
             // Backward-compat: SLA thresholds without "per test/interval"
             "test-readonly-slaprofiles-only-required.yaml",
             "test-readonly-slaprofiles-only-required.json",
@@ -163,6 +165,9 @@ public class IOSchema3Dot1ValidationTest {
                      try {
                          ObjectMapper mapper = fileName.endsWith(".yaml") ? YAML_MAPPER : JSON_MAPPER;
                          JsonNode node = mapper.readTree(file.toFile());
+                         if (declaresAnotherSchemaVersion(node, SCHEMA_VERSION)) {
+                             return;
+                         }
                          Set<ValidationMessage> errors = SCHEMA.validate(node);
                          if (!errors.isEmpty()) {
                              String details = errors.stream()
@@ -181,6 +186,15 @@ public class IOSchema3Dot1ValidationTest {
             fail(failures.size() + " fixture(s) failed schema validation:\n\n"
                     + String.join("\n\n", failures));
         }
+    }
+
+    /**
+     * A fixture declaring a {@code schemaVersion} is written for that contract only: it is validated by the schema of
+     * its version, not by the others. A fixture without {@code schemaVersion} is validated by every schema.
+     */
+    static boolean declaresAnotherSchemaVersion(final JsonNode node, final String schemaVersion) {
+        final JsonNode declared = node == null ? null : node.get("schemaVersion");
+        return declared != null && !declared.isNull() && !schemaVersion.equals(declared.asText());
     }
 
     private Set<ValidationMessage> validate(final String fixture) throws IOException {
