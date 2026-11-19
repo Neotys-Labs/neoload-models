@@ -20,7 +20,7 @@ The server settings are centralized, which means the target server for the test 
 
 A server accepts at most one of `basic_authentication`, `ntlm_authentication`, `negotiate_authentication` and `authentications`.
 
-:warning: Servers are read strictly: an unknown key (for example a misspelled `prot:`) is rejected. `type`, `authentications` and `url_rewriting` need `schemaVersion: "3.2"`.
+:warning: From `schemaVersion: "3.2"` on, servers are read strictly: an unknown key (for example a misspelled `prot:`) is rejected. Before 3.2, an unknown key is ignored, as NeoLoad always did. `type`, `authentications` and `url_rewriting` need `schemaVersion: "3.2"`.
 
 #### Example
 Defining 2 servers: one with the host name only, and an https one with a basic authentication.

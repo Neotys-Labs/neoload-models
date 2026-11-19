@@ -165,6 +165,24 @@ public class IOServerSettingsTest extends AbstractIOElementsTest {
 		assertTrue(message, message.contains("Unrecognized field \"prot\""));
 	}
 
+	/** NeoLoad always ignored an unknown key of a server before 3.2: a misspelled authentication is not read. */
+	@Test
+	public void readUnknownKeyWithoutSchemaVersionIsIgnored() throws IOException {
+		final Server server = new IO().read(getFile("test-servers-unknown-key-3.0", "yaml")).getProject().getServers().get(0);
+
+		assertEquals("backend.example.com", server.getHost());
+		assertEquals("8089", server.getPort());
+		assertFalse(server.getAuthentication().isPresent());
+	}
+
+	@Test
+	public void readUnknownKeyIn31IsIgnored() throws IOException {
+		final Server server = new IO().read(getFile("test-servers-unknown-key-3.1", "yaml")).getProject().getServers().get(0);
+
+		assertEquals("backend.example.com", server.getHost());
+		assertEquals("80", server.getPort());
+	}
+
 	@Test
 	public void readDescriptionFails() {
 		final String message = readFailure("test-servers-description");

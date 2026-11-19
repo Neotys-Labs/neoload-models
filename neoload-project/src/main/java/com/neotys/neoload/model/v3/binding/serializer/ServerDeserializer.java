@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.google.common.collect.ImmutableList;
+import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.server.Authentication;
 import com.neotys.neoload.model.v3.project.server.BasicAuthentication;
 import com.neotys.neoload.model.v3.project.server.NegotiateAuthentication;
@@ -39,13 +40,21 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Reads a server strictly: an unknown key is rejected, as everywhere else in as-code. The rules that tie several keys
- * together are checked here, while the file is read: one authentication form, the keys a {@code tcp} server accepts,
- * a realm per authentication, and the URL rewriting keys that need {@code in_path}.
+ * Reads a server. From schema 3.2 on, an unknown key is rejected, as everywhere else in as-code. Before 3.2 it is
+ * ignored, as NeoLoad always did, so that the projects written for those versions still load. The schema version of
+ * the file is the {@link #SCHEMA_VERSION_ATTRIBUTE} attribute of the reading, set by {@code IO}. Without it, the server
+ * is read as a 3.0 one.
+ * <p>
+ * The rules that tie several keys together are checked here, while the file is read: one authentication form, the
+ * keys a {@code tcp} server accepts, a realm per authentication, and the URL rewriting keys that need {@code in_path}.
  */
 public class ServerDeserializer extends StdDeserializer<Server> {
 
 	private static final long serialVersionUID = 3661407425897246832L;
+
+	/** The attribute of the reading that holds the schema version of the file, such as {@code "3.2"}. */
+	public static final String SCHEMA_VERSION_ATTRIBUTE = Project.SCHEMA_VERSION;
+	private static final int[] FIRST_VERSION_REJECTING_UNKNOWN_KEYS = {3, 2};
 
 	private static final List<String> KNOWN_FIELDS = ImmutableList.of(NAME, TYPE, HOST, SCHEME, PORT,
 			BASIC_AUTHENTICATION, NTLM_AUTHENTICATION, NEGOTIATE_AUTHENTICATION, AUTHENTICATIONS, URL_REWRITING);
@@ -62,7 +71,9 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		final ObjectCodec codec = jsonParser.getCodec();
 		final JsonNode jsonNode = codec.readTree(jsonParser);
 
-		checkKnownFields(jsonParser, jsonNode);
+		if (rejectsUnknownKeys(context)) {
+			checkKnownFields(jsonParser, jsonNode);
+		}
 		checkMandatoryFieldsForServer(jsonNode);
 		final String name = jsonNode.get(NAME).asText();
 		final Server.Type type = DeserializerHelper.asObject(codec, jsonNode, TYPE, Server.Type.class).orElse(DEFAULT_TYPE);
@@ -81,6 +92,28 @@ public class ServerDeserializer extends StdDeserializer<Server> {
 		DeserializerHelper.asText(jsonNode, NAME).ifPresent(builder::name);
 		DeserializerHelper.asText(jsonNode, HOST).ifPresent(builder::host);
 		return builder.build();
+	}
+
+	static boolean rejectsUnknownKeys(final DeserializationContext context) {
+		final Object attribute = context.getAttribute(SCHEMA_VERSION_ATTRIBUTE);
+		final String version = attribute == null ? Project.DEFAULT_SCHEMA_VERSION : attribute.toString();
+		return isAtLeast(version, FIRST_VERSION_REJECTING_UNKNOWN_KEYS);
+	}
+
+	/** Compares the numbers of a version such as {@code 3.2} with a minimum. An unreadable version is not at least. */
+	static boolean isAtLeast(final String version, final int[] minimum) {
+		final String[] parts = version.trim().split("\\.");
+		try {
+			for (int i = 0; i < minimum.length; i++) {
+				final int part = i < parts.length ? Integer.parseInt(parts[i]) : 0;
+				if (part != minimum[i]) {
+					return part > minimum[i];
+				}
+			}
+			return true;
+		} catch (final NumberFormatException e) {
+			return false;
+		}
 	}
 
 	private static void checkKnownFields(final JsonParser jsonParser, final JsonNode jsonNode) throws IOException {

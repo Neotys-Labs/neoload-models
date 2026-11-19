@@ -100,6 +100,8 @@ public class IOSchema3Dot1ValidationTest {
             "test-web_page-think-time-min-only.yaml",
             // Voluntarily invalid servers (LOAD-41828): strict reading and value checks
             "test-servers-unknown-key.yaml",
+            "test-servers-unknown-key-3.0.yaml",
+            "test-servers-unknown-key-3.1.yaml",
             "test-servers-description.yaml",
             "test-servers-nested-host.yaml",
             "test-servers-tcp-with-scheme.yaml",
