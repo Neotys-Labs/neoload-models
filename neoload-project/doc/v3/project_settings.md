@@ -2,13 +2,15 @@
 Some preferences of the project can be overwritten. Each of these properties can be overwritten one by one,
 the other properties will keep the value defined from NeoLoad.
 
+The settings are nested maps (`qtest:` / `enabled: true`), which requires `schemaVersion: "3.2"` (NeoLoad 2027.1).
+
 #### Available settings
 
 | Name                                    | Description                                                                                       | Accept variable | Required | Since |
 |:--------------------------------------- |:------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | [dynatrace](#dynatrace)                 | The Dynatrace integration                                                                         | -               | -        | 7.5   |
 | [qtest](#qtest)                         | The qTest integration                                                                             | -               | -        | 7.10  |
-| [global_assertions](#global_assertions) | The responses and actions the global assertions are applied to                                    | -               | -        | 2026.3 |
+| [global_assertions](#global_assertions) | The responses and actions the global assertions are applied to                                    | -               | -        | 2027.1 |
 
 #### dynatrace
 
@@ -28,6 +30,7 @@ the other properties will keep the value defined from NeoLoad.
 | username                                | The username to log into qTest                                                                    | -               | -        | 7.10  |
 | password                                | The password to log into qTest as clear text or encrypted by Neoload                              | -               | -        | 7.10  |
 | auth_method                             | The way to authenticate to the qTest server. Allowed values are "TOKEN" and "LOGIN_PWD"           | -               | -        | 7.10  |
+| mapping_mode                            | How the results are mapped to qTest test cases. Allowed values are "PER_SCENARIO" and "PER_USER_PATH" | -               | -        | 2026.3 |
 | project_id                              | The qTest unique identifier of the qTest project in which the result will be transferred          | -               | -        | 7.10  |
 | cycle_id                                | The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier.  | -               | -        | 7.10  |
 | create_defects                          | Enable automatic creation of Defects on failed and warning SLAs                                   | -               | -        | 7.11  |
@@ -39,8 +42,8 @@ applied to all its requests. These settings are the ones of the Runtime paramete
 
 | Name                                    | Description                                                                                       | Accept variable | Required | Since |
 |:--------------------------------------- |:------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
-| content_types                           | Comma-separated list of the response content types the global assertions are applied to. Default: `text/html,text/xhtml` | -               | -        | 2026.3 |
-| apply_on_custom_actions                 | Also apply the global assertions to custom actions. Default: `false`                              | -               | -        | 2026.3 |
+| content_types                           | Comma-separated list of the response content types the global assertions are applied to. Default: `text/html,text/xhtml` | -               | -        | 2027.1 |
+| apply_on_custom_actions                 | Also apply the global assertions to custom actions. Default: `false`                              | -               | -        | 2027.1 |
 
 #### Deprecated dotted keys
 The dotted keys of the Dynatrace and qTest settings (such as `qtest.enabled: true`) are still read, as deprecated

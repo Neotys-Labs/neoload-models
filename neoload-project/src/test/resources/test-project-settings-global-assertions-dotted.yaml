@@ -1,3 +1,4 @@
+schemaVersion: "3.2"
 name: MyProject
 project_settings:
   global_assertions.content_types: text/html,text/xhtml,application/json

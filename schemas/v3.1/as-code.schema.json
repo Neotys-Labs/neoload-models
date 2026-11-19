@@ -163,268 +163,57 @@
 			"type": "object",
 			"additionalProperties": false,
 			"properties": {
-				"dynatrace": {
-					"type": "object",
-					"additionalProperties": false,
-					"properties": {
-						"enabled": {
-							"type": "boolean",
-							"description": "Enable Dynatrace integration (a monitor must be defined)"
-						},
-						"url": {
-							"$ref": "#/definitions/common/text",
-							"description": "The URL of the Dynatrace server"
-						},
-						"token": {
-							"$ref": "#/definitions/common/text",
-							"description": "The API token of the Dynatrace server as clear text or encrypted by Neoload"
-						}
-					},
-					"description": "The Dynatrace integration"
-				},
-				"qtest": {
-					"type": "object",
-					"additionalProperties": false,
-					"properties": {
-						"enabled": {
-							"type": "boolean",
-							"description": "Enable qTest integration"
-						},
-						"url": {
-							"$ref": "#/definitions/common/text",
-							"description": "The URL of the qTest server"
-						},
-						"token": {
-							"$ref": "#/definitions/common/text",
-							"description": "The API token of the qTest server as clear text or encrypted by Neoload"
-						},
-						"username": {
-							"$ref": "#/definitions/common/text",
-							"description": "The username to log into qTest"
-						},
-						"password": {
-							"$ref": "#/definitions/common/text",
-							"description": "The password to log into qTest as clear text or encrypted by Neoload"
-						},
-						"auth_method": {
-							"type": "string",
-							"enum": ["TOKEN", "LOGIN_PWD"],
-							"description": "How the qTest server is authenticated."
-						},
-						"project_id": {
-							"type": "integer",
-							"description": "The qTest unique identifier of the qTest project in which the result will be transferred"
-						},
-						"create_defects": {
-							"type": "boolean",
-							"description": "Enable automatic creation of Defects on failed and warning SLAs"
-						},
-						"cycle_id": {
-							"type": "integer",
-							"description": "The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier."
-						}
-					},
-					"description": "The qTest integration"
-				},
-				"global_assertions": {
-					"type": "object",
-					"additionalProperties": false,
-					"properties": {
-						"content_types": {
-							"$ref": "#/definitions/common/text",
-							"description": "Comma-separated list of the response content types the global assertions (the assertions of a User Path, Container or Transaction) are applied to. Default: text/html,text/xhtml"
-						},
-						"apply_on_custom_actions": {
-							"type": "boolean",
-							"description": "Also apply the global assertions to custom actions. Default: false"
-						}
-					},
-					"description": "The response content types and actions the global assertions are applied to, as in the Runtime parameters of the project settings"
-				},
 				"dynatrace.enabled": {
-					"$ref": "#/properties/project_settings/properties/dynatrace/properties/enabled",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'dynatrace: enabled' key instead."
+					"type": "boolean",
+					"description": "Enable Dynatrace integration (a monitor must be defined)"
 				},
 				"dynatrace.url": {
-					"$ref": "#/properties/project_settings/properties/dynatrace/properties/url",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'dynatrace: url' key instead."
+					"$ref": "#/definitions/common/text",
+					"description": "The URL of the Dynatrace server"
 				},
 				"dynatrace.token": {
-					"$ref": "#/properties/project_settings/properties/dynatrace/properties/token",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'dynatrace: token' key instead."
+					"$ref": "#/definitions/common/text",
+					"description": "The API token of the Dynatrace server as clear text or encrypted by Neoload"
 				},
 				"qtest.enabled": {
-					"$ref": "#/properties/project_settings/properties/qtest/properties/enabled",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'qtest: enabled' key instead."
+					"type": "boolean",
+					"description": "Enable qTest integration"
 				},
 				"qtest.url": {
-					"$ref": "#/properties/project_settings/properties/qtest/properties/url",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'qtest: url' key instead."
+					"$ref": "#/definitions/common/text",
+					"description": "The URL of the qTest server"
 				},
 				"qtest.token": {
-					"$ref": "#/properties/project_settings/properties/qtest/properties/token",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'qtest: token' key instead."
+					"$ref": "#/definitions/common/text",
+					"description": "The API token of the qTest server as clear text or encrypted by Neoload"
 				},
 				"qtest.username": {
-					"$ref": "#/properties/project_settings/properties/qtest/properties/username",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'qtest: username' key instead."
+					"$ref": "#/definitions/common/text",
+					"description": "The username to log into qTest"
 				},
 				"qtest.password": {
-					"$ref": "#/properties/project_settings/properties/qtest/properties/password",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'qtest: password' key instead."
+					"$ref": "#/definitions/common/text",
+					"description": "The password to log into qTest as clear text or encrypted by Neoload"
 				},
 				"qtest.auth_method": {
-					"$ref": "#/properties/project_settings/properties/qtest/properties/auth_method",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'qtest: auth_method' key instead."
+					"type": "string",
+					"enum": ["TOKEN", "LOGIN_PWD"],
+					"description": "How the qTest server is authenticated."
 				},
 				"qtest.project_id": {
-					"$ref": "#/properties/project_settings/properties/qtest/properties/project_id",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'qtest: project_id' key instead."
+					"type": "integer",
+					"description": "The qTest unique identifier of the qTest project in which the result will be transferred"
 				},
 				"qtest.create_defects": {
-					"$ref": "#/properties/project_settings/properties/qtest/properties/create_defects",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'qtest: create_defects' key instead."
+					"type": "boolean",
+					"description": "Enable automatic creation of Defects on failed and warning SLAs"
 				},
 				"qtest.cycle_id": {
-					"$ref": "#/properties/project_settings/properties/qtest/properties/cycle_id",
-					"deprecated": true,
-					"description": "Deprecated, use the nested 'qtest: cycle_id' key instead."
+					"type": "integer",
+					"description": "The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier."
 				}
 			},
-			"dependentSchemas": {
-				"dynatrace.enabled": {
-					"properties": {
-						"dynatrace": {
-							"description": "The nested 'dynatrace: enabled' key, which cannot be declared with 'dynatrace.enabled'",
-							"not": {
-								"required": ["enabled"]
-							}
-						}
-					}
-				},
-				"dynatrace.url": {
-					"properties": {
-						"dynatrace": {
-							"description": "The nested 'dynatrace: url' key, which cannot be declared with 'dynatrace.url'",
-							"not": {
-								"required": ["url"]
-							}
-						}
-					}
-				},
-				"dynatrace.token": {
-					"properties": {
-						"dynatrace": {
-							"description": "The nested 'dynatrace: token' key, which cannot be declared with 'dynatrace.token'",
-							"not": {
-								"required": ["token"]
-							}
-						}
-					}
-				},
-				"qtest.enabled": {
-					"properties": {
-						"qtest": {
-							"description": "The nested 'qtest: enabled' key, which cannot be declared with 'qtest.enabled'",
-							"not": {
-								"required": ["enabled"]
-							}
-						}
-					}
-				},
-				"qtest.url": {
-					"properties": {
-						"qtest": {
-							"description": "The nested 'qtest: url' key, which cannot be declared with 'qtest.url'",
-							"not": {
-								"required": ["url"]
-							}
-						}
-					}
-				},
-				"qtest.token": {
-					"properties": {
-						"qtest": {
-							"description": "The nested 'qtest: token' key, which cannot be declared with 'qtest.token'",
-							"not": {
-								"required": ["token"]
-							}
-						}
-					}
-				},
-				"qtest.username": {
-					"properties": {
-						"qtest": {
-							"description": "The nested 'qtest: username' key, which cannot be declared with 'qtest.username'",
-							"not": {
-								"required": ["username"]
-							}
-						}
-					}
-				},
-				"qtest.password": {
-					"properties": {
-						"qtest": {
-							"description": "The nested 'qtest: password' key, which cannot be declared with 'qtest.password'",
-							"not": {
-								"required": ["password"]
-							}
-						}
-					}
-				},
-				"qtest.auth_method": {
-					"properties": {
-						"qtest": {
-							"description": "The nested 'qtest: auth_method' key, which cannot be declared with 'qtest.auth_method'",
-							"not": {
-								"required": ["auth_method"]
-							}
-						}
-					}
-				},
-				"qtest.project_id": {
-					"properties": {
-						"qtest": {
-							"description": "The nested 'qtest: project_id' key, which cannot be declared with 'qtest.project_id'",
-							"not": {
-								"required": ["project_id"]
-							}
-						}
-					}
-				},
-				"qtest.create_defects": {
-					"properties": {
-						"qtest": {
-							"description": "The nested 'qtest: create_defects' key, which cannot be declared with 'qtest.create_defects'",
-							"not": {
-								"required": ["create_defects"]
-							}
-						}
-					}
-				},
-				"qtest.cycle_id": {
-					"properties": {
-						"qtest": {
-							"description": "The nested 'qtest: cycle_id' key, which cannot be declared with 'qtest.cycle_id'",
-							"not": {
-								"required": ["cycle_id"]
-							}
-						}
-					}
-				}
-			},
-			"description": "Project preferences that override the values defined in NeoLoad. Each property can be set on its own; the others keep the NeoLoad value. The dotted keys (such as qtest.enabled) are deprecated aliases of the nested keys, and cannot be declared together with them."
+			"description": "Project preferences that override the values defined in NeoLoad. Each property can be set on its own; the others keep the NeoLoad value."
 		}
 	},
 	"definitions": {

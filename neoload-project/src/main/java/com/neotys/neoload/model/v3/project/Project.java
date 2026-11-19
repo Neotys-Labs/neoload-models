@@ -7,13 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.neotys.neoload.model.v3.binding.serializer.ProjectSettingsDeserializer;
-import com.neotys.neoload.model.v3.binding.serializer.ProjectSettingsSerializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.security.WebServicesSecurity;
+import com.neotys.neoload.model.v3.project.settings.ProjectSettings;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.userpath.Step;
@@ -28,7 +27,6 @@ import com.neotys.neoload.model.v3.validation.constraints.ValidSchemaVersion;
 import com.neotys.neoload.model.v3.validation.constraints.WebSocketSharedChannelReferenceCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.value.Value;
@@ -115,14 +113,8 @@ public interface Project {
 	@Valid
 	List<Scenario> getScenarios();
 
-	/**
-	 * The project settings, keyed by their dotted path (such as {@code qtest.enabled}); read and written as nested maps.
-	 */
 	@JsonProperty(PROJECT_SETTINGS)
-	@Valid
-	@JsonSerialize(using = ProjectSettingsSerializer.class)
-	@JsonDeserialize(using = ProjectSettingsDeserializer.class)
-	Map<String,String> getProjectSettings();
+	Optional<ProjectSettings> getProjectSettings();
 
 	@JsonIgnore
 	List<Dependency> getDependencies();

@@ -8,6 +8,10 @@ import static org.junit.Assert.fail;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
+import com.neotys.neoload.model.v3.project.settings.DynatraceSettings;
+import com.neotys.neoload.model.v3.project.settings.GlobalAssertionsSettings;
+import com.neotys.neoload.model.v3.project.settings.ProjectSettings;
+import com.neotys.neoload.model.v3.project.settings.QTestSettings;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.junit.Test;
@@ -37,6 +41,24 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 	@Test
 	public void readDeprecatedDottedProjectSettings() throws IOException {
 		assertRead("test-project-settings-dotted-deprecated", getProjectWithAllProjectSettings());
+	}
+
+	@Test
+	public void readDottedProjectSettingsWrittenAsStrings() throws IOException {
+		assertRead("test-project-settings-dotted-quoted-values", Project.builder()
+				.name("MyProject")
+				.projectSettings(ProjectSettings.builder()
+						.dynatrace(DynatraceSettings.builder().enabled(true).url("https://abc12345.live.dynatrace.com").build())
+						.qtest(QTestSettings.builder()
+								.enabled(true)
+								.authMethod(QTestSettings.AuthMethod.TOKEN)
+								.mappingMode(QTestSettings.MappingMode.PER_USER_PATH)
+								.projectId(101762L)
+								.cycleId(3761630L)
+								.createDefects(false)
+								.build())
+						.build())
+				.build());
 	}
 
 	@Test
@@ -85,37 +107,49 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 				new IO().read(content);
 				fail("Reading the " + extension + " fixture must fail");
 			} catch (final JsonMappingException e) {
-				assertTrue(e.getMessage(), e.getMessage().contains("global_assertions.apply_on_custom_actions")
-						&& e.getMessage().contains("must be a boolean"));
+				assertTrue(e.getMessage(), e.getMessage().contains("apply_on_custom_actions") && e.getMessage().contains("\"yes\""));
 			}
 		}
 	}
 
+	private static GlobalAssertionsSettings getGlobalAssertions() {
+		return GlobalAssertionsSettings.builder()
+				.contentTypes("text/html,text/xhtml,application/json")
+				.applyOnCustomActions(true)
+				.build();
+	}
+
 	private static Project getProjectWithGlobalAssertionsProjectSettings() {
 		return Project.builder()
+				.schemaVersion("3.2")
 				.name("MyProject")
-				.putProjectSettings("global_assertions.content_types", "text/html,text/xhtml,application/json")
-				.putProjectSettings("global_assertions.apply_on_custom_actions", "true")
+				.projectSettings(ProjectSettings.builder().globalAssertions(getGlobalAssertions()).build())
 				.build();
 	}
 
 	private static Project getProjectWithAllProjectSettings() {
 		return Project.builder()
+				.schemaVersion("3.2")
 				.name("MyProject")
-				.putProjectSettings("dynatrace.enabled", "true")
-				.putProjectSettings("dynatrace.url", "https://abc12345.live.dynatrace.com")
-				.putProjectSettings("dynatrace.token", "myDynatraceToken")
-				.putProjectSettings("qtest.enabled", "true")
-				.putProjectSettings("qtest.url", "https://myCompany.qtestnet.com")
-				.putProjectSettings("qtest.token", "myQTestToken")
-				.putProjectSettings("qtest.username", "john.doe")
-				.putProjectSettings("qtest.password", "myQTestPassword")
-				.putProjectSettings("qtest.auth_method", "TOKEN")
-				.putProjectSettings("qtest.project_id", "101762")
-				.putProjectSettings("qtest.cycle_id", "3761630")
-				.putProjectSettings("qtest.create_defects", "false")
-				.putProjectSettings("global_assertions.content_types", "text/html,text/xhtml,application/json")
-				.putProjectSettings("global_assertions.apply_on_custom_actions", "true")
+				.projectSettings(ProjectSettings.builder()
+						.dynatrace(DynatraceSettings.builder()
+								.enabled(true)
+								.url("https://abc12345.live.dynatrace.com")
+								.token("myDynatraceToken")
+								.build())
+						.qtest(QTestSettings.builder()
+								.enabled(true)
+								.url("https://myCompany.qtestnet.com")
+								.token("myQTestToken")
+								.username("john.doe")
+								.password("myQTestPassword")
+								.authMethod(QTestSettings.AuthMethod.TOKEN)
+								.projectId(101762L)
+								.cycleId(3761630L)
+								.createDefects(false)
+								.build())
+						.globalAssertions(getGlobalAssertions())
+						.build())
 				.build();
 	}
 

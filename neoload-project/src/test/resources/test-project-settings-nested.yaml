@@ -1,3 +1,4 @@
+schemaVersion: 3.2
 name: MyProject
 project_settings:
   dynatrace:

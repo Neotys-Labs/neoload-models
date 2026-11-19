@@ -118,6 +118,9 @@ public class IOSchema3Dot1ValidationTest {
             "test-project-settings-keys-conflict.json",
             "test-project-settings-global-assertions-dotted.yaml",
             "test-project-settings-global-assertions-dotted.json",
+            // Written by NeoLoad before 2027.1, as strings: still read, but not valid against the schema.
+            "test-project-settings-dotted-quoted-values.yaml",
+            "test-project-settings-dotted-quoted-values.json",
             "test-request-redirect-keys-conflict.yaml",
             "test-request-redirect-keys-conflict.json",
             "test-soap-request-redirect-keys-conflict.yaml",
@@ -213,24 +216,6 @@ public class IOSchema3Dot1ValidationTest {
     public void pacingOnWhileFailsSchemaValidation() throws IOException {
         Assert.assertFalse("Expected 'pacing' on a while step to fail schema validation",
                 validate("test-pacing-on-while").isEmpty());
-    }
-
-    @Test
-    public void nonBooleanApplyGlobalAssertionsOnCustomActionsFailsSchemaValidation() throws IOException {
-        Assert.assertFalse("Expected a non-boolean 'global_assertions: apply_on_custom_actions' to fail schema validation",
-                validate("test-project-settings-global-assertions-invalid").isEmpty());
-    }
-
-    @Test
-    public void dottedAndNestedProjectSettingFailsSchemaValidation() throws IOException {
-        Assert.assertFalse("Expected 'qtest.enabled' declared with 'qtest: enabled' to fail schema validation",
-                validate("test-project-settings-keys-conflict").isEmpty());
-    }
-
-    @Test
-    public void dottedGlobalAssertionsProjectSettingFailsSchemaValidation() throws IOException {
-        Assert.assertFalse("Expected the dotted 'global_assertions.content_types' to fail schema validation",
-                validate("test-project-settings-global-assertions-dotted").isEmpty());
     }
 
     @Test
