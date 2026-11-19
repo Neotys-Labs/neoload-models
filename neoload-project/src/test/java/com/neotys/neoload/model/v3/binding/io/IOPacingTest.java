@@ -289,7 +289,7 @@ public class IOPacingTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readPacingMinEqualToMaxIsAccepted() throws IOException {
-		for (final String pacing : new String[] {"{ min: 5s, max: 5s }", "{ min: 1s, max: 1000 }", "{ max: 0 }"}) {
+		for (final String pacing : new String[] {"{ min: 5s, max: 5s }", "{ min: 1s, max: 1000 }"}) {
 			final Validation validation = validate(readPacing(pacing));
 			assertTrue(validation.getMessage().orElse(""), validation.isValid());
 		}

@@ -7,7 +7,7 @@ A duration assertion checks that a [request](request.md) or [custom_action](cust
 
 | Name      | Description                                          | Accept variable | Required | Since |
 |:--------- | :---------------------------------------------------- |:---------------:|:--------:|:-----:|
-| less_than | The maximum allowed duration, in milliseconds.        | -               | &#x2713; | 2026.3 |
+| less_than | The maximum allowed duration, in milliseconds, at least `1`. | -               | &#x2713; | 2026.3 |
 
 #### Example 1
 

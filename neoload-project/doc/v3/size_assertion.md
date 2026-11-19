@@ -19,6 +19,7 @@ All settings are optional but the following rules apply:
 * At least one of `equals`, `greater_than` or `less_than` must be specified.
 * `equals` cannot be combined with `greater_than` or `less_than`.
 * `greater_than` and `less_than` can be combined to define a range.
+* `equals`, `greater_than` and `less_than` are at least `1`.
 * Sizes are positive integers, expressed in bytes.
 
 #### Example 1

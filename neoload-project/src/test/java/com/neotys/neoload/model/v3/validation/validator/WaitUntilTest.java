@@ -135,6 +135,16 @@ public class WaitUntilTest {
 		validation = validator.validate(waitUntil, NeoLoad.class);
 		assertTrue(validation.isValid());
 		assertFalse(validation.getMessage().isPresent());
+
+		waitUntil = WaitUntil.builder()
+				.addConditions(validCondition())
+				.timeout(Durations.of("0"))
+				.build();
+		validation = validator.validate(waitUntil, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
+				+ "Violation 1 - Incorrect value '0' for 'timeout': must be greater than or equal to 1 millisecond." + LINE_SEPARATOR,
+				validation.getMessage().get());
 	}
 
 	@Test

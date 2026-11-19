@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.converter.MatchToStringConverter;
 import com.neotys.neoload.model.v3.binding.serializer.MatchDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
+import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
@@ -56,6 +57,7 @@ public interface WaitUntil extends Step {
 
 	@JsonProperty(TIMEOUT)
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultTimeoutFilter.class)
+	@PositiveCheck(unit = "millisecond", groups = {NeoLoad.class})
 	@Value.Default
 	default DurationOrVariable getTimeout() {
 		return DEFAULT_TIMEOUT;

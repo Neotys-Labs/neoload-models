@@ -5,11 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertion;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-
+import org.junit.Test;
 
 public class SizeAssertionTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -85,5 +83,22 @@ public class SizeAssertionTest {
 		final SizeAssertion assertion = SizeAssertion.builder().equals(-1L).build();
 		final Validation validation = validator.validate(assertion, NeoLoad.class);
 		assertFalse(validation.isValid());
+	}
+
+	@Test
+	public void validateZeroSizeIsRejected() {
+		final Validator validator = new Validator();
+
+		Validation validation = validator.validate(SizeAssertion.builder().equals(0L).build(), NeoLoad.class);
+		assertFalse(validation.isValid());
+
+		validation = validator.validate(SizeAssertion.builder().greaterThan(0L).build(), NeoLoad.class);
+		assertFalse(validation.isValid());
+
+		validation = validator.validate(SizeAssertion.builder().lessThan(0L).build(), NeoLoad.class);
+		assertFalse(validation.isValid());
+
+		validation = validator.validate(SizeAssertion.builder().equals(1L).build(), NeoLoad.class);
+		assertTrue(validation.isValid());
 	}
 }

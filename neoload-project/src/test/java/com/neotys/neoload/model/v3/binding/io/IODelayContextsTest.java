@@ -209,7 +209,7 @@ public class IODelayContextsTest {
 
 	@Test
 	public void validateMinEqualToMaxAccepted() throws IOException {
-		for (final String delayYaml : new String[] {"{min: 5s, max: 5s}", "{max: 0}"}) {
+		for (final String delayYaml : new String[] {"{min: 5s, max: 5s}"}) {
 			final Validation validation = validate(read(delayYaml));
 			assertTrue(validation.getMessage().orElse(""), validation.isValid());
 		}
