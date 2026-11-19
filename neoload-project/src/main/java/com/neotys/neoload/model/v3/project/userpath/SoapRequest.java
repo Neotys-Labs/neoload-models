@@ -13,23 +13,21 @@ import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertionE
 import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertionElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_DEFAULT)
-@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, SoapRequest.PARAMETERS, SoapRequest.HEADERS, SoapRequest.CONTENT, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, HttpBasedRequest.FOLLOW_REDIRECTS, HttpBasedRequest.CHARSET, HttpBasedRequest.RESPONSE_STORAGE, SlaElement.SLA_PROFILE, SoapRequest.REQUEST_SECURITY_PROFILE, SoapRequest.RESPONSE_SECURITY_PROFILE})
+@JsonPropertyOrder({SoapRequest.NAME, Element.DESCRIPTION, HttpBasedRequest.URL, HttpBasedRequest.SERVER, HttpBasedRequest.PARAMETERS, HttpBasedRequest.HEADERS, SoapRequest.CONTENT, HttpBasedRequestWithResponse.EXTRACTORS, AssertionsElement.ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, HttpBasedRequestWithResponse.FOLLOW_REDIRECTS, SoapRequest.CHARSET, HttpBasedRequestWithResponse.RESPONSE_STORAGE, SlaElement.SLA_PROFILE, SoapRequest.REQUEST_SECURITY_PROFILE, SoapRequest.RESPONSE_SECURITY_PROFILE})
 @JsonSerialize(as = ImmutableSoapRequest.class)
 @JsonDeserialize(as = ImmutableSoapRequest.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
 @SuppressWarnings("java:S2097")
-public interface SoapRequest extends Step, HttpBasedRequest, SlaElement, AssertionsElement, DurationAssertionElement, SizeAssertionElement {
+public interface SoapRequest extends Step, HttpBasedRequestWithResponse, SlaElement {
 	String NAME = "name";
-	String PARAMETERS = "parameters";
-	String HEADERS = "headers";
+	String CHARSET = "charset";
 	String CONTENT = "content";
 	String REQUEST_SECURITY_PROFILE = "request_security_profile";
 	String RESPONSE_SECURITY_PROFILE = "response_security_profile";
@@ -44,15 +42,9 @@ public interface SoapRequest extends Step, HttpBasedRequest, SlaElement, Asserti
 		return DEFAULT_NAME;
 	}
 
-	@JsonProperty(PARAMETERS)
-	@JsonInclude(Include.NON_EMPTY)
-	@Valid
-	List<NameValue> getParameters();
-
-	@JsonProperty(HEADERS)
-	@JsonInclude(Include.NON_EMPTY)
-	@Valid
-	List<NameValue> getHeaders();
+	/** The charset used to encode the SOAP content. */
+	@JsonProperty(CHARSET)
+	Optional<String> getCharset();
 
 	@JsonProperty(CONTENT)
 	@RequiredCheck(groups = {NeoLoad.class})
@@ -64,6 +56,11 @@ public interface SoapRequest extends Step, HttpBasedRequest, SlaElement, Asserti
 
 	@JsonProperty(RESPONSE_SECURITY_PROFILE)
 	Optional<String> getResponseSecurityProfile();
+
+	@Value.Check
+	default SoapRequest moveUrlQueryToParameters() {
+		return hasUrlQuery() ? ImmutableSoapRequest.copyOf(this).withUrl(urlWithoutQuery()).withParameters(parametersWithUrlQuery()) : this;
+	}
 
 	class DefaultNameFilter {
 		@Override

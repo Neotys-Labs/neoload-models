@@ -53,6 +53,35 @@ public class IOSchema3Dot1ValidationTest {
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
     /**
+     * Fixtures using what only schema 3.2 describes: {@code parameters} on request, soap_request and
+     * websocket_channel, {@code extractors} on soap_request, {@code follow_redirects} and
+     * {@code response_storage} on websocket_channel. They are validated by {@link IOSchema3Dot2ValidationTest} only.
+     */
+    static final Set<String> SCHEMA_3_2_ONLY_FIXTURES = Set.of(
+            "test-assert-content-only-required.yaml",
+            "test-assert-content-only-required.json",
+            "test-assert-content-required-and-optional.yaml",
+            "test-assert-content-required-and-optional.json",
+            "test-assert-duration-request.yaml",
+            "test-assert-duration-request.json",
+            "test-request-only-required.yaml",
+            "test-request-only-required.json",
+            "test-request-required-and-optional.yaml",
+            "test-request-required-and-optional.json",
+            "test-variable-extractor-only-required.yaml",
+            "test-variable-extractor-only-required.json",
+            "test-variable-extractor-required-and-optional.yaml",
+            "test-variable-extractor-required-and-optional.json",
+            "test-http-request-no-query.yaml",
+            "test-http-request-parameters-only.yaml",
+            "test-http-request-query-in-url.yaml",
+            "test-http-soap-request-extractors.yaml",
+            "test-http-websocket-channel-query-in-url-clean.yaml",
+            "test-http-websocket-channel-query-in-url.yaml",
+            "test-http-websocket-channel-redirects-default.yaml",
+            "test-http-websocket-channel-redirects-storage.yaml");
+
+    /**
      * Fixtures excluded from schema validation.
      *
      * <p><b>Backward-compat fixtures</b> ({@code test-readonly-*}): use legacy input formats the
@@ -153,6 +182,7 @@ public class IOSchema3Dot1ValidationTest {
                      return name.endsWith(".yaml") || name.endsWith(".json");
                  })
                  .filter(p -> !EXCLUDED_FIXTURES.contains(p.getFileName().toString()))
+                 .filter(p -> !SCHEMA_3_2_ONLY_FIXTURES.contains(p.getFileName().toString()))
                  .sorted()
                  .forEach(file -> {
                      String fileName = file.getFileName().toString();

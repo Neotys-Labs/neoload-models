@@ -15,6 +15,7 @@ external XML file referenced by `content.path`.
 | [parameters](#parameters)| The query string parameter list                                     | &#x2713;        | -        | 2026.3|
 | [headers](#headers)      | The request header list                                              | &#x2713;        | -        | 2026.3|
 | [content](#content)      | The external XML file used as the request body                      | -               | &#x2713; | 2026.3|
+| [extractors](variable-extractor.md) | The extractor list                                       | -               | -        | 2026.3|
 | [content_assertions](content_assertion.md) | The list of assertions to validate the response content | -         | -        | 2026.3|
 | assertions               | Deprecated alias of `content_assertions`, read-only. Use `content_assertions` instead. | - | -   | 2026.3|
 | [duration_assertion](duration_assertion.md) | Checks that the request completed within a given duration | -   | -        | 2026.3|
@@ -93,7 +94,7 @@ Define the name of the [server](server.md) to use for the SOAP request. The `ser
 
 ## parameters
 
-Define the query string parameters to attach to the SOAP request URL with the following format:
+Define the query string parameters to attach to the SOAP request URL. A query written in `url` is moved here when the project is loaded, ahead of the declared parameters. Format:
 
 ```yaml
 parameters:

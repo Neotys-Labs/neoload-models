@@ -9,6 +9,7 @@ A request defines a plain HTTP request.
 | [url](#url)                         | The URL to hit                                                                | &#x2713;        | &#x2713; |       |
 | [server](#server)                   | The server name to use                                                        | -               | -        |       |
 | [method](#method)                   | The request method                                                            | -               | -        |       |
+| [parameters](#parameters)           | The query string parameter list                                               | &#x2713;        | -        | 2026.3|
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
 | [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        | 2026.3|
@@ -49,6 +50,8 @@ request:
 Define the URL of the HTTP request. A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.
 
 Use convention to define an URL: `http[s]://{host}[:{port}][/{path}][?{query}]`. Variables can be used from the `host`, `port`, `path` parameters and from the name/value pairs of the `query` parameter. To encode the evaluation of a variable from the name/value pairs of the `query` parameter, use convention: `__encodeURL(${my_variable})`.
+
+A `query` written in the URL is moved to [parameters](#parameters) when the project is loaded: the URL is kept without its query, and the query parameters come first in `parameters`, before the ones already declared there.
 
 #### Example 1
 
@@ -148,6 +151,42 @@ Defining an HTTP request with a relative URL.
 request:
   url: /v2/pet/findByStatus?status=available
   server: server_petstore
+```
+
+## parameters
+
+Define the query string parameters to attach to the HTTP request URL with the following format:
+
+```yaml
+parameters:
+  parameter-name: parameter-value
+```
+
+The `parameter-name` parameter represents the parameter name. This parameter is required.<br>
+The `parameter-value` parameter represents the parameter value. This parameter can be optional and can use a variable. A name can be repeated.
+
+The parameters written in the query of the `url` come first, followed by the declared `parameters`. The form-encoded `body` of a request is not a query: it stays in `body` and is never moved to `parameters`.
+
+#### Example
+
+A request declared with a query in its URL and a parameter is saved with a URL without query:
+
+```yaml
+request:
+  url: /search?q=neoload&page=1
+  parameters:
+  - lang: en
+```
+
+is written back as:
+
+```yaml
+request:
+  url: /search
+  parameters:
+  - q: neoload
+  - page: "1"
+  - lang: en
 ```
 
 ## headers

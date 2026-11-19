@@ -10,19 +10,17 @@ import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.DurationAssertionElement;
 import com.neotys.neoload.model.v3.project.userpath.assertion.SizeAssertionElement;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.validation.Valid;
-
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 /**
  * A WebSocket connection, opened through an HTTP upgrade and kept open for the rest of the
  * iteration. Apart from {@link #getMessagesMapping()} and {@link #getTimestampExtractor()} it is defined
- * like a {@link Request}: url, server, headers and extractors.
+ * like a {@link Request}: url, server, headers, parameters, extractors, assertions, follow_redirects and response_storage.
  *
  * <p>A channel has no identifier of its own: it is designated by its complete path, from
  * where it is declared down to its {@link #getName()}. Two channels may therefore share a
@@ -32,26 +30,15 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * answer a waiting synchronous {@link WebSocketRequest}.</p>
  */
 @JsonInclude(value=Include.NON_EMPTY)
-@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, UrlServerElement.URL, UrlServerElement.SERVER, WebSocketChannel.HEADERS, WebSocketChannel.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, WebSocketChannel.MESSAGES_MAPPING, WebSocketChannel.TIMESTAMP_EXTRACTOR, WebSocketChannel.PUSH_MESSAGES})
+@JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, HttpBasedRequest.URL, HttpBasedRequest.SERVER, HttpBasedRequest.PARAMETERS, HttpBasedRequest.HEADERS, HttpBasedRequestWithResponse.EXTRACTORS, AssertionsElement.CONTENT_ASSERTIONS, DurationAssertionElement.DURATION_ASSERTION, SizeAssertionElement.SIZE_ASSERTION, HttpBasedRequestWithResponse.FOLLOW_REDIRECTS, HttpBasedRequestWithResponse.RESPONSE_STORAGE, WebSocketChannel.MESSAGES_MAPPING, WebSocketChannel.TIMESTAMP_EXTRACTOR, WebSocketChannel.PUSH_MESSAGES})
 @JsonSerialize(as = ImmutableWebSocketChannel.class)
 @JsonDeserialize(as = ImmutableWebSocketChannel.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface WebSocketChannel extends Step, UrlServerElement, AssertionsElement, DurationAssertionElement, SizeAssertionElement {
-	String HEADERS = "headers";
-	String EXTRACTORS = "extractors";
+public interface WebSocketChannel extends Step, HttpBasedRequestWithResponse {
 	String MESSAGES_MAPPING = "messages_mapping";
 	String TIMESTAMP_EXTRACTOR = "timestamp_extractor";
 	String PUSH_MESSAGES = "push_messages";
-
-	@JsonProperty(HEADERS)
-	@JsonInclude(Include.NON_EMPTY)
-	@Valid
-	List<NameValue> getHeaders();
-
-	@JsonProperty(EXTRACTORS)
-	@Valid
-	List<VariableExtractor> getExtractors();
 
 	@JsonProperty(MESSAGES_MAPPING)
 	@Valid
@@ -65,6 +52,11 @@ public interface WebSocketChannel extends Step, UrlServerElement, AssertionsElem
 	@JsonProperty(PUSH_MESSAGES)
 	@Valid
 	List<WebSocketPushMessage> getPushMessages();
+
+	@Value.Check
+	default WebSocketChannel moveUrlQueryToParameters() {
+		return hasUrlQuery() ? ImmutableWebSocketChannel.copyOf(this).withUrl(urlWithoutQuery()).withParameters(parametersWithUrlQuery()) : this;
+	}
 
 	/** The channel, then its push messages and every element of their steps. */
 	@Override

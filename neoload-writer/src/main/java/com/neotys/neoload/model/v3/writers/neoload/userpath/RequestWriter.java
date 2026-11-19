@@ -90,7 +90,7 @@ public class RequestWriter extends ElementWriter {
 			theRequest.getParts().ifPresent(s -> writeParts(s, document, xmlRequest));
 		}
 		final Optional<String> parameterTag = bodySupportedByMethod ? Optional.of(XML_URL_PARAMETER_TAG_NAME) : Optional.empty();
-		url.getQuery().ifPresent(s -> writeParameters(RequestUtils.getParameters(s), parameterTag, document, xmlRequest));
+		writeParameters(theRequest.getParameters(), parameterTag, document, xmlRequest);
 		theRequest.getHeaders().forEach(header -> HeaderWriter.writeXML(document, xmlRequest, header.getName(), header.getValue()));
 	}
 
