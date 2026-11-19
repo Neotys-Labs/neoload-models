@@ -439,7 +439,7 @@
 					{
 						"properties": {
 							"value": {
-								"anyOf": [{ "$ref": "#/definitions/common/text" }, "number"],
+								"anyOf": [{ "$ref": "#/definitions/common/text" }, { "type": "number" }],
 								"description": "The variable value. Required. Does not accept a variable."
 							}
 						}
@@ -1688,7 +1688,7 @@
 						"description": "The operator. Two possible values: `BELOW`, `ABOVE`."
 					},
 					"value": {
-						"anyOf": [{ "$ref": "#/definitions/common/text" }, "number"],
+						"anyOf": [{ "$ref": "#/definitions/common/text" }, { "type": "number" }],
 						"description": "The value of the threshold."
 					},
 					"severity": {
@@ -3277,7 +3277,7 @@
 						"description": "The description of the case."
 					},
 					"value": {
-						"anyOf": [{ "$ref": "#/definitions/common/text" }, "number"],
+						"anyOf": [{ "$ref": "#/definitions/common/text" }, { "type": "number" }],
 						"description": "The value of the case. Does not accept a variable: compared literally to the Switch value."
 					},
 					"break": {
