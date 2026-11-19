@@ -1,5 +1,9 @@
 package com.neotys.neoload.model.v3.validation.validator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.neotys.neoload.model.v3.project.scenario.CustomLoadPolicy;
 import com.neotys.neoload.model.v3.project.scenario.CustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomLoadPolicy;
@@ -7,15 +11,10 @@ import com.neotys.neoload.model.v3.project.scenario.ImmutableCustomPolicyStep;
 import com.neotys.neoload.model.v3.project.scenario.ImmutableLoadDuration;
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.Arrays;
 import org.assertj.core.api.Condition;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Arrays;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class CustomLoadPolicyTest {
 
@@ -160,7 +159,7 @@ public class CustomLoadPolicyTest {
         assertThat(validation.getMessage())
                 .hasValueSatisfying(new Condition<>(string -> string.contains("Violation Number: 2"), "Only two failures"))
                 .hasValueSatisfying(new Condition<>(
-                        string -> string.contains("Incorrect value for 'duration': must be greater than or equal to 1 second or 1 iteration."),
+                        string -> string.contains("Incorrect value '0' for 'duration': must be greater than or equal to 1 second or 1 iteration."),
                         "If it no longer works, you can remove this assert, it is a deprecated validation for custom policy")
                 )
                 .hasValueSatisfying(new Condition<>(

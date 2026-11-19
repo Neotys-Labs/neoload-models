@@ -5,13 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.neotys.neoload.model.v3.project.scenario.LoadDuration;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import com.neotys.neoload.model.v3.validation.validator.Validation;
-import com.neotys.neoload.model.v3.validation.validator.Validator;
-
+import org.junit.Test;
 
 public class DurationTest {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -24,20 +20,18 @@ public class DurationTest {
 		CONSTRAINTS_VALUE_NULL = sb.toString();
 	}
 
-	private static final String CONSTRAINTS_VALUE_MIN;
-	static {
+	private static String valueMinViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for '': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
-		CONSTRAINTS_VALUE_MIN = sb.toString();
+		sb.append("Violation 1 - Incorrect value '" + value + "' for '': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
+		return sb.toString();
 	}
 
-	private static final String CONSTRAINTS_TYPE;
-	static {
+	private static String typeViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for '': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
-		CONSTRAINTS_TYPE = sb.toString();
+		sb.append("Violation 1 - Incorrect value '" + value + "' for '': must be greater than or equal to 1 second or 1 iteration.").append(LINE_SEPARATOR);
+		return sb.toString();
 	}
 
 	@Test
@@ -80,7 +74,7 @@ public class DurationTest {
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
+		assertEquals(valueMinViolation("-10"), validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
 				.value(-10)
@@ -88,7 +82,7 @@ public class DurationTest {
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
+		assertEquals(valueMinViolation("-10"), validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
 				.value(0)
@@ -96,7 +90,7 @@ public class DurationTest {
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
+		assertEquals(valueMinViolation("0"), validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
 				.value(0)
@@ -104,7 +98,7 @@ public class DurationTest {
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_VALUE_MIN, validation.getMessage().get());	
+		assertEquals(valueMinViolation("0"), validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
 				.value(1)
@@ -132,7 +126,7 @@ public class DurationTest {
 				.build();
 		Validation validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_TYPE, validation.getMessage().get());	
+		assertEquals(typeViolation("1"), validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
 				.value(1)
@@ -140,7 +134,7 @@ public class DurationTest {
 				.build();
 		validation = validator.validate(duration, NeoLoad.class);
 		assertFalse(validation.isValid());
-		assertEquals(CONSTRAINTS_TYPE, validation.getMessage().get());	
+		assertEquals(typeViolation("1"), validation.getMessage().get());	
 
 		duration = LoadDuration.builder()
 				.value(1)
