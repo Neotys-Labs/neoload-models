@@ -64,9 +64,10 @@ servers:
 
 ### Changed
 
-- **Servers are read strictly**, whatever the declared `schemaVersion`: an unknown key in a server
+- **Servers are read strictly from `schemaVersion: "3.2"` on**: an unknown key in a server
   (for example a misspelled `prot:` or a `description`) is rejected instead of being silently
-  ignored, and `host` must be a key of the server itself.
+  ignored. Before 3.2 it is still ignored, so the existing projects keep loading. In every version,
+  `host` must be a key of the server itself.
 
 ---
 
