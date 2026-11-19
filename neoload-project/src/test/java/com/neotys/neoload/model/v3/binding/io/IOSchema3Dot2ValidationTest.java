@@ -1,6 +1,5 @@
 package com.neotys.neoload.model.v3.binding.io;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -109,17 +108,5 @@ public class IOSchema3Dot2ValidationTest {
         final JsonNode node = YAML_MAPPER.readTree("schemaVersion: \"3.1\"\nname: MyProject\n");
 
         assertFalse(schema.validate(node).isEmpty());
-    }
-
-    @Test
-    public void schema32IsSchema31WithItsOwnVersion() throws IOException {
-        final String schema31 = Files.readString(schemasDir.resolve("v3.1/as-code.schema.json"))
-                .replace("schemas/v3.1/as-code.schema.json", "schemas/v3.2/as-code.schema.json")
-                .replace("\"const\": \"3.1\"", "\"const\": \"3.2\"")
-                .replace("\"const\": 3.1", "\"const\": 3.2")
-                .replace("Must be 3.1 as a string", "Must be 3.2 as a string");
-
-        assertEquals("v3.2 must stay v3.1 with its own version until 3.2 features are added: update or remove this test then",
-                schema31, Files.readString(schemasDir.resolve("v3.2/as-code.schema.json")));
     }
 }

@@ -2,6 +2,7 @@ package com.neotys.neoload.model.v3.validation.constraintvalidators;
 
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import com.neotys.neoload.model.v3.validation.constraints.CompositeCheck;
+import com.neotys.neoload.model.v3.validation.constraints.MaxSecondsCheck;
 import java.time.Duration;
 import javax.validation.ConstraintValidatorContext;
 
@@ -26,7 +27,7 @@ public final class StopAfterValidator extends AbstractConstraintValidator<Compos
 				return false;
 			}
 			final Duration time = (Duration) value;
-			return !time.isZero() && !time.isNegative() && time.getNano() == 0;
+			return !time.isZero() && !time.isNegative() && time.getNano() == 0 && time.getSeconds() <= MaxSecondsCheck.MAX_SECONDS;
 		}
 		else {
 			return (value == null);

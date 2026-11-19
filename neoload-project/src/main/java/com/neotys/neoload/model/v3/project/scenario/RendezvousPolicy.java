@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.serializer.JavaDurationDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.JavaDurationSerializer;
+import com.neotys.neoload.model.v3.validation.constraints.MaxSecondsCheck;
 import com.neotys.neoload.model.v3.validation.constraints.PositiveCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.WholeSecondsCheck;
@@ -47,6 +48,7 @@ public interface RendezvousPolicy {
 	@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = DefaultTimeoutFilter.class)
 	@PositiveCheck(unit="second", groups={NeoLoad.class})
 	@WholeSecondsCheck(groups={NeoLoad.class})
+	@MaxSecondsCheck(groups={NeoLoad.class})
 	@JsonSerialize(using=JavaDurationSerializer.class)
 	@JsonDeserialize(using=JavaDurationDeserializer.class)
 	@Value.Default
