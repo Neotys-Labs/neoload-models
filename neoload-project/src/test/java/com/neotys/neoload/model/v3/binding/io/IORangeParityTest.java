@@ -32,6 +32,7 @@ public class IORangeParityTest {
 	private static final String RENDEZVOUS_WHEN = DurationFields.scenario("  rendezvous_policies:\n  - name: r\n    when: %s\n");
 	private static final String FILE_START_FROM_LINE = variable("file", "path: data/cities.csv\n    is_first_line_column_names: true\n    start_from_line: %s\n");
 	private static final String LIST_START_FROM_LINE = variable("list", "column_names:\n    - city\n    values:\n    - - Paris\n    start_from_line: %s\n");
+	private static final String DISTRIBUTION = "name: P\npopulations:\n- name: Pop\n  user_paths:\n  - name: U\n    distribution: %s\n";
 	private static final String COUNTER_START = variable("counter", "start: %s\n    end: 10\n    increment: 1\n");
 	private static final String COUNTER_END = variable("counter", "start: 0\n    end: %s\n    increment: 1\n");
 	private static final String RANDOM_NUMBER_MIN = variable("random_number", "min: %s\n    max: 10\n");
@@ -89,6 +90,15 @@ public class IORangeParityTest {
 		rows.add(row("rendezvous_policies[].when", RENDEZVOUS_WHEN, "\"2147483647\"", VALID));
 		rows.add(row("rendezvous_policies[].when", RENDEZVOUS_WHEN, "\"${myVar}\"", INVALID));
 		rows.add(row("rendezvous_policies[].when", RENDEZVOUS_WHEN, "abc", INVALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "100%", VALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "100", VALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "\"100\"", VALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "99.9%", VALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "0%", VALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "101%", INVALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "100.1%", INVALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "100.1", INVALID));
+		rows.add(row("user_paths[].distribution", DISTRIBUTION, "\"100.1\"", INVALID));
 		rows.add(row("counter.start", COUNTER_START, "2147483647", VALID));
 		rows.add(row("counter.start", COUNTER_START, "2147483648", INVALID));
 		rows.add(row("counter.start", COUNTER_START, "1.5", INVALID));

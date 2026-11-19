@@ -1372,10 +1372,10 @@
 								},
 								"distribution": {
 									"anyOf": [
-										{ "type": "string", "pattern": "^\\d{1,3}(\\.\\d)?%?$" },
+										{ "type": "string", "pattern": "^(100(\\.0)?|\\d{1,2}(\\.\\d)?)%?$" },
 										{ "type": "number", "minimum": 0, "maximum": 100 }
 									],
-									"description": "The percentage of the User Path in Population. The value is a percentage and may be set within precision of 0.1%. If the distribution is not present, its value will be proportionally calculated."
+									"description": "The percentage of the User Path in Population. The value is a percentage from 0% to 100% and may be set within precision of 0.1%. If the distribution is not present, its value will be proportionally calculated."
 								}
 							}
 						},
