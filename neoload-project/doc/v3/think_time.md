@@ -51,7 +51,7 @@ _Complete form_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards
 |:----------- |:------------------------------------------------------------- |:---------------:|:--------:|:------:|
 | name        | The name of the think time. The default value is `think_time`. | -        | -        | 2026.3 |
 | description | The description of the think time                             | -        | -        | 2026.3 |
-| value       | The think time duration                                       | &#x2713; | &#x2713; | 2026.3 |
+| value       | The think time duration, greater than `0`                     | &#x2713; | &#x2713; | 2026.3 |
 
 ```yaml
 think_time:
@@ -78,8 +78,8 @@ A random think time is drawn between a `min` and a `max`.
 |:----------- |:------------------------------------------------- |:---------------:|:--------:|:------:|
 | name        | The name of the think time. The default value is `think_time`. | -        | -        | 2026.3 |
 | description | The description of the think time                             | -        | -        | 2026.3 |
-| min         | The minimum think time duration. The default value is `0`.    | &#x2713; | -        | 2026.3 |
-| max         | The maximum think time duration. Must be greater than or equal to `min` | &#x2713; | &#x2713; | 2026.3 |
+| min         | The minimum think time duration, `0` or more. The default value is `0`. | &#x2713; | -        | 2026.3 |
+| max         | The maximum think time duration, greater than `0`. Must be greater than or equal to `min` | &#x2713; | &#x2713; | 2026.3 |
 
 `min` and `max` use the same duration format as the fixed think time (`hours (h), minutes (m), seconds (s) and milliseconds (ms)`, a plain integer in milliseconds, or a NeoLoad variable).
 

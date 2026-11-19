@@ -1,6 +1,7 @@
 package com.neotys.neoload.model.v3.binding.io;
 
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.MISSING_VALUE;
+import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertInvalidDurationRead;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.assertViolations;
 import static com.neotys.neoload.model.v3.binding.io.ViolationsAssert.invalidValue;
 
@@ -24,6 +25,7 @@ public class IOViolationValueTest {
 	private static final Validator VALIDATOR = new Validator();
 
 	private static final String CONSTANT_LOAD = "project.scenarios[0].populations[0].constant_load";
+	private static final String USER_PATH_STEPS = "project.user_paths[0].actions.steps";
 
 	private static Validation validate(final String yaml) throws IOException {
 		return VALIDATOR.validate(new IO().read(yaml), NeoLoad.class);
@@ -55,6 +57,21 @@ public class IOViolationValueTest {
 		final Validation validation = validate(DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 1\n      start_after: 0\n"));
 
 		assertViolations(validation, invalidValue("0", CONSTANT_LOAD + ".start_after", "must be greater than or equal to 1 second or must be an existing population."));
+	}
+
+	@Test
+	public void zeroLoopCountAndWaitUntilTimeoutAreNamedWithTheirValue() throws IOException {
+		final Validation validation = validate(DurationFields.actions("    - loop:\n        count: 0\n        steps:\n        - delay: 1s\n"
+				+ DurationFields.waitUntil("        timeout: 0\n")));
+
+		assertViolations(validation,
+				invalidValue("0", USER_PATH_STEPS + "[1].timeout", "must be greater than or equal to 1 millisecond."),
+				invalidValue(USER_PATH_STEPS + "[0].count", "must be a number between 1 and 2147483647, got 0."));
+	}
+
+	@Test
+	public void negativeDelayIsNamedWithItsValueAndNotReplaced() {
+		assertInvalidDurationRead(() -> new IO().read(DurationFields.DELAY.yaml("-5")), "-5", "delay");
 	}
 
 	@Test

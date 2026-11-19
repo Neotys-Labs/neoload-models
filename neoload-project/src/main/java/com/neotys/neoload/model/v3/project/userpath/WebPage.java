@@ -10,6 +10,7 @@ import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.SlaElement;
+import com.neotys.neoload.model.v3.validation.constraints.NonZeroCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.constraints.WebPageStepsCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
@@ -48,7 +49,7 @@ public interface WebPage extends Step, SlaElement {
 
 	@JsonProperty(THINK_TIME)
 	@Valid
-	Optional<Duration> getThinkTime();
+	Optional<@NonZeroCheck(groups = {NeoLoad.class}) Duration> getThinkTime();
 
 	@JsonProperty(PLAYBACK)
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultPlaybackFilter.class)

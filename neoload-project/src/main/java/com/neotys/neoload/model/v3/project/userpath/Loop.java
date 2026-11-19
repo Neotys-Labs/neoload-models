@@ -1,14 +1,5 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,8 +9,15 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.neotys.neoload.model.v3.binding.serializer.StepsDeserializer;
 import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.Element;
+import com.neotys.neoload.model.v3.validation.constraints.NumberTextRangeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
+import java.util.stream.Stream;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, Loop.COUNT, Loop.STEPS })
@@ -49,6 +47,7 @@ public interface Loop extends Step {
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Valid
 	@Pattern(regexp = "(\\d+|\\$\\{\\w+\\})", groups = {NeoLoad.class})
+	@NumberTextRangeCheck(min = 1, max = Integer.MAX_VALUE, groups = {NeoLoad.class})
 	String getCount();
 
 	@JsonProperty(STEPS)

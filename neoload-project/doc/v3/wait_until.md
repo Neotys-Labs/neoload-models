@@ -10,7 +10,7 @@ The Wait Until action pauses the current execution thread until certain conditio
 | description  | The description of the Wait Until                                                                  | -               | -        | 2026.3 |
 | conditions   | The list of conditions to evaluate                                                                 | -               | &#x2713; | 2026.3 |
 | match        | The "match" value can be: <ul><li>`any`</li><li>`all`</li></ul>The default value is `any`.         | -               | -        | 2026.3 |
-| timeout      | The maximum time to wait for the conditions to be verified. The default value is `1m` (60000 ms).  | &#x2713;        | -        | 2026.3 |
+| timeout      | The maximum time to wait for the conditions to be verified, greater than `0`. The default value is `1m` (60000 ms).  | &#x2713;        | -        | 2026.3 |
 
 Use the following syntax to define conditions: `[(condition)(, condition)*]`
 

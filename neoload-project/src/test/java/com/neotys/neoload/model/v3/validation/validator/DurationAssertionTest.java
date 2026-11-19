@@ -23,7 +23,7 @@ public class DurationAssertionTest {
 	private static String lessThanViolation(final String value) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value '" + value + "' for 'less_than': must be greater than or equal to 0.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value '" + value + "' for 'less_than': must be greater than or equal to 1.").append(LINE_SEPARATOR);
 		return sb.toString();
 	}
 
@@ -43,6 +43,13 @@ public class DurationAssertionTest {
 		validation = validator.validate(assertion, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(lessThanViolation("-1"), validation.getMessage().get());
+
+		assertion = DurationAssertion.builder()
+				.lessThan(0L)
+				.build();
+		validation = validator.validate(assertion, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(lessThanViolation("0"), validation.getMessage().get());
 
 		assertion = DurationAssertion.builder()
 				.lessThan(2048L)
