@@ -56,12 +56,12 @@ The authentications of the server, one per row of the GUI "Authorization" table.
 
 | Name               | Description                                                                                                       | Accept variable | Required | Since  |
 |:------------------ |:----------------------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:------:|
-| login              | The login of the user account used to authenticate on the server                                                  | &#x2713;        | &#x2713; | 2027.1 |
-| password           | The password of the user account used to authenticate on the server                                               | &#x2713;        | &#x2713; | 2027.1 |
+| login              | The login of the user account used to authenticate on the server. It can be empty (`""`), as in the GUI table.     | &#x2713;        | &#x2713; | 2027.1 |
+| password           | The password of the user account used to authenticate on the server. It can be empty (`""`), as in the GUI table.  | &#x2713;        | &#x2713; | 2027.1 |
 | realm              | The realm (Basic, Digest) or the domain (NTLM, Negotiate). Without it, the credentials answer any realm. Two authentications of a server can't share a realm. | -               | -        | 2027.1 |
 | preferred_protocol | The protocol used when the server sends a Negotiate challenge: "kerberos" or "ntlm". Without it, NeoLoad picks the protocol itself (the GUI "Default"). | -               | -        | 2027.1 |
 
-When NeoLoad saves a project to YAML, a server with a single authentication and no preferred protocol is written with `basic_authentication`, `ntlm_authentication` or `negotiate_authentication`; any other server is written with `authentications`.
+When NeoLoad saves a project to YAML, a server with a single authentication, no preferred protocol and a login and a password that are not empty is written with `basic_authentication`, `ntlm_authentication` or `negotiate_authentication`, which require both; any other server is written with `authentications`. When several rows of the GUI table share a realm, NeoLoad only uses the first one: only that one is written.
 
 #### Example
 ```yaml

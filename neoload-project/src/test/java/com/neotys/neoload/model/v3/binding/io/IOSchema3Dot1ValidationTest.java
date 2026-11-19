@@ -108,6 +108,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-servers-port-zero.yaml",
             "test-servers-two-authentication-forms.yaml",
             "test-servers-duplicate-realm.yaml",
+            "test-servers-basic-authentication-empty-password.yaml",
             "test-servers-url-rewriting-separator-without-in-path.yaml",
             "test-servers-url-rewriting-without-session-argument.yaml",
             "test-servers-unknown-preferred-protocol.yaml",

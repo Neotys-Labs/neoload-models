@@ -130,7 +130,8 @@ public class IOSchema3Dot2ValidationTest {
                 "test-servers-tcp-with-scheme", "test-servers-tcp-without-port", "test-servers-port-too-high",
                 "test-servers-port-zero", "test-servers-two-authentication-forms",
                 "test-servers-url-rewriting-separator-without-in-path",
-                "test-servers-url-rewriting-without-session-argument", "test-servers-unknown-preferred-protocol")) {
+                "test-servers-url-rewriting-without-session-argument", "test-servers-unknown-preferred-protocol",
+                "test-servers-basic-authentication-empty-password")) {
             final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource(fixture + ".yaml"));
             if (schema.validate(node).isEmpty()) {
                 accepted.add(fixture);

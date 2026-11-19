@@ -101,6 +101,38 @@ public class IOServerSettingsTest extends AbstractIOElementsTest {
 		assertTrue(validation.getMessage().orElse(""), validation.isValid());
 	}
 
+	private static Project getEmptyCredentials() {
+		return Project.builder()
+				.schemaVersion("3.2")
+				.name("MyProject")
+				.addServers(Server.builder()
+						.name("backend")
+						.host("backend.example.com")
+						.port("80")
+						.addAuthentications(ServerAuthentication.builder().login("").password("").build())
+						.addAuthentications(ServerAuthentication.builder().login("guest").password("").realm("CORP").build())
+						.build())
+				.build();
+	}
+
+	/** The GUI Authorization table accepts empty credentials: an item of authentications too, written explicitly. */
+	@Test
+	public void readEmptyCredentials() throws IOException {
+		assertRead("test-servers-empty-credentials", getEmptyCredentials());
+	}
+
+	@Test
+	public void writeEmptyCredentials() throws IOException {
+		assertWrite("test-servers-empty-credentials", getEmptyCredentials());
+	}
+
+	@Test
+	public void readBasicAuthenticationWithEmptyPasswordFailsValidation() throws IOException {
+		final String message = validationFailure("test-servers-basic-authentication-empty-password");
+
+		assertTrue(message, message.contains("'project.servers[0].authentication.password': missing value or value is empty."));
+	}
+
 	@Test
 	public void readUrlRewritingDefaultsAreDropped() throws IOException {
 		assertRead("test-servers-url-rewriting-defaults", getUrlRewritingDefaults());

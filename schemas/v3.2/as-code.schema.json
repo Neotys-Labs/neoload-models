@@ -1238,11 +1238,11 @@
 						"properties": {
 							"login": {
 								"$ref": "#/definitions/common/text",
-								"description": "The login of the user account used to authenticate on the server."
+								"description": "The login of the user account used to authenticate on the server, possibly empty (\"\")."
 							},
 							"password": {
 								"$ref": "#/definitions/common/text",
-								"description": "The password of the user account used to authenticate on the server."
+								"description": "The password of the user account used to authenticate on the server, possibly empty (\"\")."
 							},
 							"realm": {
 								"$ref": "#/definitions/common/text",
@@ -1325,11 +1325,13 @@
 				"properties": {
 					"login": {
 						"$ref": "#/definitions/common/text",
-						"description": "The login of the user account used to authenticate on the server"
+						"pattern": "\\S",
+						"description": "The login of the user account used to authenticate on the server, not empty"
 					},
 					"password": {
 						"$ref": "#/definitions/common/text",
-						"description": "The password of the user account used to authenticate on the server"
+						"pattern": "\\S",
+						"description": "The password of the user account used to authenticate on the server, not empty"
 					}
 				}
 			},

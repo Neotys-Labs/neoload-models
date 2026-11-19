@@ -37,6 +37,23 @@ public interface ServerAuthentication extends LoginPasswordAuthentication {
 		NTLM
 	}
 
+	/**
+	 * The login, empty allowed as in the GUI Authorization table. Always written, even empty: both keys are required.
+	 */
+	@Override
+	@JsonProperty(LOGIN)
+	@JsonInclude(Include.ALWAYS)
+	String getLogin();
+
+	/**
+	 * The password, empty allowed as in the GUI Authorization table. Always written, even empty: both keys are
+	 * required.
+	 */
+	@Override
+	@JsonProperty(PASSWORD)
+	@JsonInclude(Include.ALWAYS)
+	String getPassword();
+
 	/** The realm (Basic, Digest) or the domain (NTLM, Negotiate). Without it, the credentials answer any realm. */
 	@JsonProperty(REALM)
 	Optional<String> getRealm();
