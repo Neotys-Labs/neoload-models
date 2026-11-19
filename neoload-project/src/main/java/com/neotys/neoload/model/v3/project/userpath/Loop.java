@@ -1,14 +1,5 @@
 package com.neotys.neoload.model.v3.project.userpath;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-
-import org.immutables.value.Value;
-import org.immutables.value.Value.Style.ValidationMethod;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,6 +11,12 @@ import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
+import java.util.stream.Stream;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import org.immutables.value.Value;
+import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, Loop.COUNT, Loop.STEPS })
@@ -48,7 +45,7 @@ public interface Loop extends Step {
 	@JsonProperty(COUNT)
 	@RequiredCheck(groups = {NeoLoad.class})
 	@Valid
-	@Pattern(regexp = "(\\d+|\\$\\{\\w+\\})", groups = {NeoLoad.class})
+	@Pattern(regexp = "^(\\d+|" + Duration.VARIABLE_PATTERN + ")$", groups = {NeoLoad.class})
 	String getCount();
 
 	@JsonProperty(STEPS)

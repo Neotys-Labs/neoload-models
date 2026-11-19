@@ -223,6 +223,11 @@
 				"type": "string",
 				"pattern": "^.*$"
 			},
+			"variable": {
+				"title": "Variable reference",
+				"type": "string",
+				"pattern": "^\\$\\{[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\.}]+(\\.[^£€$\"\\[\\]<>|*¤?§µ#`@^²°¨\\\\.}]+)*\\}$"
+			},
 			"textblob": {
 				"title": "Blob",
 				"type": "string",
@@ -1206,7 +1211,7 @@
 					"description": "The scheme used to reach the server: `http` or `https`."
 				},
 				"port": {
-					"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+					"anyOf": [{ "$ref": "#/definitions/common/variable" }, { "type": "string", "pattern": "^\\d+$" }, { "$ref": "#/definitions/common/positive_number" }],
 					"description": "The port of the server. The default value is \"80\" (for http scheme) or \"443\" (for https scheme)."
 				},
 				"basic_authentication": {
@@ -2386,7 +2391,7 @@
 							"description": "The description of the Loop. Does not accept a variable."
 						},
 						"count": {
-							"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
+							"anyOf": [{ "$ref": "#/definitions/common/variable" }, { "type": "string", "pattern": "^\\d+$" }, { "$ref": "#/definitions/common/positive_number" }],
 							"description": "The number of times to execute"
 						},
 						"steps": {

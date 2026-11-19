@@ -89,6 +89,40 @@ variables:
     secret_id: my-app/db
 ```
 
+## Using variables
+A variable is referenced by its name between `${` and `}`.
+
+| Syntax | Meaning |
+|:-------|:--------|
+| `${NAME}` | The value of the variable `NAME`. |
+| `${NAME.FIELD}` | The field `FIELD` of the variable `NAME`, such as a column of a File variable. Accepted wherever `${NAME}` is. |
+
+Each part of the reference (`NAME`, `FIELD`) follows these rules:
+- It is not empty: `${}` and `${a.}` are rejected.
+- It contains neither `.` nor `}`.
+- It contains none of the characters forbidden in an element name: `` £ € $ " [ ] < > | * ¤ ? § µ # ` @ ^ ² ° ¨ \ ``.
+- Spaces and `-` are allowed.
+
+On free-text fields, references may be combined with static text or with other references (e.g. `Hello ${user}`).
+Number and duration fields (loop `count`, server `port`, `delay`, `think_time`, `pacing`) take either a value or a single reference standing for the whole value: `${count}` is valid, `${count}0` or `${a}b${c}` is not.
+
+#### Example
+```yaml
+servers:
+- name: MyServer
+  host: myserver.intranet.neotys.com
+  port: "${users.port}"
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - loop:
+        count: "${my-var}"
+        steps:
+        - request:
+            url: http://myserver.intranet.neotys.com/login?user=${user}&login=${users.login}
+```
+
 ## Constant variable
 A string the value of which cannot be modified.
 
