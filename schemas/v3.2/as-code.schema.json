@@ -231,20 +231,34 @@
 					},
 					"description": "The qTest integration"
 				},
-				"global_assertions": {
+				"runtime": {
 					"type": "object",
 					"additionalProperties": false,
 					"properties": {
-						"content_types": {
-							"$ref": "#/definitions/common/text",
-							"description": "Comma-separated list of the response content types the global assertions (the assertions of a User Path, Container or Transaction) are applied to. Default: text/html,text/xhtml"
-						},
-						"apply_on_custom_actions": {
-							"type": "boolean",
-							"description": "Also apply the global assertions to custom actions. Default: false"
+						"responses": {
+							"type": "object",
+							"additionalProperties": false,
+							"properties": {
+								"content_assertions": {
+									"type": "object",
+									"additionalProperties": false,
+									"properties": {
+										"content_types": {
+											"$ref": "#/definitions/common/text",
+											"description": "Comma-separated list of the response content types the content assertions of a User Path, Container or Transaction are applied to. Default: text/html,text/xhtml"
+										},
+										"apply_on_custom_actions": {
+											"type": "boolean",
+											"description": "Also apply the content assertions of a User Path, Container or Transaction to custom actions. Default: false"
+										}
+									},
+									"description": "The response content types and actions the content assertions of a User Path, Container or Transaction are applied to"
+								}
+							},
+							"description": "The response settings of the Runtime parameters"
 						}
 					},
-					"description": "The response content types and actions the global assertions are applied to, as in the Runtime parameters of the project settings"
+					"description": "The Runtime parameters of the project settings"
 				},
 				"dynatrace.enabled": {
 					"$ref": "#/properties/project_settings/properties/dynatrace/properties/enabled",

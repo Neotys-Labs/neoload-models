@@ -62,7 +62,7 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-populations-only-required",
 			"test-project-settings-dotted-deprecated",
 			"test-project-settings-dotted-quoted-values",
-			"test-project-settings-global-assertions",
+			"test-project-settings-content-assertions",
 			"test-project-settings-nested",
 			"test-populations-required-and-optional",
 			"test-readonly-slaprofiles-only-required",

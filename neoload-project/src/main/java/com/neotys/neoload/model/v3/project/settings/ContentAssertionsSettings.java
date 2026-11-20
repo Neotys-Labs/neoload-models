@@ -11,16 +11,16 @@ import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 /**
- * The responses and actions the global assertions (the content assertions of a User Path, Container or Transaction)
+ * The responses and actions the content assertions of a User Path, Container or Transaction (the global assertions)
  * are applied to, as in the Runtime parameters of the project settings.
  */
 @JsonInclude(value = Include.NON_ABSENT)
-@JsonPropertyOrder({GlobalAssertionsSettings.CONTENT_TYPES, GlobalAssertionsSettings.APPLY_ON_CUSTOM_ACTIONS})
-@JsonSerialize(as = ImmutableGlobalAssertionsSettings.class)
-@JsonDeserialize(as = ImmutableGlobalAssertionsSettings.class)
+@JsonPropertyOrder({ContentAssertionsSettings.CONTENT_TYPES, ContentAssertionsSettings.APPLY_ON_CUSTOM_ACTIONS})
+@JsonSerialize(as = ImmutableContentAssertionsSettings.class)
+@JsonDeserialize(as = ImmutableContentAssertionsSettings.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
-public interface GlobalAssertionsSettings {
+public interface ContentAssertionsSettings {
 	String CONTENT_TYPES = "content_types";
 	String APPLY_ON_CUSTOM_ACTIONS = "apply_on_custom_actions";
 
@@ -31,7 +31,7 @@ public interface GlobalAssertionsSettings {
 	@JsonProperty(APPLY_ON_CUSTOM_ACTIONS)
 	Optional<Boolean> getApplyOnCustomActions();
 
-	class Builder extends ImmutableGlobalAssertionsSettings.Builder {}
+	class Builder extends ImmutableContentAssertionsSettings.Builder {}
 	static Builder builder() {
 		return new Builder();
 	}

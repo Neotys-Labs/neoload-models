@@ -16,7 +16,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
  * nested form before binding, by {@code DeprecatedKeys}.
  */
 @JsonInclude(value = Include.NON_ABSENT)
-@JsonPropertyOrder({ProjectSettings.DYNATRACE, ProjectSettings.QTEST, ProjectSettings.GLOBAL_ASSERTIONS})
+@JsonPropertyOrder({ProjectSettings.DYNATRACE, ProjectSettings.QTEST, ProjectSettings.RUNTIME})
 @JsonSerialize(as = ImmutableProjectSettings.class)
 @JsonDeserialize(as = ImmutableProjectSettings.class)
 @Value.Immutable
@@ -24,7 +24,7 @@ import org.immutables.value.Value.Style.ValidationMethod;
 public interface ProjectSettings {
 	String DYNATRACE = "dynatrace";
 	String QTEST = "qtest";
-	String GLOBAL_ASSERTIONS = "global_assertions";
+	String RUNTIME = "runtime";
 
 	@JsonProperty(DYNATRACE)
 	Optional<DynatraceSettings> getDynatrace();
@@ -32,8 +32,8 @@ public interface ProjectSettings {
 	@JsonProperty(QTEST)
 	Optional<QTestSettings> getQtest();
 
-	@JsonProperty(GLOBAL_ASSERTIONS)
-	Optional<GlobalAssertionsSettings> getGlobalAssertions();
+	@JsonProperty(RUNTIME)
+	Optional<RuntimeSettings> getRuntime();
 
 	class Builder extends ImmutableProjectSettings.Builder {}
 	static Builder builder() {

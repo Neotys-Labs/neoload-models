@@ -31,17 +31,20 @@ A file declaring `3.0`, `3.1` or no `schemaVersion` keeps working unchanged.
 
 #### Project settings
 
-**Global assertion settings** — a new `global_assertions` project setting chooses which responses the
-global assertions (the assertions of a User Path, Container or Transaction) are applied to:
-`content_types` (comma-separated, default `text/html,text/xhtml`) and `apply_on_custom_actions`
-(default `false`, must be a boolean: a value such as `"yes"` is rejected).
+**Runtime settings for content assertions** — the new `runtime: responses: content_assertions` project
+settings choose which responses the content assertions of a User Path, Container or Transaction (the global
+assertions) are applied to, as in the Runtime parameters of the project: `content_types` (comma-separated,
+default `text/html,text/xhtml`) and `apply_on_custom_actions` (default `false`, must be a boolean: a value
+such as `"yes"` is rejected).
 
 ```yaml
 schemaVersion: "3.2"
 project_settings:
-  global_assertions:
-    content_types: text/html,text/xhtml,application/json
-    apply_on_custom_actions: true
+  runtime:
+    responses:
+      content_assertions:
+        content_types: text/html,text/xhtml,application/json
+        apply_on_custom_actions: true
 ```
 
 **Nested project settings** — `project_settings` are now written as nested maps

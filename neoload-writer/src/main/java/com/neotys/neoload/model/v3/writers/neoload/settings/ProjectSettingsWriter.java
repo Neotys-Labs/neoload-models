@@ -1,9 +1,11 @@
 package com.neotys.neoload.model.v3.writers.neoload.settings;
 
 import com.neotys.neoload.model.v3.project.settings.DynatraceSettings;
-import com.neotys.neoload.model.v3.project.settings.GlobalAssertionsSettings;
+import com.neotys.neoload.model.v3.project.settings.ContentAssertionsSettings;
 import com.neotys.neoload.model.v3.project.settings.ProjectSettings;
 import com.neotys.neoload.model.v3.project.settings.QTestSettings;
+import com.neotys.neoload.model.v3.project.settings.ResponsesSettings;
+import com.neotys.neoload.model.v3.project.settings.RuntimeSettings;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
 
 import java.io.*;
@@ -19,9 +21,9 @@ public class ProjectSettingsWriter {
 	private static final String PROJECT_SETTINGS_DEFAULT_FILE = "defaultProjectSettings.properties";	
 	private static final String SETTINGS_XML_FILE = NeoLoadWriter.ConfigFiles.SETTINGS.getFileName();
 	private static final String SEPARATOR = ".";
-	private static final String GLOBAL_ASSERTIONS_CONTENT_TYPES = "global_assertions.content_types";
+	private static final String GLOBAL_ASSERTIONS_CONTENT_TYPES = "runtime.responses.content_assertions.content_types";
 	// Derived token: the comma-separated content types expanded into one <contentType> element each
-	private static final String GLOBAL_ASSERTIONS_CONTENT_TYPES_ELEMENTS = "global_assertions.content_types.elements";
+	private static final String GLOBAL_ASSERTIONS_CONTENT_TYPES_ELEMENTS = "runtime.responses.content_assertions.content_types.elements";
 
 	private ProjectSettingsWriter() {
 	}
@@ -52,10 +54,12 @@ public class ProjectSettingsWriter {
 			putToken(tokens, group + QTestSettings.PROJECT_ID, qtest.getProjectId());
 			putToken(tokens, group + QTestSettings.CYCLE_ID, qtest.getCycleId());
 		});
-		projectSettings.flatMap(ProjectSettings::getGlobalAssertions).ifPresent(globalAssertions -> {
-			final String group = ProjectSettings.GLOBAL_ASSERTIONS + SEPARATOR;
-			putToken(tokens, group + GlobalAssertionsSettings.CONTENT_TYPES, globalAssertions.getContentTypes());
-			putToken(tokens, group + GlobalAssertionsSettings.APPLY_ON_CUSTOM_ACTIONS, globalAssertions.getApplyOnCustomActions());
+		projectSettings.flatMap(ProjectSettings::getRuntime).flatMap(RuntimeSettings::getResponses)
+				.flatMap(ResponsesSettings::getContentAssertions).ifPresent(contentAssertions -> {
+			final String group = ProjectSettings.RUNTIME + SEPARATOR + RuntimeSettings.RESPONSES + SEPARATOR
+					+ ResponsesSettings.CONTENT_ASSERTIONS + SEPARATOR;
+			putToken(tokens, group + ContentAssertionsSettings.CONTENT_TYPES, contentAssertions.getContentTypes());
+			putToken(tokens, group + ContentAssertionsSettings.APPLY_ON_CUSTOM_ACTIONS, contentAssertions.getApplyOnCustomActions());
 		});
 		return tokens;
 	}

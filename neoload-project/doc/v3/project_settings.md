@@ -10,7 +10,7 @@ The settings are nested maps (`qtest:` / `enabled: true`), which requires `schem
 |:--------------------------------------- |:------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | [dynatrace](#dynatrace)                 | The Dynatrace integration                                                                         | -               | -        | 7.5   |
 | [qtest](#qtest)                         | The qTest integration                                                                             | -               | -        | 7.10  |
-| [global_assertions](#global_assertions) | The responses and actions the global assertions are applied to                                    | -               | -        | 2027.1 |
+| [runtime](#runtime)                     | The Runtime parameters of the project                                                             | -               | -        | 2027.1 |
 
 #### dynatrace
 
@@ -35,19 +35,27 @@ The settings are nested maps (`qtest:` / `enabled: true`), which requires `schem
 | cycle_id                                | The qTest unique identifier of the test cycle in which the result will be transferred. This cannot be a release identifier.  | -               | -        | 7.10  |
 | create_defects                          | Enable automatic creation of Defects on failed and warning SLAs                                   | -               | -        | 7.11  |
 
-#### global_assertions
-
-The global assertions are the [content assertions](content_assertion.md) of a User Path, Container or Transaction,
-applied to all its requests. These settings are the ones of the Runtime parameters of the project settings in the GUI.
+#### runtime
 
 | Name                                    | Description                                                                                       | Accept variable | Required | Since |
 |:--------------------------------------- |:------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
-| content_types                           | Comma-separated list of the response content types the global assertions are applied to. Default: `text/html,text/xhtml` | -               | -        | 2027.1 |
-| apply_on_custom_actions                 | Also apply the global assertions to custom actions. Default: `false`                              | -               | -        | 2027.1 |
+| [responses](#responses)                 | The response settings of the Runtime parameters                                                   | -               | -        | 2027.1 |
 
-#### Deprecated dotted keys
-The dotted keys of the Dynatrace and qTest settings (such as `qtest.enabled: true`) are still read, as deprecated
-aliases of the nested keys. A setting cannot be declared in both forms.
+#### responses
+
+| Name                                    | Description                                                                                       | Accept variable | Required | Since |
+|:--------------------------------------- |:------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| [content_assertions](#content_assertions) | The responses and actions the content assertions of a User Path, Container or Transaction are applied to | -               | -        | 2027.1 |
+
+#### content_assertions
+
+The [content assertions](content_assertion.md) of a User Path, Container or Transaction are applied to all its requests
+whose response matches these settings, the ones of the Runtime parameters of the project settings in the GUI.
+
+| Name                                    | Description                                                                                       | Accept variable | Required | Since |
+|:--------------------------------------- |:------------------------------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
+| content_types                           | Comma-separated list of the response content types the content assertions are applied to. Default: `text/html,text/xhtml` | -               | -        | 2027.1 |
+| apply_on_custom_actions                 | Also apply the content assertions to custom actions. Default: `false`                             | -               | -        | 2027.1 |
 
 #### Example
 - Enable Dynatrace integration monitoring. It is possible, for example, to quickly activate Dynatrace monitoring for the pre-production server.
@@ -68,12 +76,14 @@ project_settings:
     create_defects: false
 ```
 
-- Apply the global assertions to JSON responses and to custom actions as well.
+- Apply the content assertions to JSON responses and to custom actions as well.
 ```yaml
 project_settings:
-  global_assertions:
-    content_types: text/html,text/xhtml,application/json
-    apply_on_custom_actions: true
+  runtime:
+    responses:
+      content_assertions:
+        content_types: text/html,text/xhtml,application/json
+        apply_on_custom_actions: true
 ```
 
 #### Other Example

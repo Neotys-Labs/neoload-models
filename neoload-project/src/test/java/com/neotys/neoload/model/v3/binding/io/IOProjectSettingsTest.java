@@ -9,9 +9,11 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.neotys.neoload.model.v3.binding.io.IO.Format;
 import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.settings.DynatraceSettings;
-import com.neotys.neoload.model.v3.project.settings.GlobalAssertionsSettings;
+import com.neotys.neoload.model.v3.project.settings.ContentAssertionsSettings;
 import com.neotys.neoload.model.v3.project.settings.ProjectSettings;
 import com.neotys.neoload.model.v3.project.settings.QTestSettings;
+import com.neotys.neoload.model.v3.project.settings.ResponsesSettings;
+import com.neotys.neoload.model.v3.project.settings.RuntimeSettings;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.junit.Test;
@@ -19,13 +21,13 @@ import org.junit.Test;
 public class IOProjectSettingsTest extends AbstractIOElementsTest {
 
 	@Test
-	public void readGlobalAssertionsProjectSettings() throws IOException {
-		assertRead("test-project-settings-global-assertions", getProjectWithGlobalAssertionsProjectSettings());
+	public void readContentAssertionsProjectSettings() throws IOException {
+		assertRead("test-project-settings-content-assertions", getProjectWithContentAssertionsProjectSettings());
 	}
 
 	@Test
-	public void writeGlobalAssertionsProjectSettings() throws IOException {
-		assertWrite("test-project-settings-global-assertions", getProjectWithGlobalAssertionsProjectSettings());
+	public void writeContentAssertionsProjectSettings() throws IOException {
+		assertWrite("test-project-settings-content-assertions", getProjectWithContentAssertionsProjectSettings());
 	}
 
 	@Test
@@ -66,7 +68,7 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 		final IO io = new IO();
 		for (final Format format : Format.values()) {
 			final String written = io.write(getProjectWithAllProjectSettings(), format);
-			for (final String dottedKey : new String[] { "dynatrace.enabled", "qtest.enabled", "global_assertions.content_types" }) {
+			for (final String dottedKey : new String[] { "dynatrace.enabled", "qtest.enabled", "runtime.responses" }) {
 				assertFalse(format + " must not contain " + dottedKey + ": " + written, written.contains(dottedKey));
 			}
 		}
@@ -86,23 +88,23 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 	}
 
 	@Test
-	public void readDottedGlobalAssertionsProjectSettingFails() throws IOException {
+	public void readDottedRuntimeProjectSettingFails() throws IOException {
 		for (final String extension : new String[] { "yaml", "json" }) {
-			final String content = getContent(getFile("test-project-settings-global-assertions-dotted", extension), StandardCharsets.UTF_8);
+			final String content = getContent(getFile("test-project-settings-content-assertions-dotted", extension), StandardCharsets.UTF_8);
 			try {
 				new IO().read(content);
 				fail("Reading the " + extension + " fixture must fail");
 			} catch (final JsonMappingException e) {
-				assertTrue(e.getMessage(), e.getMessage().contains("global_assertions.content_types")
-						&& e.getMessage().contains("global_assertions: content_types"));
+				assertTrue(e.getMessage(), e.getMessage().contains("runtime.responses.content_assertions.content_types")
+						&& e.getMessage().contains("runtime: responses: content_assertions: content_types"));
 			}
 		}
 	}
 
 	@Test
-	public void readNonBooleanApplyGlobalAssertionsOnCustomActionsFails() throws IOException {
+	public void readNonBooleanApplyContentAssertionsOnCustomActionsFails() throws IOException {
 		for (final String extension : new String[] { "yaml", "json" }) {
-			final String content = getContent(getFile("test-project-settings-global-assertions-invalid", extension), StandardCharsets.UTF_8);
+			final String content = getContent(getFile("test-project-settings-content-assertions-invalid", extension), StandardCharsets.UTF_8);
 			try {
 				new IO().read(content);
 				fail("Reading the " + extension + " fixture must fail");
@@ -112,18 +114,18 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 		}
 	}
 
-	private static GlobalAssertionsSettings getGlobalAssertions() {
-		return GlobalAssertionsSettings.builder()
+	private static RuntimeSettings getRuntime() {
+		return RuntimeSettings.builder().responses(ResponsesSettings.builder().contentAssertions(ContentAssertionsSettings.builder()
 				.contentTypes("text/html,text/xhtml,application/json")
 				.applyOnCustomActions(true)
-				.build();
+				.build()).build()).build();
 	}
 
-	private static Project getProjectWithGlobalAssertionsProjectSettings() {
+	private static Project getProjectWithContentAssertionsProjectSettings() {
 		return Project.builder()
 				.schemaVersion("3.2")
 				.name("MyProject")
-				.projectSettings(ProjectSettings.builder().globalAssertions(getGlobalAssertions()).build())
+				.projectSettings(ProjectSettings.builder().runtime(getRuntime()).build())
 				.build();
 	}
 
@@ -148,7 +150,7 @@ public class IOProjectSettingsTest extends AbstractIOElementsTest {
 								.cycleId(3761630L)
 								.createDefects(false)
 								.build())
-						.globalAssertions(getGlobalAssertions())
+						.runtime(getRuntime())
 						.build())
 				.build();
 	}

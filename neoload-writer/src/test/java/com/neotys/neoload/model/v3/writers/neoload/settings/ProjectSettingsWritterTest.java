@@ -2,9 +2,11 @@ package com.neotys.neoload.model.v3.writers.neoload.settings;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
-import com.neotys.neoload.model.v3.project.settings.GlobalAssertionsSettings;
+import com.neotys.neoload.model.v3.project.settings.ContentAssertionsSettings;
 import com.neotys.neoload.model.v3.project.settings.ProjectSettings;
 import com.neotys.neoload.model.v3.project.settings.QTestSettings;
+import com.neotys.neoload.model.v3.project.settings.ResponsesSettings;
+import com.neotys.neoload.model.v3.project.settings.RuntimeSettings;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -60,7 +62,9 @@ public class ProjectSettingsWritterTest {
                         .projectId(101762L)
                         .cycleId(3761630L)
                         .build())
-                .globalAssertions(GlobalAssertionsSettings.builder().contentTypes("application/json").applyOnCustomActions(true).build())
+                .runtime(RuntimeSettings.builder().responses(ResponsesSettings.builder().contentAssertions(
+                        ContentAssertionsSettings.builder().contentTypes("application/json").applyOnCustomActions(true).build())
+                        .build()).build())
                 .build();
         ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), Optional.of(settings));
 
@@ -90,8 +94,8 @@ public class ProjectSettingsWritterTest {
     public void writeSettingsGlobalAssertionsXMLTest() throws IOException {
         File tmpDir = java.nio.file.Files.createTempDirectory("project-settings").toFile();
         Map<String, String> settings = ImmutableMap.<String, String>builder()
-                .put("global_assertions.content_types", "text/html, application/json,,")
-                .put("global_assertions.apply_on_custom_actions", "true")
+                .put("runtime.responses.content_assertions.content_types", "text/html, application/json,,")
+                .put("runtime.responses.content_assertions.apply_on_custom_actions", "true")
                 .build();
         ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), settings);
 
