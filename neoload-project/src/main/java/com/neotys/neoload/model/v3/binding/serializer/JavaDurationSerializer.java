@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.time.Duration;
 
 /**
- * Writes a {@link Duration} in compact units ({@code 1m30s}).
+ * Writes a {@link Duration} in compact units ({@code 1m30s}), zero being the number {@code 0}.
  */
 public final class JavaDurationSerializer extends StdSerializer<Duration> {
 	private static final long serialVersionUID = 1L;
@@ -19,6 +19,11 @@ public final class JavaDurationSerializer extends StdSerializer<Duration> {
 
 	@Override
 	public void serialize(final Duration duration, final JsonGenerator generator, final SerializerProvider provider) throws IOException {
-		generator.writeString(DurationParser.format(duration));
+		final String text = DurationParser.format(duration);
+		if (duration.isZero()) {
+			generator.writeNumber(0);
+		} else {
+			generator.writeString(text);
+		}
 	}
 }
