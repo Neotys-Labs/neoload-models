@@ -19,7 +19,8 @@ later; NeoLoad Web SaaS accepts it as soon as it is deployed. Declare it with
 #### Schema contract
 
 The 3.2 contract is published as `schemas/v3.2/as-code.schema.json`. It accepts the
-constructs of 3.1 and the ones below, with `schemaVersion: "3.2"`.
+constructs of 3.1, with `schemaVersion: "3.2"`, plus the [project settings](#project-settings) below:
+the `runtime: responses: content_assertions` settings and the nested `dynatrace` and `qtest` settings.
 
 ```yaml
 $schema: https://raw.githubusercontent.com/Neotys-Labs/neoload-models/refs/heads/v3/schemas/v3.2/as-code.schema.json
