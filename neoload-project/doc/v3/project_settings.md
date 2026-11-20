@@ -2,7 +2,7 @@
 Some preferences of the project can be overwritten. Each of these properties can be overwritten one by one,
 the other properties will keep the value defined from NeoLoad.
 
-The settings are nested maps (`qtest:` / `enabled: true`), which requires `schemaVersion: "3.2"` (NeoLoad 2027.1).
+The settings are nested maps (`qtest:` / `enabled: true`), which requires `schemaVersion: "3.2"` (2027.1).
 
 #### Available settings
 
