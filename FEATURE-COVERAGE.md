@@ -27,7 +27,8 @@ tab is out of scope.
 `schemaVersion` declares which contract a file targets. It does **not** gate the parser: the model
 accepts every construct it knows about regardless of the declared version, and only checks that the
 declared version is one this build knows (`supported-schemas.json`). Version gating happens in the
-published JSON Schemas (`schemas/v3.0/`, `schemas/v3.1/`), which editors use.
+published JSON Schemas (`schemas/v3.0/`, `schemas/v3.1/`, `schemas/v3.2/`), which editors use.
+Schema 3.1 is frozen with NeoLoad 2026.3: new constructs go to 3.2.
 
 ## In the 3.1 draft
 
@@ -78,7 +79,7 @@ model but not merged; **—** = not implemented anywhere.
 | Dynatrace integration settings (`dynatrace.enabled` / `url` / `token`) | 3.0 |
 | qTest integration settings (`qtest.*`) | 3.0 |
 | Certificates (`CertificateSettings`) | — |
-| Web Services security / WSS (`WSSSettings`) | — |
+| Web Services security / WSS (`WSSSettings`) | 3.1 draft (`web_services_security`: keystores, username, timestamp, signature and encryption tokens; no embedded key, variable keystores) |
 | Page naming policy (`PageNamingSettings`) | — |
 | JavaScript policy (`JSPolicySettings`) | — |
 | Error handling policy (`ErrorHandlingSettings`) | — |
@@ -132,9 +133,9 @@ The GUI offers fourteen types (`VariablesPane#initialize`).
 | User session reset policy (`reset_on` / `reset_off` / `reset_auto`) | 3.0 |
 | Containers and transactions, nested | 3.0 |
 | SLA profile on User Path container, transaction and request | 3.0 |
-| Think time policy overridden per User Path (`getThinkTimePolicy`) | — |
-| Error policy per User Path (`getErrorPolicy`) | — |
-| Failed-assertion policy per User Path (`getFailedAssertionPolicy`) | — |
+| Think time policy overridden per User Path (`getThinkTimePolicy`) | 3.1 (`think_time`) |
+| Error policy per User Path (`getErrorPolicy`) | 3.1 (`on_error`) |
+| Failed-assertion policy per User Path (`getFailedAssertionPolicy`) | 3.1 (`on_assertion_failure`) |
 | Action enabled / disabled flag | — |
 | Breakpoints | — |
 | Shared elements (`SharedElementsContainer`) | 3.1 (`shared_elements` / `shared_element`) |
@@ -154,6 +155,7 @@ and protocol action catalogues.
 | Switch | 3.0 |
 | JavaScript | 3.0 |
 | Advanced / SAP GUI / Citrix / RealBrowser / RTE actions | 3.0 (`custom_action`) |
+| RealBrowser actions as dedicated steps (`browser_open`, `browser_click`...), parameters documented and checked by the JSON Schema | 3.1 |
 | Try … Catch | 3.1 |
 | Go to next iteration | 3.1 |
 | Stop Virtual User | 3.1 |
@@ -175,8 +177,12 @@ and protocol action catalogues.
 | Response storage to a file or a variable | — |
 | Static request optimisation | — |
 | Raw request | — |
-| SOAP and Silverlight SOAP requests | — |
-| WebSocket channel, WebSocket request, push message | — |
+| SOAP request | 3.1 (`soap_request`, with `content_assertions`, `duration_assertion`, `size_assertion` and `sla_profile`) |
+| Silverlight SOAP request | — |
+| WebSocket channel and request, the request referencing its channel by path | 3.1 draft (`websocket_channel`, `websocket_request`) |
+| WebSocket channel inside a shared container (`shared_elements>Name>...` reference) | 3.1 draft |
+| WebSocket push message (conditional or fallback, with a body of steps) | 3.1 draft (`websocket_channel.push_messages`) |
+| WebSocket timestamp extractor (server send time of an inbound frame) | 3.1 draft (`websocket_channel.timestamp_extractor`) |
 | Media / RTMP, RTMPT requests | — |
 | Siebel request | — |
 | Recorded artifacts (screenshots, recorded response) | — |

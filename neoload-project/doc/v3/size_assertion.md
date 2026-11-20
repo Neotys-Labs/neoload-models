@@ -1,8 +1,9 @@
-# Assertion on response size
+# Size assertion
+_Size assertion_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 A size assertion checks the length of the response content, in bytes. It mirrors the "Content length" validation panel of the NeoLoad designer: either an exact size, or a range built from a lower bound and/or an upper bound.
 
-Unlike [assertions](assertion.md), which is a list of content checks, `size_assertion` is a single object: a request or a custom action carries at most one size assertion.
+Unlike [content assertions](content_assertion.md), which is a list of content checks, `size_assertion` is a single object: a request or a custom action carries at most one size assertion.
 
 > Validation cannot be applied to failed requests (HTTP errors, network errors, and so on).
 

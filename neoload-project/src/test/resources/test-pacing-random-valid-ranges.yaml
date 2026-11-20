@@ -30,3 +30,24 @@ user_paths:
           max: "${max_pacing}"
         steps:
         - delay: 100
+    - transaction:
+        name: MyTransaction5
+        pacing:
+          min: 3s
+          max: 3s
+        steps:
+        - delay: 100
+    - transaction:
+        name: MyTransaction6
+        pacing:
+          min: 1s
+          max: "1000"
+        steps:
+        - delay: 100
+    - transaction:
+        name: MyTransaction7
+        pacing:
+          min: 5s
+          max: "${max_pacing}"
+        steps:
+        - delay: 100

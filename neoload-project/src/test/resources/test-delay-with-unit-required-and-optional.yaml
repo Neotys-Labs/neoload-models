@@ -6,7 +6,7 @@ user_paths:
     - delay:
         name: MyConstantDelay1
         description: MyConstantDelay1Description
-        value: 1h 3m 10s 200ms
+        value: 1h3m10s200ms
     - delay:
         name: MyConstantDelay2
         description: MyConstantDelay2Description
@@ -14,8 +14,8 @@ user_paths:
     - delay:
         name: MyRandomDelay1
         description: MyRandomDelay1Description
-        min: 1h 3m 10s 100ms
-        max: 1h 3m 10s 200ms
+        min: 1h3m10s100ms
+        max: 1h3m10s200ms
     - delay:
         name: MyRandomDelay2
         description: MyRandomDelay2Description

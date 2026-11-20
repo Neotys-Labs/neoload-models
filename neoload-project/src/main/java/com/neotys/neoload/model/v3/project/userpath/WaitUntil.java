@@ -6,17 +6,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.neotys.neoload.model.v3.binding.converter.*;
+import com.neotys.neoload.model.v3.binding.converter.MatchToStringConverter;
 import com.neotys.neoload.model.v3.binding.serializer.MatchDeserializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.util.List;
+import javax.validation.Valid;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-import java.util.List;
 
 @JsonInclude(value = Include.NON_EMPTY)
 @JsonPropertyOrder({Element.NAME, Element.DESCRIPTION, WaitUntil.CONDITIONS, Match.MATCH, WaitUntil.TIMEOUT})
@@ -31,7 +29,7 @@ import java.util.List;
 public interface WaitUntil extends Step {
 
 	String DEFAULT_NAME = "wait_until";
-	String DEFAULT_TIMEOUT = "60000";
+	DurationOrVariable DEFAULT_TIMEOUT = DurationLiteral.builder().value(java.time.Duration.ofSeconds(60)).build();
 	String CONDITIONS = "conditions";
 	String TIMEOUT = "timeout";
 
@@ -57,12 +55,9 @@ public interface WaitUntil extends Step {
 	}
 
 	@JsonProperty(TIMEOUT)
-	@Pattern(regexp = "(\\d+|\\$\\{\\w+\\})", groups = {NeoLoad.class})
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultTimeoutFilter.class)
-	@JsonSerialize(converter= TimeDurationInMsOrInVariableToStringConverter.class)
-	@JsonDeserialize(converter= StringToTimeDurationInMsOrInVariableConverter.class)
 	@Value.Default
-	default String getTimeout() {
+	default DurationOrVariable getTimeout() {
 		return DEFAULT_TIMEOUT;
 	}
 

@@ -1,0 +1,39 @@
+name: MyProject
+variables:
+- random_number:
+    name: MyRandomNumber
+    min: 10
+    max: 1
+- random_string:
+    name: MyRandomString
+    min_length: 20
+    max_length: 10
+user_paths:
+- name: MyUserPath
+  actions:
+    pacing:
+      min: 3s
+      max: 1s
+    steps:
+    - delay:
+        min: 3s
+        max: 1s
+    - think_time:
+        min: 3s
+        max: 1s
+    - web_page:
+        think_time:
+          min: 3s
+          max: 1500ms
+        steps:
+        - request:
+            url: http://host:80/
+scenarios:
+- name: MyScenario
+  populations:
+  - name: MyPopulation
+    rampup_load:
+      min_users: 10
+      max_users: 5
+      increment_users: 1
+      increment_every: 5s

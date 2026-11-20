@@ -10,7 +10,7 @@ The optional `schemaVersion` attribute at the root of an as-code file declares t
 Schema versions:
 - 3.0 is published as `schemas/v3.0/as-code.schema.json`
 - 3.1 is published as `schemas/v3.1/as-code.schema.json` (supported since NeoLoad 2026.3)
-- The runtime copy of the latest schema also lives in `neoload-project/src/main/resources/as-code.latest.schema.json`
+- 3.2 is published as `schemas/v3.2/as-code.schema.json` (supported since NeoLoad 2027.1)
 
 ## Definition
 
@@ -18,7 +18,7 @@ Definition has several top-level keys:
 
 | Name                           | Description                                    | Accept variable | Required | Since |
 |:------------------------------ |:---------------------------------------------- |:---------------:|:--------:|:-----:|
-| $schema                        | Optional URL of the JSON Schema used by editors to validate the file. It is ignored when the project is loaded. | -               | -        |       |
+| $schema                        | Optional URL of the JSON Schema used by editors to validate the file. It is ignored when the project is loaded. | -               | -        | 2026.3 |
 | schemaVersion                  | Schema contract version this file is written for. Defaults to `3.0` when absent. | - | - | 2026.3 |
 | name                           | The root key defining the name of the project. See [Naming rules](README.md#naming-rules). | -               | &#x2713; |       |
 | [includes](include.md)         | The definition of as-code files to be included | -               | -        | 6.10  |
@@ -26,6 +26,7 @@ Definition has several top-level keys:
 | [variables](variables.md)      | The definition of variables                    | -               | -        |       |
 | [servers](server.md)           | The definition of servers                      | -               | -        |       |
 | [shared_elements](shared_elements.md) | The definition of reusable, named step definitions | -        | -        | 2026.3 |
+| [web_services_security](web_services_security.md) | The definition of Web Services Security keystores and profiles | - | - | 2026.3 |
 | [user_paths](user-paths.md)    | The definition of virtual User Paths           | -               | -        |       |
 | [populations](population.md)   | The definition of Populations                  | -               | -        |       |
 | [scenarios](scenario.md)       | The definition of Scenarios                    | -               | -        |       |

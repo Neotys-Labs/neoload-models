@@ -1,0 +1,17 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - transaction:
+        name: Login
+        steps:
+        - websocket_channel:
+            name: my_channel
+            url: https://host:443/login
+    - transaction:
+        name: Logout
+        steps:
+        - websocket_channel:
+            name: my_channel
+            url: https://host:443/logout

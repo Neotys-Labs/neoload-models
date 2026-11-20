@@ -12,12 +12,12 @@ import com.neotys.neoload.model.v3.validation.constraints.CustomPolicyStepsOrder
 import com.neotys.neoload.model.v3.validation.constraints.CustomPolicyStepsSameDurationTypeCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
-import org.immutables.gson.Gson;
-import org.immutables.value.Value;
-
+import java.time.Duration;
+import java.util.List;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
-import java.util.List;
+import org.immutables.gson.Gson;
+import org.immutables.value.Value;
 
 @JsonInclude(value= JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({StartStopPolicy.START_AFTER, CustomLoadPolicy.RAMPUP, StartStopPolicy.STOP_AFTER, CustomLoadPolicy.STEPS})
@@ -39,7 +39,7 @@ public interface CustomLoadPolicy extends LoadPolicy {
     List<CustomPolicyStep> getSteps();
 
     @JsonProperty(RAMPUP)
-    Integer getRampup();
+    Duration getRampup();
 
     @JsonIgnore
     @Value.Derived

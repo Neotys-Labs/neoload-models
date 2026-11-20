@@ -1,14 +1,15 @@
 # Fork
+_Fork_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 The Fork action is used to play actions in a different execution thread to the current one. This execution thread is parallel to the main chain used by the Virtual User. When the current iteration of the Virtual User stops, all the threads created using Fork actions in the Actions Container are immediately halted.
 
 #### Available settings
 | Name              | Description                                                                                        | Accept variable | Required           | Since |
 |:----------------- |:-------------------------------------------------------------------------------------------------- |:---------------:|:------------------:|:-----:|
-| name              | The name of the Fork                                                                               | -               | -                  | -     |
-| description       | The description of the Fork                                                                        | -               | -                  | -     |
-| copy_variables    | When `true`, existing values of variables are copied locally so that modifications in another thread do not affect this Fork. Default is `false`. | - | - | - |
-| [steps](steps.md) | The steps to be executed in the parallel thread                                                    | -               | &#x2713;           | -     |
+| name              | The name of the Fork                                                                               | -               | -                  | 2026.3 |
+| description       | The description of the Fork                                                                        | -               | -                  | 2026.3 |
+| copy_variables    | When `true`, existing values of variables are copied locally so that modifications in another thread do not affect this Fork. Default is `false`. | - | - | 2026.3 |
+| [steps](steps.md) | The steps to be executed in the parallel thread                                                    | -               | &#x2713;           | 2026.3 |
 
 
 #### Example

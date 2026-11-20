@@ -1,8 +1,7 @@
 # Wait Until
+_Wait Until_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards.
 
 The Wait Until action pauses the current execution thread until certain conditions have been verified. You may also set a maximum timeout delay: once this delay is timed out, the thread is restarted and the following action is executed, even if the conditions have not been verified.
-
-Wait Until is supported in NeoLoad from version 2026.3 onwards.
 
 #### Available settings
 | Name         | Description                                                                                        | Accept variable | Required | Since  |

@@ -68,6 +68,18 @@ public class SchemaVersionTest {
     }
 
     @Test
+    public void read_yaml_with_3_2_returns_3_2() throws Exception {
+        final Project project = readYaml("schemaVersion: \"3.2\"\nname: foo\n");
+        assertEquals("3.2", project.getSchemaVersion());
+    }
+
+    @Test
+    public void read_yaml_with_unquoted_3_2_coerces_to_string() throws Exception {
+        final Project project = readYaml("schemaVersion: 3.2\nname: foo\n");
+        assertEquals("3.2", project.getSchemaVersion());
+    }
+
+    @Test
     public void read_yaml_with_unquoted_3_0_coerces_to_string() throws Exception {
         // YAML 1.1 parses bare "3.0" as a float; Jackson coerces to the target String field.
         final Project project = readYaml("schemaVersion: 3.0\nname: foo\n");

@@ -3,19 +3,17 @@ package com.neotys.neoload.model.v3.binding.converter;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
-import com.neotys.neoload.model.v3.binding.converter.StopAfterToStringConverter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter;
 import com.neotys.neoload.model.v3.project.scenario.StopAfter.Type;
-
+import java.time.Duration;
+import org.junit.Test;
 
 public class StopAfterToStringConverterTest {
 	private static final String ZERO = "0";
 	
 	private static StopAfter convertToStopAfter(final int input) {
 		return StopAfter.builder()
-				.value(input)
+				.value(Duration.ofSeconds(input))
 				.type(Type.TIME)
 				.build();
 	}

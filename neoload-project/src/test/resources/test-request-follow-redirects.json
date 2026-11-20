@@ -1,0 +1,1 @@
+{"name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"request":{"url":"http://www.neotys.com/select","follow_redirects":true}},{"soap_request":{"url":"http://host:80/","content":{"path":"./requests/mySOAPRequest.xml"},"follow_redirects":true}}]}}]}

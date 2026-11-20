@@ -23,9 +23,18 @@ public class RandomStringVariableTest {
 	private static final String CONSTRAINTS_MAX_LENGTH;
 	static {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'max_length': must be greater than or equal to 1 character.").append(LINE_SEPARATOR);
+		sb.append("Data Model is invalid. Violation Number: 2.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for '': random_string 'min_length' must be less than or equal to 'max_length'.").append(LINE_SEPARATOR);
+		sb.append("Violation 2 - Incorrect value for 'max_length': must be greater than or equal to 1 character.").append(LINE_SEPARATOR);
 		CONSTRAINTS_MAX_LENGTH = sb.toString();
+	}
+
+	private static final String CONSTRAINTS_MIN_LENGTH_GREATER_THAN_MAX_LENGTH;
+	static {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for '': random_string 'min_length' must be less than or equal to 'max_length'.").append(LINE_SEPARATOR);
+		CONSTRAINTS_MIN_LENGTH_GREATER_THAN_MAX_LENGTH = sb.toString();
 	}
 
 	@Test
@@ -52,6 +61,28 @@ public class RandomStringVariableTest {
 		final Validation validation = validator.validate(withNegativeMaxLength, NeoLoad.class);
 		assertFalse(validation.isValid());
 		assertEquals(CONSTRAINTS_MAX_LENGTH, validation.getMessage().get());
+	}
+
+	@Test
+	public void validateMinLengthNotGreaterThanMaxLength() {
+		final Validator validator = new Validator();
+
+		final RandomStringVariable withMinLengthGreaterThanMaxLength = RandomStringVariable.builder()
+				.name("MyRandomString")
+				.minLength(20)
+				.maxLength(10)
+				.build();
+		Validation validation = validator.validate(withMinLengthGreaterThanMaxLength, NeoLoad.class);
+		assertFalse(validation.isValid());
+		assertEquals(CONSTRAINTS_MIN_LENGTH_GREATER_THAN_MAX_LENGTH, validation.getMessage().get());
+
+		final RandomStringVariable withMinLengthEqualToMaxLength = RandomStringVariable.builder()
+				.name("MyRandomString")
+				.minLength(10)
+				.maxLength(10)
+				.build();
+		validation = validator.validate(withMinLengthEqualToMaxLength, NeoLoad.class);
+		assertTrue(validation.getMessage().orElse(""), validation.isValid());
 	}
 
 	@Test

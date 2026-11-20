@@ -1,0 +1,37 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - websocket_channel:
+        name: chat_socket
+        url: https://host:443/chat
+    - transaction:
+        name: Twin
+        steps:
+        - websocket_channel:
+            name: twin_socket
+            url: https://host:443/twin1
+    - transaction:
+        name: Twin
+        steps:
+        - websocket_channel:
+            name: twin_socket
+            url: https://host:443/twin2
+    - websocket_request:
+        name: bare_name
+        channel: chat_socket
+    - websocket_request:
+        name: wrong_path
+        channel: actions>Login>chat_socket
+    - websocket_request:
+        name: ambiguous
+        channel: actions>Twin>twin_socket
+    - websocket_request:
+        name: with_variable
+        channel: actions>${channel}
+    - websocket_request:
+        name: no_messages_mapping
+        channel: actions>chat_socket
+        synchronous: true
+        mapping_id: m1

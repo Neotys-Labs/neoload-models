@@ -19,6 +19,8 @@ import com.neotys.neoload.model.v3.binding.serializer.UserPathSerializer;
 import com.neotys.neoload.model.v3.project.Element;
 import com.neotys.neoload.model.v3.project.userpath.assertion.AssertionsElement;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.constraints.WebSocketChannelMessagesMappingCheck;
+import com.neotys.neoload.model.v3.validation.constraints.WebSocketChannelReferenceCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
 @JsonInclude(value=Include.NON_EMPTY)
@@ -26,11 +28,20 @@ import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 @JsonDeserialize(using = UserPathDeserializer.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@WebSocketChannelReferenceCheck(groups={NeoLoad.class})
+@WebSocketChannelMessagesMappingCheck(groups={NeoLoad.class})
 public interface UserPath extends Element, AssertionsElement {
 	String USER_SESSION = "user_session";
 	String RESET_ON = "reset_on";
 	String RESET_OFF = "reset_off";
 	String RESET_AUTO = "reset_auto";
+
+	String ON_ERROR = "on_error";
+	String ON_ASSERTION_FAILURE = "on_assertion_failure";
+	String GO_TO_NEXT_ITERATION = "go_to_next_iteration";
+	String STOP_AND_START_NEW_VU = "stop_and_start_new_vu";
+
+	String THINK_TIME = "think_time";
 
 	String INIT = "init";
 	String ACTIONS = "actions";
@@ -47,12 +58,36 @@ public interface UserPath extends Element, AssertionsElement {
 		RESET_AUTO;
 	}
 	
+	/**
+	 * What the Virtual User does when an error occurs or an assertion fails, as in the designer's
+	 * User Path "Runtime parameters" panel. Doing nothing, the default, is expressed by leaving the policy empty.
+	 */
+	enum FailurePolicy {
+		@JsonProperty(UserPath.GO_TO_NEXT_ITERATION)
+		GO_TO_NEXT_ITERATION,
+		@JsonProperty(UserPath.STOP_AND_START_NEW_VU)
+		STOP_AND_START_NEW_VU;
+	}
+
 	@JsonInclude(value=Include.NON_DEFAULT)
 	@Value.Default
 	default UserSession getUserSession() {
 		return DEFAULT_USER_SESSION;
 	}
 	
+	/**
+	 * The policy applied when an error occurs. Empty by default: the Virtual User does nothing.
+	 */
+	Optional<FailurePolicy> getOnError();
+
+	/**
+	 * The policy applied when an assertion fails. Empty by default: the Virtual User does nothing.
+	 */
+	Optional<FailurePolicy> getOnAssertionFailure();
+
+	@Valid
+	Optional<UserPathThinkTime> getThinkTime();
+
 	@Valid
 	Optional<Container> getInit();
 	

@@ -3,6 +3,7 @@ package com.neotys.neoload.model.readers.jmeter.step.thread;
 import com.neotys.neoload.model.readers.jmeter.ContainerUtils;
 import com.neotys.neoload.model.readers.jmeter.EventListenerUtils;
 import com.neotys.neoload.model.v3.project.scenario.*;
+import java.time.Duration;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,9 +105,9 @@ class PopulationPolicyConverter {
         return ConstantLoadPolicy.builder()
                 .users(nbUser)
                 .duration(loadDuration)
-                .rampup(rampUp)
+                .rampup(Duration.ofSeconds(rampUp))
                 .startAfter(StartAfter.builder()
-                        .value(delay)
+                        .value(Duration.ofSeconds(delay))
                         .type(StartAfter.Type.TIME)
                         .build()
                 ).build();

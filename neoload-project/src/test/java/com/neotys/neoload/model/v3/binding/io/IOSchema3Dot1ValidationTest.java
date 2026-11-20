@@ -4,7 +4,10 @@ import static org.junit.Assert.fail;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import com.neotys.neoload.model.v3.validation.validator.Validator;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
@@ -43,6 +46,8 @@ import org.junit.Test;
  */
 public class IOSchema3Dot1ValidationTest {
 
+    private static final String SCHEMA_VERSION = "3.1";
+
     private static JsonSchema SCHEMA;
     private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
@@ -61,7 +66,7 @@ public class IOSchema3Dot1ValidationTest {
      *
      * <p>Do not add new fixtures here without a clear justification.</p>
      */
-    private static final Set<String> EXCLUDED_FIXTURES = Set.of(
+    static final Set<String> EXCLUDED_FIXTURES = Set.of(
             // Backward-compat: SLA thresholds without "per test/interval"
             "test-readonly-slaprofiles-only-required.yaml",
             "test-readonly-slaprofiles-only-required.json",
@@ -79,6 +84,8 @@ public class IOSchema3Dot1ValidationTest {
             "test-try-catch-invalid-caught-exceptions.yaml",
             "test-current-date-variable-offsets-invalid.yaml",
             "test-pacing-invalid-values.yaml",
+            "test-waituntil-invalid-timeout.yaml",
+            "test-pacing-malformed-units.yaml",
             "test-pacing-mixed.yaml",
             "test-pacing-on-loop.yaml",
             "test-pacing-on-while.yaml",
@@ -92,13 +99,34 @@ public class IOSchema3Dot1ValidationTest {
             "test-web_page-think-time-invalid-value.yaml",
             "test-web_page-think-time-min-only.yaml",
             "test-web_page-think-time-mixed.yaml",
+            "test-web_page-think-time-with-name.yaml",
             "test-web_page-unsupported-step.yaml",
             "test-shared-elements-unsupported-type.yaml",
             "test-shared-elements-missing-name-loop.yaml",
             "test-shared-elements-missing-name-while.yaml",
             "test-shared-elements-missing-name-fork.yaml",
             "test-shared-elements-rejected-below-3-1.yaml",
-            "test-shared-element-reference-step-rejected-below-3-1.yaml"
+            "test-shared-element-reference-step-rejected-below-3-1.yaml",
+            "test-userpaths-invalid-on-error.yaml",
+            "test-userpaths-invalid-on-assertion-failure.yaml",
+            "test-userpaths-think-time-invalid-usage.yaml",
+            "test-userpaths-think-time-invalid-values.yaml",
+            "test-userpaths-think-time-unknown-key.yaml",
+            "test-request-redirect-keys-conflict.yaml",
+            "test-request-redirect-keys-conflict.json",
+            "test-soap-request-redirect-keys-conflict.yaml",
+            "test-soap-request-redirect-keys-conflict.json",
+            "test-request-header-empty-object.yaml",
+            "test-request-header-name-value-extra-key.yaml",
+            "test-request-header-name-value-null.yaml",
+            "test-empty-collections.yaml",
+            "test-empty-collections.json",
+            "test-websocket_channel-no-url.yaml",
+            "test-websocket_channel-timestamp-extractor-no-regexp.yaml",
+            "test-websocket_request-invalid-references.yaml",
+            "test-websocket_request-invalid-settings.yaml",
+            "test-websocket_request-invalid-shared-references.yaml",
+            "test-websocket_push_message-invalid.yaml"
     );
 
     @BeforeClass
@@ -131,6 +159,9 @@ public class IOSchema3Dot1ValidationTest {
                      try {
                          ObjectMapper mapper = fileName.endsWith(".yaml") ? YAML_MAPPER : JSON_MAPPER;
                          JsonNode node = mapper.readTree(file.toFile());
+                         if (declaresAnotherSchemaVersion(node, SCHEMA_VERSION)) {
+                             return;
+                         }
                          Set<ValidationMessage> errors = SCHEMA.validate(node);
                          if (!errors.isEmpty()) {
                              String details = errors.stream()
@@ -151,6 +182,15 @@ public class IOSchema3Dot1ValidationTest {
         }
     }
 
+    /**
+     * A fixture declaring a {@code schemaVersion} is written for that contract only: it is validated by the schema of
+     * its version, not by the others. A fixture without {@code schemaVersion} is validated by every schema.
+     */
+    static boolean declaresAnotherSchemaVersion(final JsonNode node, final String schemaVersion) {
+        final JsonNode declared = node == null ? null : node.get("schemaVersion");
+        return declared != null && !declared.isNull() && !schemaVersion.equals(declared.asText());
+    }
+
     private Set<ValidationMessage> validate(final String fixture) throws IOException {
         final File file = new File(getClass().getClassLoader().getResource(fixture + ".yaml").getFile());
         final JsonNode node = YAML_MAPPER.readTree(file);
@@ -167,5 +207,129 @@ public class IOSchema3Dot1ValidationTest {
     public void pacingOnWhileFailsSchemaValidation() throws IOException {
         Assert.assertFalse("Expected 'pacing' on a while step to fail schema validation",
                 validate("test-pacing-on-while").isEmpty());
+    }
+
+    @Test
+    public void unknownUserPathFailurePoliciesFailSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected an unknown 'on_error' value to fail schema validation",
+                validate("test-userpaths-invalid-on-error").isEmpty());
+        Assert.assertFalse("Expected an unknown 'on_assertion_failure' value to fail schema validation",
+                validate("test-userpaths-invalid-on-assertion-failure").isEmpty());
+    }
+
+    @Test
+    public void unknownUserPathThinkTimeSettingFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected an unknown user path 'think_time' setting to fail schema validation",
+                validate("test-userpaths-think-time-unknown-key").isEmpty());
+    }
+
+    @Test
+    public void eachInvalidUserPathThinkTimeFailsSchemaValidation() throws IOException {
+        assertEachUserPathFailsSchemaValidation("test-userpaths-think-time-invalid-usage");
+        assertEachUserPathFailsSchemaValidation("test-userpaths-think-time-invalid-values");
+    }
+
+    private void assertEachUserPathFailsSchemaValidation(final String fixture) throws IOException {
+        final File file = new File(getClass().getClassLoader().getResource(fixture + ".yaml").getFile());
+        for (final JsonNode userPath : YAML_MAPPER.readTree(file).get("user_paths")) {
+            final ObjectNode project = YAML_MAPPER.createObjectNode().put("name", "MyProject");
+            project.putArray("user_paths").add(userPath);
+            Assert.assertFalse("Expected user path '" + userPath.get("name").asText() + "' of " + fixture + " to fail schema validation",
+                    SCHEMA.validate(project).isEmpty());
+        }
+    }
+
+    @Test
+    public void webPageThinkTimeSharesStepDurationSyntax() throws IOException {
+        assertWebPageThinkTime("1m 30s", true);
+        assertWebPageThinkTime("{value: 2000}", true);
+        assertWebPageThinkTime("{max: 5s}", true);
+        assertWebPageThinkTime("{min: 1s, max: 5s}", true);
+        assertWebPageThinkTime("{name: tt, value: 2s}", false);
+        assertWebPageThinkTime("{value: 2.5}", false);
+    }
+
+    @Test
+    public void pacingAcceptsValueFormAndSpaces() throws IOException {
+        assertPacing("{ value: 2s }", true);
+        assertPacing("1h 1s", true);
+        assertPacing("1500", true);
+        assertPacing("{ max: 5s }", true);
+        assertPacing("{ value: 2s, min: 1s }", false);
+        assertPacing("abc", false);
+        assertPacing("1 h", false);
+        assertPacing("1m1h", false);
+        assertPacing("1s1s", false);
+        assertPacing("1s5", false);
+        assertPacing("\" 1h 2m 5s \"", true);
+        assertPacing("{ value: 5x }", false);
+        assertPacing("{ min: abc, max: 5s }", false);
+    }
+
+    @Test
+    public void durationVariableFollowsElementNameRules() throws IOException {
+        assertPacing("${my-var}", true);
+        assertPacing("${file.column}", true);
+        assertPacing("${a€b}", false);
+        assertPacing("${a$b}", false);
+        assertPacing("${a.}", false);
+    }
+
+    @Test
+    public void durationActionsRejectMalformedDurations() throws IOException {
+        for (final String key : new String[] {"delay", "think_time"}) {
+            assertStep(key + ": 1h 1s", true);
+            assertStep(key + ": 1h 1m 1s 1ms", true);
+            assertStep(key + ": 1h1m1s1ms", true);
+            assertStep(key + ": ${my_var}", true);
+            assertStep(key + ": { name: wait, max: 3000 }", true);
+            assertStep(key + ": abc", false);
+            assertStep(key + ": { name: wait, value: 1.5s }", false);
+            assertStep(key + ": { name: wait, value: 2s, min: 1s }", false);
+            assertStep(key + ": { value: 2s, max: 3s }", false);
+            assertStep(key + ": { name: wait, other: 1s, max: 3s }", false);
+        }
+    }
+
+    private static void assertStep(final String step, final boolean valid) throws IOException {
+        final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - " + step + "\n";
+        Assert.assertEquals(step, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+    }
+
+    private static void assertPacing(final String pacing, final boolean valid) throws IOException {
+        final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    pacing: " + pacing + "\n    steps:\n    - delay: 1s\n";
+        Assert.assertEquals(pacing, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+    }
+
+    private static void assertWebPageThinkTime(final String thinkTime, final boolean valid) throws IOException {
+        final String yaml = "name: P\nuser_paths:\n- name: U\n  actions:\n    steps:\n    - web_page:\n"
+                + "        think_time: " + thinkTime + "\n        steps:\n        - request:\n            url: http://host:80/\n";
+        Assert.assertEquals(thinkTime, valid, SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty());
+    }
+
+    @Test
+    public void schemaAndJavaModelAcceptAndRejectTheSameDurationValues() throws IOException {
+        final String[] values = {"90", "90s", "1h30m", "120m", "500ms", "1s1h", "abc", "5x", "-5", "${v}"};
+        final List<String> mismatches = new ArrayList<>();
+
+        for (final DurationFields field : DurationFields.values()) {
+            for (final String value : values) {
+                final String yaml = field.yaml(value);
+                final boolean schemaValid = SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty();
+                if (schemaValid != isValidForJava(yaml)) {
+                    mismatches.add(field + "=" + value + " (schema " + (schemaValid ? "valid" : "invalid") + ")");
+                }
+            }
+        }
+
+        Assert.assertTrue("Schema and Java verdicts differ for: " + mismatches, mismatches.isEmpty());
+    }
+
+    private static boolean isValidForJava(final String yaml) {
+        try {
+            return new Validator().validate(new IO().read(yaml), NeoLoad.class).isValid();
+        } catch (final IOException e) {
+            return false;
+        }
     }
 }
