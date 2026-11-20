@@ -29,6 +29,7 @@ import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequestContent;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import java.io.IOException;
+import java.time.Duration;
 import org.junit.Test;
 
 public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
@@ -47,6 +48,7 @@ public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
 	private static Project getWebServicesSecurityRequiredAndOptional() {
 		return Project.builder()
 				.name("MyProject")
+				.schemaVersion("3.2")
 				.webServicesSecurity(WebServicesSecurity.builder()
 						.addKeystores(WsKeystore.builder()
 								.path("./wss-keystores/server.p12")
@@ -66,7 +68,7 @@ public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
 												.build())
 										.addTokens(WsTimestampToken.builder()
 												.id("TS-1")
-												.timeToLive(600)
+												.timeToLive(Duration.ofSeconds(600))
 												.milliseconds(false)
 												.build())
 										.build())

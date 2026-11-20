@@ -7,7 +7,7 @@ public final class InvalidDurationException extends IllegalArgumentException {
 
 	private static final long serialVersionUID = 1L;
 
-	InvalidDurationException(final String input) {
+	public InvalidDurationException(final String input) {
 		super("Incorrect duration: '" + input + "' is not a valid duration.");
 	}
 }
