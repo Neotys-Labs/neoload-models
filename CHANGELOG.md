@@ -29,6 +29,19 @@ name: MyProject
 
 A file declaring `3.0`, `3.1` or no `schemaVersion` keeps working unchanged.
 
+#### Assertions
+
+**`content_assertions` on `custom_action`** — a custom action can now validate its response
+content, with the same content assertions as a request.
+
+```yaml
+- custom_action:
+    name: sql action
+    type: SQL
+    content_assertions:
+    - contains: expected text
+```
+
 ---
 
 ## [3.1] — Upcoming version in 2026
@@ -307,17 +320,6 @@ web_services_security:
     url: https://www.tricentis.com/
     duration_assertion:
       less_than: 2048
-```
-
-**`content_assertions` on `custom_action`** — a custom action can now validate its response
-content, with the same content assertions as a request.
-
-```yaml
-- custom_action:
-    name: sql action
-    type: SQL
-    content_assertions:
-    - contains: expected text
 ```
 
 #### Variables

@@ -48,7 +48,7 @@ public class IOCustomActionTest extends AbstractIOElementsTest {
 
 	@Test
 	public void readCustomActionContentAssertions() throws IOException {
-		final Project expectedProject = buildProject(getCustomActionWithContentAssertions());
+		final Project expectedProject = buildProject32(getCustomActionWithContentAssertions());
 		assertNotNull(expectedProject);
 
 		read("test-assert-content-custom-action", expectedProject);
@@ -56,10 +56,15 @@ public class IOCustomActionTest extends AbstractIOElementsTest {
 
 	@Test
 	public void writeCustomActionContentAssertions() throws IOException {
-		final Project expectedProject = buildProject(getCustomActionWithContentAssertions());
+		final Project expectedProject = buildProject32(getCustomActionWithContentAssertions());
 		assertNotNull(expectedProject);
 
 		write("test-assert-content-custom-action", expectedProject);
+	}
+
+	/** content_assertions on a custom action is a 3.2 construct: the fixture declares schemaVersion 3.2. */
+	private static Project buildProject32(final CustomAction customAction) {
+		return Project.builder().from(buildProject(customAction)).schemaVersion("3.2").build();
 	}
 
 	private CustomAction getCustomActionWithContentAssertions() {
