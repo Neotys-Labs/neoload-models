@@ -1,15 +1,11 @@
 package com.neotys.neoload.model.v3.writers.neoload.settings;
 
 import com.neotys.neoload.model.v3.project.settings.DynatraceSettings;
-import com.neotys.neoload.model.v3.project.settings.ContentAssertionsSettings;
 import com.neotys.neoload.model.v3.project.settings.ProjectSettings;
 import com.neotys.neoload.model.v3.project.settings.QTestSettings;
-import com.neotys.neoload.model.v3.project.settings.ResponsesSettings;
-import com.neotys.neoload.model.v3.project.settings.RuntimeSettings;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -20,10 +16,6 @@ public class ProjectSettingsWriter {
 		
 	private static final String PROJECT_SETTINGS_DEFAULT_FILE = "defaultProjectSettings.properties";	
 	private static final String SETTINGS_XML_FILE = NeoLoadWriter.ConfigFiles.SETTINGS.getFileName();
-	private static final String SEPARATOR = ".";
-	private static final String GLOBAL_ASSERTIONS_CONTENT_TYPES = "runtime.responses.content_assertions.content_types";
-	// Derived token: the comma-separated content types expanded into one <contentType> element each
-	private static final String GLOBAL_ASSERTIONS_CONTENT_TYPES_ELEMENTS = "runtime.responses.content_assertions.content_types.elements";
 
 	private ProjectSettingsWriter() {
 	}
@@ -33,18 +25,18 @@ public class ProjectSettingsWriter {
 	}
 
 	/**
-	 * The settings as the {@code group.setting} tokens of the settings.xml template, such as {@code qtest.enabled}.
+	 * The typed settings as the {@code group.setting} tokens of the settings.xml template, such as {@code qtest.enabled}.
 	 */
 	static Map<String, String> toTokens(final Optional<ProjectSettings> projectSettings) {
 		final Map<String, String> tokens = new LinkedHashMap<>();
 		projectSettings.flatMap(ProjectSettings::getDynatrace).ifPresent(dynatrace -> {
-			final String group = ProjectSettings.DYNATRACE + SEPARATOR;
+			final String group = ProjectSettings.DYNATRACE + ".";
 			putToken(tokens, group + DynatraceSettings.ENABLED, dynatrace.getEnabled());
 			putToken(tokens, group + DynatraceSettings.URL, dynatrace.getUrl());
 			putToken(tokens, group + DynatraceSettings.TOKEN, dynatrace.getToken());
 		});
 		projectSettings.flatMap(ProjectSettings::getQtest).ifPresent(qtest -> {
-			final String group = ProjectSettings.QTEST + SEPARATOR;
+			final String group = ProjectSettings.QTEST + ".";
 			putToken(tokens, group + QTestSettings.ENABLED, qtest.getEnabled());
 			putToken(tokens, group + QTestSettings.URL, qtest.getUrl());
 			putToken(tokens, group + QTestSettings.TOKEN, qtest.getToken());
@@ -53,13 +45,6 @@ public class ProjectSettingsWriter {
 			putToken(tokens, group + QTestSettings.AUTH_METHOD, qtest.getAuthMethod());
 			putToken(tokens, group + QTestSettings.PROJECT_ID, qtest.getProjectId());
 			putToken(tokens, group + QTestSettings.CYCLE_ID, qtest.getCycleId());
-		});
-		projectSettings.flatMap(ProjectSettings::getRuntime).flatMap(RuntimeSettings::getResponses)
-				.flatMap(ResponsesSettings::getContentAssertions).ifPresent(contentAssertions -> {
-			final String group = ProjectSettings.RUNTIME + SEPARATOR + RuntimeSettings.RESPONSES + SEPARATOR
-					+ ResponsesSettings.CONTENT_ASSERTIONS + SEPARATOR;
-			putToken(tokens, group + ContentAssertionsSettings.CONTENT_TYPES, contentAssertions.getContentTypes());
-			putToken(tokens, group + ContentAssertionsSettings.APPLY_ON_CUSTOM_ACTIONS, contentAssertions.getApplyOnCustomActions());
 		});
 		return tokens;
 	}
@@ -70,8 +55,7 @@ public class ProjectSettingsWriter {
 
 	public static void writeSettingsXML(final String nlProjectFolder, final Map<String,String> overwrittenProjectSettings) throws IOException{
 		final Map<String,String> allProjectSettings = readProjectSettingsDefault();
-		allProjectSettings.putAll(overwrittenProjectSettings);
-		allProjectSettings.put(GLOBAL_ASSERTIONS_CONTENT_TYPES_ELEMENTS, toContentTypeElements(allProjectSettings.get(GLOBAL_ASSERTIONS_CONTENT_TYPES)));
+		allProjectSettings.putAll(overwrittenProjectSettings);	    
 	    final Reader source = new InputStreamReader(ProjectSettingsWriter.class.getResourceAsStream(SETTINGS_XML_FILE));
 	    try(final Reader reader = new TokenReplacingReader(source, allProjectSettings)){
 		    int intValueOfChar;
@@ -105,16 +89,5 @@ public class ProjectSettingsWriter {
 			            e -> e.getValue().toString()
 			       )
 			   );
-	}
-
-	private static String toContentTypeElements(final String contentTypes) {
-		if (contentTypes == null) {
-			return "";
-		}
-		return Arrays.stream(contentTypes.split(","))
-				.map(String::trim)
-				.filter(contentType -> !contentType.isEmpty())
-				.map(contentType -> "<contentType value=\"" + contentType + "\"/>\n")
-				.collect(Collectors.joining());
-	}
+	}	
 }
