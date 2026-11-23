@@ -4,6 +4,9 @@ the other properties will keep the value defined from NeoLoad.
 
 The settings are nested maps (`qtest:` / `enabled: true`), which requires `schemaVersion: "3.2"` (2027.1).
 
+Before schema 3.2 (2027.1), the Dynatrace and qTest settings were written as dotted keys (`qtest.enabled: true`).
+They are still read, but deprecated: see the [3.1 documentation](https://github.com/Neotys-Labs/neoload-models/blob/stable/v3.1/neoload-project/doc/v3/project_settings.md).
+
 #### Available settings
 
 | Name                                    | Description                                                                                       | Accept variable | Required | Since |
