@@ -266,16 +266,18 @@
 <errorHandleSettings enabled="false">
 <httpCode value="404"/>
 </errorHandleSettings>
-<globalAssertionSettings applyGlobalAssertionsOnCA="@runtime.responses.content_assertions.apply_on_custom_actions@">
-@runtime.responses.content_assertions.content_types.elements@</globalAssertionSettings>
+<globalAssertionSettings applyGlobalAssertionsOnCA="false">
+<contentType value="text/html"/>
+<contentType value="text/xhtml"/>
+</globalAssertionSettings>
 <caApmSettings>
 <headersSettings containerEnabled="true" headersEnabled="false" logicalActionEnabled="true" percentageOfVUToTrace="10" traceByVUEnabled="false" vuEnabled="true"/>
 <workstationSettings emDomain="SuperDomain" emLogin="admin" emPassword="" intervalEndDelay="0" intervalStartDelay="0" jwsHost="localhost" jwsPort="8081" linksEnabled="false"/>
 </caApmSettings>
-<dynaTraceSettings dynaTraceEnabled="@dynatrace.enabled@" logicalNamesEnabled="@dynatrace.logicalnames.enabled@" url="@dynatrace.url@" token="@dynatrace.token@"/>
-<appDynamicsSettings appDynamicsEnabled="@appdynamics.enabled@" containerNamesEnabled="false" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
-<nudgeSettings containerNamesEnabled="false" enabled="@nudge.enabled@" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
-<qTestSettings authMethod="@qtest.auth_method@" contextTreePathIds="@qtest.cycle_id@" enable="@qtest.enabled@" password="@qtest.password@" projectId="@qtest.project_id@" token="@qtest.token@" url="@qtest.url@" username="@qtest.username@"/>
+<dynaTraceSettings dynaTraceEnabled="false" logicalNamesEnabled="false" url="" token=""/>
+<appDynamicsSettings appDynamicsEnabled="false" containerNamesEnabled="false" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
+<nudgeSettings containerNamesEnabled="false" enabled="false" logicalActionNamesEnabled="false" vuNamesEnabled="false"/>
+<qTestSettings authMethod="TOKEN" contextTreePathIds="" enable="false" password="" projectId="" token="" url="" username=""/>
 <amfSettings amfGDSLocale110GA="false" amfServer="1"/>
 <ofSettings isHandlerIdAutomaticManagementEnabled="true" isHandlerIdCleanedAtRecord="true" isHandlerIdErrorReportingEnabled="true"/>
 <performanceSettings optimizationReferrerOnly="false"/>
@@ -360,6 +362,6 @@
 <exportNeoSenseSettings destination="" mode="" recordedReqRespExported="false" screenShotsExported="false"/>
 <exportNeoSenseSettings destination="" mode="" recordedReqRespExported="false" screenShotsExported="false"/>
 <restApisSettings>
-<identification isEnabled="@restapi.identification.enabled@"/>
+<identification isEnabled="false"/>
 </restApisSettings>
 </settings>

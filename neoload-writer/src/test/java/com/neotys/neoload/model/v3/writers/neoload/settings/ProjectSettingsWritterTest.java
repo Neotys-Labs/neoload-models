@@ -1,60 +1,68 @@
 package com.neotys.neoload.model.v3.writers.neoload.settings;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Files;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.neotys.neoload.model.v3.project.settings.ContentAssertionsSettings;
+import com.neotys.neoload.model.v3.project.settings.DynatraceSettings;
 import com.neotys.neoload.model.v3.project.settings.ProjectSettings;
 import com.neotys.neoload.model.v3.project.settings.QTestSettings;
 import com.neotys.neoload.model.v3.project.settings.ResponsesSettings;
 import com.neotys.neoload.model.v3.project.settings.RuntimeSettings;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class ProjectSettingsWritterTest {
 
     @Test
-    public void writeSettingsXMLTest() throws IOException {
-        File tmpDir = Files.createTempDir();
-        Map<String, String> settings = ImmutableMap.<String, String>builder()
-                .put("dynatrace.enabled", "true")
-                .put("restapi.identification.enabled", "true")
-                .build();
-        ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), settings);
+    public void writeDefaultSettingsXMLTest() throws Exception {
+        final File settingsFile = write(Optional.empty());
+        final Document document = parse(settingsFile);
 
-        String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName())));
-        // Default
-        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" logicalNamesEnabled=\"false\" url=\"\" token=\"\"/>");
-        Assertions.assertThat(settingsContent).contains("<identification isEnabled=\"true\"/>");
+        assertThat(new String(Files.readAllBytes(settingsFile.toPath()), StandardCharsets.UTF_8).trim()).startsWith("<!DOCTYPE settings [");
+        assertThat(document.getDoctype()).isNotNull();
+        final Element dynatrace = element(document, "dynaTraceSettings");
+        assertThat(dynatrace.getAttribute("dynaTraceEnabled")).isEqualTo("false");
+        assertThat(dynatrace.getAttribute("url")).isEmpty();
+        assertThat(dynatrace.getAttribute("token")).isEmpty();
+        final Element qtest = element(document, "qTestSettings");
+        assertThat(qtest.getAttribute("enable")).isEqualTo("false");
+        assertThat(qtest.getAttribute("authMethod")).isEqualTo("TOKEN");
+        final Element globalAssertions = element(document, "globalAssertionSettings");
+        assertThat(globalAssertions.getAttribute("applyGlobalAssertionsOnCA")).isEqualTo("false");
+        assertThat(contentTypes(globalAssertions)).containsExactly("text/html", "text/xhtml");
+        assertThat(element(document, "identification").getAttribute("isEnabled")).isEqualTo("false");
     }
 
     @Test
-    public void writeSettingsDynatraceHeadersXMLTest() throws IOException {
-        File tmpDir = Files.createTempDir();
-        Map<String, String> settings = ImmutableMap.<String, String>builder()
-                .put("dynatrace.enabled", "true")
-                .put("dynatrace.type", "Dynatrace")
-                .put("dynatrace.header", "X-Dynatrace-MyHeader(should not be taken into account)")
-                .put("dynatrace.url", "http://urlto.dynatrace.com")
-                .put("dynatrace.token", "myApiTokenInClear")
+    public void writeDynatraceSettingsXMLTest() throws Exception {
+        final ProjectSettings settings = ProjectSettings.builder()
+                .dynatrace(DynatraceSettings.builder().enabled(true).url("http://urlto.dynatrace.com").token("myApiTokenInClear").build())
                 .build();
-        ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), settings);
+        final Document document = parse(write(Optional.of(settings)));
 
-        String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName())));
-        // Overrides
-        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"true\" logicalNamesEnabled=\"false\" url=\"http://urlto.dynatrace.com\" token=\"myApiTokenInClear\"/>");
+        final Element dynatrace = element(document, "dynaTraceSettings");
+        assertThat(dynatrace.getAttribute("dynaTraceEnabled")).isEqualTo("true");
+        assertThat(dynatrace.getAttribute("logicalNamesEnabled")).isEqualTo("false");
+        assertThat(dynatrace.getAttribute("url")).isEqualTo("http://urlto.dynatrace.com");
+        assertThat(dynatrace.getAttribute("token")).isEqualTo("myApiTokenInClear");
     }
 
     @Test
-    public void writeTypedSettingsXMLTest() throws IOException {
-        File tmpDir = java.nio.file.Files.createTempDirectory("project-settings").toFile();
-        ProjectSettings settings = ProjectSettings.builder()
+    public void writeQTestAndGlobalAssertionSettingsXMLTest() throws Exception {
+        final ProjectSettings settings = ProjectSettings.builder()
                 .qtest(QTestSettings.builder()
                         .enabled(true)
                         .url("https://myCompany.qtestnet.com")
@@ -62,48 +70,98 @@ public class ProjectSettingsWritterTest {
                         .projectId(101762L)
                         .cycleId(3761630L)
                         .build())
-                .runtime(RuntimeSettings.builder().responses(ResponsesSettings.builder().contentAssertions(
-                        ContentAssertionsSettings.builder().contentTypes("application/json").applyOnCustomActions(true).build())
-                        .build()).build())
+                .runtime(runtime(ContentAssertionsSettings.builder().contentTypes("application/json").applyOnCustomActions(true).build()))
                 .build();
-        ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), Optional.of(settings));
+        final Document document = parse(write(Optional.of(settings)));
 
-        String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName()))).replace("\r\n", "\n");
-        Assertions.assertThat(settingsContent).contains("<qTestSettings authMethod=\"LOGIN_PWD\" contextTreePathIds=\"3761630\" enable=\"true\" password=\"\" projectId=\"101762\" token=\"\" url=\"https://myCompany.qtestnet.com\" username=\"\"/>");
-        Assertions.assertThat(settingsContent).contains("<globalAssertionSettings applyGlobalAssertionsOnCA=\"true\">\n"
-                + "<contentType value=\"application/json\"/>\n"
-                + "</globalAssertionSettings>");
+        final Element qtest = element(document, "qTestSettings");
+        assertThat(qtest.getAttribute("enable")).isEqualTo("true");
+        assertThat(qtest.getAttribute("url")).isEqualTo("https://myCompany.qtestnet.com");
+        assertThat(qtest.getAttribute("authMethod")).isEqualTo("LOGIN_PWD");
+        assertThat(qtest.getAttribute("projectId")).isEqualTo("101762");
+        assertThat(qtest.getAttribute("contextTreePathIds")).isEqualTo("3761630");
+        assertThat(qtest.getAttribute("username")).isEmpty();
+        final Element globalAssertions = element(document, "globalAssertionSettings");
+        assertThat(globalAssertions.getAttribute("applyGlobalAssertionsOnCA")).isEqualTo("true");
+        assertThat(contentTypes(globalAssertions)).containsExactly("application/json");
         // Absent settings keep the defaults
-        Assertions.assertThat(settingsContent).contains("<dynaTraceSettings dynaTraceEnabled=\"false\" logicalNamesEnabled=\"false\" url=\"\" token=\"\"/>");
+        assertThat(element(document, "dynaTraceSettings").getAttribute("dynaTraceEnabled")).isEqualTo("false");
     }
 
     @Test
-    public void writeSettingsGlobalAssertionsDefaultXMLTest() throws IOException {
-        File tmpDir = java.nio.file.Files.createTempDirectory("project-settings").toFile();
-        ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), ImmutableMap.of());
-
-        String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName()))).replace("\r\n", "\n");
-        // Default
-        Assertions.assertThat(settingsContent).contains("<globalAssertionSettings applyGlobalAssertionsOnCA=\"false\">\n"
-                + "<contentType value=\"text/html\"/>\n"
-                + "<contentType value=\"text/xhtml\"/>\n"
-                + "</globalAssertionSettings>");
-    }
-
-    @Test
-    public void writeSettingsGlobalAssertionsXMLTest() throws IOException {
-        File tmpDir = java.nio.file.Files.createTempDirectory("project-settings").toFile();
-        Map<String, String> settings = ImmutableMap.<String, String>builder()
-                .put("runtime.responses.content_assertions.content_types", "text/html, application/json,,")
-                .put("runtime.responses.content_assertions.apply_on_custom_actions", "true")
+    public void writeGlobalAssertionContentTypesAreTrimmedXMLTest() throws Exception {
+        final ProjectSettings settings = ProjectSettings.builder()
+                .runtime(runtime(ContentAssertionsSettings.builder().contentTypes("text/html, application/json,,").build()))
                 .build();
-        ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), settings);
+        final Document document = parse(write(Optional.of(settings)));
 
-        String settingsContent = new String(java.nio.file.Files.readAllBytes(Paths.get(tmpDir.getAbsolutePath(), NeoLoadWriter.ConfigFiles.SETTINGS.getFileName()))).replace("\r\n", "\n");
-        // Overrides
-        Assertions.assertThat(settingsContent).contains("<globalAssertionSettings applyGlobalAssertionsOnCA=\"true\">\n"
-                + "<contentType value=\"text/html\"/>\n"
-                + "<contentType value=\"application/json\"/>\n"
-                + "</globalAssertionSettings>");
+        final Element globalAssertions = element(document, "globalAssertionSettings");
+        assertThat(contentTypes(globalAssertions)).containsExactly("text/html", "application/json");
+        assertThat(globalAssertions.getAttribute("applyGlobalAssertionsOnCA")).isEqualTo("false");
+    }
+
+    @Test
+    public void writeEmptyGlobalAssertionContentTypesXMLTest() throws Exception {
+        final ProjectSettings settings = ProjectSettings.builder()
+                .runtime(runtime(ContentAssertionsSettings.builder().contentTypes("").build()))
+                .build();
+        final Document document = parse(write(Optional.of(settings)));
+
+        assertThat(contentTypes(element(document, "globalAssertionSettings"))).isEmpty();
+    }
+
+    @Test
+    public void writeApplyOnCustomActionsOnlyKeepsDefaultContentTypesXMLTest() throws Exception {
+        final ProjectSettings settings = ProjectSettings.builder()
+                .runtime(runtime(ContentAssertionsSettings.builder().applyOnCustomActions(true).build()))
+                .build();
+        final Document document = parse(write(Optional.of(settings)));
+
+        final Element globalAssertions = element(document, "globalAssertionSettings");
+        assertThat(globalAssertions.getAttribute("applyGlobalAssertionsOnCA")).isEqualTo("true");
+        assertThat(contentTypes(globalAssertions)).containsExactly("text/html", "text/xhtml");
+    }
+
+    @Test
+    public void writeSettingsWithXMLSpecialCharactersXMLTest() throws Exception {
+        final String token = "a&b\"c<d>e'f";
+        final ProjectSettings settings = ProjectSettings.builder()
+                .dynatrace(DynatraceSettings.builder().token(token).build())
+                .qtest(QTestSettings.builder().password(token).build())
+                .build();
+        final Document document = parse(write(Optional.of(settings)));
+
+        assertThat(element(document, "dynaTraceSettings").getAttribute("token")).isEqualTo(token);
+        assertThat(element(document, "qTestSettings").getAttribute("password")).isEqualTo(token);
+    }
+
+    private static RuntimeSettings runtime(final ContentAssertionsSettings contentAssertions) {
+        return RuntimeSettings.builder().responses(ResponsesSettings.builder().contentAssertions(contentAssertions).build()).build();
+    }
+
+    private static File write(final Optional<ProjectSettings> settings) throws IOException {
+        final File tmpDir = Files.createTempDirectory("project-settings").toFile();
+        ProjectSettingsWriter.writeSettingsXML(tmpDir.getAbsolutePath(), settings);
+        return new File(tmpDir, NeoLoadWriter.ConfigFiles.SETTINGS.getFileName());
+    }
+
+    private static Document parse(final File settingsFile) throws ParserConfigurationException, SAXException, IOException {
+        // The whole file, DTD included, must be well-formed XML
+        return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(settingsFile);
+    }
+
+    private static Element element(final Document document, final String tagName) {
+        final NodeList elements = document.getElementsByTagName(tagName);
+        assertThat(elements.getLength()).as(tagName).isEqualTo(1);
+        return (Element) elements.item(0);
+    }
+
+    private static List<String> contentTypes(final Element globalAssertions) {
+        final NodeList elements = globalAssertions.getElementsByTagName("contentType");
+        final List<String> values = new ArrayList<>();
+        for (int i = 0; i < elements.getLength(); i++) {
+            values.add(((Element) elements.item(i)).getAttribute("value"));
+        }
+        return values;
     }
 }
