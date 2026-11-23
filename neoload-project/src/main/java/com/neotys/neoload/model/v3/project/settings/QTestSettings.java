@@ -33,6 +33,11 @@ public interface QTestSettings {
 	String CYCLE_ID = "cycle_id";
 	String CREATE_DEFECTS = "create_defects";
 
+	// NeoLoad defaults, written for a new NeoLoad project when the setting is absent. The getters stay Optional:
+	// an absent setting keeps the NeoLoad value when the as-code project is applied to an existing one.
+	boolean DEFAULT_ENABLED = false;
+	AuthMethod DEFAULT_AUTH_METHOD = AuthMethod.TOKEN;
+
 	enum AuthMethod {
 		TOKEN, LOGIN_PWD
 	}

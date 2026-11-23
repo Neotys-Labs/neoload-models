@@ -24,6 +24,10 @@ public interface DynatraceSettings {
 	String URL = "url";
 	String TOKEN = "token";
 
+	// NeoLoad defaults, written for a new NeoLoad project when the setting is absent. The getters stay Optional:
+	// an absent setting keeps the NeoLoad value when the as-code project is applied to an existing one.
+	boolean DEFAULT_ENABLED = false;
+
 	@JsonProperty(ENABLED)
 	Optional<Boolean> getEnabled();
 

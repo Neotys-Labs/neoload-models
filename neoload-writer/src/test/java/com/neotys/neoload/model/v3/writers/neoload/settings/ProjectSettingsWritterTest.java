@@ -11,6 +11,7 @@ import com.neotys.neoload.model.v3.project.settings.RuntimeSettings;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -44,6 +46,22 @@ public class ProjectSettingsWritterTest {
         assertThat(globalAssertions.getAttribute("applyGlobalAssertionsOnCA")).isEqualTo("false");
         assertThat(contentTypes(globalAssertions)).containsExactly("text/html", "text/xhtml");
         assertThat(element(document, "identification").getAttribute("isEnabled")).isEqualTo("false");
+        // The written elements are at their place in the DTD order of the settings children
+        assertThat(childElementNames(document.getDocumentElement())).containsSubsequence("errorHandleSettings",
+                "globalAssertionSettings", "caApmSettings", "dynaTraceSettings", "appDynamicsSettings", "nudgeSettings",
+                "qTestSettings", "amfSettings");
+    }
+
+    @Test
+    public void templateHoldsOnlyFixedSettingsTest() throws IOException {
+        final String template;
+        try (InputStream in = ProjectSettingsWriter.class.getResourceAsStream(NeoLoadWriter.ConfigFiles.SETTINGS.getFileName())) {
+            template = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
+        final String body = template.substring(template.indexOf("<settings>"));
+
+        // These elements are written by the Java writers, with the defaults of the as-code model
+        assertThat(body).doesNotContain("<globalAssertionSettings", "<dynaTraceSettings", "<qTestSettings");
     }
 
     @Test
@@ -154,6 +172,16 @@ public class ProjectSettingsWritterTest {
         final NodeList elements = document.getElementsByTagName(tagName);
         assertThat(elements.getLength()).as(tagName).isEqualTo(1);
         return (Element) elements.item(0);
+    }
+
+    private static List<String> childElementNames(final Element parent) {
+        final List<String> names = new ArrayList<>();
+        for (Node child = parent.getFirstChild(); child != null; child = child.getNextSibling()) {
+            if (child.getNodeType() == Node.ELEMENT_NODE) {
+                names.add(child.getNodeName());
+            }
+        }
+        return names;
     }
 
     private static List<String> contentTypes(final Element globalAssertions) {

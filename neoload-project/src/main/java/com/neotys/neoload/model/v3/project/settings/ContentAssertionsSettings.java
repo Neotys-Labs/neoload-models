@@ -24,6 +24,11 @@ public interface ContentAssertionsSettings {
 	String CONTENT_TYPES = "content_types";
 	String APPLY_ON_CUSTOM_ACTIONS = "apply_on_custom_actions";
 
+	// NeoLoad defaults, written for a new NeoLoad project when the setting is absent. The getters stay Optional:
+	// an absent setting keeps the NeoLoad value when the as-code project is applied to an existing one.
+	String DEFAULT_CONTENT_TYPES = "text/html,text/xhtml";
+	boolean DEFAULT_APPLY_ON_CUSTOM_ACTIONS = false;
+
 	/** Comma-separated content types; an empty value applies the global assertions to no response. */
 	@JsonProperty(CONTENT_TYPES)
 	Optional<String> getContentTypes();

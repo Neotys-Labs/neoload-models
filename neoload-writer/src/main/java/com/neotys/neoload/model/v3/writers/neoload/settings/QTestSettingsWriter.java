@@ -5,8 +5,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Writes the qTest settings of the project into the {@code qTestSettings} element of settings.xml.
- * The attributes that are not set in the model keep the default value of the template.
+ * Writes the {@code qTestSettings} element of settings.xml from the qTest settings of the project, with the defaults
+ * of {@link QTestSettings} for the absent settings.
  */
 public final class QTestSettingsWriter {
 
@@ -24,14 +24,15 @@ public final class QTestSettingsWriter {
 	}
 
 	public static void writeXML(final Document document, final Element settingsElement, final QTestSettings qtest) {
-		final Element element = ProjectSettingsWriter.getOrAppendChild(document, settingsElement, XML_TAG_NAME);
-		qtest.getEnabled().ifPresent(enabled -> element.setAttribute(XML_ATTR_ENABLED, enabled.toString()));
-		qtest.getUrl().ifPresent(url -> element.setAttribute(XML_ATTR_URL, url));
-		qtest.getToken().ifPresent(token -> element.setAttribute(XML_ATTR_TOKEN, token));
-		qtest.getUsername().ifPresent(username -> element.setAttribute(XML_ATTR_USERNAME, username));
-		qtest.getPassword().ifPresent(password -> element.setAttribute(XML_ATTR_PASSWORD, password));
-		qtest.getAuthMethod().ifPresent(authMethod -> element.setAttribute(XML_ATTR_AUTH_METHOD, authMethod.name()));
-		qtest.getProjectId().ifPresent(projectId -> element.setAttribute(XML_ATTR_PROJECT_ID, projectId.toString()));
-		qtest.getCycleId().ifPresent(cycleId -> element.setAttribute(XML_ATTR_CYCLE_ID, cycleId.toString()));
+		final Element element = document.createElement(XML_TAG_NAME);
+		element.setAttribute(XML_ATTR_AUTH_METHOD, qtest.getAuthMethod().orElse(QTestSettings.DEFAULT_AUTH_METHOD).name());
+		element.setAttribute(XML_ATTR_CYCLE_ID, qtest.getCycleId().map(String::valueOf).orElse(""));
+		element.setAttribute(XML_ATTR_ENABLED, String.valueOf(qtest.getEnabled().orElse(QTestSettings.DEFAULT_ENABLED)));
+		element.setAttribute(XML_ATTR_PASSWORD, qtest.getPassword().orElse(""));
+		element.setAttribute(XML_ATTR_PROJECT_ID, qtest.getProjectId().map(String::valueOf).orElse(""));
+		element.setAttribute(XML_ATTR_TOKEN, qtest.getToken().orElse(""));
+		element.setAttribute(XML_ATTR_URL, qtest.getUrl().orElse(""));
+		element.setAttribute(XML_ATTR_USERNAME, qtest.getUsername().orElse(""));
+		ProjectSettingsWriter.insertInOrder(document, settingsElement, element);
 	}
 }

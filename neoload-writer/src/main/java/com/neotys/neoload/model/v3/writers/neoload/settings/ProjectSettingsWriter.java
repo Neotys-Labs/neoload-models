@@ -1,6 +1,9 @@
 package com.neotys.neoload.model.v3.writers.neoload.settings;
 
+import com.neotys.neoload.model.v3.project.settings.ContentAssertionsSettings;
+import com.neotys.neoload.model.v3.project.settings.DynatraceSettings;
 import com.neotys.neoload.model.v3.project.settings.ProjectSettings;
+import com.neotys.neoload.model.v3.project.settings.QTestSettings;
 import com.neotys.neoload.model.v3.project.settings.ResponsesSettings;
 import com.neotys.neoload.model.v3.project.settings.RuntimeSettings;
 import com.neotys.neoload.model.v3.writers.neoload.NeoLoadWriter;
@@ -12,6 +15,8 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,15 +36,23 @@ import org.xml.sax.SAXException;
 /**
  * Writes the settings.xml file of the NeoLoad project.
  *
- * <p>The settings.xml template holds the DTD and the fixed settings, with their default values. The settings of the
- * as-code project are written over them by {@link DynatraceSettingsWriter}, {@link QTestSettingsWriter} and
- * {@link GlobalAssertionSettingsWriter}. The DTD header is copied as is: a DOM document does not write back an
- * internal DTD.</p>
+ * <p>The settings.xml template holds the DTD and the fixed settings only: nothing in it is overwritten.
+ * {@link DynatraceSettingsWriter}, {@link QTestSettingsWriter} and {@link GlobalAssertionSettingsWriter} write the
+ * settings of the as-code project, with the defaults declared in the as-code model for the absent ones. The DTD header
+ * is copied as is: a DOM document does not write back an internal DTD.</p>
  */
 public class ProjectSettingsWriter {
 
+	static final String LINE_SEPARATOR = "\n";
 	private static final String SETTINGS_XML_FILE = NeoLoadWriter.ConfigFiles.SETTINGS.getFileName();
 	private static final String XML_TAG_NAME = "settings";
+	/** The children of the settings element, in the order of the settings.xml DTD. */
+	private static final List<String> CHILDREN_ORDER = Arrays.asList("configuration", "clientCertificatesSettings",
+			"pageNamingSettings", "jsPolicySettings", "errorHandleSettings", GlobalAssertionSettingsWriter.XML_TAG_NAME,
+			"caApmSettings", DynatraceSettingsWriter.XML_TAG_NAME, "appDynamicsSettings", "nudgeSettings",
+			QTestSettingsWriter.XML_TAG_NAME, "amfSettings", "ofSettings", "performanceSettings", "statisticsSettings",
+			"wsSecuritySettings", "media-streaming-settings", "plugin-identification-settings", "team-server-settings",
+			"restApisSettings", "exportNeoSenseSettings");
 
 	private ProjectSettingsWriter() {
 	}
@@ -51,28 +64,31 @@ public class ProjectSettingsWriter {
 		final Document document = parse(template.substring(bodyStart));
 		final Element settingsElement = document.getDocumentElement();
 
-		projectSettings.ifPresent(settings -> {
-			settings.getDynatrace().ifPresent(dynatrace -> DynatraceSettingsWriter.writeXML(document, settingsElement, dynatrace));
-			settings.getQtest().ifPresent(qtest -> QTestSettingsWriter.writeXML(document, settingsElement, qtest));
-			settings.getRuntime().flatMap(RuntimeSettings::getResponses).flatMap(ResponsesSettings::getContentAssertions)
-					.ifPresent(contentAssertions -> GlobalAssertionSettingsWriter.writeXML(document, settingsElement, contentAssertions));
-		});
+		// The elements are always written: an absent setting gets the default of the as-code model
+		final ProjectSettings settings = projectSettings.orElseGet(() -> ProjectSettings.builder().build());
+		GlobalAssertionSettingsWriter.writeXML(document, settingsElement,
+				settings.getRuntime().flatMap(RuntimeSettings::getResponses).flatMap(ResponsesSettings::getContentAssertions)
+						.orElseGet(() -> ContentAssertionsSettings.builder().build()));
+		DynatraceSettingsWriter.writeXML(document, settingsElement, settings.getDynatrace().orElseGet(() -> DynatraceSettings.builder().build()));
+		QTestSettingsWriter.writeXML(document, settingsElement, settings.getQtest().orElseGet(() -> QTestSettings.builder().build()));
 
 		write(new File(nlProjectFolder, SETTINGS_XML_FILE), header, document);
 	}
 
 	/**
-	 * The child element of {@code parent} named {@code tagName}, appended when the template does not have it.
+	 * Inserts {@code element} at its place in the settings element, as the DTD orders the children, on its own line.
 	 */
-	static Element getOrAppendChild(final Document document, final Element parent, final String tagName) {
-		for (Node child = parent.getFirstChild(); child != null; child = child.getNextSibling()) {
-			if (child.getNodeType() == Node.ELEMENT_NODE && tagName.equals(child.getNodeName())) {
-				return (Element) child;
+	static void insertInOrder(final Document document, final Element settingsElement, final Element element) {
+		final int rank = CHILDREN_ORDER.indexOf(element.getTagName());
+		for (Node child = settingsElement.getFirstChild(); child != null; child = child.getNextSibling()) {
+			if (child.getNodeType() == Node.ELEMENT_NODE && CHILDREN_ORDER.indexOf(child.getNodeName()) > rank) {
+				settingsElement.insertBefore(element, child);
+				settingsElement.insertBefore(document.createTextNode(LINE_SEPARATOR), child);
+				return;
 			}
 		}
-		final Element element = document.createElement(tagName);
-		parent.appendChild(element);
-		return element;
+		settingsElement.appendChild(element);
+		settingsElement.appendChild(document.createTextNode(LINE_SEPARATOR));
 	}
 
 	private static String readTemplate() throws IOException {
