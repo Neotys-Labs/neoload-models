@@ -5,6 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.neotys.neoload.model.v3.binding.serializer.JavaDurationDeserializer;
+import com.neotys.neoload.model.v3.binding.serializer.JavaDurationSerializer;
+import com.neotys.neoload.model.v3.validation.constraints.WholeSecondsCheck;
+import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.time.Duration;
 import java.util.Optional;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
@@ -18,7 +24,7 @@ public interface WsTimestampToken extends WsToken {
 	String ID = "id";
 	String TIME_TO_LIVE = "time_to_live";
 	String MILLISECONDS = "milliseconds";
-	int DEFAULT_TIME_TO_LIVE = 300;
+	Duration DEFAULT_TIME_TO_LIVE = Duration.ofSeconds(300);
 	boolean DEFAULT_MILLISECONDS = true;
 
 	@JsonProperty(ID)
@@ -26,8 +32,11 @@ public interface WsTimestampToken extends WsToken {
 
 	@JsonProperty(TIME_TO_LIVE)
 	@JsonInclude(value = Include.CUSTOM, valueFilter = DefaultTimeToLiveFilter.class)
+	@WholeSecondsCheck(groups = {NeoLoad.class})
+	@JsonSerialize(using = JavaDurationSerializer.class)
+	@JsonDeserialize(using = JavaDurationDeserializer.class)
 	@Value.Default
-	default int getTimeToLive() {
+	default Duration getTimeToLive() {
 		return DEFAULT_TIME_TO_LIVE;
 	}
 
@@ -39,13 +48,13 @@ public interface WsTimestampToken extends WsToken {
 	}
 
 	/**
-	 * Jackson value filter omitting {@code time_to_live} from serialization when it equals the default.
+	 * Jackson value filter omitting {@code time_to_live} from serialization when it equals the default, the value being the raw {@link Duration}.
 	 */
 	class DefaultTimeToLiveFilter {
 		@Override
-		public boolean equals(final Object value) { return Integer.valueOf(DEFAULT_TIME_TO_LIVE).equals(value); }
+		public boolean equals(final Object value) { return DEFAULT_TIME_TO_LIVE.equals(value); }
 		@Override
-		public int hashCode() { return Integer.hashCode(DEFAULT_TIME_TO_LIVE); }
+		public int hashCode() { return DEFAULT_TIME_TO_LIVE.hashCode(); }
 	}
 
 	/**

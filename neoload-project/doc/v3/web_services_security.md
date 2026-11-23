@@ -112,7 +112,7 @@ password_type:
 | Name         | Description                              | Accept variable | Required | Since |
 |:------------ |:---------------------------------------- |:---------------:|:--------:|:-----:|
 | id           | The timestamp identifier                 | -               | -        | 2026.3|
-| time_to_live | The validity duration, in seconds. Defaults to `300` | -               | -        | 2026.3|
+| time_to_live | The validity duration: a number hours (h), minutes (m), seconds (s). `0` means the message never expires. Defaults to `5m` | -               | -        | 2026.3|
 | milliseconds | Use millisecond precision. Defaults to `true`                | -               | -        | 2026.3|
 
 ### signature
