@@ -100,7 +100,6 @@ Type `BrowserOpen`. Open a new browser.
 | `timezone` | Timezone of the context | - |
 | `blockRoute` | Block all resources related to the given route. Example: `https:\/\/neoload-api\.saas\.neotys\.com\/v3\/.*` to block all v3 api requests from https://neoload-api.saas.neotys.com/v3. `.*\.(png\|jpg\|jpeg)` to block all images resources. Note: images embedded in html (SVG, base64 etc...) won't be blocked | - |
 | `userAgent` | User agent of the browser | - |
-| `browserArguments` | Additional arguments to pass to the browser instance. Advanced parameter, hidden by default in NeoLoad GUI. | - |
 | `header` | Adds the specified header to each requests sent by the browser. You can add as many "header" parameter as you need. This parameter expected format is "(HeaderHost) HeaderName=HeaderValue" or "HeaderName=HeaderValue". If HeaderHost is empty, header will affect every requests. Otherwise, header will only affect requests addressed to this host | - |
 | `ignoreSSLCertificateErrors` | Ignore SSL certificate errors (expired, untrusted, wrong host certificate, etc.). It is not recommended for security matters. Default value is "false". | - |
 | `bypassCsp` | Set this parameter to "true" to bypass all content security policies in the browser context. Default value is "false". | - |
@@ -111,8 +110,6 @@ Type `BrowserOpen`. Open a new browser.
 | `httpCredentials.login` | Login for HTTP authentication. 'httpCredentials.origin' parameter is required to restrict sending credentials to specific hosts. | - |
 | `httpCredentials.password` | Password for HTTP authentication. 'httpCredentials.origin' parameter is required to restrict sending credentials to specific hosts. Set the parameter `type` to `PASSWORD` to store the value encrypted. | - |
 | `httpCredentials.origin` | Origin to which credentials for HTTP authentication will be sent. Ex: 'https://tricentis.com'. | - |
-| `httpCredentials.disableOriginRestrictions` | (UNSAFE) Set to true to allow specifying no origin for httpCredentials. This means that login & password will be sent to any server that sends a 401 challenge in response to a request sent by the browser. Advanced parameter, hidden by default in NeoLoad GUI. | - |
-| `httpCredentials.allowedOrigin` | Deprecated parameter. Use httpCredentials.origin instead. Advanced parameter, hidden by default in NeoLoad GUI. | - |
 | `ignoreScreenshots` | Disable all screenshots during Check VU or Debug. Default value is "false". | - |
 | `ignoreErrors` | Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a "If...Then...Else" or a "Try...Catch" block. Default value is "false". | - |
 
@@ -132,7 +129,6 @@ Type `BrowserNavigate`. Navigate to an url.
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
 | `url` | URL to visit. The URL must start with an http or https scheme, for example "https://". | &#x2713; |
-| `unsafeUrl` | URL to visit without scheme restriction, for example a local file. Always ignored on a NeoLoad Cloud Load Generator. Advanced parameter, hidden by default in NeoLoad GUI. | - |
 | `waitForNavigation.url` | URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed. | - |
 | `waitForNavigation.timeout` | If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000. | - |
 | `waitForNavigation.until` | Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed. | - |
@@ -207,7 +203,7 @@ Type `BrowserPress`. Press a key on a selector.
 
 ## browser_select_option
 
-Type `BrowserSelectOption`. Select one or several options of a select element.
+Type `BrowserSelectOption`. Select an option from the html select element identified by the selector. You can specify several options if the select element has the 'multiple' attribute, or you can specify none to clear the selection.
 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
@@ -357,8 +353,6 @@ Type `BrowserHandleDialog`. Set dialog behavior.
 
 Type `BrowserOpenTab`. Open a new tab at the rightmost position.
 
-This action takes no parameter.
-
 ## browser_switch_tab
 
 Type `BrowserSwitchTab`. Switch tab to the given index.
@@ -388,7 +382,6 @@ Type `BrowserCaptureRequests`. Configure the capture of HTTP requests metrics fo
 | `resourceType` | The resource type to group the requests (possible values are document, stylesheet, image, media, font, script, texttrack, xhr, fetch, eventsource, websocket, manifest, ping, other). | - |
 | `includeCache` | By default, only the requests sent over the network are captured (including the requests with 304 'Not Modified' response status since it includes network exchange). Set the value to true to capture also the requests locally loaded from the browser memory or disk cache (no network interaction). Default value is "false". | - |
 | `includeFailedRequests` | By default, failed requests (network errors, connection refused, etc.) are excluded from captured results. Set the value to true to include them. Default value is "false". | - |
-| `ignoreSizesForRegexp` | Mitigates thread hanging issues when accessing the request sizes. Regular expression applied to the full request URL: when a request URL matches, response sizes are not computed. Leave empty to compute sizes for all requests. Advanced parameter, hidden by default in NeoLoad GUI. | - |
 
 ## browser_capture_web_vitals
 
@@ -397,4 +390,3 @@ Type `BrowserCaptureWebVitals`. Captures Core Web Vitals metrics during Virtual 
 | Parameter | Description | Required |
 |:----------|:------------|:--------:|
 | `url` | A url (excluding query parameters) to group Web Vitals metrics data under. | - |
-

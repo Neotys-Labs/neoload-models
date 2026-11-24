@@ -3365,9 +3365,29 @@
 					}
 				},
 				"parameter_names": {
+					"ignoreErrors": {
+						"const": "ignoreErrors",
+						"description": "Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a \"If...Then...Else\" or a \"Try...Catch\" block. Default value is \"false\"."
+					},
+					"waitForNavigation_url": {
+						"const": "waitForNavigation.url",
+						"description": "URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed."
+					},
+					"waitForNavigation_timeout": {
+						"const": "waitForNavigation.timeout",
+						"description": "If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000."
+					},
+					"waitForNavigation_until": {
+						"const": "waitForNavigation.until",
+						"description": "Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed."
+					},
 					"selector": {
 						"const": "selector",
 						"description": "The selector is a string that point to the elements in the page. Several types of selector are supported: text, CSS, XPath... You can specify several selectors by adding multiple selector parameters to this action. The targeted element will match any of the selectors (OR operator)."
+					},
+					"force": {
+						"const": "force",
+						"description": "true or false. Forces the click, even if the target element is obscured by other elements. Default value is \"false\"."
 					},
 					"timeout": {
 						"const": "timeout",
@@ -3385,18 +3405,6 @@
 						"const": "frameSelector",
 						"description": "Frame selector."
 					},
-					"waitForNavigation_url": {
-						"const": "waitForNavigation.url",
-						"description": "URL pattern targeted, ex:http://tricentis.com/.* . The URL being navigated to must match this pattern. Enables a wait for page navigation after this action has been executed."
-					},
-					"waitForNavigation_timeout": {
-						"const": "waitForNavigation.timeout",
-						"description": "If applicable, the navigation must occur within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Enables a wait for page navigation after this action has been executed. Maximum value is 200000."
-					},
-					"waitForNavigation_until": {
-						"const": "waitForNavigation.until",
-						"description": "Allowed values are : LOAD, DOMCONTENTLOADED, NETWORKIDLE, COMMIT. Default value is LOAD. The navigation will be considered done when the specified state is reached. Enables a wait for page navigation after this action has been executed."
-					},
 					"waitForDownload": {
 						"const": "waitForDownload",
 						"description": "Enable waiting for a download if the parameter is set to true. Default value is \"false\"."
@@ -3408,43 +3416,55 @@
 					"waitForDownload_timeout": {
 						"const": "waitForDownload.timeout",
 						"description": "If applicable, the download must start within the specified timeout in ms. By default the OpenBrowser defaultNavigationTimeout is used. Maximum value is 200000. If the timeout is set to 0, the download will be waited indefinitely."
-					},
-					"ignoreErrors": {
-						"const": "ignoreErrors",
-						"description": "Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a \"If...Then...Else\" or a \"Try...Catch\" block. Default value is \"false\"."
-					},
-					"force": {
-						"const": "force",
-						"description": "true or false. Forces the click, even if the target element is obscured by other elements. Default value is \"false\"."
 					}
 				},
 				"parameter_groups": {
-					"frame": {
-						"anyOf": [
-							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex" },
-							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName" },
-							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector" }
-						]
-					},
 					"waitForNavigation": {
 						"anyOf": [
-							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url" },
-							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout" },
-							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until" }
+							{
+								"$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_url"
+							},
+							{
+								"$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_timeout"
+							},
+							{
+								"$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForNavigation_until"
+							}
+						]
+					},
+					"frame": {
+						"anyOf": [
+							{
+								"$ref": "#/definitions/user_paths/real_browser/parameter_names/frameIndex"
+							},
+							{
+								"$ref": "#/definitions/user_paths/real_browser/parameter_names/frameName"
+							},
+							{
+								"$ref": "#/definitions/user_paths/real_browser/parameter_names/frameSelector"
+							}
 						]
 					},
 					"waitForDownload": {
 						"anyOf": [
-							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload" },
-							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path" },
-							{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout" }
+							{
+								"$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload"
+							},
+							{
+								"$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_path"
+							},
+							{
+								"$ref": "#/definitions/user_paths/real_browser/parameter_names/waitForDownload_timeout"
+							}
 						]
 					}
 				},
 				"browser_open": {
 					"title": "Action: Real Browser BrowserOpen",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -3490,10 +3510,6 @@
 												"description": "User agent of the browser"
 											},
 											{
-												"const": "browserArguments",
-												"description": "Additional arguments to pass to the browser instance. Advanced parameter, hidden by default in NeoLoad GUI."
-											},
-											{
 												"const": "header",
 												"description": "Adds the specified header to each requests sent by the browser. You can add as many \"header\" parameter as you need. This parameter expected format is \"(HeaderHost) HeaderName=HeaderValue\" or \"HeaderName=HeaderValue\". If HeaderHost is empty, header will affect every requests. Otherwise, header will only affect requests addressed to this host"
 											},
@@ -3534,27 +3550,32 @@
 												"description": "Origin to which credentials for HTTP authentication will be sent. Ex: 'https://tricentis.com'."
 											},
 											{
-												"const": "httpCredentials.disableOriginRestrictions",
-												"description": "(UNSAFE) Set to true to allow specifying no origin for httpCredentials. This means that login & password will be sent to any server that sends a 401 challenge in response to a request sent by the browser. Advanced parameter, hidden by default in NeoLoad GUI."
-											},
-											{
-												"const": "httpCredentials.allowedOrigin",
-												"description": "Deprecated parameter. Use httpCredentials.origin instead. Advanced parameter, hidden by default in NeoLoad GUI."
-											},
-											{
 												"const": "ignoreScreenshots",
 												"description": "Disable all screenshots during Check VU or Debug. Default value is \"false\"."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserOpen parameter."
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": {
-								"const": "browser",
-								"description": "Requires the `browser` parameter."
-							} }, "required": ["name"] } }],
+							"allOf": [
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"const": "browser",
+												"description": "Requires the `browser` parameter."
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
+							],
 							"description": "The parameters of the BrowserOpen action, as a list of name/value pairs."
 						}
 					},
@@ -3572,7 +3593,9 @@
 								"properties": {
 									"name": {
 										"anyOf": [
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											},
 											{
 												"const": "shouldClearProcesses",
 												"description": "This parameter is only applicable when the action is in the Actions container (ignored otherwise). Default is false, the internal processes are persisted in the Virtual user instance to be reused from one iteration to another. Setting the value to true will ensure all external processes are closed and recreated for each iteration, at the cost of increasing the response time and CPU consumption of this CloseBrowser and the next OpenBrowser actions. Default value is \"false\"."
@@ -3591,7 +3614,9 @@
 				"browser_navigate": {
 					"title": "Action: Real Browser BrowserNavigate",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -3605,20 +3630,31 @@
 												"description": "URL to visit. The URL must start with an http or https scheme, for example \"https://\"."
 											},
 											{
-												"const": "unsafeUrl",
-												"description": "URL to visit without scheme restriction, for example a local file. Always ignored on a NeoLoad Cloud Load Generator. Advanced parameter, hidden by default in NeoLoad GUI."
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation"
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserNavigate parameter."
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": {
-								"const": "url",
-								"description": "Requires the `url` parameter."
-							} }, "required": ["name"] } }],
+							"allOf": [
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"const": "url",
+												"description": "Requires the `url` parameter."
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
+							],
 							"description": "The parameters of the BrowserNavigate action, as a list of name/value pairs."
 						}
 					},
@@ -3636,12 +3672,16 @@
 								"properties": {
 									"name": {
 										"anyOf": [
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/selector" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/selector"
+											},
 											{
 												"const": "coordinates",
 												"description": "Coordinates of the click, relative to the selector if specified, absolute otherwise. If no coordinates are specified with selector, the click will be performed on the middle of the element. Example: 100.0;200.0"
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/force" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/force"
+											},
 											{
 												"const": "mouseButton",
 												"description": "LEFT, MIDDLE, RIGHT, BACK or FORWARD. Default to LEFT."
@@ -3654,11 +3694,21 @@
 												"const": "modifiers",
 												"description": "Modifier keys to press separated by \"+\" like Control+Shift."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserClick parameter."
 									}
@@ -3673,7 +3723,9 @@
 				"browser_type": {
 					"title": "Action: Real Browser BrowserType",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -3682,7 +3734,9 @@
 								"properties": {
 									"name": {
 										"anyOf": [
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/selector" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/selector"
+											},
 											{
 												"const": "text",
 												"description": "Text to type"
@@ -3691,21 +3745,44 @@
 												"const": "encryptedText",
 												"description": "Text to type on a password input. Set the parameter `type` to `PASSWORD` to store the value encrypted."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout"
+											},
 											{
 												"const": "delay",
 												"description": "Adds delay between each keydown/keyup sequence in ms. When this parameter is absent, the text will be inserted in the field as a whole, without triggering any keydown/keyup events."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserType parameter."
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } }],
+							"allOf": [
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"$ref": "#/definitions/user_paths/selector_parameter_name"
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
+							],
 							"description": "The parameters of the BrowserType action, as a list of name/value pairs."
 						}
 					},
@@ -3715,7 +3792,9 @@
 				"browser_press": {
 					"title": "Action: Real Browser BrowserPress",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -3724,7 +3803,9 @@
 								"properties": {
 									"name": {
 										"anyOf": [
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/selector" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/selector"
+											},
 											{
 												"const": "key",
 												"description": "Key to press, can be a simple key, example : 'A' Or a combination with modifiers: 'Control+Shift+C' or 'ArrowLeft+Control'. The list of keys are standard values for the KeyboardEvent.key property from the Browser Keyboard API."
@@ -3733,22 +3814,52 @@
 												"const": "delay",
 												"description": "Delay in ms between each keydown/keyup sequence."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserPress parameter."
 									}
 								}
 							},
 							"allOf": [
-								{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } },
-								{ "contains": { "properties": { "name": {
-									"const": "key",
-									"description": "Requires the `key` parameter."
-								} }, "required": ["name"] } }
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"$ref": "#/definitions/user_paths/selector_parameter_name"
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								},
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"const": "key",
+												"description": "Requires the `key` parameter."
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
 							],
 							"description": "The parameters of the BrowserPress action, as a list of name/value pairs."
 						}
@@ -3759,7 +3870,9 @@
 				"browser_select_option": {
 					"title": "Action: Real Browser BrowserSelectOption",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -3768,40 +3881,69 @@
 								"properties": {
 									"name": {
 										"anyOf": [
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/selector" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/selector"
+											},
 											{
 												"type": "string",
 												"pattern": "^options\\[[0-9]+\\]\\.text$",
-												"examples": ["options[0].text"],
+												"examples": [
+													"options[0].text"
+												],
 												"description": "Select the option with a matching text. Multiple options can be selected by adding more parameters with a different index."
 											},
 											{
 												"type": "string",
 												"pattern": "^options\\[[0-9]+\\]\\.value$",
-												"examples": ["options[0].value"],
+												"examples": [
+													"options[0].value"
+												],
 												"description": "Select the option with a matching value. Multiple options can be selected by adding more parameters with a different index."
 											},
 											{
 												"type": "string",
 												"pattern": "^options\\[[0-9]+\\]\\.index$",
-												"examples": ["options[0].index"],
+												"examples": [
+													"options[0].index"
+												],
 												"description": "Select the option with a matching index. Multiple options can be selected by adding more parameters with a different index."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserSelectOption parameter."
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } }],
+							"allOf": [
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"$ref": "#/definitions/user_paths/selector_parameter_name"
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
+							],
 							"description": "The parameters of the BrowserSelectOption action, as a list of name/value pairs."
 						}
 					},
 					"unevaluatedProperties": false,
-					"description": "Real Browser action BrowserSelectOption. Select one or several options of a select element."
+					"description": "Real Browser action BrowserSelectOption. Select an option from the html select element identified by the selector. You can specify several options if the select element has the 'multiple' attribute, or you can specify none to clear the selection."
 				},
 				"browser_mouse_over": {
 					"title": "Action: Real Browser BrowserMouseOver",
@@ -3814,15 +3956,25 @@
 								"properties": {
 									"name": {
 										"anyOf": [
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/selector" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/selector"
+											},
 											{
 												"const": "coordinates",
 												"description": "Coordinates of the mouse, relative to the selector if specified, absolute otherwise. If no coordinates are specified with selector, the mouse will be placed at the middle of the element. Example: 100.0;200.0"
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserMouseOver parameter."
 									}
@@ -3837,7 +3989,9 @@
 				"browser_drag_and_drop": {
 					"title": "Action: Real Browser BrowserDragAndDrop",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -3862,25 +4016,53 @@
 												"const": "targetPosition",
 												"description": "A position relative to the top left corner of the target element where to release the click finalizing the drop action. Example : 200;350"
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/force" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/force"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserDragAndDrop parameter."
 									}
 								}
 							},
 							"allOf": [
-								{ "contains": { "properties": { "name": {
-									"const": "sourceSelector",
-									"description": "Requires the `sourceSelector` parameter."
-								} }, "required": ["name"] } },
-								{ "contains": { "properties": { "name": {
-									"const": "targetSelector",
-									"description": "Requires the `targetSelector` parameter."
-								} }, "required": ["name"] } }
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"const": "sourceSelector",
+												"description": "Requires the `sourceSelector` parameter."
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								},
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"const": "targetSelector",
+												"description": "Requires the `targetSelector` parameter."
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
 							],
 							"description": "The parameters of the BrowserDragAndDrop action, as a list of name/value pairs."
 						}
@@ -3907,9 +4089,15 @@
 												"const": "Y",
 												"description": "The amount of pixels to scroll on the Y axis. Positive values emulate a scroll down and negative values a scroll top event. Default value is \"0\"."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserScroll parameter."
 									}
@@ -3924,7 +4112,9 @@
 				"browser_read": {
 					"title": "Action: Real Browser BrowserRead",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -3933,7 +4123,9 @@
 								"properties": {
 									"name": {
 										"anyOf": [
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/selector" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/selector"
+											},
 											{
 												"const": "variableName",
 												"description": "The variable name of the text result."
@@ -3942,8 +4134,12 @@
 												"const": "attribute",
 												"description": "If specified, returns the attribute's value instead of the text value of the selected element"
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
 											{
 												"const": "ignoreErrors",
 												"description": "Set this option to true to ignore errors for this action. This is useful for handling conditional actions without having to resort to a \"If...Then...Else\" or a \"Try...Catch\" block. Default value is \"true\"."
@@ -3953,7 +4149,20 @@
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } }],
+							"allOf": [
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"$ref": "#/definitions/user_paths/selector_parameter_name"
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
+							],
 							"description": "The parameters of the BrowserRead action, as a list of name/value pairs."
 						}
 					},
@@ -3963,7 +4172,9 @@
 				"browser_wait_selector": {
 					"title": "Action: Real Browser BrowserWaitSelector",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -3976,13 +4187,19 @@
 												"const": "selector",
 												"description": "The selector is a string that point to the elements in the page. Several types of selector are supported: text, CSS, XPath... You can wait for several elements at the same time by adding multiple \"selector\" parameters to this action."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout"
+											},
 											{
 												"const": "state",
 												"description": "attached, detached, visible, hidden. Defaults to 'visible'."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											},
 											{
 												"const": "selectorLogicalOperator",
 												"description": "Set this option with AND or OR to change the logical operator between the selectors. Default value is \"AND\"."
@@ -3992,7 +4209,20 @@
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } }],
+							"allOf": [
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"$ref": "#/definitions/user_paths/selector_parameter_name"
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
+							],
 							"description": "The parameters of the BrowserWaitSelector action, as a list of name/value pairs."
 						}
 					},
@@ -4002,7 +4232,9 @@
 				"browser_evaluate_javascript": {
 					"title": "Action: Real Browser BrowserEvaluateJavascript",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -4019,19 +4251,38 @@
 												"const": "variableName",
 												"description": "The name of the variable where the evaluation result will be stored."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForDownload"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserEvaluateJavascript parameter."
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": {
-								"const": "script",
-								"description": "Requires the `script` parameter."
-							} }, "required": ["name"] } }],
+							"allOf": [
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"const": "script",
+												"description": "Requires the `script` parameter."
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
+							],
 							"description": "The parameters of the BrowserEvaluateJavascript action, as a list of name/value pairs."
 						}
 					},
@@ -4041,7 +4292,9 @@
 				"browser_upload_file": {
 					"title": "Action: Real Browser BrowserUploadFile",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -4050,26 +4303,56 @@
 								"properties": {
 									"name": {
 										"anyOf": [
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/selector" },
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/selector"
+											},
 											{
 												"const": "filePaths",
 												"description": "A list of file paths separated by semicolons ';'. Use the variable '${NL-CustomResources}' to access on the Load Generator the synchronized resources located in the 'custom-resources' folder of the project."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation" },
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/timeout"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/frame"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_groups/waitForNavigation"
+											},
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserUploadFile parameter."
 									}
 								}
 							},
 							"allOf": [
-								{ "contains": { "properties": { "name": { "$ref": "#/definitions/user_paths/selector_parameter_name" } }, "required": ["name"] } },
-								{ "contains": { "properties": { "name": {
-									"const": "filePaths",
-									"description": "Requires the `filePaths` parameter."
-								} }, "required": ["name"] } }
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"$ref": "#/definitions/user_paths/selector_parameter_name"
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								},
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"const": "filePaths",
+												"description": "Requires the `filePaths` parameter."
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
 							],
 							"description": "The parameters of the BrowserUploadFile action, as a list of name/value pairs."
 						}
@@ -4080,7 +4363,9 @@
 				"browser_handle_dialog": {
 					"title": "Action: Real Browser BrowserHandleDialog",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -4106,10 +4391,21 @@
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": {
-								"const": "behavior",
-								"description": "Requires the `behavior` parameter."
-							} }, "required": ["name"] } }],
+							"allOf": [
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"const": "behavior",
+												"description": "Requires the `behavior` parameter."
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
+							],
 							"description": "The parameters of the BrowserHandleDialog action, as a list of name/value pairs."
 						}
 					},
@@ -4125,7 +4421,9 @@
 				"browser_switch_tab": {
 					"title": "Action: Real Browser BrowserSwitchTab",
 					"$ref": "#/definitions/user_paths/real_browser/action",
-					"required": ["parameters"],
+					"required": [
+						"parameters"
+					],
 					"properties": {
 						"parameters": {
 							"type": "array",
@@ -4138,16 +4436,29 @@
 												"const": "index",
 												"description": "The 0-based index of the tab"
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserSwitchTab parameter."
 									}
 								}
 							},
-							"allOf": [{ "contains": { "properties": { "name": {
-								"const": "index",
-								"description": "Requires the `index` parameter."
-							} }, "required": ["name"] } }],
+							"allOf": [
+								{
+									"contains": {
+										"properties": {
+											"name": {
+												"const": "index",
+												"description": "Requires the `index` parameter."
+											}
+										},
+										"required": [
+											"name"
+										]
+									}
+								}
+							],
 							"description": "The parameters of the BrowserSwitchTab action, as a list of name/value pairs."
 						}
 					},
@@ -4169,7 +4480,9 @@
 												"const": "index",
 												"description": "The 0-based index of the tab. If empty closes the current tab."
 											},
-											{ "$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors" }
+											{
+												"$ref": "#/definitions/user_paths/real_browser/parameter_names/ignoreErrors"
+											}
 										],
 										"description": "The name of the BrowserCloseTab parameter."
 									}
@@ -4211,10 +4524,6 @@
 											{
 												"const": "includeFailedRequests",
 												"description": "By default, failed requests (network errors, connection refused, etc.) are excluded from captured results. Set the value to true to include them. Default value is \"false\"."
-											},
-											{
-												"const": "ignoreSizesForRegexp",
-												"description": "Mitigates thread hanging issues when accessing the request sizes. Regular expression applied to the full request URL: when a request URL matches, response sizes are not computed. Leave empty to compute sizes for all requests. Advanced parameter, hidden by default in NeoLoad GUI."
 											}
 										],
 										"description": "The name of the BrowserCaptureRequests parameter."
