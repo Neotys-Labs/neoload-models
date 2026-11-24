@@ -9,11 +9,13 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -39,12 +41,50 @@ public class IOWebServicesSecuritySchemaValidationTest {
 
     private static JsonSchema schema30;
     private static JsonSchema schema31;
+    private static JsonSchema schema32;
 
     @BeforeClass
     public static void loadSchemas() throws URISyntaxException {
         final Path schemasDir = locateSchemasDir();
         schema30 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(schemasDir.resolve("v3.0/as-code.schema.json").toUri());
         schema31 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());
+        schema32 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemasDir.resolve("v3.2/as-code.schema.json").toUri());
+    }
+
+    @Test
+    public void tokenPasswordWithVariableKeystoreAcceptedBySchema3Dot2() throws IOException {
+        final String signature = "signature:\n            keystore: ./wss-keystores/client_${env}.p12\n            password: x\n            alias: client";
+        final String encrypt = "encryption:\n            keystore: ./wss-keystores/${ks}\n            password: x\n            alias: server";
+
+        assertTrue(schema32.validate(project32(requestProfile("digest", signature))).isEmpty());
+        assertTrue(schema32.validate(project32(requestProfile("digest", encrypt))).isEmpty());
+    }
+
+    @Test
+    public void tokenPasswordWithFixedKeystoreRejectedBySchema3Dot2() throws IOException {
+        final String signature = "signature:\n            keystore: ./wss-keystores/client.p12\n            password: x\n            alias: client";
+
+        final Set<ValidationMessage> errors = schema32.validate(project32(requestProfile("digest", signature)));
+
+        assertFalse(errors.isEmpty());
+        assertTrue(errors.stream().anyMatch(error -> error.getMessage().contains("password")));
+    }
+
+    @Test
+    public void variableKeystoreWithoutPrefixRejectedBySchema3Dot2() throws IOException {
+        final String signature = "signature:\n            keystore: ${ks}\n            alias: client";
+
+        final Set<ValidationMessage> errors = schema32.validate(project32(requestProfile("digest", signature)));
+
+        assertFalse(errors.isEmpty());
+        assertTrue(errors.stream().anyMatch(error -> error.getMessage().contains("keystore")));
+    }
+
+    @Test
+    public void tokenPasswordRejectedBySchema3Dot1() throws IOException {
+        final String signature = "signature:\n            keystore: ./wss-keystores/client_${env}.p12\n            password: x\n            alias: client";
+
+        assertFalse(schema31.validate(project(requestProfile("digest", signature))).isEmpty());
     }
 
     @Test
@@ -190,6 +230,10 @@ public class IOWebServicesSecuritySchemaValidationTest {
 
     private static JsonNode project(final String webServicesSecurity) throws IOException {
         return YAML_MAPPER.readTree("name: MyProject\n" + webServicesSecurity + SOAP_USER_PATH);
+    }
+
+    private static JsonNode project32(final String webServicesSecurity) throws IOException {
+        return YAML_MAPPER.readTree("schemaVersion: \"3.2\"\nname: MyProject\n" + webServicesSecurity + SOAP_USER_PATH);
     }
 
     private static Path locateSchemasDir() throws URISyntaxException {

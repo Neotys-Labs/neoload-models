@@ -1025,7 +1025,11 @@
 																"properties": {
 																	"keystore": {
 																		"$ref": "#/definitions/common/file_path",
-																		"description": "The name of the keystore holding the signing key."
+																		"description": "The keystore holding the signing key: the `path` of a keystore declared in `keystores`, or `./wss-keystores/` followed by a file name containing a variable (for example `./wss-keystores/client_${env}.p12`), resolved for each Virtual User to a file of the `wss-keystores` folder."
+																	},
+																	"password": {
+																		"$ref": "#/definitions/common/text",
+																		"description": "The password of a variable keystore. Only allowed when `keystore` contains a variable; a declared keystore takes the `password` of its `keystores` entry."
 																	},
 																	"alias": {
 																		"$ref": "#/definitions/common/text",
@@ -1056,6 +1060,10 @@
 																		"description": "The parts of the message to sign."
 																	}
 																},
+																"$comment": "a keystore holding ${ is a variable keystore: it must start with ./wss-keystores/ and may carry a password; any other keystore is a declared keystore, whose password is set in keystores",
+																"if": { "required": ["keystore"], "properties": { "keystore": { "pattern": "\\$\\{", "description": "A keystore holding a variable." } } },
+																"then": { "properties": { "keystore": { "pattern": "^\\./wss-keystores/", "description": "A variable keystore starts with ./wss-keystores/." } } },
+																"else": { "properties": { "password": false } },
 																"description": "A digital signature of parts of the message."
 															}
 														}
@@ -1072,7 +1080,11 @@
 																"properties": {
 																	"keystore": {
 																		"$ref": "#/definitions/common/file_path",
-																		"description": "The name of the keystore holding the encryption key."
+																		"description": "The keystore holding the encryption key: the `path` of a keystore declared in `keystores`, or `./wss-keystores/` followed by a file name containing a variable (for example `./wss-keystores/client_${env}.p12`), resolved for each Virtual User to a file of the `wss-keystores` folder."
+																	},
+																	"password": {
+																		"$ref": "#/definitions/common/text",
+																		"description": "The password of a variable keystore. Only allowed when `keystore` contains a variable; a declared keystore takes the `password` of its `keystores` entry."
 																	},
 																	"alias": {
 																		"$ref": "#/definitions/common/text",
@@ -1098,6 +1110,10 @@
 																		"description": "The parts of the message to encrypt."
 																	}
 																},
+																"$comment": "a keystore holding ${ is a variable keystore: it must start with ./wss-keystores/ and may carry a password; any other keystore is a declared keystore, whose password is set in keystores",
+																"if": { "required": ["keystore"], "properties": { "keystore": { "pattern": "\\$\\{", "description": "A keystore holding a variable." } } },
+																"then": { "properties": { "keystore": { "pattern": "^\\./wss-keystores/", "description": "A variable keystore starts with ./wss-keystores/." } } },
+																"else": { "properties": { "password": false } },
 																"description": "An encryption of parts of the message."
 															}
 														}

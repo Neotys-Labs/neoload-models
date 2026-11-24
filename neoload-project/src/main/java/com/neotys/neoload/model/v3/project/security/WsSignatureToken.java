@@ -6,20 +6,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
+import com.neotys.neoload.model.v3.validation.constraints.WsKeystoreTokenCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.value.Value;
 import org.immutables.value.Value.Style.ValidationMethod;
 
 @JsonInclude(value = Include.NON_EMPTY)
-@JsonPropertyOrder({WsSignatureToken.KEYSTORE, WsSignatureToken.ALIAS, WsSignatureToken.KEY_IDENTIFIER_TYPE, WsSignatureToken.SIGNATURE_ALGORITHM,
+@JsonPropertyOrder({WsSignatureToken.KEYSTORE, WsSignatureToken.PASSWORD, WsSignatureToken.ALIAS, WsSignatureToken.KEY_IDENTIFIER_TYPE, WsSignatureToken.SIGNATURE_ALGORITHM,
 		WsSignatureToken.DIGEST_ALGORITHM, WsSignatureToken.CANONICALIZATION_ALGORITHM, WsSignatureToken.PARTS})
 @JsonDeserialize(as = ImmutableWsSignatureToken.class)
 @Value.Immutable
 @Value.Style(validationMethod = ValidationMethod.NONE)
+@WsKeystoreTokenCheck(groups = {NeoLoad.class})
 public interface WsSignatureToken extends WsKeystoreToken {
 	String KEYSTORE = "keystore";
+	String PASSWORD = "password";
 	String ALIAS = "alias";
 	String KEY_IDENTIFIER_TYPE = "key_identifier_type";
 	String SIGNATURE_ALGORITHM = "signature_algorithm";
@@ -30,6 +34,9 @@ public interface WsSignatureToken extends WsKeystoreToken {
 	@JsonProperty(KEYSTORE)
 	@RequiredCheck(groups = {NeoLoad.class})
 	String getKeystore();
+
+	@JsonProperty(PASSWORD)
+	Optional<String> getPassword();
 
 	@JsonProperty(ALIAS)
 	@RequiredCheck(groups = {NeoLoad.class})

@@ -29,6 +29,33 @@ name: MyProject
 
 A file declaring `3.0`, `3.1` or no `schemaVersion` keeps working unchanged.
 
+#### Web Services Security
+
+The `keystore` of a `signature` or `encryption` token accepts a variable keystore: `./wss-keystores/`
+followed by a file name holding a variable, alone or mixed with text (`./wss-keystores/client_${env}.p12`).
+Each Virtual User resolves it to a file of the `wss-keystores` folder; a variable keystore not
+starting with `./wss-keystores/` is rejected. Such a token takes an optional `password`, which accepts a variable and uses the same secret
+format as `keystores[].password`. `password` is rejected on a token whose `keystore` holds no
+variable: a declared keystore keeps its password in `keystores`. Only declared keystores are staged
+with the project, so a hand-written file declares under `keystores` every file a variable keystore
+can resolve to.
+
+```yaml
+schemaVersion: "3.2"
+web_services_security:
+  keystores:
+  - path: ./wss-keystores/client_dev.p12
+  - path: ./wss-keystores/client_prod.p12
+  request_profiles:
+  - name: MyRequestProfile
+    headers:
+    - tokens:
+      - signature:
+          keystore: ./wss-keystores/client_${env}.p12
+          password: ${keystorePassword}
+          alias: client
+```
+
 #### Populations
 
 The browser and the cache of each User Path of a Population, set in the "Browser", "HTTP/2" and

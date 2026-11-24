@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.neotys.neoload.model.v3.binding.io.IO;
+import com.neotys.neoload.model.v3.project.Project;
 import com.neotys.neoload.model.v3.project.security.WebServicesSecurity;
 import com.neotys.neoload.model.v3.project.security.WsDerivedPasswordType;
 import com.neotys.neoload.model.v3.project.security.WsEncryptToken;
@@ -13,6 +15,10 @@ import com.neotys.neoload.model.v3.project.security.WsRequestProfile;
 import com.neotys.neoload.model.v3.project.security.WsResponseProfile;
 import com.neotys.neoload.model.v3.project.security.WsSignatureToken;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Objects;
 import org.junit.Test;
 
 public class WebServicesSecurityTest {
@@ -95,5 +101,42 @@ public class WebServicesSecurityTest {
 		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
 				+ "Violation 1 - Incorrect value for 'response_profiles': must contain only unique names." + LINE_SEPARATOR,
 				new Validator().validate(security, NeoLoad.class).getMessage().get());
+	}
+
+	@Test
+	public void validateVariableKeystoreWithoutPassword() throws Exception {
+		final Project project = readProject("test-web-services-security-variable-keystore-without-password");
+		final WsSignatureToken token = (WsSignatureToken) project.getWebServicesSecurity().get()
+				.getRequestProfiles().get(0).getHeaders().get(0).getTokens().get(0);
+
+		assertTrue(new Validator().validate(project, NeoLoad.class).isValid());
+		assertFalse(token.getPassword().isPresent());
+	}
+
+	@Test
+	public void validateSignaturePasswordWithFixedKeystore() throws Exception {
+		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
+				+ "Violation 1 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[0]': invalid attributes usage (password is only allowed with a variable keystore: a keystore without variable takes the password of its keystores entry)." + LINE_SEPARATOR,
+				new Validator().validate(readProject("test-web-services-security-signature-fixed-keystore-password"), NeoLoad.class).getMessage().get());
+	}
+
+	@Test
+	public void validateEncryptionPasswordWithFixedKeystore() throws Exception {
+		assertEquals("Data Model is invalid. Violation Number: 1." + LINE_SEPARATOR
+				+ "Violation 1 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[0]': invalid attributes usage (password is only allowed with a variable keystore: a keystore without variable takes the password of its keystores entry)." + LINE_SEPARATOR,
+				new Validator().validate(readProject("test-web-services-security-encrypt-fixed-keystore-password"), NeoLoad.class).getMessage().get());
+	}
+
+	@Test
+	public void validateVariableKeystoreWithoutPrefix() throws Exception {
+		assertEquals("Data Model is invalid. Violation Number: 2." + LINE_SEPARATOR
+				+ "Violation 1 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[0]': invalid keystore (a variable keystore must start with ./wss-keystores/)." + LINE_SEPARATOR
+				+ "Violation 2 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[1]': invalid keystore (a variable keystore must start with ./wss-keystores/)." + LINE_SEPARATOR,
+				new Validator().validate(readProject("test-web-services-security-variable-keystore-without-prefix"), NeoLoad.class).getMessage().get());
+	}
+
+	private static Project readProject(final String fileName) throws IOException, URISyntaxException {
+		final File file = new File(Objects.requireNonNull(WebServicesSecurityTest.class.getClassLoader().getResource(fileName + ".yaml")).toURI());
+		return new IO().read(file).getProject();
 	}
 }

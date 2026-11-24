@@ -8,7 +8,7 @@ keystores, request profiles and response profiles. A SOAP request selects a prof
 
 This section is available since NeoLoad **2026.3** (schema 3.1).
 
-The username token `password`, the `salt` of a derived `password_type` and the keystore `password` are secrets. In as-code they are authored as plaintext; NeoLoad stores them encrypted when the project is imported, and writes their NeoLoad-encrypted form when it exports a project back to as-code.
+The username token `password`, the `salt` of a derived `password_type`, the keystore `password` and the `password` of a signature or encryption token are secrets. In as-code they are authored as plaintext; NeoLoad stores them encrypted when the project is imported, and writes their NeoLoad-encrypted form when it exports a project back to as-code.
 
 ## Definition
 
@@ -117,11 +117,12 @@ password_type:
 
 ### signature
 
-Signs the message with a key of a keystore declared in `keystores`.
+Signs the message with a key of a keystore declared in `keystores`, or of a [variable keystore](#variable-keystore).
 
 | Name | Description | Accept variable | Required | Since |
 |:---- |:----------- |:---------------:|:--------:|:-----:|
-| keystore | The `path` of a keystore declared in `keystores` | - | &#x2713; | 2026.3|
+| keystore | The `path` of a keystore declared in `keystores`, or a [variable keystore](#variable-keystore): `./wss-keystores/` followed by a file name containing a variable, for example `./wss-keystores/client_${env}.p12`. A variable keystore must start with `./wss-keystores/`. The variable form needs schema 3.2 | &#x2713; | &#x2713; | 2026.3|
+| password | The password of a variable keystore: only allowed when `keystore` contains a variable, a declared keystore takes the `password` of its `keystores` entry. Same secret format as `keystores[].password` | &#x2713; | - | 2027.1|
 | alias | The alias of the key in the keystore | &#x2713; | &#x2713; | 2026.3|
 | key_identifier_type | How the key is referenced in the message: `direct_reference`, `direct_reference_first_certificate`, `issuer_reference`, `x509_key_identifier`, `subject_key_identifier`, `thumbprint_sha1` or `encrypted_key_sha1`. Defaults to `issuer_reference` | - | - | 2026.3|
 | signature_algorithm | `rsa_sha1`, `rsa_sha256`, `rsa_sha384`, `rsa_sha512`, `rsa_ripemd160`, `rsa_md5`, `hmac_md5`, `hmac_ripemd160`, `hmac_sha1`, `hmac_sha256`, `hmac_sha384`, `hmac_sha512`, `dsa_sha1`, `ecdsa_sha1`, `ecdsa_sha256`, `ecdsa_sha384` or `ecdsa_sha512`. Defaults to `rsa_sha1` | - | - | 2026.3|
@@ -131,16 +132,36 @@ Signs the message with a key of a keystore declared in `keystores`.
 
 ### encryption
 
-Encrypts the message with the key of a keystore declared in `keystores`.
+Encrypts the message with the key of a keystore declared in `keystores`, or of a [variable keystore](#variable-keystore).
 
 | Name | Description | Accept variable | Required | Since |
 |:---- |:----------- |:---------------:|:--------:|:-----:|
-| keystore | The `path` of a keystore declared in `keystores` | - | &#x2713; | 2026.3|
+| keystore | The `path` of a keystore declared in `keystores`, or a [variable keystore](#variable-keystore): `./wss-keystores/` followed by a file name containing a variable, for example `./wss-keystores/client_${env}.p12`. A variable keystore must start with `./wss-keystores/`. The variable form needs schema 3.2 | &#x2713; | &#x2713; | 2026.3|
+| password | The password of a variable keystore: only allowed when `keystore` contains a variable, a declared keystore takes the `password` of its `keystores` entry. Same secret format as `keystores[].password` | &#x2713; | - | 2027.1|
 | alias | The alias of the key in the keystore | &#x2713; | &#x2713; | 2026.3|
 | key_identifier_type | Same values as `signature`, except `direct_reference_first_certificate`. Defaults to `issuer_reference` | - | - | 2026.3|
 | symmetric_encryption_algorithm | `triple_des`, `aes_128`, `aes_192` or `aes_256`. Defaults to `aes_128` | - | - | 2026.3|
 | asymmetric_encryption_algorithm | `rsa_v1_5`, `rsa_oaep` or `none` to send the symmetric key unencrypted. Defaults to `rsa_v1_5` | - | - | 2026.3|
 | [parts](#parts) | The parts of the message to encrypt. Defaults to an empty list | - | - | 2026.3|
+
+#### variable keystore
+
+A `keystore` containing a variable selects the keystore file for each Virtual User, among the files of the `wss-keystores` folder. It must start with `./wss-keystores/`, followed by the file name holding the variables (`./wss-keystores/client_${env}.p12`, `./wss-keystores/${keystore}`); a variable keystore without that prefix is rejected. The file name after the prefix is not checked against `keystores`. Only the keystores declared under `keystores` are staged with the project: a hand-written YAML must declare under `keystores` every file a variable keystore can resolve to. Since schema 3.2 (NeoLoad 2027.1).
+
+```yaml
+web_services_security:
+  keystores:
+  - path: ./wss-keystores/client_dev.p12
+  - path: ./wss-keystores/client_prod.p12
+  request_profiles:
+  - name: MyRequestProfile
+    headers:
+    - tokens:
+      - signature:
+          keystore: ./wss-keystores/client_${env}.p12
+          password: ${keystorePassword}
+          alias: client
+```
 
 #### parts
 
