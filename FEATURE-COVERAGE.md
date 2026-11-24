@@ -33,7 +33,7 @@ Schema 3.1 is frozen with NeoLoad 2026.3: new constructs go to 3.2.
 ## In the 3.1 draft
 
 Implemented in the model but not merged into `v3`, therefore in neither 3.0 nor 3.1. None of them
-is documented in `neoload-project/doc/v3/` yet.
+is documented in `docs/v3.2/` yet.
 
 **Steps**
 
@@ -59,7 +59,7 @@ single-value setting (`less_than`) on `request` and `custom_action`.
 
 - **`rendezvous` step** — implemented under LOAD-38588 and reverted in `4239a72c` before x.x.x.
   It is **not** part of 3.1. The scenario-level
-  [`rendezvous_policies`](neoload-project/doc/v3/rendezvous_policy.md), which already existed in
+  [`rendezvous_policies`](docs/v3.0/rendezvous_policy.md), which already existed in
   3.0, is unaffected.
 - **Request `name` unbound from the YAML binding and defaulted to the URL** — implemented under
   LOAD-39283 and reverted in `4ff8ee31` before x.x.x. `name` behaves as it did in 3.0.
