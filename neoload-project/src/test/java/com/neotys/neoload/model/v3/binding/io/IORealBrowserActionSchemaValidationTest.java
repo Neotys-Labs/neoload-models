@@ -15,6 +15,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,19 +29,33 @@ public class IORealBrowserActionSchemaValidationTest {
 
     private static final ObjectMapper YAML_MAPPER = new YAMLMapper();
 
+    private static final List<String> HIDDEN_PARAMETER_NAMES = List.of(
+            "unsafeUrl",
+            "browserArguments",
+            "httpCredentials.disableOriginRestrictions",
+            "httpCredentials.allowedOrigin",
+            "ignoreSizesForRegexp");
+
     private static JsonSchema schema30;
     private static JsonSchema schema31;
+    private static JsonSchema schema32;
+    private static JsonNode realBrowser31;
+    private static JsonNode realBrowser32;
 
     @BeforeClass
-    public static void loadSchemas() throws URISyntaxException {
+    public static void loadSchemas() throws URISyntaxException, IOException {
         final Path schemasDir = locateSchemasDir();
         schema30 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(schemasDir.resolve("v3.0/as-code.schema.json").toUri());
         schema31 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());
+        schema32 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909).getSchema(schemasDir.resolve("v3.2/as-code.schema.json").toUri());
+        final ObjectMapper mapper = new ObjectMapper();
+        realBrowser31 = mapper.readTree(schemasDir.resolve("v3.1/as-code.schema.json").toFile()).at("/definitions/user_paths/real_browser");
+        realBrowser32 = mapper.readTree(schemasDir.resolve("v3.2/as-code.schema.json").toFile()).at("/definitions/user_paths/real_browser");
     }
 
     @Test
     public void realBrowserJourneyAccepted() throws IOException {
-        assertValid(schema31, steps(
+        final JsonNode journey = steps(
                 "    - browser_open:\n"
                         + "        name: Open browser\n"
                         + "        parameters:\n"
@@ -90,7 +106,20 @@ public class IORealBrowserActionSchemaValidationTest {
                         + "    - browser_open_tab:\n"
                         + "        name: Open tab\n"
                         + "    - browser_close:\n"
-                        + "        name: Close browser\n"));
+                        + "        name: Close browser\n");
+        assertValid(schema31, journey);
+        assertValid(schema32, journey);
+    }
+
+    @Test
+    public void openSchemaDropsHiddenParametersAndKeepsTheSelectSentence() {
+        assertTrue(constNames(realBrowser31).containsAll(HIDDEN_PARAMETER_NAMES));
+        final Set<String> openNames = constNames(realBrowser32);
+        for (final String hidden : HIDDEN_PARAMETER_NAMES) {
+            assertFalse(hidden, openNames.contains(hidden));
+        }
+        assertTrue(realBrowser32.at("/browser_select_option/description").asText("")
+                .contains("You can specify several options if the select element has the 'multiple' attribute"));
     }
 
     @Test
@@ -184,6 +213,26 @@ public class IORealBrowserActionSchemaValidationTest {
                         + "        type: BrowserClick\n"
                         + "        parameters:\n"
                         + "        - { name: selectr, value: '#login' }\n"));
+    }
+
+    private static Set<String> constNames(final JsonNode node) {
+        final Set<String> names = new HashSet<>();
+        collectConstNames(node, names);
+        return names;
+    }
+
+    private static void collectConstNames(final JsonNode node, final Set<String> names) {
+        if (node == null || node.isMissingNode()) {
+            return;
+        }
+        if (node.isObject()) {
+            if (node.has("const")) {
+                names.add(node.get("const").asText());
+            }
+            node.forEach(child -> collectConstNames(child, names));
+        } else if (node.isArray()) {
+            node.forEach(child -> collectConstNames(child, names));
+        }
     }
 
     private static JsonNode steps(final String steps) throws IOException {

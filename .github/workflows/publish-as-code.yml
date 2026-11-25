@@ -1,0 +1,202 @@
+# Publishes one custom-action family's as-code contract into this repository.
+# The family is the contract (family.json plus its schema file). This workflow does not
+# name a family.
+#
+# Checkout of the contract repository needs AS_CODE_CONTRACT_READ_TOKEN (contents: read
+# on the custom-action repositories). The custom-action repository dispatches this
+# workflow with NEOLOAD_MODELS_DISPATCH_TOKEN. One credential can do both jobs when it
+# is stored under those two names.
+#
+# The workflow file runs from the default branch. A contract that is already published
+# does not open a pull request.
+
+name: Publish as-code contract
+
+on:
+  workflow_dispatch:
+    inputs:
+      contract_repository:
+        description: Custom-action repository (owner/name)
+        required: true
+        type: string
+      contract_ref:
+        description: Git ref that contains the published contract
+        required: true
+        default: develop
+        type: string
+      contract_path:
+        description: Contract directory inside that repository
+        required: true
+        type: string
+  repository_dispatch:
+    types: [publish-as-code]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    runs-on: ubuntu-stepsecurity-x64
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      - name: Resolve the contract request
+        id: request
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_EVENT_NAME}" == "repository_dispatch" ]]; then
+            repository="${{ github.event.client_payload.repository }}"
+            ref="${{ github.event.client_payload.ref }}"
+            contract_path="${{ github.event.client_payload.contract_path }}"
+          else
+            repository="${{ inputs.contract_repository }}"
+            ref="${{ inputs.contract_ref }}"
+            contract_path="${{ inputs.contract_path }}"
+          fi
+          if [[ -z "${repository}" || -z "${ref}" || -z "${contract_path}" ]]; then
+            echo "::error::The contract request needs a repository, a ref, and a contract path."
+            exit 1
+          fi
+          echo "repository=${repository}" >> "$GITHUB_OUTPUT"
+          echo "ref=${ref}" >> "$GITHUB_OUTPUT"
+          echo "path=${contract_path}" >> "$GITHUB_OUTPUT"
+
+      - name: Require a token that can read the contract repository
+        env:
+          TOKEN: ${{ secrets.AS_CODE_CONTRACT_READ_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${TOKEN}" ]]; then
+            echo "::error::Add the AS_CODE_CONTRACT_READ_TOKEN secret. It must be able to read the custom-action repository. Store the same credential on that repository as NEOLOAD_MODELS_DISPATCH_TOKEN so it can dispatch this workflow."
+            exit 1
+          fi
+
+      - name: Checkout the default branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Checkout the contract
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ steps.request.outputs.repository }}
+          ref: ${{ steps.request.outputs.ref }}
+          token: ${{ secrets.AS_CODE_CONTRACT_READ_TOKEN }}
+          path: contract-source
+          persist-credentials: false
+
+      - name: Set up Java
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: liberica
+          java-version: '21'
+
+      - name: Set up Maven
+        uses: step-security/setup-maven@952ce6ada26435ad361053035d888477856de677 # v5.0.1
+        with:
+          maven-version: '3.9.16'
+
+      - name: Cache local Maven repository
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: /tmp/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+          fail-on-cache-miss: false
+
+      - name: Authenticate with Cloudsmith via OIDC
+        id: cloudsmith-auth
+        uses: step-security/cloudsmith-cli-action@c8efdacddbb86cc95fcc18e06ac2597a9f449828 # v3.1.0
+        with:
+          oidc-namespace: ${{ secrets.CLOUDSMITH_OIDC_NAMESPACE }}
+          oidc-service-slug: ${{ secrets.CLOUDSMITH_OIDC_SERVICE_SLUG }}
+          export-auth-token: "true"
+
+      - name: Set ENV for Maven settings
+        run: |
+          echo "CLOUDSMITH_MVN_REPO=${{ secrets.CLOUDSMITH_MVN_REPO }}" >> $GITHUB_ENV
+          echo "NEXUS_PUBLIC_USERNAME=${{ secrets.MVN_NEXUS_PUBLIC_USERNAME }}" >> $GITHUB_ENV
+          echo "NEXUS_PUBLIC_PASSWORD=${{ secrets.MVN_NEXUS_PUBLIC_PASSWORD }}" >> $GITHUB_ENV
+          echo "OSSRH_USERNAME=${{ secrets.MVN_OSSRH_USERNAME }}" >> $GITHUB_ENV
+          echo "OSSRH_PASSWORD=${{ secrets.MVN_OSSRH_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Create Maven settings.xml
+        uses: ./.github/actions/maven-settings
+
+      - name: Publish the contract
+        id: publish
+        run: |
+          set -euo pipefail
+          mvn -B -pl neoload-project -DskipTests -Dmaven.javadoc.skip=true package
+          mvn -B -pl neoload-project dependency:build-classpath -DincludeScope=compile -Dmdep.outputFile="${GITHUB_WORKSPACE}/neoload-project/target/publisher-classpath.txt"
+          java -cp "neoload-project/target/classes:$(tr -d '\n' < neoload-project/target/publisher-classpath.txt)" \
+            com.neotys.neoload.model.v3.ascode.PublishAsCodeContract \
+            "$GITHUB_WORKSPACE" \
+            "$GITHUB_WORKSPACE/contract-source/${{ steps.request.outputs.path }}"
+
+      - name: Authorize GitHub App for write operations
+        if: ${{ !cancelled() }}
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        id: github-app-token
+        with:
+          client-id: ${{ secrets.GH_APP_NEOLOAD_PUBLISHER_CLIENT_ID }}
+          private-key: ${{ secrets.GH_APP_NEOLOAD_CI_REPORTER_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Open a pull request when the contract changed
+        env:
+          GITHUB_TOKEN: ${{ steps.github-app-token.outputs.token }}
+          CONTRACT_REPOSITORY: ${{ steps.request.outputs.repository }}
+          CONTRACT_REF: ${{ steps.request.outputs.ref }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "contract already published"
+            exit 0
+          fi
+
+          git config user.name "neoload-publisher[bot]"
+          git config user.email "neoload-publisher[bot]@users.noreply.github.com"
+          remote_url=$(git config --get remote.origin.url)
+          clean_url=$(echo "$remote_url" | sed -E 's|https://[^@]*@github.com|https://github.com|')
+          auth_remote_url=${clean_url/https:\/\/github.com/https:\/\/x-access-token:${GITHUB_TOKEN}@github.com}
+          git remote set-url origin "$auth_remote_url"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+
+          branch="publish-as-code/${GITHUB_RUN_ID}"
+          git checkout -b "${branch}"
+          git add -u
+          git commit -m "Publish the as-code contract from ${CONTRACT_REPOSITORY}@${CONTRACT_REF}"
+          git push origin "HEAD:refs/heads/${branch}"
+          gh pr create \
+            --base "${DEFAULT_BRANCH}" \
+            --head "${branch}" \
+            --title "Publish the as-code contract from ${CONTRACT_REPOSITORY}" \
+            --body "$(cat <<EOF
+          ## Summary
+          - Publishes the as-code contract from ${CONTRACT_REPOSITORY} at ${CONTRACT_REF}.
+          - The open schema, the family's documentation page, and the step registry change only where that contract differs.
+          - Schema versions that already shipped stay untouched. A second run with the same contract opens no pull request.
+
+          ## Test plan
+          - [ ] The diff is limited to this family's slice, its page, and its step pairs.
+          - [ ] A parameter description change is visible in the diff.
+          - [ ] Review the pull request before merging.
+
+          EOF
+          )"
