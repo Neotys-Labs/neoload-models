@@ -55,7 +55,7 @@ populations:
     cache: new_user
 ```
 
-See [Population](neoload-project/doc/v3/population.md) for the full reference.
+See [Population](docs/v3.2/population.md) for the full reference.
 
 ---
 
@@ -194,7 +194,7 @@ user_paths:
     - shared_element: Login
 ```
 
-See [shared_elements](neoload-project/doc/v3/shared_elements.md) for the full reference.
+See [shared_elements](docs/v3.1/shared_elements.md) for the full reference.
 
 #### Real Browser actions
 
@@ -222,7 +222,7 @@ requires its mandatory parameters (for example `url` on `browser_navigate`, `sel
 `custom_action` stays the generic step and accepts any type and parameter: a `custom_action` of a
 Real Browser type is still read, and is written back as its `browser_*` step. A custom action
 parameter `name` now accepts any character, so indexed names such as `options[0].text` validate.
-See [Real Browser actions](neoload-project/doc/v3/real_browser_actions.md) for the full reference.
+See [Real Browser actions](docs/v3.1/real_browser_actions.md) for the full reference.
 
 #### User paths
 
@@ -250,7 +250,7 @@ user_paths:
         url: https://www.tricentis.com/
 ```
 
-See [User Paths](neoload-project/doc/v3/user-paths.md) for the full reference.
+See [User Paths](docs/v3.1/user-paths.md) for the full reference.
 
 #### Requests
 
@@ -395,7 +395,7 @@ project the GUI accepts.
   maximum.
 - **Element names** (populations, scenarios, User Paths, servers, variables, SLA profiles, and so
   on) — 100 characters maximum, and the forbidden character set is rejected. See
-  [the naming rules](neoload-project/doc/v3/README.md#naming-rules).
+  [the naming rules](docs/v3.1/README.md#naming-rules).
 
 ### Changed
 
@@ -448,4 +448,4 @@ Surface, for reference:
   `apm_configuration` for Dynatrace.
 - **SLA** — profiles and KPI thresholds, `per test` and `per interval`.
 
-Full reference: [neoload-project/doc/v3](neoload-project/doc/v3/README.md).
+Full reference: [docs/v3.0](docs/v3.0/README.md).
