@@ -10,6 +10,7 @@ Java model, JSON schema and docs of the NeoLoad as-code YAML DSL. Consumed by `n
 |---|---|
 | Modules | Change `neoload-project` only. Touch `neoload-writer`, `models-readers`, `neoload-project-model` only when they stop compiling because of a `neoload-project` change. |
 | JSON schema | Change `schemas/v3.2/as-code.schema.json` only. Older schemas, 3.1 included (shipped with NeoLoad 2026.3), are frozen. |
+| Changelog | `CHANGELOG.md`: add entries under `[3.2]` only. The `[3.1]` section is frozen (shipped with NeoLoad 2026.3), even for Java-only rules that apply to every `schemaVersion`. |
 | Docs | `neoload-project/doc/v3/*.md` is updated in the same change as the model and the schema. |
 | Object references | Cross-object checks (a population policy naming a population, a shared element reference…) live in `neoload-root`, after NLP + YAML files are merged into one project. This repo validates each element on its own. |
 
