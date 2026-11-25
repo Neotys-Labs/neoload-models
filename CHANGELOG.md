@@ -19,7 +19,7 @@ later; NeoLoad Web SaaS accepts it as soon as it is deployed. Declare it with
 #### Schema contract
 
 The 3.2 contract is published as `schemas/v3.2/as-code.schema.json`. It accepts the same
-constructs as 3.1, with `schemaVersion: "3.2"`.
+constructs as 3.1, plus the ones below, with `schemaVersion: "3.2"`.
 
 ```yaml
 $schema: https://raw.githubusercontent.com/Neotys-Labs/neoload-models/refs/heads/v3/schemas/v3.2/as-code.schema.json
@@ -42,15 +42,42 @@ content, with the same content assertions as a request.
     - contains: expected text
 ```
 
+#### Populations
+
+The browser and the cache of each User Path of a Population, set in the "Browser", "HTTP/2" and
+"Handle Cache" columns of the Population table in the NeoLoad GUI, are now writable in as-code as two
+optional keys of a Population User Path.
+
+- **`browser`** — the browser emulated by the Virtual Users: `name` (the label shown in NeoLoad),
+  `user_agent`, `connections` (6 by default), `cookies` and `http2` (`true` by default) and
+  `accept_encoding` (`[gzip, deflate, brotli]` by default). When omitted, the recorded browser
+  is used; without `user_agent`, the other settings apply to the recorded browser.
+- **`cache`** — `as_recorded` (the default), `new_user` (empty cache) or `returning_user` (cache
+  already filled).
+
+```yaml
+schemaVersion: "3.2"
+populations:
+- name: MyPopulation
+  user_paths:
+  - name: MyUserPath
+    browser:
+      name: Chrome 124.0
+      user_agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+      http2: false
+    cache: new_user
+```
+
+See [Population](neoload-project/doc/v3/population.md) for the full reference.
+
 ---
 
-## [3.1] — Upcoming version in 2026
+## [3.1] — November 2026 (NeoLoad 2026.3 and above)
 
-Shipped in `neoload-models` **x.x.x**. Requires **NeoLoad 2026.3**, **CheckVU CLI 2026.3** and
-**NeoLoad Web On-premise 2026.3** or later; NeoLoad Web SaaS accepts it as soon as it is deployed.
-Declare it with `schemaVersion: "3.1"`.
-
-A file without `schemaVersion` is still read as 3.0, so **existing projects keep working
+Shipped in `neoload-models` v**3.4.x**. \
+Requires **NeoLoad 2026.3** and **NeoLoad Web On-premise 2026.3** or later; NeoLoad Web SaaS accepts it as soon as it is deployed. \
+Run checkVU: `neoload checkvu myProject.yaml` with [neoload cli](https://github.com/Neotys-Labs/neoload-cli) **1.5.0** or later. \
+Declare it with `schemaVersion: "3.1"`. A file without `schemaVersion` is still read as 3.0, so **existing projects keep working
 unchanged**.
 
 ### Added
