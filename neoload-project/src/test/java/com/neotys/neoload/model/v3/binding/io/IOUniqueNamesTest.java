@@ -53,8 +53,10 @@ public class IOUniqueNamesTest {
 
 	@Test
 	public void nameComparisonIsCaseSensitive() throws IOException, URISyntaxException {
-		final String message = message(validate("case-sensitive"));
+		final Validation validation = validate("case-sensitive");
+		final String message = message(validation);
 		assertFalse(message, message.contains(NOT_UNIQUE));
+		assertTrue(message, validation.isValid());
 	}
 
 	@Test
