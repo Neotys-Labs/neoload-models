@@ -37,7 +37,9 @@ abstract class AbstractUniqueKeyValidator<E> {
 		if (duplicates.isEmpty()) {
 			return true;
 		}
-		context.unwrap(HibernateConstraintValidatorContext.class).addMessageParameter(DUPLICATES, String.join(", ", duplicates));
+		if (context != null) {
+			context.unwrap(HibernateConstraintValidatorContext.class).addMessageParameter(DUPLICATES, String.join(", ", duplicates));
+		}
 		return false;
 	}
 }
