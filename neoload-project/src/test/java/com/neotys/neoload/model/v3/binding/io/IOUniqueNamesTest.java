@@ -19,8 +19,6 @@ import org.junit.Test;
 
 public class IOUniqueNamesTest {
 
-	private static final String NOT_UNIQUE = "must contain only unique";
-
 	static Validation validate(final String fixture) throws IOException, URISyntaxException {
 		final String fileName = "test-unique-names-" + fixture + ".yaml";
 		final URL url = IOUniqueNamesTest.class.getClassLoader().getResource(fileName);
@@ -37,12 +35,20 @@ public class IOUniqueNamesTest {
 		return "Incorrect value for '" + path + "': must contain only unique names. Duplicates: " + duplicates + ".";
 	}
 
+	private static void assertDuplicate(final String fixture, final String path, final String duplicates) throws IOException, URISyntaxException {
+		final Validation validation = validate(fixture);
+		assertFalse(validation.isValid());
+		assertTrue(message(validation), message(validation).contains(duplicateNamesMessage(path, duplicates)));
+	}
+
+	private static void assertNoUniquenessError(final String fixture) throws IOException, URISyntaxException {
+		final Validation validation = validate(fixture);
+		assertFalse(message(validation), message(validation).contains("must contain only unique"));
+	}
+
 	@Test
 	public void duplicatesAreReportedDistinctInOrderOfFirstAppearance() throws IOException, URISyntaxException {
-		final Validation validation = validate("distinct-in-order-of-first-appearance");
-		final String message = message(validation);
-		assertFalse(validation.isValid());
-		assertTrue(message, message.contains(duplicateNamesMessage("variables", "foo, bar")));
+		assertDuplicate("distinct-in-order-of-first-appearance", "variables", "foo, bar");
 	}
 
 	@Test
@@ -54,9 +60,8 @@ public class IOUniqueNamesTest {
 	@Test
 	public void nameComparisonIsCaseSensitive() throws IOException, URISyntaxException {
 		final Validation validation = validate("case-sensitive");
-		final String message = message(validation);
-		assertFalse(message, message.contains(NOT_UNIQUE));
-		assertTrue(message, validation.isValid());
+		assertFalse(message(validation), message(validation).contains("must contain only unique"));
+		assertTrue(message(validation), validation.isValid());
 	}
 
 	@Test
@@ -67,16 +72,12 @@ public class IOUniqueNamesTest {
 
 	@Test
 	public void duplicateRendezvousPoliciesInOneScenarioAreRejected() throws IOException, URISyntaxException {
-		final Validation validation = validate("duplicate-rendezvous-policies");
-		final String message = message(validation);
-		assertFalse(validation.isValid());
-		assertTrue(message, message.contains(duplicateNamesMessage("scenarios[0].rendezvous_policies", "rdv")));
+		assertDuplicate("duplicate-rendezvous-policies", "scenarios[0].rendezvous_policies", "rdv");
 	}
 
 	@Test
 	public void sameRendezvousPolicyNameInTwoScenariosIsAllowed() throws IOException, URISyntaxException {
-		final String message = message(validate("rendezvous-policy-in-two-scenarios"));
-		assertFalse(message, message.contains(NOT_UNIQUE));
+		assertNoUniquenessError("rendezvous-policy-in-two-scenarios");
 	}
 
 	@Test
@@ -90,21 +91,16 @@ public class IOUniqueNamesTest {
 
 	@Test
 	public void emptyListItemDoesNotCrashUniquenessValidation() throws IOException, URISyntaxException {
-		final String message = message(validate("empty-list-item"));
-		assertFalse(message, message.contains(NOT_UNIQUE));
+		assertNoUniquenessError("empty-list-item");
 	}
 
 	@Test
 	public void listsLeftAsIsStillAcceptDuplicates() throws IOException, URISyntaxException {
-		final String message = message(validate("lists-left-as-is"));
-		assertFalse(message, message.contains(NOT_UNIQUE));
+		assertNoUniquenessError("lists-left-as-is");
 	}
 
 	@Test
 	public void messageParametersAreNotInterpolated() throws IOException, URISyntaxException {
-		final Validation validation = validate("uninterpolated-message-parameters");
-		final String message = message(validation);
-		assertFalse(validation.isValid());
-		assertTrue(message, message.contains(duplicateNamesMessage("servers", "${1+1}{x}")));
+		assertDuplicate("uninterpolated-message-parameters", "servers", "${1+1}{x}");
 	}
 }
