@@ -59,13 +59,12 @@ See [Population](neoload-project/doc/v3/population.md) for the full reference.
 
 ---
 
-## [3.1] — Upcoming version in 2026
+## [3.1] — November 2026 (NeoLoad 2026.3 and above)
 
-Shipped in `neoload-models` **x.x.x**. Requires **NeoLoad 2026.3**, **CheckVU CLI 2026.3** and
-**NeoLoad Web On-premise 2026.3** or later; NeoLoad Web SaaS accepts it as soon as it is deployed.
-Declare it with `schemaVersion: "3.1"`.
-
-A file without `schemaVersion` is still read as 3.0, so **existing projects keep working
+Shipped in `neoload-models` v**3.4.x**. \
+Requires **NeoLoad 2026.3** and **NeoLoad Web On-premise 2026.3** or later; NeoLoad Web SaaS accepts it as soon as it is deployed. \
+Run checkVU: `neoload checkvu myPorject.yaml` with neoload cli **1.5.0** or later. \
+Declare it with `schemaVersion: "3.1"`. A file without `schemaVersion` is still read as 3.0, so **existing projects keep working
 unchanged**.
 
 ### Added
