@@ -9,7 +9,7 @@ A request defines a plain HTTP request.
 | [url](#url)                         | The URL to hit                                                                | &#x2713;        | &#x2713; |       |
 | [server](#server)                   | The server name to use                                                        | -               | -        |       |
 | [method](#method)                   | The request method                                                            | -               | -        |       |
-| [parameters](#parameters)           | The query string parameter list                                               | &#x2713;        | -        | 2026.3|
+| [parameters](#parameters)           | The query string parameter list                                               | &#x2713;        | -        | 2027.1|
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
 | [body](#body)                       | The request body                                                              | &#x2713;        | -        |       |
 | [bodybinary](#bodybinary)           | The request body, as a base64-encoded binary payload                          | -               | -        | 2026.3|
