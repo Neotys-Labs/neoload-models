@@ -71,6 +71,15 @@ public class IOWebServicesSecuritySchemaValidationTest {
     }
 
     @Test
+    public void variableKeystoreWithParentSegmentRejectedBySchema3Dot2() throws IOException {
+        final String signature = "signature:\n            keystore: ./wss-keystores/../../x/${env}.p12\n            alias: client";
+        final String encrypt = "encryption:\n            keystore: ./wss-keystores/${env}/../x.p12\n            alias: server";
+
+        assertFalse(schema32.validate(project32(requestProfile("digest", signature))).isEmpty());
+        assertFalse(schema32.validate(project32(requestProfile("digest", encrypt))).isEmpty());
+    }
+
+    @Test
     public void variableKeystoreWithoutPrefixRejectedBySchema3Dot2() throws IOException {
         final String signature = "signature:\n            keystore: ${ks}\n            alias: client";
 

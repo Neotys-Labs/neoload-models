@@ -1060,9 +1060,9 @@
 																		"description": "The parts of the message to sign."
 																	}
 																},
-																"$comment": "a keystore holding ${ is a variable keystore: it must start with ./wss-keystores/ and may carry a password; any other keystore is a declared keystore, whose password is set in keystores",
+																"$comment": "a keystore holding ${ is a variable keystore: it must start with ./wss-keystores/, contain no .. path segment and may carry a password; any other keystore is a declared keystore, whose password is set in keystores",
 																"if": { "required": ["keystore"], "properties": { "keystore": { "pattern": "\\$\\{", "description": "A keystore holding a variable." } } },
-																"then": { "properties": { "keystore": { "pattern": "^\\./wss-keystores/", "description": "A variable keystore starts with ./wss-keystores/." } } },
+																"then": { "properties": { "keystore": { "pattern": "^\\./wss-keystores/", "not": { "pattern": "(^|[/\\\\])\\.\\.([/\\\\]|$)" }, "description": "A variable keystore starts with ./wss-keystores/ and contains no .. path segment." } } },
 																"else": { "properties": { "password": false } },
 																"description": "A digital signature of parts of the message."
 															}
@@ -1110,9 +1110,9 @@
 																		"description": "The parts of the message to encrypt."
 																	}
 																},
-																"$comment": "a keystore holding ${ is a variable keystore: it must start with ./wss-keystores/ and may carry a password; any other keystore is a declared keystore, whose password is set in keystores",
+																"$comment": "a keystore holding ${ is a variable keystore: it must start with ./wss-keystores/, contain no .. path segment and may carry a password; any other keystore is a declared keystore, whose password is set in keystores",
 																"if": { "required": ["keystore"], "properties": { "keystore": { "pattern": "\\$\\{", "description": "A keystore holding a variable." } } },
-																"then": { "properties": { "keystore": { "pattern": "^\\./wss-keystores/", "description": "A variable keystore starts with ./wss-keystores/." } } },
+																"then": { "properties": { "keystore": { "pattern": "^\\./wss-keystores/", "not": { "pattern": "(^|[/\\\\])\\.\\.([/\\\\]|$)" }, "description": "A variable keystore starts with ./wss-keystores/ and contains no .. path segment." } } },
 																"else": { "properties": { "password": false } },
 																"description": "An encryption of parts of the message."
 															}

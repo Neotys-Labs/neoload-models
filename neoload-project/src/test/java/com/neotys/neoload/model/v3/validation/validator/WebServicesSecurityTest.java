@@ -130,9 +130,18 @@ public class WebServicesSecurityTest {
 	@Test
 	public void validateVariableKeystoreWithoutPrefix() throws Exception {
 		assertEquals("Data Model is invalid. Violation Number: 2." + LINE_SEPARATOR
-				+ "Violation 1 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[0]': invalid keystore (a variable keystore must start with ./wss-keystores/)." + LINE_SEPARATOR
-				+ "Violation 2 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[1]': invalid keystore (a variable keystore must start with ./wss-keystores/)." + LINE_SEPARATOR,
+				+ "Violation 1 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[0]': invalid keystore (a variable keystore must start with ./wss-keystores/ and cannot contain a .. path segment)." + LINE_SEPARATOR
+				+ "Violation 2 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[1]': invalid keystore (a variable keystore must start with ./wss-keystores/ and cannot contain a .. path segment)." + LINE_SEPARATOR,
 				new Validator().validate(readProject("test-web-services-security-variable-keystore-without-prefix"), NeoLoad.class).getMessage().get());
+	}
+
+	@Test
+	public void validateVariableKeystoreWithParentSegment() throws Exception {
+		final String message = "invalid keystore (a variable keystore must start with ./wss-keystores/ and cannot contain a .. path segment).";
+		assertEquals("Data Model is invalid. Violation Number: 2." + LINE_SEPARATOR
+				+ "Violation 1 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[0]': " + message + LINE_SEPARATOR
+				+ "Violation 2 - Incorrect value for 'web_services_security.request_profiles[0].headers[0].tokens[1]': " + message + LINE_SEPARATOR,
+				new Validator().validate(readProject("test-web-services-security-variable-keystore-path-traversal"), NeoLoad.class).getMessage().get());
 	}
 
 	private static Project readProject(final String fileName) throws IOException, URISyntaxException {

@@ -111,6 +111,7 @@ public class IOSchema3Dot1ValidationTest {
             "test-web-services-security-signature-fixed-keystore-password.yaml",
             "test-web-services-security-encrypt-fixed-keystore-password.yaml",
             "test-web-services-security-variable-keystore-without-prefix.yaml",
+            "test-web-services-security-variable-keystore-path-traversal.yaml",
             "test-userpaths-invalid-on-assertion-failure.yaml",
             "test-userpaths-think-time-invalid-usage.yaml",
             "test-userpaths-think-time-invalid-values.yaml",

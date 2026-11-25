@@ -121,7 +121,7 @@ Signs the message with a key of a keystore declared in `keystores`, or of a [var
 
 | Name | Description | Accept variable | Required | Since |
 |:---- |:----------- |:---------------:|:--------:|:-----:|
-| keystore | The `path` of a keystore declared in `keystores`, or a [variable keystore](#variable-keystore): `./wss-keystores/` followed by a file name containing a variable, for example `./wss-keystores/client_${env}.p12`. A variable keystore must start with `./wss-keystores/`. The variable form needs schema 3.2 | &#x2713; | &#x2713; | 2026.3|
+| keystore | The `path` of a keystore declared in `keystores`, or a [variable keystore](#variable-keystore): `./wss-keystores/` followed by a file name containing a variable, for example `./wss-keystores/client_${env}.p12`. A variable keystore must start with `./wss-keystores/` and cannot contain a `..` path segment. The variable form needs schema 3.2 | &#x2713; | &#x2713; | 2026.3|
 | password | The password of a variable keystore: only allowed when `keystore` contains a variable, a declared keystore takes the `password` of its `keystores` entry. Same secret format as `keystores[].password` | &#x2713; | - | 2027.1|
 | alias | The alias of the key in the keystore | &#x2713; | &#x2713; | 2026.3|
 | key_identifier_type | How the key is referenced in the message: `direct_reference`, `direct_reference_first_certificate`, `issuer_reference`, `x509_key_identifier`, `subject_key_identifier`, `thumbprint_sha1` or `encrypted_key_sha1`. Defaults to `issuer_reference` | - | - | 2026.3|
@@ -136,7 +136,7 @@ Encrypts the message with the key of a keystore declared in `keystores`, or of a
 
 | Name | Description | Accept variable | Required | Since |
 |:---- |:----------- |:---------------:|:--------:|:-----:|
-| keystore | The `path` of a keystore declared in `keystores`, or a [variable keystore](#variable-keystore): `./wss-keystores/` followed by a file name containing a variable, for example `./wss-keystores/client_${env}.p12`. A variable keystore must start with `./wss-keystores/`. The variable form needs schema 3.2 | &#x2713; | &#x2713; | 2026.3|
+| keystore | The `path` of a keystore declared in `keystores`, or a [variable keystore](#variable-keystore): `./wss-keystores/` followed by a file name containing a variable, for example `./wss-keystores/client_${env}.p12`. A variable keystore must start with `./wss-keystores/` and cannot contain a `..` path segment. The variable form needs schema 3.2 | &#x2713; | &#x2713; | 2026.3|
 | password | The password of a variable keystore: only allowed when `keystore` contains a variable, a declared keystore takes the `password` of its `keystores` entry. Same secret format as `keystores[].password` | &#x2713; | - | 2027.1|
 | alias | The alias of the key in the keystore | &#x2713; | &#x2713; | 2026.3|
 | key_identifier_type | Same values as `signature`, except `direct_reference_first_certificate`. Defaults to `issuer_reference` | - | - | 2026.3|
@@ -146,7 +146,7 @@ Encrypts the message with the key of a keystore declared in `keystores`, or of a
 
 #### variable keystore
 
-A `keystore` containing a variable selects the keystore file for each Virtual User, among the files of the `wss-keystores` folder. It must start with `./wss-keystores/`, followed by the file name holding the variables (`./wss-keystores/client_${env}.p12`, `./wss-keystores/${keystore}`); a variable keystore without that prefix is rejected. The file name after the prefix is not checked against `keystores`. Only the keystores declared under `keystores` are staged with the project: a hand-written YAML must declare under `keystores` every file a variable keystore can resolve to. Since schema 3.2 (NeoLoad 2027.1).
+A `keystore` containing a variable selects the keystore file for each Virtual User, among the files of the `wss-keystores` folder. It must start with `./wss-keystores/`, followed by the file name holding the variables (`./wss-keystores/client_${env}.p12`, `./wss-keystores/${keystore}`); a variable keystore without that prefix, or with a `..` path segment (`./wss-keystores/../x/${env}.p12`), is rejected so that it stays inside the `wss-keystores` folder. The file name after the prefix is not checked against `keystores`. Only the keystores declared under `keystores` are staged with the project: a hand-written YAML must declare under `keystores` every file a variable keystore can resolve to. Since schema 3.2 (NeoLoad 2027.1).
 
 ```yaml
 web_services_security:
