@@ -31,4 +31,3 @@ Every validation made in this repo is tested in this repo, by loading real YAML 
 - Defaults are not written back: a fixture with defaults omitted round-trips unchanged.
 - Voluntarily invalid fixtures go in `IOSchema3Dot1ValidationTest.EXCLUDED_FIXTURES` (shared by `IOSchema3Dot2ValidationTest`).
 - A fixture using a 3.2 construct declares `schemaVersion: "3.2"`: each schema test only validates the fixtures without `schemaVersion` or declaring its own version.
-- Assert inside the test method: Sonar does not see assertions hidden in helpers.
