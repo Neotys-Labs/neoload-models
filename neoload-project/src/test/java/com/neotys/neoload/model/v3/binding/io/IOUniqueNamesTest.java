@@ -19,7 +19,7 @@ import org.junit.Test;
 
 public class IOUniqueNamesTest {
 
-	private static Validation validate(final String fixture) throws IOException, URISyntaxException {
+	static Validation validate(final String fixture) throws IOException, URISyntaxException {
 		final String fileName = "test-unique-names-" + fixture + ".yaml";
 		final URL url = IOUniqueNamesTest.class.getClassLoader().getResource(fileName);
 		assertNotNull("Missing classpath resource " + fileName, url);
@@ -27,14 +27,18 @@ public class IOUniqueNamesTest {
 		return new Validator().validate(new IO().read(yaml, Project.class), NeoLoad.class);
 	}
 
-	private static String message(final Validation validation) {
+	static String message(final Validation validation) {
 		return validation.getMessage().orElse("");
+	}
+
+	static String duplicateNamesMessage(final String path, final String duplicates) {
+		return "Incorrect value for '" + path + "': must contain only unique names. Duplicates: " + duplicates + ".";
 	}
 
 	private static void assertDuplicate(final String fixture, final String path, final String duplicates) throws IOException, URISyntaxException {
 		final Validation validation = validate(fixture);
 		assertFalse(validation.isValid());
-		assertTrue(message(validation), message(validation).contains("Incorrect value for '" + path + "': must contain only unique names. Duplicates: " + duplicates + "."));
+		assertTrue(message(validation), message(validation).contains(duplicateNamesMessage(path, duplicates)));
 	}
 
 	private static void assertNoUniquenessError(final String fixture) throws IOException, URISyntaxException {
@@ -45,20 +49,6 @@ public class IOUniqueNamesTest {
 	@Test
 	public void duplicatesAreReportedDistinctInOrderOfFirstAppearance() throws IOException, URISyntaxException {
 		assertDuplicate("distinct-in-order-of-first-appearance", "variables", "foo, bar");
-	}
-
-	@Test
-	public void everyCheckedListRejectsDuplicateNames() throws IOException, URISyntaxException {
-		assertDuplicate("duplicate-servers", "servers", "dup");
-		assertDuplicate("duplicate-user-paths", "user_paths", "dup");
-		assertDuplicate("duplicate-populations", "populations", "dup");
-		assertDuplicate("duplicate-sla-profiles", "sla_profiles", "dup");
-		assertDuplicate("duplicate-scenarios", "scenarios", "dup");
-		assertDuplicate("duplicate-scenario-populations", "scenarios[0].populations", "dup");
-		assertDuplicate("duplicate-shared-elements", "shared_elements", "dup");
-		assertDuplicate("duplicate-content-assertions", "user_paths[0].actions.steps[0].content_assertions", "dup");
-		assertDuplicate("duplicate-request-profiles", "web_services_security.request_profiles", "dup");
-		assertDuplicate("duplicate-response-profiles", "web_services_security.response_profiles", "dup");
 	}
 
 	@Test
