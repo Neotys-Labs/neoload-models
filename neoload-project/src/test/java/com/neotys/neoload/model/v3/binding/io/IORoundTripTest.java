@@ -65,6 +65,8 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-project-settings-content-assertions",
 			"test-project-settings-nested",
 			"test-populations-required-and-optional",
+			"test-populations-browser-cache",
+			"test-populations-browser-cache-defaults",
 			"test-readonly-slaprofiles-only-required",
 			"test-readonly-slaprofiles-required-and-optional",
 			"test-readonly-while-required-and-optional",

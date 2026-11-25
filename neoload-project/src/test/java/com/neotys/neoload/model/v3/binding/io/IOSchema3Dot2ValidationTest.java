@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
@@ -32,6 +33,9 @@ import org.junit.Test;
  *
  * <p>Fixtures declaring another {@code schemaVersion} are validated by the schema of their version only. The
  * fixtures excluded from the v3.1 validation are excluded here too, for the same reasons.</p>
+ *
+ * <p>Schema 3.1 is frozen: the constructs added since are in 3.2 only, and their fixtures declare
+ * {@code schemaVersion: "3.2"}.</p>
  */
 public class IOSchema3Dot2ValidationTest {
 
@@ -96,11 +100,8 @@ public class IOSchema3Dot2ValidationTest {
     @Test
     public void schemaVersion32ConformsTo32AndNotTo31() throws IOException {
         final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource("test-schema-version-3-2.yaml"));
-        final JsonSchema schema31 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)
-                .getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());
-
         assertTrue(schema.validate(node).toString(), schema.validate(node).isEmpty());
-        assertFalse(schema31.validate(node).isEmpty());
+        assertFalse(schema31().validate(node).isEmpty());
     }
 
     @Test
@@ -140,5 +141,21 @@ public class IOSchema3Dot2ValidationTest {
 
     private Set<ValidationMessage> validate(final String fixture) throws IOException {
         return schema.validate(YAML_MAPPER.readTree(getClass().getClassLoader().getResource(fixture + ".yaml")));
+    }
+
+    @Test
+    public void populationBrowserAndCacheAreIn32Only() throws IOException {
+        final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource("test-populations-browser-cache.yaml"));
+        final ObjectNode as31 = node.deepCopy();
+        as31.put("schemaVersion", "3.1");
+
+        assertTrue(schema.validate(node).toString(), schema.validate(node).isEmpty());
+        final String errors31 = schema31().validate(as31).toString();
+        assertTrue(errors31, errors31.contains("browser") && errors31.contains("cache"));
+    }
+
+    private static JsonSchema schema31() {
+        return JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)
+                .getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());
     }
 }

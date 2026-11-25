@@ -67,7 +67,7 @@ single-value setting (`less_than`) on `request` and `custom_action`.
 ---
 
 The tables below list, per functional area, what a `.nlp` project can express and where as-code
-stands. Legend: **3.0** / **3.1** = available in that contract; **3.1 draft** = implemented in the
+stands. Legend: **3.0** / **3.1** / **3.2** = available in that contract; **3.1 draft** = implemented in the
 model but not merged; **—** = not implemented anywhere.
 
 ## Project and settings
@@ -214,6 +214,9 @@ and protocol action catalogues.
 |:------------|:--------|
 | Population name, description | 3.0 |
 | User Path list with `distribution` percentage | 3.0 |
+| Browser per User Path — user agent, connections, cookies, HTTP/2, accept encoding (`browser`) | 3.2 |
+| Cache per User Path — as recorded, new user, returning user (`cache`) | 3.2 |
+| WAN emulation per User Path | — |
 
 ## Scenarios and load policies
 

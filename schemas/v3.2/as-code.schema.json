@@ -1609,6 +1609,57 @@
 										{ "type": "number", "minimum": 0, "maximum": 100 }
 									],
 									"description": "The percentage of the User Path in Population. The value is a percentage and may be set within precision of 0.1%. If the distribution is not present, its value will be proportionally calculated."
+								},
+								"browser": {
+									"title": "Browser",
+									"type": "object",
+									"additionalProperties": false,
+									"properties": {
+										"name": {
+											"$ref": "#/definitions/common/text",
+											"description": "The label of the browser profile shown in NeoLoad. Without name, the profile is shown as customized, or as the recorded one when there is no user agent."
+										},
+										"user_agent": {
+											"$ref": "#/definitions/common/text",
+											"description": "The User-Agent sent by the browser. Without user agent, the browser is the recorded one, with the other settings applied to it."
+										},
+										"connections": {
+											"type": "integer",
+											"minimum": 1,
+											"default": 6,
+											"description": "The maximum number of connections the browser opens at the same time to a server."
+										},
+										"cookies": {
+											"type": "boolean",
+											"default": true,
+											"description": "Whether the browser stores and sends the cookies."
+										},
+										"http2": {
+											"type": "boolean",
+											"default": true,
+											"description": "Whether the browser uses HTTP/2 when the server supports it."
+										},
+										"accept_encoding": {
+											"type": "array",
+											"items": {
+												"type": "string",
+												"enum": ["gzip", "xgzip", "zip", "deflate", "deflate_rfc1951", "exi", "compress", "pack200_gzip", "bzip2", "lzma", "xz", "brotli", "identity"]
+											},
+											"default": ["gzip", "deflate", "brotli"],
+											"description": "The content encodings the browser accepts: gzip, deflate and brotli by default. NeoLoad decodes the responses in these encodings and sends them as the value of the Accept-Encoding header of the requests that have one; it does not add the header to a request without it. An empty list is the default list."
+										}
+									},
+									"description": "The browser emulated by the Virtual Users of the User Path. Without browser, the recorded browser is used.",
+									"examples": [
+										{"name": "Chrome 124.0", "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36", "accept_encoding": ["gzip", "deflate"]},
+										{"http2": false}
+									]
+								},
+								"cache": {
+									"type": "string",
+									"enum": ["as_recorded", "new_user", "returning_user"],
+									"default": "as_recorded",
+									"description": "How the Virtual Users handle the browser cache: as during the recording (the default value), empty as for a first visit (new_user), or already filled (returning_user)."
 								}
 							}
 						},
