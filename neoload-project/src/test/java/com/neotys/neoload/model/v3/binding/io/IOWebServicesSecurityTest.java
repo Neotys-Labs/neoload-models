@@ -23,12 +23,14 @@ import com.neotys.neoload.model.v3.project.security.WsSignatureToken;
 import com.neotys.neoload.model.v3.project.security.WsSimplePasswordType;
 import com.neotys.neoload.model.v3.project.security.WsSymmetricEncryptionAlgorithm;
 import com.neotys.neoload.model.v3.project.security.WsTimestampToken;
+import com.neotys.neoload.model.v3.project.security.WsToken;
 import com.neotys.neoload.model.v3.project.security.WsUsernameToken;
 import com.neotys.neoload.model.v3.project.userpath.Container;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequest;
 import com.neotys.neoload.model.v3.project.userpath.SoapRequestContent;
 import com.neotys.neoload.model.v3.project.userpath.UserPath;
 import java.io.IOException;
+import java.util.Optional;
 import org.junit.Test;
 
 public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
@@ -175,6 +177,44 @@ public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
 				.build();
 	}
 
+	private static Project getSignatureVariableKeystore() {
+		return Project.builder()
+				.schemaVersion("3.2")
+				.name("MyProject")
+				.webServicesSecurity(WebServicesSecurity.builder()
+						.addRequestProfiles(WsRequestProfile.builder()
+								.name("MyRequestProfile")
+								.addHeaders(WsSecurityHeader.builder()
+										.addTokens(WsSignatureToken.builder()
+												.keystore("./wss-keystores/client_${env}.p12")
+												.password("${keystorePassword}")
+												.alias("client")
+												.build())
+										.build())
+								.build())
+						.build())
+				.build();
+	}
+
+	private static Project getEncryptVariableKeystore() {
+		return Project.builder()
+				.schemaVersion("3.2")
+				.name("MyProject")
+				.webServicesSecurity(WebServicesSecurity.builder()
+						.addRequestProfiles(WsRequestProfile.builder()
+								.name("MyRequestProfile")
+								.addHeaders(WsSecurityHeader.builder()
+										.addTokens(WsEncryptToken.builder()
+												.keystore("./wss-keystores/${keystore}")
+												.password("clearSecret")
+												.alias("server")
+												.build())
+										.build())
+								.build())
+						.build())
+				.build();
+	}
+
 	private static Project getSoapRequestSecurityProfiles() {
 		return Project.builder()
 				.name("MyProject")
@@ -269,6 +309,42 @@ public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
 	}
 
 	@Test
+	public void readSignatureVariableKeystore() throws IOException {
+		assertRead("test-web-services-security-signature-variable-keystore", getSignatureVariableKeystore());
+	}
+
+	@Test
+	public void writeSignatureVariableKeystore() throws IOException {
+		assertWrite("test-web-services-security-signature-variable-keystore", getSignatureVariableKeystore());
+	}
+
+	@Test
+	public void signatureVariableKeystorePassword() throws IOException {
+		final WsSignatureToken token = (WsSignatureToken) readFirstToken("test-web-services-security-signature-variable-keystore");
+
+		assertEquals("./wss-keystores/client_${env}.p12", token.getKeystore());
+		assertEquals(Optional.of("${keystorePassword}"), token.getPassword());
+	}
+
+	@Test
+	public void readEncryptVariableKeystore() throws IOException {
+		assertRead("test-web-services-security-encrypt-variable-keystore", getEncryptVariableKeystore());
+	}
+
+	@Test
+	public void writeEncryptVariableKeystore() throws IOException {
+		assertWrite("test-web-services-security-encrypt-variable-keystore", getEncryptVariableKeystore());
+	}
+
+	@Test
+	public void encryptVariableKeystorePassword() throws IOException {
+		final WsEncryptToken token = (WsEncryptToken) readFirstToken("test-web-services-security-encrypt-variable-keystore");
+
+		assertEquals("./wss-keystores/${keystore}", token.getKeystore());
+		assertEquals(Optional.of("clearSecret"), token.getPassword());
+	}
+
+	@Test
 	public void readSoapRequestSecurityProfiles() throws IOException {
 		assertRead("test-soap-request-security-profiles", getSoapRequestSecurityProfiles());
 	}
@@ -354,5 +430,10 @@ public class IOWebServicesSecurityTest extends AbstractIOElementsTest {
 		assertFalse(written.contains("security_profile"));
 		assertFalse(written.contains("web_services_security"));
 		assertTrue(written.contains("soap_request"));
+	}
+
+	private WsToken readFirstToken(final String fileName) throws IOException {
+		return new IO().read(getFile(fileName, "yaml")).getProject().getWebServicesSecurity().get()
+				.getRequestProfiles().get(0).getHeaders().get(0).getTokens().get(0);
 	}
 }
