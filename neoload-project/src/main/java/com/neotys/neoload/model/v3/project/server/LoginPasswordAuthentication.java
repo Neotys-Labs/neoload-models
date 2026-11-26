@@ -1,9 +1,12 @@
 package com.neotys.neoload.model.v3.project.server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.neotys.neoload.model.v3.validation.constraints.RequiredCheck;
-import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 
+/**
+ * An authentication with a login and a password. {@code basic_authentication}, {@code ntlm_authentication} and
+ * {@code negotiate_authentication} require both; an item of {@code authentications} accepts empty ones, as the
+ * Authorization table of the NeoLoad GUI does.
+ */
 public interface LoginPasswordAuthentication extends Authentication {
 
 	String BASIC_AUTHENTICATION 		= "basic_authentication";
@@ -14,10 +17,8 @@ public interface LoginPasswordAuthentication extends Authentication {
 	String PASSWORD = "password";
 
 	@JsonProperty(LOGIN)
-	@RequiredCheck(groups = {NeoLoad.class})
 	String getLogin();
 
 	@JsonProperty(PASSWORD)
-	@RequiredCheck(groups = {NeoLoad.class})
 	String getPassword();
 }

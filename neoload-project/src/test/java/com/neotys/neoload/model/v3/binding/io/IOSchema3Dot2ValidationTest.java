@@ -154,6 +154,36 @@ public class IOSchema3Dot2ValidationTest {
         assertTrue(errors31, errors31.contains("browser") && errors31.contains("cache"));
     }
 
+    @Test
+    public void serverSettingsAreIn32Only() throws IOException {
+        final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource("test-servers-all-settings.yaml"));
+        final ObjectNode as31 = node.deepCopy();
+        as31.put("schemaVersion", "3.1");
+
+        assertTrue(schema.validate(node).toString(), schema.validate(node).isEmpty());
+        final String errors31 = schema31().validate(as31).toString();
+        assertTrue(errors31, errors31.contains("authentications") && errors31.contains("url_rewriting") && errors31.contains("type"));
+    }
+
+    /** The 3.2 schema rejects the servers the Java reader rejects, except the duplicate realm, which a schema can't check. */
+    @Test
+    public void invalidServersDoNotConformTo32() throws IOException {
+        final List<String> accepted = new ArrayList<>();
+        for (final String fixture : List.of("test-servers-unknown-key", "test-servers-description", "test-servers-nested-host",
+                "test-servers-tcp-with-scheme", "test-servers-tcp-without-port", "test-servers-port-too-high",
+                "test-servers-port-zero", "test-servers-two-authentication-forms",
+                "test-servers-url-rewriting-separator-without-in-path",
+                "test-servers-url-rewriting-without-session-argument", "test-servers-unknown-preferred-protocol",
+                "test-servers-basic-authentication-empty-password")) {
+            final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource(fixture + ".yaml"));
+            if (schema.validate(node).isEmpty()) {
+                accepted.add(fixture);
+            }
+        }
+
+        assertTrue("Accepted by the 3.2 schema: " + accepted, accepted.isEmpty());
+    }
+
     private static JsonSchema schema31() {
         return JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)
                 .getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());

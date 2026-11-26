@@ -48,6 +48,8 @@ request:
 
 Define the URL of the HTTP request. A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.
 
+An absolute URL without `server` uses a declared [server](server.md) with the same host, port and scheme. When several servers match, the one named after the host is used, otherwise the first one of the list. When none matches, a server named after the host is created. To use a given server, set `server` and a relative URL.
+
 Use convention to define an URL: `http[s]://{host}[:{port}][/{path}][?{query}]`. Variables can be used from the `host`, `port`, `path` parameters and from the name/value pairs of the `query` parameter. To encode the evaluation of a variable from the name/value pairs of the `query` parameter, use convention: `__encodeURL(${my_variable})`.
 
 #### Example 1

@@ -1,0 +1,8 @@
+schemaVersion: "3.2"
+name: MyProject
+servers:
+- name: backend
+  host: backend.example.com
+  url_rewriting:
+    session_argument: jsessionid
+    path_separator: /

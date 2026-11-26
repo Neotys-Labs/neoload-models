@@ -1,0 +1,6 @@
+schemaVersion: "3.1"
+name: MyProject
+servers:
+- name: backend
+  host: backend.example.com
+  prot: 8080

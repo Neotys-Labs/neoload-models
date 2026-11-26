@@ -100,9 +100,12 @@ model but not merged; **—** = not implemented anywhere.
 | NLP feature | as-code |
 |:------------|:--------|
 | Name, host, port, scheme | 3.0 |
-| Basic / NTLM / Negotiate authentication | 3.0 |
-| Server description | — (dropped by `ServerDeserializer`) |
-| URL rewriting — session argument name, path separator, path extension (`HttpServer`) | — |
+| Port limited to 1–65535 or a variable | 3.2 |
+| Basic / NTLM / Negotiate authentication (one per server) | 3.0 |
+| Several authentications per server, with the preferred protocol (Default / Kerberos / NTLM) | 3.2 (`authentications`) |
+| Regular (non-HTTP) server | 3.2 (`type: tcp`) |
+| URL rewriting — session argument name, path extension, path separator, equals sign (`HttpServer`) | 3.2 (`url_rewriting`) |
+| Server description | — (not shown in the GUI; out of as-code) |
 
 ## Variables
 

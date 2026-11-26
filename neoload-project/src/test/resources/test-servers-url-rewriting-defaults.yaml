@@ -1,0 +1,15 @@
+schemaVersion: "3.2"
+name: MyProject
+servers:
+- name: shop
+  host: shop.example.com
+  url_rewriting:
+    session_argument: phpsessid
+    in_path: false
+- name: backend
+  host: backend.example.com
+  url_rewriting:
+    session_argument: jsessionid
+    in_path: true
+    path_separator: ;
+    equals_sign: true
