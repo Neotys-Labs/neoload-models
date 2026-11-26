@@ -1,0 +1,1 @@
+{"name":"MyProject","project_settings":{"dynatrace.enabled":"true","dynatrace.url":"https://abc12345.live.dynatrace.com","qtest.enabled":"true","qtest.auth_method":"token","qtest.mapping_mode":"PER_USER_PATH","qtest.project_id":"101762","qtest.cycle_id":"3761630","qtest.create_defects":"false"}}

@@ -29,6 +29,32 @@ name: MyProject
 
 A file declaring `3.0`, `3.1` or no `schemaVersion` keeps working unchanged.
 
+#### Project settings
+
+**Runtime settings for content assertions** — the new `runtime: responses: content_assertions` project
+settings choose which responses the content assertions of a User Path, Container or Transaction (the global
+assertions) are applied to, as in the Runtime parameters of the project: `content_types` (comma-separated,
+default `text/html,text/xhtml`) and `apply_on_custom_actions` (default `false`, must be a boolean: a value
+such as `"yes"` is rejected).
+
+```yaml
+schemaVersion: "3.2"
+project_settings:
+  runtime:
+    responses:
+      content_assertions:
+        content_types: text/html,text/xhtml,application/json
+        apply_on_custom_actions: true
+```
+
+**Nested project settings** — `project_settings` are now written as nested maps
+(`qtest:` / `enabled: true`) instead of dotted keys (`qtest.enabled: true`). The dotted `dynatrace.*` and
+`qtest.*` keys stay readable as deprecated aliases; declaring a setting in both forms is an error.
+Booleans and integers are written with their type instead of as strings; the values written as strings by
+older NeoLoad versions (`qtest.enabled: "true"`) are still read. `qtest: mapping_mode` (`PER_SCENARIO` or
+`PER_USER_PATH`), written by NeoLoad since 2026.3, is now declared in the schema.
+An unknown setting (`qtest: foo`), already rejected by the schema, is now rejected on read too.
+
 #### Assertions
 
 **`content_assertions` on `custom_action`** — a custom action can now validate its response

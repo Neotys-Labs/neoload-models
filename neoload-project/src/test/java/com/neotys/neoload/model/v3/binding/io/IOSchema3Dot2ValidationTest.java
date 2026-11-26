@@ -112,6 +112,38 @@ public class IOSchema3Dot2ValidationTest {
     }
 
     @Test
+    public void nonBooleanApplyContentAssertionsOnCustomActionsFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected a non-boolean 'runtime: responses: content_assertions: apply_on_custom_actions' to fail schema validation",
+                validate("test-project-settings-content-assertions-invalid").isEmpty());
+    }
+
+    @Test
+    public void dottedAndNestedProjectSettingFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected 'qtest.enabled' declared with 'qtest: enabled' to fail schema validation",
+                validate("test-project-settings-keys-conflict").isEmpty());
+    }
+
+    @Test
+    public void dottedRuntimeProjectSettingFailsSchemaValidation() throws IOException {
+        Assert.assertFalse("Expected the dotted 'runtime.responses.content_assertions.content_types' to fail schema validation",
+                validate("test-project-settings-content-assertions-dotted").isEmpty());
+    }
+
+    @Test
+    public void runtimeProjectSettingsConformTo32AndNotTo31() throws IOException {
+        final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource("test-project-settings-content-assertions.yaml"));
+        final JsonSchema schema31 = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909)
+                .getSchema(schemasDir.resolve("v3.1/as-code.schema.json").toUri());
+
+        assertTrue(schema.validate(node).toString(), schema.validate(node).isEmpty());
+        assertFalse(schema31.validate(node).isEmpty());
+    }
+
+    private Set<ValidationMessage> validate(final String fixture) throws IOException {
+        return schema.validate(YAML_MAPPER.readTree(getClass().getClassLoader().getResource(fixture + ".yaml")));
+    }
+
+    @Test
     public void populationBrowserAndCacheAreIn32Only() throws IOException {
         final JsonNode node = YAML_MAPPER.readTree(getClass().getClassLoader().getResource("test-populations-browser-cache.yaml"));
         final ObjectNode as31 = node.deepCopy();
