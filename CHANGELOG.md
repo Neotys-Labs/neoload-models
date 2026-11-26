@@ -55,6 +55,19 @@ older NeoLoad versions (`qtest.enabled: "true"`) are still read. `qtest: mapping
 `PER_USER_PATH`), written by NeoLoad since 2026.3, is now declared in the schema.
 An unknown setting (`qtest: foo`), already rejected by the schema, is now rejected on read too.
 
+#### Assertions
+
+**`content_assertions` on `custom_action`** — a custom action can now validate its response
+content, with the same content assertions as a request.
+
+```yaml
+- custom_action:
+    name: sql action
+    type: SQL
+    content_assertions:
+    - contains: expected text
+```
+
 #### Populations
 
 The browser and the cache of each User Path of a Population, set in the "Browser", "HTTP/2" and
