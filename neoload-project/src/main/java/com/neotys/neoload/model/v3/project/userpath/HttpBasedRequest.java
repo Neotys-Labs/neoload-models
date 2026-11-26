@@ -34,8 +34,16 @@ public interface HttpBasedRequest extends UrlServerElement {
 		return getUrl() != null && getUrl().indexOf('?') >= 0 && urlQuery().isPresent();
 	}
 
+	/**
+	 * The url cut at the first {@code ?} or {@code #}: the query is moved to the parameters, and a fragment is dropped
+	 * because it is never sent to the server.
+	 */
 	default String urlWithoutQuery() {
-		return getUrl().substring(0, getUrl().indexOf('?'));
+		final String url = getUrl();
+		final int fragment = url.indexOf('#');
+		final int query = url.indexOf('?');
+		final int end = fragment >= 0 && (query < 0 || fragment < query) ? fragment : query;
+		return url.substring(0, end);
 	}
 
 	/** The parameters written in the url query, in order, followed by the declared {@code parameters}. */

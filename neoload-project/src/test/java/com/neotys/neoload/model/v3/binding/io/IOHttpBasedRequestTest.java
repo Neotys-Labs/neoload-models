@@ -160,4 +160,15 @@ public class IOHttpBasedRequestTest extends AbstractIOElementsTest {
 		assertEquals(List.of("token=abc==", "a=b=c"), render(request));
 		assertEquals(List.of("token=abc==", "a=b=c"), render(firstStep(new IO().read(written("test-http-request-query-equals-in-value")).getProject(), Request.class)));
 	}
+
+	@Test
+	public void urlFragmentIsDroppedWithTheQuery() throws IOException {
+		final Request queryThenFragment = firstStep(load("test-http-request-query-then-fragment"), Request.class);
+		final Request fragmentThenQuery = firstStep(load("test-http-request-fragment-then-query"), Request.class);
+
+		assertEquals("/p", queryThenFragment.getUrl());
+		assertEquals(List.of("x=1"), render(queryThenFragment));
+		assertEquals("/p", fragmentThenQuery.getUrl());
+		assertTrue(fragmentThenQuery.getParameters().isEmpty());
+	}
 }
