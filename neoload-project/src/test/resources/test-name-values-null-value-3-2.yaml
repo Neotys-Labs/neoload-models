@@ -1,0 +1,26 @@
+schemaVersion: "3.2"
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        url: http://www.neotys.com/select
+        headers:
+        - name: X-Empty
+          value:
+        - X-Empty-Map:
+    - soap_request:
+        url: http://host:80/
+        headers:
+        - SOAPAction:
+        parameters:
+        - name: MyParameter
+          value:
+        content:
+          path: ./requests/mySOAPRequest.xml
+    - websocket_channel:
+        name: my_channel
+        url: https://host:443/socket
+        headers:
+        - X-Empty-Map:

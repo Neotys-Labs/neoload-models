@@ -1,5 +1,6 @@
 package com.neotys.neoload.model.v3.binding.io;
 
+import com.neotys.neoload.model.v3.project.Project;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -37,9 +38,13 @@ public final class UnsupportedSchemaVersionException extends IOException {
 
 	private static String buildMessage(final String declaredSchemaVersion,
 			final Set<String> supportedSchemaVersions) {
+		final String supported = "[" + String.join(", ", supportedSchemaVersions) + "]";
+		if (declaredSchemaVersion.isEmpty()) {
+			return "The '" + Project.SCHEMA_VERSION + "' value is empty: remove the key to read the file as schema "
+					+ Project.DEFAULT_SCHEMA_VERSION + ", or set a supported schema version: " + supported + ".";
+		}
 		return "Schema version '" + declaredSchemaVersion
-				+ "' is not supported by this product version. Supported schema versions: ["
-				+ String.join(", ", supportedSchemaVersions)
-				+ "]. See " + COMPATIBILITY_MATRIX_URL + " for product compatibility information.";
+				+ "' is not supported by this product version. Supported schema versions: " + supported
+				+ ". See " + COMPATIBILITY_MATRIX_URL + " for product compatibility information.";
 	}
 }

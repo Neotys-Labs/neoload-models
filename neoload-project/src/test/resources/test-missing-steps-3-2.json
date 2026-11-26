@@ -1,0 +1,1 @@
+{"schemaVersion":"3.2","name":"MyProject","user_paths":[{"name":"MyUserPath","init":{},"actions":{"steps":[{"transaction":{"name":"MyTransaction"}},{"if":{"conditions":["'${variable}' == '2'"],"then":{}}},{"switch":{"value":"${MySwitchVariable}","case":[{"value":0,"steps":[{"delay":"1s"}]}],"default":{}}}]},"end":{}}]}

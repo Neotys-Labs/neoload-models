@@ -8,7 +8,7 @@ A repetition structure which executes steps sequentially a specific number of ti
 | name              | The name of the Loop                                                                               | -               | -                  | 7.2   |
 | description       | The description of the Loop                                                                        | -               | -                  | 7.2   |
 | count             | The number of times to execute                                                                     | -               | &#x2713;           | 7.2   |
-| [steps](steps.md) | The steps to be executed                                                                           | -               | &#x2713;           | 7.2   |
+| [steps](steps.md) | The steps to be executed. At least one step.                                                       | -               | &#x2713;           | 7.2   |
 
 
 #### Example

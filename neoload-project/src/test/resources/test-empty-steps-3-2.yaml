@@ -1,0 +1,33 @@
+schemaVersion: "3.2"
+name: MyProject
+user_paths:
+- name: MyUserPath
+  init:
+    steps: []
+  actions:
+    steps:
+    - transaction:
+        name: MyTransaction
+        steps: []
+    - if:
+        conditions:
+        - "'${variable}' == '2'"
+        then:
+          steps: []
+        else:
+          steps: []
+    - try_catch:
+        try:
+          steps: []
+        catch:
+          steps: []
+    - switch:
+        value: "${MySwitchVariable}"
+        case:
+        - value: 0
+          steps:
+          - delay: 1s
+        default:
+          steps: []
+  end:
+    steps: []

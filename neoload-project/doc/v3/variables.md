@@ -382,7 +382,7 @@ _Date variable_ is supported in NeoLoad from version 2026.3 (schema 3.1) onwards
 
 A variable whose value is a fixed date, formatted according to a pattern and optionally shifted at each change by a fixed step.
 
-The `pattern` follows the [`SimpleDateFormat`](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) syntax. `start_date` must match that pattern.
+The `pattern` follows the [`SimpleDateFormat`](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) syntax. `start_date` must match that pattern: NeoLoad rejects a `start_date` that does not (not checked when `pattern` is `milliseconds since the UNIX epoch`).
 
 The `change_step` is a single amount and unit. Units are not combined, so that fixed-length units never mix with calendar units in the same value.
 

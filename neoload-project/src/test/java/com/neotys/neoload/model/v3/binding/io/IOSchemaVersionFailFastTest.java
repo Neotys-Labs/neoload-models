@@ -64,6 +64,17 @@ public class IOSchemaVersionFailFastTest {
 	}
 
 	@Test
+	public void empty_schema_version_is_rejected() {
+		final UnsupportedSchemaVersionException exception = assertThrows(
+				UnsupportedSchemaVersionException.class,
+				() -> mapper.read("schemaVersion: \"\"\nname: empty\n"));
+
+		assertEquals("", exception.getDeclaredSchemaVersion());
+		assertEquals("The 'schemaVersion' value is empty: remove the key to read the file as schema 3.0, or set a supported schema version: [3.0, 3.1, 3.2].",
+				exception.getMessage());
+	}
+
+	@Test
 	public void malformed_yaml_preserves_jackson_parse_error() {
 		assertThrows(JsonProcessingException.class,
 				() -> mapper.read("schemaVersion: \"3.0\"\nname: ["));

@@ -25,9 +25,10 @@
 		"schemaVersion": {
 			"anyOf": [
 				{ "type": "string", "const": "3.2" },
-				{ "type": "number", "const": 3.2 }
+				{ "type": "number", "const": 3.2 },
+				{ "type": "null" }
 			],
-			"description": "Schema contract version this file is written for. Must be 3.2 as a string or number for this schema."
+			"description": "Schema contract version this file is written for. Must be 3.2 as a string or number for this schema. A key with no value (`schemaVersion:`) is read like a missing one, as 3.0; an empty string is rejected."
 		},
 		"name": {
 			"$ref": "#/definitions/common/project_name",
@@ -110,14 +111,14 @@
 					}
 				}
 			},
-			"description": "Variables add dynamic content to a scenario. They can be combined with other variables or with static content, for example `${product_${productID}}`, and used in places such as form parameter values."
+			"description": "Variables add dynamic content to a scenario. They can be combined with other variables or with static content, for example `${product_${productID}}`, and used in places such as form parameter values. Names must be unique within the list."
 		},
 		"servers": {
 			"title": "Servers",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/server" },
-			"description": "Target servers for the test, defined once so the host can be changed without editing each request."
+			"description": "Target servers for the test, defined once so the host can be changed without editing each request. Names must be unique within the list."
 		},
 		"web_services_security": {
 			"$ref": "#/definitions/web_services_security",
@@ -128,35 +129,35 @@
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/sla" },
-			"description": "Service level agreement profiles. Each profile is a set of KPI thresholds used to check quality of service, for example a maximum average response time."
+			"description": "Service level agreement profiles. Each profile is a set of KPI thresholds used to check quality of service, for example a maximum average response time. Names must be unique within the list."
 		},
 		"populations": {
 			"title": "Populations",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/populations/population" },
-			"description": "Groups of Virtual Users. Each population lists the User Paths that compose it and the share of each one."
+			"description": "Groups of Virtual Users. Each population lists the User Paths that compose it and the share of each one. Names must be unique within the list."
 		},
 		"scenarios": {
 			"title": "Scenarios",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/scenario" },
-			"description": "Test configurations. A scenario selects the populations to run and the load policy of each one."
+			"description": "Test configurations. A scenario selects the populations to run and the load policy of each one. Names must be unique within the list."
 		},
 		"shared_elements": {
 			"title": "Shared_elements",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/shared_element" },
-			"description": "Named, reusable steps declared once for the project. A shared_element step runs one of them by name."
+			"description": "Named, reusable steps declared once for the project. A shared_element step runs one of them by name. Names must be unique within the list."
 		},
 		"user_paths": {
 			"title": "User_paths",
 			"type": "array",
 			"minItems": 1,
 			"items": { "$ref": "#/definitions/user_paths/user_path" },
-			"description": "Virtual user behavior. A User Path is the sequence of requests and logical actions that simulates one visitor."
+			"description": "Virtual user behavior. A User Path is the sequence of requests and logical actions that simulates one visitor. Names must be unique within the list."
 		},
 		"project_settings": {
 			"title": "Neoload_Project_settings",
@@ -840,7 +841,7 @@
 							},
 							"start_date": {
 								"$ref": "#/definitions/common/text",
-								"description": "The starting date, formatted according to `pattern`."
+								"description": "The starting date, formatted according to `pattern`. NeoLoad rejects a `start_date` that does not match `pattern`. Not checked when `pattern` is `milliseconds since the UNIX epoch`."
 							},
 							"change_step": {
 								"type": "string",
@@ -1033,6 +1034,7 @@
 							"swap_file": {
 								"type": "object",
 								"required": ["path"],
+								"additionalProperties": false,
 								"properties": {
 									"path": {
 										"$ref": "#/definitions/common/text",
@@ -1138,7 +1140,7 @@
 							}
 						}
 					},
-					"description": "The keystores holding the keys and certificates used to sign and encrypt messages, or to verify and decrypt them."
+					"description": "The keystores holding the keys and certificates used to sign and encrypt messages, or to verify and decrypt them. Paths must be unique within the list."
 				},
 				"request_profiles": {
 					"type": "array",
@@ -1357,7 +1359,7 @@
 							}
 						}
 					},
-					"description": "The profiles that secure outgoing SOAP requests. A SOAP request selects one by name in `request_security_profile`."
+					"description": "The profiles that secure outgoing SOAP requests. A SOAP request selects one by name in `request_security_profile`. Names must be unique within the list."
 				},
 				"response_profiles": {
 					"type": "array",
@@ -1377,7 +1379,7 @@
 							}
 						}
 					},
-					"description": "The profiles that process incoming SOAP responses. A SOAP request selects one by name in `response_security_profile`."
+					"description": "The profiles that process incoming SOAP responses. A SOAP request selects one by name in `response_security_profile`. Names must be unique within the list."
 				}
 			},
 			"description": "Web Services Security (WS-Security) settings: the keystores, and the request and response profiles applied to SOAP requests."
@@ -1908,7 +1910,7 @@
 							}
 						}
 					},
-					"description": "The list of runtime settings per population"
+					"description": "The list of runtime settings per population. Names must be unique within the list."
 				}
 			},
 			"apm": {
@@ -2079,7 +2081,6 @@
 			"container": {
 				"title": "Containers",
 				"type": "object",
-				"required": ["steps"],
 				"additionalProperties": false,
 				"properties": {
 					"description": {
@@ -2096,7 +2097,7 @@
 					},
 					"steps": {
 						"$ref": "#/definitions/user_paths/steps",
-						"description": "The steps of the container."
+						"description": "The steps of the container. Can be empty or omitted."
 					},
 					"assertions": {
 						"$ref": "#/definitions/common/assertions"
@@ -2110,7 +2111,6 @@
 			"steps": {
 				"title": "Steps",
 				"type": "array",
-				"minItems": 1,
 				"items": {
 					"oneOf": [
 						{
@@ -2275,7 +2275,7 @@
 					"name": "transaction",
 					"title": "Action: Transaction",
 					"type": "object",
-					"required": ["name", "steps"],
+					"required": ["name"],
 					"properties": {
 						"name": {
 							"$ref": "#/definitions/common/name",
@@ -2295,7 +2295,7 @@
 						},
 						"steps": {
 							"$ref": "#/definitions/user_paths/steps",
-							"description": "Steps of the Transaction. Required. Does not accept a variable."
+							"description": "Steps of the Transaction. Can be empty or omitted. Does not accept a variable."
 						},
 						"assertions": {
 							"$ref": "#/definitions/common/assertions"
@@ -2318,6 +2318,12 @@
 					"required": ["url"],
 					"unevaluatedProperties": false,
 					"properties": {
+						"name": {
+							"type": "string",
+							"minLength": 1,
+							"deprecated": true,
+							"description": "Deprecated, ignored by NeoLoad: a request is named after its URL path. Still accepted so that existing files keep loading."
+						},
 						"url": {
 							"$ref": "#/definitions/user_paths/request_url"
 						},
@@ -2659,7 +2665,8 @@
 						},
 						"steps": {
 							"$ref": "#/definitions/user_paths/steps",
-							"description": "The steps to be executed"
+							"minItems": 1,
+							"description": "The steps to be executed. Required, at least one step."
 						}
 					},
 					"additionalProperties": false,
@@ -2687,7 +2694,8 @@
 						},
 						"steps": {
 							"$ref": "#/definitions/user_paths/steps",
-							"description": "The steps to be executed. Required. Does not accept a variable."
+							"minItems": 1,
+							"description": "The steps to be executed. Required, at least one step. Does not accept a variable."
 						}
 					},
 					"additionalProperties": false,
@@ -2715,7 +2723,7 @@
 						},
 						"case": {
 							"type": "array",
-							"description": "Case list. A Case contains steps executed when Case value equals Switch value",
+							"description": "Case list. A Case contains steps executed when Case value equals Switch value. Case values must be unique within the list.",
 							"items": { "$ref": "#/definitions/user_paths/case" }
 						},
 						"default": {
@@ -2840,7 +2848,8 @@
 						},
 						"steps": {
 							"$ref": "#/definitions/user_paths/steps",
-							"description": "The steps to be executed in the parallel thread"
+							"minItems": 1,
+							"description": "The steps to be executed in the parallel thread. Required, at least one step."
 						}
 					},
 					"additionalProperties": false,
@@ -3006,7 +3015,8 @@
 						},
 						"steps": {
 							"$ref": "#/definitions/user_paths/steps",
-							"description": "Steps of the Web Page. Only request, nested `web_page` and soap_request steps are supported"
+							"minItems": 1,
+							"description": "Steps of the Web Page. Required, at least one step. Only request, nested `web_page` and soap_request steps are supported."
 						}
 					},
 					"additionalProperties": false,
@@ -3195,7 +3205,7 @@
 			},
 			"request_url": {
 				"$ref": "#/definitions/common/url",
-				"description": "The URL to hit"
+				"description": "The URL to hit: `http://host[:port]/path`, `https://host[:port]/path`, or a path starting with `/` sent to the request `server`. A variable is accepted in the host, the port and the path, not in the scheme nor as the whole base URL: for a variable base URL, declare a server with a variable host and use a path here."
 			},
 			"request_server": {
 				"$ref": "#/definitions/common/name",
@@ -3221,8 +3231,8 @@
 							"maxProperties": 1,
 							"patternProperties": {
 								".*": {
-									"type": "string",
-									"description": "The value of the entry, the key being the name."
+									"type": ["string", "null"],
+									"description": "The value of the entry, the key being the name. An empty value (`null`) gives an entry without value."
 								}
 							}
 						},
@@ -3235,8 +3245,8 @@
 									"description": "The name of the entry."
 								},
 								"value": {
-									"type": "string",
-									"description": "The value of the entry."
+									"type": ["string", "null"],
+									"description": "The value of the entry. An empty value (`null`) gives an entry without value."
 								}
 							},
 							"additionalProperties": false
@@ -3529,7 +3539,7 @@
 			},
 			"case": {
 				"type": "object",
-				"required": ["value"],
+				"required": ["value", "steps"],
 				"properties": {
 					"description": {
 						"$ref": "#/definitions/common/text",
@@ -3553,7 +3563,8 @@
 					},
 					"steps": {
 						"$ref": "#/definitions/user_paths/steps",
-						"description": "The steps to be executed. Required."
+						"minItems": 1,
+						"description": "The steps to be executed. Required, at least one step."
 					},
 					"assertions": {
 						"$ref": "#/definitions/common/assertions"

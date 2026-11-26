@@ -22,7 +22,7 @@ The Switch action is fall-through, which means that if a Break flag is disabled 
 | break             | Enable the break            |        -        |          |       |
 | description       | The description of the case |        -        |    -     |       |
 | [pacing](pacing.md) | The minimum duration enforced for the case | &#x2713; | - | 2026.3 |
-| [steps](steps.md) | The steps to be executed    |        -        | &#x2713; |       |
+| [steps](steps.md) | The steps to be executed. At least one step. |        -        | &#x2713; |       |
 
 #### Example
 A switch with 2 cases:

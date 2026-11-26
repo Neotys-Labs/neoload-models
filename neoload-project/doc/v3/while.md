@@ -9,7 +9,7 @@ A repetition structure "While - do". The steps contained in the structure are ex
 | description       | The description of the While                                                                       | -               | -                  | 7.2   |
 | conditions        | The list of conditions to evaluate                                                                 | -               | &#x2713;           | 7.2   |
 | match             | The "match" value can be: <ul><li>`any`</li><li>`all`</li></ul>The default value is `any`.         | -               | -                  | 7.2   |
-| [steps](steps.md) | The steps to be executed                                                                           | -               | &#x2713;           | 7.2   |
+| [steps](steps.md) | The steps to be executed. At least one step.                                                       | -               | &#x2713;           | 7.2   |
 
 Use the following syntax to define conditions: `[(condition)(, condition)*]`
 

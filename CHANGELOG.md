@@ -96,6 +96,29 @@ populations:
 
 See [Population](neoload-project/doc/v3/population.md) for the full reference.
 
+### Deprecated
+
+- **`name` of a `request`** — ignored by NeoLoad, which names a request after its URL path. The 3.2
+  schema accepts it so that a file NeoLoad loads also validates; do not write it in new files.
+
+### Fixed
+
+The 3.2 schema accepts and rejects the same files as NeoLoad:
+
+- **Empty steps** — `steps: []`, or no `steps`, in a container (`init`, `actions`, `end`, If
+  `then` / `else`, Try / Catch, Switch `default`), a Transaction or a WebSocket push message is
+  accepted: NeoLoad writes `steps: []` for an empty container. `loop`, `while`, `fork`, `web_page`
+  and a Switch `case` still need at least one step.
+- **Entries without value** — a header or a SOAP parameter with no value (`- X-Foo:`, or
+  `name: X-Foo` with an empty `value:`) is accepted.
+- **`swap_file`** — an unknown key in the `swap_file` of a `shared_queue` variable is rejected.
+- **`schemaVersion` without value** — `schemaVersion:` is accepted and, as in NeoLoad, read like a
+  missing key: the file is a 3.0 file. An empty string (`schemaVersion: ""`) stays rejected.
+- **Rules checked by NeoLoad only** — the field descriptions state them: unique names in each list,
+  a `start_date` matching the `pattern` of its date variable, and the URL forms of a request (no
+  variable scheme, no variable base URL such as `${base_url}/get`: use a server with a variable
+  host).
+
 ---
 
 ## [3.1] — November 2026 (NeoLoad 2026.3 and above)

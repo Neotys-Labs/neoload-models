@@ -9,7 +9,7 @@ The Fork action is used to play actions in a different execution thread to the c
 | name              | The name of the Fork                                                                               | -               | -                  | 2026.3 |
 | description       | The description of the Fork                                                                        | -               | -                  | 2026.3 |
 | copy_variables    | When `true`, existing values of variables are copied locally so that modifications in another thread do not affect this Fork. Default is `false`. | - | - | 2026.3 |
-| [steps](steps.md) | The steps to be executed in the parallel thread                                                    | -               | &#x2713;           | 2026.3 |
+| [steps](steps.md) | The steps to be executed in the parallel thread. At least one step.                                | -               | &#x2713;           | 2026.3 |
 
 
 #### Example

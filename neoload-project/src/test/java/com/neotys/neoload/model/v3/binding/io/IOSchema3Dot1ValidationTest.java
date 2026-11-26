@@ -140,7 +140,25 @@ public class IOSchema3Dot1ValidationTest {
             "test-populations-browser-invalid-encoding.yaml",
             "test-populations-browser-unsupported-encoding.yaml",
             "test-populations-browser-unknown-key.yaml",
-            "test-populations-invalid-cache.yaml"
+            "test-populations-invalid-cache.yaml",
+            "test-empty-steps-loop-3-2.yaml",
+            "test-empty-steps-loop-3-2.json",
+            "test-empty-steps-while-3-2.yaml",
+            "test-empty-steps-while-3-2.json",
+            "test-empty-steps-fork-3-2.yaml",
+            "test-empty-steps-fork-3-2.json",
+            "test-empty-steps-web-page-3-2.yaml",
+            "test-empty-steps-web-page-3-2.json",
+            "test-empty-steps-case-3-2.yaml",
+            "test-empty-steps-case-3-2.json",
+            "test-request-url-variable-base-3-2.yaml",
+            "test-request-url-variable-base-3-2.json",
+            "test-schema-version-null.yaml",
+            "test-schema-version-null.json",
+            "test-schema-version-empty.yaml",
+            "test-schema-version-empty.json",
+            "test-shared-queue-swap-file-unknown-key-3-2.yaml",
+            "test-shared-queue-swap-file-unknown-key-3-2.json"
     );
 
     @BeforeClass
