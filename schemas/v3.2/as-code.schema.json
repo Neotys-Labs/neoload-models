@@ -551,11 +551,11 @@
 					{
 						"properties": {
 							"min_length": {
-								"type": "number",
+								"$ref": "#/definitions/common/strictly_positive_int",
 								"description": "The minimum number of characters of the generated value. The default value is `5`."
 							},
 							"max_length": {
-								"type": "number",
+								"$ref": "#/definitions/common/strictly_positive_int",
 								"description": "The maximum number of characters of the generated value. The default value is `10`. Must be greater than or equal to `min_length`."
 							},
 							"predictable": {
@@ -786,8 +786,7 @@
 					{
 						"properties": {
 							"queue_size": {
-								"type": "integer",
-								"minimum": 1,
+								"$ref": "#/definitions/common/strictly_positive_int",
 								"default": 10000,
 								"description": "The maximum number of elements the queue can hold. The default value is `10000`."
 							},
@@ -1014,6 +1013,7 @@
 																	},
 																	"time_to_live": {
 																		"$ref": "#/definitions/common/positive_number",
+																		"maximum": 2147483647,
 																		"description": "The validity duration of the message, after which it expires."
 																	},
 																	"milliseconds": {
@@ -1430,6 +1430,7 @@
 					},
 					"min_users": {
 						"$ref": "#/definitions/common/positive_number",
+						"maximum": 2147483647,
 						"description": "The initial number of Virtual Users"
 					},
 					"max_users": {
@@ -3129,6 +3130,8 @@
 					},
 					"match_number": {
 						"type": "integer",
+						"minimum": -1,
+						"maximum": 2147483647,
 						"default": 1,
 						"description": "If multiple values have matched \"regexp\", the match number defines which match to use. Value \"-1\" is to extract all occurrences, \"0\" to randomly extract one occurence and \"N\" to extract the Nth occurrence. The default value is \"1\"."
 					},

@@ -38,6 +38,13 @@ public class IORangeParityTest {
 	private static final String RANDOM_NUMBER_MIN = variable("random_number", "min: %s\n    max: 10\n");
 	private static final String RANDOM_NUMBER_MAX = variable("random_number", "min: -10\n    max: %s\n");
 
+	private static final String RAMPUP_MIN_USERS = DurationFields.scenario("  populations:\n  - name: R\n    rampup_load:\n      min_users: %s\n      max_users: 2147483647\n      increment_users: 1\n      increment_every: 1 iteration\n      duration: 15 iterations\n");
+	private static final String RANDOM_STRING_MIN_LENGTH = variable("random_string", "min_length: %s\n    max_length: 2147483647\n");
+	private static final String RANDOM_STRING_MAX_LENGTH = variable("random_string", "min_length: 1\n    max_length: %s\n");
+	private static final String SHARED_QUEUE_SIZE = variable("shared_queue", "queue_size: %s\n    consumer_timeout: 5000\n");
+	private static final String EXTRACTOR_MATCH_NUMBER = DurationFields.actions("    - request:\n        url: http://host:80/\n        extractors:\n        - name: E\n          regexp: a(.*)\n          match_number: %s\n");
+	private static final String TIME_TO_LIVE = "name: P\nweb_services_security:\n  request_profiles:\n  - name: R\n    headers:\n    - tokens:\n      - timestamp:\n          time_to_live: %s\n";
+
 	private static String rampup(final String maxUsers, final String incrementUsers) {
 		return DurationFields.scenario("  populations:\n  - name: R\n    rampup_load:\n      min_users: 1\n      max_users: " + maxUsers + "\n      increment_users: " + incrementUsers
 				+ "\n      increment_every: 1 iteration\n      duration: 15 iterations\n");
@@ -111,6 +118,24 @@ public class IORangeParityTest {
 		rows.add(row("random_number.max", RANDOM_NUMBER_MAX, "2147483647", VALID));
 		rows.add(row("random_number.max", RANDOM_NUMBER_MAX, "2147483648", INVALID));
 		rows.add(row("random_number.max", RANDOM_NUMBER_MAX, "9.9", INVALID));
+		rows.add(row("rampup_load.min_users", RAMPUP_MIN_USERS, "2147483647", VALID));
+		rows.add(row("rampup_load.min_users", RAMPUP_MIN_USERS, "2147483648", INVALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN_LENGTH, "2147483647", VALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN_LENGTH, "5.5", INVALID));
+		rows.add(row("random_string.min_length", RANDOM_STRING_MIN_LENGTH, "0", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX_LENGTH, "2147483647", VALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX_LENGTH, "2147483648", INVALID));
+		rows.add(row("random_string.max_length", RANDOM_STRING_MAX_LENGTH, "10.5", INVALID));
+		rows.add(row("shared_queue.queue_size", SHARED_QUEUE_SIZE, "2147483647", VALID));
+		rows.add(row("shared_queue.queue_size", SHARED_QUEUE_SIZE, "2147483648", INVALID));
+		rows.add(row("shared_queue.queue_size", SHARED_QUEUE_SIZE, "0", INVALID));
+		rows.add(row("extractor.match_number", EXTRACTOR_MATCH_NUMBER, "2147483647", VALID));
+		rows.add(row("extractor.match_number", EXTRACTOR_MATCH_NUMBER, "2147483648", INVALID));
+		rows.add(row("extractor.match_number", EXTRACTOR_MATCH_NUMBER, "-1", VALID));
+		rows.add(row("extractor.match_number", EXTRACTOR_MATCH_NUMBER, "-2", INVALID));
+		rows.add(row("extractor.match_number", EXTRACTOR_MATCH_NUMBER, "1.5", INVALID));
+		rows.add(row("timestamp.time_to_live", TIME_TO_LIVE, "2147483647", VALID));
+		rows.add(row("timestamp.time_to_live", TIME_TO_LIVE, "2147483648", INVALID));
 		return rows;
 	}
 
