@@ -9,6 +9,10 @@ Each `shared_elements` entry is an ordinary [transaction](transaction.md), [loop
 [while](while.md) or [fork](fork.md) step; that `name` is what a `shared_element` step references.
 Any other step type is rejected.
 
+:warning: If the project already have a shared container with the same name from NeoLoad, the whole shared container will be __replaced__ by the as-code one, also in the User Paths defined only in NeoLoad. Likewise, when several as-code files declare the same shared element, the last declaration replaces the earlier ones.
+
+The links that other requests of the project hold to a request of the replaced container (referer, variable extractor) move to the as-code request with the same type, name and method, at the same level and in the same order. When there is none, the link is removed and a warning is logged.
+
 #### Available settings — `shared_elements` entry
 | Name            | Description                                              | Accept variable | Required | Since |
 |:-----------------|:----------------------------------------------------------|:---------------:|:--------:|:-----:|
