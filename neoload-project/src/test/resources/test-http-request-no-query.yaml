@@ -1,0 +1,9 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        url: /search
+        parameters:
+        - lang: en

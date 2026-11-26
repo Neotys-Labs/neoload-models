@@ -1,6 +1,6 @@
 # WebSocket Channel
 
-The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping`, `timestamp_extractor` and `push_messages` it is defined like a [request](request.md): `url`, `server`, `headers`, `extractors` and the assertions (`content_assertions`, `duration_assertion`, `size_assertion`).
+The WebSocket Channel Action opens a WebSocket connection through an HTTP upgrade and keeps it open for the rest of the iteration. Apart from `messages_mapping`, `timestamp_extractor` and `push_messages` it is defined like a [request](request.md): `url`, `server`, `headers`, `parameters`, `extractors`, `follow_redirects`, `response_storage` and the assertions (`content_assertions`, `duration_assertion`, `size_assertion`).
 
 The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no `method`, `body` or `parts` settings.
 
@@ -12,7 +12,10 @@ The upgrade handshake is a GET with no body, per RFC 6455, so the channel has no
 | url                                 | The channel URL, with the `http` or `https` scheme, or a path relative to `server`                    | &#x2713;        | &#x2713; | 2026.3 |
 | server                              | The name of the server to use when `url` is a relative path                                           | -               | -        | 2026.3 |
 | headers                             | The headers of the upgrade request. `Upgrade: websocket` is implied, see [The `Upgrade` header](#the-upgrade-header) | &#x2713;        | -        | 2026.3 |
+| parameters                          | The query string parameter list. A query written in `url` is moved here, ahead of the declared parameters | &#x2713;    | -        | 2026.3 |
 | extractors                          | Variable extractors applied to the channel response                                                   | -               | -        | 2026.3 |
+| follow_redirects                    | When `true`, the HTTP redirections returned by the server to the upgrade request are followed. The default value is `false`. See [follow_redirects](request.md#follow_redirects) | - | - | 2026.3 |
+| response_storage                    | Stores the response body of the upgrade request in a file. See [response_storage](request.md#response_storage) | - | - | 2026.3 |
 | [content_assertions](content_assertion.md) | The list of assertions to validate the response of the upgrade request                  | -               | -        | 2026.3 |
 | assertions                          | Deprecated alias of `content_assertions`, read-only. Use `content_assertions` instead. | -               | -        | 2026.3 |
 | [duration_assertion](duration_assertion.md) | Checks that the upgrade request completed within a given duration                | -               | -        | 2026.3 |

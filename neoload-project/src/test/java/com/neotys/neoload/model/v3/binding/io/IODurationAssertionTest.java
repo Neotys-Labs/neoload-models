@@ -31,7 +31,7 @@ public class IODurationAssertionTest extends AbstractIOElementsTest {
 		final Project expectedProject = getProjectWithRequestDurationAssertion();
 		assertNotNull(expectedProject);
 
-		write("test-assert-duration-request", expectedProject);
+		write("test-assert-duration-request-parameters", expectedProject);
 	}
 
 	@Test

@@ -33,7 +33,7 @@ public class IOVariableExtractorTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getRequestWithVariableExtractorsOnlyRequired());
 		assertNotNull(expectedProject);
 
-		write("test-variable-extractor-only-required", expectedProject);
+		write("test-variable-extractor-only-required-parameters", expectedProject);
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class IOVariableExtractorTest extends AbstractIOElementsTest {
 		final Project expectedProject = buildProject(getRequestWithVariableExtractorRequiredAndOptional());
 		assertNotNull(expectedProject);
 
-		write("test-variable-extractor-required-and-optional", expectedProject);
+		write("test-variable-extractor-required-and-optional-parameters", expectedProject);
 	}
 
 	private Request getRequestWithVariableExtractorsOnlyRequired() {
