@@ -29,6 +29,21 @@ name: MyProject
 
 A file declaring `3.0`, `3.1` or no `schemaVersion` keeps working unchanged.
 
+### Changed
+
+- **Whole-number fields no longer accept decimals, nor numbers beyond the 32-bit range.** A field
+  holding a whole number (`start` of a counter, `min_length` of a random string, `match_number` of
+  an extractor, `consumer_timeout` of a shared queue, `users`...) used to truncate a decimal
+  silently: `start: 1.5` was read as `1`, and this applied whatever the declared `schemaVersion`.
+  The read now fails, whatever the `schemaVersion` (`3.0` and `3.1` files included), and names the
+  path and the value:
+
+  ```
+  Incorrect value '1.5' for 'variables[0].start': must be a whole number.
+  ```
+
+  A decimal with a zero fraction (`10.0`) is rejected too. Write `10`.
+
 ---
 
 ## [3.1] — Upcoming version in 2026
