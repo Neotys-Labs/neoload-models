@@ -140,4 +140,24 @@ public class IOHttpBasedRequestTest extends AbstractIOElementsTest {
 		assertEquals(List.of("name:neoload"), render(request));
 		assertTrue(written("test-request-only-required-legacy-query").contains("- request:"));
 	}
+
+	@Test
+	public void emptyQuerySegmentsAreSkipped() throws IOException {
+		final Request middle = firstStep(load("test-http-request-query-empty-segments"), Request.class);
+		final Request leading = firstStep(load("test-http-request-query-leading-ampersand"), Request.class);
+
+		assertEquals("/p", middle.getUrl());
+		assertEquals(List.of("a=1", "b=2"), render(middle));
+		assertEquals("/p", leading.getUrl());
+		assertEquals(List.of("b=2"), render(leading));
+		assertEquals(List.of("a=1", "b=2"), render(firstStep(new IO().read(written("test-http-request-query-empty-segments")).getProject(), Request.class)));
+	}
+
+	@Test
+	public void equalsSignInQueryValueIsKept() throws IOException {
+		final Request request = firstStep(load("test-http-request-query-equals-in-value"), Request.class);
+
+		assertEquals(List.of("token=abc==", "a=b=c"), render(request));
+		assertEquals(List.of("token=abc==", "a=b=c"), render(firstStep(new IO().read(written("test-http-request-query-equals-in-value")).getProject(), Request.class)));
+	}
 }

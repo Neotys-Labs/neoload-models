@@ -105,18 +105,15 @@ public class RequestUtils {
 		if (Strings.isNullOrEmpty(query) || query.trim().isEmpty()) {
 			return urlParameters.build();
 		}
-		for (String param : query.split("&")) {
-			if (param.contains("=")) {
-				final String[] pair = param.split("=");
-				if (pair.length > 1) {
-					urlParameters.add(NameValue.builder().name(pair[0]).value(pair[1]).build());
-				} else if (pair.length == 1) {
-					urlParameters.add(NameValue.builder().name(pair[0]).value("").build());
-				} else {
-					urlParameters.add(NameValue.builder().name("").value("").build());
-				}
-			} else {
+		for (final String param : query.split("&")) {
+			if (param.isEmpty()) {
+				continue;
+			}
+			final int separator = param.indexOf('=');
+			if (separator < 0) {
 				urlParameters.add(NameValue.builder().name(param).build());
+			} else {
+				urlParameters.add(NameValue.builder().name(param.substring(0, separator)).value(param.substring(separator + 1)).build());
 			}
 		}
 		return urlParameters.build();
