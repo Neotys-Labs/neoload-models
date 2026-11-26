@@ -67,6 +67,8 @@ public class IORoundTripTest extends AbstractIOElementsTest {
 			"test-populations-required-and-optional",
 			"test-populations-browser-cache",
 			"test-populations-browser-cache-defaults",
+			"test-populations-wan-emulation",
+			"test-populations-wan-emulation-defaults",
 			"test-readonly-slaprofiles-only-required",
 			"test-readonly-slaprofiles-required-and-optional",
 			"test-readonly-while-required-and-optional",

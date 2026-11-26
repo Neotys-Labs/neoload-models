@@ -70,9 +70,9 @@ content, with the same content assertions as a request.
 
 #### Populations
 
-The browser and the cache of each User Path of a Population, set in the "Browser", "HTTP/2" and
-"Handle Cache" columns of the Population table in the NeoLoad GUI, are now writable in as-code as two
-optional keys of a Population User Path.
+The browser, the cache and the WAN emulation of each User Path of a Population, set in the "Browser",
+"HTTP/2", "Handle Cache" and "WAN Emulation" columns of the Population table in the NeoLoad GUI, are now
+writable in as-code as three optional keys of a Population User Path.
 
 - **`browser`** — the browser emulated by the Virtual Users: `name` (the label shown in NeoLoad),
   `user_agent`, `connections` (6 by default), `cookies` and `http2` (`true` by default) and
@@ -80,6 +80,10 @@ optional keys of a Population User Path.
   is used; without `user_agent`, the other settings apply to the recorded browser.
 - **`cache`** — `as_recorded` (the default), `new_user` (empty cache) or `returning_user` (cache
   already filled).
+- **`wan_emulation`** — the network of the Virtual Users: `name` (the label shown in NeoLoad), and the
+  `bandwidth` (`unlimited` by default), `latency` and `packet_loss` (none by default) of the `download` and of the
+  `upload`. When omitted, the network is not limited. A mobile profile is written with the values of its selected
+  signal strength.
 
 ```yaml
 schemaVersion: "3.2"
@@ -92,6 +96,10 @@ populations:
       user_agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
       http2: false
     cache: new_user
+    wan_emulation:
+      name: ADSL 2048
+      download: {bandwidth: 2560Kbps}
+      upload: {bandwidth: 256Kbps}
 ```
 
 See [Population](neoload-project/doc/v3/population.md) for the full reference.

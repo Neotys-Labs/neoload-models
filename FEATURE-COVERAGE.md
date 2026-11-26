@@ -217,7 +217,7 @@ and protocol action catalogues.
 | User Path list with `distribution` percentage | 3.0 |
 | Browser per User Path — user agent, connections, cookies, HTTP/2, accept encoding (`browser`) | 3.2 |
 | Cache per User Path — as recorded, new user, returning user (`cache`) | 3.2 |
-| WAN emulation per User Path | — |
+| WAN emulation per User Path — download and upload bandwidth, latency, packet loss (`wan_emulation`); mobile profiles with their selected signal strength only | 3.2 |
 
 ## Scenarios and load policies
 
