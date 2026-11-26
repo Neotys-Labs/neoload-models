@@ -12,6 +12,7 @@ import com.neotys.neoload.model.v3.binding.serializer.StepsSerializer;
 import com.neotys.neoload.model.v3.project.population.Population;
 import com.neotys.neoload.model.v3.project.scenario.Scenario;
 import com.neotys.neoload.model.v3.project.security.WebServicesSecurity;
+import com.neotys.neoload.model.v3.project.settings.ProjectSettings;
 import com.neotys.neoload.model.v3.project.server.Server;
 import com.neotys.neoload.model.v3.project.sla.SlaProfile;
 import com.neotys.neoload.model.v3.project.userpath.Step;
@@ -26,7 +27,6 @@ import com.neotys.neoload.model.v3.validation.constraints.ValidSchemaVersion;
 import com.neotys.neoload.model.v3.validation.constraints.WebSocketSharedChannelReferenceCheck;
 import com.neotys.neoload.model.v3.validation.groups.NeoLoad;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.immutables.value.Value;
@@ -114,8 +114,7 @@ public interface Project {
 	List<Scenario> getScenarios();
 
 	@JsonProperty(PROJECT_SETTINGS)
-	@Valid
-	Map<String,String> getProjectSettings();
+	Optional<ProjectSettings> getProjectSettings();
 
 	@JsonIgnore
 	List<Dependency> getDependencies();
