@@ -73,6 +73,13 @@ public class IOWholeNumberTest {
 	}
 
 	@Test
+	public void decimalSharedQueueConsumerTimeoutFailsTheReadNamingFieldAndValue() {
+		final String message = readError(variable("shared_queue", "queue_size: 10\n    consumer_timeout: 1.5\n"));
+
+		assertEquals("Incorrect value '1.5' for 'variables[0].consumer_timeout': " + NOT_A_WHOLE_NUMBER, message);
+	}
+
+	@Test
 	public void decimalInJsonFailsTheReadNamingFieldAndValue() {
 		final String message = readError("{\"name\": \"P\", \"variables\": [{\"counter\": {\"name\": \"V\", \"start\": 1.5, \"end\": 10, \"increment\": 1}}]}");
 

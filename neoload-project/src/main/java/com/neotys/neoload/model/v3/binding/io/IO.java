@@ -115,7 +115,7 @@ public final class IO {
 		if (cause instanceof InputCoercionException && isInt(((InputCoercionException) cause).getTargetType())) {
 			return incorrectValue(textOf((InputCoercionException) cause), NOT_A_32_BIT_WHOLE_NUMBER, exception);
 		}
-		if (exception instanceof InvalidFormatException && isDecimalToInt((InvalidFormatException) exception)) {
+		if (exception instanceof InvalidFormatException && isDecimalToWholeNumber((InvalidFormatException) exception)) {
 			return incorrectValue(String.valueOf(((InvalidFormatException) exception).getValue()), NOT_A_WHOLE_NUMBER, exception);
 		}
 		return exception;
@@ -125,8 +125,12 @@ public final class IO {
 		return int.class.equals(type) || Integer.class.equals(type);
 	}
 
-	private static boolean isDecimalToInt(final InvalidFormatException exception) {
-		return isInt(exception.getTargetType()) && exception.getValue() instanceof Number;
+	private static boolean isLong(final Class<?> type) {
+		return long.class.equals(type) || Long.class.equals(type);
+	}
+
+	private static boolean isDecimalToWholeNumber(final InvalidFormatException exception) {
+		return (isInt(exception.getTargetType()) || isLong(exception.getTargetType())) && exception.getValue() instanceof Number;
 	}
 
 	private static String textOf(final InputCoercionException exception) {
