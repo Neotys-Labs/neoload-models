@@ -503,6 +503,13 @@
 					{ "$ref": "#/definitions/common/positive_number" }
 				]
 			},
+			"positive_duration_seconds": {
+				"title": "Strictly positive duration in seconds",
+				"anyOf": [
+					{ "type": "string", "pattern": "^\\s*(?![0hms\\s]*$)(\\d+|(?=\\d)(\\d+h\\s*)?(\\d+m\\s*)?(\\d+s)?)\\s*$" },
+					{ "$ref": "#/definitions/common/strictly_positive_number" }
+				]
+			},
 			"duration": {
 				"title": "Duration",
 				"anyOf": [{ "$ref": "#/definitions/common/time" }, { "$ref": "#/definitions/common/iterations" }]
@@ -1246,7 +1253,7 @@
 																		"description": "The identifier of the Timestamp element."
 																	},
 																	"time_to_live": {
-																		"$ref": "#/definitions/common/positive_number",
+																		"$ref": "#/definitions/common/duration_seconds",
 																		"description": "The validity duration of the message, after which it expires."
 																	},
 																	"milliseconds": {
@@ -1693,7 +1700,7 @@
 						"description": "The fixed number of Virtual Users"
 					},
 					"rampup": {
-						"$ref": "#/definitions/common/duration_seconds",
+						"$ref": "#/definitions/common/positive_duration_seconds",
 						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay."
 					}
 				}
@@ -1730,7 +1737,7 @@
 						"description": "The incrementation frequency: time length or number of iterations."
 					},
 					"increment_rampup": {
-						"$ref": "#/definitions/common/duration_seconds",
+						"$ref": "#/definitions/common/positive_duration_seconds",
 						"description": "Define how Virtual Users start: simultaneously or with a preset delay. This rule is used each time new Virtual Users are created, at each load increase for a ramp-up load policy."
 					}
 				},
@@ -1761,7 +1768,7 @@
 						"$ref": "#/definitions/common/start_after_options"
 					},
 					"step_rampup": {
-						"$ref": "#/definitions/common/duration_seconds",
+						"$ref": "#/definitions/common/positive_duration_seconds",
 						"description": "Define how Virtual Users should be started: simultaneously or with a preset delay. This rule is used each time new Virtual Users are created, at each load peak for a peak load policy."
 					},
 					"stop_after": {
@@ -1802,7 +1809,7 @@
 						"description": "Steps to define the Virtual Users count for a specific period"
 					},
 					"rampup": {
-						"$ref": "#/definitions/common/duration_seconds",
+						"$ref": "#/definitions/common/positive_duration_seconds",
 						"description": "Simultaneously or with a preset delay.There are different behaviours depending on duration mode (unlimited, time length, iterations) - unlimited/time length: This rule is used each time Virtual Users count is updated - iterations: This rule is used each time a new step starts"
 					},
 					"start_after": {
@@ -1983,7 +1990,7 @@
 						"description": "When to release the Rendezvous. Possible values are: \"manual\", percentage or positive number. The default value is 100%."
 					},
 					"timeout": {
-						"$ref": "#/definitions/common/duration_seconds",
+						"$ref": "#/definitions/common/positive_duration_seconds",
 						"description": "The timeout between Virtual Users. Timeout duration is expressed in hours (h), minutes (m), seconds (s). The default value is 300s."
 					}
 				},
