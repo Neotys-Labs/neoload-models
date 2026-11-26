@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -337,6 +338,37 @@ public class IOSchema3Dot1ValidationTest {
         }
 
         Assert.assertTrue("Schema and Java verdicts differ for: " + mismatches, mismatches.isEmpty());
+    }
+
+    @Test
+    public void schemaAndJavaModelAcceptAndRejectTheSameThinkTimePercentages() throws IOException {
+        final Map<String, List<String>> accepted = Map.of(
+                "factor", List.of("0", "150", "50%", "200%", "\"${name}\""),
+                "random", List.of("1", "10", "10%", "200%", "\"${name}\""));
+        final Map<String, List<String>> rejected = Map.of(
+                "factor", List.of("-10%", "1.5", "\"${my_factor}%\"", "-1", "10%%", "abc", "\" 50%\"", "\" ${name}\""),
+                "random", List.of("0%", "0", "-1", "1.5", "\"${my_random}%\"", "10%%", "abc", "\" 10%\"", "\" ${name}\""));
+        final List<String> mismatches = new ArrayList<>();
+
+        for (final String field : accepted.keySet()) {
+            for (final String value : accepted.get(field)) {
+                collectMismatch(mismatches, field, value, true);
+            }
+            for (final String value : rejected.get(field)) {
+                collectMismatch(mismatches, field, value, false);
+            }
+        }
+
+        Assert.assertTrue("Schema or Java verdicts differ from the expected one for: " + mismatches, mismatches.isEmpty());
+    }
+
+    private static void collectMismatch(final List<String> mismatches, final String field, final String value, final boolean expected) throws IOException {
+        final String yaml = "name: MyProject\nuser_paths:\n- name: MyUserPath\n  think_time:\n    " + field + ": " + value
+                + "\n  actions:\n    steps:\n    - delay: 1s\n";
+        final boolean schemaValid = SCHEMA.validate(YAML_MAPPER.readTree(yaml)).isEmpty();
+        if (schemaValid != expected || isValidForJava(yaml) != expected) {
+            mismatches.add(field + "=" + value + " (expected " + (expected ? "valid" : "invalid") + ")");
+        }
     }
 
     private static boolean isValidForJava(final String yaml) {

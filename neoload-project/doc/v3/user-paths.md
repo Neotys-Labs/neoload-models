@@ -41,6 +41,8 @@ Changes all the think times of the User Path at once: the `think_time` of its [w
 | think_time.factor   | Multiplies each think time by this percentage: an integer, `0` or more (`150%`, `%` optional)      | Apply this factor for each page and delay | &#x2713;        | -        | 2026.3 |
 | think_time.random   | Adds a random delay of +/- this percentage to each think time: an integer, `1` or more (`10%`, `%` optional). By default, no random delay is added | Add a random delay +/- | &#x2713; | - | 2026.3 |
 
+A percentage is always written with its `%` when a project is exported: `150` is written back as `150%`. A value that is neither an integer nor a variable, such as `1.5` or `abc`, fails the read.
+
 Use `override` or `factor`, not both. `random` can be used alone or with either of them. Without `override` nor `factor`, the think times are kept as defined (designer setting "Use think time defined on pages and delays").
 
 #### Example
