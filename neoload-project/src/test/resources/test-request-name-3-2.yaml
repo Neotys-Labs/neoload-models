@@ -1,0 +1,9 @@
+schemaVersion: "3.2"
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        name: MyRequest
+        url: http://www.neotys.com/select

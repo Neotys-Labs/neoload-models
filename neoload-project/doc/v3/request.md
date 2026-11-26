@@ -7,6 +7,7 @@ A request defines a plain HTTP request.
 | Name                                | Description                                                                   | Accept variable | Required | Since |
 |:----------------------------------- |:----------------------------------------------------------------------------- |:---------------:|:--------:|:-----:|
 | [url](#url)                         | The URL to hit                                                                | &#x2713;        | &#x2713; |       |
+| name                                | **Deprecated**, ignored: a request is named after its URL path. Still accepted so that existing files keep loading. | -               | -        |       |
 | [server](#server)                   | The server name to use                                                        | -               | -        |       |
 | [method](#method)                   | The request method                                                            | -               | -        |       |
 | [headers](#headers)                 | The request header list                                                       | &#x2713;        | -        |       |
@@ -49,6 +50,8 @@ request:
 Define the URL of the HTTP request. A URL can be defined with an absolute URL or a relative URL. A relative URL requires the `server` field.
 
 Use convention to define an URL: `http[s]://{host}[:{port}][/{path}][?{query}]`. Variables can be used from the `host`, `port`, `path` parameters and from the name/value pairs of the `query` parameter. To encode the evaluation of a variable from the name/value pairs of the `query` parameter, use convention: `__encodeURL(${my_variable})`.
+
+The scheme cannot be a variable, and a variable cannot hold the whole base URL: `url: ${base_url}/get` is rejected. For a variable base URL, declare a [server](server.md) with a variable host and use a relative URL.
 
 #### Example 1
 
@@ -160,7 +163,7 @@ headers:
 ```
 
 The `header-name` parameter represents the header name. This parameter is required.<br> 
-The `header-value` parameter represents the header value. This parameter can be optional and can use a variable.
+The `header-value` parameter represents the header value. This parameter can be optional and can use a variable. A header written with no value (`- header-name:`, or `name: header-name` with an empty `value:`) is sent without value.
 
 #### Example
 

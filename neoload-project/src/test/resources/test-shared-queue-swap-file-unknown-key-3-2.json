@@ -1,0 +1,1 @@
+{"schemaVersion":"3.2","name":"MyProject","variables":[{"shared_queue":{"name":"MySharedQueue","swap_file":{"path":"data/queue.csv","unknown_key":1}}}]}

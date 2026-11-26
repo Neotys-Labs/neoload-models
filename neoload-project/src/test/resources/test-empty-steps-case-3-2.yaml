@@ -1,0 +1,14 @@
+schemaVersion: "3.2"
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - switch:
+        value: "${MySwitchVariable}"
+        case:
+        - value: 0
+          steps: []
+        default:
+          steps:
+          - delay: 1s

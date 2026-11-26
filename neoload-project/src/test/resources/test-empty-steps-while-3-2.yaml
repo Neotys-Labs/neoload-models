@@ -1,0 +1,10 @@
+schemaVersion: "3.2"
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - while:
+        conditions:
+        - "'operand1' == 'operand2'"
+        steps: []

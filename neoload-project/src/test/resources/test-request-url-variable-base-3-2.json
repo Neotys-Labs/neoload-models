@@ -1,0 +1,1 @@
+{"schemaVersion":"3.2","name":"MyProject","user_paths":[{"name":"MyUserPath","actions":{"steps":[{"request":{"url":"${base_url}/get"}}]}}]}
