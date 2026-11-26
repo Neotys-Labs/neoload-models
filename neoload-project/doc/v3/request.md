@@ -185,7 +185,7 @@ request:
   url: /search
   parameters:
   - q: neoload
-  - page: "1"
+  - page: 1
   - lang: en
 ```
 
