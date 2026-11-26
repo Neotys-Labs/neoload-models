@@ -80,6 +80,20 @@ public class IOWholeNumberTest {
 	}
 
 	@Test
+	public void decimalExtractorMatchNumberInAStepFailsTheReadNamingTheFullPath() {
+		final String message = readError(DurationFields.actions("    - request:\n        url: http://host:80/\n        extractors:\n        - name: E\n          regexp: a(.*)\n          match_number: 1.5\n"));
+
+		assertEquals("Incorrect value '1.5' for 'user_paths[0].actions.steps[0].request.extractors[0].match_number': " + NOT_A_WHOLE_NUMBER, message);
+	}
+
+	@Test
+	public void decimalExtractorMatchNumberInANestedStepFailsTheReadNamingTheFullPath() {
+		final String message = readError(DurationFields.actions("    - delay: 1s\n    - transaction:\n        name: T\n        steps:\n        - request:\n            url: http://host:80/\n            extractors:\n            - name: E\n              regexp: a(.*)\n              match_number: 1.5\n"));
+
+		assertEquals("Incorrect value '1.5' for 'user_paths[0].actions.steps[1].transaction.steps[0].request.extractors[0].match_number': " + NOT_A_WHOLE_NUMBER, message);
+	}
+
+	@Test
 	public void decimalInJsonFailsTheReadNamingFieldAndValue() {
 		final String message = readError("{\"name\": \"P\", \"variables\": [{\"counter\": {\"name\": \"V\", \"start\": 1.5, \"end\": 10, \"increment\": 1}}]}");
 
@@ -90,7 +104,7 @@ public class IOWholeNumberTest {
 	public void constantLoadUsersBeyondIntFailsTheReadNamingFieldAndValue() {
 		final String message = readError(DurationFields.scenario("  populations:\n  - name: C\n    constant_load:\n      users: 2147483648\n"));
 
-		assertEquals("Incorrect value '2147483648' for 'scenarios[0].populations[0].users': " + NOT_A_32_BIT_WHOLE_NUMBER, message);
+		assertEquals("Incorrect value '2147483648' for 'scenarios[0].populations[0].constant_load.users': " + NOT_A_32_BIT_WHOLE_NUMBER, message);
 	}
 
 	@Test

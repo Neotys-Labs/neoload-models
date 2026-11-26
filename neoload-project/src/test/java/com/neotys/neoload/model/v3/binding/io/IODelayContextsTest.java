@@ -179,7 +179,12 @@ public class IODelayContextsTest {
 			read("{value: 2s, max: 5s}");
 			fail("Expected 'value' combined with 'max' to fail");
 		} catch (final IOException e) {
-			assertReadError(e, VALUE_COMBINED_WITH_BOUNDS, context == Context.WEB_PAGE ? "think_time" : "steps");
+			if (context == Context.WEB_PAGE) {
+				assertReadError(e, VALUE_COMBINED_WITH_BOUNDS, "think_time");
+			} else {
+				assertTrue(e.getMessage(), e.getMessage().startsWith(VALUE_COMBINED_WITH_BOUNDS));
+				assertTrue(e.getMessage(), e.getMessage().endsWith("$Json[\"steps\"]->java.util.ArrayList[0])"));
+			}
 		}
 	}
 
