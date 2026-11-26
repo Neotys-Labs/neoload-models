@@ -52,6 +52,13 @@ public class DurationParserTest {
 	}
 
 	@Test
+	public void negativeDurationIsFormattedWithALeadingMinus() {
+		assertEquals("-5s", DurationParser.format(Duration.ofSeconds(-5)));
+		assertEquals("-1m30s", DurationParser.format(Duration.ofSeconds(-90)));
+		assertEquals("0", DurationParser.format(Duration.ZERO));
+	}
+
+	@Test
 	public void formatThenParseGivesTheSameDuration() {
 		for (final long milliseconds : new long[] {1, 999, 1000, 90000, 3601001, 360000000}) {
 			final Duration duration = Duration.ofMillis(milliseconds);

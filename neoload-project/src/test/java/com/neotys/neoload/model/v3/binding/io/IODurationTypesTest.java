@@ -154,7 +154,7 @@ public class IODurationTypesTest {
 		final Project project = read(DurationFields.RENDEZVOUS_TIMEOUT.yaml("1s500ms"));
 
 		assertEquals(Duration.ofMillis(1500), scenario(project).getRendezvousPolicies().get(0).getTimeout());
-		assertViolations(validate(project), invalidValue("project.scenarios[0].rendezvous_policies[0].timeout", "'1s500ms' must be a whole number of seconds."));
+		assertViolations(validate(project), invalidValue("1s500ms", "project.scenarios[0].rendezvous_policies[0].timeout", "must be a whole number of seconds."));
 	}
 
 	@Test
@@ -246,7 +246,7 @@ public class IODurationTypesTest {
 				.addPopulations(PopulationPolicy.builder().name("C").loadPolicy(ConstantLoadPolicy.builder().users(1).build()).build())
 				.build()).build();
 
-		assertViolations(validate(project), invalidValue("project.scenarios[0].monitoring.before", "'1s500ms' must be a whole number of seconds."));
+		assertViolations(validate(project), invalidValue("1s500ms", "project.scenarios[0].monitoring.before", "must be a whole number of seconds."));
 	}
 
 	@Test
@@ -269,7 +269,7 @@ public class IODurationTypesTest {
 				.addRendezvousPolicies(RendezvousPolicy.builder().name("r").timeout(Duration.ofSeconds(2)).build())
 				.build()).build();
 
-		assertViolations(validate(project), invalidValue("project.scenarios[0].populations[0].constant_load.rampup", "'1s500ms' must be a whole number of seconds."));
+		assertViolations(validate(project), invalidValue("1s500ms", "project.scenarios[0].populations[0].constant_load.rampup", "must be a whole number of seconds."));
 	}
 
 	@Test
