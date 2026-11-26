@@ -35,7 +35,7 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 		final Project expectedProject = getAsertionsOnlyRequired();
 		assertNotNull(expectedProject);
 
-		write("test-assert-content-only-required", expectedProject);
+		write("test-assert-content-only-required-parameters", expectedProject);
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class IOContentAssertionTest extends AbstractIOElementsTest {
 		final Project expectedProject = getAsertionsRequiredAndOptional();
 		assertNotNull(expectedProject);
 
-		write("test-assert-content-required-and-optional", expectedProject);
+		write("test-assert-content-required-and-optional-parameters", expectedProject);
 	}
 
 

@@ -4,6 +4,4 @@ user_paths:
   actions:
     steps:
     - request:
-        url: http://www.neotys.com/select
-        parameters:
-        - name:neoload
+        url: http://www.neotys.com/select?name:neoload

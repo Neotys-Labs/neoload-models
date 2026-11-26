@@ -4,11 +4,9 @@ user_paths:
   actions:
     steps:
     - request:
-        url: /select
+        url: /select?name=neoload
         server: neotys
         method: POST
-        parameters:
-        - name: neoload
         headers:
         - Content-Type: text/html; charset=utf-8
         - Accept-Encoding: "gzip, compress, br"
@@ -24,11 +22,9 @@ user_paths:
         _internal_recorded_id: r0001
         sla_profile: MySlaProfile
     - request:
-        url: /select
+        url: /select?name=neoload
         server: neotys
         method: POST
-        parameters:
-        - name: neoload
         headers:
         - Content-Type: text/html; charset=utf-8
         - Accept-Encoding: "gzip, compress, br"

@@ -104,7 +104,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 		final Project expectedProject = getRequestOnlyRequired();
 		assertNotNull(expectedProject);
 
-		write("test-request-only-required", expectedProject);
+		write("test-request-only-required-parameters", expectedProject);
 	}
 
 	private static Project getRequestBinaryBody() {
@@ -210,7 +210,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 		final Project expectedProject = getRequestRequiredAndOptional();
 		assertNotNull(expectedProject);
 
-		write("test-request-required-and-optional", expectedProject);
+		write("test-request-required-and-optional-parameters", expectedProject);
 	}
 
 	private static final String TEST_URL = "http://www.neotys.com/select";
@@ -323,7 +323,7 @@ public class IORequestTest extends AbstractIOElementsTest {
 	public void writeCharsetIgnoredWithoutBody() throws IOException {
 		final Request request = Request.builder().url("http://www.neotys.com/select?name:neoload").charset("UTF-8").build();
 		assertFalse(request.getCharset().isPresent());
-		write("test-request-only-required", projectOf(request));
+		write("test-request-only-required-parameters", projectOf(request));
 	}
 
 	@Test
