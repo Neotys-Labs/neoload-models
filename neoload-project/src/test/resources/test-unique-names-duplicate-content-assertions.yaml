@@ -1,0 +1,12 @@
+name: MyProject
+user_paths:
+- name: MyUserPath
+  actions:
+    steps:
+    - request:
+        url: http://www.neotys.com/
+        content_assertions:
+        - name: dup
+          contains: a
+        - name: dup
+          contains: b

@@ -152,7 +152,6 @@ public final class WebSocketSharedChannelReferenceValidator extends AbstractCons
 			this.userPaths = project.getUserPaths();
 			for (final Step sharedElement : project.getSharedElements()) {
 				if (sharedElement.getName() != null) {
-					// Duplicate names are reported by UniqueElementNameCheck; the first one is kept here
 					sharedElements.putIfAbsent(sharedElement.getName(), sharedElement);
 				}
 			}

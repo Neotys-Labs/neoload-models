@@ -29,7 +29,7 @@ public class ContainerTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		CONSTRAINTS_CONTAINER_ASSERTIONS_NAMES = sb.toString();
 	}
 
@@ -37,7 +37,7 @@ public class ContainerTest {
 	static {
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Data Model is invalid. Violation Number: 1.").append(LINE_SEPARATOR);
-		sb.append("Violation 1 - Incorrect value for 'content_assertions': must contain only unique names.").append(LINE_SEPARATOR);
+		sb.append("Violation 1 - Incorrect value for 'content_assertions': must contain only unique names. Duplicates: assertion.").append(LINE_SEPARATOR);
 		CONSTRAINTS_CONTAINER_CONTENT_ASSERTIONS_NAMES = sb.toString();
 	}
 

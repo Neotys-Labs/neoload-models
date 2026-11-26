@@ -83,6 +83,17 @@ populations:
 
 See [Population](neoload-project/doc/v3/population.md) for the full reference.
 
+#### Validation
+
+- **Duplicate names are reported with the duplicated values.** Every list whose names must be
+  unique (servers, variables, User Paths, populations, scenarios, SLA profiles, shared elements,
+  a scenario's populations and rendezvous policies, content assertions, and the web services
+  security profiles) now fails with `must contain only unique names. Duplicates: foo, bar.`.
+  Duplicate keystore paths fail the same way with `unique paths`. Names are compared
+  case-sensitively, and content assertions without a name never count as duplicates.
+- **Rendezvous policy names must be unique within a scenario.** The same name can still be used in
+  two different scenarios.
+
 ---
 
 ## [3.1] — November 2026 (NeoLoad 2026.3 and above)

@@ -5,8 +5,8 @@ import com.neotys.neoload.model.v3.project.userpath.assertion.ContentAssertion;
 import com.neotys.neoload.model.v3.validation.constraints.AssertionsFieldCheck;
 import com.neotys.neoload.model.v3.validation.constraints.MutuallyExclusiveAssertionsFieldCheck;
 import com.neotys.neoload.model.v3.validation.constraints.RequiredContentAssertionCheck;
-import com.neotys.neoload.model.v3.validation.constraints.UniqueContentAssertionNameCheck;
 import com.neotys.neoload.model.v3.validation.constraints.UniqueContentAssertionPathCheck;
+import com.neotys.neoload.model.v3.validation.constraints.UniqueNameCheck;
 import java.util.List;
 import javax.validation.ConstraintValidatorContext;
 
@@ -18,7 +18,7 @@ import javax.validation.ConstraintValidatorContext;
  */
 public final class AssertionsFieldValidator extends AbstractConstraintValidator<AssertionsFieldCheck, AssertionsElement> {
 
-	private static final UniqueContentAssertionNameValidator NAME_VALIDATOR = new UniqueContentAssertionNameValidator();
+	private static final UniqueOptionalNameValidator NAME_VALIDATOR = new UniqueOptionalNameValidator();
 	private static final RequiredContentAssertionValidator REQUIRED_VALIDATOR = new RequiredContentAssertionValidator();
 	private static final UniqueContentAssertionPathValidator PATH_VALIDATOR = new UniqueContentAssertionPathValidator();
 
@@ -44,8 +44,8 @@ public final class AssertionsFieldValidator extends AbstractConstraintValidator<
 			valid = false;
 		}
 
-		if (!NAME_VALIDATOR.isValid(effective, null)) {
-			context.buildConstraintViolationWithTemplate(messageTemplate(UniqueContentAssertionNameCheck.class))
+		if (!NAME_VALIDATOR.isValid(effective, context)) {
+			context.buildConstraintViolationWithTemplate(messageTemplate(UniqueNameCheck.class))
 					.addPropertyNode(fieldName)
 					.addConstraintViolation();
 			valid = false;

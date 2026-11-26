@@ -1,0 +1,6 @@
+name: MyProject
+servers:
+- name: '${1+1}{x}'
+  host: h
+- name: '${1+1}{x}'
+  host: h
