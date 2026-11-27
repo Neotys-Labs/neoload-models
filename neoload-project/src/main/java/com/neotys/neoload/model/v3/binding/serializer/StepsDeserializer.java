@@ -62,6 +62,10 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		super(List.class);
 	}
 
+	/**
+	 * Reads the steps of a list. A reading error names the index of the step and its type, such as
+	 * {@code steps[0].request}: each step is read from its own tree, so Jackson's reference chain would not include them.
+	 */
 	@Override
 	public List<Step> deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext) throws IOException {
 		final List<Step> steps = new ArrayList<>();
@@ -69,13 +73,20 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		final ObjectCodec codec = jsonParser.getCodec();
 		final JsonNode jsonNode = codec.readTree(jsonParser);
 
+		int index = 0;
 		final Iterator<JsonNode> iterator = jsonNode.elements();
 		while (iterator.hasNext()) {
 			final JsonNode stepNode = iterator.next();
-			final Step step = parseStep(codec, stepNode);
-			if (step != null) {
-				steps.add(step);
+			try {
+				final Step step = parseStep(codec, stepNode);
+				if (step != null) {
+					steps.add(step);
+				}
+			} catch (final JsonMappingException e) {
+				e.prependPath(steps, index);
+				throw e;
 			}
+			index++;
 		}
 
 		return steps;
@@ -185,7 +196,12 @@ public class StepsDeserializer extends StdDeserializer<List<Step>> {
 		if (stepClass == null) {
 			return null;
 		}
-		return codec.treeToValue(stepValue, stepClass);
+		try {
+			return codec.treeToValue(stepValue, stepClass);
+		} catch (final JsonMappingException e) {
+			e.prependPath(stepClass, stepName);
+			throw e;
+		}
 	}
 
 	private static Step parseCustomActionStep(final ObjectCodec codec, final JsonNode stepValue, final String type) throws IOException {

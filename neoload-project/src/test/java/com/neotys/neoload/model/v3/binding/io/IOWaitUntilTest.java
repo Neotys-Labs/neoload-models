@@ -40,7 +40,7 @@ public class IOWaitUntilTest extends AbstractIOElementsTest {
 			cause = cause.getCause();
 		}
 		Assert.assertNotNull(exception.toString(), cause);
-		Assert.assertEquals("Incorrect value for 'user_paths[0].steps.timeout': Incorrect duration: '1m1h' is not a valid duration.", exception.getMessage());
+		Assert.assertEquals("Incorrect value for 'user_paths[0].actions.steps[0].wait_until.timeout': Incorrect duration: '1m1h' is not a valid duration.", exception.getMessage());
 	}
 
 	@Test

@@ -3,7 +3,6 @@ package com.neotys.neoload.model.v3.binding.converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import com.google.common.base.Strings;
 import com.neotys.neoload.model.v3.project.scenario.WhenRelease;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,6 +10,7 @@ public final class StringToWhenReleaseConverter extends StdConverter<String, Whe
 	private static final WhenRelease ERROR_VALUE = WhenRelease.builder().build();
 	public static final Pattern PERCENTAGE_PATTERN = Pattern.compile("^([1-9][0-9]?|^100)%$");
 	public static final Pattern POSITIVE_PATTERN = Pattern.compile("^[1-9]\\d*$");
+	private static final String USERS_OUT_OF_RANGE = "must be manual, a percentage from 1% to 100% or a number of users from 1 to " + Integer.MAX_VALUE + ".";
 
 	@Override
 	public WhenRelease convert(final String input) {
@@ -34,11 +34,19 @@ public final class StringToWhenReleaseConverter extends StdConverter<String, Whe
 		final Matcher positiveMatcher = POSITIVE_PATTERN.matcher(input);
 		if (positiveMatcher.matches()) {
 			return WhenRelease.builder()
-					.value(Integer.parseInt(input))
+					.value(parseUsers(input))
 					.type(WhenRelease.Type.VU_NUMBER)
 					.build();
 		}
 
 		return ERROR_VALUE;
+	}
+
+	private static int parseUsers(final String input) {
+		try {
+			return Integer.parseInt(input);
+		} catch (final NumberFormatException e) {
+			throw new InvalidValueException(input, USERS_OUT_OF_RANGE);
+		}
 	}
 }

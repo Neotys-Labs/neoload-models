@@ -239,6 +239,18 @@
 				"type": "integer",
 				"minimum": 0
 			},
+			"int": {
+				"title": "Integer",
+				"type": "integer",
+				"minimum": -2147483648,
+				"maximum": 2147483647
+			},
+			"strictly_positive_int": {
+				"title": "Strictly Positive Integer",
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 2147483647
+			},
 			"strictly_positive_number": {
 				"title": "Strictly Positive Number",
 				"type": "integer",
@@ -429,7 +441,7 @@
 								"description": "If `true`, the first line of the file can be used as column headers name. The value of this parameter is ignored if `column_names` parameter is specified. The default value is `false`."
 							},
 							"start_from_line": {
-								"type": "integer",
+								"$ref": "#/definitions/common/strictly_positive_int",
 								"default": 1,
 								"description": "The first line of the file to be used. The default value is `1`. Does not accept a variable."
 							},
@@ -472,15 +484,15 @@
 					{
 						"properties": {
 							"start": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable start value. Required. Does not accept a variable."
 							},
 							"end": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable end value. Required. Does not accept a variable."
 							},
 							"increment": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable increment value. Required. Does not accept a variable."
 							},
 							"scope": {
@@ -509,11 +521,11 @@
 					{
 						"properties": {
 							"min": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "The variable min value. Required. Does not accept a variable."
 							},
 							"max": {
-								"type": "number",
+								"$ref": "#/definitions/common/int",
 								"description": "Must be greater than or equal to `min`."
 							},
 							"predictable": {
@@ -539,11 +551,11 @@
 					{
 						"properties": {
 							"min_length": {
-								"type": "number",
+								"$ref": "#/definitions/common/strictly_positive_int",
 								"description": "The minimum number of characters of the generated value. The default value is `5`."
 							},
 							"max_length": {
-								"type": "number",
+								"$ref": "#/definitions/common/strictly_positive_int",
 								"description": "The maximum number of characters of the generated value. The default value is `10`. Must be greater than or equal to `min_length`."
 							},
 							"predictable": {
@@ -637,7 +649,7 @@
 								"description": "The list of rows. Each row is a list of values, one per column of `column_names`."
 							},
 							"start_from_line": {
-								"type": "integer",
+								"$ref": "#/definitions/common/strictly_positive_int",
 								"default": 1,
 								"description": "The first row of `values` to be used. The default value is \"1\"."
 							},
@@ -774,8 +786,7 @@
 					{
 						"properties": {
 							"queue_size": {
-								"type": "integer",
-								"minimum": 1,
+								"$ref": "#/definitions/common/strictly_positive_int",
 								"default": 10000,
 								"description": "The maximum number of elements the queue can hold. The default value is `10000`."
 							},
@@ -1002,6 +1013,7 @@
 																	},
 																	"time_to_live": {
 																		"$ref": "#/definitions/common/positive_number",
+																		"maximum": 2147483647,
 																		"description": "The validity duration of the message, after which it expires."
 																	},
 																	"milliseconds": {
@@ -1360,10 +1372,10 @@
 								},
 								"distribution": {
 									"anyOf": [
-										{ "type": "string", "pattern": "^\\d{1,3}(\\.\\d)?%?$" },
+										{ "type": "string", "pattern": "^(100(\\.0)?|\\d{1,2}(\\.\\d)?)%?$" },
 										{ "type": "number", "minimum": 0, "maximum": 100 }
 									],
-									"description": "The percentage of the User Path in Population. The value is a percentage and may be set within precision of 0.1%. If the distribution is not present, its value will be proportionally calculated."
+									"description": "The percentage of the User Path in Population. The value is a percentage from 0% to 100% and may be set within precision of 0.1%. If the distribution is not present, its value will be proportionally calculated."
 								}
 							}
 						},
@@ -1392,7 +1404,7 @@
 						"$ref": "#/definitions/common/stop_after_options"
 					},
 					"users": {
-						"type": "integer",
+						"$ref": "#/definitions/common/strictly_positive_int",
 						"default": 1,
 						"description": "The fixed number of Virtual Users"
 					},
@@ -1418,14 +1430,15 @@
 					},
 					"min_users": {
 						"$ref": "#/definitions/common/positive_number",
+						"maximum": 2147483647,
 						"description": "The initial number of Virtual Users"
 					},
 					"max_users": {
-						"$ref": "#/definitions/common/positive_number",
+						"$ref": "#/definitions/common/strictly_positive_int",
 						"description": "The maximum number of Virtual Users. Must be greater than or equal to `min_users`."
 					},
 					"increment_users": {
-						"type": "integer",
+						"$ref": "#/definitions/common/strictly_positive_int",
 						"default": 1,
 						"description": "The number of Virtual Users to increment"
 					},
@@ -1485,7 +1498,7 @@
 				"additionalProperties": false,
 				"properties": {
 					"users": {
-						"$ref": "#/definitions/common/positive_number",
+						"$ref": "#/definitions/common/strictly_positive_int",
 						"description": "The fixed number of Virtual Users during the phase"
 					},
 					"duration": {
@@ -1531,6 +1544,7 @@
 					},
 					"users": {
 						"$ref": "#/definitions/common/positive_number",
+						"maximum": 2147483647,
 						"description": "The fixed number of Virtual Users at the specified moment"
 					}
 				},
@@ -1683,8 +1697,12 @@
 						"description": "The name of the rendezvous the policy applies to."
 					},
 					"when": {
-						"anyOf": [{ "$ref": "#/definitions/common/text" }, { "$ref": "#/definitions/common/positive_number" }],
-						"description": "When to release the Rendezvous. Possible values are: \"manual\", percentage or positive number. The default value is 100%."
+						"anyOf": [
+							{ "const": "manual" },
+							{ "type": "string", "pattern": "^(([1-9]\\d?|100)%|[1-9]\\d*)$" },
+							{ "$ref": "#/definitions/common/strictly_positive_int" }
+						],
+						"description": "When to release the Rendezvous. Possible values are: \"manual\", a percentage from 1% to 100% or a positive number of Virtual Users. The default value is 100%."
 					},
 					"timeout": {
 						"$ref": "#/definitions/common/duration_seconds",
@@ -3112,6 +3130,8 @@
 					},
 					"match_number": {
 						"type": "integer",
+						"minimum": -1,
+						"maximum": 2147483647,
 						"default": 1,
 						"description": "If multiple values have matched \"regexp\", the match number defines which match to use. Value \"-1\" is to extract all occurrences, \"0\" to randomly extract one occurence and \"N\" to extract the Nth occurrence. The default value is \"1\"."
 					},
