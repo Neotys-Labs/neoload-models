@@ -115,7 +115,7 @@ public final class IO {
 		if (cause instanceof InputCoercionException && isInt(((InputCoercionException) cause).getTargetType())) {
 			return incorrectValue(textOf((InputCoercionException) cause), NOT_A_32_BIT_WHOLE_NUMBER, exception);
 		}
-		if (exception instanceof InvalidFormatException && isDecimalForWholeNumberField((InvalidFormatException) exception)) {
+		if (exception instanceof InvalidFormatException && isForbiddenDecimalError((InvalidFormatException) exception)) {
 			return incorrectValue(String.valueOf(((InvalidFormatException) exception).getValue()), NOT_A_WHOLE_NUMBER, exception);
 		}
 		return exception;
@@ -130,9 +130,9 @@ public final class IO {
 	}
 
 	/**
-	 * Whether the error is a decimal number given to a field that holds a whole number ({@code int} or {@code long}).
+	 * Whether the error is a decimal number given to a field that only accepts a whole number ({@code int} or {@code long}).
 	 */
-	private static boolean isDecimalForWholeNumberField(final InvalidFormatException exception) {
+	private static boolean isForbiddenDecimalError(final InvalidFormatException exception) {
 		return (isInt(exception.getTargetType()) || isLong(exception.getTargetType())) && exception.getValue() instanceof Number;
 	}
 
